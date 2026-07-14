@@ -656,7 +656,7 @@ window.DDOOPI = {
 </div>
 
 <script>
-/* ==== 버전: v39 (2026-07-13) — 제한 시간 타이머 (학년대 × 난이도별) ==== */
+/* ==== 버전: v40 (2026-07-14) — Gemini thinking OFF (힌트·응답 잘림 수정) ==== */
 /* ============================================================
    질문 데이터 v5 — 교재 Q번호 = 개별 선택 항목
    각 항목: Q번호 1개 선택 → 그 개념을 묻는 3~5개 소질문 한 화면 제시
@@ -2238,30 +2238,48 @@ function setApiKey(k){ try{ localStorage.setItem('dd:anthropicKey', k); }catch(e
 async function callClaude(payload){
   const key = getApiKey();
 
-  /* --- 구글 Gemini 키(AIza...)면 Gemini 무료 API로 호출 --- */
+  /* --- 구글 Gemini 키(AIza...)면 Gemini 무료 API로 호출 ---
+     [중요] gemini-2.5-flash는 '사고(thinking) 토큰'을 maxOutputTokens 예산에서 먼저 차감한다.
+     thinkingBudget을 0으로 끄지 않으면 답변이 중간에서 잘린다 (힌트 잘림의 원인).       */
   if(key && !key.startsWith('sk-ant')){
     const sys = payload.system || '';
     const userText = (payload.messages||[]).map(m => typeof m.content==='string' ? m.content : '').join('\n');
-    let res;
-    try{
-      res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + encodeURIComponent(key), {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({
-          systemInstruction:{ parts:[{text:sys}] },
-          contents:[{ role:'user', parts:[{text:userText}] }],
-          generationConfig:{ maxOutputTokens: payload.max_tokens || 1200 }
-        })
-      });
-    }catch(e){ throw new Error('네트워크 오류가 발생했어요. 인터넷 연결을 확인해 주세요.'); }
-    if(!res.ok){
-      if(res.status===400 || res.status===403) throw new Error('Gemini 키가 올바르지 않아요. 선생님 화면에서 키를 다시 확인해 주세요.');
-      if(res.status===429) throw new Error('무료 사용 한도에 잠시 걸렸어요. 1분 정도 쉬었다가 다시 제출해 주세요.');
-      throw new Error('AI 서버 응답 오류 ('+res.status+')');
+    const baseBudget = Math.max(payload.max_tokens || 1200, 512);
+
+    async function askGemini(budget){
+      let res;
+      try{
+        res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + encodeURIComponent(key), {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({
+            systemInstruction:{ parts:[{text:sys}] },
+            contents:[{ role:'user', parts:[{text:userText}] }],
+            generationConfig:{
+              maxOutputTokens: budget,
+              temperature: 0.4,
+              thinkingConfig: { thinkingBudget: 0 }   // 사고 모드 OFF → 예산 전부를 답변에 사용
+            }
+          })
+        });
+      }catch(e){ throw new Error('네트워크 오류가 발생했어요. 인터넷 연결을 확인해 주세요.'); }
+      if(!res.ok){
+        if(res.status===400 || res.status===403) throw new Error('Gemini 키가 올바르지 않아요. 선생님 화면에서 키를 다시 확인해 주세요.');
+        if(res.status===429) throw new Error('무료 사용 한도에 잠시 걸렸어요. 1분 정도 쉬었다가 다시 제출해 주세요.');
+        throw new Error('AI 서버 응답 오류 ('+res.status+')');
+      }
+      const data = await res.json();
+      const cand = (data.candidates||[])[0] || {};
+      const text = ((cand.content?.parts)||[]).map(p=>p.text||'').join('');
+      return { text, cut: cand.finishReason === 'MAX_TOKENS' };
     }
-    const data = await res.json();
-    const text = (((data.candidates||[])[0]||{}).content?.parts||[]).map(p=>p.text||'').join('');
-    if(!text) throw new Error('AI 응답이 비어 있어요. 다시 시도해 주세요.');
-    return { content:[{type:'text', text}] };
+
+    let out = await askGemini(baseBudget);
+    // 그래도 잘렸으면 예산을 2배로 늘려 한 번 더 (긴 해설·JSON 대비)
+    if((out.cut || !out.text) && baseBudget < 4000){
+      out = await askGemini(Math.min(baseBudget * 2, 4000));
+    }
+    if(!out.text) throw new Error('AI 응답이 비어 있어요. 다시 시도해 주세요.');
+    return { content:[{type:'text', text: out.text}] };
   }
 
   /* --- Anthropic 키(sk-ant...) 또는 Claude 앱 내부 --- */
@@ -2905,12 +2923,13 @@ async function ensureHintStep(box, qi, stepIndex){
 규칙: 한두 문장으로 완결되게. 이모지 0~1개. 그 힌트 문장만 출력(따옴표·JSON·설명 없이).`;
   const userMsg = `[학년/교재] ${grade.name}\n[단원] ${unit.label}\n[질문] ${question}`;
   try{
-    const data = await callClaude({ model:"claude-sonnet-4-6", max_tokens:400, system:systemPrompt, messages:[{role:"user", content:userMsg}] });
+    const data = await callClaude({ model:"claude-sonnet-4-6", max_tokens:700, system:systemPrompt, messages:[{role:"user", content:userMsg}] });
     let text = (data.content||[]).map(b=>b.text||'').join(' ').trim();
     text = text.replace(/```/g,'').replace(/^["'\s]+|["'\s]+$/g,'').trim();
     if(!text) return false;
     box._hints[step.key] = text;
-    await storageSet(cacheKey, {text});
+    // 문장이 제대로 끝났을 때만 캐시에 저장 (잘린 힌트가 굳어버리는 것 방지)
+    if(/[.!?…]$|[다요죠까)]$/.test(text)) { await storageSet(cacheKey, {text}); }
     return true;
   }catch(e){ return false; }
 }
