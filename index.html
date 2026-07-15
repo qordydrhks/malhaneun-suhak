@@ -399,6 +399,75 @@
   .timer-note b{color:var(--ink);}
   .timeout-tag{display:inline-block;background:#FDECEE;color:#C0392B;border-radius:7px;
     padding:2px 7px;font-size:.7rem;font-weight:800;margin-left:6px;}
+
+  /* ---------- 오늘 완료 패널 ---------- */
+  .today-panel{background:#fff;border:1px solid var(--line);border-radius:16px;
+    padding:14px 16px;margin:0 0 14px;box-shadow:0 4px 14px -10px rgba(40,33,63,.4);}
+  .today-head{display:flex;align-items:center;gap:9px;cursor:pointer;user-select:none;}
+  .today-title{font-weight:800;font-size:1rem;letter-spacing:-.02em;}
+  .today-badge{display:inline-flex;align-items:center;justify-content:center;
+    min-width:22px;height:22px;padding:0 6px;border-radius:999px;
+    background:var(--red);color:#fff;font-size:.78rem;font-weight:800;font-variant-numeric:tabular-nums;}
+  .today-badge.zero{background:#C9C4D8;}
+  .today-caret{margin-left:auto;color:var(--ink-soft);font-size:.8rem;transition:transform .2s;}
+  .today-panel.collapsed .today-caret{transform:rotate(-90deg);}
+  .today-panel.collapsed .today-list{display:none;}
+  .today-list{margin-top:12px;display:flex;flex-direction:column;gap:8px;}
+  .today-row{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:11px;
+    background:#F8F7FC;border:1px solid #EEEBF7;}
+  .today-row .tr-dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto;}
+  .today-row .tr-name{font-weight:800;font-size:.9rem;flex:0 0 auto;}
+  .today-row .tr-unit{font-size:.82rem;color:var(--ink-soft);overflow:hidden;
+    text-overflow:ellipsis;white-space:nowrap;flex:1 1 auto;}
+  .today-row .tr-score{font-weight:800;font-size:.86rem;font-variant-numeric:tabular-nums;flex:0 0 auto;}
+  .today-row .tr-time{font-size:.72rem;color:#A7A2B8;flex:0 0 auto;min-width:52px;text-align:right;}
+  .today-row .tr-warn{font-size:.72rem;font-weight:800;color:var(--red);flex:0 0 auto;}
+  .today-empty{font-size:.86rem;color:var(--ink-soft);padding:8px 2px;}
+
+  /* ---------- 학생 개인 이력 모달 ---------- */
+  .stu-name{cursor:pointer;text-decoration:underline dotted rgba(123,95,224,.5);text-underline-offset:3px;}
+  .sh-overlay{position:fixed;inset:0;background:rgba(30,25,50,.5);z-index:1000;
+    display:none;align-items:flex-start;justify-content:center;padding:24px 12px;overflow-y:auto;
+    -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);}
+  .sh-overlay.open{display:flex;}
+  .sh-modal{background:#fff;border-radius:20px;width:100%;max-width:560px;
+    box-shadow:0 20px 60px -20px rgba(40,33,63,.5);overflow:hidden;}
+  .sh-head{padding:18px 20px;border-bottom:1px solid var(--line);
+    display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:2;}
+  .sh-head .sh-name{font-weight:800;font-size:1.15rem;letter-spacing:-.02em;}
+  .sh-head .sh-sub{font-size:.8rem;color:var(--ink-soft);margin-top:2px;}
+  .sh-close{border:none;background:#F1EEF9;color:var(--ink);width:32px;height:32px;
+    border-radius:50%;font-size:1.1rem;cursor:pointer;flex:0 0 auto;}
+  .sh-body{padding:16px 20px 22px;max-height:70vh;overflow-y:auto;}
+  .sh-section-title{font-size:.78rem;font-weight:800;letter-spacing:.06em;color:var(--purple);
+    font-family:ui-monospace,monospace;margin:4px 0 10px;}
+  .sh-recent{display:flex;flex-direction:column;gap:8px;margin-bottom:22px;}
+  .sh-item{padding:10px 12px;border-radius:11px;background:#F8F7FC;border:1px solid #EEEBF7;}
+  .sh-item .si-top{display:flex;align-items:center;gap:8px;}
+  .sh-item .si-score{font-weight:800;font-size:.84rem;font-variant-numeric:tabular-nums;flex:0 0 auto;}
+  .sh-item .si-unit{font-weight:700;font-size:.86rem;flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .sh-item .si-time{font-size:.72rem;color:#A7A2B8;flex:0 0 auto;}
+  .sh-item .si-lvl{font-size:.7rem;color:var(--ink-soft);}
+  .sh-item .si-ans{font-size:.78rem;color:var(--ink-soft);margin-top:5px;line-height:1.45;}
+  .sh-item .si-warn{color:var(--red);font-weight:800;font-size:.72rem;}
+  .sh-folder{border:1px solid var(--line);border-radius:12px;margin-bottom:8px;overflow:hidden;}
+  .sh-folder-head{display:flex;align-items:center;gap:9px;padding:11px 13px;cursor:pointer;
+    user-select:none;background:#FCFBFE;}
+  .sh-folder-head:hover{background:#F6F4FC;}
+  .sh-folder .fh-caret{color:var(--ink-soft);font-size:.78rem;transition:transform .2s;}
+  .sh-folder.open .fh-caret{transform:rotate(90deg);}
+  .sh-folder .fh-name{font-weight:800;font-size:.88rem;flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .sh-folder .fh-meta{font-size:.74rem;color:var(--ink-soft);flex:0 0 auto;}
+  .sh-folder .fh-best{font-weight:800;font-size:.78rem;flex:0 0 auto;}
+  .sh-folder-body{display:none;padding:4px 13px 12px;flex-direction:column;gap:7px;}
+  .sh-folder.open .sh-folder-body{display:flex;}
+  .sh-attempt{font-size:.8rem;padding:7px 10px;border-radius:9px;background:#F8F7FC;line-height:1.45;}
+  .sh-attempt .sa-top{display:flex;align-items:center;gap:7px;}
+  .sh-attempt .sa-score{font-weight:800;font-variant-numeric:tabular-nums;}
+  .sh-attempt .sa-time{font-size:.7rem;color:#A7A2B8;margin-left:auto;}
+  .sh-attempt .sa-ans{color:var(--ink-soft);font-size:.76rem;margin-top:3px;}
+  .sh-dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto;}
+  .sh-empty{font-size:.85rem;color:var(--ink-soft);padding:10px 2px;}
 </style>
 </head>
 <body>
@@ -622,6 +691,8 @@ window.DDOOPI = {
       <div id="regMsg"></div>
     </div>
 
+    <div id="todayPanel"></div>
+
     <div class="dash-toolbar">
       <span class="dash-summary" id="dashSummary">불러오는 중…</span>
       <button class="clear-btn" id="refreshDashBtn">새로고침</button>
@@ -634,6 +705,20 @@ window.DDOOPI = {
     </div>
     <div id="boardArea"></div>
 
+  </div>
+
+  <!-- 학생 개인 이력 모달 -->
+  <div class="sh-overlay" id="shOverlay">
+    <div class="sh-modal">
+      <div class="sh-head">
+        <div>
+          <div class="sh-name" id="shName">학생</div>
+          <div class="sh-sub" id="shSub"></div>
+        </div>
+        <button class="sh-close" id="shClose">×</button>
+      </div>
+      <div class="sh-body" id="shBody"></div>
+    </div>
   </div>
 
   <!-- 학부모 학습 보고서 모달 -->
@@ -656,7 +741,7 @@ window.DDOOPI = {
 </div>
 
 <script>
-/* ==== 버전: v43 (2026-07-15) — 음성 인식 대안 후보 5개 캡처 + 채점 발음 관대화(수학 용어 오인식 보정) ==== */
+/* ==== 버전: v45 (2026-07-15) — 학생 이름 클릭 → 개인 이력(최근 2주 + 단원별 폴더) ==== */
 /* ============================================================
    질문 데이터 v5 — 교재 Q번호 = 개별 선택 항목
    각 항목: Q번호 1개 선택 → 그 개념을 묻는 3~5개 소질문 한 화면 제시
@@ -4474,6 +4559,73 @@ function startDashAutoRefresh(){
 }
 function stopDashAutoRefresh(){ if(dashTimer){ clearInterval(dashTimer); dashTimer=null; } }
 
+// 오늘(자정 이후) 완료한 학생 목록을 접이식 패널로 표시
+function renderTodayPanel(subs){
+  const host = $('todayPanel');
+  if(!host) return;
+
+  const now = new Date();
+  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime(); // 오늘 0시
+  const todays = (subs||[])
+    .filter(x => { const t = new Date(x.time).getTime(); return !isNaN(t) && t >= start; })
+    .sort((a,b) => new Date(b.time) - new Date(a.time));
+
+  // 같은 학생이 한 개념을 여러 번 시도하면 '가장 최근 것 1건'만 대표로 보여줌
+  const seen = new Set();
+  const rows = [];
+  todays.forEach(x => {
+    const key = (x.studentId||'') + '|' + (x.courseId||'') + '|' + (x.unitId||'');
+    if(seen.has(key)) return;
+    seen.add(key);
+    rows.push(x);
+  });
+
+  const n = rows.length;
+  const collapsed = host.dataset.collapsed === '1';   // 접힘 상태 유지
+  const scoreColor = s => s>=85 ? 'var(--sage)' : (s>=PASS_SCORE ? 'var(--amber)' : 'var(--red)');
+  const fmtTime = iso => {
+    const d = new Date(iso); if(isNaN(d)) return '';
+    const diff = Math.floor((now - d)/60000);
+    if(diff < 1) return '방금';
+    if(diff < 60) return diff + '분 전';
+    return d.getHours() + ':' + String(d.getMinutes()).padStart(2,'0');
+  };
+  const esc = s => String(s||'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+  const listHtml = n === 0
+    ? '<div class="today-empty">아직 오늘 완료한 학생이 없어요.</div>'
+    : rows.map(x => {
+        const warn = (x.needTeacher || (!x.pass)) ? '<span class="tr-warn">⚠️</span>' : '';
+        return `<div class="today-row">
+          <span class="tr-dot" style="background:${scoreColor(x.score||0)}"></span>
+          <span class="tr-name">${esc(x.name)}</span>
+          <span class="tr-unit">${esc(x.unitLabel)}</span>
+          ${warn}
+          <span class="tr-score" style="color:${scoreColor(x.score||0)}">${x.score||0}점</span>
+          <span class="tr-time">${fmtTime(x.time)}</span>
+        </div>`;
+      }).join('');
+
+  host.innerHTML = `
+    <div class="today-panel${collapsed?' collapsed':''}" id="todayPanelInner">
+      <div class="today-head" id="todayHead">
+        <span class="today-title">오늘 완료</span>
+        <span class="today-badge${n===0?' zero':''}">${n}</span>
+        <span class="today-caret">▾</span>
+      </div>
+      <div class="today-list">${listHtml}</div>
+    </div>`;
+
+  const head = $('todayHead');
+  if(head){
+    head.addEventListener('click', ()=>{
+      const inner = $('todayPanelInner');
+      const nowCollapsed = inner.classList.toggle('collapsed');
+      host.dataset.collapsed = nowCollapsed ? '1' : '0';
+    });
+  }
+}
+
 async function loadBoard(){
   const area = $('boardArea');
   const summary = $('dashSummary');
@@ -4493,6 +4645,8 @@ async function loadBoard(){
   }
   const openFlags = flags.filter(f=>!f.resolved);
   summary.textContent = `학생 ${students.length}명 · 총 제출 ${subs.length}건` + (openFlags.length?` · 🚩 도움필요 ${openFlags.length}건`:'');
+
+  renderTodayPanel(subs);
 
   // 학생별 데이터 준비
   const byStudent = {};
@@ -4588,6 +4742,14 @@ async function loadBoard(){
       card.querySelector('.stu-top').addEventListener('click', ()=>{
         $(histId).classList.toggle('open');
       });
+      // 이름을 누르면 개인 이력 페이지(최근 2주 + 단원별 폴더)
+      const nameEl = card.querySelector('.stu-name');
+      if(nameEl){
+        nameEl.addEventListener('click', (e)=>{
+          e.stopPropagation();
+          openStudentHistory(s, mySubs);
+        });
+      }
       card.querySelector('.rp-btn').addEventListener('click', (e)=>{
         e.stopPropagation();
         openReport(s);
@@ -4596,6 +4758,101 @@ async function loadBoard(){
     });
     area.appendChild(wrap);
   });
+}
+
+/* ============================================================
+   학생 개인 이력 (최근 2주 + 단원별 폴더)
+   데이터는 그대로 두고 '보는 방식'만 학생별·단원별로 정리한다.
+   ============================================================ */
+function openStudentHistory(student, mySubs){
+  const body = $('shBody');
+  $('shName').textContent = student.name;
+
+  const subs = (mySubs || []).slice().sort((a,b)=> new Date(b.time) - new Date(a.time));
+  const passCnt = subs.filter(x=>x.pass).length;
+  $('shSub').textContent = `${escapeHtml(student.grade||'')} · 총 ${subs.length}건 · 통과 ${passCnt}건`;
+
+  const now = Date.now();
+  const TWO_WEEKS = 14*24*60*60*1000;
+  const recent = subs.filter(x=> (now - new Date(x.time).getTime()) <= TWO_WEEKS);
+
+  const scoreColor = s => s>=85 ? 'var(--sage)' : (s>=PASS_SCORE ? 'var(--amber)' : 'var(--red)');
+  const lvlName = l => l==='blank'?'빈칸':(l==='low'?'차근차근':'원리');
+  const fmt = iso => {
+    const d = new Date(iso); if(isNaN(d)) return '';
+    return d.toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  };
+  const ans = t => { t = String(t||''); return escapeHtml(t.slice(0,90)) + (t.length>90?'…':''); };
+
+  // ── 최근 2주 (시간순) ──
+  const recentHtml = recent.length ? recent.map(x=>{
+    const warn = (x.needTeacher || !x.pass) ? '<span class="si-warn">⚠️ 재학습</span>' : '';
+    return `<div class="sh-item">
+      <div class="si-top">
+        <span class="sh-dot" style="background:${scoreColor(x.score||0)}"></span>
+        <span class="si-unit">${escapeHtml(x.unitLabel)}</span>
+        ${warn}
+        <span class="si-score" style="color:${scoreColor(x.score||0)}">${x.score||0}점</span>
+        <span class="si-time">${fmt(x.time)}</span>
+      </div>
+      <div class="si-lvl">${lvlName(x.level)}${x.hintsUsed?` · 💡힌트 ${x.hintsUsed}회`:''}</div>
+      <div class="si-ans">답변: ${ans(x.transcript)}</div>
+    </div>`;
+  }).join('') : '<div class="sh-empty">최근 2주간 학습 기록이 없어요.</div>';
+
+  // ── 전체 이력: 단원별 폴더 (courseName › unitLabel 로 묶음) ──
+  const groups = {};
+  subs.forEach(x=>{
+    const key = (x.courseName||'') + '||' + (x.unitLabel||'');
+    (groups[key] = groups[key] || []).push(x);
+  });
+  // 폴더를 '가장 최근 시도' 순으로 정렬
+  const folderKeys = Object.keys(groups).sort((a,b)=>{
+    const la = Math.max(...groups[a].map(x=>new Date(x.time).getTime()));
+    const lb = Math.max(...groups[b].map(x=>new Date(x.time).getTime()));
+    return lb - la;
+  });
+
+  const foldersHtml = folderKeys.map((key, fi)=>{
+    const rows = groups[key].slice().sort((a,b)=> new Date(b.time)-new Date(a.time));
+    const [courseName, unitLabel] = key.split('||');
+    const best = Math.max(...rows.map(x=>x.score||0));
+    const attempts = rows.map(x=>{
+      const warn = (x.needTeacher || !x.pass) ? ' ⚠️' : '';
+      return `<div class="sh-attempt">
+        <div class="sa-top">
+          <span class="sh-dot" style="background:${scoreColor(x.score||0)}"></span>
+          <span class="sa-score" style="color:${scoreColor(x.score||0)}">${x.score||0}점</span>
+          <span>${lvlName(x.level)}${x.hintsUsed?` · 💡${x.hintsUsed}`:''}${warn}</span>
+          <span class="sa-time">${fmt(x.time)}</span>
+        </div>
+        <div class="sa-ans">답변: ${ans(x.transcript)}</div>
+        ${x.hint?`<div class="sa-ans">💬 힌트: ${escapeHtml(x.hint)}</div>`:''}
+      </div>`;
+    }).join('');
+    return `<div class="sh-folder" data-fi="${fi}">
+      <div class="sh-folder-head">
+        <span class="fh-caret">▸</span>
+        <span class="fh-name">${escapeHtml(unitLabel)}</span>
+        <span class="fh-meta">${escapeHtml(courseName)} · ${rows.length}회</span>
+        <span class="fh-best" style="color:${scoreColor(best)}">최고 ${best}점</span>
+      </div>
+      <div class="sh-folder-body">${attempts}</div>
+    </div>`;
+  }).join('') || '<div class="sh-empty">아직 학습 기록이 없어요.</div>';
+
+  body.innerHTML = `
+    <div class="sh-section-title">📅 최근 2주</div>
+    <div class="sh-recent">${recentHtml}</div>
+    <div class="sh-section-title">📁 전체 이력 · 단원별</div>
+    ${foldersHtml}`;
+
+  // 폴더 접기/펼치기
+  body.querySelectorAll('.sh-folder-head').forEach(h=>{
+    h.addEventListener('click', ()=> h.parentElement.classList.toggle('open'));
+  });
+
+  $('shOverlay').classList.add('open');
 }
 
 /* ============================================================
@@ -4895,9 +5152,17 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 <script>
+/* 학생 개인 이력 모달 닫기 */
+(function(){
+  const ov = document.getElementById('shOverlay');
+  const cl = document.getElementById('shClose');
+  if(cl) cl.addEventListener('click', ()=> ov.classList.remove('open'));
+  if(ov) ov.addEventListener('click', (e)=>{ if(e.target===ov) ov.classList.remove('open'); });
+})();
+
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v43';
+  const APP_VERSION = 'v45';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);

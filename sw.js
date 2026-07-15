@@ -1,7 +1,7 @@
 // 말하는 수학 서비스워커
 // 설치형 앱(PWA) 요건을 충족하기 위한 최소 구성.
 // 네트워크 우선(network-first)이라 파일을 새로 올리면 바로 반영됩니다.
-const CACHE = 'dodream-v28';
+const CACHE = 'dodream-v30';
 
 self.addEventListener('install', (e) => {
   self.skipWaiting();
