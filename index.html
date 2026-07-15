@@ -656,7 +656,7 @@ window.DDOOPI = {
 </div>
 
 <script>
-/* ==== 버전: v42 (2026-07-15) — 채점 완화: 핵심단어 4개 중 포함 비율 기반 점수(2개=70점 통과) + 품질 가점 ==== */
+/* ==== 버전: v43 (2026-07-15) — 음성 인식 대안 후보 5개 캡처 + 채점 발음 관대화(수학 용어 오인식 보정) ==== */
 /* ============================================================
    질문 데이터 v5 — 교재 Q번호 = 개별 선택 항목
    각 항목: Q번호 1개 선택 → 그 개념을 묻는 3~5개 소질문 한 화면 제시
@@ -3561,7 +3561,7 @@ const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRec
 
 function resetRecordingUI(){
   Timer.hide();
-  state.transcript = ''; state.isRecording = false; state.manualMode = false; state._manualStop = false;
+  state.transcript = ''; state.altTranscript = ''; state.isRecording = false; state.manualMode = false; state._manualStop = false;
   $('recBtnWrap').classList.remove('recording');
   $('recBtn').classList.remove('recording');
   $('recBtn').style.display = 'flex';
@@ -3669,12 +3669,15 @@ async function handleSpeakTimeoutZero(){
 function startRecording(){
   const recognition = new SpeechRecognitionCtor();
   // interimResults=false: 확정된 문장만 받는다 → 중간 결과가 겹쳐 반복되는 문제 원천 차단
-  recognition.lang = 'ko-KR'; recognition.continuous = true; recognition.interimResults = false; recognition.maxAlternatives = 1;
+  recognition.lang = 'ko-KR'; recognition.continuous = true; recognition.interimResults = false; recognition.maxAlternatives = 5;
   // 확정된 조각들을 중복 없이 모으는 저장소
   const finalPieces = [];
+  // 각 조각의 '다른 인식 후보'들 (동측내각/동측 내각/동쪽 내각 …) — 채점 AI가 참고하도록 전달
+  const altPieces = [];
   state._manualStop = false;
 
   function renderTranscript(pending){
+    state.altTranscript = altPieces.join(' | ');   // 채점에 함께 넘길 대안 후보
     const parts = finalPieces.slice();
     if(pending) parts.push(pending);
     const full = parts.join(' ').replace(/\s+/g,' ').trim();
@@ -3705,8 +3708,16 @@ function startRecording(){
     // 이번 이벤트에서 새로 확정된 것만 골라 누적 (index는 resultIndex부터).
     for(let i=event.resultIndex;i<event.results.length;i++){
       if(event.results[i].isFinal){
-        const t = (event.results[i][0].transcript || '').trim();
+        const res = event.results[i];
+        const t = (res[0].transcript || '').trim();
         if(t) finalPieces.push(t);
+        // 2순위 이하 후보도 모아둔다 (수학 용어 오인식 대비)
+        const alts = [];
+        for(let a=1;a<res.length && a<5;a++){
+          const at = (res[a] && res[a].transcript || '').trim();
+          if(at && at!==t) alts.push(at);
+        }
+        if(alts.length) altPieces.push(alts.join(' / '));
       }
     }
     renderTranscript('');
@@ -3796,6 +3807,12 @@ async function evaluateWithClaude(unitLabel, question, transcript){
   const systemPrompt = `너는 '말하는 수학'의 다정한 수학 선생님 '뚜삐'야. 초·중등 학생을 대상으로 해.
 학생이 개념 질문 하나에 대해 구두로 설명한 내용을 듣고 평가하는데, 학습과학 연구에 근거한 '정교화 피드백(elaborative feedback)' 원칙을 반드시 지켜:
 
+[음성 인식 관대화 — 채점 전에 반드시 적용]
+- 이 설명은 학생이 '말로' 한 것을 음성 인식으로 받아쓴 거야. 수학 용어는 특히 잘못 적히기 쉬워. (예: '동측내각'→'동측 내각/동쪽 내각/동측 네각', '외심'→'왜심/외신', '이등변'→'이 등변/이동변')
+- 글자가 조금 달라도 소리가 비슷하고 문맥상 그 용어가 분명하면, 학생이 그 용어를 '맞게 말한 것'으로 간주하고 채점해. 받아쓰기 오류로 학생을 깎지 마.
+- [대안 후보]가 주어지면, 그중에 올바른 용어에 가까운 게 있는지도 살펴보고 학생에게 유리한 쪽으로 해석해.
+- 힌트를 줄 때 잘못 적힌 글자를 그대로 지적하지 마. (학생은 정확히 말했는데 기계가 틀리게 적은 것뿐이야.)
+
 [피드백 원칙 — 매우 중요]
 1. "맞았다/틀렸다"는 절대 말하지 마. 정답을 그대로 알려주는 것도 금지야. (단순 정오 피드백은 효과가 거의 없다는 게 연구 결과야.)
 2. 대신 "왜 그런지"에 초점을 둬: 학생 설명에서 잘 된 부분을 콕 짚어 칭찬하고, 빠졌거나 약한 개념이 무엇인지 알려준 뒤, 스스로 다시 떠올릴 수 있는 힌트를 줘.
@@ -3821,7 +3838,9 @@ ${blankGuide}
 반드시 아래 JSON "만" 출력해. 앞뒤에 인사말·설명·마크다운을 절대 붙이지 마. 첫 글자는 { 여야 하고 마지막 글자는 } 여야 해.
 각 문자열은 짧게(1~2문장). 큰따옴표 안에서 줄바꿈 하지 마.
 {"score": 0-100 정수, "keywords": ["핵심단어1","핵심단어2","핵심단어3","핵심단어4"], "hit_count": 0-4 정수, "praise": "구체적으로 잘한 점 한두 문장", "hint": "빠진/약한 개념을 스스로 떠올리게 하는 힌트 한두 문장(정답 직접 언급 금지)", "retry_point": "다시 설명해볼 포인트 딱 하나", "misconception": "감지된 오개념 한 줄 또는 빈 문자열"}`;
-  const userMsg = `[단원] ${unitLabel}\n[질문] ${question}\n\n[학생의 구두 설명(음성 인식 텍스트, 다소 어색해도 그대로임)]\n${transcript}`;
+  const altLine = (state.altTranscript && state.altTranscript.trim())
+    ? `\n\n[대안 후보(같은 말의 다른 인식 결과 — 참고용)]\n${state.altTranscript}` : '';
+  const userMsg = `[단원] ${unitLabel}\n[질문] ${question}\n\n[학생의 구두 설명(음성 인식 텍스트, 다소 어색해도 그대로임)]\n${transcript}${altLine}`;
   const data = await callClaude({ model:"claude-sonnet-4-6", max_tokens:1600, system:systemPrompt, messages:[{role:"user", content:userMsg}] });
   const raw = (data.content||[]).map(b=>b.text||'').join('\n').trim();
   const parsed = parseEval(raw);
@@ -4875,5 +4894,29 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
+<script>
+/* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
+(function(){
+  const APP_VERSION = 'v43';
+  const badge = document.createElement('div');
+  badge.textContent = APP_VERSION;
+  badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
+  badge.style.cssText = 'position:fixed;right:8px;bottom:8px;z-index:9999;'
+    + 'font:600 11px/1 ui-monospace,Menlo,monospace;color:#B7B2C8;'
+    + 'background:rgba(245,244,251,.85);border:1px solid #E4E0F2;border-radius:999px;'
+    + 'padding:4px 8px;pointer-events:auto;cursor:pointer;user-select:none;'
+    + '-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);';
+  // 탭하면 캐시 버전까지 잠깐 표시 (서비스워커 반영 여부 확인용)
+  badge.addEventListener('click', async ()=>{
+    let cacheName = '';
+    try{ const keys = await caches.keys(); cacheName = keys.find(k=>k.startsWith('dodream-')) || ''; }catch(e){}
+    const full = APP_VERSION + (cacheName ? ' · ' + cacheName : '');
+    badge.textContent = full;
+    setTimeout(()=>{ badge.textContent = APP_VERSION; }, 2600);
+  });
+  window.addEventListener('load', ()=> document.body.appendChild(badge));
+})();
+</script>
+
 </body>
 </html>
