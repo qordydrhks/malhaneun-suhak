@@ -741,7 +741,7 @@ window.DDOOPI = {
 </div>
 
 <script>
-/* ==== 버전: v45 (2026-07-15) — 학생 이름 클릭 → 개인 이력(최근 2주 + 단원별 폴더) ==== */
+/* ==== 버전: v46 (2026-07-15) — 개인 이력 모달 자동 닫힘 버그 수정 ==== */
 /* ============================================================
    질문 데이터 v5 — 교재 Q번호 = 개별 선택 항목
    각 항목: Q번호 1개 선택 → 그 개념을 묻는 3~5개 소질문 한 화면 제시
@@ -4747,7 +4747,9 @@ async function loadBoard(){
       if(nameEl){
         nameEl.addEventListener('click', (e)=>{
           e.stopPropagation();
-          openStudentHistory(s, mySubs);
+          e.preventDefault();
+          // 지금 클릭이 오버레이로 전파돼 즉시 닫히는 것을 막기 위해 다음 프레임에 연다
+          setTimeout(()=> openStudentHistory(s, mySubs), 0);
         });
       }
       card.querySelector('.rp-btn').addEventListener('click', (e)=>{
@@ -5157,12 +5159,18 @@ if ('serviceWorker' in navigator) {
   const ov = document.getElementById('shOverlay');
   const cl = document.getElementById('shClose');
   if(cl) cl.addEventListener('click', ()=> ov.classList.remove('open'));
-  if(ov) ov.addEventListener('click', (e)=>{ if(e.target===ov) ov.classList.remove('open'); });
+  // 오버레이 '빈 공간'을 눌러 시작했다가 거기서 뗀 경우에만 닫는다.
+  // (모달 내부에서 시작한 클릭이 오버레이로 새어 닫히는 것 방지)
+  if(ov){
+    let downOnOverlay = false;
+    ov.addEventListener('mousedown', (e)=>{ downOnOverlay = (e.target === ov); });
+    ov.addEventListener('click', (e)=>{ if(e.target === ov && downOnOverlay) ov.classList.remove('open'); });
+  }
 })();
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v45';
+  const APP_VERSION = 'v46';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
