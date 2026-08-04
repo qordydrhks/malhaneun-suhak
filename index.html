@@ -468,6 +468,36 @@
   .sh-attempt .sa-ans{color:var(--ink-soft);font-size:.76rem;margin-top:3px;}
   .sh-dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto;}
   .sh-empty{font-size:.85rem;color:var(--ink-soft);padding:10px 2px;}
+
+  /* ---------- 학생 본인 학습 요약 ---------- */
+  .my-panel{background:linear-gradient(135deg,#F3EFFF,#EEF4FF);border:1px solid #E4E0F2;
+    border-radius:18px;padding:16px 18px;margin:0 0 14px;}
+  .my-stats{display:flex;gap:10px;margin-bottom:14px;}
+  .my-stat{flex:1;background:#fff;border-radius:13px;padding:11px 8px;text-align:center;
+    border:1px solid #EDEAF7;}
+  .my-stat .ms-num{font-size:1.4rem;font-weight:800;line-height:1.1;letter-spacing:-.02em;}
+  .my-stat .ms-num small{font-size:.8rem;font-weight:700;}
+  .my-stat .ms-label{font-size:.72rem;color:var(--ink-soft);margin-top:3px;font-weight:600;}
+  .my-streak .ms-num{color:#E9A63C;}
+  .my-pass .ms-num{color:var(--sage,#3FA372);}
+  .my-total .ms-num{color:var(--purple);}
+  .my-cheer{font-size:.86rem;font-weight:700;color:var(--ink);margin-bottom:12px;
+    display:flex;align-items:center;gap:7px;line-height:1.4;}
+  .my-recent-title{font-size:.74rem;font-weight:800;color:var(--purple);letter-spacing:.05em;
+    font-family:ui-monospace,monospace;margin:0 0 8px;}
+  .my-recent{display:flex;flex-direction:column;gap:7px;}
+  .my-item{display:flex;align-items:center;gap:9px;background:#fff;border-radius:11px;
+    padding:9px 12px;border:1px solid #EDEAF7;}
+  .my-item .mi-badge{font-size:.72rem;font-weight:800;padding:2px 8px;border-radius:999px;flex:0 0 auto;}
+  .mi-badge.pass{background:#E4F5EC;color:#2C8459;}
+  .mi-badge.retry{background:#FDECEE;color:#C0392B;}
+  .my-item .mi-unit{font-size:.85rem;font-weight:700;flex:1 1 auto;overflow:hidden;
+    text-overflow:ellipsis;white-space:nowrap;}
+  .my-item .mi-time{font-size:.72rem;color:#A7A2B8;flex:0 0 auto;}
+  .my-empty{font-size:.85rem;color:var(--ink-soft);text-align:center;padding:6px 0 2px;}
+  .my-toggle{margin-top:10px;width:100%;border:none;background:rgba(255,255,255,.7);
+    color:var(--purple);font-family:inherit;font-size:.8rem;font-weight:700;
+    padding:8px;border-radius:10px;cursor:pointer;}
 </style>
 </head>
 <body>
@@ -573,6 +603,7 @@ window.DDOOPI = {
       <div style="font-size:1.6rem;">👋</div>
     </div>
 
+    <div id="myHistoryHost"></div>
     <div id="reviewHost"></div>
 
     <div class="card" id="setupCard">
@@ -741,7 +772,7 @@ window.DDOOPI = {
 </div>
 
 <script>
-/* ==== 버전: v46 (2026-07-15) — 개인 이력 모달 자동 닫힘 버그 수정 ==== */
+/* ==== 버전: v47 (2026-07-15) — 학생 로그인 화면에 본인 학습 이력 요약(연속일수·통과 개념·최근 기록) ==== */
 /* ============================================================
    질문 데이터 v5 — 교재 Q번호 = 개별 선택 항목
    각 항목: Q번호 1개 선택 → 그 개념을 묻는 3~5개 소질문 한 화면 제시
@@ -3137,6 +3168,105 @@ $('loginBtn').addEventListener('click', async ()=>{
   enterStudentView();
 });
 
+// ── 학생 본인 학습 이력 요약 (격려 톤) ──
+async function renderMyHistory(){
+  const host = document.getElementById('myHistoryHost');
+  if(!host) return;
+  const s = session.student;
+  if(!s){ host.innerHTML=''; return; }
+
+  host.innerHTML = '<div class="my-panel"><div class="my-empty">지난 기록을 불러오는 중…</div></div>';
+
+  let mine = [];
+  try{
+    const all = await getAllSubmissions();
+    mine = (all||[]).filter(x => x.studentId === s.id);
+  }catch(e){ mine = []; }
+
+  if(mine.length === 0){
+    host.innerHTML = `<div class="my-panel">
+      <div class="my-cheer">🌱 첫 설명을 시작해볼까요? 오늘의 한 걸음이 쌓여요.</div>
+    </div>`;
+    return;
+  }
+
+  mine.sort((a,b)=> new Date(b.time) - new Date(a.time));
+
+  // 통계
+  const total = mine.length;
+  const passCnt = mine.filter(x=>x.pass).length;
+  // 서로 다른 '통과한 개념' 수 (진도 개념)
+  const passedUnits = new Set(mine.filter(x=>x.pass).map(x=> x.courseId+'|'+x.unitId)).size;
+  // 연속 학습일수 (오늘부터 거꾸로, 하루라도 비면 중단)
+  const dayKey = t => { const d=new Date(t); return d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate(); };
+  const daySet = new Set(mine.map(x=>dayKey(x.time)));
+  let streak = 0;
+  // 오늘 이미 했으면 오늘부터, 아직 안 했으면 어제부터 거꾸로 센다 (하루라도 비면 중단)
+  const todayKey = dayKey(new Date());
+  let startOffset = daySet.has(todayKey) ? 0 : 1;
+  for(let i=startOffset;i<400;i++){
+    const d = new Date(); d.setDate(d.getDate()-i);
+    if(daySet.has(dayKey(d))) streak++;
+    else break;
+  }
+
+  // 격려 문구
+  let cheer;
+  if(streak >= 3) cheer = `🔥 ${streak}일 연속 학습 중이에요! 대단해요.`;
+  else if(passedUnits >= 10) cheer = `🎯 벌써 ${passedUnits}개 개념을 통과했어요. 꾸준함이 멋져요!`;
+  else if(passCnt >= 1) cheer = `👏 지금까지 잘 해왔어요. 오늘도 한 걸음 더!`;
+  else cheer = `💪 설명하다 막혀도 괜찮아요. 다시 말해보는 게 진짜 공부예요.`;
+
+  const fmt = iso => {
+    const d = new Date(iso), now = new Date();
+    const diff = Math.floor((now - d)/86400000);
+    if(diff <= 0) return '오늘';
+    if(diff === 1) return '어제';
+    if(diff < 7) return diff + '일 전';
+    return (d.getMonth()+1) + '/' + d.getDate();
+  };
+  const esc = t => String(t||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+  // 최근 항목: 기본 3개, 더보기로 8개
+  const makeItem = x => {
+    const cls = x.pass ? 'pass' : 'retry';
+    const label = x.pass ? '통과' : '한번 더';
+    return `<div class="my-item">
+      <span class="mi-badge ${cls}">${label}</span>
+      <span class="mi-unit">${esc(x.unitLabel)}</span>
+      <span class="mi-time">${fmt(x.time)}</span>
+    </div>`;
+  };
+  const first = mine.slice(0,3).map(makeItem).join('');
+  const more = mine.slice(3,8).map(makeItem).join('');
+  const moreBtn = mine.length > 3
+    ? `<button class="my-toggle" id="myMoreBtn">최근 기록 더 보기 (${Math.min(mine.length,8)-3}개) ▾</button>` : '';
+
+  host.innerHTML = `<div class="my-panel">
+    <div class="my-cheer">${cheer}</div>
+    <div class="my-stats">
+      <div class="my-stat my-streak"><div class="ms-num">${streak}<small>일</small></div><div class="ms-label">연속 학습</div></div>
+      <div class="my-stat my-pass"><div class="ms-num">${passedUnits}<small>개</small></div><div class="ms-label">통과한 개념</div></div>
+      <div class="my-stat my-total"><div class="ms-num">${total}<small>번</small></div><div class="ms-label">지금까지 설명</div></div>
+    </div>
+    <div class="my-recent-title">최근 학습</div>
+    <div class="my-recent" id="myRecent">${first}</div>
+    ${moreBtn}
+  </div>`;
+
+  const btn = document.getElementById('myMoreBtn');
+  if(btn){
+    btn.addEventListener('click', ()=>{
+      const rec = document.getElementById('myRecent');
+      if(btn.dataset.open === '1'){
+        rec.innerHTML = first; btn.textContent = `최근 기록 더 보기 (${Math.min(mine.length,8)-3}개) ▾`; btn.dataset.open='0';
+      }else{
+        rec.innerHTML = first + more; btn.textContent = '접기 ▴'; btn.dataset.open='1';
+      }
+    });
+  }
+}
+
 function enterStudentView(){
   const s = session.student;
   $('greetName').textContent = s.name + ' 학생, 어서 와요!';
@@ -3152,6 +3282,7 @@ function enterStudentView(){
   $('gradeSelect').value = state.gradeId || '';
   populateUnitSelect();
   checkStartReady();
+  renderMyHistory();   // 학생 본인 학습 이력 요약
   $('setupCard').style.display = 'block';
   $('questionCard').style.display = 'none';
   $('quizCard').style.display = 'none';
@@ -5170,7 +5301,7 @@ if ('serviceWorker' in navigator) {
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v46';
+  const APP_VERSION = 'v47';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
