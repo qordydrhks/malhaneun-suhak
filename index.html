@@ -597,9 +597,8 @@
     .rail{display:none;}
     .rail.drawer-open{display:block; position:fixed; top:var(--topbar-h); right:0; width:min(300px,85vw);
       height:calc(100vh - var(--topbar-h)); z-index:60; box-shadow:-12px 0 40px -12px rgba(30,25,50,.35);}
-    .tb-nav a .ic{font-size:19px;}
-    .tb-nav a span:last-child{display:none;}
-    .tb-brand b{display:none;}
+    .tb-nav a{font-size:12.5px; padding:7px 10px;}
+    .tb-brand b{display:inline; font-size:14px;}
     .stat-row{grid-template-columns:repeat(2,1fr);}
     .two-col{grid-template-columns:1fr;}
     .main{padding:16px 14px 50px;}
@@ -5044,8 +5043,8 @@ function startDashAutoRefresh(){
     // 개인 이력 모달이 열려 있으면 보드를 다시 그리지 않는다 (모달이 닫히는 문제 방지)
     const shOpen = document.getElementById('shOverlay');
     if(shOpen && shOpen.classList.contains('open')) return;
-    if(v && v.classList.contains('active')) loadBoard();
-  }, 15000); // 15초마다
+    if(v && v.classList.contains('active')) loadBoard(true);
+  }, 30000); // 15초마다
 }
 function stopDashAutoRefresh(){ if(dashTimer){ clearInterval(dashTimer); dashTimer=null; } }
 
@@ -5196,12 +5195,22 @@ function renderTodayPanel(subs){
   }
 }
 
-async function loadBoard(){
+async function loadBoard(silent){
   const area = $('boardArea');
   const summary = $('dashSummary');
-  area.innerHTML = '<div class="loading-row"><span class="spin"></span> 불러오는 중…</div>';
+  // 자동 새로고침(silent)일 때는 '불러오는 중' 스피너를 띄우지 않는다 (깜빡임 방지)
+  if(!silent) area.innerHTML = '<div class="loading-row"><span class="spin"></span> 불러오는 중…</div>';
   const online = await checkSupabase();
   const [students, subs, flags] = [await getAllStudents(), await getAllSubmissions(), await getAllFlags()];
+
+  // 데이터가 이전과 동일하면 다시 그리지 않는다 (조용한 새로고침에서 불필요한 재렌더·깜빡임 방지)
+  const snapshot = JSON.stringify({
+    s: students.map(x=>x.id),
+    b: (subs||[]).map(x=>[x.id, x.score, x.time]),
+    f: (flags||[]).map(x=>[x.id, x.resolved])
+  });
+  if(silent && window.__lastBoardSnapshot === snapshot) return;
+  window.__lastBoardSnapshot = snapshot;
 
   // 서버 연결 상태 배지
   const syncBadge = online
