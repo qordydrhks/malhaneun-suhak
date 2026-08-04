@@ -600,7 +600,7 @@ window.DDOOPI = {
         <div class="g-name" id="greetName"></div>
         <div class="g-sub" id="greetSub"></div>
       </div>
-      <div style="font-size:1.6rem;">👋</div>
+      <button id="logoutBtn" title="로그아웃" style="border:none;background:#F1EEF9;color:var(--ink-soft);border-radius:999px;padding:7px 13px;font-family:inherit;font-size:.78rem;font-weight:700;cursor:pointer;">로그아웃</button>
     </div>
 
     <div id="myHistoryHost"></div>
@@ -772,7 +772,7 @@ window.DDOOPI = {
 </div>
 
 <script>
-/* ==== 버전: v47 (2026-07-15) — 학생 로그인 화면에 본인 학습 이력 요약(연속일수·통과 개념·최근 기록) ==== */
+/* ==== 버전: v50 (2026-07-16) — 자동 로그인(1회 로그인 유지) + 로그아웃 버튼 ==== */
 /* ============================================================
    질문 데이터 v5 — 교재 Q번호 = 개별 선택 항목
    각 항목: Q번호 1개 선택 → 그 개념을 묻는 3~5개 소질문 한 화면 제시
@@ -2952,6 +2952,32 @@ function showView(name){
   window.scrollTo(0,0);
 }
 
+// 앱을 열 때: 저장된 로그인이 있으면 이름·비번 입력 없이 바로 입장
+async function tryAutoLogin(){
+  let saved = null;
+  try{ saved = JSON.parse(localStorage.getItem('dd:autoLogin') || 'null'); }catch(e){}
+  if(!saved || !saved.id) return;
+  try{
+    const students = await getAllStudents();
+    const found = students.find(s => s.id === saved.id);
+    if(found){
+      session.student = found;
+      enterStudentView();
+    }
+    // 서버에서 학생을 못 찾으면(삭제됨 등) 그냥 로그인 화면 유지
+  }catch(e){ /* 오프라인/서버 지연이면 조용히 로그인 화면 유지 */ }
+}
+
+// 로그아웃: 저장된 로그인 지우고 로그인 화면으로 (학습 기록은 서버에 그대로 남음)
+function doLogout(){
+  try{ localStorage.removeItem('dd:autoLogin'); }catch(e){}
+  session.student = null;
+  const ln = document.getElementById('loginName'); if(ln) ln.value = '';
+  const lp = document.getElementById('loginPw'); if(lp) lp.value = '';
+  const chip = document.getElementById('sessionChip'); if(chip) chip.style.display = 'none';
+  showView('viewLanding');
+}
+
 /* ============================================================
    세션 / 상태
    ============================================================ */
@@ -3165,6 +3191,8 @@ $('loginBtn').addEventListener('click', async ()=>{
   if(hash !== found.pwHash){ msg.innerHTML = '<div class="error-box">비밀번호가 맞지 않아요. 다시 확인해 주세요.</div>'; return; }
   msg.innerHTML = '';
   session.student = found;
+  // 자동 로그인: 이 기기에 로그인 상태를 저장 (다음에 앱 열면 바로 입장)
+  try{ localStorage.setItem('dd:autoLogin', JSON.stringify({ id: found.id, name: found.name })); }catch(e){}
   enterStudentView();
 });
 
@@ -3817,18 +3845,29 @@ $('recBtn').addEventListener('click', async ()=>{
   // 1) 즉각 반응 표시 (버튼이 죽은 게 아님을 보여줌)
   $('recStatus').textContent = '마이크 준비 중…';
 
-  // 2) 마이크 권한을 명시적으로 요청 → 권한 팝업이 반드시 뜨고, 거부/문제 시 원인이 표시됨
+  // 2) 마이크 권한 확인 → 이미 허용돼 있으면 재요청 없이 바로 진행 (허용 팝업 반복 방지)
+  let alreadyGranted = false;
   try{
-    const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
-    stream.getTracks().forEach(t=>t.stop()); // 권한 확인만 하고 바로 해제
-  }catch(err){
-    const name = err && err.name ? err.name : '알 수 없음';
-    let msg = '마이크를 사용할 수 없어요 ('+name+').';
-    if(name==='NotAllowedError' || name==='PermissionDeniedError') msg = '마이크 권한이 차단돼 있어요. 크롬 주소창 자물쇠 → 권한 → 마이크를 허용으로 바꾸고 새로고침해 주세요.';
-    else if(name==='NotFoundError') msg = '이 기기에서 마이크를 찾지 못했어요.';
-    $('recStatus').textContent = msg + ' 아래에서 직접 입력할 수 있어요.';
-    $('showManualBtn').click();
-    return;
+    if(navigator.permissions && navigator.permissions.query){
+      const st = await navigator.permissions.query({ name:'microphone' });
+      if(st.state === 'granted') alreadyGranted = true;
+    }
+  }catch(e){ /* permissions API 미지원 브라우저는 아래에서 처리 */ }
+
+  if(!alreadyGranted){
+    // 아직 허용 안 됐을 때만 명시적으로 요청 (첫 1회만 팝업이 뜸)
+    try{
+      const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+      stream.getTracks().forEach(t=>t.stop()); // 권한 확인만 하고 바로 해제
+    }catch(err){
+      const name = err && err.name ? err.name : '알 수 없음';
+      let msg = '마이크를 사용할 수 없어요 ('+name+').';
+      if(name==='NotAllowedError' || name==='PermissionDeniedError') msg = '마이크 권한이 차단돼 있어요. 크롬 주소창 자물쇠 → 권한 → 마이크를 허용으로 바꾸고 새로고침해 주세요.';
+      else if(name==='NotFoundError') msg = '이 기기에서 마이크를 찾지 못했어요.';
+      $('recStatus').textContent = msg + ' 아래에서 직접 입력할 수 있어요.';
+      $('showManualBtn').click();
+      return;
+    }
   }
 
   startRecording();
@@ -4012,7 +4051,95 @@ $('submitBtn').addEventListener('click', async ()=>{
   }
 });
 
+/* ============================================================
+   음성 인식 수학 용어 자동 교정
+   인식이 자주 깨지는 용어를 소리 기반으로 올바른 표기로 바꾼다.
+   원본(화면 표시)은 그대로 두고, 채점에 넘기기 전에만 적용한다.
+   [잘못 인식된 표기, ..., 올바른 표기] 형태. 새 항목은 여기에 추가만 하면 됨.
+   ============================================================ */
+const MATH_TERM_FIXES = [
+  // 각 관계
+  [['동측 내각','동쪽 내각','동측 네각','동쪽 네각','동측내 각'], '동측내각'],
+  [['엇 각','어깨 각','엇깍','엇각들'], '엇각'],
+  [['맞 꼭지각','맞꼭지 각','맞 꼭짓각','맞꼭짓각'], '맞꼭지각'],
+  [['동위 각','동위각들','도위각'], '동위각'],
+  [['외 각','왜각'], '외각'],
+  [['내 각'], '내각'],
+  // 삼각형의 중심
+  [['왜심','외신','외 심','회심'], '외심'],
+  [['내 심','네심'], '내심'],
+  [['무게 중심','무게중 심','무게중신'], '무게중심'],
+  [['수심들','수 심'], '수심'],
+  [['외접 원','외 접원','외접언'], '외접원'],
+  [['내접 원','내 접원'], '내접원'],
+  // 선·변
+  [['수직 이등분선','수직이 등분선','수직이등분 선','수직이등번선'], '수직이등분선'],
+  [['각 이등분선','각이 등분선','각이등분 선'], '각이등분선'],
+  [['이 등변','이등 변','이동변','이등변 삼각형'], '이등변'],
+  [['정 삼각형'], '정삼각형'],
+  [['빗 변','빗변들'], '빗변'],
+  [['대 변'], '대변'],
+  [['밑 변'], '밑변'],
+  // 수와 식
+  [['소 인수분해','소인수 분해','소인수분 해','소인수분해를'], '소인수분해'],
+  [['최대 공약수','최대공 약수','최대공약 수'], '최대공약수'],
+  [['최소 공배수','최소공 배수','최소공배 수'], '최소공배수'],
+  [['순환 소수','순환소 수','순한소수'], '순환소수'],
+  [['유한 소수'], '유한소수'],
+  [['무한 소수'], '무한소수'],
+  [['유리 수','유리수들'], '유리수'],
+  [['무리 수'], '무리수'],
+  [['정 수'], '정수'],
+  [['절 댓값','절대 값','절댓 값','절대값'], '절댓값'],
+  [['거듭 제곱','거듭제 곱','거듭재곱'], '거듭제곱'],
+  [['지 수','지수법 칙'], '지수'],
+  [['분 배법칙','분배 법칙','분배법 칙'], '분배법칙'],
+  [['동 류항','동류 항','동유항'], '동류항'],
+  [['일차 방정식','일차방 정식','일차방정 식'], '일차방정식'],
+  [['이차 방정식','이차방 정식'], '이차방정식'],
+  [['연립 방정식','연립방 정식','연립방정 식'], '연립방정식'],
+  [['부 등식','부등 식'], '부등식'],
+  [['일차 함수','일차함 수'], '일차함수'],
+  [['기울 기','기 울기'], '기울기'],
+  [['절 편','와이절편','y절 편','x절 편'], '절편'],
+  // 함수·미적분(고등)
+  [['로그 함수','로그함 수'], '로그함수'],
+  [['지수 함수','지수함 수'], '지수함수'],
+  [['삼각 함수','삼각함 수'], '삼각함수'],
+  [['합성 함수','합성함 수'], '합성함수'],
+  [['역 함수','역함 수'], '역함수'],
+  [['도 함수','도함 수'], '도함수'],
+  [['미분 계수','미분계 수'], '미분계수'],
+  [['평균 변화율','평균변화 율','평균변 화율'], '평균변화율'],
+  [['극 한','극한값들'], '극한'],
+  [['접 선','접선의 방정식'], '접선'],
+  [['부정 적분','부정적 분'], '부정적분'],
+  [['정 적분','정적 분'], '정적분'],
+  [['등차 수열','등차수 열'], '등차수열'],
+  [['등비 수열','등비수 열'], '등비수열'],
+  [['공 차'], '공차'],
+  [['공 비'], '공비'],
+  // 사인/코사인
+  [['싸인','사 인','사인 법칙','싸인법칙'], '사인'],
+  [['코 사인','코싸인','코사인 법칙'], '코사인'],
+  [['탄 젠트','탄젠 트','탄젠트값'], '탄젠트'],
+];
+
+function fixMathTerms(text){
+  if(!text) return text;
+  let out = ' ' + text + ' ';
+  for(const [wrongs, right] of MATH_TERM_FIXES){
+    for(const w of wrongs){
+      // 단어 경계를 공백으로 처리 (한글은 \\b가 잘 안 먹으므로 공백 기준)
+      const re = new RegExp(w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+      out = out.replace(re, right);
+    }
+  }
+  return out.replace(/\s+/g,' ').trim();
+}
+
 async function evaluateWithClaude(unitLabel, question, transcript){
+  transcript = fixMathTerms(transcript);   // 수학 용어 자동 교정 후 채점
   const isBlank = state.level === 'blank';
   const blankGuide = isBlank ? `
 [빈칸 모드 추가 지침]
@@ -4685,6 +4812,9 @@ function startDashAutoRefresh(){
   if(dashTimer) clearInterval(dashTimer);
   dashTimer = setInterval(()=>{
     const v = document.getElementById('viewTeacher');
+    // 개인 이력 모달이 열려 있으면 보드를 다시 그리지 않는다 (모달이 닫히는 문제 방지)
+    const shOpen = document.getElementById('shOverlay');
+    if(shOpen && shOpen.classList.contains('open')) return;
     if(v && v.classList.contains('active')) loadBoard();
   }, 15000); // 15초마다
 }
@@ -5283,8 +5413,16 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(()=>{});
   });
 }
+// 저장된 로그인이 있으면 자동 입장
+window.addEventListener('load', ()=>{ try{ tryAutoLogin(); }catch(e){} });
 </script>
 <script>
+/* 로그아웃 버튼 */
+(function(){
+  const b = document.getElementById('logoutBtn');
+  if(b) b.addEventListener('click', doLogout);
+})();
+
 /* 학생 개인 이력 모달 닫기 */
 (function(){
   const ov = document.getElementById('shOverlay');
@@ -5301,7 +5439,7 @@ if ('serviceWorker' in navigator) {
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v47';
+  const APP_VERSION = 'v50';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
