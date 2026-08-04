@@ -424,6 +424,22 @@
   .today-row .tr-warn{font-size:.72rem;font-weight:800;color:var(--red);flex:0 0 auto;}
   .today-empty{font-size:.86rem;color:var(--ink-soft);padding:8px 2px;}
 
+  /* 학생 정보 수정 */
+  .sh-edit-btn{border:1px solid var(--purple-dim); background:var(--purple-dim); color:var(--purple-deep);
+    border-radius:8px; padding:6px 12px; font-family:inherit; font-size:12.5px; font-weight:700; cursor:pointer;}
+  .sh-edit-form{padding:16px 20px; border-bottom:1px solid var(--line); background:#FBFAFF;}
+  .sh-edit-form .ef-title{font-size:13px; font-weight:800; margin-bottom:12px; color:var(--ink);}
+  .sh-edit-form label{font-size:12px; font-weight:700; color:var(--ink-soft); display:block; margin-bottom:5px;}
+  .sh-edit-form input, .sh-edit-form select{width:100%; border:1px solid var(--line); border-radius:9px;
+    padding:10px 12px; font-family:inherit; font-size:14px; background:#fff; margin-bottom:12px; outline:none;}
+  .sh-edit-form .ef-hint{font-size:11.5px; color:var(--ink-soft); margin:-6px 0 12px;}
+  .sh-edit-form .ef-actions{display:flex; gap:8px;}
+  .sh-edit-form .ef-save{flex:1; border:none; background:var(--nav-grad); color:#fff; border-radius:9px;
+    padding:11px; font-family:inherit; font-size:14px; font-weight:800; cursor:pointer;}
+  .sh-edit-form .ef-cancel{border:1px solid var(--line); background:#fff; color:var(--ink-soft); border-radius:9px;
+    padding:11px 16px; font-family:inherit; font-size:14px; font-weight:700; cursor:pointer;}
+  .sh-edit-form .ef-msg{font-size:12.5px; font-weight:700; margin-top:10px;}
+
   /* ---------- 학생 개인 이력 모달 ---------- */
   .stu-name{cursor:pointer;text-decoration:underline dotted rgba(123,95,224,.5);text-underline-offset:3px;}
   .sh-overlay{position:fixed;inset:0;background:rgba(30,25,50,.5);z-index:1000;
@@ -669,6 +685,59 @@
   .login-teacher-link{ background:none; border:none; color:#A9B6FF; font-family:inherit;
     font-size:12.5px; font-weight:700; cursor:pointer; }
   #loginMsg{ margin-top:10px; }
+
+
+  /* ============ 학부모 리포트 (다크 우주) ============ */
+  #viewParent.active{ position:fixed; inset:0; z-index:100; overflow-y:auto; background:#12122A; }
+  .pp-scroll{ min-height:100vh; padding:0; }
+  .pp-phone{ max-width:460px; margin:0 auto; background:#12122A; min-height:100vh; }
+  .pp-head{ background:linear-gradient(135deg,#1E1B44,#2D2660); color:#fff; padding:24px 22px 26px; border-radius:0 0 24px 24px; position:relative; overflow:hidden; }
+  .pp-head::before{ content:''; position:absolute; inset:0; background:radial-gradient(circle at 78% 42%, rgba(155,120,255,.32), transparent 42%); }
+  .pp-planet{ position:absolute; right:20px; top:50%; transform:translateY(-50%); width:62px; height:62px; z-index:1; }
+  .pp-star{ position:absolute; border-radius:50%; background:#fff; z-index:1; }
+  .pp-brand{ font-size:12px; font-weight:700; color:#B9B4D8; position:relative; z-index:2; }
+  .pp-greet{ font-size:21px; font-weight:800; color:#fff; margin-top:6px; letter-spacing:-.02em; position:relative; z-index:2; }
+  .pp-sub{ font-size:12.5px; color:#C9C4E6; margin-top:4px; position:relative; z-index:2; }
+  .pp-live{ display:inline-flex; align-items:center; gap:5px; margin-top:13px; background:rgba(255,255,255,.13); color:#D6D2F0; padding:5px 12px; border-radius:999px; font-size:11px; font-weight:700; position:relative; z-index:2; }
+  .pp-live .pp-dot{ width:6px; height:6px; border-radius:50%; background:#9B7BFF; }
+  .pp-wrap{ padding:16px 15px 6px; }
+  .pp-loading{ text-align:center; color:#8580AC; font-size:13px; padding:40px 0; }
+  .pp-sec{ font-size:11.5px; font-weight:800; color:#B49BFF; margin:16px 4px 10px; display:flex; align-items:center; gap:6px; }
+  .pp-sec:first-child{ margin-top:4px; }
+  .pp-sec .ln{ flex:1; height:1px; background:linear-gradient(90deg,#3A3266,transparent); }
+  .pp-sec.praise{ color:#F5CE6A; }
+  .pp-sec.praise .ln{ background:linear-gradient(90deg,#4A3F28,transparent); }
+  .pp-card{ background:#1C1B3A; border:1px solid #2A2850; border-radius:15px; padding:16px; margin-bottom:12px; }
+  .pp-card.praise{ background:#221E33; border:1px solid #4A3F28; }
+  .pp-card-t{ font-size:13px; font-weight:800; color:#EDEBFA; margin-bottom:13px; display:flex; align-items:center; gap:6px; }
+  .pp-card.praise .pp-card-t{ color:#F5CE6A; }
+  .pp-wk{ display:grid; grid-template-columns:repeat(3,1fr); gap:9px; }
+  .pp-ws{ background:#252350; border-radius:12px; padding:13px 5px; text-align:center; }
+  .pp-ws .n{ font-size:20px; font-weight:800; color:#B49BFF; line-height:1; }
+  .pp-ws .n small{ font-size:10.5px; }
+  .pp-ws .l{ font-size:10px; color:#A5A0C8; font-weight:600; margin-top:5px; }
+  .pp-days{ display:flex; justify-content:space-between; gap:4px; }
+  .pp-day{ flex:1; text-align:center; }
+  .pp-day .d{ width:30px; height:30px; border-radius:10px; margin:0 auto 5px; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; }
+  .pp-day .d.on{ background:linear-gradient(135deg,#7B4DD8,#A87DF5); color:#fff; }
+  .pp-day .d.off{ background:#252350; color:#585480; }
+  .pp-day .l{ font-size:10px; color:#A5A0C8; font-weight:600; }
+  .pp-concept{ display:flex; align-items:center; gap:9px; padding:9px 0; border-bottom:1px solid #2A2850; }
+  .pp-concept:last-child{ border:none; }
+  .pp-concept .ci{ width:26px; height:26px; border-radius:8px; background:#2A2456; color:#B49BFF; display:flex; align-items:center; justify-content:center; font-size:13px; flex:0 0 auto; }
+  .pp-concept .cn{ font-size:12.5px; font-weight:700; color:#E4E2F5; flex:1; }
+  .pp-concept .cd{ font-size:10px; font-weight:800; padding:3px 9px; border-radius:999px; background:#1E3A2C; color:#5FD497; }
+  .pp-comment{ font-size:13.5px; line-height:1.65; color:#EFE6CE; }
+  .pp-comment-by{ font-size:11.5px; color:#C9A94E; margin-top:11px; text-align:right; font-weight:700; }
+  .pp-voice{ display:flex; align-items:center; gap:11px; padding:12px; background:#1C1B3A; border:1px solid #3A3320; border-radius:12px; margin-bottom:8px; }
+  .pp-voice:last-child{ margin-bottom:0; }
+  .pp-voice .play{ width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#F5CE6A,#E5A32C); color:#231A05; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; flex:0 0 auto; font-size:13px; font-weight:800; }
+  .pp-voice .vt{ font-size:12.5px; font-weight:700; color:#EDEBFA; }
+  .pp-voice .vs{ font-size:11px; color:#A5A0C8; margin-top:2px; }
+  .pp-voice .vscore{ font-size:11.5px; font-weight:800; color:#F5CE6A; }
+  .pp-growth{ height:110px; padding-top:6px; }
+  .pp-empty{ text-align:center; color:#8580AC; font-size:12.5px; padding:18px 0; }
+  .pp-foot{ max-width:460px; margin:0 auto; text-align:center; font-size:11px; color:#6B6790; padding:18px; line-height:1.6; background:#12122A; }
 
 </style>
 </head>
@@ -953,8 +1022,14 @@ window.DDOOPI = {
           <div class="sh-name" id="shName">학생</div>
           <div class="sh-sub" id="shSub"></div>
         </div>
-        <button class="sh-close" id="shClose">×</button>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button class="sh-edit-btn" id="shParentBtn">학부모 리포트</button>
+          <button class="sh-edit-btn" id="shEditBtn">정보 수정</button>
+          <button class="sh-close" id="shClose">×</button>
+        </div>
       </div>
+      <div id="shParentForm" style="display:none;"></div>
+      <div id="shEditForm" style="display:none;"></div>
       <div class="sh-body" id="shBody"></div>
     </div>
   </div>
@@ -973,6 +1048,38 @@ window.DDOOPI = {
     </div>
   </div>
 </div>
+
+  <!-- ============ 학부모 리포트 (링크 접속) ============ -->
+  <div class="view" id="viewParent">
+    <div class="pp-scroll">
+      <div class="pp-phone">
+        <!-- 헤더 -->
+        <div class="pp-head">
+          <div class="pp-star" style="width:3px;height:3px;right:60px;top:22px;"></div>
+          <div class="pp-star" style="width:2px;height:2px;right:38px;top:44px;"></div>
+          <div class="pp-star" style="width:2.5px;height:2.5px;right:96px;top:54px;"></div>
+          <svg class="pp-planet" viewBox="0 0 100 100" aria-hidden="true">
+            <defs><radialGradient id="ppPl" cx=".38" cy=".35"><stop offset="0" stop-color="#B49BFF"/><stop offset="1" stop-color="#6C43C9"/></radialGradient></defs>
+            <ellipse cx="50" cy="52" rx="46" ry="15" fill="none" stroke="#9B7BFF" stroke-width="2.5" opacity=".65" transform="rotate(-20 50 52)"/>
+            <circle cx="50" cy="50" r="24" fill="url(#ppPl)"/>
+            <ellipse cx="42" cy="43" rx="7" ry="4" fill="#fff" opacity=".22"/>
+          </svg>
+          <div class="pp-brand">두드림 수학 · 말하는 수학</div>
+          <div class="pp-greet" id="ppGreet">학습 리포트</div>
+          <div class="pp-sub" id="ppSub"></div>
+          <div class="pp-live"><span class="pp-dot"></span> <span id="ppUpdated">실시간 리포트</span></div>
+        </div>
+
+        <div class="pp-wrap" id="ppBody">
+          <!-- 로딩 / 데이터가 여기에 채워짐 -->
+          <div class="pp-loading" id="ppLoading">불러오는 중…</div>
+          <div id="ppContent" style="display:none;"></div>
+        </div>
+
+        <div class="pp-foot">이 리포트는 아이가 학습할 때마다 자동으로 업데이트됩니다<br>궁금한 점은 학원으로 문의해 주세요 · 두드림 수학 전문학원</div>
+      </div>
+    </div>
+  </div>
 
 <script>
 /* ==== 버전: v51 (2026-08-04) — UI 전면 개편: 반응형 3구역 골격(상단바+본문+우측목록), 대시보드/학생화면 재구성, 앱태그 ==== */
@@ -3154,7 +3261,7 @@ async function callClaude(payload){
 }
 
 function showView(name){
-  ['viewLanding','viewTeacherAuth','viewStudent','viewTeacher'].forEach(v=>$(v).classList.remove('active'));
+  ['viewLanding','viewTeacherAuth','viewStudent','viewTeacher','viewParent'].forEach(v=>$(v).classList.remove('active'));
   $(name).classList.add('active');
   // 새 골격(대시보드·학생화면)은 전체 너비를 쓰도록 wrap 제한 해제
   const full = (name === 'viewTeacher' || name === 'viewStudent');
@@ -5347,8 +5454,12 @@ async function loadBoard(silent){
    학생 개인 이력 (최근 2주 + 단원별 폴더)
    데이터는 그대로 두고 '보는 방식'만 학생별·단원별로 정리한다.
    ============================================================ */
+let SH_CURRENT_STUDENT = null;
 function openStudentHistory(student, mySubs){
   const body = $('shBody');
+  SH_CURRENT_STUDENT = student;   // 정보 수정용
+  const ef = document.getElementById('shEditForm');
+  if(ef){ ef.style.display = 'none'; ef.innerHTML = ''; }  // 편집폼 초기화
   $('shName').textContent = student.name;
 
   const subs = (mySubs || []).slice().sort((a,b)=> new Date(b.time) - new Date(a.time));
@@ -5436,6 +5547,372 @@ function openStudentHistory(student, mySubs){
   });
 
   $('shOverlay').classList.add('open');
+}
+
+// ============ 학부모 리포트 관리 (선생님용) ============
+// 학부모 링크 만들기
+function makeParentLink(studentId){
+  const base = location.origin + location.pathname;
+  return base + '?parent=' + encodeURIComponent(studentId);
+}
+
+// 코멘트 저장 (Supabase + 로컬)
+async function saveParentComment(studentId, text){
+  const now = new Date().toISOString();
+  const ok = await checkSupabase();
+  if(ok){
+    try{
+      await sbUpsert('parent_comments', { student_id: studentId, comment: text, updated_at: now });
+    }catch(e){}
+  }
+  try{ localStorage.setItem('dd:pcomment:'+studentId, JSON.stringify({ text, updatedAt: now })); }catch(e){}
+}
+
+// AI로 코멘트 초안 생성
+async function generateCommentDraft(stu, subs){
+  const recent = subs.slice().sort((a,b)=> new Date(b.time)-new Date(a.time)).slice(0, 10);
+  const passed = recent.filter(x=>x.pass).map(x=>x.unitLabel||x.unitId).filter(Boolean);
+  const summary = passed.length
+    ? '최근 통과한 개념: ' + passed.slice(0,6).join(', ')
+    : '아직 통과한 개념이 많지 않지만 꾸준히 시도하고 있음';
+  const payload = {
+    system: '당신은 따뜻하고 격려하는 수학 선생님입니다. 학부모에게 보낼 짧은 코멘트(2~3문장)를 씁니다. 아이의 이름을 부르고, 구체적으로 잘한 점을 칭찬하며, 긍정적이고 희망적으로 마무리하세요. 점수나 실패는 강조하지 말고 성장과 노력에 집중하세요. 존댓말을 쓰고, 이모지는 넣지 마세요.',
+    messages: [{ role:'user', content: `학생 이름: ${stu.name}\n학년: ${stu.grade||''}\n${summary}\n\n이 아이에 대한 학부모용 격려 코멘트를 2~3문장으로 써주세요.` }]
+  };
+  const res = await callClaude(payload);
+  // callClaude 반환 형태에 맞춰 텍스트 추출
+  if(typeof res === 'string') return res.trim();
+  if(res && res.text) return res.text.trim();
+  if(res && res.content) return (Array.isArray(res.content) ? res.content.map(c=>c.text||'').join('') : res.content).trim();
+  return '';
+}
+
+// 학부모 리포트 관리 패널 열기
+async function openParentManage(){
+  const s = SH_CURRENT_STUDENT;
+  if(!s) return;
+  const box = document.getElementById('shParentForm');
+  if(!box) return;
+
+  const link = makeParentLink(s.id);
+  let existing = null;
+  try{ existing = await getParentComment(s.id); }catch(e){}
+
+  box.innerHTML = `<div class="sh-edit-form">
+    <div class="ef-title">👨‍👩‍👧 학부모 리포트</div>
+
+    <label>학부모 링크 (카톡으로 보내세요)</label>
+    <div style="display:flex; gap:8px; margin-bottom:14px;">
+      <input id="pmLink" readonly value="${escapeHtml(link)}" style="flex:1; margin-bottom:0; font-size:12.5px; color:var(--ink-soft);">
+      <button class="ef-cancel" id="pmCopyBtn" style="white-space:nowrap;">복사</button>
+    </div>
+
+    <label>선생님 한마디 (학부모 페이지에 표시돼요)</label>
+    <div style="display:flex; gap:8px; margin-bottom:8px;">
+      <button class="sh-edit-btn" id="pmAiBtn" style="flex:0 0 auto;">✨ 자동 초안</button>
+      <span id="pmAiMsg" style="font-size:12px; color:var(--ink-soft); align-self:center;"></span>
+    </div>
+    <textarea id="pmComment" placeholder="아이의 이번 주 모습에 대해 따뜻한 한마디를 남겨주세요." style="min-height:90px;">${escapeHtml(existing && existing.text ? existing.text : '')}</textarea>
+
+    <div class="ef-actions">
+      <button class="ef-save" id="pmSaveBtn">코멘트 저장</button>
+      <button class="ef-cancel" id="pmCloseBtn">닫기</button>
+    </div>
+    <div class="ef-msg" id="pmMsg"></div>
+  </div>`;
+  box.style.display = 'block';
+
+  // 링크 복사
+  document.getElementById('pmCopyBtn').addEventListener('click', ()=>{
+    const inp = document.getElementById('pmLink');
+    inp.select();
+    try{
+      navigator.clipboard.writeText(inp.value);
+    }catch(e){ document.execCommand('copy'); }
+    const btn = document.getElementById('pmCopyBtn');
+    const old = btn.textContent; btn.textContent = '복사됨!';
+    setTimeout(()=> btn.textContent = old, 1500);
+  });
+
+  // 닫기
+  document.getElementById('pmCloseBtn').addEventListener('click', ()=>{
+    box.style.display = 'none'; box.innerHTML = '';
+  });
+
+  // AI 자동 초안
+  document.getElementById('pmAiBtn').addEventListener('click', async ()=>{
+    const msg = document.getElementById('pmAiMsg');
+    const key = getApiKey();
+    if(!key){ msg.style.color='var(--red)'; msg.textContent='AI 키가 필요해요 (학생·설정 탭)'; return; }
+    msg.style.color='var(--ink-soft)'; msg.textContent='초안 만드는 중…';
+    try{
+      const allSubs = await getAllSubmissions();
+      const mine = filterByApp(allSubs, APP_ID).filter(x=>x.studentId===s.id);
+      const draft = await generateCommentDraft(s, mine);
+      if(draft){
+        document.getElementById('pmComment').value = draft;
+        msg.textContent = '초안이 채워졌어요. 수정 후 저장하세요.';
+      }else{
+        msg.style.color='var(--red)'; msg.textContent='초안 생성에 실패했어요.';
+      }
+    }catch(e){
+      msg.style.color='var(--red)'; msg.textContent='초안 생성 중 오류가 났어요.';
+    }
+  });
+
+  // 저장
+  document.getElementById('pmSaveBtn').addEventListener('click', async ()=>{
+    const text = document.getElementById('pmComment').value.trim();
+    const msg = document.getElementById('pmMsg');
+    msg.style.color='var(--ink-soft)'; msg.textContent='저장 중…';
+    try{
+      await saveParentComment(s.id, text);
+      msg.style.color='var(--sage)'; msg.textContent='저장됐어요! 학부모 페이지에 반영됩니다.';
+    }catch(e){
+      msg.style.color='var(--red)'; msg.textContent='저장에 실패했어요.';
+    }
+  });
+}
+
+// ============ 학부모 리포트 (링크 접속) ============
+// 학생 고유코드 = 학생 id (링크: ...?parent=<id>)
+async function openParentReport(code){
+  showView('viewParent');
+  const loading = document.getElementById('ppLoading');
+  const content = document.getElementById('ppContent');
+  try{
+    const students = await getAllStudents();
+    const stu = students.find(s => s.id === code);
+    if(!stu){
+      loading.textContent = '학생 정보를 찾을 수 없어요. 링크를 다시 확인해 주세요.';
+      return;
+    }
+    const allSubs = await getAllSubmissions();
+    const mine = filterByApp(allSubs, APP_ID).filter(x => x.studentId === stu.id);
+
+    // 헤더
+    document.getElementById('ppGreet').textContent = (stu.name || '학생') + '이의 학습 리포트';
+    document.getElementById('ppSub').textContent = (stu.grade || '') + ' · 이번 주도 열심히 하고 있어요!';
+
+    // 코멘트 읽기 (있으면)
+    let comment = null;
+    try{ comment = await getParentComment(stu.id); }catch(e){}
+
+    content.innerHTML = renderParentBody(stu, mine, comment);
+    loading.style.display = 'none';
+    content.style.display = 'block';
+
+    // 최근 업데이트 시각
+    if(mine.length){
+      const last = mine.reduce((a,b)=> new Date(a.time) > new Date(b.time) ? a : b);
+      const dt = new Date(last.time);
+      document.getElementById('ppUpdated').textContent = '최근 학습 · ' + (dt.getMonth()+1) + '/' + dt.getDate();
+    }
+  }catch(e){
+    loading.textContent = '리포트를 불러오는 중 문제가 생겼어요. 잠시 후 다시 열어 주세요.';
+  }
+}
+
+// 학부모 리포트 본문 HTML 생성
+function renderParentBody(stu, subs, comment){
+  const now = new Date();
+  // 이번 주(월~일) 범위
+  const dayIdx = (now.getDay() + 6) % 7; // 월=0
+  const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayIdx);
+  const weekSubs = subs.filter(x => new Date(x.time) >= weekStart);
+
+  // 이번 주 요약
+  const weekDays = new Set(weekSubs.map(x => new Date(x.time).toDateString()));
+  const weekConcepts = new Set(weekSubs.filter(x=>x.pass).map(x => x.unitLabel || x.unitId));
+  // 연속 학습일 (오늘부터 거슬러)
+  let streak = 0;
+  const daySet = new Set(subs.map(x => new Date(x.time).toDateString()));
+  for(let i=0;i<60;i++){
+    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
+    if(daySet.has(d.toDateString())) streak++;
+    else if(i>0) break;
+  }
+  // 학습 시간 추정 (제출 1건당 약 3분으로 러프하게 — 실제 타이머값 없으면)
+  const weekMin = Math.max(weekSubs.length * 3, weekSubs.length ? 1 : 0);
+
+  // 이번 주 출석 (월~일)
+  const dayLabels = ['월','화','수','목','금','토','일'];
+  const daysHtml = dayLabels.map((lb, i)=>{
+    const d = new Date(weekStart.getFullYear(), weekStart.getMonth(), weekStart.getDate() + i);
+    const on = daySet.has(d.toDateString());
+    return `<div class="pp-day"><div class="d ${on?'on':'off'}">${on?'✓':'·'}</div><div class="l">${lb}</div></div>`;
+  }).join('');
+
+  // 성장 그래프 (최근 4주 평균 점수)
+  const weeks = [];
+  for(let w=3; w>=0; w--){
+    const ws = new Date(weekStart.getFullYear(), weekStart.getMonth(), weekStart.getDate() - w*7);
+    const we = new Date(ws.getFullYear(), ws.getMonth(), ws.getDate() + 7);
+    const wsubs = subs.filter(x => { const t=new Date(x.time); return t>=ws && t<we; });
+    const avg = wsubs.length ? Math.round(wsubs.reduce((a,b)=>a+(b.score||0),0)/wsubs.length) : null;
+    weeks.push({ label: w===0?'이번':(4-w)+'주', avg });
+  }
+  const growthHtml = renderGrowthChart(weeks);
+
+  // 마스터한 개념 (이번 주 통과)
+  const mastered = [...weekConcepts];
+  const conceptHtml = mastered.length
+    ? mastered.slice(0,6).map(c => `<div class="pp-concept"><span class="ci">✓</span><span class="cn">${escapeHtml(c)}</span><span class="cd">완료</span></div>`).join('')
+    : '<div class="pp-empty">이번 주 통과한 개념이 곧 여기 표시돼요.</div>';
+
+  // 잘한 음성 (점수 높은 순 2개, transcript 있는 것)
+  const goodVoice = subs.filter(x => x.pass && x.transcript && x.transcript.length > 5)
+    .sort((a,b)=>(b.score||0)-(a.score||0)).slice(0,2);
+  const voiceHtml = goodVoice.length
+    ? goodVoice.map(v => `<div class="pp-voice"><button class="play" onclick="alert('음성 재생 기능은 준비 중이에요')">▶</button><div style="flex:1"><div class="vt">${escapeHtml(v.unitLabel||v.unitId||'개념 설명')}</div><div class="vs">"${escapeHtml((v.transcript||'').slice(0,32))}…"</div></div><span class="vscore">${v.score}점</span></div>`).join('')
+    : '<div class="pp-empty">아이가 잘 설명한 내용이 곧 여기 담겨요.</div>';
+
+  // 선생님 코멘트
+  const commentHtml = comment && comment.text
+    ? `<div class="pp-comment">${escapeHtml(comment.text)}</div><div class="pp-comment-by">— 선생님</div>`
+    : '<div class="pp-empty">선생님이 곧 응원의 한마디를 남겨주실 거예요.</div>';
+
+  return `
+    <div class="pp-sec">📗 학습 현황 <span class="ln"></span></div>
+
+    <div class="pp-card">
+      <div class="pp-card-t">📅 이번 주 학습</div>
+      <div class="pp-wk">
+        <div class="pp-ws"><div class="n">${streak}<small>일</small></div><div class="l">연속 학습</div></div>
+        <div class="pp-ws"><div class="n">${weekConcepts.size}<small>개</small></div><div class="l">공부한 개념</div></div>
+        <div class="pp-ws"><div class="n">${weekMin}<small>분</small></div><div class="l">학습 시간</div></div>
+      </div>
+    </div>
+
+    <div class="pp-card">
+      <div class="pp-card-t">🔥 이번 주 출석</div>
+      <div class="pp-days">${daysHtml}</div>
+    </div>
+
+    <div class="pp-card">
+      <div class="pp-card-t">📈 점수가 오르고 있어요</div>
+      <div class="pp-growth">${growthHtml}</div>
+    </div>
+
+    <div class="pp-card">
+      <div class="pp-card-t">✅ 이번 주 마스터한 개념</div>
+      ${conceptHtml}
+    </div>
+
+    <div class="pp-sec praise">🌟 선생님의 칭찬 <span class="ln"></span></div>
+
+    <div class="pp-card praise">
+      <div class="pp-card-t">💬 선생님 한마디</div>
+      ${commentHtml}
+    </div>
+
+    <div class="pp-card praise">
+      <div class="pp-card-t">🎙️ 아이의 멋진 설명 들어보기</div>
+      ${voiceHtml}
+    </div>
+  `;
+}
+
+// 성장 라인차트 SVG 생성 (다크 우주 스타일)
+function renderGrowthChart(weeks){
+  const valid = weeks.filter(w => w.avg !== null);
+  if(valid.length < 2){
+    return '<div class="pp-empty">학습이 쌓이면 점수 변화를 보여드릴게요.</div>';
+  }
+  const W = 300, H = 92, pad = 30;
+  const xs = weeks.map((_, i) => pad + (W - pad*2) * i / (weeks.length - 1));
+  const scale = v => { const min=50, max=100; return H - 16 - (H - 32) * (Math.max(min,Math.min(max,v)) - min) / (max - min); };
+  let pts = [], circles = '';
+  weeks.forEach((w, i)=>{
+    if(w.avg === null) return;
+    const x = xs[i], y = scale(w.avg);
+    pts.push(x + ',' + y);
+    const last = (i === weeks.length - 1);
+    circles += `<circle cx="${x}" cy="${y}" r="${last?5:4}" fill="${last?'#fff':'#B49BFF'}" ${last?'stroke="#9B7BFF" stroke-width="2"':''}/>`;
+    circles += `<text x="${x}" y="${y-9}" fill="${last?'#fff':'#B49BFF'}" font-size="11" font-weight="800" text-anchor="middle">${w.avg}</text>`;
+  });
+  const labels = weeks.map((w,i)=>`<text x="${xs[i]}" y="88" fill="#8580AC" font-size="9.5" text-anchor="middle">${w.label}</text>`).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:100%;">
+    <polyline points="${pts.join(' ')}" fill="none" stroke="#9B7BFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    ${circles}${labels}
+  </svg>`;
+}
+
+// 선생님 코멘트 읽기 (Supabase 또는 로컬)
+async function getParentComment(studentId){
+  const ok = await checkSupabase();
+  if(ok){
+    try{
+      const rows = await sbSelect('parent_comments', 'select=*&student_id=eq.' + encodeURIComponent(studentId) + '&order=updated_at.desc&limit=1');
+      if(rows && rows.length) return { text: rows[0].comment, updatedAt: rows[0].updated_at };
+    }catch(e){}
+  }
+  // 로컬 폴백
+  try{ const c = localStorage.getItem('dd:pcomment:'+studentId); if(c) return JSON.parse(c); }catch(e){}
+  return null;
+}
+
+// 학생 정보 수정 폼 열기 (이름 변경 + 비번 재설정)
+function openStudentEdit(){
+  const s = SH_CURRENT_STUDENT;
+  if(!s) return;
+  const ef = document.getElementById('shEditForm');
+  if(!ef) return;
+
+  // 학년 옵션 (등록 화면과 동일한 GRADE_OPTIONS 사용)
+  const opts = (typeof GRADE_OPTIONS !== 'undefined' ? GRADE_OPTIONS : []);
+  const gradeOpts = opts
+    .map(g => `<option value="${escapeHtml(g)}" ${(g===s.grade)?'selected':''}>${escapeHtml(g)}</option>`).join('');
+  const gradeField = gradeOpts
+    ? `<label>학년</label><select id="efGrade">${gradeOpts}</select>`
+    : `<label>학년</label><input id="efGrade" value="${escapeHtml(s.grade||'')}">`;
+
+  ef.innerHTML = `<div class="sh-edit-form">
+    <div class="ef-title">✏️ 학생 정보 수정</div>
+    <label>이름</label>
+    <input id="efName" value="${escapeHtml(s.name||'')}">
+    ${gradeField}
+    <label>새 비밀번호 (재설정할 때만 입력)</label>
+    <input id="efPw" type="text" placeholder="비워두면 기존 비밀번호 유지">
+    <div class="ef-hint">아이가 비밀번호를 잊었으면 새 비밀번호를 정해서 입력하고, 그 번호를 알려주세요. (기존 비번은 보안상 볼 수 없어요)</div>
+    <div class="ef-actions">
+      <button class="ef-save" id="efSaveBtn">저장하기</button>
+      <button class="ef-cancel" id="efCancelBtn">취소</button>
+    </div>
+    <div class="ef-msg" id="efMsg"></div>
+  </div>`;
+  ef.style.display = 'block';
+
+  document.getElementById('efCancelBtn').addEventListener('click', ()=>{
+    ef.style.display = 'none'; ef.innerHTML = '';
+  });
+
+  document.getElementById('efSaveBtn').addEventListener('click', async ()=>{
+    const name = document.getElementById('efName').value.trim();
+    const grade = document.getElementById('efGrade').value.trim();
+    const newPw = document.getElementById('efPw').value;
+    const msg = document.getElementById('efMsg');
+    if(!name){ msg.style.color='var(--red)'; msg.textContent='이름을 입력해 주세요.'; return; }
+
+    msg.style.color='var(--ink-soft)'; msg.textContent='저장 중…';
+    // 기존 학생 객체 복사 후 변경
+    const updated = { id:s.id, name, grade, pwHash: s.pwHash };
+    if(newPw){ updated.pwHash = await sha256(newPw); }   // 새 비번만 해시 교체
+
+    const ok = await saveStudent(updated);
+    if(ok){
+      msg.style.color='var(--sage)';
+      msg.textContent = newPw ? '저장됐어요! 새 비밀번호를 학생에게 알려주세요.' : '저장됐어요!';
+      // 화면 갱신: 모달 헤더와 이름, 보드 다시 로드
+      SH_CURRENT_STUDENT = updated;
+      $('shName').textContent = name;
+      if(typeof loadBoard === 'function') loadBoard();
+      setTimeout(()=>{ ef.style.display='none'; ef.innerHTML=''; }, 1500);
+    }else{
+      msg.style.color='var(--red)';
+      msg.textContent = '저장에 실패했어요. 인터넷 연결을 확인해 주세요.';
+    }
+  });
 }
 
 /* ============================================================
@@ -5734,7 +6211,11 @@ if ('serviceWorker' in navigator) {
   });
 }
 // 저장된 로그인이 있으면 자동 입장
-window.addEventListener('load', ()=>{ try{ tryAutoLogin(); }catch(e){} });
+window.addEventListener('load', ()=>{ try{
+  const pcode = new URLSearchParams(location.search).get('parent');
+  if(pcode){ openParentReport(pcode); return; }
+  tryAutoLogin();
+}catch(e){} });
 </script>
 <script>
 /* 선생님 계정 버튼 → 로그아웃(나가기) */
@@ -5796,6 +6277,10 @@ window.addEventListener('load', ()=>{ try{ tryAutoLogin(); }catch(e){} });
 
 /* 학생 개인 이력 모달 닫기 */
 (function(){
+  const eb = document.getElementById('shEditBtn');
+  if(eb) eb.addEventListener('click', openStudentEdit);
+  const pb = document.getElementById('shParentBtn');
+  if(pb) pb.addEventListener('click', openParentManage);
   const ov = document.getElementById('shOverlay');
   const cl = document.getElementById('shClose');
   if(cl) cl.addEventListener('click', ()=> ov.classList.remove('open'));
