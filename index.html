@@ -124,10 +124,10 @@
     flex:1;padding:11px 8px;border-radius:12px;border:1.5px solid var(--line);
     background:#FCFAF6;font-family:inherit;font-weight:700;font-size:.85rem;color:var(--ink-soft);cursor:pointer;
   }
-  .seg button.active{background:var(--ink);border-color:var(--ink);color:#fff;}
+  .seg button.active{background:#3A2568;border-color:#3A2568;color:#fff;}
 
   .primary-btn{
-    width:100%;padding:15px;border-radius:12px;border:none;background:var(--ink);
+    width:100%;padding:15px;border-radius:12px;border:none;background:var(--nav-grad);
     color:#fff;font-weight:800;font-size:.98rem;cursor:pointer;font-family:inherit;
   }
   .primary-btn.accent{background:var(--spark);}
@@ -498,6 +498,179 @@
   .my-toggle{margin-top:10px;width:100%;border:none;background:rgba(255,255,255,.7);
     color:var(--purple);font-family:inherit;font-size:.8rem;font-weight:700;
     padding:8px;border-radius:10px;cursor:pointer;}
+
+  /* ============================================================
+     [v51] 반응형 골격 — 상단바 + 3구역 레이아웃 (신규, 기존 클래스와 독립)
+     ============================================================ */
+  :root{ --topbar-h:60px; --rail-w:280px;
+    /* 짙은 파랑 그라데이션 (상단바·강조 버튼) */
+    --nav-grad:linear-gradient(100deg, #3A2568, #4B2E86);
+    --accent-grad:linear-gradient(135deg, #7343E6, #9B6BFF);
+  }
+
+  /* 상단바 */
+  .topbar{position:sticky; top:0; z-index:50; height:var(--topbar-h);
+    background:linear-gradient(100deg, #3A2568 0%, #5B34A8 60%, #6D3FC4 100%);
+    border-bottom:none;
+    box-shadow:0 3px 16px -5px rgba(60,30,120,.5);
+    display:flex; align-items:center; gap:18px; padding:0 18px;}
+  .tb-brand{display:flex; align-items:center; gap:9px; flex:0 0 auto;}
+  .tb-logo{width:34px; height:34px; border-radius:9px; background:rgba(255,255,255,.15);
+    display:flex; align-items:center; justify-content:center; overflow:hidden;}
+  .tb-logo svg{width:30px; height:30px;}
+  .tb-brand b{font-size:15px; font-weight:800; letter-spacing:-.02em; white-space:nowrap; color:#fff;}
+  .tb-nav{display:flex; gap:2px; flex:1 1 auto; overflow-x:auto; scrollbar-width:none;}
+  .tb-nav::-webkit-scrollbar{display:none;}
+  .tb-nav a{display:flex; flex-direction:column; align-items:center; gap:2px;
+    padding:7px 13px; border-radius:10px; text-decoration:none; color:rgba(255,255,255,.72);
+    font-size:12px; font-weight:700; white-space:nowrap; cursor:pointer; transition:.15s; border:none; background:none; font-family:inherit;}
+  .tb-nav a .ic{font-size:16px;}
+  .tb-nav a:hover{background:rgba(255,255,255,.1);}
+  .tb-nav a.on{color:#fff; background:rgba(255,255,255,.16);}
+  .tb-right{display:flex; align-items:center; gap:10px; flex:0 0 auto;}
+  .tb-account{display:flex; align-items:center; gap:8px; padding:6px 12px;
+    border:1px solid rgba(255,255,255,.2); border-radius:999px; font-size:13px; font-weight:700; cursor:pointer;
+    background:rgba(255,255,255,.12); color:#fff;}
+  .tb-account .av{width:24px; height:24px; border-radius:50%; background:var(--accent-grad); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800;}
+  .tb-logout{border:1px solid rgba(255,255,255,.2); background:rgba(255,255,255,.12); color:#fff;
+    border-radius:999px; padding:6px 13px; font-family:inherit; font-size:12px; font-weight:700; cursor:pointer;}
+
+  /* 3구역 레이아웃 */
+  .shell{display:grid; grid-template-columns:1fr var(--rail-w); align-items:start;}
+  .shell.no-rail{grid-template-columns:1fr;}
+  .main{padding:22px 24px 60px; min-width:0;}
+  .main.centered{max-width:960px; margin:0 auto; width:100%;}
+  .rail{position:sticky; top:var(--topbar-h); height:calc(100vh - var(--topbar-h));
+    border-left:1px solid var(--line); background:var(--card); overflow-y:auto; padding:18px 16px;}
+
+  /* 본문 공통 */
+  .page-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; flex-wrap:wrap; gap:12px;}
+  .page-title{font-size:22px; font-weight:800; letter-spacing:-.03em;}
+  .page-title .sub{font-size:13px; font-weight:600; color:var(--ink-soft); margin-left:8px;}
+  .head-actions{display:flex; gap:8px; flex-wrap:wrap;}
+  .nbtn{border:1px solid var(--line); background:var(--card); color:var(--ink);
+    font-family:inherit; font-size:13px; font-weight:700; padding:9px 15px; border-radius:10px; cursor:pointer;}
+  .nbtn.primary{background:var(--nav-grad); color:#fff; border:none;}
+  .nbtn.ghost{background:var(--paper);}
+
+  /* 통계 4칸 */
+  .stat-row{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px;}
+  .nstat{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:15px 16px;}
+  .nstat .s-label{font-size:12px; font-weight:700; color:var(--ink-soft);}
+  .nstat .s-num{font-size:26px; font-weight:800; letter-spacing:-.02em; margin-top:4px;}
+  .nstat .s-num small{font-size:14px; font-weight:700;}
+  .nstat.a .s-num{color:var(--blue);} .nstat.b .s-num{color:var(--sage);}
+  .nstat.c .s-num{color:var(--amber);} .nstat.d .s-num{color:var(--purple);}
+
+  /* 2단 패널 */
+  .two-col{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;}
+  .npanel{background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden;}
+  .npanel-head{display:flex; align-items:center; gap:8px; padding:13px 16px; border-bottom:1px solid var(--line);}
+  .npanel-head h3{font-size:14px; font-weight:800;}
+  .npanel-head .count{background:var(--red); color:#fff; font-size:11px; font-weight:800;
+    min-width:20px; height:20px; padding:0 6px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center;}
+  .npanel-head .count.blue{background:var(--blue);}
+  .npanel-head .count.zero{background:#C9C4D8;}
+  .npanel-body{padding:8px;}
+
+  /* 우측 학생목록 */
+  .rail-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;}
+  .rail-head h3{font-size:14px; font-weight:800;}
+  .rail-head .cnt{font-size:11px; color:var(--ink-soft);}
+  .rail-search{width:100%; border:1px solid var(--line); border-radius:10px; padding:9px 12px;
+    font-family:inherit; font-size:13px; margin-bottom:12px; background:var(--paper);}
+  .grade-group{margin-bottom:6px;}
+  .grade-label{font-size:12px; font-weight:800; color:var(--purple); padding:7px 4px;}
+  .rstu{display:flex; align-items:center; gap:9px; padding:8px 10px; border-radius:10px; cursor:pointer;}
+  .rstu:hover{background:var(--blue-dim);}
+  .rstu .s-av{width:24px; height:24px; border-radius:50%; background:var(--paper); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:var(--ink-soft); flex:0 0 auto;}
+  .rstu .s-name{font-size:13px; font-weight:700; flex:1 1 auto;}
+  .rstu .s-meta{font-size:11px; color:#A7A2B8;}
+
+  /* 모바일 */
+  .only-mobile{display:none;}
+  @media (max-width: 900px){
+    :root{--rail-w:0px;}
+    .shell{grid-template-columns:1fr;}
+    .rail{display:none;}
+    .rail.drawer-open{display:block; position:fixed; top:var(--topbar-h); right:0; width:min(300px,85vw);
+      height:calc(100vh - var(--topbar-h)); z-index:60; box-shadow:-12px 0 40px -12px rgba(30,25,50,.35);}
+    .tb-nav a .ic{font-size:19px;}
+    .tb-nav a span:last-child{display:none;}
+    .tb-brand b{display:none;}
+    .stat-row{grid-template-columns:repeat(2,1fr);}
+    .two-col{grid-template-columns:1fr;}
+    .main{padding:16px 14px 50px;}
+    .page-title{font-size:19px;}
+    .hide-mobile{display:none;}
+    .only-mobile{display:inline-flex;}
+  }
+  @media (max-width: 560px){
+    .stat-row{grid-template-columns:1fr 1fr;}
+  }
+
+  /* 학생 화면: 3단계 진행 표시 */
+  .lsteps{display:flex; align-items:center; gap:6px; margin:0 4px 16px; padding:0;}
+  .lstep{display:flex; align-items:center; gap:7px; font-size:12.5px; font-weight:700; color:var(--ink-soft);}
+  .lstep .sn{width:22px; height:22px; border-radius:50%; background:var(--line); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800;}
+  .lstep.on{color:var(--blue);}
+  .lstep.on .sn{background:var(--blue);}
+  .lstep.done .sn{background:var(--sage);}
+  .lstep-line{flex:1; height:2px; background:var(--line); border-radius:2px;}
+  @media (max-width: 480px){
+    .lstep .st{display:none;}
+  }
+
+  /* [v51 수정] 새 골격(대시보드·학생화면)이 켜지면 wrap의 680px 제한을 푼다 */
+  .wrap:has(#viewTeacher.active),
+  .wrap:has(#viewStudent.active){
+    max-width:none; padding:0;
+  }
+  /* :has 미지원 브라우저 대비 — body에 클래스로도 제어 */
+  body.fullwidth .wrap{ max-width:none; padding:0; }
+
+
+  /* [v51 재디자인] 상단바 미니멀 마크 + 깔끔한 탭 */
+  .tb-mark{width:34px; height:34px; border-radius:9px; flex:0 0 auto;
+    background:rgba(255,255,255,.16); color:#fff; font-weight:800; font-size:13px;
+    letter-spacing:.02em; display:flex; align-items:center; justify-content:center;
+    border:1px solid rgba(255,255,255,.22);}
+  .tb-nav a{position:relative;}
+  .tb-nav a.on{background:transparent; color:#fff;}
+  .tb-nav a.on::after{content:''; position:absolute; left:12px; right:12px; bottom:-2px;
+    height:3px; border-radius:3px; background:#fff;}
+  .tb-add{opacity:.5; font-weight:600;}
+  .tb-icon{width:36px; height:36px; border-radius:9px; display:flex; align-items:center; justify-content:center;
+    background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2); color:#fff; cursor:pointer;}
+  .tb-icon svg{width:18px; height:18px;}
+  .tb-caret{opacity:.8; font-size:11px;}
+
+  /* [v51] 다크 로그인 화면 (시안 C) */
+  #viewLanding.active{ position:fixed; inset:0; z-index:100; }
+  .login-dark{ min-height:100vh; width:100vw;
+    background:radial-gradient(circle at 30% 15%, #2A2B52, #14152B 62%);
+    display:flex; align-items:center; justify-content:center; padding:40px 20px; overflow-y:auto;}
+  .login-card{ width:100%; max-width:380px; text-align:center; }
+  .login-logo{ width:56px; height:56px; border-radius:16px; margin:0 auto 22px;
+    background:linear-gradient(135deg,#7343E6,#9B6BFF); display:flex; align-items:center; justify-content:center;}
+  .login-logo svg{ width:30px; height:30px; }
+  .login-title{ font-size:25px; font-weight:800; color:#fff; letter-spacing:-.03em; margin-bottom:6px; }
+  .login-desc{ font-size:13.5px; color:#9B9AB8; margin-bottom:30px; }
+  .login-input{ width:100%; border:1px solid #33345A; border-radius:12px; padding:14px 16px;
+    font-family:inherit; font-size:14.5px; background:#1E1F3D; color:#fff; margin-bottom:13px; outline:none;}
+  .login-input::placeholder{ color:#6D6C8C; }
+  .login-input:focus{ border-color:#9B6BFF; }
+  .login-btn{ width:100%; border:none; border-radius:12px; padding:15px; font-family:inherit;
+    font-size:15px; font-weight:800; cursor:pointer; color:#fff;
+    background:linear-gradient(135deg,#7343E6,#9B6BFF); margin-top:2px;}
+  .login-sub{ margin-top:16px; }
+  .login-teacher-link{ background:none; border:none; color:#A9B6FF; font-family:inherit;
+    font-size:12.5px; font-weight:700; cursor:pointer; }
+  #loginMsg{ margin-top:10px; }
+
 </style>
 </head>
 <body>
@@ -511,71 +684,28 @@ window.DDOOPI = {
 </script>
 
 
-<header>
-  <div class="brand">
-    <div class="logo">두</div>
-    <span class="mark">말하는 <span>수학</span></span>
-  </div>
-  <div class="session-chip" id="sessionChip">
-    <span id="sessionName"></span>
-    <button id="logoutBtn">나가기</button>
-  </div>
-</header>
+<div id="sessionChip" style="display:none;">
+  <span id="sessionName"></span>
+  <button id="logoutBtn">나가기</button>
+</div>
 
 <div class="wrap">
 
   <!-- ============ LANDING / LOGIN ============ -->
   <div class="view active" id="viewLanding">
-    <div class="hero">
-      <div class="mascot" aria-hidden="true">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-6 0 212 200" class="dd-hero" role="img" aria-label="뚜삐">
-<defs>
-<linearGradient id="gh" x1="0" y1="0" x2=".35" y2="1"><stop offset="0" stop-color="#f8ca7b"/><stop offset=".48" stop-color="#F4AE34"/><stop offset="1" stop-color="#c88f2b"/></linearGradient>
-<linearGradient id="hh" x1="0" y1="0" x2=".35" y2="1"><stop offset="0" stop-color="#f05888"/><stop offset=".5" stop-color="#EA1055"/><stop offset="1" stop-color="#bb0d44"/></linearGradient>
-<linearGradient id="wh" x1="0" y1="0" x2=".35" y2="1"><stop offset="0" stop-color="#ecc079"/><stop offset=".5" stop-color="#E4A53F"/><stop offset="1" stop-color="#b68432"/></linearGradient>
-<linearGradient id="bh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF700"/><stop offset="1" stop-color="#f2eb00"/></linearGradient>
-<filter id="fh" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.4"/></filter>
-<filter id="dh" x="-30%" y="-25%" width="165%" height="165%"><feDropShadow dx="0" dy="3" stdDeviation="2.6" flood-color="#5C4BA8" flood-opacity=".2"/></filter>
-</defs>
-<g filter="url(#dh)">
-<g class="dd-arm ">
-<path d="M 166.1 112.9 Q 183.1 86.1 192.0 59.3" fill="none" stroke="url(#wh)" stroke-width="3.8" stroke-linecap="round"/>
-<path d="M 197.0 57.9 C 189.3 52.2 187.8 46.4 191.6 44.3 C 194.5 42.5 196.6 44.9 197.1 47.3 C 196.7 45.3 198.7 42.5 202.1 43.9 C 205.8 46.2 204.6 51.7 197.0 57.9 Z" fill="url(#hh)" stroke="#bb0d44" stroke-width="2.9" stroke-linejoin="round"/>
-</g>
-<g class="dd-heart">
-<path d="M 100.5 48.7 C 78.9 36.1 74.7 23.6 85.2 18.8 C 93.5 14.9 99.5 20.2 100.8 25.5 C 99.6 21.0 105.4 14.9 114.8 17.9 C 125.3 23.0 121.9 35.0 100.5 48.7 Z" fill="none" stroke="#bb0d44" stroke-width="8" filter="url(#fh)" opacity=".4"/>
-<path d="M 100.5 48.7 C 78.9 36.1 74.7 23.6 85.2 18.8 C 93.5 14.9 99.5 20.2 100.8 25.5 C 99.6 21.0 105.4 14.9 114.8 17.9 C 125.3 23.0 121.9 35.0 100.5 48.7 Z" fill="url(#hh)" stroke="#bb0d44" stroke-width="4" stroke-linejoin="round"/>
-</g>
-<g fill="none" stroke="url(#gh)" stroke-width="5.4" stroke-linecap="round"><path d="M 82.3 152.7 Q 77.6 162.9 74.0 172.1"/><path d="M 74.0 172.1 Q 67.0 174.9 59.9 178.6"/><path d="M 74.0 172.1 Q 75.2 177.6 75.2 183.2"/><path d="M 74.0 172.1 Q 83.5 174.9 89.4 178.6"/><path d="M 117.7 152.7 Q 122.4 162.9 126.0 172.1"/><path d="M 126.0 172.1 Q 133.0 174.9 140.1 178.6"/><path d="M 126.0 172.1 Q 124.8 177.6 124.8 183.2"/><path d="M 126.0 172.1 Q 116.5 174.9 110.6 178.6"/></g>
-<path d="M 97.5 38.3 C 129.7 37.0 153.1 53.0 159.1 75.0 C 164.2 85.0 164.8 92.1 163.6 100.8 C 180.8 96.0 191.3 106.7 187.8 117.8 C 183.8 128.3 170.9 132.2 160.3 126.2 C 157.5 144.3 144.6 157.3 121.4 161.4 C 109.4 164.2 89.3 163.2 79.2 161.4 C 59.9 155.1 44.0 141.8 40.3 125.7 C 32.4 133.0 18.6 128.4 16.6 117.6 C 11.0 103.0 24.6 95.3 39.0 98.8 C 33.7 89.3 36.0 78.2 39.6 69.0 C 52.0 49.8 70.4 37.4 97.5 38.3 Z" fill="none" stroke="#c88f2b" stroke-width="9" filter="url(#fh)" opacity=".42"/>
-<path d="M 97.5 38.3 C 129.7 37.0 153.1 53.0 159.1 75.0 C 164.2 85.0 164.8 92.1 163.6 100.8 C 180.8 96.0 191.3 106.7 187.8 117.8 C 183.8 128.3 170.9 132.2 160.3 126.2 C 157.5 144.3 144.6 157.3 121.4 161.4 C 109.4 164.2 89.3 163.2 79.2 161.4 C 59.9 155.1 44.0 141.8 40.3 125.7 C 32.4 133.0 18.6 128.4 16.6 117.6 C 11.0 103.0 24.6 95.3 39.0 98.8 C 33.7 89.3 36.0 78.2 39.6 69.0 C 52.0 49.8 70.4 37.4 97.5 38.3 Z" fill="url(#bh)" stroke="url(#gh)" stroke-width="7" stroke-linejoin="round"/>
-<ellipse cx="59.9" cy="105.5" rx="9.6" ry="6.2" fill="#CBB4F2" opacity=".85"/>
-<ellipse cx="140.1" cy="105.5" rx="9.6" ry="6.2" fill="#EE87AC" opacity=".85"/>
-<g class="dd-eyes"><circle cx="85.0" cy="88.9" r="5.2" fill="#4A12F3"/><circle cx="86.8" cy="87.0" r="1.6" fill="#fff" opacity=".92"/><circle cx="115.0" cy="88.9" r="5.2" fill="#4A12F3"/><circle cx="116.8" cy="87.0" r="1.6" fill="#fff" opacity=".92"/></g>
-<path d="M 92.5 99.1 C 95 96.3 105 96.3 107.5 99.1 C 107.5 106.5 104 111.6 100 111.6 C 96 111.6 92.5 106.5 92.5 99.1 Z" fill="#E60000"/>
-</g></svg>
-      </div>
-      <span class="knock"><span class="dot"></span>말하는 수학 · 뚜삐</span>
-      <h1>머릿속 개념,<br><em>말로 꺼내야</em> 진짜 내 것!</h1>
-      <p>오늘 배운 수학을 뚜삐에게 말로 설명해 봐요.<br>잘 들어주고, 빠진 부분을 콕 짚어줄게요.</p>
-      <div class="chips">
-        <span class="chip chip-blue">🎙️ 말로 설명</span>
-        <span class="chip chip-purple">🤖 콕 짚어주는 피드백</span>
-        <span class="chip chip-yellow">⭐ 7일 뒤 복습</span>
-      </div>
-    </div>
+    <div class="login-dark">
+      <div class="login-card">
+        <div class="login-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+        </div>
+        <div class="login-title">말하는 수학</div>
+        <div class="login-desc">개념을 말로 설명하며 완성하는 수학</div>
 
-    <div class="card">
-      <p class="step-eyebrow">Student Login</p>
-      <p class="step-title">이름과 비밀번호로 시작하기</p>
-      <label class="field-label" for="loginName">이름</label>
-      <input type="text" id="loginName" placeholder="예: 김민준" autocomplete="off">
-      <label class="field-label" for="loginPw">비밀번호</label>
-      <input type="password" id="loginPw" placeholder="선생님께 받은 비밀번호">
-      <button class="primary-btn accent" id="loginBtn">입장하기</button>
-      <div id="loginMsg"></div>
-      <div class="center" style="margin-top:14px;">
-        <button class="small-link" id="goTeacherBtn">선생님이신가요? 관리자 화면으로</button>
+        <input class="login-input" type="text" id="loginName" placeholder="이름 (예: 김민준)" autocomplete="off">
+        <input class="login-input" type="password" id="loginPw" placeholder="비밀번호">
+        <button class="login-btn" id="loginBtn">입장하기</button>
+        <div id="loginMsg"></div>
+        <div class="login-sub"><button class="login-teacher-link" id="goTeacherBtn">선생님이신가요? 관리자 화면으로</button></div>
       </div>
     </div>
   </div>
@@ -594,148 +724,226 @@ window.DDOOPI = {
 
   <!-- ============ STUDENT VIEW ============ -->
   <div class="view" id="viewStudent">
-
-    <div class="greet-bar">
-      <div>
-        <div class="g-name" id="greetName"></div>
-        <div class="g-sub" id="greetSub"></div>
-      </div>
-      <button id="logoutBtn" title="로그아웃" style="border:none;background:#F1EEF9;color:var(--ink-soft);border-radius:999px;padding:7px 13px;font-family:inherit;font-size:.78rem;font-weight:700;cursor:pointer;">로그아웃</button>
+  <!-- 상단바 (집중형: 브랜드 + 학생이름 + 로그아웃) -->
+  <div class="topbar">
+    <div class="tb-brand">
+      <div class="tb-mark">DD</div>
+      <b>말하는 수학</b>
     </div>
-
-    <div id="myHistoryHost"></div>
-    <div id="reviewHost"></div>
-
-    <div class="card" id="setupCard">
-      <p class="step-eyebrow">Step 1</p>
-      <p class="step-title">오늘은 어떤 단원을 설명해 볼까요?</p>
-
-      <label class="field-label">난이도</label>
-      <div class="seg" id="levelSeg">
-        <button data-level="blank">빈칸 기초</button>
-        <button data-level="low" class="active">차근차근</button>
-        <button data-level="high">원리 설명</button>
-      </div>
-
-      <label class="field-label" for="gradeSelect">과정 선택</label>
-      <select id="gradeSelect"></select>
-
-      <label class="field-label" for="unitSelect">질문 선택 (교재 Q번호 기준)</label>
-      <select id="unitSelect"></select>
-
-      <label class="field-label">제한 시간</label>
-      <div class="seg" id="paceSeg">
-        <button data-pace="off">끄기</button>
-        <button data-pace="normal">표준</button>
-        <button data-pace="relaxed">여유</button>
-        <button data-pace="slow">넉넉</button>
-      </div>
-      <div class="timer-note" id="timerNote"></div>
-
-      <button class="primary-btn" id="startBtn" disabled>질문 확인하기</button>
-    </div>
-
-    <div class="card" id="questionCard" style="display:none;">
-      <p class="step-eyebrow">Step 2</p>
-      <p class="step-title">오늘의 질문</p>
-
-      <div class="q-box">
-        <div class="q-meta" id="qMeta"></div>
-        <div id="qList"></div>
-      </div>
-
-      <div class="info-box" style="margin-top:-6px;margin-bottom:6px;">💡 <b>이 질문 하나</b>에 대해 말로 설명해 주세요. 뚜삐가 듣고 점수와 힌트를 줄 거예요. <b>80점을 넘으면</b> 다음 질문으로 넘어갈 수 있어요!</div>
-
-      <div class="timer-wrap" id="speakTimer" style="display:none;">
-        <div class="timer-head"><span>남은 시간</span><b id="speakTimerNum">0:00</b></div>
-        <div class="timer-track"><div class="timer-fill" id="speakTimerBar" style="width:100%"></div></div>
-      </div>
-
-      <div class="rec-zone">
-        <div class="rec-btn-wrap" id="recBtnWrap">
-          <span class="ripple r1"></span><span class="ripple r2"></span><span class="ripple r3"></span>
-          <button class="rec-btn" id="recBtn" aria-label="녹음 시작">
-            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
-              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-              <line x1="12" y1="19" x2="12" y2="23"></line>
-              <line x1="8" y1="23" x2="16" y2="23"></line>
-            </svg>
-          </button>
-        </div>
-        <div class="rec-status" id="recStatus" aria-live="polite">마이크를 눌러 설명을 시작하세요.</div>
-        <div class="live-transcript empty" id="liveTranscript">아직 녹음된 내용이 없어요.</div>
-
-        <div class="manual-fallback" id="manualFallback" style="display:none;">
-          <button class="small-link" id="showManualBtn">음성 인식이 안 되면 직접 타이핑할게요</button>
-          <textarea id="manualText" placeholder="여기에 설명을 입력해 주세요" style="display:none;"></textarea>
-        </div>
-      </div>
-
-      <button class="primary-btn" id="submitBtn" disabled style="margin-top:18px;">제출하고 평가 받기</button>
-      <button class="ghost-btn" id="backBtn">다른 질문 선택하기</button>
-
-      <div id="fbArea"></div>
-    </div>
-
-    <!-- Step 3: 적용 문제 (4지선다) -->
-    <div class="card" id="quizCard" style="display:none;">
-      <p class="step-eyebrow">Step 3</p>
-      <p class="step-title">이제 문제로 확인!</p>
-      <div class="info-box" style="margin-bottom:12px;">✏️ 방금 설명한 개념을 <b>실제로 적용</b>해보는 문제예요. 찍지 말고 개념을 떠올려서 골라 보세요!</div>
-      <div id="quizMeta" class="q-meta"></div>
-      <div class="timer-wrap" id="quizTimer" style="display:none;">
-        <div class="timer-head"><span>남은 시간</span><b id="quizTimerNum">0:00</b></div>
-        <div class="timer-track"><div class="timer-fill" id="quizTimerBar" style="width:100%"></div></div>
-      </div>
-      <div id="quizArea"></div>
+    <div class="tb-right">
+      <span class="hide-mobile" id="greetName" style="font-size:14px;font-weight:800;color:#fff;"></span>
+      <button class="tb-logout" id="studentLogoutBtn">로그아웃</button>
     </div>
   </div>
 
-  <!-- ============ TEACHER VIEW ============ -->
+  <div class="shell no-rail">
+    <div class="main centered">
+      <!-- 인사 + 성취 요약 (기존 로직이 채우는 호스트 유지) -->
+      <div id="greetSub" style="display:none;"></div>
+      <div id="myHistoryHost"></div>
+      <div id="reviewHost"></div>
+
+      <!-- 3단계 진행 표시 -->
+      <div class="lsteps" id="learnSteps">
+        <div class="lstep on" data-s="1"><span class="sn">1</span><span class="st">개념 고르기</span></div>
+        <div class="lstep-line"></div>
+        <div class="lstep" data-s="2"><span class="sn">2</span><span class="st">말로 설명</span></div>
+        <div class="lstep-line"></div>
+        <div class="lstep" data-s="3"><span class="sn">3</span><span class="st">문제 풀기</span></div>
+      </div>
+
+      <!-- Step 1: 단원 고르기 -->
+      <div class="card" id="setupCard">
+        <p class="step-eyebrow">Step 1</p>
+        <p class="step-title">오늘은 어떤 단원을 설명해 볼까요?</p>
+
+        <label class="field-label">난이도</label>
+        <div class="seg" id="levelSeg">
+          <button data-level="blank">빈칸 기초</button>
+          <button data-level="low" class="active">차근차근</button>
+          <button data-level="high">원리 설명</button>
+        </div>
+
+        <label class="field-label" for="gradeSelect">과정 선택</label>
+        <select id="gradeSelect"></select>
+
+        <label class="field-label" for="unitSelect">질문 선택 (교재 Q번호 기준)</label>
+        <select id="unitSelect"></select>
+
+        <label class="field-label">제한 시간</label>
+        <div class="seg" id="paceSeg">
+          <button data-pace="off">끄기</button>
+          <button data-pace="normal">표준</button>
+          <button data-pace="relaxed">여유</button>
+          <button data-pace="slow">넉넉</button>
+        </div>
+        <div class="timer-note" id="timerNote"></div>
+
+        <button class="primary-btn" id="startBtn" disabled>질문 확인하기</button>
+      </div>
+
+      <!-- Step 2: 말로 설명 -->
+      <div class="card" id="questionCard" style="display:none;">
+        <p class="step-eyebrow">Step 2</p>
+        <p class="step-title">오늘의 질문</p>
+
+        <div class="q-box">
+          <div class="q-meta" id="qMeta"></div>
+          <div id="qList"></div>
+        </div>
+
+        <div class="info-box" style="margin-top:-6px;margin-bottom:6px;">💡 <b>이 질문 하나</b>에 대해 말로 설명해 주세요. 뚜삐가 듣고 점수와 힌트를 줄 거예요. <b>80점을 넘으면</b> 다음 질문으로 넘어갈 수 있어요!</div>
+
+        <div class="timer-wrap" id="speakTimer" style="display:none;">
+          <div class="timer-head"><span>남은 시간</span><b id="speakTimerNum">0:00</b></div>
+          <div class="timer-track"><div class="timer-fill" id="speakTimerBar" style="width:100%"></div></div>
+        </div>
+
+        <div class="rec-zone">
+          <div class="rec-btn-wrap" id="recBtnWrap">
+            <span class="ripple r1"></span><span class="ripple r2"></span><span class="ripple r3"></span>
+            <button class="rec-btn" id="recBtn" aria-label="녹음 시작">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <line x1="12" y1="19" x2="12" y2="23"></line>
+                <line x1="8" y1="23" x2="16" y2="23"></line>
+              </svg>
+            </button>
+          </div>
+          <div class="rec-status" id="recStatus" aria-live="polite">마이크를 눌러 설명을 시작하세요.</div>
+          <div class="live-transcript empty" id="liveTranscript">아직 녹음된 내용이 없어요.</div>
+
+          <div class="manual-fallback" id="manualFallback" style="display:none;">
+            <button class="small-link" id="showManualBtn">음성 인식이 안 되면 직접 타이핑할게요</button>
+            <textarea id="manualText" placeholder="여기에 설명을 입력해 주세요" style="display:none;"></textarea>
+          </div>
+        </div>
+
+        <button class="primary-btn" id="submitBtn" disabled style="margin-top:18px;">제출하고 평가 받기</button>
+        <button class="ghost-btn" id="backBtn">다른 질문 선택하기</button>
+
+        <div id="fbArea"></div>
+      </div>
+
+      <!-- Step 3: 적용 문제 -->
+      <div class="card" id="quizCard" style="display:none;">
+        <p class="step-eyebrow">Step 3</p>
+        <p class="step-title">이제 문제로 확인!</p>
+        <div class="info-box" style="margin-bottom:12px;">✏️ 방금 설명한 개념을 <b>실제로 적용</b>해보는 문제예요. 찍지 말고 개념을 떠올려서 골라 보세요!</div>
+        <div id="quizMeta" class="q-meta"></div>
+        <div class="timer-wrap" id="quizTimer" style="display:none;">
+          <div class="timer-head"><span>남은 시간</span><b id="quizTimerNum">0:00</b></div>
+          <div class="timer-track"><div class="timer-fill" id="quizTimerBar" style="width:100%"></div></div>
+        </div>
+        <div id="quizArea"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TEACHER VIEW ============ -->
   <div class="view" id="viewTeacher">
+  <!-- ===== 상단바 ===== -->
+  <div class="topbar">
+    <div class="tb-brand">
+      <div class="tb-mark">DD</div>
+      <b>두드림 수학</b>
+    </div>
+    <nav class="tb-nav" id="teacherNav">
+      <a class="on" data-tab="dash"><span>말하는 수학</span></a>
+      <a data-tab="manage"><span>학생 · 설정</span></a>
+      <a class="tb-add" style="cursor:default"><span>+ 앱 추가</span></a>
+    </nav>
+    <div class="tb-right">
+      <button class="tb-icon only-mobile" id="railToggleBtn" title="학생목록" aria-label="학생목록">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </button>
+      <div class="tb-account" id="teacherAccountBtn"><span class="hide-mobile">선생님</span> <span class="tb-caret">▾</span></div>
+    </div>
+  </div>
 
-    <div class="card">
-      <p class="step-eyebrow">AI 연결 설정</p>
-      <p class="step-title">AI 키 등록 <span id="keyStatus" style="font-size:.78rem;font-weight:700;"></span></p>
-      <p style="font-size:.82rem;color:var(--ink-soft);line-height:1.55;margin:0 0 12px;">
-        외부 주소(넷리파이 등)에서 AI 채점을 쓰려면 키가 필요해요.
-        <b>구글 Gemini 키(무료·카드 불필요)</b> 또는 Anthropic 키(유료) 둘 다 됩니다.
-        키는 이 기기 브라우저에만 저장돼요.</p>
-      <input type="password" id="apiKeyInput" placeholder="AQ. 또는 AIza… (Gemini) / sk-ant… (Claude) 키 붙여넣기" autocomplete="off">
-      <button class="primary-btn" id="saveKeyBtn">키 저장하기</button>
-      <div id="keyMsg"></div>
+  <!-- ===== 3구역 ===== -->
+  <div class="shell" id="teacherShell">
+    <!-- 본문 -->
+    <div class="main">
+
+      <!-- 탭1: 대시보드 -->
+      <div id="dashTab">
+        <div class="page-head">
+          <div class="page-title">말하는 수학 <span class="sub">학습 현황</span></div>
+          <div class="head-actions">
+            <button class="nbtn ghost" id="refreshDashBtn">새로고침</button>
+          </div>
+        </div>
+
+        <!-- 요약 통계 -->
+        <div class="stat-row" id="dashStats">
+          <div class="nstat a"><div class="s-label">오늘 학습</div><div class="s-num" id="statToday">–</div></div>
+          <div class="nstat b"><div class="s-label">오늘 통과</div><div class="s-num" id="statPass">–</div></div>
+          <div class="nstat c"><div class="s-label">도움 필요</div><div class="s-num" id="statHelp">–</div></div>
+          <div class="nstat d"><div class="s-label">전체 학생</div><div class="s-num" id="statTotal">–</div></div>
+        </div>
+
+        <!-- 오늘 완료 패널 (기존 로직이 채움) -->
+        <div id="todayPanel"></div>
+
+        <!-- 전체 기록 -->
+        <div class="dash-toolbar" style="margin-top:4px;">
+          <span class="dash-summary" id="dashSummary">불러오는 중…</span>
+        </div>
+        <div class="board-legend">
+          <span><span class="lg-dot" style="background:var(--sage)"></span>85점 이상 통과</span>
+          <span><span class="lg-dot" style="background:var(--amber)"></span>70~84점 통과</span>
+          <span><span class="lg-dot" style="background:var(--red)"></span>70점 미만 · 재학습</span>
+          <span><span class="lg-dot" style="background:#E4DFD4"></span>미응시</span>
+        </div>
+        <div id="boardArea"></div>
+      </div>
+
+      <!-- 탭2: 학생·설정 (등록 + AI키) -->
+      <div id="manageTab" style="display:none;">
+        <div class="page-head"><div class="page-title">학생 · 설정</div></div>
+
+        <div class="card">
+          <p class="step-eyebrow">학생 등록</p>
+          <p class="step-title">새 학생을 등록합니다</p>
+          <label class="field-label" for="regName">이름</label>
+          <input type="text" id="regName" placeholder="예: 김민준" autocomplete="off">
+          <label class="field-label" for="regGrade">학년</label>
+          <select id="regGrade"></select>
+          <label class="field-label" for="regPhone">전화번호 (선택 · 테스트 중엔 비워두세요)</label>
+          <input type="tel" id="regPhone" placeholder="실서비스 전환 후 입력 권장">
+          <label class="field-label" for="regPw">비밀번호</label>
+          <input type="password" id="regPw" placeholder="학생이 입장할 때 쓸 비밀번호">
+          <button class="primary-btn" id="regBtn">학생 등록하기</button>
+          <div id="regMsg"></div>
+        </div>
+
+        <div class="card">
+          <p class="step-eyebrow">AI 연결 설정</p>
+          <p class="step-title">AI 키 등록 <span id="keyStatus" style="font-size:.78rem;font-weight:700;"></span></p>
+          <p style="font-size:.82rem;color:var(--ink-soft);line-height:1.55;margin:0 0 12px;">
+            외부 주소에서 AI 채점을 쓰려면 키가 필요해요.
+            <b>구글 Gemini 키(무료·카드 불필요)</b> 또는 Anthropic 키(유료) 둘 다 됩니다.
+            키는 이 기기 브라우저에만 저장돼요.</p>
+          <input type="password" id="apiKeyInput" placeholder="AQ. 또는 AIza… (Gemini) / sk-ant… (Claude) 키 붙여넣기" autocomplete="off">
+          <button class="primary-btn" id="saveKeyBtn">키 저장하기</button>
+          <div id="keyMsg"></div>
+        </div>
+
+        <p class="note">브라우저 내장 음성 인식(크롬 권장) + AI 채점 프로토타입입니다.<br>
+        테스트 단계이므로 실제 학부모 전화번호 등 민감정보는 넣지 마세요.</p>
+      </div>
+
     </div>
 
-    <div class="card">
-      <p class="step-eyebrow">학생 등록</p>
-      <p class="step-title">새 학생을 등록합니다</p>
-      <label class="field-label" for="regName">이름</label>
-      <input type="text" id="regName" placeholder="예: 김민준" autocomplete="off">
-      <label class="field-label" for="regGrade">학년</label>
-      <select id="regGrade"></select>
-      <label class="field-label" for="regPhone">전화번호 (선택 · 테스트 중엔 비워두세요)</label>
-      <input type="tel" id="regPhone" placeholder="실서비스 전환 후 입력 권장">
-      <label class="field-label" for="regPw">비밀번호</label>
-      <input type="password" id="regPw" placeholder="학생이 입장할 때 쓸 비밀번호">
-      <button class="primary-btn" id="regBtn">학생 등록하기</button>
-      <div id="regMsg"></div>
-    </div>
-
-    <div id="todayPanel"></div>
-
-    <div class="dash-toolbar">
-      <span class="dash-summary" id="dashSummary">불러오는 중…</span>
-      <button class="clear-btn" id="refreshDashBtn">새로고침</button>
-    </div>
-    <div class="board-legend">
-      <span><span class="lg-dot" style="background:var(--sage)"></span>85점 이상 통과</span>
-      <span><span class="lg-dot" style="background:var(--amber)"></span>70~84점 통과</span>
-      <span><span class="lg-dot" style="background:var(--red)"></span>70점 미만 · 재학습</span>
-      <span><span class="lg-dot" style="background:#E4DFD4"></span>미응시</span>
-    </div>
-    <div id="boardArea"></div>
-
+    <!-- 우측 학생목록 -->
+    <aside class="rail" id="teacherRail">
+      <div class="rail-head"><h3>학생 목록</h3><span class="cnt" id="railCount">–</span></div>
+      <input class="rail-search" id="railSearch" placeholder="🔍 학생 검색">
+      <div id="railList"></div>
+    </aside>
   </div>
 
   <!-- 학생 개인 이력 모달 -->
@@ -765,14 +973,10 @@ window.DDOOPI = {
       <div class="rp-body" id="rpBody"></div>
     </div>
   </div>
-
-  <p class="note">브라우저 내장 음성 인식(크롬 권장) + Claude AI 채점 프로토타입입니다.<br>
-  학생 정보·테스트 이력은 열고 있는 기기(브라우저)에 저장됩니다. 비밀번호는 암호화(SHA-256)되어 저장됩니다.<br>
-  테스트 단계이므로 실제 학부모 전화번호 등 민감정보는 넣지 마세요. 여러 기기에서 데이터를 공유하려면 실서비스 전 Supabase 전환이 필요합니다.</p>
 </div>
 
 <script>
-/* ==== 버전: v50 (2026-07-16) — 자동 로그인(1회 로그인 유지) + 로그아웃 버튼 ==== */
+/* ==== 버전: v51 (2026-08-04) — UI 전면 개편: 반응형 3구역 골격(상단바+본문+우측목록), 대시보드/학생화면 재구성, 앱태그 ==== */
 /* ============================================================
    질문 데이터 v5 — 교재 Q번호 = 개별 선택 항목
    각 항목: Q번호 1개 선택 → 그 개념을 묻는 3~5개 소질문 한 화면 제시
@@ -2806,6 +3010,10 @@ async function sha256(text){
 }
 const GRADE_OPTIONS = ["초1","초2","초3","초4","초5","초6","중1","중2","중3"];
 const GRADE_TO_COURSE = {"초4":"e4-2","초5":"e5-1","초6":"e6-1","중1":"m1-2","중2":"m2-2","중3":"m3-1"};
+// 이 앱의 식별자 — 나중에 여러 앱(고등개념 등)을 합칠 때 기록을 앱별로 구분하는 태그.
+// 지금은 저장 스키마를 건드리지 않고, 읽을 때 각 기록에 이 값을 부여한다(안전).
+// 두 번째 앱을 실제로 만들 때 Supabase submissions에 app 컬럼을 추가하고 저장에도 반영하면 됨.
+const APP_ID = 'speaking-math';
 const PASS_SCORE = 70;
 const ADVANCE_SCORE = 80; // 이 점수 이상이면 다음 질문으로 바로 진행
 
@@ -2949,6 +3157,9 @@ async function callClaude(payload){
 function showView(name){
   ['viewLanding','viewTeacherAuth','viewStudent','viewTeacher'].forEach(v=>$(v).classList.remove('active'));
   $(name).classList.add('active');
+  // 새 골격(대시보드·학생화면)은 전체 너비를 쓰도록 wrap 제한 해제
+  const full = (name === 'viewTeacher' || name === 'viewStudent');
+  document.body.classList.toggle('fullwidth', full);
   window.scrollTo(0,0);
 }
 
@@ -3116,9 +3327,16 @@ function rowToSub(r){
     retryPoint: r.retry_point, misconception: r.misconception,
     pass: (r.score||0) >= PASS_SCORE,
     attempt: r.attempt, needTeacher: r.need_teacher, hintsUsed: r.hints_used,
+    app: r.app || APP_ID,
     reviewDue: r.review_due, time: r.created_at
   };
 }
+// 특정 앱의 기록만 거르는 헬퍼 — 앱 합친 뒤에도 이 함수로 말하는수학 기록만 뽑을 수 있음
+function filterByApp(subs, appId){
+  const id = appId || APP_ID;
+  return (subs||[]).filter(x => (x.app || APP_ID) === id);
+}
+
 async function getAllSubmissions(){
   const ok = await checkSupabase();
   if(ok){
@@ -3131,7 +3349,7 @@ async function getAllSubmissions(){
   try{
     for(let i=0;i<localStorage.length;i++){
       const k=localStorage.key(i);
-      if(k && k.startsWith('dd:sub:')){ const s=JSON.parse(localStorage.getItem(k)); if(s) out.push(s); }
+      if(k && k.startsWith('dd:sub:')){ const s=JSON.parse(localStorage.getItem(k)); if(s){ if(!s.app) s.app = APP_ID; out.push(s); } }
     }
   }catch(e){}
   out.sort((a,b)=>new Date(b.time)-new Date(a.time));
@@ -3195,6 +3413,17 @@ $('loginBtn').addEventListener('click', async ()=>{
   try{ localStorage.setItem('dd:autoLogin', JSON.stringify({ id: found.id, name: found.name })); }catch(e){}
   enterStudentView();
 });
+
+// 학생 화면 3단계 진행 표시 업데이트 (1=고르기, 2=말하기, 3=풀기)
+function setLearnStep(n){
+  const steps = document.querySelectorAll('#learnSteps .lstep');
+  steps.forEach(el=>{
+    const s = parseInt(el.dataset.s, 10);
+    el.classList.remove('on','done');
+    if(s < n) el.classList.add('done');
+    else if(s === n) el.classList.add('on');
+  });
+}
 
 // ── 학생 본인 학습 이력 요약 (격려 톤) ──
 async function renderMyHistory(){
@@ -3311,7 +3540,7 @@ function enterStudentView(){
   populateUnitSelect();
   checkStartReady();
   renderMyHistory();   // 학생 본인 학습 이력 요약
-  $('setupCard').style.display = 'block';
+  $('setupCard').style.display = 'block'; if(typeof setLearnStep==='function') setLearnStep(1);
   $('questionCard').style.display = 'none';
   $('quizCard').style.display = 'none';
   showView('viewStudent');
@@ -3788,7 +4017,7 @@ $('startBtn').addEventListener('click', async ()=>{
   }
   $('setupCard').style.display = 'none';
   $('quizCard').style.display = 'none';
-  $('questionCard').style.display = 'block';
+  $('questionCard').style.display = 'block'; if(typeof setLearnStep==='function') setLearnStep(2);
   resetRecordingUI();
 });
 $('backBtn').addEventListener('click', ()=>{
@@ -4392,7 +4621,7 @@ async function startQuiz(){
   const grade = GRADES.find(g=>g.id===state.gradeId);
   const unit = currentUnits().find(u=>u.id===state.unitId);
   $('questionCard').style.display = 'none';
-  $('quizCard').style.display = 'block';
+  $('quizCard').style.display = 'block'; if(typeof setLearnStep==='function') setLearnStep(3);
   $('quizMeta').textContent = grade.name + ' · ' + unit.label;
   $('quizArea').innerHTML = '<div class="loading-row">' + DDOOPI.think + ' 뚜삐가 문제를 만들고 검산하는 중이에요…</div>';
   window.scrollTo({top:0, behavior:'smooth'});
@@ -4820,6 +5049,86 @@ function startDashAutoRefresh(){
 }
 function stopDashAutoRefresh(){ if(dashTimer){ clearInterval(dashTimer); dashTimer=null; } }
 
+// 대시보드 상단 요약 4칸
+function renderDashStats(students, subs, flags){
+  const now = new Date();
+  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const todays = (subs||[]).filter(x=>{ const t=new Date(x.time).getTime(); return !isNaN(t) && t>=start; });
+  // 오늘 학습한 서로 다른 학생 수
+  const todayStudents = new Set(todays.map(x=>x.studentId)).size;
+  // 오늘 통과 건수
+  const todayPass = todays.filter(x=>x.pass).length;
+  // 도움 필요: 미해결 플래그 수 (없으면 오늘 미통과 건수)
+  const openFlags = (flags||[]).filter(f=>!f.resolved).length;
+  const setTxt = (id, v) => { const el = document.getElementById(id); if(el) el.textContent = v; };
+  setTxt('statToday', todayStudents + '명');
+  setTxt('statPass',  todayPass + '건');
+  setTxt('statHelp',  openFlags + '건');
+  setTxt('statTotal', (students||[]).length + '명');
+}
+
+// 우측 학생목록 (학년별 그룹 + 검색). 이름 클릭 → 개인 이력 모달
+let RAIL_CACHE = { students:[], subs:[] };
+function renderRail(students, subs){
+  RAIL_CACHE = { students: students||[], subs: subs||[] };
+  const host = document.getElementById('railList');
+  const cnt = document.getElementById('railCount');
+  if(!host) return;
+  if(cnt) cnt.textContent = (students||[]).length + '명';
+
+  const q = (document.getElementById('railSearch')?.value || '').trim();
+  let list = (students||[]).slice();
+  if(q) list = list.filter(s => (s.name||'').includes(q));
+
+  // 학년별 그룹
+  const groups = {};
+  list.forEach(s=>{ const g = s.grade || '기타'; (groups[g]=groups[g]||[]).push(s); });
+  const gradeOrder = ['초1','초2','초3','초4','초5','초6','중1','중2','중3','고1','고2','고3','기타'];
+  const keys = Object.keys(groups).sort((a,b)=>{
+    const ia = gradeOrder.indexOf(a), ib = gradeOrder.indexOf(b);
+    return (ia<0?99:ia) - (ib<0?99:ib);
+  });
+
+  // 각 학생의 마지막 학습 시각
+  const lastTime = {};
+  (subs||[]).forEach(x=>{
+    const t = new Date(x.time).getTime();
+    if(!lastTime[x.studentId] || t > lastTime[x.studentId]) lastTime[x.studentId] = t;
+  });
+  const now = Date.now();
+  const ago = t => {
+    if(!t) return '';
+    const d = Math.floor((now - t)/86400000);
+    if(d <= 0) return '오늘'; if(d===1) return '어제'; if(d<7) return d+'일 전';
+    const dt = new Date(t); return (dt.getMonth()+1)+'/'+dt.getDate();
+  };
+
+  host.innerHTML = keys.map(g=>{
+    const rows = groups[g].map(s=>{
+      const av = (s.name||'?').slice(0,1);
+      return `<div class="rstu" data-sid="${s.id}">
+        <span class="s-av">${av}</span>
+        <span class="s-name">${escapeHtml(s.name)}</span>
+        <span class="s-meta">${ago(lastTime[s.id])}</span>
+      </div>`;
+    }).join('');
+    return `<div class="grade-group"><div class="grade-label">${escapeHtml(g)} (${groups[g].length})</div>${rows}</div>`;
+  }).join('') || '<div class="dash-empty" style="font-size:.85rem">학생이 없어요.</div>';
+
+  // 이름 클릭 → 개인 이력
+  host.querySelectorAll('.rstu').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const sid = el.dataset.sid;
+      const stu = RAIL_CACHE.students.find(s=>s.id===sid);
+      if(!stu) return;
+      const mine = RAIL_CACHE.subs.filter(x=>x.studentId===sid);
+      setTimeout(()=> openStudentHistory(stu, mine), 0);
+      // 모바일: 목록 서랍 닫기
+      document.getElementById('teacherRail')?.classList.remove('drawer-open');
+    });
+  });
+}
+
 // 오늘(자정 이후) 완료한 학생 목록을 접이식 패널로 표시
 function renderTodayPanel(subs){
   const host = $('todayPanel');
@@ -4908,6 +5217,8 @@ async function loadBoard(){
   summary.textContent = `학생 ${students.length}명 · 총 제출 ${subs.length}건` + (openFlags.length?` · 🚩 도움필요 ${openFlags.length}건`:'');
 
   renderTodayPanel(subs);
+  renderDashStats(students, subs, flags);
+  renderRail(students, subs);
 
   // 학생별 데이터 준비
   const byStudent = {};
@@ -5417,9 +5728,60 @@ if ('serviceWorker' in navigator) {
 window.addEventListener('load', ()=>{ try{ tryAutoLogin(); }catch(e){} });
 </script>
 <script>
+/* 선생님 계정 버튼 → 로그아웃(나가기) */
+(function(){
+  const acct = document.getElementById('teacherAccountBtn');
+  if(acct){
+    acct.style.cursor = 'pointer';
+    acct.addEventListener('click', ()=>{
+      const lb = document.getElementById('logoutBtn');
+      if(lb) lb.click();  // 기존 나가기 로직 재사용
+    });
+  }
+})();
+
+/* 대시보드 탭 전환 · 우측목록 검색 · 모바일 서랍 */
+(function(){
+  // 탭 전환 (말하는수학 ↔ 학생·설정)
+  const nav = document.getElementById('teacherNav');
+  if(nav){
+    nav.querySelectorAll('a[data-tab]').forEach(a=>{
+      a.addEventListener('click', ()=>{
+        const tab = a.dataset.tab;
+        nav.querySelectorAll('a[data-tab]').forEach(x=>x.classList.remove('on'));
+        a.classList.add('on');
+        const dash = document.getElementById('dashTab');
+        const manage = document.getElementById('manageTab');
+        if(dash) dash.style.display = (tab==='dash') ? 'block' : 'none';
+        if(manage) manage.style.display = (tab==='manage') ? 'block' : 'none';
+      });
+    });
+  }
+  // 우측목록 검색
+  const rs = document.getElementById('railSearch');
+  if(rs){ rs.addEventListener('input', ()=> renderRail(RAIL_CACHE.students, RAIL_CACHE.subs)); }
+  // 모바일: 학생목록 서랍 토글
+  const rt = document.getElementById('railToggleBtn');
+  if(rt){ rt.addEventListener('click', ()=> document.getElementById('teacherRail')?.classList.toggle('drawer-open')); }
+})();
+
+/* 엔터키로 로그인/PIN 제출 */
+(function(){
+  ['loginName','loginPw'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.addEventListener('keydown', e=>{
+      if(e.key === 'Enter'){ e.preventDefault(); const b = document.getElementById('loginBtn'); if(b) b.click(); }
+    });
+  });
+  const pin = document.getElementById('teacherPin');
+  if(pin) pin.addEventListener('keydown', e=>{
+    if(e.key === 'Enter'){ e.preventDefault(); const b = document.getElementById('teacherPinBtn'); if(b) b.click(); }
+  });
+})();
+
 /* 로그아웃 버튼 */
 (function(){
-  const b = document.getElementById('logoutBtn');
+  const b = document.getElementById('studentLogoutBtn');
   if(b) b.addEventListener('click', doLogout);
 })();
 
@@ -5439,7 +5801,7 @@ window.addEventListener('load', ()=>{ try{ tryAutoLogin(); }catch(e){} });
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v50';
+  const APP_VERSION = 'v51';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
