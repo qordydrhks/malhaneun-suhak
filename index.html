@@ -826,6 +826,7 @@ window.DDOOPI = {
       <!-- 인사 + 성취 요약 (기존 로직이 채우는 호스트 유지) -->
       <div id="greetSub" style="display:none;"></div>
       <div id="myHistoryHost"></div>
+      <div id="assignHost"></div>
       <div id="reviewHost"></div>
 
       <!-- 3단계 진행 표시 -->
@@ -3728,9 +3729,86 @@ function enterStudentView(){
   $('quizCard').style.display = 'none';
   showView('viewStudent');
   loadReviewCards(); // 7일 복습 카드
+  loadAssignments(); // 선생님이 낸 문제
 }
 
 // 통과한 개념 중 복습일(7일)이 된 것을 홈 상단에 카드로 표시
+async // ============ 학생: 선생님이 낸 문제 (배정) ============
+async function loadAssignments(){
+  const host = document.getElementById('assignHost');
+  if(!host) return;
+  host.innerHTML = '';
+  const s = session.student;
+  if(!s) return;
+  let list = [];
+  try{ list = await getAssignments(s.id); }catch(e){}
+  if(!list.length) return;
+
+  const cards = list.map((p, i)=>{
+    const diffTxt = p.difficulty==='advanced' ? '심화' : '기본';
+    return '<div style="background:linear-gradient(135deg,#F4EFFF,#EDE6FF);border:1px solid #D9C9F5;border-radius:14px;padding:15px;margin-bottom:10px;">'
+      + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">'
+      + '<span style="font-size:12px;font-weight:800;color:#7343E6;">✨ 선생님이 낸 문제</span>'
+      + (p.small_unit ? '<span style="font-size:11px;color:#8A7BB0;">'+escapeHtml(p.small_unit)+'</span>' : '')
+      + '<span style="font-size:11px;font-weight:700;color:#7343E6;background:#fff;padding:2px 8px;border-radius:999px;">'+diffTxt+'</span></div>'
+      + '<div style="font-size:13.5px;font-weight:600;color:#2A2350;line-height:1.6;white-space:pre-wrap;">'+escapeHtml(p.question)+'</div>'
+      + '<button class="nbtn primary" style="margin-top:11px;" onclick="startAssignedProblem('+i+')">이 문제 풀기</button>'
+      + '</div>';
+  }).join('');
+  host.innerHTML = '<div style="font-size:13px;font-weight:800;color:#7343E6;margin:2px 2px 9px;">📩 선생님이 낸 문제 '+list.length+'개</div>' + cards;
+}
+
+// 배정 문제 풀기 (간단한 정답 확인 방식)
+async function startAssignedProblem(index){
+  const s = session.student;
+  if(!s) return;
+  const list = await getAssignments(s.id);
+  const p = list[index];
+  if(!p) return;
+
+  // 문제 표시 + 답 입력 (기존 quizCard 스타일 재활용은 복잡하므로 전용 팝업)
+  let overlay = document.getElementById('assignSolveOverlay');
+  if(overlay) overlay.remove();
+  overlay = document.createElement('div');
+  overlay.id = 'assignSolveOverlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(20,21,43,.6);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;';
+  overlay.innerHTML =
+    '<div style="background:#fff;border-radius:16px;padding:22px;max-width:440px;width:100%;max-height:85vh;overflow:auto;">'
+    + '<div style="font-size:12px;font-weight:800;color:#7343E6;margin-bottom:10px;">✨ 선생님이 낸 문제</div>'
+    + '<div style="font-size:14.5px;font-weight:600;color:#14152B;line-height:1.65;white-space:pre-wrap;margin-bottom:16px;">'+escapeHtml(p.question)+'</div>'
+    + '<label style="font-size:12.5px;font-weight:700;display:block;margin-bottom:5px;">내 답</label>'
+    + '<input id="assignAnswerInput" placeholder="답을 입력하세요" style="width:100%;padding:11px;border:1px solid #E3E9E5;border-radius:9px;font-size:14px;outline:none;">'
+    + '<div style="display:flex;gap:8px;margin-top:14px;"><button class="nbtn primary" id="assignSubmitBtn" style="flex:1;">제출</button><button class="nbtn ghost" id="assignCloseBtn">닫기</button></div>'
+    + '<div id="assignResult" style="margin-top:14px;"></div>'
+    + '</div>';
+  document.body.appendChild(overlay);
+
+  document.getElementById('assignCloseBtn').addEventListener('click', ()=> overlay.remove());
+  document.getElementById('assignSubmitBtn').addEventListener('click', async ()=>{
+    const ans = document.getElementById('assignAnswerInput').value.trim();
+    const box = document.getElementById('assignResult');
+    if(!ans){ box.innerHTML = '<div style="color:#C0344B;font-size:13px;">답을 입력해 주세요.</div>'; return; }
+    // 정답 비교 (공백·대소문자 무시, 정답 텍스트 포함 여부)
+    const correct = (p.answer||'').trim();
+    const norm = t => t.replace(/\\s+/g,'').toLowerCase();
+    const isRight = correct && (norm(ans) === norm(correct) || norm(ans).includes(norm(correct)) || norm(correct).includes(norm(ans)));
+    if(isRight){
+      box.innerHTML = '<div style="background:#E4F3EA;color:#1B7A4B;padding:12px;border-radius:10px;font-size:13.5px;font-weight:700;">정답이에요! 잘했어요 🎉</div>'
+        + (p.explanation ? '<div style="margin-top:8px;font-size:12.5px;color:#5B5E7E;line-height:1.55;">'+escapeHtml(p.explanation)+'</div>' : '');
+    }else{
+      box.innerHTML = '<div style="background:#FDECEF;color:#C0344B;padding:12px;border-radius:10px;font-size:13.5px;font-weight:700;">다시 한 번 생각해볼까요?</div>'
+        + (correct ? '<div style="margin-top:8px;font-size:12.5px;color:#5B5E7E;">정답: '+escapeHtml(correct)+'</div>' : '')
+        + (p.explanation ? '<div style="margin-top:6px;font-size:12.5px;color:#5B5E7E;line-height:1.55;">'+escapeHtml(p.explanation)+'</div>' : '');
+    }
+    // 푼 문제는 배정에서 제거 + 목록 갱신
+    await removeAssignment(s.id, index);
+    loadAssignments();
+    const btn = document.getElementById('assignSubmitBtn');
+    if(btn){ btn.textContent = '완료'; btn.disabled = true; btn.style.opacity = '.6'; }
+  });
+}
+
+// ============ 학생: 선생님이 낸 문제 (배정) 끝 ============
 async function loadReviewCards(){
   const host = $('reviewHost');
   if(!host) return;
@@ -4996,6 +5074,41 @@ async function deleteProblem(id){
   }catch(e){ return false; }
 }
 
+// ============ 문제 배정 (출제) ============
+// 선생님이 문제은행에서 고른 문제를 특정 학생에게 배정.
+// 저장은 기존 storageSet/Get 재활용 (Supabase ai_cache + 로컬 폴백) → 새 테이블 불필요.
+function assignKey(studentId){ return 'assign:' + studentId; }
+
+// 학생에게 문제 배정 (기존 배정에 추가)
+async function assignProblemToStudent(studentId, problem){
+  let list = [];
+  try{ const cur = await storageGet(assignKey(studentId)); if(cur && Array.isArray(cur.list)) list = cur.list; }catch(e){}
+  // 중복 방지 (같은 문제 내용)
+  if(list.some(p => (p.question||'') === (problem.question||''))) return { ok:true, dup:true };
+  list.push({
+    question: problem.question || '',
+    answer: problem.answer || '',
+    explanation: problem.explanation || '',
+    big_unit: problem.big_unit || '', small_unit: problem.small_unit || '',
+    qtype: problem.qtype || '', difficulty: problem.difficulty || 'basic',
+    assignedAt: new Date().toISOString()
+  });
+  try{ await storageSet(assignKey(studentId), { list }); return { ok:true }; }catch(e){ return { ok:false }; }
+}
+
+// 학생의 배정 문제 읽기
+async function getAssignments(studentId){
+  try{ const cur = await storageGet(assignKey(studentId)); if(cur && Array.isArray(cur.list)) return cur.list; }catch(e){}
+  return [];
+}
+
+// 배정 문제 하나 제거 (다 풀었을 때)
+async function removeAssignment(studentId, index){
+  let list = await getAssignments(studentId);
+  if(index >= 0 && index < list.length){ list.splice(index, 1); try{ await storageSet(assignKey(studentId), { list }); }catch(e){} }
+  return list;
+}
+
 // ============ 문제은행 관리자 UI (3단계) ============
 let BANK_INITED = false;
 
@@ -5101,7 +5214,7 @@ function renderBankResult(list){
       + '<div class="pb-q">'+escapeHtml(p.question)+'</div>'
       + (p.answer ? '<div class="pb-a">정답: '+escapeHtml(p.answer)+'</div>' : '')
       + (p.explanation ? '<div class="pb-exp">'+escapeHtml(p.explanation)+'</div>' : '')
-      + '<div class="pb-actions"><button class="nbtn ghost" onclick="deleteBankProblem(\''+String(p.id)+'\')">삭제</button></div>'
+      + '<div class="pb-actions"><button class="nbtn primary" onclick="openAssignPicker(\''+String(p.id)+'\')">학생에게 출제</button><button class="nbtn ghost" onclick="deleteBankProblem(\''+String(p.id)+'\')">삭제</button></div>'
       + '</div>';
   }).join('');
   result.innerHTML = '<div class="pb-count">총 '+list.length+'개</div>' + rows;
@@ -5111,6 +5224,61 @@ async function deleteBankProblem(id){
   if(!confirm('이 문제를 삭제할까요?')) return;
   try{ await deleteProblem(id); }catch(e){}
   bankSearch();
+}
+
+// 문제를 학생에게 출제: 학생 선택 팝업
+let ASSIGN_TARGET_PROBLEM = null;
+async function openAssignPicker(problemId){
+  // 현재 결과 목록에서 문제 찾기
+  let prob = null;
+  try{
+    const list = await queryProblems({});
+    prob = list.find(x => String(x.id) === String(problemId));
+  }catch(e){}
+  if(!prob){ alert('문제를 찾지 못했어요.'); return; }
+  ASSIGN_TARGET_PROBLEM = prob;
+
+  let students = [];
+  try{ students = await getAllStudents(); }catch(e){}
+  if(!students.length){ alert('등록된 학생이 없어요.'); return; }
+
+  // 팝업 만들기
+  let overlay = document.getElementById('assignOverlay');
+  if(overlay) overlay.remove();
+  overlay = document.createElement('div');
+  overlay.id = 'assignOverlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(20,21,43,.55);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;';
+  const rows = students.map(s =>
+    '<label style="display:flex;align-items:center;gap:9px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;margin-bottom:7px;cursor:pointer;">'
+    + '<input type="checkbox" value="'+s.id+'" style="width:auto;margin:0;"> '
+    + '<span style="font-weight:700;font-size:13.5px;">'+escapeHtml(s.name)+'</span>'
+    + '<span style="font-size:12px;color:var(--ink-soft);">'+escapeHtml(s.grade||'')+'</span></label>'
+  ).join('');
+  overlay.innerHTML =
+    '<div style="background:#fff;border-radius:16px;padding:20px;max-width:400px;width:100%;max-height:80vh;overflow:auto;">'
+    + '<div style="font-size:16px;font-weight:800;margin-bottom:4px;">학생에게 출제</div>'
+    + '<div style="font-size:12.5px;color:var(--ink-soft);margin-bottom:14px;line-height:1.5;">이 문제를 풀게 할 학생을 고르세요. 학생이 로그인하면 문제가 나타나요.</div>'
+    + '<div style="max-height:40vh;overflow:auto;margin-bottom:14px;">'+rows+'</div>'
+    + '<div style="display:flex;gap:8px;"><button class="nbtn primary" id="assignConfirmBtn" style="flex:1;">출제하기</button><button class="nbtn ghost" id="assignCancelBtn">취소</button></div>'
+    + '<div id="assignMsg" style="margin-top:10px;font-size:.85rem;"></div>'
+    + '</div>';
+  document.body.appendChild(overlay);
+
+  document.getElementById('assignCancelBtn').addEventListener('click', ()=> overlay.remove());
+  overlay.addEventListener('click', (e)=>{ if(e.target===overlay) overlay.remove(); });
+  document.getElementById('assignConfirmBtn').addEventListener('click', async ()=>{
+    const checked = [...overlay.querySelectorAll('input[type=checkbox]:checked')].map(c=>c.value);
+    const msg = document.getElementById('assignMsg');
+    if(!checked.length){ msg.style.color='#C0344B'; msg.textContent='학생을 한 명 이상 선택해 주세요.'; return; }
+    msg.style.color='var(--ink-soft)'; msg.textContent='출제 중…';
+    let n = 0;
+    for(const sid of checked){
+      const r = await assignProblemToStudent(sid, ASSIGN_TARGET_PROBLEM);
+      if(r.ok) n++;
+    }
+    msg.style.color='#1B7A4B'; msg.textContent = n + '명에게 출제했어요!';
+    setTimeout(()=> overlay.remove(), 1200);
+  });
 }
 
 // 직접 추가 폼 열기/닫기
@@ -6745,7 +6913,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v51.6';
+  const APP_VERSION = 'v51.7';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
