@@ -1000,6 +1000,21 @@ window.DDOOPI = {
           <div id="keyMsg"></div>
         </div>
 
+        <div class="card" id="ownerPwCard">
+          <p class="step-eyebrow">관리자 설정</p>
+          <p class="step-title">관리자 비밀번호 변경</p>
+          <p style="font-size:.82rem;color:var(--ink-soft);line-height:1.55;margin:0 0 12px;">
+            선생님 모드(관리자 화면)에 들어올 때 쓰는 비밀번호예요. 최초 비밀번호는 <b>0000</b>이며, 꼭 바꿔서 쓰세요.</p>
+          <label class="field-label" for="curPw">현재 비밀번호</label>
+          <input type="password" id="curPw" placeholder="지금 쓰는 비밀번호" autocomplete="off">
+          <label class="field-label" for="newPw1">새 비밀번호</label>
+          <input type="password" id="newPw1" placeholder="새 비밀번호" autocomplete="off">
+          <label class="field-label" for="newPw2">새 비밀번호 확인</label>
+          <input type="password" id="newPw2" placeholder="한 번 더 입력" autocomplete="off">
+          <button class="primary-btn" id="changePwBtn">비밀번호 변경</button>
+          <div id="pwChangeMsg"></div>
+        </div>
+
         <p class="note">브라우저 내장 음성 인식(크롬 권장) + AI 채점 프로토타입입니다.<br>
         테스트 단계이므로 실제 학부모 전화번호 등 민감정보는 넣지 마세요.</p>
       </div>
@@ -3298,7 +3313,9 @@ function doLogout(){
 /* ============================================================
    세션 / 상태
    ============================================================ */
-let session = { student:null, teacher:false };
+// role: 'owner'(원장) | 'teacher'(선생님) | null. 지금은 PIN 통과=owner.
+// 추후 선생님 계정이 생기면 teacher 역할로 로그인하고, 배정된 학생만 보이도록 확장한다.
+let session = { student:null, teacher:false, role:null, teacherId:null };
 let state = {
   level:'low', gradeId:null, unitId:null, question:'', questions:[],
   transcript:'', recognition:null, isRecording:false, manualMode:false, attempt:0, hintsUsed:{},
@@ -3723,6 +3740,7 @@ $('teacherPinBtn').addEventListener('click', async ()=>{
   }
   if(!saved){ await storageSet('config:teacherPin', {hash:savedHash}); }
   session.teacher = true;
+  session.role = 'owner';   // PIN 로그인 = 원장(관리자)
   $('sessionChip').style.display = 'flex';
   $('sessionName').textContent = '선생님 모드';
   showView('viewTeacher');
@@ -6267,6 +6285,37 @@ window.addEventListener('load', ()=>{ try{
   if(rt){ rt.addEventListener('click', ()=> document.getElementById('teacherRail')?.classList.toggle('drawer-open')); }
 })();
 
+/* 관리자 비밀번호 변경 */
+(function(){
+  const btn = document.getElementById('changePwBtn');
+  if(!btn) return;
+  btn.addEventListener('click', async ()=>{
+    const cur = document.getElementById('curPw').value;
+    const n1 = document.getElementById('newPw1').value;
+    const n2 = document.getElementById('newPw2').value;
+    const msg = document.getElementById('pwChangeMsg');
+    const show = (t, ok) => {
+      msg.innerHTML = '<div style="margin-top:10px;padding:10px 12px;border-radius:9px;font-size:.85rem;font-weight:700;'
+        + (ok ? 'background:#E4F3EA;color:#1B7A4B;' : 'background:#FCE4E7;color:#C0344B;') + '">' + t + '</div>';
+    };
+    if(!n1){ show('새 비밀번호를 입력해 주세요.', false); return; }
+    if(n1.length < 4){ show('비밀번호는 4자 이상으로 해주세요.', false); return; }
+    if(n1 !== n2){ show('새 비밀번호가 서로 다릅니다.', false); return; }
+
+    const saved = await storageGet('config:teacherPin');
+    const savedHash = saved ? saved.hash : await sha256('0000');
+    const curHash = await sha256(cur);
+    if(curHash !== savedHash){ show('현재 비밀번호가 맞지 않습니다.', false); return; }
+
+    const newHash = await sha256(n1);
+    await storageSet('config:teacherPin', { hash:newHash });
+    document.getElementById('curPw').value = '';
+    document.getElementById('newPw1').value = '';
+    document.getElementById('newPw2').value = '';
+    show('비밀번호가 변경됐어요. 다음 로그인부터 새 비밀번호를 사용하세요.', true);
+  });
+})();
+
 /* 엔터키로 로그인/PIN 제출 */
 (function(){
   ['loginName','loginPw'].forEach(id=>{
@@ -6307,7 +6356,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v51.1';
+  const APP_VERSION = 'v51.2';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
