@@ -3733,7 +3733,7 @@ function enterStudentView(){
 }
 
 // 통과한 개념 중 복습일(7일)이 된 것을 홈 상단에 카드로 표시
-async // ============ 학생: 선생님이 낸 문제 (배정) ============
+// ============ 학생: 선생님이 낸 문제 (배정) ============
 async function loadAssignments(){
   const host = document.getElementById('assignHost');
   if(!host) return;
@@ -6913,7 +6913,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v51.7';
+  const APP_VERSION = 'v51.8';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
