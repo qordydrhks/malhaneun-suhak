@@ -1,0 +1,16 @@
+{
+  "name": "가르치는 수학 · 고등",
+  "short_name": "가르치는수학",
+  "description": "두드림 수학 고등부 개념 진단 · Teach-back",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F5F4FB",
+  "theme_color": "#3A2568",
+  "lang": "ko",
+  "icons": [
+    { "src": "../icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "../icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" }
+  ]
+}
