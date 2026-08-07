@@ -756,6 +756,14 @@
   .pb-count{ font-size:12.5px; color:var(--ink-soft); margin:4px 4px 12px; font-weight:600; }
   .pb-empty{ text-align:center; color:var(--ink-soft); font-size:13px; padding:30px 0; }
 
+  /* 복습 접기/펼치기 */
+  .review-toggle{ width:100%; display:flex; align-items:center; justify-content:space-between; gap:10px;
+    background:#FDF6E3; border:1px solid #F0E0B0; border-radius:12px; padding:13px 15px;
+    font-family:inherit; font-size:13.5px; font-weight:700; color:#8A6D1E; cursor:pointer; text-align:left; }
+  .review-toggle b{ color:#C0344B; }
+  .review-chev{ font-size:12px; transition:transform .2s; flex:0 0 auto; }
+  .review-body{ margin-top:10px; }
+
 </style>
 </head>
 <body>
@@ -3829,14 +3837,33 @@ async function loadReviewCards(){
     return !later;
   });
   if(dueFiltered.length===0) return;
-  const cards = dueFiltered.slice(0,5).map(x=>{
+  const cards = dueFiltered.slice(0,8).map(x=>{
     return `<button class="review-card" data-course="${x.courseId}" data-unit="${x.unitId}">
       <span class="rc-star">⭐</span>
       <span class="rc-text"><b>복습할 시간!</b><br>${escapeHtml(x.unitLabel)}</span>
       <span class="rc-go">복습 →</span>
     </button>`;
   }).join('');
-  host.innerHTML = `<div class="review-wrap"><div class="review-title">🔁 7일 전에 통과한 개념, 한 번 더 말해볼까요?</div>${cards}</div>`;
+  host.innerHTML = `<div class="review-wrap">
+    <button class="review-toggle" id="reviewToggle" aria-expanded="false">
+      <span>🔁 복습할 개념 <b>${dueFiltered.length}개</b> · 7일 전에 통과한 개념을 한 번 더!</span>
+      <span class="review-chev" id="reviewChev">▾</span>
+    </button>
+    <div class="review-body" id="reviewBody" style="display:none;">${cards}</div>
+  </div>`;
+
+  // 접기/펼치기
+  const tgl = document.getElementById('reviewToggle');
+  const body = document.getElementById('reviewBody');
+  const chev = document.getElementById('reviewChev');
+  if(tgl && body){
+    tgl.addEventListener('click', ()=>{
+      const open = body.style.display !== 'none';
+      body.style.display = open ? 'none' : 'block';
+      tgl.setAttribute('aria-expanded', open ? 'false' : 'true');
+      if(chev) chev.style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
+    });
+  }
   host.querySelectorAll('.review-card').forEach(btn=>{
     btn.addEventListener('click', async ()=>{
       const cid = btn.dataset.course, uid = Number(btn.dataset.unit);
@@ -3849,7 +3876,11 @@ async function loadReviewCards(){
       await pickQuestion();
       $('setupCard').style.display='none'; $('questionCard').style.display='block';
       resetRecordingUI();
-      window.scrollTo({top:0,behavior:'smooth'});
+      // 맨 위로 올리지 말고, 방금 뜬 문제 카드가 보이도록 그 위치로 부드럽게 이동
+      requestAnimationFrame(()=>{
+        const qc = $('questionCard');
+        if(qc && qc.scrollIntoView) qc.scrollIntoView({behavior:'smooth', block:'start'});
+      });
     });
   });
 }
@@ -6913,7 +6944,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v51.8';
+  const APP_VERSION = 'v51.9';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
