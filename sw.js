@@ -1,14 +1,20 @@
 // 말하는 수학 서비스워커
 // 설치형 앱(PWA) 요건을 충족하기 위한 최소 구성.
 // 네트워크 우선(network-first)이라 파일을 새로 올리면 바로 반영됩니다.
-const CACHE = 'dodream-v45';
+// 버전을 올리면 activate 시 예전 캐시를 모두 지워 최신 파일이 확실히 로드됩니다.
+const CACHE = 'dodream-v52';
 
 self.addEventListener('install', (e) => {
   self.skipWaiting();
 });
 
 self.addEventListener('activate', (e) => {
-  e.waitUntil(clients.claim());
+  e.waitUntil((async () => {
+    // 예전 버전 캐시 모두 삭제 (오래된 화면이 남지 않도록)
+    const keys = await caches.keys();
+    await Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)));
+    await self.clients.claim();
+  })());
 });
 
 self.addEventListener('fetch', (e) => {
