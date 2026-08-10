@@ -764,6 +764,17 @@
   .review-chev{ font-size:12px; transition:transform .2s; flex:0 0 auto; }
   .review-body{ margin-top:10px; }
 
+
+  .rubric-details{margin-top:14px;border:1px solid #E4E0F0;border-radius:14px;background:#FBFAFE;overflow:hidden;}
+  .rubric-details summary{cursor:pointer;padding:12px 14px;font-weight:800;color:#5B34A8;list-style:none;}
+  .rubric-details summary::-webkit-details-marker{display:none;}
+  .rubric-grid{padding:0 14px 14px;}
+  .rubric-item{margin-top:10px;}
+  .rubric-item>div:first-child{display:flex;justify-content:space-between;font-size:.82rem;color:#4C465D;margin-bottom:5px;}
+  .rubric-bar{height:7px;background:#ECEAF4;border-radius:99px;overflow:hidden;}
+  .rubric-bar i{display:block;height:100%;background:linear-gradient(90deg,#8A63D2,#B49BE8);border-radius:99px;}
+  .rubric-level{margin-top:12px;padding:9px 10px;border-radius:10px;background:#F2EFFB;color:#5B34A8;font-size:.84rem;}
+  .rubric-grid p{font-size:.8rem;line-height:1.5;color:#625C70;margin:8px 0 0;}
 </style>
 </head>
 <body>
@@ -3991,6 +4002,7 @@ function rowToSub(r){
     level: r.level, question: r.question, transcript: r.transcript,
     score: r.score, praise: r.praise, hint: r.hint,
     retryPoint: r.retry_point, misconception: r.misconception,
+    rubric: (()=>{ try{return r.rubric_json ? JSON.parse(r.rubric_json) : (r.rubric || null)}catch(e){return null} })(),
     pass: (r.score||0) >= PASS_SCORE,
     attempt: r.attempt, needTeacher: r.need_teacher, hintsUsed: r.hints_used,
     app: r.app || APP_ID,
@@ -5171,100 +5183,138 @@ function fixMathTerms(text){
 }
 
 async function evaluateWithClaude(unitLabel, question, transcript){
-  transcript = fixMathTerms(transcript);   // 수학 용어 자동 교정 후 채점
+  transcript = fixMathTerms(transcript);
   const isBlank = state.level === 'blank';
+  const gradeName = (GRADES.find(g=>g.id===state.gradeId)||{}).name || state.gradeId || '';
   const blankGuide = isBlank ? `
 [빈칸 모드 추가 지침]
-- 지금 학생은 빈칸 채우기 문제에 답하고 있어. 학생이 말한 답이 빈칸에 맞는지 판단해.
-- 발음이 음성 인식으로 조금 다르게 적혔어도 의미가 맞으면 인정해 줘 (예: '분모'를 '번모'로 인식).
-- 기초 단계이므로 격려를 더 많이, 점수는 후하게. 핵심 단어 1개만 맞아도 60점 이상은 주고, 2개면 통과시켜.
-- 틀린 빈칸은 답을 알려주지 말고 첫 글자나 관련 상황 힌트만 줘.` : '';
+- 기초 단계이므로 짧은 답도 의미가 맞으면 충분히 인정해.
+- 핵심 개념 1개를 정확히 말했으면 너무 박하게 평가하지 말고, 2개 이상 핵심 요소를 충족하면 통과 가능성을 높여.
+- 틀린 빈칸은 답을 그대로 알려주지 말고 첫 글자나 관련 상황 힌트만 줘.` : '';
+
   const systemPrompt = `너는 '말하는 수학'의 다정한 수학 선생님 '뚜삐'야. 초·중등 학생을 대상으로 해.
-학생이 개념 질문 하나에 대해 구두로 설명한 내용을 듣고 평가하는데, 학습과학 연구에 근거한 '정교화 피드백(elaborative feedback)' 원칙을 반드시 지켜:
+이번 평가의 목적은 '키워드를 몇 개 말했는가'가 아니라 학생이 질문의 개념을 실제로 이해하고 있는지를 최대한 공정하게 판단하는 것이야.
 
-[음성 인식 관대화 — 채점 전에 반드시 적용]
-- 이 설명은 학생이 '말로' 한 것을 음성 인식으로 받아쓴 거야. 수학 용어는 특히 잘못 적히기 쉬워. (예: '동측내각'→'동측 내각/동쪽 내각/동측 네각', '외심'→'왜심/외신', '이등변'→'이 등변/이동변')
-- 글자가 조금 달라도 소리가 비슷하고 문맥상 그 용어가 분명하면, 학생이 그 용어를 '맞게 말한 것'으로 간주하고 채점해. 받아쓰기 오류로 학생을 깎지 마.
-- [대안 후보]가 주어지면, 그중에 올바른 용어에 가까운 게 있는지도 살펴보고 학생에게 유리한 쪽으로 해석해.
-- 힌트를 줄 때 잘못 적힌 글자를 그대로 지적하지 마. (학생은 정확히 말했는데 기계가 틀리게 적은 것뿐이야.)
+[1. 음성 인식 관대화]
+- 학생의 답은 음성 인식 텍스트야. 수학 용어는 발음과 문맥을 우선해서 판단해.
+- 글자가 조금 달라도 소리가 비슷하고 문맥상 분명하면 올바른 수학 용어를 말한 것으로 인정해.
+- 대안 후보가 있으면 그중 학생에게 가장 유리하면서 질문의 의미와 맞는 해석을 사용해.
+- 음성 인식 오류 자체는 학생 점수에서 감점하지 마.
 
-[피드백 원칙 — 매우 중요]
-1. "맞았다/틀렸다"는 절대 말하지 마. 정답을 그대로 알려주는 것도 금지야. (단순 정오 피드백은 효과가 거의 없다는 게 연구 결과야.)
-2. 대신 "왜 그런지"에 초점을 둬: 학생 설명에서 잘 된 부분을 콕 짚어 칭찬하고, 빠졌거나 약한 개념이 무엇인지 알려준 뒤, 스스로 다시 떠올릴 수 있는 힌트를 줘.
-3. 오개념(잘못 알고 있는 것)이 보이면, 정답을 주지 말고 "그렇게 하면 이런 경우엔 어떻게 될까?" 처럼 학생이 스스로 모순을 발견하도록 되물어.
-4. 말투는 초·중등 눈높이로 따뜻하고 격려하듯. 너무 어렵거나 딱딱한 용어는 풀어서.
-5. 마지막엔 항상 '다시 설명해볼 포인트'를 딱 하나 제시해서 재도전을 유도해.
-6. [매우 중요] praise·hint·retry_point는 반드시 위 [질문]이 묻는 그 개념에만 붙어야 해. 단원 전체의 일반론이나 질문이 묻지 않은 다른 개념 이야기는 금지. 질문에 없는 내용을 지적하지 마.
-7. hint에는 학생이 실제로 말한 표현을 한 조각 인용해서 연결해 (예: "'외심은 가운데 점'이라고 말한 부분"). 그래야 학생이 자기 설명과 힌트를 이어붙일 수 있어.
-8. [수식 표기] LaTeX와 역슬래시(\\)를 절대 쓰지 마. 각ABC → '각 ABC', 선분AB → '선분 AB', 분수 → 1/2, 제곱 → x^2 처럼 일반 텍스트로만 써.
+[2. 가장 중요한 원칙: 개념 이해와 표현력을 분리]
+- 전문 용어를 쓰지 않아도 수학적 의미가 정확하면 인정해. 예: '1하고 자기 자신만 나눠져요'는 '약수가 1과 자기 자신뿐'과 같은 의미로 볼 수 있어.
+- 문장이 짧거나 어린 학생다운 표현이어도 핵심 의미가 맞으면 과소평가하지 마.
+- 반대로 핵심 단어가 들어 있어도 개념 관계가 틀리면 높은 점수를 주지 마.
+- '그럴듯한 암기 문장'과 실제 이해를 구분하기 위해 관계와 이유를 중요하게 봐.
+
+[3. 질문별 개념 DNA를 먼저 만든다고 생각해]
+현재 질문에 답하려면 필요한 의미 요소를 네가 먼저 정해.
+- essential_concepts: 반드시 알아야 할 핵심 개념 2~5개
+- relations: 개념과 개념 사이의 정확한 관계
+- conditions: 성립 조건/범위가 있다면 무엇인지
+- reasoning: 왜 그런지 설명할 때 필요한 근거
+- accepted_expressions: 어린 학생의 자연스러운 표현도 포함
+- misconceptions: 이 질문에서 자주 생길 수 있는 오개념
+이것들은 학생에게 보여주는 것이 아니라 채점 근거로 사용해.
+
+[4. 100점 루브릭]
+- core_concept: 0~30점 — 핵심 개념을 이해하고 있는가
+- relation: 0~25점 — 개념 사이의 관계/인과를 정확히 연결하는가
+- condition: 0~20점 — 조건·성질·범위를 정확히 알고 있는가
+- reasoning: 0~15점 — 왜 그런지 근거를 설명하는가
+- expression: 0~10점 — 자기 말로 의미가 통하게 설명하는가
+- misconception_penalty: 0~-15점 — 분명한 오개념이 있을 때만 감점
+최종 점수는 위 점수의 합으로 계산하되 0~100 사이로 제한해.
+
+[5. 부분 이해를 정확히 구분]
+다음 수준 중 하나를 판단해:
+- level_0: 거의 모름/무관한 답
+- level_1: 관련 단어나 사실 하나를 알고 있음
+- level_2: 정의 또는 핵심 성질을 알고 있음
+- level_3: 핵심 성질과 관계를 설명함
+- level_4: 이유/근거까지 설명함
+- level_5: 새로운 상황에도 적용할 수 있는 수준의 설명
+
+[6. 학년 보정]
+학년: ${gradeName}
+- 어린 학생에게 전문 용어를 요구하지 마.
+- 같은 의미를 쉬운 말로 정확하게 설명하면 높은 점수를 줄 수 있어.
+- 학년이 올라갈수록 조건, 관계, 이유를 조금 더 엄격하게 본다.
+- 단, 학년을 이유로 이미 알고 있는 개념을 과도하게 감점하지 마.
+
+[7. 피드백]
+- '맞았다/틀렸다'만 말하지 말고 잘한 부분과 보완할 한 가지를 알려줘.
+- hint와 retry_point는 반드시 현재 질문의 개념에만 연결해.
+- hint에는 학생이 실제로 말한 표현을 한 조각 연결해.
+- 오개념이 있으면 정답을 바로 알려주지 말고 스스로 다시 생각하게 하는 질문을 줘.
+- LaTeX와 역슬래시는 사용하지 마.
 ${blankGuide}
-[채점 — 이 순서를 반드시 지켜]
-1. 먼저 이 [질문]에 제대로 답하려면 꼭 들어가야 할 '핵심 단어(또는 핵심 표현)' 4개를 스스로 정해. (개념의 이름, 핵심 성질, 조건, 관계 등)
-2. 학생의 구두 설명에 그 4개 중 몇 개가 (뜻이 통하게) 들어갔는지 세. 음성 인식 오류나 말로 풀어 쓴 동의어도 뜻이 맞으면 인정해. (예: '수직이등분선'을 '똑같이 나누는 선'이라고 말해도 인정)
-3. 포함된 핵심 단어 개수(0~4개)로 '기본 점수'를 정해:
-   - 0개 → 25점,  1개 → 45점,  2개 → 70점,  3개 → 82점,  4개 → 90점
-   (2개 이상이면 통과선인 70점을 넘도록. 학생을 너무 박하게 깎지 마.)
-4. 여기에 '설명 품질 가점'을 최대 +10점까지 더해: 왜 그런지 이유를 말했거나, 예시를 들었거나, 개념들의 관계를 정확히 연결했으면 가점. 단 최종 점수는 100점을 넘지 않게.
-5. 오개념이 분명히 드러난 경우에만 최종 점수에서 살짝 감점(최대 −10). 사소한 말실수나 음성 인식 오류로는 감점하지 마.
-- 전반적으로 후하게. 핵심을 짚었으면 통과시키고, 부족한 부분은 점수가 아니라 힌트로 안내해.
-- misconception 필드에는 감지된 오개념이 있으면 한 줄로, 없으면 빈 문자열.
-- keywords 필드에 네가 1번에서 정한 핵심 단어 4개를, hit_count 필드에 학생 설명에 포함된 개수를 넣어.
 
-반드시 아래 JSON "만" 출력해. 앞뒤에 인사말·설명·마크다운을 절대 붙이지 마. 첫 글자는 { 여야 하고 마지막 글자는 } 여야 해.
-각 문자열은 짧게(1~2문장). 큰따옴표 안에서 줄바꿈 하지 마.
-{"score": 0-100 정수, "keywords": ["핵심단어1","핵심단어2","핵심단어3","핵심단어4"], "hit_count": 0-4 정수, "praise": "구체적으로 잘한 점 한두 문장", "hint": "빠진/약한 개념을 스스로 떠올리게 하는 힌트 한두 문장(정답 직접 언급 금지)", "retry_point": "다시 설명해볼 포인트 딱 하나", "misconception": "감지된 오개념 한 줄 또는 빈 문자열"}`;
+[8. 반드시 JSON만 출력]
+아래 형식을 정확히 지켜. score는 네가 임의로 결정하지 말고 components를 기준으로 계산한 값과 일치해야 해.
+{
+  "score": 0-100 정수,
+  "rubric": {
+    "core_concept": 0-30,
+    "relation": 0-25,
+    "condition": 0-20,
+    "reasoning": 0-15,
+    "expression": 0-10,
+    "misconception_penalty": 0--15,
+    "understanding_level": "level_0~level_5",
+    "core_evidence": "핵심 개념 판단 근거 한 문장",
+    "relation_evidence": "관계 판단 근거 한 문장",
+    "condition_evidence": "조건/성질 판단 근거 한 문장",
+    "reasoning_evidence": "이유 판단 근거 한 문장"
+  },
+  "concept_dna": {
+    "essential_concepts": ["의미 단위 2~5개"],
+    "relations": ["핵심 관계 0~3개"],
+    "conditions": ["조건 0~3개"],
+    "misconceptions": ["이 질문의 대표 오개념 0~3개"]
+  },
+  "keywords": ["대표 표현 2~5개"],
+  "hit_count": 0-5,
+  "misconception": "감지된 오개념 한 줄 또는 빈 문자열",
+  "praise": "구체적으로 잘한 점 한두 문장",
+  "hint": "빠진/약한 개념을 스스로 떠올리게 하는 힌트 한두 문장",
+  "retry_point": "다시 설명해볼 포인트 딱 하나"
+}
+`;
+
   const altLine = (state.altTranscript && state.altTranscript.trim())
     ? `\n\n[대안 후보(같은 말의 다른 인식 결과 — 참고용)]\n${state.altTranscript}` : '';
-  const userMsg = `[단원] ${unitLabel}\n[질문] ${question}\n\n[학생의 구두 설명(음성 인식 텍스트, 다소 어색해도 그대로임)]\n${transcript}${altLine}`;
-  const data = await callClaude({ model:"claude-sonnet-4-6", max_tokens:1600, system:systemPrompt, messages:[{role:"user", content:userMsg}] });
+  const userMsg = `[학년] ${gradeName}\n[단원] ${unitLabel}\n[질문] ${question}\n\n[학생의 구두 설명(음성 인식 텍스트)]\n${transcript}${altLine}`;
+  const data = await callClaude({ model:"claude-sonnet-4-6", max_tokens:2200, system:systemPrompt, messages:[{role:"user", content:userMsg}] });
   const raw = (data.content||[]).map(b=>b.text||'').join('\n').trim();
   const parsed = parseEval(raw);
   if(!parsed) throw new Error('AI 응답을 해석하지 못했어요.');
-  parsed.score = Math.max(0, Math.min(100, Math.round(Number(parsed.score)||0)));
-  // 안전장치: 핵심단어 포함 개수(hit_count)별 최소 점수 보장 (AI가 규칙을 어겨도 후하게)
-  const _h = Math.max(0, Math.min(4, Math.round(Number(parsed.hit_count))||0));
-  const _floor = [25, 45, 70, 82, 90][_h];
-  if(Number.isFinite(_floor) && parsed.score < _floor) parsed.score = _floor;
-  return parsed;
-}
 
-// 채점 응답 파싱: ①정상 JSON ②중괄호 구간만 추출 ③필드별 정규식 (잘려도 최대한 살림)
-function parseEval(raw){
-  let text = String(raw||'').replace(/```json/gi,'').replace(/```/g,'').trim();
-  // ① 그대로 파싱
-  try{
-    const o = JSON.parse(text);
-    if(o && o.score !== undefined) return o;
-  }catch(e){}
-  // ② 첫 { ~ 마지막 } 만 잘라서 파싱
-  const s = text.indexOf('{'), e2 = text.lastIndexOf('}');
-  if(s >= 0 && e2 > s){
-    try{
-      const o = JSON.parse(text.slice(s, e2+1));
-      if(o && o.score !== undefined) return o;
-    }catch(e){}
+  const rb = parsed.rubric || {};
+  const clamp = (n,min,max)=>Math.max(min,Math.min(max,Math.round(Number(n)||0)));
+  rb.core_concept = clamp(rb.core_concept,0,30);
+  rb.relation = clamp(rb.relation,0,25);
+  rb.condition = clamp(rb.condition,0,20);
+  rb.reasoning = clamp(rb.reasoning,0,15);
+  rb.expression = clamp(rb.expression,0,10);
+  rb.misconception_penalty = clamp(rb.misconception_penalty, -15, 0);
+  parsed.rubric = rb;
+  parsed.score = clamp(rb.core_concept + rb.relation + rb.condition + rb.reasoning + rb.expression + rb.misconception_penalty,0,100);
+  parsed.hit_count = clamp(parsed.hit_count,0,5);
+  if(!Array.isArray(parsed.keywords)) parsed.keywords=[];
+  if(!parsed.concept_dna) parsed.concept_dna={};
+  if(!Array.isArray(parsed.concept_dna.essential_concepts)) parsed.concept_dna.essential_concepts=[];
+  if(!Array.isArray(parsed.concept_dna.relations)) parsed.concept_dna.relations=[];
+  if(!Array.isArray(parsed.concept_dna.conditions)) parsed.concept_dna.conditions=[];
+  if(!Array.isArray(parsed.concept_dna.misconceptions)) parsed.concept_dna.misconceptions=[];
+
+  // 기초/빈칸 단계에서는 짧지만 의미가 맞는 답을 과소평가하지 않도록 최소점수 보정
+  if(isBlank){
+    const h = Math.max(0, Math.min(5, parsed.hit_count));
+    const floor = [25,60,70,80,88,92][h];
+    if(parsed.score < floor) parsed.score = floor;
   }
-  // ③ 필드별 정규식 추출 (응답이 잘렸거나 따옴표가 깨진 경우)
-  const pickStr = (key)=>{
-    const m = text.match(new RegExp('"'+key+'"\\s*:\\s*"((?:[^"\\\\]|\\\\.)*)', 'i'));
-    return m ? m[1].replace(/\\"/g,'"').trim() : '';
-  };
-  const mScore = text.match(/"score"\s*:\s*(\d{1,3})/i);
-  const score = mScore ? Number(mScore[1]) : null;
-  const praise = pickStr('praise');
-  const hint = pickStr('hint');
-  const retry = pickStr('retry_point');
-  const misc = pickStr('misconception');
-  if(score !== null || praise || hint){
-    return {
-      score: score !== null ? score : 60,
-      praise: praise || '설명해 줘서 좋아요!',
-      hint: hint || '핵심 개념을 한 번 더 떠올려 볼까요?',
-      retry_point: retry || '',
-      misconception: misc || ''
-    };
-  }
-  return null;
+  return parsed;
 }
 
 async function evaluateWithClaude_OLD(unitLabel, questions, transcript){
@@ -5356,6 +5406,16 @@ function renderFeedback(result, advance, needTeacher){
     ? `<div class="fb-block misc"><div class="fb-eyebrow">한 번 더 생각해볼 점</div><p>${escapeHtml(result.misconception)}</p></div>`
     : '';
 
+  const rubric = result.rubric || {};
+  const rubricItems = [
+    ['핵심 개념', rubric.core_concept, 30],
+    ['개념 관계', rubric.relation, 25],
+    ['조건·성질', rubric.condition, 20],
+    ['이유·근거', rubric.reasoning, 15],
+    ['표현·전달', rubric.expression, 10]
+  ];
+  const rubricBlock = `<details class="rubric-details"><summary>🔎 어떻게 판단했는지 보기</summary><div class="rubric-grid">${rubricItems.map(([label,v,max])=>`<div class="rubric-item"><div><b>${label}</b><span>${Number(v)||0}/${max}</span></div><div class="rubric-bar"><i style="width:${Math.max(0,Math.min(100,((Number(v)||0)/max)*100))}%"></i></div></div>`).join('')}<div class="rubric-level">이해 단계: <b>${escapeHtml((rubric.understanding_level||'level_0').replace('level_','Level '))}</b></div>${rubric.core_evidence?`<p><b>핵심 개념:</b> ${escapeHtml(rubric.core_evidence)}</p>`:''}${rubric.relation_evidence?`<p><b>관계:</b> ${escapeHtml(rubric.relation_evidence)}</p>`:''}${rubric.condition_evidence?`<p><b>조건·성질:</b> ${escapeHtml(rubric.condition_evidence)}</p>`:''}${rubric.reasoning_evidence?`<p><b>이유:</b> ${escapeHtml(rubric.reasoning_evidence)}</p>`:''}</div></details>`;
+
   fbArea.innerHTML = `
     <div class="fb-wrap">
       <div class="fb-score-row">
@@ -5373,6 +5433,7 @@ function renderFeedback(result, advance, needTeacher){
       <div class="fb-block praise"><div class="fb-eyebrow">잘한 점</div><p>${escapeHtml(result.praise||'')}</p></div>
       <div class="fb-block hint"><div class="fb-eyebrow">더 채워볼 점</div><p>${escapeHtml(result.hint||'')}</p></div>
       ${misconceptionBlock}
+      ${rubricBlock}
       ${bottom}
       <div class="fb-appeal" style="margin-top:18px;border-top:1px dashed #D9D4EC;padding-top:14px;">
         <button id="appealToggle" type="button" style="width:100%;background:#F2F0FB;border:1px solid #E0DAF2;color:#5B34A8;font-family:inherit;font-weight:700;font-size:.9rem;padding:11px;border-radius:11px;cursor:pointer;">🤔 왜 이 점수인지 궁금하거나 채점이 이상해요</button>
@@ -6234,6 +6295,7 @@ async function saveSubmission(grade, unit, transcript, result, attempt, needTeac
     hint: result.hint || '',
     retry_point: result.retry_point || '',
     misconception: result.misconception || '',
+    rubric_json: JSON.stringify({ rubric: result.rubric||null, concept_dna: result.concept_dna||null, keywords: result.keywords||[], hit_count: result.hit_count||0, understanding_level: result.rubric?.understanding_level||'' }),
     attempt: attempt || 1,
     need_teacher: !!needTeacher,
     hints_used: Object.keys(state.hintsUsed||{}).length,
@@ -6241,7 +6303,12 @@ async function saveSubmission(grade, unit, transcript, result, attempt, needTeac
   };
   const ok = await checkSupabase();
   if(ok){
-    try{ await sbInsert('submissions', row); return; }catch(e){ console.warn('제출 저장 실패(서버)', e); }
+    try{ await sbInsert('submissions', row); return; }
+    catch(e){
+      // 기존 Supabase 스키마에 rubric_json 컬럼이 아직 없어도 기존 기록 저장은 계속되게 한다.
+      try{ const legacyRow = {...row}; delete legacyRow.rubric_json; await sbInsert('submissions', legacyRow); return; }
+      catch(e2){ console.warn('제출 저장 실패(서버)', e2); }
+    }
   }
   // 폴백: 로컬
   try{
@@ -6249,7 +6316,7 @@ async function saveSubmission(grade, unit, transcript, result, attempt, needTeac
       id:'sub'+Date.now(), studentId:row.student_id, name:row.name, studentGrade:row.student_grade,
       courseId:row.course_id, courseName:row.course_name, unitId:row.unit_id, unitLabel:row.unit_label,
       level:row.level, question:row.question, transcript, score:row.score, praise:row.praise, hint:row.hint,
-      retryPoint:row.retry_point, misconception:row.misconception, pass:passed,
+      retryPoint:row.retry_point, misconception:row.misconception, rubric: result.rubric||null, conceptDna: result.concept_dna||null, keywords: result.keywords||[], hitCount: result.hit_count||0, pass:passed,
       attempt:row.attempt, needTeacher:row.need_teacher, hintsUsed:row.hints_used,
       reviewDue, time: now.toISOString()
     };
