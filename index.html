@@ -4730,9 +4730,13 @@ function cpRender(){
   }, false, CP.small===null);
   const qs=CP.type!==null?cpQuestions():[];
   const qHead = state.level==='high' ? '깊은 질문' : (state.level==='blank' ? '채워보기' : '쉬운 질문');
-  cpAddColumn(qHead, qs.map((q,i)=>({key:i,label:q})), CP.qIndex, key=>{
-    CP.qIndex=Number(key); state._pickerQIndex=CP.qIndex; cpSyncLegacy(); cpRender();
-    const btn=document.getElementById('startBtn'); if(btn && !btn.disabled) btn.textContent='선택한 질문 시작하기';
+  cpAddColumn(qHead, qs.map((q,i)=>({key:i,label:q})), CP.qIndex, async key=>{
+    CP.qIndex=Number(key);
+    state._pickerQIndex=CP.qIndex;
+    cpSyncLegacy();
+    cpRender();
+    // 마지막 질문을 클릭하면 바로 학습 화면으로 이동
+    await startSelectedQuestion();
   }, true, CP.type===null);
   const parts=[];
   if(model) parts.push(model.name);
@@ -4974,24 +4978,29 @@ async function getOrGenerateBlanks(grade, unit){
   }
 }
 
-$('startBtn').addEventListener('click', async ()=>{
-  if(!state.unitId) return;
-  state.attempt = 0; state.hintsUsed = {}; // 새 개념 시작 → 시도·힌트 초기화
+async function startSelectedQuestion(){
+  if(!state.unitId) return false;
+  state.attempt = 0; state.hintsUsed = {};
   const btn = $('startBtn');
-  if(state.level === 'blank'){
+  if(state.level === 'blank' && btn){
     btn.disabled = true; btn.textContent = '빈칸 문제 만드는 중…';
   }
   const ok = await pickQuestion();
-  btn.disabled = false; btn.textContent = '질문 확인하기';
+  if(btn){ btn.disabled = false; btn.textContent = '질문 확인하기'; }
   if(ok === false){
     alert('빈칸 문제를 만들지 못했어요. 잠시 후 다시 시도하거나 다른 난이도를 선택해 주세요.');
-    return;
+    return false;
   }
   $('setupCard').style.display = 'none';
   $('quizCard').style.display = 'none';
-  $('questionCard').style.display = 'block'; if(typeof setLearnStep==='function') setLearnStep(2);
+  $('questionCard').style.display = 'block';
+  if(typeof setLearnStep==='function') setLearnStep(2);
   resetRecordingUI();
-});
+  window.scrollTo({top:0, behavior:'smooth'});
+  return true;
+}
+
+$('startBtn').addEventListener('click', startSelectedQuestion);
 $('backBtn').addEventListener('click', ()=>{
   stopRecognitionIfActive();
   $('questionCard').style.display = 'none';
