@@ -4630,18 +4630,37 @@ function populateUnitSelect(){
   const sel = $('unitSelect');
   const placeholder = '<option value="">' + (state.gradeId?'질문을 선택해주세요 ▼':'과정을 먼저 선택해주세요') + '</option>';
   const units = currentUnits();
-  const chapters = CHAPTER_MAP[state.gradeId];
-  if(chapters){
+
+  // PDF 통합 질문 데이터는 새 unitId(910000~)를 쓰므로
+  // 예전 CHAPTER_MAP의 id 범위로 필터링하면 모든 option이 사라진다.
+  // 통합 데이터가 있는 과정은 bigUnit 값을 기준으로 직접 그룹핑한다.
+  if(DD_CURRICULUM[state.gradeId]){
+    const groups = new Map();
+    units.forEach(u=>{
+      const key = u.bigUnit || '전체 개념';
+      if(!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(u);
+    });
     let html = placeholder;
-    chapters.forEach(ch=>{
-      const inCh = units.filter(u=>u.id>=ch.from && u.id<=ch.to);
-      if(inCh.length===0) return;
-      html += `<optgroup label="${ch.name}">` +
-        inCh.map(u=>`<option value="${u.id}">${u.label}</option>`).join('') + '</optgroup>';
+    groups.forEach((arr, name)=>{
+      html += `<optgroup label="${name}">` +
+        arr.map(u=>`<option value="${u.id}">${u.label}</option>`).join('') + '</optgroup>';
     });
     sel.innerHTML = html;
   } else {
-    sel.innerHTML = placeholder + units.map(u=>`<option value="${u.id}">${u.label}</option>`).join('');
+    const chapters = CHAPTER_MAP[state.gradeId];
+    if(chapters){
+      let html = placeholder;
+      chapters.forEach(ch=>{
+        const inCh = units.filter(u=>u.id>=ch.from && u.id<=ch.to);
+        if(inCh.length===0) return;
+        html += `<optgroup label="${ch.name}">` +
+          inCh.map(u=>`<option value="${u.id}">${u.label}</option>`).join('') + '</optgroup>';
+      });
+      sel.innerHTML = html;
+    } else {
+      sel.innerHTML = placeholder + units.map(u=>`<option value="${u.id}">${u.label}</option>`).join('');
+    }
   }
   state.unitId = null;
 }
@@ -4704,7 +4723,12 @@ function cpSyncLegacy(){
   const t=cpCurrentType();
   if(t && t.unitId!=null){
     state.unitId=Number(t.unitId);
-    if(us && String(us.value)!==String(t.unitId)){ us.value=String(t.unitId); us.dispatchEvent(new Event('change',{bubbles:true})); }
+    if(us && String(us.value)!==String(t.unitId)){
+      us.value=String(t.unitId);
+      // option이 정상 존재할 때만 change를 발생시킨다.
+      // 없으면 change 핸들러가 unitId를 null로 되돌리는 문제를 막는다.
+      if(us.value) us.dispatchEvent(new Event('change',{bubbles:true}));
+    }
   }
   document.querySelectorAll('#levelSeg button').forEach(x=>x.classList.toggle('active',x.dataset.level===state.level));
   if(typeof updateTimerNote==='function') updateTimerNote();
