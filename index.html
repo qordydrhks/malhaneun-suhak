@@ -799,6 +799,33 @@
 }
 
 </style>
+
+<style id="a-style-picker-css">
+/* v57 · 모바일/PC 공통 한 화면 전체 선택형 */
+#cpColumns{display:none !important;}
+.a-picker-card{margin-top:12px;border:1px solid #E7E4F0;border-radius:16px;background:#fff;padding:14px;}
+.a-picker-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;}
+.a-picker-title strong{font-size:13px;color:#5B34A8;}
+.a-picker-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;}
+.a-field{min-width:0;}
+.a-field.full{grid-column:1/-1;}
+.a-field label{display:block;font-size:10.5px;font-weight:800;color:#6E6880;margin:0 0 5px 2px;}
+.a-field select{width:100%;height:44px;border:1px solid #E4DFEE;border-radius:11px;background:#FCFBFE;color:#17172D;padding:0 10px;font-size:12.5px;font-weight:700;outline:none;}
+.a-field select:focus{border-color:#8E6BE8;box-shadow:0 0 0 3px rgba(115,67,230,.09);}
+#aQuestionSelect{min-height:46px;}
+.a-picker-summary{margin-top:10px;background:#F4EFFF;border-radius:10px;padding:9px 11px;color:#5B34A8;font-size:11.5px;font-weight:700;line-height:1.55;}
+.a-picker-help{margin-top:7px;font-size:10.5px;color:#7B768B;line-height:1.45;}
+@media(min-width:760px){
+  .a-picker-grid{grid-template-columns:repeat(4,minmax(0,1fr));}
+  .a-field.question-field{grid-column:1/-1;}
+}
+@media(max-width:420px){
+  .a-picker-card{padding:12px 10px;}
+  .a-picker-grid{gap:8px;}
+  .a-field select{font-size:12px;padding:0 8px;}
+}
+</style>
+
 </head>
 <body>
 <script>
@@ -895,7 +922,26 @@ window.DDOOPI = {
         <div class="concept-picker" id="conceptPicker">
           <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;font-size:11.5px;color:var(--ink-soft);"><span>교재 기반 통합 질문 데이터</span><span style="background:#E9F5EE;color:#2C8459;padding:4px 9px;border-radius:999px;font-weight:800;">746문항 연결</span></div>
           <div class="cp-breadcrumb" id="cpBreadcrumb">과정부터 골라주세요</div>
-          <div class="cp-columns" id="cpColumns"></div>
+          
+<div class="a-picker-card" id="aPicker">
+  <div class="a-picker-title">
+    <strong>한 화면에서 학습 내용 선택</strong>
+    <span style="font-size:10.5px;color:#7B768B;">모바일 최적화</span>
+  </div>
+  <div class="a-picker-grid">
+    <div class="a-field"><label>학년</label><select id="aGradeSelect"></select></div>
+    <div class="a-field"><label>학기</label><select id="aSemesterSelect"></select></div>
+    <div class="a-field full"><label>대단원</label><select id="aBigSelect"></select></div>
+    <div class="a-field"><label>중단원</label><select id="aMidSelect"></select></div>
+    <div class="a-field"><label>소단원</label><select id="aSmallSelect"></select></div>
+    <div class="a-field full"><label>개념 · 문제 유형</label><select id="aTypeSelect"></select></div>
+    <div class="a-field question-field"><label>말하기 질문 · 쉬운/깊은 질문 모두 표시</label><select id="aQuestionSelect"></select></div>
+  </div>
+  <div class="a-picker-summary" id="aPickerSummary">학년부터 선택해 주세요.</div>
+  <div class="a-picker-help">질문을 고른 뒤 아래 <b>질문 확인하기</b>를 누르면 선택한 질문으로 바로 시작합니다.</div>
+</div>
+
+<div class="cp-columns" id="cpColumns"></div>
         </div>
 
         <!-- 기존 로직 호환용: 화면에서는 숨기고 컬럼 선택과 동기화 -->
@@ -4797,6 +4843,136 @@ setTimeout(()=>{
   cpRender();
 },0);
 
+
+/* ============================================================
+   v57 · A스타일 한 화면 전체 선택형
+   학년 → 학기 → 대단원 → 중단원 → 소단원 → 유형 → 질문
+   기존 CP/state/unitId를 그대로 사용하므로 채점·음성·저장 로직은 유지.
+   ============================================================ */
+const AP = { gradePart:'', semesterPart:'' };
+
+function apParseCourseName(name){
+  const n=String(name||'').replace(/\s+/g,'');
+  let m=n.match(/^(초|중|고)(\d)[-·]?(1|2)학기$/);
+  if(m) return {grade:m[1]+m[2], semester:m[3]+'학기'};
+  m=n.match(/^(초|중|고)(\d)[-·]?(1|2)$/);
+  if(m) return {grade:m[1]+m[2], semester:m[3]+'학기'};
+  m=n.match(/^(초|중|고)(\d).*?(1|2)학기/);
+  if(m) return {grade:m[1]+m[2], semester:m[3]+'학기'};
+  return {grade:name||'', semester:'과정'};
+}
+function apCourses(){
+  return GRADES.map(g=>({id:g.id,name:g.name,...apParseCourseName(g.name)}));
+}
+function apUnique(arr){ return [...new Set(arr.filter(Boolean))]; }
+function apSetOptions(el, items, value, placeholder){
+  if(!el) return;
+  el.innerHTML = (placeholder?`<option value="">${placeholder}</option>`:'') +
+    items.map(x=>`<option value="${escapeHtml(String(x.value))}">${escapeHtml(String(x.label))}</option>`).join('');
+  if(value!=null && items.some(x=>String(x.value)===String(value))) el.value=String(value);
+}
+function apCurrentCourse(){
+  const courses=apCourses();
+  return courses.find(c=>c.grade===AP.gradePart && c.semester===AP.semesterPart) || null;
+}
+function apInit(){
+  const g=$('aGradeSelect'), sem=$('aSemesterSelect');
+  if(!g||!sem) return;
+  const courses=apCourses();
+  const grades=apUnique(courses.map(c=>c.grade));
+  apSetOptions(g, grades.map(x=>({value:x,label:x})), AP.gradePart, '학년 선택');
+  g.addEventListener('change',()=>{
+    AP.gradePart=g.value; AP.semesterPart='';
+    CP.grade=null; CP.big=null; CP.small=null; CP.type=null; CP.qIndex=null; state.unitId=null;
+    apRender();
+  });
+  sem.addEventListener('change',()=>{
+    AP.semesterPart=sem.value;
+    const c=apCurrentCourse();
+    CP.grade=c?c.id:null; CP.big=null; CP.small=null; CP.type=null; CP.qIndex=null; state.unitId=null;
+    if(CP.grade){ state.gradeId=CP.grade; const gs=$('gradeSelect'); if(gs){gs.value=CP.grade; gs.dispatchEvent(new Event('change',{bubbles:true}));} }
+    apRender();
+  });
+  ['aBigSelect','aSmallSelect','aTypeSelect','aQuestionSelect'].forEach((id)=>{
+    const el=$(id); if(!el) return;
+    el.addEventListener('change', async ()=>{
+      if(id==='aBigSelect'){ CP.big=el.value===''?null:Number(el.value); CP.small=null; CP.type=null; CP.qIndex=null; state.unitId=null; }
+      if(id==='aSmallSelect'){ CP.small=el.value===''?null:Number(el.value); CP.type=null; CP.qIndex=null; state.unitId=null; }
+      if(id==='aTypeSelect'){ CP.type=el.value===''?null:Number(el.value); CP.qIndex=null; state.unitId=null; cpSyncLegacy(); }
+      if(id==='aQuestionSelect'){
+        const raw=el.value;
+        if(raw){
+          const [lvl,idxStr]=raw.split(':'); const qi=Number(idxStr);
+          const t=cpCurrentType();
+          state.level=lvl==='high'?'high':lvl==='blank'?'blank':'low';
+          CP.qIndex=qi; state._pickerQIndex=qi;
+          if(t){
+            state._directSelectedQuestion = lvl==='high' ? ((t.high||[])[qi]||'') :
+              lvl==='low' ? ((t.low||[])[qi]||'') : '';
+          }
+          cpSyncLegacy();
+        }
+      }
+      apRender();
+    });
+  });
+  // 중단원은 현재 PDF 구조에 없는 과정이 많아 표시용으로 둔다.
+  const mid=$('aMidSelect'); if(mid) mid.disabled=true;
+  apRender();
+}
+function apRender(){
+  const courses=apCourses();
+  const g=$('aGradeSelect'), sem=$('aSemesterSelect');
+  if(!g||!sem) return;
+  const grades=apUnique(courses.map(c=>c.grade));
+  apSetOptions(g,grades.map(x=>({value:x,label:x})),AP.gradePart,'학년 선택');
+
+  const sems=AP.gradePart ? apUnique(courses.filter(c=>c.grade===AP.gradePart).map(c=>c.semester)) : [];
+  apSetOptions(sem,sems.map(x=>({value:x,label:x})),AP.semesterPart,'학기 선택');
+
+  const course=apCurrentCourse();
+  if(course && CP.grade!==course.id) CP.grade=course.id;
+  const model=CP.grade?cpModel(CP.grade):null;
+  const bigs=model?model.bigUnits:[];
+
+  apSetOptions($('aBigSelect'),bigs.map((b,i)=>({value:i,label:b.name})),CP.big,'대단원 선택');
+
+  // 현재 통합 PDF 데이터는 대단원→소단원 구조이므로 중단원은 없는 경우를 명확히 표시.
+  const mid=$('aMidSelect');
+  if(mid){
+    mid.innerHTML='<option value="">중단원 구분 없음</option>';
+    mid.disabled=true;
+  }
+
+  const big=cpCurrentBig(), smalls=big?big.smalls:[];
+  apSetOptions($('aSmallSelect'),smalls.map((x,i)=>({value:i,label:x.name})),CP.small,'소단원 선택');
+
+  const small=cpCurrentSmall(), types=small?small.types:[];
+  apSetOptions($('aTypeSelect'),types.map((x,i)=>({value:i,label:x.name})),CP.type,'유형 선택');
+
+  const t=cpCurrentType(); const qs=[];
+  if(t){
+    (t.low||[]).forEach((q,i)=>qs.push({value:'low:'+i,label:'🟢 쉬운 · '+q}));
+    (t.high||[]).forEach((q,i)=>qs.push({value:'high:'+i,label:'🟣 깊은 · '+q}));
+  }
+  const activeQ = CP.qIndex==null ? '' : ((state.level==='high'?'high':'low')+':'+CP.qIndex);
+  apSetOptions($('aQuestionSelect'),qs,activeQ,'질문 선택');
+
+  const parts=[];
+  if(AP.gradePart) parts.push(AP.gradePart);
+  if(AP.semesterPart) parts.push(AP.semesterPart);
+  if(big) parts.push(big.name);
+  if(small) parts.push(small.name);
+  if(t) parts.push(t.name);
+  if(CP.qIndex!=null && t){
+    const q=state.level==='high'?(t.high||[])[CP.qIndex]:(t.low||[])[CP.qIndex];
+    if(q) parts.push(q);
+  }
+  const sum=$('aPickerSummary'); if(sum) sum.textContent=parts.length?parts.join(' › '):'학년부터 선택해 주세요.';
+  if(typeof checkStartReady==='function') checkStartReady();
+}
+setTimeout(apInit,0);
+
 $('gradeSelect').addEventListener('change', e=>{
   state.gradeId = e.target.value || null;
   populateUnitSelect();
@@ -5035,7 +5211,26 @@ async function getOrGenerateBlanks(grade, unit){
 }
 
 async function startSelectedQuestion(){
-  if(!state.unitId) return false;
+  // v57: 새 선택 UI와 기존 학습 엔진 사이 unitId를 확실히 연결한다.
+  // DD_CURRICULUM의 type.unitId가 있으면 우선 사용하고, 혹시 누락돼도 현재 선택 정보로 다시 찾는다.
+  if(!state.unitId){
+    const t = (typeof cpCurrentType==='function') ? cpCurrentType() : null;
+    if(t && t.unitId!=null) state.unitId = Number(t.unitId);
+  }
+  if(!state.unitId){
+    const units = currentUnits();
+    const small = (typeof cpCurrentSmall==='function') ? cpCurrentSmall() : null;
+    const type = (typeof cpCurrentType==='function') ? cpCurrentType() : null;
+    const matched = units.find(u =>
+      (!small || u.smallUnit===small.name || (u.label||'').includes(small.name)) &&
+      (!type || u.typeLabel===type.name || (u.label||'').includes(type.name))
+    );
+    if(matched) state.unitId = Number(matched.id);
+  }
+  if(!state.unitId){
+    alert('선택한 질문의 학습 단원을 연결하지 못했습니다. 다른 질문을 선택한 뒤 다시 시도해 주세요.');
+    return false;
+  }
   state.attempt = 0; state.hintsUsed = {};
   const btn = $('startBtn');
   if(state.level === 'blank' && btn){
