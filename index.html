@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>말하는 수학</title>
-<!-- v58: 중1-1 대단원 2~4 PDF 정리본 적용 -->
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#4C6FFF">
 <meta name="mobile-web-app-capable" content="yes">
@@ -800,33 +799,6 @@
 }
 
 </style>
-
-<style id="a-style-picker-css">
-/* v57 · 모바일/PC 공통 한 화면 전체 선택형 */
-#cpColumns{display:none !important;}
-.a-picker-card{margin-top:12px;border:1px solid #E7E4F0;border-radius:16px;background:#fff;padding:14px;}
-.a-picker-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;}
-.a-picker-title strong{font-size:13px;color:#5B34A8;}
-.a-picker-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;}
-.a-field{min-width:0;}
-.a-field.full{grid-column:1/-1;}
-.a-field label{display:block;font-size:10.5px;font-weight:800;color:#6E6880;margin:0 0 5px 2px;}
-.a-field select{width:100%;height:44px;border:1px solid #E4DFEE;border-radius:11px;background:#FCFBFE;color:#17172D;padding:0 10px;font-size:12.5px;font-weight:700;outline:none;}
-.a-field select:focus{border-color:#8E6BE8;box-shadow:0 0 0 3px rgba(115,67,230,.09);}
-#aQuestionSelect{min-height:46px;}
-.a-picker-summary{margin-top:10px;background:#F4EFFF;border-radius:10px;padding:9px 11px;color:#5B34A8;font-size:11.5px;font-weight:700;line-height:1.55;}
-.a-picker-help{margin-top:7px;font-size:10.5px;color:#7B768B;line-height:1.45;}
-@media(min-width:760px){
-  .a-picker-grid{grid-template-columns:repeat(4,minmax(0,1fr));}
-  .a-field.question-field{grid-column:1/-1;}
-}
-@media(max-width:420px){
-  .a-picker-card{padding:12px 10px;}
-  .a-picker-grid{gap:8px;}
-  .a-field select{font-size:12px;padding:0 8px;}
-}
-</style>
-
 </head>
 <body>
 <script>
@@ -923,26 +895,7 @@ window.DDOOPI = {
         <div class="concept-picker" id="conceptPicker">
           <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;font-size:11.5px;color:var(--ink-soft);"><span>교재 기반 통합 질문 데이터</span><span style="background:#E9F5EE;color:#2C8459;padding:4px 9px;border-radius:999px;font-weight:800;">746문항 연결</span></div>
           <div class="cp-breadcrumb" id="cpBreadcrumb">과정부터 골라주세요</div>
-          
-<div class="a-picker-card" id="aPicker">
-  <div class="a-picker-title">
-    <strong>한 화면에서 학습 내용 선택</strong>
-    <span style="font-size:10.5px;color:#7B768B;">모바일 최적화</span>
-  </div>
-  <div class="a-picker-grid">
-    <div class="a-field"><label>학년</label><select id="aGradeSelect"></select></div>
-    <div class="a-field"><label>학기</label><select id="aSemesterSelect"></select></div>
-    <div class="a-field full"><label>대단원</label><select id="aBigSelect"></select></div>
-    <div class="a-field"><label>중단원</label><select id="aMidSelect"></select></div>
-    <div class="a-field"><label>소단원</label><select id="aSmallSelect"></select></div>
-    <div class="a-field full"><label>개념 · 문제 유형</label><select id="aTypeSelect"></select></div>
-    <div class="a-field question-field"><label>말하기 질문 · 쉬운/깊은 질문 모두 표시</label><select id="aQuestionSelect"></select></div>
-  </div>
-  <div class="a-picker-summary" id="aPickerSummary">학년부터 선택해 주세요.</div>
-  <div class="a-picker-help">질문을 고른 뒤 아래 <b>질문 확인하기</b>를 누르면 선택한 질문으로 바로 시작합니다.</div>
-</div>
-
-<div class="cp-columns" id="cpColumns"></div>
+          <div class="cp-columns" id="cpColumns"></div>
         </div>
 
         <!-- 기존 로직 호환용: 화면에서는 숨기고 컬럼 선택과 동기화 -->
@@ -963,6 +916,7 @@ window.DDOOPI = {
         <div class="timer-note" id="timerNote"></div>
 
         <button class="primary-btn" id="startBtn" disabled>질문 확인하기</button>
+        <button class="ghost-btn" id="cvEntryBtn" style="margin-top:10px;">🗣️ 대화형으로 설명해보기 <span style="font-size:11px;opacity:.7">(새 기능 · 체험)</span></button>
       </div>
 
       <!-- Step 2: 말로 설명 -->
@@ -1007,6 +961,73 @@ window.DDOOPI = {
         <button class="ghost-btn" id="backBtn">다른 질문 선택하기</button>
 
         <div id="fbArea"></div>
+      </div>
+
+      <!-- 새 기능: 대화형 말하기 (cv~ 로 격리) -->
+      <style>
+        #convoCard .cv-pieces{display:flex;align-items:center;gap:8px;margin:6px 0 12px;}
+        #convoCard .cv-lab{font-size:11.5px;color:#8A8698;}
+        #convoCard .cv-piece{width:20px;height:20px;border-radius:7px;background:#fff;border:2px solid #E7E1D3;transition:transform .3s,background .3s,border-color .3s;}
+        #convoCard .cv-piece.on{background:#3FB98C;border-color:#3FB98C;transform:rotate(-8deg) scale(1.05);}
+        #convoCard .cv-chat{display:flex;flex-direction:column;gap:11px;max-height:46vh;overflow-y:auto;padding:6px 2px;}
+        #convoCard .cv-row{display:flex;gap:8px;animation:cvpop .25s ease;}
+        #convoCard .cv-row.me{flex-direction:row-reverse;}
+        #convoCard .cv-av{width:30px;height:30px;flex:0 0 30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;background:#EEF0FD;}
+        #convoCard .cv-row.me .cv-av{background:#E7F6EF;}
+        #convoCard .cv-bubble{padding:10px 13px;border-radius:16px;font-size:15px;line-height:1.5;max-width:78%;word-break:break-word;box-shadow:0 6px 18px rgba(42,39,64,.08);}
+        #convoCard .cv-row.t .cv-bubble{background:#EEF0FD;border-bottom-left-radius:5px;}
+        #convoCard .cv-row.me .cv-bubble{background:#E7F6EF;border-bottom-right-radius:5px;}
+        #convoCard .cv-typing{display:inline-flex;gap:4px;}
+        #convoCard .cv-typing i{width:7px;height:7px;border-radius:50%;background:#5B6EE1;opacity:.5;animation:cvbl 1s infinite;}
+        #convoCard .cv-typing i:nth-child(2){animation-delay:.2s;}#convoCard .cv-typing i:nth-child(3){animation-delay:.4s;}
+        #convoCard .cv-inputbar{margin-top:12px;}
+        #convoCard .cv-box{display:flex;gap:8px;align-items:flex-end;}
+        #convoCard #cvAnswer{flex:1;resize:none;border:2px solid #E7E1D3;border-radius:16px;padding:11px 13px;font-family:inherit;font-size:15px;max-height:110px;line-height:1.4;}
+        #convoCard #cvAnswer:focus{outline:none;border-color:#5B6EE1;}
+        #convoCard .cv-mic{width:46px;height:46px;flex:0 0 46px;border:2px solid #E7E1D3;background:#fff;border-radius:14px;font-size:20px;cursor:pointer;}
+        #convoCard .cv-mic.rec{background:#F0865B;border-color:#F0865B;color:#fff;}
+        #convoCard .cv-send{height:46px;padding:0 16px;border:none;border-radius:14px;background:#5B6EE1;color:#fff;font-weight:700;font-size:15px;cursor:pointer;}
+        #convoCard .cv-send:disabled{opacity:.4;cursor:default;}
+        #convoCard .cv-meter{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:11px;color:#8A8698;}
+        #convoCard .cv-meter b{color:#5B6EE1;}
+        #convoCard #cvBadge{background:#FFF3D6;color:#9A6B00;padding:1px 7px;border-radius:8px;font-weight:700;}
+        #convoCard .cv-result{background:#fff;border:1px solid #EFE9DC;border-radius:18px;padding:16px;margin-top:10px;box-shadow:0 8px 24px rgba(42,39,64,.08);animation:cvpop .3s ease;}
+        #convoCard .cv-result h3{margin:0 0 4px;font-size:20px;}
+        #convoCard .cv-stars{font-size:28px;letter-spacing:4px;margin:4px 0;}
+        #convoCard .cv-study{background:#FBF7EF;border-radius:14px;padding:12px 14px;margin-top:10px;font-size:14px;line-height:1.55;}
+        #convoCard .cv-book{display:inline-block;margin-top:6px;color:#5B6EE1;font-weight:700;}
+        #convoCard .cv-earn{margin-top:10px;text-align:center;font-size:18px;color:#C9860B;font-weight:800;}
+        @keyframes cvpop{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+        @keyframes cvbl{0%,100%{opacity:.3;}50%{opacity:1;}}
+      </style>
+      <div class="card" id="convoCard" style="display:none;">
+        <p class="step-eyebrow">새 기능 · 대화형</p>
+        <p class="step-title" id="cvConcept">개념</p>
+        <div class="info-box" style="margin-top:-4px;margin-bottom:8px;">🐾 뚜삐와 <b>대화하듯</b> 개념을 설명해 보세요. 뚜삐가 이어서 질문해 줄 거예요.</div>
+
+        <div class="cv-pieces">
+          <span class="cv-lab">생각 조각</span>
+          <span class="cv-piece" data-i="0"></span>
+          <span class="cv-piece" data-i="1"></span>
+          <span class="cv-piece" data-i="2"></span>
+          <span class="cv-lab" style="margin-left:auto">핵심을 짚을 때마다 채워져요</span>
+        </div>
+
+        <div class="cv-chat" id="cvChat"></div>
+        <div id="cvResult"></div>
+
+        <div class="cv-inputbar" id="cvInputbar">
+          <div class="cv-box">
+            <button class="cv-mic" id="cvMic" title="말하기">🎤</button>
+            <textarea id="cvAnswer" rows="1" placeholder="말하거나 적어보세요"></textarea>
+            <button class="cv-send" id="cvSend" disabled>보내기</button>
+          </div>
+          <div class="cv-meter">🤖 AI 호출 <b id="cvCalls">0</b>회 · 요금 확인용
+            <span id="cvBadge" style="display:none;">🧪 데모(AI 흉내)</span>
+          </div>
+        </div>
+
+        <button class="ghost-btn" id="cvBack" style="margin-top:12px;">◀ 단원 선택으로 돌아가기</button>
       </div>
 
       <!-- Step 3: 적용 문제 -->
@@ -1369,6 +1390,7 @@ const E6_1_UNITS = [
 /* 각 항목 title은 교재 QA 목차 그대로. 소질문은 그 개념을 두드림 방식으로 물음 */
 /* ===== 신규 과정: 중1-1 · 중2-1 · 고2 대수 · 미적분 I (교재 Q 기반) ===== */
 const M1_1_UNITS = [
+  // Ⅰ. 소인수분해
   {id:1,label:"Q001 · 소수와 합성수는 무엇일까?",
     low:["① 소수는 어떤 수일까?","② 합성수는 어떤 수일까?","③ 1은 소수일까, 합성수일까?"],
     high:["① 소수와 합성수를 약수의 개수로 구분해서 설명해 봐.","② 1이 소수도 합성수도 아닌 이유를 말해 줘.","③ 자연수를 소수·합성수·1로 나누는 기준을 설명해 봐."]},
@@ -1405,58 +1427,99 @@ const M1_1_UNITS = [
   {id:12,label:"Q020 · 두 수의 곱이 최대공약수와 최소공배수의 곱과 같을까?",
     low:["① 두 수의 곱은 무엇과 무엇의 곱과 같을까?","② (최대공약수)×(최소공배수)는 무엇과 같을까?","③ 이 관계를 식으로 나타내면?"],
     high:["① 두 수의 곱이 최대공약수와 최소공배수의 곱과 같음을 설명해 봐.","② 이 관계가 성립하는 이유를 소인수분해로 말해 줘.","③ 이 관계를 이용해 한 수를 구하는 과정을 설명해 봐."]},
-  {"id":13,"label":"01. 정수와 유리수의 뜻 · 부호와 정수","low":["① 부호 +, −는 왜 생기게 되었을까? (서로 반대되는 성질을 나타내기 위해)","② 0은 어떤 기준이 되는 수일까? (양수와 음수를 나누는 기준)","③ 자연수에 부호 +, −를 붙이면 어떤 수가 될까? (양의 정수, 음의 정수)"],"high":["① 양의 정수는 자연수와 같은 수일까? 양의 부호 +를 왜 생략할 수 있는지 설명해 봐."],"bigUnit":"Ⅱ. 정수와 유리수","smallUnit":"01. 정수와 유리수의 뜻","typeLabel":"부호와 정수","source":"SUMMA_M1_1_PDF"},
-  {"id":14,"label":"01. 정수와 유리수의 뜻 · 유리수와 포함 관계","low":["① 분수에 부호 +, −를 붙이면 어떤 수가 될까? (양의 유리수, 음의 유리수)"],"high":["① −6/3은 정수일까 아닐까? 약분해서 판단하는 방법을 말해 줘.","② 정수는 모두 유리수에 포함될까? 그 이유를 설명해 봐.","③ 자연수·정수·유리수 사이의 포함 관계를 그림으로 설명해 봐."],"bigUnit":"Ⅱ. 정수와 유리수","smallUnit":"01. 정수와 유리수의 뜻","typeLabel":"유리수와 포함 관계","source":"SUMMA_M1_1_PDF"},
-  {"id":15,"label":"01. 정수와 유리수의 뜻 · 수직선과 수의 분류","low":["① 음수를 인정받게 만든 직선의 이름은 무엇일까? (수직선)"],"high":["① 여러 수가 주어졌을 때 양의 정수·음의 정수·정수가 아닌 유리수로 어떻게 분류할까?","② 0의 부호, 정수·유리수의 포함 관계 등 정수와 유리수의 성질을 설명해 봐.","③ 수직선 위의 점이 나타내는 수를 어떻게 읽고, 조건에 맞는 점을 어떻게 찾을까?"],"bigUnit":"Ⅱ. 정수와 유리수","smallUnit":"01. 정수와 유리수의 뜻","typeLabel":"수직선과 수의 분류","source":"SUMMA_M1_1_PDF"},
-  {"id":16,"label":"02. 정수와 유리수의 대소 관계 · 절댓값","low":["① 절댓값이란 무엇일까? (수직선에서 원점과의 거리)","② |a|=7이면 a는 어떤 수일까? (+7 또는 −7 — 절댓값이 같은 두 수는 부호만 반대)"],"high":["① 절댓값은 항상 양수일까? 0 또는 양수인 이유를 설명해 봐.","② 절댓값이 주어진 수, 또는 절댓값이 같고 부호가 반대인 두 수를 어떻게 찾을까?"],"bigUnit":"Ⅱ. 정수와 유리수","smallUnit":"02. 정수와 유리수의 대소 관계","typeLabel":"절댓값","source":"SUMMA_M1_1_PDF"},
-  {"id":17,"label":"02. 정수와 유리수의 대소 관계 · 수의 대소 관계","low":["① 수의 크기를 비교할 때 수직선을 어떻게 사용할까? (오른쪽에 있을수록 큰 수)"],"high":["① a>b이면 항상 |a|>|b|일까? 두 수의 부호(둘 다 양수 / 둘 다 음수 / 부호가 다름)에 따라 어떻게 달라지는지 설명해 봐.","② (음수)<0<(양수), 음수끼리는 절댓값이 큰 쪽이 작다는 것을 활용해 여러 수의 대소를 어떻게 정할까?"],"bigUnit":"Ⅱ. 정수와 유리수","smallUnit":"02. 정수와 유리수의 대소 관계","typeLabel":"수의 대소 관계","source":"SUMMA_M1_1_PDF"},
-  {"id":18,"label":"02. 정수와 유리수의 대소 관계 · 부등호와 절댓값의 활용","low":["① 이상·이하·초과·미만을 부등호 ≥, ≤, >, <로 어떻게 나타낼까?"],"high":["① |x|<2인 정수 x는 모두 몇 개일까? 이런 문제를 푸는 방법을 설명해 봐.","② 여러 조건('이상이고 미만' 등)이 섞인 문장을 부등호로 어떻게 나타낼까?"],"bigUnit":"Ⅱ. 정수와 유리수","smallUnit":"02. 정수와 유리수의 대소 관계","typeLabel":"부등호와 절댓값의 활용","source":"SUMMA_M1_1_PDF"},
-  {"id":19,"label":"03. 정수와 유리수의 덧셈 · 덧셈의 부호 규칙","low":["① 부호가 같은 두 수의 덧셈 규칙은? (절댓값의 합에 공통인 부호)","② 부호가 다른 두 수의 덧셈 규칙은? (절댓값의 차에 절댓값이 큰 수의 부호)"],"high":["① 부호가 같은 두 수의 덧셈이 왜 그렇게 되는지 수직선으로 설명해 봐.","② 부호가 다른 두 수의 덧셈을 수직선으로 설명하고, 절댓값이 같고 부호가 다른 두 수의 합이 왜 0인지 말해 봐."],"bigUnit":"Ⅱ. 정수와 유리수","smallUnit":"03. 정수와 유리수의 덧셈","typeLabel":"덧셈의 부호 규칙","source":"SUMMA_M1_1_PDF"},
-  {"id":20,"label":"03. 정수와 유리수의 덧셈 · 덧셈의 계산 법칙","low":["① 덧셈의 교환법칙과 결합법칙이란? (a+b=b+a, (a+b)+c=a+(b+c))"],"high":["① 교환법칙·결합법칙을 이용하면 덧셈을 어떻게 편리하게 계산할 수 있을까?","② 정수와 유리수의 덧셈·뺄셈을 부호에 따라 어떻게 계산할까?"],"bigUnit":"Ⅱ. 정수와 유리수","smallUnit":"03. 정수와 유리수의 덧셈","typeLabel":"덧셈의 계산 법칙","source":"SUMMA_M1_1_PDF"},
-  {"id":21,"label":"03. 정수와 유리수의 덧셈 · 덧셈·뺄셈의 활용","low":[],"high":["① '●보다 ▲만큼 큰(작은) 수'를 식으로 어떻게 나타내 계산할까?","② |a|, |b|가 주어졌을 때 a+b 또는 a−b가 될 수 있는 값을 어떻게 모두 구할까?","③ □+A=B, □−A=B, A−□=B 꼴에서 □를 어떻게 구할까?"],"bigUnit":"Ⅱ. 정수와 유리수","smallUnit":"03. 정수와 유리수의 덧셈","typeLabel":"덧셈·뺄셈의 활용","source":"SUMMA_M1_1_PDF"},
-  {"id":22,"label":"04. 정수와 유리수의 뺄셈 · 뺄셈의 방법과 괄호 없는 식","low":["① 유리수의 뺄셈 규칙은? (빼는 수의 부호를 바꿔 덧셈으로 고친다)","② 괄호가 없는 식(3−2−5+9)은 어떻게 바꿔 계산할까? (생략된 +부호와 괄호를 넣어서)"],"high":["① 뺄셈을 왜 덧셈으로 바꿔 계산할 수 있을까? (뺄셈은 덧셈의 역연산) 설명해 봐.","② 뺄셈 기호를 수의 부호로 보아 양수끼리·음수끼리 모아 빠르게 계산하는 방법을 설명해 봐."],"bigUnit":"Ⅱ. 정수와 유리수","smallUnit":"04. 정수와 유리수의 뺄셈","typeLabel":"뺄셈의 방법과 괄호 없는 식","source":"SUMMA_M1_1_PDF"},
-  {"id":23,"label":"04. 정수와 유리수의 뺄셈 · 덧셈·뺄셈의 혼합 계산","low":["① 덧셈·뺄셈이 섞인 식은 어떤 순서로 계산할까? (뺄셈→덧셈으로 고치고, 양수끼리·음수끼리 모아서)"],"high":["① 왜 그 순서로 계산하면 편리한지 설명해 봐.","② 덧셈·뺄셈이 섞인 식을 계산 법칙을 이용해 어떻게 빠르게 계산할까?"],"bigUnit":"Ⅱ. 정수와 유리수","smallUnit":"04. 정수와 유리수의 뺄셈","typeLabel":"덧셈·뺄셈의 혼합 계산","source":"SUMMA_M1_1_PDF"},
-  {"id":24,"label":"05. 정수와 유리수의 곱셈 · 곱셈의 부호 규칙","low":["① (양수)×(양수), (음수)×(양수)의 부호는? (각각 +, −)","② (양수)×(음수), (음수)×(음수)의 부호는? (각각 −, +)"],"high":["① (음수)×(양수)가 왜 −가 되는지 '음수를 여러 번 더하기'로 설명해 봐.","② (음수)×(음수)가 왜 +가 되는지 '곱하는 수를 1씩 줄이면 3씩 커진다' 규칙으로 설명해 봐."],"bigUnit":"Ⅱ. 정수와 유리수","smallUnit":"05. 정수와 유리수의 곱셈","typeLabel":"곱셈의 부호 규칙","source":"SUMMA_M1_1_PDF"},
-  {"id":25,"label":"05. 정수와 유리수의 곱셈 · 곱셈의 계산 법칙 · 세 수 이상의 곱","low":["① 곱셈의 교환법칙·결합법칙이란? (a×b=b×a, (a×b)×c=a×(b×c))","② 세 수 이상의 곱의 부호는 무엇으로 정해질까? (음수의 개수 — 짝수면 +, 홀수면 −)"],"high":["① 교환법칙·결합법칙을 이용하면 곱셈이 편리해지는 경우를 설명해 봐.","② 여러 수의 곱에서 음수의 개수로 부호를 먼저 정해 계산하는 방법을 말해 봐."],"bigUnit":"Ⅱ. 정수와 유리수","smallUnit":"05. 정수와 유리수의 곱셈","typeLabel":"곱셈의 계산 법칙 · 세 수 이상의 곱","source":"SUMMA_M1_1_PDF"},
-  {"id":26,"label":"05. 정수와 유리수의 곱셈 · 거듭제곱","low":["① 음수의 거듭제곱의 부호는? (지수가 짝수 → +, 홀수 → −)"],"high":["① (−2)⁴과 −2⁴은 왜 다른 값일까? 그 차이를 설명해 봐.","② 양수·음수의 거듭제곱 부호를 지수의 짝·홀로 판단하고, −1²과 (−1)² 같은 헷갈리는 식을 어떻게 구분할까?"],"bigUnit":"Ⅱ. 정수와 유리수","smallUnit":"05. 정수와 유리수의 곱셈","typeLabel":"거듭제곱","source":"SUMMA_M1_1_PDF"},
-  {"id":27,"label":"05. 정수와 유리수의 곱셈 · 분배법칙과 활용","low":["① 분배법칙이란 무엇일까? (a×(b+c)=a×b+a×c)"],"high":["① 분배법칙을 이용하면 어떤 계산이 편리해지는지 예로 설명해 봐.","② 거듭제곱·나눗셈이 섞인 곱셈·나눗셈 식을 어떤 순서로 계산할까?","③ A×□=B, □÷A=B, A÷□=B 꼴에서 □를 어떻게 구할까?"],"bigUnit":"Ⅱ. 정수와 유리수","smallUnit":"05. 정수와 유리수의 곱셈","typeLabel":"분배법칙과 활용","source":"SUMMA_M1_1_PDF"},
-  {"id":28,"label":"06. 정수와 유리수의 나눗셈 · 나눗셈의 방법","low":["① 유리수의 나눗셈에서 몫의 부호 규칙은? (부호 같으면 +, 다르면 −)"],"high":["① 나눗셈이 왜 곱셈과 같은 부호 규칙을 따르는지 설명해 봐.","② 유리수의 나눗셈을 역수를 이용한 곱셈으로 어떻게 바꿔 계산할까?"],"bigUnit":"Ⅱ. 정수와 유리수","smallUnit":"06. 정수와 유리수의 나눗셈","typeLabel":"나눗셈의 방법","source":"SUMMA_M1_1_PDF"},
-  {"id":29,"label":"06. 정수와 유리수의 나눗셈 · 역수","low":["① 역수란 무엇일까? (두 수의 곱이 1이 될 때, 한 수를 다른 수의 역수라고 한다)","② 나눗셈을 곱셈으로 바꾸는 방법은? (나누는 수를 역수로 바꿔 곱한다)"],"high":["① 어떤 수의 역수를 어떻게 구할까? (부호는 그대로, 분모·분자를 바꿈) 0의 역수가 없는 이유도 말해 봐.","② 왜 나눗셈을 역수의 곱셈으로 바꿀 수 있는지 설명해 봐."],"bigUnit":"Ⅱ. 정수와 유리수","smallUnit":"06. 정수와 유리수의 나눗셈","typeLabel":"역수","source":"SUMMA_M1_1_PDF"},
-  {"id":30,"label":"06. 정수와 유리수의 나눗셈 · 수의 부호 판별","low":["① a×b>0이면 a, b의 부호는? a×b<0이면? (>0: 서로 같은 부호, <0: 서로 다른 부호)"],"high":["① a×b의 부호만으로 a, b 각각의 부호를 정확히 알 수 있을까? 무엇이 더 필요한지 설명해 봐.","② a×b>0, a÷b<0 같은 조건에서 a, b의 부호를 어떻게 판별할까?"],"bigUnit":"Ⅱ. 정수와 유리수","smallUnit":"06. 정수와 유리수의 나눗셈","typeLabel":"수의 부호 판별","source":"SUMMA_M1_1_PDF"},
-  {"id":31,"label":"06. 정수와 유리수의 나눗셈 · 사칙연산의 혼합 계산","low":["① 사칙연산 혼합 계산의 순서는? (거듭제곱 → 괄호 → 곱·나눗셈 → 덧·뺄셈)"],"high":["① 괄호가 여러 개일 때 소괄호·중괄호·대괄호 순서까지 포함해 계산 순서를 설명해 봐.","② 사칙연산·거듭제곱·괄호가 모두 있는 식을 실제로 어떤 순서로 풀어가는지 말해 봐."],"bigUnit":"Ⅱ. 정수와 유리수","smallUnit":"06. 정수와 유리수의 나눗셈","typeLabel":"사칙연산의 혼합 계산","source":"SUMMA_M1_1_PDF"},
-  {"id":32,"label":"01. 문자의 사용 · 문자를 사용한 식","low":["① 문자를 사용하면 무엇이 좋을까? (수량 사이의 관계를 식으로 간단히 나타낼 수 있다)"],"high":["① 주어진 상황에서 규칙을 찾아 문자를 사용한 식으로 어떻게 세울까? (예: 양말 x켤레 값 = 3000+1000×x)","② 거리·농도·할인 같은 여러 상황을 문자를 사용한 식으로 어떻게 나타낼까?"],"bigUnit":"Ⅲ. 문자와 식","smallUnit":"01. 문자의 사용","typeLabel":"문자를 사용한 식","source":"SUMMA_M1_1_PDF"},
-  {"id":33,"label":"01. 문자의 사용 · 곱셈·나눗셈 기호의 생략","low":["① 곱셈 기호 ×의 생략 규칙은? (수는 문자 앞에 / 1은 생략 / 문자는 알파벳 순 / 같은 문자는 거듭제곱 / 괄호 앞에 수)","② 나눗셈 기호 ÷의 생략 방법은? (나누는 수를 역수로 바꿔 곱셈으로 고친 뒤 ×를 생략, 또는 분수 꼴로)"],"high":["① 곱셈 기호를 생략할 때 주의점을 설명해 봐. (수는 반드시 문자 앞에 — x×(−2)는 −2x, 0.1×x는 0.1x)","② a÷b를 왜 a/b로 쓸 수 있는지, 나누는 수가 분수일 때는 어떻게 하는지 설명해 봐.","③ 곱셈·나눗셈 기호를 생략한 식이 옳은지 어떻게 판단할까?"],"bigUnit":"Ⅲ. 문자와 식","smallUnit":"01. 문자의 사용","typeLabel":"곱셈·나눗셈 기호의 생략","source":"SUMMA_M1_1_PDF"},
-  {"id":34,"label":"02. 식의 값 · 대입과 식의 값","low":["① 문자 대신 수로 바꾸어 넣는 것을 무엇이라고 할까? (대입)","② 식의 값이란 무엇일까? (문자에 수를 대입하여 계산한 결과)"],"high":["① 식의 값을 구하는 순서와 주의점을 설명해 봐. (생략된 ×를 다시 쓰기, 음수는 괄호 사용, 분모의 분수는 ÷를 다시 쓰기)","② x, y에 수를 대입해 식의 값을 구할 때 부호와 거듭제곱을 어떻게 처리할까?"],"bigUnit":"Ⅲ. 문자와 식","smallUnit":"02. 식의 값","typeLabel":"대입과 식의 값","source":"SUMMA_M1_1_PDF"},
-  {"id":35,"label":"03. 일차식과 수의 곱셈, 나눗셈 · 다항식·일차식과 용어","low":["① 다항식·단항식이란? (다항식=한 개 이상의 항의 합, 단항식=항이 한 개인 다항식)","② 항·상수항·계수란 무엇일까? (항=수 또는 문자의 곱, 상수항=수로만 이루어진 항, 계수=문자 앞에 곱해진 수)","③ 차수·일차식이란? (항의 차수=곱해진 문자의 개수, 다항식의 차수=가장 큰 항의 차수, 일차식=차수가 1인 다항식)"],"high":["① 계수와 차수를 혼동하지 않는 법과, 두 종류 이상의 문자가 있는 항의 차수를 설명해 봐.","② 식에서 항·상수항·계수를 찾고 다항식·일차식인지 판단하는 방법을 말해 봐."],"bigUnit":"Ⅲ. 문자와 식","smallUnit":"03. 일차식과 수의 곱셈, 나눗셈","typeLabel":"다항식·일차식과 용어","source":"SUMMA_M1_1_PDF"},
-  {"id":36,"label":"03. 일차식과 수의 곱셈, 나눗셈 · 일차식과 수의 곱셈·나눗셈","low":["① (수)×(일차식) 계산 규칙은? (단항식이면 수끼리 곱해 문자 앞에, 다항식이면 분배법칙으로 각 항에)","② (일차식)÷(수) 계산 규칙은? (나누는 수의 역수를 각 항에 곱한다)"],"high":["① (수)×(다항식)을 분배법칙으로 계산하는 과정을 설명해 봐. (예: −2(3x−4))","② 나눗셈을 역수의 곱셈으로 바꿔 계산하는 과정을 설명해 봐.","③ 일차식과 수의 곱셈·나눗셈이 옳게 계산됐는지 어떻게 확인할까?"],"bigUnit":"Ⅲ. 문자와 식","smallUnit":"03. 일차식과 수의 곱셈, 나눗셈","typeLabel":"일차식과 수의 곱셈·나눗셈","source":"SUMMA_M1_1_PDF"},
-  {"id":37,"label":"04. 일차식의 덧셈과 뺄셈 · 동류항","low":["① 동류항이란 무엇일까? (문자와 차수가 각각 같은 항 — 상수항끼리는 모두 동류항)","② 동류항끼리의 계산 방법은? (계수끼리 더하거나 뺀 후 문자를 곱한다)"],"high":["① 4x+2x=6x가 왜 그렇게 되는지 분배법칙으로 설명해 봐."],"bigUnit":"Ⅲ. 문자와 식","smallUnit":"04. 일차식의 덧셈과 뺄셈","typeLabel":"동류항","source":"SUMMA_M1_1_PDF"},
-  {"id":38,"label":"04. 일차식의 덧셈과 뺄셈 · 일차식의 덧셈과 뺄셈","low":["① 일차식의 덧셈·뺄셈은 어떤 순서로 계산할까? (괄호를 풀고 동류항끼리 모아서)"],"high":["① 괄호 앞에 +/−가 있을 때 부호 처리를 설명해 봐. (A−(B−C)=A−B+C)","② 여러 일차식의 덧셈·뺄셈을 괄호를 풀고 동류항끼리 어떻게 계산할까?"],"bigUnit":"Ⅲ. 문자와 식","smallUnit":"04. 일차식의 덧셈과 뺄셈","typeLabel":"일차식의 덧셈과 뺄셈","source":"SUMMA_M1_1_PDF"},
-  {"id":39,"label":"04. 일차식의 덧셈과 뺄셈 · 복잡한 계산과 활용","low":["① 분수 꼴·여러 괄호가 있는 일차식은 어떻게 접근할까? (분수는 분모의 최소공배수로 통분, 괄호는 소→중→대 순으로)"],"high":["① (2x−3)/3 − (x−2)/2 같은 분수 꼴을 통분해 계산하는 과정을 설명해 봐.","② 소·중·대괄호가 섞인 복잡한 일차식을 어떤 순서로 계산할까?","③ '어떤 식에 더해야 할 것을 잘못 뺐더니...' 같은 문제에서 바르게 계산한 식을 어떻게 구할까?","④ 도형의 둘레·넓이를 문자를 사용한 일차식으로 어떻게 나타낼까?"],"bigUnit":"Ⅲ. 문자와 식","smallUnit":"04. 일차식의 덧셈과 뺄셈","typeLabel":"복잡한 계산과 활용","source":"SUMMA_M1_1_PDF"},
-  {"id":40,"label":"01. 방정식과 그 해 · 등식과 그 표현","low":["① 등식이란 무엇일까? 좌변·우변·양변은? (등식=등호 =를 사용하여 나타낸 식, 좌변=왼쪽, 우변=오른쪽, 양변=둘 다)","② 식이 등식인지 아닌지 어떻게 판단할까? (등호 =의 유무로 판단)"],"high":["① 'x를 2배 한 수는 x에 6을 더한 수와 같다' 같은 문장을 등식으로 어떻게 나타낼까?"],"bigUnit":"Ⅲ. 문자와 식","smallUnit":"01. 방정식과 그 해","typeLabel":"등식과 그 표현","source":"SUMMA_M1_1_PDF"},
-  {"id":41,"label":"01. 방정식과 그 해 · 방정식과 해","low":["① 방정식·미지수·해(근)·'방정식을 푼다'란? (방정식=x값에 따라 참·거짓이 되는 등식, 미지수=문자 x, 해=참이 되게 하는 값)"],"high":["① 어떤 값이 방정식의 해인지 어떻게 확인할까? (대입해서 참이 되는지 확인)","② [ ] 안의 수가 방정식의 해인지처럼, 주어진 수가 방정식의 해인지 대입하여 어떻게 판단할까?"],"bigUnit":"Ⅲ. 문자와 식","smallUnit":"01. 방정식과 그 해","typeLabel":"방정식과 해","source":"SUMMA_M1_1_PDF"},
-  {"id":42,"label":"01. 방정식과 그 해 · 항등식","low":["① 항등식이란 무엇일까? (x에 어떤 값을 대입해도 항상 참인 등식)"],"high":["① 어떤 등식이 항등식인지 어떻게 확인할까? (양변을 각각 정리해 좌변=우변이 되는지)","② ax+3=5x−b가 모든 x에 대하여 항상 참일 때처럼, 항등식이 되는 조건으로 미지의 상수 a, b를 어떻게 구할까?"],"bigUnit":"Ⅲ. 문자와 식","smallUnit":"01. 방정식과 그 해","typeLabel":"항등식","source":"SUMMA_M1_1_PDF"},
-  {"id":43,"label":"02. 일차방정식과 그 풀이 · 등식의 성질","low":["① 등식의 성질 4가지는? (양변에 같은 수를 더하고·빼고·곱하고·0이 아닌 수로 나눠도 등식은 성립)","② 방정식을 푼다는 것은 방정식을 어떤 꼴로 고치는 것? (x=(수) 꼴)"],"high":["① 등식의 성질을 접시저울(양팔저울)로 어떻게 이해할 수 있는지 설명해 봐.","② 2x+1=7을 등식의 성질만으로 푸는 과정을 설명해 봐.","③ 'a=b이면 a−3=b−3이다' 같은 보기에서 등식의 성질이 바르게 쓰였는지 어떻게 판단할까? (양변에 같은 수를 더·빼·곱하고, 0이 아닌 수로 나눔)"],"bigUnit":"Ⅲ. 문자와 식","smallUnit":"02. 일차방정식과 그 풀이","typeLabel":"등식의 성질","source":"SUMMA_M1_1_PDF"},
-  {"id":44,"label":"02. 일차방정식과 그 풀이 · 이항과 일차방정식","low":["① 이항이란 무엇일까? (등식의 한 변에 있는 항을 부호를 바꾸어 다른 변으로 옮기는 것)","② 일차방정식이란 무엇일까? ((x에 대한 일차식)=0, 즉 ax+b=0 (a≠0) 꼴이 되는 방정식)"],"high":["① 이항이 왜 등식의 성질 ①·②의 간편 버전인지 설명해 봐. (이항하면 부호가 바뀌는 이유)","② 2x+1=2(x+5)가 왜 일차방정식이 아닌지, 확인하는 과정을 설명해 봐.","③ 여러 식 중 x에 대한 일차방정식인 것을 어떻게 가려낼까? (모든 항을 좌변으로 이항해 ax+b=0 (a≠0) 꼴인지 확인 — 예: −2x−3=4−ax가 일차방정식이 되는 a의 조건 구하기)"],"bigUnit":"Ⅲ. 문자와 식","smallUnit":"02. 일차방정식과 그 풀이","typeLabel":"이항과 일차방정식","source":"SUMMA_M1_1_PDF"},
-  {"id":45,"label":"02. 일차방정식과 그 풀이 · 일차방정식의 풀이","low":["① 일차방정식의 풀이 순서는? (괄호 풀기 → x항은 좌변·상수항은 우변으로 이항 → ax=b 꼴 → 양변을 a로 나눔)","② 계수가 소수·분수일 때는 어떻게 할까? (소수는 양변에 10의 거듭제곱을, 분수는 양변에 분모의 최소공배수를 곱해 정수로)"],"high":["① 3(x−2)=x+2를 이항을 이용해 푸는 과정을 설명해 봐.","② 0.7x+0.2=0.5x−1.4처럼 계수가 소수인 방정식을 정수 계수로 고쳐 푸는 과정을 설명해 봐.","③ 괄호·소수·분수가 섞인 일차방정식을 계수를 정수로 고쳐 어떤 순서로 풀까? (해가 가장 큰 것 찾기, 비례식 (a):(b)=(c):(d) 꼴 풀이 포함)"],"bigUnit":"Ⅲ. 문자와 식","smallUnit":"02. 일차방정식과 그 풀이","typeLabel":"일차방정식의 풀이","source":"SUMMA_M1_1_PDF"},
-  {"id":46,"label":"02. 일차방정식과 그 풀이 · 해의 확인과 상수 구하기","low":["① 방정식의 해를 그 방정식에 대입하면 어떻게 될까? (등식이 성립한다)"],"high":["① 해를 알고 있을 때, 대입하면 등식이 성립하는 성질을 이용해 미지의 상수를 어떻게 구할까? (예: 2x+a=3의 해가 x=−1일 때 a 구하기)","② 해가 x=(값)으로 주어진 방정식에 대입해 상수 a를 구하거나, 두 일차방정식의 해가 같을 때 상수를 어떻게 구할까?"],"bigUnit":"Ⅲ. 문자와 식","smallUnit":"02. 일차방정식과 그 풀이","typeLabel":"해의 확인과 상수 구하기","source":"SUMMA_M1_1_PDF"},
-  {"id":47,"label":"03. 일차방정식의 활용 · 활용 문제의 풀이 순서","low":["① 일차방정식의 활용 문제를 푸는 4단계 순서는? (① 미지수 정하기 ② 방정식 세우기 ③ 방정식 풀기 ④ 확인하기)","② 활용 문제의 답을 쓸 때 주의할 점은? (단위가 있으면 반드시 단위를 쓴다)"],"high":["① 사과·배를 합해 20개 사고 36000원을 낸 문제처럼, 개수와 금액 조건을 하나의 방정식으로 어떻게 세울까?","② '확인하기'에서 구한 해가 문제의 뜻에 맞는지 어떻게 따질까? (개수·나이 등은 음수·분수·소수가 될 수 없음)"],"bigUnit":"Ⅲ. 문자와 식","smallUnit":"03. 일차방정식의 활용","typeLabel":"활용 문제의 풀이 순서","source":"SUMMA_M1_1_PDF"},
-  {"id":48,"label":"03. 일차방정식의 활용 · 연속한 수 문제","low":["① 연속하는 세 정수를 x를 사용해 어떻게 놓을까? (x−1, x, x+1 또는 x, x+1, x+2)","② 연속하는 두 홀수(짝수)는 어떻게 놓을까? (x, x+2 또는 x−2, x)"],"high":["① 연속하는 세 정수의 합이 42일 때 방정식을 세워 구하는 과정을 설명해 봐. (가운데 수를 x로 놓든 가장 작은 수를 x로 놓든 답이 같은 이유)","② 연속수·자릿수·과부족·원가와 정가·양초 길이 등 다양한 실생활 상황을 미지수를 정해 방정식으로 어떻게 세워 풀까?"],"bigUnit":"Ⅲ. 문자와 식","smallUnit":"03. 일차방정식의 활용","typeLabel":"연속한 수 문제","source":"SUMMA_M1_1_PDF"},
-  {"id":49,"label":"03. 일차방정식의 활용 · 자릿수 · 과부족 문제","low":["① 십의 자리 숫자가 a, 일의 자리 숫자가 b인 두 자리 자연수를 식으로 어떻게 나타낼까? (10a+b)","② 백·십·일의 자리가 a, b, c인 세 자리 자연수는? (100a+10b+c)","③ 부족하거나 남는 문제에서 무엇이 일정함을 이용해 방정식을 세울까? (나누어 주는 방법과 관계없이 물건의 전체 개수가 일정)"],"high":["① 자리 숫자를 바꾼 수와 처음 수의 관계를 표로 정리해 방정식을 어떻게 세울까? (예: 십의 자리 5, 바꾼 수가 처음보다 9 작음)","② '5개씩 주면 2개 남고 6개씩 주면 3개 부족'처럼 두 조건으로 전체 개수를 두 식으로 나타내 방정식을 어떻게 세울까?"],"bigUnit":"Ⅲ. 문자와 식","smallUnit":"03. 일차방정식의 활용","typeLabel":"자릿수 · 과부족 문제","source":"SUMMA_M1_1_PDF"},
-  {"id":50,"label":"03. 일차방정식의 활용 · 거리·속력·시간 문제","low":["① 거리·속력·시간 문제에서 (거리)=(속력)×(시간), (시간)=(거리)/(속력) 중 무엇을 쓸지 어떻게 정할까? (구하려는 것이 무엇인지에 따라)"],"high":["① 갈 때와 올 때 속력이 다른 왕복 문제에서, 거리를 x로 놓고 (갈 때 시간)+(올 때 시간)으로 방정식을 어떻게 세울까?","② 시간의 단위가 '분'과 '시간'으로 섞일 때 어떻게 통일해 계산할까? (예: 54분=54/60=9/10 시간)","③ 왕복·앞질러 가기·먼저 도착 등 거리·속력·시간 상황을 어떻게 방정식으로 세워 풀까?"],"bigUnit":"Ⅲ. 문자와 식","smallUnit":"03. 일차방정식의 활용","typeLabel":"거리·속력·시간 문제","source":"SUMMA_M1_1_PDF"},
-  {"id":51,"label":"03. 일차방정식의 활용 · 일에 대한 문제","low":["① 일에 대한 문제에서 전체 일의 양을 얼마로 놓을까? (1)","② 완성하는 데 a일 걸리는 사람이 하루에 하는 일의 양은? (1/a)"],"high":["① 갑·을이 함께 일한 날수를 x로 놓고, 각자 한 일의 양의 합이 전체 1이 되도록 방정식을 어떻게 세울까?","② 여러 사람(호스·수도관 등)이 함께·따로 일할 때, 전체 일을 1로 놓고 하루(1분)에 하는 일의 양으로 어떻게 방정식을 세울까?"],"bigUnit":"Ⅲ. 문자와 식","smallUnit":"03. 일차방정식의 활용","typeLabel":"일에 대한 문제","source":"SUMMA_M1_1_PDF"},
-  {"id":52,"label":"01. 순서쌍과 좌표 · 수직선과 좌표평면 위의 점","low":["① 직선 위의 점의 좌표는 어떻게 정할까? (수직선을 도입해 점이 나타내는 수로 나타냄 — P(a), 좌표가 0인 점은 원점 O)","② 좌표평면에서 x축·y축·좌표축·원점은 각각 무엇일까? (x축=가로 수직선, y축=세로 수직선, 좌표축=둘을 통틀어, 원점=두 축이 만나는 점 O)","③ 평면 위의 점 P의 좌표는 어떻게 나타낼까? (순서쌍 (a,b)로 P(a,b), a=x좌표, b=y좌표)"],"high":["① 원점·x축 위의 점·y축 위의 점의 좌표는 각각 어떻게 될까? (O(0,0), x축 위 (a,0), y축 위 (0,b))","② 좌표평면 위 여러 점의 좌표를 바르게 읽거나, 두 순서쌍이 서로 같을 조건으로 미지수를 어떻게 구할까?"],"bigUnit":"Ⅳ. 좌표평면과 그래프","smallUnit":"01. 순서쌍과 좌표","typeLabel":"수직선과 좌표평면 위의 점","source":"SUMMA_M1_1_PDF"},
-  {"id":53,"label":"01. 순서쌍과 좌표 · 두 점을 이은 선분의 길이","low":["① 좌표축에 평행한 두 점을 이은 선분의 길이는 어떻게 구할까? (x축에 평행하면 x좌표의 차, y축에 평행하면 y좌표의 차)"],"high":["① 좌표평면 위 도형에서 밑변·높이를 좌표의 차로 구해 넓이를 어떻게 구할까?","② 세 점(또는 네 점)을 꼭짓점으로 하는 삼각형·사각형의 넓이를 좌표를 이용해 어떻게 구할까? (좌표축에 평행한 변이 없으면 둘러싸는 직사각형을 이용)"],"bigUnit":"Ⅳ. 좌표평면과 그래프","smallUnit":"01. 순서쌍과 좌표","typeLabel":"두 점을 이은 선분의 길이","source":"SUMMA_M1_1_PDF"},
-  {"id":54,"label":"01. 순서쌍과 좌표 · 사분면","low":["① 좌표평면의 네 부분(제1~4사분면)은 어떤 순서로 정할까? (원점 기준 시계 반대 방향, 좌표축 위의 점은 어느 사분면에도 속하지 않음)","② 각 사분면에 있는 점의 부호는? (제1(+,+), 제2(−,+), 제3(−,−), 제4(+,−))"],"high":["① 점 (a,b)가 어느 사분면에 있는지, 또 a,b의 부호가 주어졌을 때 (−a, ab) 같은 점이 어느 사분면인지 어떻게 판단할까?","② a·b의 부호 조건이나 (b,a)·(−a+b, a−b) 같은 변형된 좌표가 속하는 사분면을 어떻게 정할까?"],"bigUnit":"Ⅳ. 좌표평면과 그래프","smallUnit":"01. 순서쌍과 좌표","typeLabel":"사분면","source":"SUMMA_M1_1_PDF"},
-  {"id":55,"label":"01. 순서쌍과 좌표 · 대칭인 점의 좌표","low":["① 점 (a,b)의 x축·y축·원점에 대하여 대칭인 점의 좌표는? (x축 대칭 (a,−b), y축 대칭 (−a,b), 원점 대칭 (−a,−b))"],"high":["① x축·y축·원점 대칭이 각각 어느 좌표의 부호를 바꾸는지, 왜 그렇게 되는지 설명해 봐.","② 대칭인 점의 좌표로 미지수를 구하거나(두 점이 대칭일 조건), 대칭인 점들로 이루어진 삼각형의 넓이를 어떻게 구할까?"],"bigUnit":"Ⅳ. 좌표평면과 그래프","smallUnit":"01. 순서쌍과 좌표","typeLabel":"대칭인 점의 좌표","source":"SUMMA_M1_1_PDF"},
-  {"id":56,"label":"02. 그래프 · 그래프와 변수","low":["① 그래프란 무엇일까? (주어진 자료나 상황을 좌표평면 위에 점·직선·곡선 등의 그림으로 나타낸 것)","② 변수란 무엇이고 상수와 어떻게 다를까? (변수=x,y처럼 여러 값을 가질 수 있는 문자, 상수=a,b처럼 일정한 값을 갖는 수·문자)","③ 좌표평면 위에 그래프를 어떻게 나타낼까? (두 변수 x,y의 관계를 만족하는 순서쌍 (x,y)를 좌표로 하는 점을 나타냄)"],"high":["① x,y가 자연수처럼 정해진 값만 가질 때와 모든 수를 가질 때, 그래프가 어떻게 달라질까? (떨어진 점들 vs 점들을 선으로 이음)"],"bigUnit":"Ⅳ. 좌표평면과 그래프","smallUnit":"02. 그래프","typeLabel":"그래프와 변수","source":"SUMMA_M1_1_PDF"},
-  {"id":57,"label":"02. 그래프 · 그래프의 해석 — 속력·거리","low":["① 변화 관계를 나타낸 그래프를 해석할 때 가장 먼저 확인할 것은? (x축, y축이 각각 무엇을 나타내는지)"],"high":["① 시간에 따른 속력(또는 거리) 그래프에서 증가·감소·정지와 변화의 빠르기를 어떻게 읽을까?","② 두 사람의 이동 그래프처럼, 그래프를 해석해 도착 시간·멈춘 시간·다시 만나는 시점 등을 어떻게 구할까?"],"bigUnit":"Ⅳ. 좌표평면과 그래프","smallUnit":"02. 그래프","typeLabel":"그래프의 해석 — 속력·거리","source":"SUMMA_M1_1_PDF"},
-  {"id":58,"label":"02. 그래프 · 그래프와 실제 상황 — 물의 높이·반복","low":["① 그릇에 일정하게 물을 채울 때, 그릇 모양에 따라 물의 높이 그래프는 어떻게 달라질까? (폭이 일정하면 일정하게, 좁아지면 빠르게, 넓어지면 느리게 증가)"],"high":["① 위로 갈수록 좁아지다 곧아지는 병 등 여러 모양의 병에 맞는 물 높이 그래프를 어떻게 고를까?","② 대관람차처럼 반복적으로 나타나는 현상의 그래프에서 한 주기·특정 위치의 시각·높이를 어떻게 읽을까?","③ 밑면 크기가 다른 원기둥이나 두 원기둥을 붙인 물통에 물을 넣을 때, 시간에 따른 물 높이 그래프를 어떻게 고를까?"],"bigUnit":"Ⅳ. 좌표평면과 그래프","smallUnit":"02. 그래프","typeLabel":"그래프와 실제 상황 — 물의 높이·반복","source":"SUMMA_M1_1_PDF"},
-  {"id":59,"label":"03. 정비례 · 정비례 관계","low":["① 정비례란 무엇이고 관계식은? (x가 2,3,4배 변하면 y도 2,3,4배 변하는 관계, y=ax (a≠0))","② y가 x에 정비례할 때 y/x의 값은 어떤가? (항상 일정한 수 a, 즉 y=ax ⟺ y/x=a)"],"high":["① 시속 60km로 x시간 달린 거리 y처럼, 실생활 상황이 정비례하는지 판단하고 관계식 y=ax를 어떻게 세울까?","② y=x+2, y/x=−1, xy=−2 등에서 y가 x에 정비례하는 것을 어떻게 가려낼까? (y=ax 또는 y/x=a 꼴 찾기)","③ 맞물린 톱니바퀴·물통 채우기처럼 정비례 관계식을 세우고 조건을 대입해 필요한 값을 어떻게 구할까?"],"bigUnit":"Ⅳ. 좌표평면과 그래프","smallUnit":"03. 정비례","typeLabel":"정비례 관계","source":"SUMMA_M1_1_PDF"},
-  {"id":60,"label":"03. 정비례 · 정비례 그래프의 모양","low":["① 정비례 y=ax의 그래프는 어떤 모양일까? (원점을 지나는 직선; a>0이면 오른쪽 위·제1·3사분면, a<0이면 오른쪽 아래·제2·4사분면)","② a의 절댓값이 클수록 그래프는 어느 축에 가까워질까? (y축에 가까워진다 = x축에서 멀어진다)"],"high":["① 원점과 지나는 다른 한 점을 이용해 y=ax의 그래프를 어떻게 그릴까? (예: y=(3/4)x는 (0,0)과 (4,3)을 이음)","② y=−2x의 그래프처럼 정비례 그래프에 대한 설명(지나는 사분면·증감·지나는 점)의 옳고 그름을 어떻게 판단할까?"],"bigUnit":"Ⅳ. 좌표평면과 그래프","smallUnit":"03. 정비례","typeLabel":"정비례 그래프의 모양","source":"SUMMA_M1_1_PDF"},
-  {"id":61,"label":"03. 정비례 · 그래프 위의 점과 식 구하기","low":["① 점 (p,q)가 y=ax의 그래프 위의 점이면 무엇이 성립할까? (y=ax에 x=p, y=q를 대입하면 등식이 성립)"],"high":["① 원점을 지나는 직선이 그래프로 주어졌을 때 관계식을 어떻게 구할까? (y=ax로 놓고 지나는 점의 좌표를 대입해 a를 구함)","② 그래프 위의 점이 주어졌을 때, 정비례 관계 y=ax의 식을 세우거나 다른 점이 그래프 위에 있는지 어떻게 확인할까?"],"bigUnit":"Ⅳ. 좌표평면과 그래프","smallUnit":"03. 정비례","typeLabel":"그래프 위의 점과 식 구하기","source":"SUMMA_M1_1_PDF"},
-  {"id":62,"label":"04. 반비례 · 반비례 관계","low":["① 반비례란 무엇이고 관계식은? (x가 2,3,4배 변하면 y는 1/2,1/3,1/4배 변하는 관계, y=a/x (a≠0))","② y가 x에 반비례할 때 xy의 값은 어떤가? (항상 일정한 수 a, 즉 xy=a ⟺ y=a/x)"],"high":["① 귤 12개를 x명이 나눠 가질 때 한 명의 몫 y처럼, 실생활 상황이 반비례하는지 판단하고 관계식 y=a/x를 어떻게 세울까?","② y=12−x, xy=−6, x/y=−3 등에서 y가 x에 반비례하는 것을 어떻게 가려낼까? (y=a/x 또는 xy=a 꼴 찾기)","③ 기계 대수·기체의 부피처럼 반비례 관계식을 세우고 조건을 대입해 필요한 값을 어떻게 구할까?"],"bigUnit":"Ⅳ. 좌표평면과 그래프","smallUnit":"04. 반비례","typeLabel":"반비례 관계","source":"SUMMA_M1_1_PDF"},
-  {"id":63,"label":"04. 반비례 · 반비례 그래프의 모양","low":["① 반비례 y=a/x의 그래프는 어떤 모양일까? (좌표축에 한없이 가까워지는 한 쌍의 매끄러운 곡선; a>0이면 제1·3사분면, a<0이면 제2·4사분면)","② a의 절댓값이 클수록 그래프는 어떻게 될까? (원점에서 멀리 떨어진다)"],"high":["① x,y가 모두 정수인 순서쌍을 찾아 반비례 그래프를 어떻게 그릴까? 그래프가 좌표축과 만나지 않는 이유는?","② y=3/x의 그래프처럼 반비례 그래프에 대한 설명(지나는 사분면·증감·지나는 점)의 옳고 그름을 어떻게 판단할까?"],"bigUnit":"Ⅳ. 좌표평면과 그래프","smallUnit":"04. 반비례","typeLabel":"반비례 그래프의 모양","source":"SUMMA_M1_1_PDF"},
-  {"id":64,"label":"04. 반비례 · 그래프 위의 점 · 식 구하기 · 교점","low":["① 점 (p,q)가 y=a/x의 그래프 위의 점이면 무엇이 성립할까? (y=a/x에 x=p, y=q를 대입하면 등식이 성립)"],"high":["① 한 쌍의 곡선이 그래프로 주어졌을 때 관계식을 어떻게 구할까? (y=a/x로 놓고 지나는 점을 대입해 a를 구함, xy=a 이용)","② 정비례·반비례 두 그래프가 한 점에서 만날 때, 그 점의 좌표로 두 식의 미지수를 어떻게 구할까? (만나는 점은 두 관계식을 동시에 성립시킴)","③ 반비례 그래프 위의 점이나 두 점이 주어졌을 때, 반비례 관계 y=a/x의 식을 어떻게 구할까?"],"bigUnit":"Ⅳ. 좌표평면과 그래프","smallUnit":"04. 반비례","typeLabel":"그래프 위의 점 · 식 구하기 · 교점","source":"SUMMA_M1_1_PDF"}
+
+  // Ⅱ. 정수와 유리수
+  {id:13,label:"Q023 · 자연수에 부호 +, −를 붙이면 어떤 수가 될까?",
+    low:["① 양의 정수는 어떤 부호가 붙을까?","② 음의 정수는 어떤 부호가 붙을까?","③ +3과 −3은 어떻게 다를까?"],
+    high:["① 자연수에 부호를 붙여 정수를 만드는 과정을 설명해 봐.","② 양의 부호와 음의 부호가 뜻하는 방향을 말해 줘.","③ 정수가 양의 정수·0·음의 정수로 나뉘는 것을 설명해 봐."]},
+  {id:14,label:"Q027 · 정수는 모두 유리수에 포함될까?",
+    low:["① 유리수란 어떤 수일까?","② 정수는 분수로 나타낼 수 있을까?","③ 3을 분수로 쓰면?"],
+    high:["① 정수가 유리수에 포함되는 이유를 설명해 봐.","② 모든 정수를 분수 꼴로 나타낼 수 있음을 말해 줘.","③ 자연수·정수·유리수의 포함 관계를 설명해 봐."]},
+  {id:15,label:"Q030 · 절댓값이란 무엇일까?",
+    low:["① 절댓값은 무엇을 나타낼까?","② 수직선에서 절댓값은 어떤 거리일까?","③ −5의 절댓값은?"],
+    high:["① 절댓값이 원점으로부터의 거리임을 설명해 봐.","② +5와 −5의 절댓값이 같은 이유를 말해 줘.","③ 어떤 수의 절댓값을 구하는 과정을 설명해 봐."]},
+  {id:16,label:"Q031 · 절댓값은 항상 양수일까?",
+    low:["① 절댓값이 0이 되는 수가 있을까?","② 절댓값은 음수가 될 수 있을까?","③ 0의 절댓값은?"],
+    high:["① 절댓값이 항상 0 이상인 이유를 설명해 봐.","② 절댓값이 0인 수는 0뿐임을 말해 줘.","③ '절댓값은 양수'가 틀린 표현인 이유를 설명해 봐."]},
+  {id:17,label:"Q033 · 수의 크기를 비교할 때 수직선을 사용한다?",
+    low:["① 수직선에서 오른쪽에 있는 수가 더 클까, 작을까?","② 음수끼리는 절댓값이 클수록 어떤 수일까?","③ −3과 −5 중 어느 것이 더 클까?"],
+    high:["① 수직선으로 수의 크기를 비교하는 방법을 설명해 봐.","② 음수는 절댓값이 클수록 작은 이유를 말해 줘.","③ 여러 수의 대소를 수직선으로 정리하는 과정을 설명해 봐."]},
+  {id:18,label:"Q037 · 부호가 같은 두 유리수의 덧셈은 어떻게 할까?",
+    low:["① 부호가 같은 두 수의 절댓값은 어떻게 할까?","② 결과의 부호는 어떻게 정할까?","③ (−3)+(−4)는?"],
+    high:["① 부호가 같은 두 유리수의 덧셈 방법을 설명해 봐.","② 절댓값을 더하고 공통 부호를 붙이는 이유를 말해 줘.","③ 부호가 같은 세 수 이상의 덧셈 과정을 설명해 봐."]},
+  {id:19,label:"Q038 · 부호가 다른 두 유리수의 덧셈은 어떻게 할까?",
+    low:["① 부호가 다른 두 수는 절댓값을 어떻게 할까?","② 결과의 부호는 어느 쪽을 따를까?","③ (−7)+(+3)은?"],
+    high:["① 부호가 다른 두 유리수의 덧셈 방법을 설명해 봐.","② 절댓값의 차에 큰 쪽 부호를 붙이는 이유를 말해 줘.","③ 부호가 다른 수들의 덧셈 과정을 설명해 봐."]},
+  {id:20,label:"Q040 · 유리수의 뺄셈은 어떻게 할까?",
+    low:["① 뺄셈은 어떤 셈으로 바꿀 수 있을까?","② 빼는 수의 부호는 어떻게 바뀔까?","③ (+5)−(−2)는?"],
+    high:["① 유리수의 뺄셈을 덧셈으로 바꾸는 방법을 설명해 봐.","② 빼는 수의 부호를 바꾸는 이유를 말해 줘.","③ 덧셈과 뺄셈이 섞인 식을 계산하는 과정을 설명해 봐."]},
+  {id:21,label:"Q043 · (양수)×(양수), (음수)×(양수)는 어떻게 계산할까?",
+    low:["① 부호가 같은 두 수의 곱의 부호는?","② 부호가 다른 두 수의 곱의 부호는?","③ (−3)×(+4)는?"],
+    high:["① 두 수의 곱에서 부호를 정하는 규칙을 설명해 봐.","② 부호가 다르면 곱이 음수가 되는 이유를 말해 줘.","③ 여러 수의 곱에서 부호를 정하는 과정을 설명해 봐."]},
+  {id:22,label:"Q046 · 세 수 이상의 곱셈을 쉽게 하는 방법은?",
+    low:["① 곱해진 음수의 개수와 부호는 어떤 관계일까?","② 음수가 짝수 개면 부호는?","③ 음수가 홀수 개면 부호는?"],
+    high:["① 여러 수의 곱에서 부호를 음수의 개수로 판단하는 방법을 설명해 봐.","② 음수가 짝수 개일 때 곱이 양수인 이유를 말해 줘.","③ 세 수 이상의 곱을 부호부터 정해 계산하는 과정을 설명해 봐."]},
+  {id:23,label:"Q048 · 분배법칙이란 무엇일까?",
+    low:["① 분배법칙은 어떤 계산을 편하게 해줄까?","② a×(b+c)는 어떻게 펼쳐질까?","③ 3×(10+2)를 분배법칙으로 계산하면?"],
+    high:["① 분배법칙이 무엇인지 설명해 봐.","② 괄호를 풀 때 각 항에 곱하는 이유를 말해 줘.","③ 분배법칙으로 복잡한 곱셈을 간단히 하는 과정을 설명해 봐."]},
+  {id:24,label:"Q049 · 유리수의 나눗셈은 어떻게 계산할까?",
+    low:["① 나눗셈은 어떤 셈으로 바꿀 수 있을까?","② 나누는 수는 무엇으로 바뀔까?","③ 부호는 곱셈과 같을까?"],
+    high:["① 유리수의 나눗셈에서 부호를 정하는 방법을 설명해 봐.","② 나눗셈을 역수의 곱셈으로 바꾸는 이유를 말해 줘.","③ 나눗셈이 섞인 식을 계산하는 과정을 설명해 봐."]},
+  {id:25,label:"Q050 · 역수란 무엇일까?",
+    low:["① 역수란 어떤 수일까?","② 어떤 수와 그 역수의 곱은?","③ 2/3의 역수는?"],
+    high:["① 역수가 무엇인지 설명해 봐.","② 곱해서 1이 되는 수가 역수인 이유를 말해 줘.","③ 나눗셈에서 역수를 이용하는 과정을 설명해 봐."]},
+  {id:26,label:"Q053 · 덧셈, 뺄셈, 곱셈, 나눗셈이 혼합된 식은 어떻게 계산할까?",
+    low:["① 어떤 계산을 먼저 할까?","② 거듭제곱과 괄호는 언제 계산할까?","③ 곱셈·나눗셈과 덧셈·뺄셈 중 무엇이 먼저일까?"],
+    high:["① 사칙계산이 혼합된 식의 계산 순서를 설명해 봐.","② 거듭제곱·괄호를 먼저 계산하는 이유를 말해 줘.","③ 복잡한 혼합 계산식을 순서대로 푸는 과정을 설명해 봐."]},
+
+  // Ⅲ. 문자와 식
+  {id:27,label:"Q055 · 곱셈 기호 ×를 생략하여 식을 간단히 나타낼 수 있을까?",
+    low:["① 문자와 수의 곱에서 ×는 어떻게 할까?","② 수와 문자 중 무엇을 앞에 쓸까?","③ 3×a를 간단히 쓰면?"],
+    high:["① 곱셈 기호를 생략하는 규칙을 설명해 봐.","② 수를 문자 앞에 쓰는 이유를 말해 줘.","③ 여러 문자의 곱을 간단히 나타내는 과정을 설명해 봐."]},
+  {id:28,label:"Q056 · 나눗셈 기호 ÷도 생략하여 식을 간단히 나타낼 수 있을까?",
+    low:["① 나눗셈은 어떤 꼴로 바꿔 쓸까?","② a÷b는 어떻게 나타낼까?","③ 분수 꼴로 쓰면 무엇이 편할까?"],
+    high:["① 나눗셈 기호를 생략해 분수로 나타내는 방법을 설명해 봐.","② ÷를 분수 꼴로 바꾸는 이유를 말해 줘.","③ 곱셈과 나눗셈이 섞인 식을 간단히 나타내는 과정을 설명해 봐."]},
+  {id:29,label:"Q058 · 식의 값을 구하는 방법은?",
+    low:["① 대입이란 무엇일까?","② 문자에 수를 넣을 때 무엇을 주의할까?","③ a=2일 때 3a의 값은?"],
+    high:["① 문자에 수를 대입해 식의 값을 구하는 방법을 설명해 봐.","② 대입할 때 괄호를 쓰는 이유를 말해 줘.","③ 여러 문자에 수를 대입해 값을 구하는 과정을 설명해 봐."]},
+  {id:30,label:"Q060 · 일차식이란 무엇일까?",
+    low:["① 항과 계수는 각각 무엇일까?","② 차수란 무엇일까?","③ 2x+1은 몇 차식일까?"],
+    high:["① 일차식이 무엇인지 항과 차수로 설명해 봐.","② 상수항의 차수를 0으로 보는 이유를 말해 줘.","③ 어떤 식이 일차식인지 판단하는 과정을 설명해 봐."]},
+  {id:31,label:"Q063 · 동류항이란 무엇일까?",
+    low:["① 동류항은 무엇이 같은 항일까?","② 상수항끼리는 동류항일까?","③ 3x와 5x는 동류항일까?"],
+    high:["① 동류항이 무엇인지 설명해 봐.","② 문자와 차수가 같아야 동류항인 이유를 말해 줘.","③ 식에서 동류항을 찾아 묶는 과정을 설명해 봐."]},
+  {id:32,label:"Q065 · 일차식의 덧셈과 뺄셈은 어떻게 계산할까?",
+    low:["① 동류항끼리 어떻게 계산할까?","② 괄호 앞에 −가 있으면 어떻게 될까?","③ (2x+1)+(3x−2)는?"],
+    high:["① 일차식의 덧셈·뺄셈 방법을 동류항으로 설명해 봐.","② 괄호를 풀 때 부호를 바꾸는 이유를 말해 줘.","③ 괄호가 있는 일차식의 덧셈·뺄셈 과정을 설명해 봐."]},
+  {id:33,label:"Q067 · 등식이란 무엇일까?",
+    low:["① 등식은 어떤 기호로 나타낼까?","② 좌변과 우변은 무엇일까?","③ 3+2=5는 등식일까?"],
+    high:["① 등식이 무엇인지 설명해 봐.","② 등식과 부등식의 차이를 말해 줘.","③ 어떤 문장을 등식으로 나타내는 과정을 설명해 봐."]},
+
+  // Ⅳ. 좌표평면과 그래프
+  {id:34,label:"Q085 · 평면 위의 점의 좌표는 어떻게 정할까?",
+    low:["① 순서쌍이란 무엇일까?","② x좌표와 y좌표는 어떻게 읽을까?","③ 점 (2,3)의 위치는?"],
+    high:["① 좌표평면에서 점의 위치를 좌표로 나타내는 방법을 설명해 봐.","② 순서쌍에서 순서가 중요한 이유를 말해 줘.","③ 좌표를 보고 점을 찍는 과정을 설명해 봐."]},
+  {id:35,label:"Q087 · 좌표평면은 네 개의 면으로 나눌 수 있다고?",
+    low:["① 사분면이란 무엇일까?","② 제1사분면의 x, y 부호는?","③ 점 (−2,3)은 몇 사분면에 있을까?"],
+    high:["① 좌표평면이 사분면으로 나뉘는 것을 설명해 봐.","② 각 사분면에서 x·y의 부호를 말해 줘.","③ 점의 좌표를 보고 사분면을 판단하는 과정을 설명해 봐."]},
+  {id:36,label:"Q091 · 좌표평면 위에 그래프를 어떻게 나타낼까?",
+    low:["① 두 양의 관계를 어떻게 좌표로 나타낼까?","② 표의 값을 점으로 어떻게 찍을까?","③ 점들을 이으면 무엇이 될까?"],
+    high:["① 두 변수의 관계를 그래프로 나타내는 방법을 설명해 봐.","② 표를 좌표평면의 점으로 옮기는 과정을 말해 줘.","③ 점들을 이어 그래프를 완성하는 과정을 설명해 봐."]},
+  {id:37,label:"Q092 · 그래프를 보고 시간−속력, 시간−거리 사이의 관계를 이해할 수 있을까?",
+    low:["① 그래프의 가로축과 세로축은 무엇을 나타낼까?","② 그래프가 올라가면 어떤 뜻일까?","③ 수평인 그래프는 무엇을 뜻할까?"],
+    high:["① 시간에 따른 변화를 그래프로 읽는 방법을 설명해 봐.","② 그래프의 모양이 상황을 어떻게 나타내는지 말해 줘.","③ 실제 상황을 그래프로 해석하는 과정을 설명해 봐."]},
+  {id:38,label:"Q095 · 정비례란 무엇일까?",
+    low:["① 정비례 관계에서 한 양이 2배가 되면 다른 양은?","② 정비례식 y=ax에서 a는 무엇일까?","③ y가 x에 정비례하면 y/x는 어떨까?"],
+    high:["① 정비례가 무엇인지 설명해 봐.","② 정비례 관계를 y=ax로 나타내는 이유를 말해 줘.","③ 정비례 관계를 식과 그래프로 나타내는 과정을 설명해 봐."]},
+  {id:39,label:"Q097 · 정비례 관계 y=ax의 그래프는 어떤 모양일까?",
+    low:["① 정비례 그래프는 어떤 점을 지날까?","② a>0이면 그래프는 어느 방향으로 갈까?","③ a<0이면?"],
+    high:["① 정비례 그래프가 원점을 지나는 직선인 이유를 설명해 봐.","② a의 부호에 따라 그래프 방향이 달라지는 것을 말해 줘.","③ y=ax의 그래프를 그리는 과정을 설명해 봐."]},
+  {id:40,label:"Q101 · 반비례란 무엇일까?",
+    low:["① 반비례 관계에서 한 양이 2배가 되면 다른 양은?","② 반비례식 y=a/x에서 xy는 어떨까?","③ y가 x에 반비례하면 곱은 어떨까?"],
+    high:["① 반비례가 무엇인지 설명해 봐.","② 반비례 관계를 y=a/x로 나타내는 이유를 말해 줘.","③ 반비례 관계를 식과 그래프로 나타내는 과정을 설명해 봐."]},
+  {id:41,label:"Q103 · 반비례 관계 y=a/x의 그래프는 어떤 모양일까?",
+    low:["① 반비례 그래프는 몇 개의 곡선으로 이루어질까?","② 그래프는 축에 닿을까?","③ a>0이면 그래프는 어느 사분면에 있을까?"],
+    high:["① 반비례 그래프가 한 쌍의 매끄러운 곡선인 이유를 설명해 봐.","② 그래프가 x축·y축에 닿지 않는 이유를 말해 줘.","③ y=a/x의 그래프를 그리는 과정을 설명해 봐."]}
 ];
 
 const M2_1_UNITS = [
@@ -4555,9 +4618,9 @@ const CHAPTER_MAP = {
   ],
   "m1-1": [
     {name:"Ⅰ. 소인수분해", from:1, to:12},
-    {name:"Ⅱ. 정수와 유리수", from:13, to:31},
-    {name:"Ⅲ. 문자와 식", from:32, to:51},
-    {name:"Ⅳ. 좌표평면과 그래프", from:52, to:64}
+    {name:"Ⅱ. 정수와 유리수", from:13, to:26},
+    {name:"Ⅲ. 문자와 식", from:27, to:33},
+    {name:"Ⅳ. 좌표평면과 그래프", from:34, to:41}
   ],
   "e4-1": [
     {name:"1. 큰 수", from:1, to:5},
@@ -4683,28 +4746,6 @@ const CP = { grade:null, big:null, small:null, type:null, qIndex:null };
 function cpModel(gradeId){
   const dd=DD_CURRICULUM[gradeId];
   if(dd) return dd;
-  // 중1-1: PDF 정리본의 대단원/소단원/유형 구조를 그대로 선택 UI에 연결
-  if(gradeId==='m1-1'){
-    const g=GRADES.find(x=>x.id===gradeId); if(!g) return null;
-    const units=g.units||[];
-    const map=new Map();
-    units.forEach(u=>{
-      const big=u.bigUnit || ((CHAPTER_MAP['m1-1']||[]).find(ch=>Number(u.id)>=ch.from&&Number(u.id)<=ch.to)||{}).name || '전체 개념';
-      const small=u.smallUnit || u.label;
-      const type=u.typeLabel || u.label;
-      if(!map.has(big)) map.set(big,new Map());
-      const sm=map.get(big);
-      if(!sm.has(small)) sm.set(small,[]);
-      sm.get(small).push({name:type,low:u.low||[],high:u.high||[],unitId:u.id});
-    });
-    return {
-      name:g.name,
-      bigUnits:[...map.entries()].map(([name,sm])=>({
-        name,
-        smalls:[...sm.entries()].map(([sname,types])=>({name:sname,types}))
-      }))
-    };
-  }
   // 아직 PDF 질문 데이터가 없는 과정은 기존 앱 데이터를 같은 5단계 구조로 감싼다.
   const g=GRADES.find(x=>x.id===gradeId); if(!g) return null;
   const units=g.units||[], mapped=CHAPTER_MAP[gradeId]||[];
@@ -4823,136 +4864,6 @@ setTimeout(()=>{
   if(CP.grade){ const gs=document.getElementById('gradeSelect'); if(gs){ gs.value=CP.grade; state.gradeId=CP.grade; populateUnitSelect(); } }
   cpRender();
 },0);
-
-
-/* ============================================================
-   v57 · A스타일 한 화면 전체 선택형
-   학년 → 학기 → 대단원 → 중단원 → 소단원 → 유형 → 질문
-   기존 CP/state/unitId를 그대로 사용하므로 채점·음성·저장 로직은 유지.
-   ============================================================ */
-const AP = { gradePart:'', semesterPart:'' };
-
-function apParseCourseName(name){
-  const n=String(name||'').replace(/\s+/g,'');
-  let m=n.match(/^(초|중|고)(\d)[-·]?(1|2)학기$/);
-  if(m) return {grade:m[1]+m[2], semester:m[3]+'학기'};
-  m=n.match(/^(초|중|고)(\d)[-·]?(1|2)$/);
-  if(m) return {grade:m[1]+m[2], semester:m[3]+'학기'};
-  m=n.match(/^(초|중|고)(\d).*?(1|2)학기/);
-  if(m) return {grade:m[1]+m[2], semester:m[3]+'학기'};
-  return {grade:name||'', semester:'과정'};
-}
-function apCourses(){
-  return GRADES.map(g=>({id:g.id,name:g.name,...apParseCourseName(g.name)}));
-}
-function apUnique(arr){ return [...new Set(arr.filter(Boolean))]; }
-function apSetOptions(el, items, value, placeholder){
-  if(!el) return;
-  el.innerHTML = (placeholder?`<option value="">${placeholder}</option>`:'') +
-    items.map(x=>`<option value="${escapeHtml(String(x.value))}">${escapeHtml(String(x.label))}</option>`).join('');
-  if(value!=null && items.some(x=>String(x.value)===String(value))) el.value=String(value);
-}
-function apCurrentCourse(){
-  const courses=apCourses();
-  return courses.find(c=>c.grade===AP.gradePart && c.semester===AP.semesterPart) || null;
-}
-function apInit(){
-  const g=$('aGradeSelect'), sem=$('aSemesterSelect');
-  if(!g||!sem) return;
-  const courses=apCourses();
-  const grades=apUnique(courses.map(c=>c.grade));
-  apSetOptions(g, grades.map(x=>({value:x,label:x})), AP.gradePart, '학년 선택');
-  g.addEventListener('change',()=>{
-    AP.gradePart=g.value; AP.semesterPart='';
-    CP.grade=null; CP.big=null; CP.small=null; CP.type=null; CP.qIndex=null; state.unitId=null;
-    apRender();
-  });
-  sem.addEventListener('change',()=>{
-    AP.semesterPart=sem.value;
-    const c=apCurrentCourse();
-    CP.grade=c?c.id:null; CP.big=null; CP.small=null; CP.type=null; CP.qIndex=null; state.unitId=null;
-    if(CP.grade){ state.gradeId=CP.grade; const gs=$('gradeSelect'); if(gs){gs.value=CP.grade; gs.dispatchEvent(new Event('change',{bubbles:true}));} }
-    apRender();
-  });
-  ['aBigSelect','aSmallSelect','aTypeSelect','aQuestionSelect'].forEach((id)=>{
-    const el=$(id); if(!el) return;
-    el.addEventListener('change', async ()=>{
-      if(id==='aBigSelect'){ CP.big=el.value===''?null:Number(el.value); CP.small=null; CP.type=null; CP.qIndex=null; state.unitId=null; }
-      if(id==='aSmallSelect'){ CP.small=el.value===''?null:Number(el.value); CP.type=null; CP.qIndex=null; state.unitId=null; }
-      if(id==='aTypeSelect'){ CP.type=el.value===''?null:Number(el.value); CP.qIndex=null; state.unitId=null; cpSyncLegacy(); }
-      if(id==='aQuestionSelect'){
-        const raw=el.value;
-        if(raw){
-          const [lvl,idxStr]=raw.split(':'); const qi=Number(idxStr);
-          const t=cpCurrentType();
-          state.level=lvl==='high'?'high':lvl==='blank'?'blank':'low';
-          CP.qIndex=qi; state._pickerQIndex=qi;
-          if(t){
-            state._directSelectedQuestion = lvl==='high' ? ((t.high||[])[qi]||'') :
-              lvl==='low' ? ((t.low||[])[qi]||'') : '';
-          }
-          cpSyncLegacy();
-        }
-      }
-      apRender();
-    });
-  });
-  // 중단원은 현재 PDF 구조에 없는 과정이 많아 표시용으로 둔다.
-  const mid=$('aMidSelect'); if(mid) mid.disabled=true;
-  apRender();
-}
-function apRender(){
-  const courses=apCourses();
-  const g=$('aGradeSelect'), sem=$('aSemesterSelect');
-  if(!g||!sem) return;
-  const grades=apUnique(courses.map(c=>c.grade));
-  apSetOptions(g,grades.map(x=>({value:x,label:x})),AP.gradePart,'학년 선택');
-
-  const sems=AP.gradePart ? apUnique(courses.filter(c=>c.grade===AP.gradePart).map(c=>c.semester)) : [];
-  apSetOptions(sem,sems.map(x=>({value:x,label:x})),AP.semesterPart,'학기 선택');
-
-  const course=apCurrentCourse();
-  if(course && CP.grade!==course.id) CP.grade=course.id;
-  const model=CP.grade?cpModel(CP.grade):null;
-  const bigs=model?model.bigUnits:[];
-
-  apSetOptions($('aBigSelect'),bigs.map((b,i)=>({value:i,label:b.name})),CP.big,'대단원 선택');
-
-  // 현재 통합 PDF 데이터는 대단원→소단원 구조이므로 중단원은 없는 경우를 명확히 표시.
-  const mid=$('aMidSelect');
-  if(mid){
-    mid.innerHTML='<option value="">중단원 구분 없음</option>';
-    mid.disabled=true;
-  }
-
-  const big=cpCurrentBig(), smalls=big?big.smalls:[];
-  apSetOptions($('aSmallSelect'),smalls.map((x,i)=>({value:i,label:x.name})),CP.small,'소단원 선택');
-
-  const small=cpCurrentSmall(), types=small?small.types:[];
-  apSetOptions($('aTypeSelect'),types.map((x,i)=>({value:i,label:x.name})),CP.type,'유형 선택');
-
-  const t=cpCurrentType(); const qs=[];
-  if(t){
-    (t.low||[]).forEach((q,i)=>qs.push({value:'low:'+i,label:'🟢 쉬운 · '+q}));
-    (t.high||[]).forEach((q,i)=>qs.push({value:'high:'+i,label:'🟣 깊은 · '+q}));
-  }
-  const activeQ = CP.qIndex==null ? '' : ((state.level==='high'?'high':'low')+':'+CP.qIndex);
-  apSetOptions($('aQuestionSelect'),qs,activeQ,'질문 선택');
-
-  const parts=[];
-  if(AP.gradePart) parts.push(AP.gradePart);
-  if(AP.semesterPart) parts.push(AP.semesterPart);
-  if(big) parts.push(big.name);
-  if(small) parts.push(small.name);
-  if(t) parts.push(t.name);
-  if(CP.qIndex!=null && t){
-    const q=state.level==='high'?(t.high||[])[CP.qIndex]:(t.low||[])[CP.qIndex];
-    if(q) parts.push(q);
-  }
-  const sum=$('aPickerSummary'); if(sum) sum.textContent=parts.length?parts.join(' › '):'학년부터 선택해 주세요.';
-  if(typeof checkStartReady==='function') checkStartReady();
-}
-setTimeout(apInit,0);
 
 $('gradeSelect').addEventListener('change', e=>{
   state.gradeId = e.target.value || null;
@@ -5192,26 +5103,7 @@ async function getOrGenerateBlanks(grade, unit){
 }
 
 async function startSelectedQuestion(){
-  // v57: 새 선택 UI와 기존 학습 엔진 사이 unitId를 확실히 연결한다.
-  // DD_CURRICULUM의 type.unitId가 있으면 우선 사용하고, 혹시 누락돼도 현재 선택 정보로 다시 찾는다.
-  if(!state.unitId){
-    const t = (typeof cpCurrentType==='function') ? cpCurrentType() : null;
-    if(t && t.unitId!=null) state.unitId = Number(t.unitId);
-  }
-  if(!state.unitId){
-    const units = currentUnits();
-    const small = (typeof cpCurrentSmall==='function') ? cpCurrentSmall() : null;
-    const type = (typeof cpCurrentType==='function') ? cpCurrentType() : null;
-    const matched = units.find(u =>
-      (!small || u.smallUnit===small.name || (u.label||'').includes(small.name)) &&
-      (!type || u.typeLabel===type.name || (u.label||'').includes(type.name))
-    );
-    if(matched) state.unitId = Number(matched.id);
-  }
-  if(!state.unitId){
-    alert('선택한 질문의 학습 단원을 연결하지 못했습니다. 다른 질문을 선택한 뒤 다시 시도해 주세요.');
-    return false;
-  }
+  if(!state.unitId) return false;
   state.attempt = 0; state.hintsUsed = {};
   const btn = $('startBtn');
   if(state.level === 'blank' && btn){
@@ -7899,9 +7791,182 @@ window.addEventListener('load', ()=>{ try{
   }
 })();
 
+/* ============================================================
+   새 기능: 대화형 말하기 엔진  (전부 cv~ 로 격리, 기존 코드 안 건드림)
+   - 진짜 AI: 기존 callClaude() 재사용 (선생님이 등록한 키로 작동)
+   - 막히면 데모 두뇌로 자동 전환
+   - 내용(CV_TYPE)·규칙(CV_SET)만 바꾸면 다른 유형/학년으로 확장
+   ============================================================ */
+(function(){
+  // ── 내용: 이 유형에 담긴 것 (여기만 바꾸면 다른 유형이 됨) ──
+  const CV_TYPE = {
+    name: "받아올림 없는 세 자리 수의 덧셈",
+    bigUnit: "1. 덧셈과 뺄셈",
+    firstQuestion: "세 자리 수 두 개를 더하는 방법을, 네 말로 설명해 볼래?",
+    keyPoints: [
+      { id:"kp1", label:"같은 자리 수끼리 더한다" },
+      { id:"kp2", label:"일의 자리부터 차례로 계산한다" },
+      { id:"kp3", label:"더한 값을 자리에 맞춰 쓴다" }
+    ],
+    outOfScope: "받아올림(한 자리 합이 10을 넘는 경우)",
+    shortConcept: "세 자리 수의 덧셈은 같은 자리 수끼리 더해요. 일의 자리끼리, 십의 자리끼리, 백의 자리끼리요. 일의 자리부터 차례로 더하고, 더한 값을 그 자리에 맞춰 써요.",
+    bookPage: "디딤돌 초등수학 3-1 · 1단원 (8쪽 부근)"
+  };
+  // ── 규칙: 학년별 (중/고 만들 땐 여기만 추가) ──
+  const CV_SET = { maxFollowUps:4, passStars:2, rewardPerPass:10,
+    tone:"아주 다정하고 친근하게, 짧게. 절대 '틀렸다'고 하지 않기." };
+
+  // ── DOM ──
+  const $=(id)=>document.getElementById(id);
+  const chat=$('cvChat'), answerEl=$('cvAnswer'), sendBtn=$('cvSend'),
+        micBtn=$('cvMic'), callsEl=$('cvCalls'), badgeEl=$('cvBadge'),
+        pieces=[...document.querySelectorAll('#convoCard .cv-piece')];
+
+  let cv, demoMode=false, totalPoints=0;
+  function fresh(){ return { transcript:[], covered:[], followUps:0, finished:false, aiCalls:0, _target:null }; }
+  function esc(s){ return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+  function open(){                       // 대화형 화면 열기
+    ['setupCard','questionCard','quizCard'].forEach(id=>{ const el=$(id); if(el) el.style.display='none'; });
+    $('convoCard').style.display='block';
+    start(); window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function backToSetup(){
+    $('convoCard').style.display='none';
+    const s=$('setupCard'); if(s) s.style.display='block';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function start(){
+    cv=fresh();
+    chat.innerHTML=''; $('cvResult').innerHTML='';
+    $('cvConcept').textContent = CV_TYPE.bigUnit + ' · ' + CV_TYPE.name;
+    callsEl.textContent=0; $('cvInputbar').style.display='';
+    answerEl.value=''; sendBtn.disabled=true; updatePieces();
+    addBubble('t', CV_TYPE.firstQuestion);
+    cv.transcript.push({who:'t', text:CV_TYPE.firstQuestion});
+  }
+  function addBubble(who,text){
+    const row=document.createElement('div'); row.className='cv-row '+who;
+    row.innerHTML='<div class="cv-av">'+(who==='t'?'🐾':'🙂')+'</div><div class="cv-bubble">'+esc(text)+'</div>';
+    chat.appendChild(row); chat.scrollTop=chat.scrollHeight;
+  }
+  function addTyping(){
+    const row=document.createElement('div'); row.className='cv-row t'; row.id='cvTyping';
+    row.innerHTML='<div class="cv-av">🐾</div><div class="cv-bubble"><span class="cv-typing"><i></i><i></i><i></i></span></div>';
+    chat.appendChild(row); chat.scrollTop=chat.scrollHeight;
+  }
+  function rmTyping(){ const t=$('cvTyping'); if(t) t.remove(); }
+  function updatePieces(){ pieces.forEach((p,i)=>p.classList.toggle('on', i<cv.covered.length)); }
+
+  async function onSend(){
+    const text=answerEl.value.trim(); if(!text||cv.finished) return;
+    answerEl.value=''; sendBtn.disabled=true; grow();
+    addBubble('me',text); cv.transcript.push({who:'me',text});
+    addTyping();
+    let res; try{ res=await ask(text); }catch(e){ rmTyping(); addBubble('t','앗, 잠깐 문제가 있었어. 다시 보내줄래?'); console.error(e); return; }
+    rmTyping();
+    cv.covered=res.covered||cv.covered; updatePieces(); cv.followUps++;
+
+    const stuckStart = res.stuck && cv.covered.length===0 && cv.followUps<=1;
+    const reachedMax = cv.followUps>=CV_SET.maxFollowUps;
+    if(stuckStart){ addBubble('t', res.reply||'괜찮아! 조금 더 공부하고 다시 오자.'); finish('restudy'); return; }
+    if(res.done || reachedMax){ if(res.reply) addBubble('t',res.reply); finish('grade'); return; }
+    addBubble('t', res.reply);
+  }
+
+  // 실제 AI(callClaude) → 막히면 데모
+  async function ask(latestText){
+    if(!demoMode){
+      try{ return await realAsk(); }
+      catch(e){ demoMode=true; badgeEl.style.display='inline-block'; console.warn('AI 불가→데모', e.message||e); }
+    }
+    return demoBrain(latestText);
+  }
+  async function realAsk(){
+    const kp=CV_TYPE.keyPoints.map(k=>'- '+k.id+': '+k.label).join('\n');
+    const convo=cv.transcript.map(t=>(t.who==='t'?'뚜삐: ':'아이: ')+t.text).join('\n');
+    const sys="너는 초등 3학년 아이와 대화하는 다정한 수학 친구 '뚜삐'야. 아이가 개념을 '자기 말'로 설명하도록 돕는 게 목적이야.\n규칙:\n- "+CV_SET.tone+"\n- 말은 2~3문장 이내로 짧게. 질문은 한 번에 하나만.\n- 아직 안 짚은 핵심이 있으면 그쪽으로 향하는 쉬운 꼬리질문이나 구체적 숫자 예시를 던져.\n- 범위를 벗어나는 내용("+CV_TYPE.outOfScope+")을 말하면 칭찬하되 '그건 다음에 배울 거야'라고 넘겨.\n- 절대 '틀렸다'고 하지 마.\n반드시 아래 JSON으로만 답해(다른 말 금지):\n{\"covered\":[짚은 id들],\"stuck\":false,\"done\":false,\"reply\":\"뚜삐 다음 한마디\"}";
+    const user="[개념] "+CV_TYPE.name+"\n[핵심 포인트]\n"+kp+"\n\n[지금까지 대화]\n"+convo+"\n\n아이의 최근 답까지 보고 covered/stuck/done/reply를 JSON으로만 답해줘.";
+    const data=await callClaude({ system:sys, max_tokens:800, messages:[{role:'user', content:user}] });
+    cv.aiCalls++; callsEl.textContent=cv.aiCalls;
+    let raw=((data.content||[]).filter(c=>c.type==='text').map(c=>c.text).join('')||'').trim();
+    raw=raw.replace(/```json/gi,'').replace(/```/g,'').trim();
+    const s=raw.indexOf('{'), e=raw.lastIndexOf('}'); if(s>=0&&e>=0) raw=raw.slice(s,e+1);
+    const obj=JSON.parse(raw); if(!Array.isArray(obj.covered)) obj.covered=[];
+    return obj;
+  }
+  function demoBrain(text){
+    const t=(text||'').replace(/\s/g,''); const covered=new Set(cv.covered);
+    const dunno=/^(모르겠|모름|몰라|글쎄|뭐지|음+|응+|\?+)$/.test(t) || (/(모르|몰라|글쎄)/.test(t)&&t.length<=6);
+    if(dunno && covered.size===0) return {covered:[], stuck:true, done:false, reply:"괜찮아! 조금만 더 공부하고 다시 오면 금방 할 수 있어. 🙂"};
+
+    // 1) 아이가 스스로 말한 단어로 채우기 (넉넉하게)
+    if(/같은자리|자리끼리|자리를맞|자리에맞|맞춰서더|맞는자리|각자리|백의자리|십의자리|일의자리/.test(t)) covered.add('kp1');
+    if(/일의자리부터|오른쪽부터|일부터|낮은자리부터|먼저더|먼저.*일|일.*먼저|오른쪽에서/.test(t)) covered.add('kp2');
+    if(/맞춰써|맞춰쓰|맞춰적|줄맞|아래에맞|자리에맞춰써|같은줄|밑에|아래에/.test(t)) covered.add('kp3');
+    // 2) 방금 뚜삐가 물어본 핵심에 뭐라도 답했으면 인정하고 진행 (데모라서 넉넉하게)
+    if(cv._target && !dunno && t.length>=1) covered.add(cv._target);
+
+    cv.covered=[...covered];
+    const done=covered.size>=CV_TYPE.keyPoints.length;
+    if(done){ cv._target=null; return {covered:[...covered], stuck:false, done:true,
+      reply:"완벽해! 같은 자리끼리, 일의 자리부터, 자리 맞춰 쓰기까지 다 말했어. 최고야! 👏"}; }
+
+    let reply;
+    if(!covered.has('kp1')){ cv._target='kp1'; reply="좋아! 그럼 234랑 145를 더할 때, 맨 오른쪽 4는 어떤 숫자랑 더해야 할까?"; }
+    else if(!covered.has('kp2')){ cv._target='kp2'; reply="맞아! 그럼 세 자리 중 어느 자리부터 더하기 시작하면 좋을까?"; }
+    else { cv._target='kp3'; reply="그렇지! 그럼 각 자리를 더한 값은 어디에 써야 할까?"; }
+    return {covered:[...covered], stuck:false, done:false, reply};
+  }
+
+  function finish(kind){
+    cv.finished=true; $('cvInputbar').style.display='none';
+    let stars; const c=cv.covered.length, total=CV_TYPE.keyPoints.length;
+    if(kind==='restudy') stars=1;
+    else if(c>=total && cv.followUps<=2) stars=3;
+    else if(c>=2) stars=2; else stars=1;
+    const passed=stars>=CV_SET.passStars;
+    if(passed){ totalPoints+=CV_SET.rewardPerPass; }
+    const grade= stars===3?'상 · 아주 잘 이해했어요':stars===2?'중 · 잘하고 있어요':'하 · 조금 더 공부해요';
+    const starHtml=[1,2,3].map(n=>'<span style="color:'+(n<=stars?'#F5B72E':'#E7E1D3')+'">★</span>').join('');
+    let study=''; if(!passed) study='<div class="cv-study">📘 <b>다시 한 번 공부해 볼까?</b><br>'+esc(CV_TYPE.shortConcept)+'<span class="cv-book">👉 '+esc(CV_TYPE.bookPage)+'</span></div>';
+    const earn=passed?'<div class="cv-earn">🎉 +'+CV_SET.rewardPerPass+' 포인트! (누적 '+totalPoints+')</div>'
+                     :'<div class="cv-earn" style="color:#F0865B">이번엔 통과 못했어요 · 다음에 다시 도전! 🙂</div>';
+    const msg=passed?'핵심을 잘 짚었어! 개념이 머릿속에 정리됐구나. 최고야 👏':'여기까지 온 것도 멋져. 위 설명을 보고 다시 오면 금방 통과할 거야!';
+    $('cvResult').innerHTML='<div class="cv-result"><h3>대화 끝!</h3><div class="cv-stars">'+starHtml+'</div>'
+      +'<div style="font-size:13.5px;color:#8A8698;margin-bottom:6px;">이해도: '+grade+'</div>'
+      +'<div style="font-size:14.5px;line-height:1.55;">'+msg+'</div>'+study+earn
+      +'<div style="margin-top:12px;text-align:center;"><button class="cv-send" style="background:#3FB98C" id="cvAgain">다시 해보기</button></div></div>';
+    $('cvResult').scrollIntoView({behavior:'smooth'});
+    const ag=$('cvAgain'); if(ag) ag.addEventListener('click', start);
+  }
+
+  // 입력 도우미
+  function grow(){ answerEl.style.height='auto'; answerEl.style.height=Math.min(answerEl.scrollHeight,110)+'px'; }
+  answerEl.addEventListener('input', ()=>{ sendBtn.disabled=!answerEl.value.trim(); grow(); });
+  answerEl.addEventListener('keydown', e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); onSend(); }});
+  sendBtn.addEventListener('click', onSend);
+  $('cvBack').addEventListener('click', backToSetup);
+  $('cvEntryBtn') && $('cvEntryBtn').addEventListener('click', open);
+
+  // 마이크 (기존 앱처럼 SpeechRecognition)
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(SR){
+    const rec=new SR(); rec.lang='ko-KR'; rec.interimResults=true; rec.continuous=false;
+    let recging=false, base='';
+    rec.onresult=e=>{ let s=''; for(let i=e.resultIndex;i<e.results.length;i++) s+=e.results[i][0].transcript;
+      answerEl.value=(base+s).trim(); sendBtn.disabled=!answerEl.value.trim(); grow(); };
+    rec.onend=()=>{ recging=false; micBtn.classList.remove('rec'); };
+    rec.onerror=()=>{ recging=false; micBtn.classList.remove('rec'); };
+    micBtn.addEventListener('click', ()=>{ if(recging){ rec.stop(); return; }
+      base=answerEl.value?answerEl.value+' ':''; try{ rec.start(); recging=true; micBtn.classList.add('rec'); }catch(_){}});
+  }else{ micBtn.style.display='none'; }
+})();
+
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v52.0';
+  const APP_VERSION = 'v53.0-대화형체험';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
