@@ -1025,6 +1025,7 @@ window.DDOOPI = {
         #convoCard .cv-tag.lock{font-size:11px;font-weight:700;color:#B4AFA2;background:#ECE7DC;padding:3px 9px;border-radius:999px;margin-left:auto;}
         #convoCard .cv-tag.go{font-size:11px;font-weight:700;color:#3FB98C;background:#E7F6EF;padding:3px 9px;border-radius:999px;margin-left:auto;}
         #convoCard .cv-tag.done{font-size:11px;font-weight:700;color:#fff;background:#3FB98C;padding:3px 9px;border-radius:999px;margin-left:auto;}
+        #convoCard .cv-figure{background:#fff;border:1px solid #EFE9DC;border-radius:14px;padding:14px 10px;margin:2px 0 10px;box-shadow:0 4px 14px rgba(42,39,64,.05);}
       </style>
       <div class="card" id="convoCard" style="display:none;">
         <p class="step-eyebrow">새 기능 · 대화형</p>
@@ -1036,6 +1037,7 @@ window.DDOOPI = {
         <!-- 대화 영역 -->
         <div id="cvSession" style="display:none;">
           <div class="info-box" style="margin-top:-4px;margin-bottom:8px;">🐾 뚜삐와 <b>대화하듯</b> 설명해 보세요. 뚜삐가 이어서 질문해 줄 거예요.</div>
+          <div id="cvFigure" class="cv-figure" style="display:none;"></div>
           <div class="cv-pieces" id="cvPieces"></div>
           <div class="cv-chat" id="cvChat"></div>
           <div id="cvResult"></div>
@@ -7882,11 +7884,195 @@ window.addEventListener('load', ()=>{ try{
         shortConcept:"받아내림이 여러 번 생겨도 방법은 같아요. 일의 자리부터 차례로 빼면서, 뺄 수 없는 자리마다 윗자리에서 10을 빌려와요. 빌려준 자리는 1씩 줄어들어요.",
         bookPage:"디딤돌 3-1 · 1단원 (20쪽 부근)" }
       ]},
-      { id:"u2", name:"평면도형", ready:false },
-      { id:"u3", name:"나눗셈", ready:false },
-      { id:"u4", name:"곱셈", ready:false },
-      { id:"u5", name:"길이와 시간", ready:false },
-      { id:"u6", name:"분수와 소수", ready:false }
+      { id:"u2", name:"평면도형", ready:true, types:[
+        { id:"geo1", name:"선분·반직선·직선 알아보기",
+          figure:"lines3", figureDesc:"위에서부터 선분(양 끝에 점), 반직선(왼쪽 끝점, 오른쪽 화살표), 직선(양쪽 화살표)이 차례로 그려져 있다.",
+          firstQuestion:"위 그림에 선이 세 가지 있어. 선분·반직선·직선이 어떻게 다른지 설명해 볼래?",
+          keyPoints:[{id:"a",label:"선분은 두 점을 곧게 이은 선(양 끝이 있다)"},{id:"b",label:"반직선은 한쪽으로만 끝없이 늘인 선(끝점 1개)"},{id:"c",label:"직선은 양쪽으로 끝없이 늘인 선(끝점 없다)"}],
+          outOfScope:"",
+          shortConcept:"선분은 두 점을 곧게 이은 선이라 양 끝이 있어요. 반직선은 한쪽으로만 끝없이 늘여 끝점이 하나예요. 직선은 양쪽으로 끝없이 늘여 끝점이 없어요.",
+          bookPage:"디딤돌 3-1 · 2단원 (40쪽 부근)" },
+        { id:"geo2", name:"각과 직각 알아보기",
+          figure:"angle-both", figureDesc:"왼쪽에 일반적인 각(꼭짓점에서 두 선이 벌어짐, '각'), 오른쪽에 직각(직각 표시가 있는 각, '직각')이 그려져 있다.",
+          firstQuestion:"왼쪽은 '각', 오른쪽은 '직각'이야. 각이 무엇이고 직각이 무엇인지 설명해 볼래?",
+          keyPoints:[{id:"a",label:"각은 한 점에서 그은 두 반직선으로 이루어진다"},{id:"b",label:"뾰족한 점을 꼭짓점, 두 반직선을 변이라 한다"},{id:"c",label:"반듯한(90도) 각을 직각이라 한다"}],
+          outOfScope:"",
+          shortConcept:"각은 한 점에서 그은 두 반직선으로 이루어져요. 그 점을 꼭짓점, 두 반직선을 변이라고 해요. 종이를 반듯하게 두 번 접었을 때 생기는 각처럼 반듯한 각을 직각이라고 해요.",
+          bookPage:"디딤돌 3-1 · 2단원 (44쪽 부근)" },
+        { id:"geo3", name:"직각삼각형 알아보기",
+          figure:"right-triangle", figureDesc:"한 각에 직각 표시가 있는 직각삼각형이 그려져 있다.",
+          firstQuestion:"이 삼각형은 다른 삼각형과 뭐가 다를까? 직각삼각형을 설명해 볼래?",
+          keyPoints:[{id:"a",label:"한 각이 직각인 삼각형이다"},{id:"b",label:"직각은 반듯한 각(90도)이다"}],
+          outOfScope:"",
+          shortConcept:"직각삼각형은 한 각이 직각인 삼각형이에요. 직각은 반듯하게 접었을 때 생기는 90도 각이에요.",
+          bookPage:"디딤돌 3-1 · 2단원 (48쪽 부근)" },
+        { id:"geo4", name:"직사각형 알아보기",
+          figure:"rectangle", figureDesc:"네 각에 직각 표시가 있고, 마주 보는 변에 같음 눈금이 있는 직사각형이 그려져 있다.",
+          firstQuestion:"이 사각형은 직사각형이야. 직사각형이 어떤 도형인지 설명해 볼래?",
+          keyPoints:[{id:"a",label:"네 각이 모두 직각인 사각형이다"},{id:"b",label:"마주 보는 두 변의 길이가 같다"}],
+          outOfScope:"",
+          shortConcept:"직사각형은 네 각이 모두 직각인 사각형이에요. 마주 보는 두 변의 길이는 서로 같아요.",
+          bookPage:"디딤돌 3-1 · 2단원 (52쪽 부근)" },
+        { id:"geo5", name:"정사각형 알아보기",
+          figure:"square", figureDesc:"네 각에 직각 표시가 있고, 네 변에 모두 같음 눈금이 있는 정사각형이 그려져 있다.",
+          firstQuestion:"이 사각형은 정사각형이야. 정사각형이 직사각형과 어떻게 다른지 설명해 볼래?",
+          keyPoints:[{id:"a",label:"네 각이 모두 직각이다"},{id:"b",label:"네 변의 길이가 모두 같다"}],
+          outOfScope:"",
+          shortConcept:"정사각형은 네 각이 모두 직각이고, 네 변의 길이가 모두 같은 사각형이에요. 그래서 정사각형은 직사각형이라고도 할 수 있어요.",
+          bookPage:"디딤돌 3-1 · 2단원 (56쪽 부근)" }
+      ]},
+      { id:"u3", name:"나눗셈", ready:true, types:[
+        { id:"div1", name:"똑같이 나누기 (몇 명에게 나누기)",
+          firstQuestion:"사탕 15개를 5명에게 똑같이 나누어 주려고 해. 어떻게 하는지 나눗셈으로 설명해 볼래?",
+          keyPoints:[{id:"a",label:"전체를 사람 수만큼 똑같이 나눈다"},{id:"b",label:"나눗셈식으로 나타낸다 (15÷5)"},{id:"c",label:"몫은 한 명이 갖는 수다"}],
+          outOfScope:"나머지가 있는 나눗셈",
+          shortConcept:"똑같이 나누기는 전체를 똑같은 크기로 가르는 거예요. 15개를 5명에게 똑같이 나누면 15÷5로 쓰고, 몫 3은 한 명이 갖는 수예요.",
+          bookPage:"디딤돌 3-1 · 3단원 (68쪽 부근)" },
+        { id:"div2", name:"몇 개씩 묶어 덜어내기",
+          firstQuestion:"사과 12개를 4개씩 담으면 접시가 몇 개 필요할까? 어떻게 알 수 있는지 말해볼래?",
+          keyPoints:[{id:"a",label:"전체를 몇 개씩 묶는다"},{id:"b",label:"묶음의 수가 몫이다 (12÷4=3)"},{id:"c",label:"12에서 4씩 덜어내는 것과 같다"}],
+          outOfScope:"나머지가 있는 나눗셈",
+          shortConcept:"몇 개씩 묶어서 나누는 방법이에요. 12개를 4개씩 묶으면 3묶음이라 12÷4=3이에요. 12에서 4를 3번 덜어내는 것과 같아요.",
+          bookPage:"디딤돌 3-1 · 3단원 (72쪽 부근)" },
+        { id:"div3", name:"곱셈과 나눗셈의 관계",
+          firstQuestion:"3×5=15를 보고 만들 수 있는 나눗셈식이 있을까? 어떻게 되는지 말해볼래?",
+          keyPoints:[{id:"a",label:"곱셈식 하나로 나눗셈식 2개를 만들 수 있다"},{id:"b",label:"나눗셈식 하나로 곱셈식 2개를 만들 수 있다"},{id:"c",label:"곱셈과 나눗셈은 서로 반대되는 계산이다"}],
+          outOfScope:"",
+          shortConcept:"곱셈과 나눗셈은 서로 반대예요. 3×5=15면 15÷3=5, 15÷5=3을 만들 수 있어요. 반대로 나눗셈식 하나로 곱셈식 2개도 만들 수 있어요.",
+          bookPage:"디딤돌 3-1 · 3단원 (74쪽 부근)" },
+        { id:"div4", name:"나눗셈의 몫을 곱셈식으로 구하기",
+          firstQuestion:"24÷6의 몫을 곱셈을 이용해서 구하려면 어떻게 생각하면 좋을까? 말해볼래?",
+          keyPoints:[{id:"a",label:"'6에 얼마를 곱하면 24가 될까'로 바꿔 생각한다"},{id:"b",label:"6×□=24에서 □가 몫이다"}],
+          outOfScope:"",
+          shortConcept:"나눗셈의 몫은 곱셈으로 찾을 수 있어요. 24÷6은 '6×□=24'에서 □를 찾는 거예요. 6×4=24니까 몫은 4예요.",
+          bookPage:"디딤돌 3-1 · 3단원 (76쪽 부근)" },
+        { id:"div5", name:"나눗셈의 몫을 곱셈구구로 구하기",
+          firstQuestion:"42÷7의 몫을 곱셈구구(구구단)로 빠르게 구하려면 어떻게 할까? 말해볼래?",
+          keyPoints:[{id:"a",label:"나누는 수의 단(7단)에서 나누어지는 수(42)를 찾는다"},{id:"b",label:"7×6=42이므로 몫은 6이다"}],
+          outOfScope:"",
+          shortConcept:"곱셈구구로 몫을 빠르게 찾을 수 있어요. 42÷7은 7단에서 42를 찾으면 돼요. 7×6=42니까 몫은 6이에요.",
+          bookPage:"디딤돌 3-1 · 3단원 (78쪽 부근)" }
+      ]},
+      { id:"u4", name:"곱셈", ready:true, types:[
+        { id:"mul1", name:"(몇십)×(몇)",
+          firstQuestion:"20×3은 어떻게 계산하면 좋을까? 네 방법을 말해볼래?",
+          keyPoints:[{id:"a",label:"2×3을 먼저 계산한다"},{id:"b",label:"결과에 0을 하나 붙인다"},{id:"c",label:"20을 3번 더한 것과 같다"}],
+          outOfScope:"올림이 있는 곱셈",
+          shortConcept:"(몇십)×(몇)은 먼저 몇×몇을 하고 0을 붙여요. 20×3은 2×3=6에 0을 붙여 60이에요. 20을 3번 더한 것과 같아요.",
+          bookPage:"디딤돌 3-1 · 4단원 (96쪽 부근)" },
+        { id:"mul2", name:"올림이 없는 (몇십몇)×(몇)",
+          firstQuestion:"12×4는 어떻게 계산할까? 12를 어떻게 나눠서 곱하면 좋을지 말해볼래?",
+          keyPoints:[{id:"a",label:"12를 10과 2로 나눠 각각 곱한다 (10×4, 2×4)"},{id:"b",label:"두 값을 더한다"}],
+          outOfScope:"올림이 있는 곱셈",
+          shortConcept:"올림이 없는 (몇십몇)×(몇)은 각 자리를 곱해 더해요. 12×4는 10×4=40과 2×4=8을 더해 48이에요.",
+          bookPage:"디딤돌 3-1 · 4단원 (100쪽 부근)" },
+        { id:"mul3", name:"십의 자리에서 올림이 있는 곱셈",
+          firstQuestion:"41×3처럼 십의 자리를 곱한 값이 십을 넘으면 어떻게 할까? 말해볼래?",
+          keyPoints:[{id:"a",label:"십의 자리 곱이 넘치면 백의 자리로 올린다"},{id:"b",label:"일의 자리부터 차례로 계산한다"}],
+          outOfScope:"",
+          shortConcept:"십의 자리를 곱한 값이 크면 백의 자리로 올려줘요. 41×3은 1×3=3, 40×3=120이라 123이에요.",
+          bookPage:"디딤돌 3-1 · 4단원 (102쪽 부근)" },
+        { id:"mul4", name:"일의 자리에서 올림이 있는 곱셈",
+          firstQuestion:"13×4처럼 일의 자리를 곱한 값이 10을 넘으면 어떻게 할까? 말해볼래?",
+          keyPoints:[{id:"a",label:"일의 자리 곱이 10을 넘으면 십의 자리로 올린다"},{id:"b",label:"올린 수를 십의 자리 곱에 더한다"}],
+          outOfScope:"",
+          shortConcept:"일의 자리 곱이 10을 넘으면 십의 자리로 올려요. 13×4는 3×4=12라 2를 쓰고 1을 올려서, 10×4=40에 더해 52예요.",
+          bookPage:"디딤돌 3-1 · 4단원 (104쪽 부근)" },
+        { id:"mul5", name:"올림이 여러 번 있는 곱셈",
+          firstQuestion:"26×4처럼 올림이 여러 번 생겨도 방법은 똑같을까? 어떻게 하는지 말해볼래?",
+          keyPoints:[{id:"a",label:"일의 자리부터 차례로 곱한다"},{id:"b",label:"올림이 생기는 자리마다 윗자리로 올려 더한다"}],
+          outOfScope:"",
+          shortConcept:"올림이 여러 번 생겨도 방법은 같아요. 일의 자리부터 곱하면서 올림을 윗자리에 더해요. 26×4는 6×4=24(4쓰고 2올림), 20×4=80에 20 더해 104예요.",
+          bookPage:"디딤돌 3-1 · 4단원 (106쪽 부근)" }
+      ]},
+      { id:"u5", name:"길이와 시간", ready:true, types:[
+        { id:"len1", name:"밀리미터(mm) 알아보기",
+          firstQuestion:"1cm보다 작은 길이는 어떻게 나타낼까? mm에 대해 말해볼래?",
+          keyPoints:[{id:"a",label:"1cm를 똑같이 10칸으로 나눈 한 칸이 1mm다"},{id:"b",label:"1cm는 10mm다"}],
+          outOfScope:"",
+          shortConcept:"1cm를 똑같이 10칸으로 나눈 한 칸이 1mm예요. 그래서 1cm=10mm이고, 3cm 5mm는 35mm예요.",
+          bookPage:"디딤돌 3-1 · 5단원 (124쪽 부근)" },
+        { id:"len2", name:"킬로미터(km) 알아보기",
+          firstQuestion:"아주 먼 거리는 어떤 단위로 나타낼까? km에 대해 말해볼래?",
+          keyPoints:[{id:"a",label:"1000m를 1km라고 한다"},{id:"b",label:"1km는 1000m다"}],
+          outOfScope:"",
+          shortConcept:"1000m를 1km라고 해요. 그래서 1km=1000m이고, 2km 300m는 2300m예요.",
+          bookPage:"디딤돌 3-1 · 5단원 (128쪽 부근)" },
+        { id:"len3", name:"길이와 거리 어림하기",
+          firstQuestion:"자로 재지 않고 길이를 대충 알아보는 걸 뭐라고 할까? 어떻게 하면 좋을지 말해볼래?",
+          keyPoints:[{id:"a",label:"재지 않고 대략 알아보는 것을 어림이라고 한다"},{id:"b",label:"이미 아는 길이(뼘, 걸음 등)를 기준으로 삼는다"}],
+          outOfScope:"",
+          shortConcept:"어림은 자로 재지 않고 대략 알아보는 거예요. 내 뼘이나 걸음처럼 아는 길이를 기준으로 삼으면 잘 어림할 수 있어요.",
+          bookPage:"디딤돌 3-1 · 5단원 (132쪽 부근)" },
+        { id:"len4", name:"초 알아보기",
+          firstQuestion:"1분보다 짧은 시간은 어떻게 나타낼까? 초에 대해 말해볼래?",
+          keyPoints:[{id:"a",label:"1분을 똑같이 60칸으로 나눈 한 칸이 1초다"},{id:"b",label:"1분은 60초다"}],
+          outOfScope:"",
+          shortConcept:"1분을 똑같이 60칸으로 나눈 한 칸이 1초예요. 그래서 1분=60초이고, 2분 30초는 150초예요.",
+          bookPage:"디딤돌 3-1 · 5단원 (136쪽 부근)" },
+        { id:"len5", name:"시간의 덧셈",
+          firstQuestion:"시간을 더할 때는 어떻게 계산할까? 네 방법을 말해볼래?",
+          keyPoints:[{id:"a",label:"시는 시끼리, 분은 분끼리, 초는 초끼리 더한다"},{id:"b",label:"60초가 넘으면 1분으로 받아올림한다"}],
+          outOfScope:"",
+          shortConcept:"시간의 덧셈은 초는 초끼리, 분은 분끼리, 시는 시끼리 더해요. 초가 60을 넘으면 1분으로 올려줘요.",
+          bookPage:"디딤돌 3-1 · 5단원 (140쪽 부근)" },
+        { id:"len6", name:"시간의 뺄셈",
+          firstQuestion:"시간을 뺄 때는 어떻게 계산할까? 초끼리 뺄 수 없으면 어떻게 할지 말해볼래?",
+          keyPoints:[{id:"a",label:"시는 시끼리, 분은 분끼리, 초는 초끼리 뺀다"},{id:"b",label:"초끼리 뺄 수 없으면 1분을 60초로 바꿔 받아내림한다"}],
+          outOfScope:"",
+          shortConcept:"시간의 뺄셈도 같은 단위끼리 빼요. 초끼리 뺄 수 없으면 1분을 60초로 바꿔서 빌려와요.",
+          bookPage:"디딤돌 3-1 · 5단원 (144쪽 부근)" }
+      ]},
+      { id:"u6", name:"분수와 소수", ready:true, types:[
+        { id:"fr1", name:"전체를 똑같이 나누기",
+          firstQuestion:"도형을 '똑같이 나눈다'는 게 무슨 뜻일까? 말해볼래?",
+          keyPoints:[{id:"a",label:"나눈 조각의 크기가 모두 같아야 한다"},{id:"b",label:"똑같이 나눠야 분수로 나타낼 수 있다"}],
+          outOfScope:"",
+          shortConcept:"똑같이 나눈다는 건 조각의 크기가 모두 같다는 뜻이에요. 똑같이 나눠야 분수로 나타낼 수 있어요.",
+          bookPage:"디딤돌 3-1 · 6단원 (156쪽 부근)" },
+        { id:"fr2", name:"분수 알아보기",
+          firstQuestion:"전체를 똑같이 4로 나눈 것 중 1을 분수로 어떻게 나타낼까? 분모와 분자가 뭔지 말해볼래?",
+          keyPoints:[{id:"a",label:"전체를 똑같이 나눈 수가 분모다(아래)"},{id:"b",label:"그중 몇 개인지가 분자다(위)"}],
+          outOfScope:"",
+          shortConcept:"분수는 전체를 똑같이 나눈 것 중 몇 개인지를 나타내요. 4분의 1에서 아래 4는 나눈 수(분모), 위 1은 그중 개수(분자)예요.",
+          bookPage:"디딤돌 3-1 · 6단원 (160쪽 부근)" },
+        { id:"fr3", name:"단위분수 알아보기",
+          firstQuestion:"분자가 1인 분수를 뭐라고 할까? 어떤 분수들이 그런지 말해볼래?",
+          keyPoints:[{id:"a",label:"분자가 1인 분수를 단위분수라고 한다"},{id:"b",label:"2분의 1, 3분의 1처럼 분자가 1이다"}],
+          outOfScope:"",
+          shortConcept:"분자가 1인 분수를 단위분수라고 해요. 2분의 1, 3분의 1, 4분의 1 같은 거예요.",
+          bookPage:"디딤돌 3-1 · 6단원 (164쪽 부근)" },
+        { id:"fr4", name:"분모가 같은 분수의 크기 비교",
+          firstQuestion:"5분의 2와 5분의 4 중 어느 게 더 클까? 왜 그런지 말해볼래?",
+          keyPoints:[{id:"a",label:"분모가 같으면 분자가 클수록 크다"},{id:"b",label:"나눈 조각의 크기가 같기 때문이다"}],
+          outOfScope:"",
+          shortConcept:"분모가 같으면 분자가 클수록 커요. 조각의 크기가 같으니 조각이 더 많은 쪽이 크죠. 그래서 5분의 4가 5분의 2보다 커요.",
+          bookPage:"디딤돌 3-1 · 6단원 (166쪽 부근)" },
+        { id:"fr5", name:"단위분수의 크기 비교",
+          firstQuestion:"2분의 1과 4분의 1 중 어느 게 더 클까? 왜 그런지 말해볼래?",
+          keyPoints:[{id:"a",label:"단위분수는 분모가 클수록 작다"},{id:"b",label:"많이 나눌수록 한 조각이 작기 때문이다"}],
+          outOfScope:"",
+          shortConcept:"단위분수는 분모가 클수록 작아요. 많이 나눌수록 한 조각이 작아지니까요. 그래서 2분의 1이 4분의 1보다 커요.",
+          bookPage:"디딤돌 3-1 · 6단원 (168쪽 부근)" },
+        { id:"fr6", name:"소수 한 자리 수 알아보기",
+          firstQuestion:"10분의 1을 소수로 어떻게 쓸까? 0.1에 대해 말해볼래?",
+          keyPoints:[{id:"a",label:"10분의 1을 0.1로 쓴다"},{id:"b",label:"분수 10분의 1과 소수 0.1은 같은 수다"}],
+          outOfScope:"",
+          shortConcept:"10분의 1을 소수로 0.1이라고 써요. 분수 10분의 1과 소수 0.1은 같은 수예요. 가운데 점(.)을 소수점이라고 해요.",
+          bookPage:"디딤돌 3-1 · 6단원 (172쪽 부근)" },
+        { id:"fr7", name:"1보다 큰 소수 알아보기",
+          firstQuestion:"1과 0.3을 합하면 소수로 어떻게 쓸까? 2.4에서 2와 4가 뭘 나타내는지 말해볼래?",
+          keyPoints:[{id:"a",label:"자연수 부분과 소수 부분으로 이루어진다"},{id:"b",label:"2.4는 2와 0.4(0.1이 4개)를 합한 수다"}],
+          outOfScope:"",
+          shortConcept:"1보다 큰 소수는 자연수와 소수 부분을 합해요. 2.4는 2와 0.4를 합한 거고, 소수 첫째 자리 4는 0.1이 4개라는 뜻이에요.",
+          bookPage:"디딤돌 3-1 · 6단원 (174쪽 부근)" },
+        { id:"fr8", name:"소수의 크기 비교",
+          firstQuestion:"0.3과 0.7 중 어느 게 더 클까? 어떻게 비교하는지 말해볼래?",
+          keyPoints:[{id:"a",label:"자연수 부분을 먼저 비교한다"},{id:"b",label:"자연수가 같으면 소수 첫째 자리(0.1의 개수)를 비교한다"}],
+          outOfScope:"",
+          shortConcept:"소수는 자연수 부분을 먼저 비교하고, 같으면 소수 첫째 자리를 비교해요. 0.7은 0.1이 7개, 0.3은 3개라 0.7이 더 커요.",
+          bookPage:"디딤돌 3-1 · 6단원 (176쪽 부근)" }
+      ]}
     ]},
     { id:"e4", name:"초등 4학년", ready:false },
     { id:"e5", name:"초등 5학년", ready:false },
@@ -7969,6 +8155,9 @@ window.addEventListener('load', ()=>{ try{
     titleEl.textContent=CUR.name;
     chat.innerHTML=''; $('cvResult').innerHTML=''; callsEl.textContent=0;
     $('cvInputbar').style.display=''; answerEl.value=''; sendBtn.disabled=true;
+    const fig=$('cvFigure');
+    if(CUR.figure){ fig.innerHTML=cvDrawFigure(CUR.figure); fig.style.display='block'; }
+    else { fig.innerHTML=''; fig.style.display='none'; }
     renderPieces(); addBubble('t', CUR.firstQuestion); cv.transcript.push({who:'t', text:CUR.firstQuestion});
   }
   function renderPieces(){
@@ -7976,6 +8165,65 @@ window.addEventListener('load', ()=>{ try{
     for(let i=0;i<CUR.keyPoints.length;i++) h+='<span class="cv-piece" data-i="'+i+'"></span>';
     h+='<span class="cv-lab" style="margin-left:auto">핵심을 짚을 때마다 채워져요</span>';
     piecesEl.innerHTML=h;
+  }
+
+  /* 도형 생성기 — 기본 평면도형을 SVG로 그림 (나중에 좌표평면·그래프로 확장 가능) */
+  function cvDrawFigure(kind){
+    const ink='#2A2740', blue='#5B6EE1', mint='#3FB98C', soft='#9A96A6', fill='#EEF0FD';
+    const S='<svg viewBox="0 0 320 180" width="100%" style="max-width:330px;display:block;margin:0 auto" xmlns="http://www.w3.org/2000/svg">';
+    const E='</svg>';
+    const ln=(a,b,c,d,col,w)=>'<line x1="'+a+'" y1="'+b+'" x2="'+c+'" y2="'+d+'" stroke="'+(col||ink)+'" stroke-width="'+(w||2.6)+'" stroke-linecap="round"/>';
+    const dot=(x,y,col)=>'<circle cx="'+x+'" cy="'+y+'" r="4.2" fill="'+(col||ink)+'"/>';
+    const tx=(x,y,t,col,sz)=>'<text x="'+x+'" y="'+y+'" font-family="Noto Sans KR,sans-serif" font-size="'+(sz||13)+'" font-weight="700" fill="'+(col||soft)+'">'+t+'</text>';
+    const arrowR=(x,y)=>ln(x,y,x-9,y-5)+ln(x,y,x-9,y+5);   // 오른쪽 화살표
+    const arrowL=(x,y)=>ln(x,y,x+9,y-5)+ln(x,y,x+9,y+5);   // 왼쪽 화살표
+    const arrowU=(x,y)=>ln(x,y,x-5,y+9)+ln(x,y,x+5,y+9);   // 위 화살표
+    // 직각 표시(작은 사각형): 꼭짓점(x,y)에서 dx,dy 방향
+    const ra=(x,y,dx,dy)=>{const s=13;return '<path d="M '+(x+dx*s)+' '+y+' L '+(x+dx*s)+' '+(y+dy*s)+' L '+x+' '+(y+dy*s)+'" fill="none" stroke="'+mint+'" stroke-width="2"/>';};
+    // 변 같음 눈금
+    const tickH=(x,y,n)=>{let o='';for(let i=0;i<n;i++){const xx=x+(i-(n-1)/2)*5;o+=ln(xx,y-6,xx,y+6,mint,2);}return o;};
+    const tickV=(x,y,n)=>{let o='';for(let i=0;i<n;i++){const yy=y+(i-(n-1)/2)*5;o+=ln(x-6,yy,x+6,yy,mint,2);}return o;};
+
+    if(kind==='lines3'){
+      return S
+        + ln(45,42,250,42)+dot(45,42)+dot(250,42)+tx(262,47,'선분',blue)
+        + ln(45,92,246,92)+dot(45,92)+arrowR(250,92)+tx(262,97,'반직선',blue)
+        + ln(49,142,246,142)+arrowL(45,142)+arrowR(250,142)+tx(262,147,'직선',blue)
+        + E;
+    }
+    if(kind==='angle-both'){
+      return S
+        + ln(55,140,160,140)+ln(55,140,125,60)+dot(55,140)
+        + '<path d="M 95 140 A 40 40 0 0 0 82 112" fill="none" stroke="'+blue+'" stroke-width="2"/>'
+        + tx(78,165,'각',ink,14)
+        + ln(215,140,300,140)+ln(215,140,215,58)+dot(215,140)+ra(215,140,1,-1)
+        + tx(240,165,'직각',ink,14)
+        + E;
+    }
+    if(kind==='right-triangle'){
+      return S
+        + '<polygon points="65,150 65,52 225,150" fill="'+fill+'" stroke="'+ink+'" stroke-width="2.6" stroke-linejoin="round"/>'
+        + ra(65,150,1,-1) + tx(70,138,'직각',mint,12)
+        + E;
+    }
+    if(kind==='rectangle'){
+      const x1=60,y1=48,x2=250,y2=132;
+      return S
+        + '<rect x="'+x1+'" y="'+y1+'" width="'+(x2-x1)+'" height="'+(y2-y1)+'" fill="'+fill+'" stroke="'+ink+'" stroke-width="2.6"/>'
+        + ra(x1,y1,1,1)+ra(x2,y1,-1,1)+ra(x1,y2,1,-1)+ra(x2,y2,-1,-1)
+        + tickH((x1+x2)/2,y1,1)+tickH((x1+x2)/2,y2,1)      // 위·아래(긴 변) 같음
+        + tickV(x1,(y1+y2)/2,2)+tickV(x2,(y1+y2)/2,2)      // 좌·우(짧은 변) 같음
+        + E;
+    }
+    if(kind==='square'){
+      const x1=95,y1=35,x2=215,y2=155;
+      return S
+        + '<rect x="'+x1+'" y="'+y1+'" width="'+(x2-x1)+'" height="'+(y2-y1)+'" fill="'+fill+'" stroke="'+ink+'" stroke-width="2.6"/>'
+        + ra(x1,y1,1,1)+ra(x2,y1,-1,1)+ra(x1,y2,1,-1)+ra(x2,y2,-1,-1)
+        + tickH((x1+x2)/2,y1,1)+tickH((x1+x2)/2,y2,1)+tickV(x1,(y1+y2)/2,1)+tickV(x2,(y1+y2)/2,1)  // 네 변 모두 같음
+        + E;
+    }
+    return '';
   }
   function updatePieces(){ piecesEl.querySelectorAll('.cv-piece').forEach((p,i)=> p.classList.toggle('on', i<cv.covered.length)); }
 
@@ -8038,6 +8286,7 @@ window.addEventListener('load', ()=>{ try{
       +"반드시 아래 JSON으로만 답해(다른 말 금지):\n"
       +"{\"covered\":[옳게 설명한 id들],\"stuck\":false,\"done\":false,\"reply\":\"뚜삐 다음 한마디\"}";
     const user="[개념] "+CUR.name+"\n[핵심 포인트]\n"+kp
+      +(CUR.figureDesc?"\n[아이 화면에 보이는 그림] "+CUR.figureDesc:"")
       +"\n\n[이미 짚은 핵심] "+doneList
       +"\n[아직 안 짚은 핵심] "+restList
       +"\n\n[지금까지 대화]\n"+convo
@@ -8131,7 +8380,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v54.0-드릴다운메뉴';
+  const APP_VERSION = 'v56.0-초3-1완성·도형';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
