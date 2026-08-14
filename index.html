@@ -4320,10 +4320,13 @@ async function renderMyHistory(){
   const makeItem = x => {
     const cls = x.pass ? 'pass' : 'retry';
     const label = x.pass ? '통과' : '한번 더';
-    return `<div class="my-item">
+    const clickable = (window.cvHasType && window.cvHasType(x.unitId));
+    const attr = clickable ? ` data-cvtype="${esc(x.unitId)}" role="button" tabindex="0" title="눌러서 이 개념 다시 말하기" style="cursor:pointer"` : '';
+    const arrow = clickable ? '<span class="mi-go" style="margin-left:auto;color:#5B6EE1;font-weight:700">다시 ▶</span>' : '';
+    return `<div class="my-item"${attr}>
       <span class="mi-badge ${cls}">${label}</span>
       <span class="mi-unit">${esc(x.unitLabel)}</span>
-      <span class="mi-time">${fmt(x.time)}</span>
+      <span class="mi-time">${fmt(x.time)}</span>${arrow}
     </div>`;
   };
   const first = mine.slice(0,3).map(makeItem).join('');
@@ -4343,6 +4346,13 @@ async function renderMyHistory(){
     ${moreBtn}
   </div>`;
 
+  function wireCvClicks(){
+    document.querySelectorAll('#myRecent .my-item[data-cvtype]').forEach(el=>{
+      el.onclick = ()=>{ if(window.cvOpenType) window.cvOpenType(el.dataset.cvtype); };
+    });
+  }
+  wireCvClicks();
+
   const btn = document.getElementById('myMoreBtn');
   if(btn){
     btn.addEventListener('click', ()=>{
@@ -4352,6 +4362,7 @@ async function renderMyHistory(){
       }else{
         rec.innerHTML = first + more; btn.textContent = '접기 ▴'; btn.dataset.open='1';
       }
+      wireCvClicks();
     });
   }
 }
@@ -8259,6 +8270,53 @@ window.addEventListener('load', ()=>{ try{
         const t=u.types.find(x=>x.id===id); if(t) return t; } }
     return null;
   }
+  function findContext(id){   // 유형 id로 학년/단원 찾기 (breadcrumb·저장용)
+    for(const g of CV_DATA.grades){ if(!g.units) continue;
+      for(const u of g.units){ if(u.types && u.types.some(x=>x.id===id)) return {grade:g, unit:u}; } }
+    return null;
+  }
+
+  // 최근 학습에서 클릭 → 그 개념 대화 바로 열기
+  function openType(id){
+    const t=findType(id); if(!t) return;
+    const ctx=findContext(id); if(ctx){ nav.grade=ctx.grade; nav.unit=ctx.unit; nav.level='type'; }
+    ['setupCard','questionCard','quizCard'].forEach(x=>{ const el=$(x); if(el) el.style.display='none'; });
+    $('convoCard').style.display='block';
+    start(id); window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  // 대화 결과를 기록으로 저장 (기존 submissions 테이블·형식 재사용, 새 컬럼 안 씀)
+  async function cvSaveRecord(percent, isPass, earnedPts){
+    try{
+      const s = (window.session && window.session.student) ? window.session.student : null;
+      if(!s) return;   // 로그인한 학생일 때만 저장
+      const ctx = findContext(CUR.id) || {};
+      const openQ = (cv.transcript[0] && cv.transcript[0].text) || '';
+      const transcriptText = cv.transcript.map(t=>(t.who==='t'?'뚜삐: ':'아이: ')+t.text).join('\n');
+      const label = '🗣️ ' + CUR.name;
+      const row = {
+        student_id: s.id, name: s.name, student_grade: s.grade || '',
+        course_id: (ctx.grade? ctx.grade.id : 'e3'), course_name: (ctx.grade? ctx.grade.name : '초등 3학년'),
+        unit_id: CUR.id, unit_label: label,        // unit_id에 유형 id → 클릭 연결
+        level: 'talk',
+        question: openQ, transcript: transcriptText,
+        score: percent,
+        praise: '대화형 · 이해도 '+percent+'% · '+(isPass?('통과 +'+earnedPts+'점'):'미통과'),
+        hint:'', retry_point:'', misconception:'',
+        attempt:1, need_teacher:false, hints_used:0, review_due:null
+      };
+      if(typeof checkSupabase==='function' && await checkSupabase()){
+        try{ await sbInsert('submissions', row); return; }catch(e){ console.warn('대화 기록 저장(서버) 실패', e); }
+      }
+      // 로컬 폴백
+      const id='sub'+Date.now();
+      const local={ id, studentId:s.id, name:s.name, studentGrade:s.grade||'',
+        courseId:row.course_id, courseName:row.course_name, unitId:CUR.id, unitLabel:label,
+        level:'talk', question:openQ, transcript:transcriptText, score:percent, pass:isPass,
+        praise:row.praise, time:new Date().toISOString() };
+      try{ localStorage.setItem('dd:sub:'+id, JSON.stringify(local)); }catch(e){}
+    }catch(e){ console.warn('대화 기록 저장 실패', e); }
+  }
   function navItem(name, ready, data, num){
     const locked=!ready;
     const numHtml = (num!=null) ? '<span class="cv-num">'+num+'</span>' : '';
@@ -8450,6 +8508,7 @@ window.addEventListener('load', ()=>{ try{
       +"- 칭찬은 아이가 '실제로 옳은 내용'을 말했을 때만 해. 맞지도 않았는데 칭찬하지 마.\n"
       +"- 아이가 '모르겠어/잘 모르겠다'고 하면 칭찬하지 말고, 더 쉬운 힌트나 아주 작고 구체적인 질문으로 도와줘. 이때 covered는 늘리지 마.\n"
       +"- 아직 안 짚은 핵심이 있으면 그쪽으로 향하는 쉬운 꼬리질문을 해. 예시는 개념에 맞는 '세 자리 수'로 들고, 한 대화 안에서 예시 숫자를 계속 바꾸지 마.\n"
+      +"- 같은 질문을 표현만 바꿔 반복하지 마. 아이가 이미 맞게 말했거나 핵심 포인트가 적으면, 개념을 '실제로 적용'하는 구체적 예문·상황 문제를 내서 확인해. (예: '2km 300m는 몇 m일까?', '156+275처럼 받아올림이 두 번 있는 걸 해볼까?') 아이가 그 예문을 맞히면 개념을 확실히 아는 거야.\n"
       +"- 범위를 벗어나는 내용("+(CUR.outOfScope||'없음')+")을 말하면 칭찬하되 '그건 다음에 배울 거야'라고 넘겨.\n"
       +"- 절대 '틀렸다'고 하지 마.\n"
       +"covered에는 아이가 지금까지 '스스로 옳게 설명한' 핵심 id만 넣어. 모르겠다고 한 것은 넣지 마.\n"
@@ -8486,18 +8545,17 @@ window.addEventListener('load', ()=>{ try{
     cv.finished=true; $('cvInputbar').style.display='none';
     const c=cv.covered.length, total=CUR.keyPoints.length;
 
-    // 이해도 % 채점: 핵심을 얼마나 짚었나(80%) + 얼마나 군더더기 없이 했나(20%)
+    // 이해도 % 채점: 맞힌 핵심 비율을 제대로 인정(90%) + 약간의 매끄러움 보너스(10%)
     let percent;
     if(kind==='restudy'){ percent=20; }
     else {
-      const coverage = total ? c/total : 0;                                   // 0~1
+      const coverage = total ? c/total : 0;                                   // 0~1 (맞힌 핵심 비율)
       const speed = Math.max(0, (CV_SET.maxFollowUps - Math.max(0, cv.followUps-1)) / CV_SET.maxFollowUps); // 0~1
-      percent = Math.round(coverage*80 + speed*20);
-      if(c<total) percent = Math.min(percent, 84);   // 핵심을 다 못 짚으면 '상'(85%+)은 안 됨
+      percent = Math.round(coverage*90 + speed*10);   // 맞힌 만큼이 대부분, 속도는 약간만
       percent = Math.max(10, Math.min(100, percent));
     }
-    const stars = percent>=85?3 : percent>=60?2 : 1;   // 상/중/하
-    const isPass = stars>=CV_SET.passStars;            // 60%(중) 이상 통과
+    const stars = percent>=85?3 : percent>=70?2 : 1;   // 상/중/하
+    const isPass = percent>=PASS_SCORE;                 // 앱 전체와 통일: 70점 이상 통과
 
     // 통과 시, %에 비례해 1~10점 (예: 88%→9점, 60%→6점)
     let earnedPts=0;
@@ -8506,6 +8564,8 @@ window.addEventListener('load', ()=>{ try{
       if(!passedMap[CUR.id]){ passedMap[CUR.id]=true; totalPoints+=earnedPts; }
       else { passedMap[CUR.id]=true; }   // 이미 통과한 유형은 중복 적립 안 함
     }
+
+    cvSaveRecord(percent, isPass, earnedPts);   // 결과를 최근 학습에 저장 (로그인 학생만)
 
     const gradeLabel = (stars===3?'상':stars===2?'중':'하');
     const starHtml=[1,2,3].map(n=>'<span style="color:'+(n<=stars?'#F5B72E':'#E7E1D3')+'">★</span>').join('');
@@ -8530,6 +8590,9 @@ window.addEventListener('load', ()=>{ try{
   $('cvBack').addEventListener('click', backToSetup);
   $('cvToMenu').addEventListener('click', showMenu);
   $('cvEntryBtn') && $('cvEntryBtn').addEventListener('click', open);
+  // 최근 학습에서 클릭 연결용 전역 노출
+  window.cvOpenType = openType;
+  window.cvHasType = (id)=>!!findType(id);
 
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   let cvRec=null, cvRecging=false, cvBase='', cvFinals='';
@@ -8566,7 +8629,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v57.1-초3-1질문4배';
+  const APP_VERSION = 'v58.1-예문·채점완화·통과70';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
