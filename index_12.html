@@ -999,35 +999,41 @@ window.DDOOPI = {
         #convoCard .cv-earn{margin-top:10px;text-align:center;font-size:18px;color:#C9860B;font-weight:800;}
         @keyframes cvpop{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
         @keyframes cvbl{0%,100%{opacity:.3;}50%{opacity:1;}}
+        #convoCard .cv-grp{margin:10px 0 4px;font-size:12px;font-weight:800;color:#5B6EE1;}
+        #convoCard .cv-item{display:flex;align-items:center;gap:8px;width:100%;text-align:left;border:2px solid #EFE9DC;background:#fff;border-radius:14px;padding:11px 13px;margin-bottom:7px;font-family:inherit;font-size:14.5px;color:#2A2740;cursor:pointer;transition:border-color .2s,transform .1s;}
+        #convoCard .cv-item:hover{border-color:#5B6EE1;}
+        #convoCard .cv-item:active{transform:scale(.99);}
+        #convoCard .cv-item .cv-dot{width:9px;height:9px;border-radius:50%;background:#CFE9DC;flex:0 0 9px;}
+        #convoCard .cv-item.done .cv-dot{background:#3FB98C;}
+        #convoCard .cv-item .cv-tag{margin-left:auto;font-size:11px;color:#8A8698;}
       </style>
       <div class="card" id="convoCard" style="display:none;">
         <p class="step-eyebrow">새 기능 · 대화형</p>
-        <p class="step-title" id="cvConcept">개념</p>
-        <div class="info-box" style="margin-top:-4px;margin-bottom:8px;">🐾 뚜삐와 <b>대화하듯</b> 개념을 설명해 보세요. 뚜삐가 이어서 질문해 줄 거예요.</div>
+        <p class="step-title" id="cvTitle">대화형으로 설명하기</p>
 
-        <div class="cv-pieces">
-          <span class="cv-lab">생각 조각</span>
-          <span class="cv-piece" data-i="0"></span>
-          <span class="cv-piece" data-i="1"></span>
-          <span class="cv-piece" data-i="2"></span>
-          <span class="cv-lab" style="margin-left:auto">핵심을 짚을 때마다 채워져요</span>
+        <!-- 개념 고르기 목록 -->
+        <div id="cvMenu"></div>
+
+        <!-- 대화 영역 -->
+        <div id="cvSession" style="display:none;">
+          <div class="info-box" style="margin-top:-4px;margin-bottom:8px;">🐾 뚜삐와 <b>대화하듯</b> 설명해 보세요. 뚜삐가 이어서 질문해 줄 거예요.</div>
+          <div class="cv-pieces" id="cvPieces"></div>
+          <div class="cv-chat" id="cvChat"></div>
+          <div id="cvResult"></div>
+          <div class="cv-inputbar" id="cvInputbar">
+            <div class="cv-box">
+              <button class="cv-mic" id="cvMic" title="말하기">🎤</button>
+              <textarea id="cvAnswer" rows="1" placeholder="말하거나 적어보세요"></textarea>
+              <button class="cv-send" id="cvSend" disabled>보내기</button>
+            </div>
+            <div class="cv-meter">🤖 AI 호출 <b id="cvCalls">0</b>회 · 요금 확인용
+              <span id="cvBadge" style="display:none;">🧪 데모(AI 흉내)</span>
+            </div>
+          </div>
+          <button class="ghost-btn" id="cvToMenu" style="margin-top:12px;">◀ 다른 개념 고르기</button>
         </div>
 
-        <div class="cv-chat" id="cvChat"></div>
-        <div id="cvResult"></div>
-
-        <div class="cv-inputbar" id="cvInputbar">
-          <div class="cv-box">
-            <button class="cv-mic" id="cvMic" title="말하기">🎤</button>
-            <textarea id="cvAnswer" rows="1" placeholder="말하거나 적어보세요"></textarea>
-            <button class="cv-send" id="cvSend" disabled>보내기</button>
-          </div>
-          <div class="cv-meter">🤖 AI 호출 <b id="cvCalls">0</b>회 · 요금 확인용
-            <span id="cvBadge" style="display:none;">🧪 데모(AI 흉내)</span>
-          </div>
-        </div>
-
-        <button class="ghost-btn" id="cvBack" style="margin-top:12px;">◀ 단원 선택으로 돌아가기</button>
+        <button class="ghost-btn" id="cvBack" style="margin-top:10px;">◀ 단원 선택으로 돌아가기</button>
       </div>
 
       <!-- Step 3: 적용 문제 -->
@@ -7795,99 +7801,157 @@ window.addEventListener('load', ()=>{ try{
    새 기능: 대화형 말하기 엔진  (전부 cv~ 로 격리, 기존 코드 안 건드림)
    - 진짜 AI: 기존 callClaude() 재사용 (선생님이 등록한 키로 작동)
    - 막히면 데모 두뇌로 자동 전환
-   - 내용(CV_TYPE)·규칙(CV_SET)만 바꾸면 다른 유형/학년으로 확장
+   - CV_DATA(개념 목록) / CV_SET(학년 규칙)만 채우면 확장됨
    ============================================================ */
 (function(){
-  // ── 내용: 이 유형에 담긴 것 (여기만 바꾸면 다른 유형이 됨) ──
-  const CV_TYPE = {
-    name: "받아올림 없는 세 자리 수의 덧셈",
-    bigUnit: "1. 덧셈과 뺄셈",
-    firstQuestion: "세 자리 수 두 개를 더하는 방법을, 네 말로 설명해 볼래?",
-    keyPoints: [
-      { id:"kp1", label:"같은 자리 수끼리 더한다" },
-      { id:"kp2", label:"일의 자리부터 차례로 계산한다" },
-      { id:"kp3", label:"더한 값을 자리에 맞춰 쓴다" }
-    ],
-    outOfScope: "받아올림(한 자리 합이 10을 넘는 경우)",
-    shortConcept: "세 자리 수의 덧셈은 같은 자리 수끼리 더해요. 일의 자리끼리, 십의 자리끼리, 백의 자리끼리요. 일의 자리부터 차례로 더하고, 더한 값을 그 자리에 맞춰 써요.",
-    bookPage: "디딤돌 초등수학 3-1 · 1단원 (8쪽 부근)"
-  };
-  // ── 규칙: 학년별 (중/고 만들 땐 여기만 추가) ──
+  // ── 개념 목록: 여기만 채우면 개념이 늘어남 ──
+  // 유형 하나 = {id, name, firstQuestion, keyPoints:[{id,label}], outOfScope, shortConcept, bookPage}
+  const CV_DATA = [
+    { big:"1. 덧셈과 뺄셈", types:[
+      { id:"add1", name:"받아올림 없는 세 자리 수의 덧셈",
+        firstQuestion:"세 자리 수 두 개를 더하는 방법을, 네 말로 설명해 볼래?",
+        keyPoints:[{id:"a",label:"같은 자리 수끼리 더한다"},{id:"b",label:"일의 자리부터 차례로 계산한다"},{id:"c",label:"더한 값을 자리에 맞춰 쓴다"}],
+        outOfScope:"받아올림(한 자리 합이 10을 넘는 경우)",
+        shortConcept:"세 자리 수의 덧셈은 같은 자리 수끼리 더해요. 일의 자리끼리, 십의 자리끼리, 백의 자리끼리요. 일의 자리부터 차례로 더하고, 더한 값을 그 자리에 맞춰 써요.",
+        bookPage:"디딤돌 3-1 · 1단원 (8쪽 부근)" },
+      { id:"add2", name:"받아올림이 있는 덧셈 (한 번)",
+        firstQuestion:"두 수를 더하다가 한 자리 합이 10을 넘으면 어떻게 해야 할까? 말해볼래?",
+        keyPoints:[{id:"a",label:"합이 10을 넘으면 윗자리로 1을 올린다(받아올림)"},{id:"b",label:"올린 1을 윗자리 합에 더한다"}],
+        outOfScope:"받아올림이 여러 번인 경우",
+        shortConcept:"같은 자리끼리 더하다가 합이 10을 넘으면, 넘은 1을 바로 윗자리로 올려줘요. 이걸 받아올림이라고 해요. 올린 1은 그 윗자리 합에 더해요.",
+        bookPage:"디딤돌 3-1 · 1단원 (10쪽 부근)" },
+      { id:"add3", name:"받아올림이 여러 번 있는 덧셈",
+        firstQuestion:"받아올림이 두 번 넘게 생겨도 방법은 똑같을까? 어떻게 하는지 말해볼래?",
+        keyPoints:[{id:"a",label:"10이 넘는 자리마다 윗자리로 1씩 올린다"},{id:"b",label:"일의 자리부터 차례로 하면 빠뜨리지 않는다"}],
+        outOfScope:"",
+        shortConcept:"받아올림이 여러 번 생겨도 방법은 같아요. 일의 자리부터 차례대로 더하면서, 합이 10을 넘는 자리마다 윗자리로 1씩 올려줘요.",
+        bookPage:"디딤돌 3-1 · 1단원 (12쪽 부근)" },
+      { id:"sub1", name:"받아내림 없는 세 자리 수의 뺄셈",
+        firstQuestion:"세 자리 수 두 개를 빼는 방법을, 네 말로 설명해 볼래?",
+        keyPoints:[{id:"a",label:"같은 자리 수끼리 뺀다"},{id:"b",label:"일의 자리부터 차례로 뺀다"}],
+        outOfScope:"받아내림",
+        shortConcept:"뺄셈도 같은 자리끼리 빼요. 일의 자리끼리, 십의 자리끼리, 백의 자리끼리요. 일의 자리부터 차례로 빼면 돼요.",
+        bookPage:"디딤돌 3-1 · 1단원 (16쪽 부근)" },
+      { id:"sub2", name:"받아내림이 있는 뺄셈 (한 번)",
+        firstQuestion:"윗자리 수가 작아서 뺄 수 없으면 어떻게 할까? 말해볼래?",
+        keyPoints:[{id:"a",label:"뺄 수 없으면 윗자리에서 10을 빌려온다(받아내림)"},{id:"b",label:"빌려준 자리는 1이 줄어든다"}],
+        outOfScope:"받아내림이 여러 번인 경우",
+        shortConcept:"일의 자리끼리 뺄 수 없으면, 십의 자리에서 10을 빌려와요. 이걸 받아내림이라고 해요. 빌려준 십의 자리는 1이 줄어들어요.",
+        bookPage:"디딤돌 3-1 · 1단원 (18쪽 부근)" },
+      { id:"sub3", name:"받아내림이 여러 번 있는 뺄셈",
+        firstQuestion:"받아내림을 두 번 넘게 해야 할 때도 방법은 똑같을까? 어떻게 하는지 말해볼래?",
+        keyPoints:[{id:"a",label:"뺄 수 없는 자리마다 윗자리에서 10을 빌려온다"},{id:"b",label:"일의 자리부터 차례로 하면 헷갈리지 않는다"}],
+        outOfScope:"",
+        shortConcept:"받아내림이 여러 번 생겨도 방법은 같아요. 일의 자리부터 차례로 빼면서, 뺄 수 없는 자리마다 윗자리에서 10을 빌려와요. 빌려준 자리는 1씩 줄어들어요.",
+        bookPage:"디딤돌 3-1 · 1단원 (20쪽 부근)" }
+    ]}
+  ];
   const CV_SET = { maxFollowUps:4, passStars:2, rewardPerPass:10,
     tone:"아주 다정하고 친근하게, 짧게. 절대 '틀렸다'고 하지 않기." };
 
-  // ── DOM ──
   const $=(id)=>document.getElementById(id);
-  const chat=$('cvChat'), answerEl=$('cvAnswer'), sendBtn=$('cvSend'),
-        micBtn=$('cvMic'), callsEl=$('cvCalls'), badgeEl=$('cvBadge'),
-        pieces=[...document.querySelectorAll('#convoCard .cv-piece')];
+  const menuEl=$('cvMenu'), sessionEl=$('cvSession'), chat=$('cvChat'),
+        piecesEl=$('cvPieces'), answerEl=$('cvAnswer'), sendBtn=$('cvSend'),
+        micBtn=$('cvMic'), callsEl=$('cvCalls'), badgeEl=$('cvBadge'), titleEl=$('cvTitle');
 
-  let cv, demoMode=false, totalPoints=0;
+  let CUR=null, cv, demoMode=false, totalPoints=0;
+  const passedMap={};
   function fresh(){ return { transcript:[], covered:[], followUps:0, finished:false, aiCalls:0, _target:null }; }
   function esc(s){ return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
-  function open(){                       // 대화형 화면 열기
+  function renderMenu(){
+    let html='';
+    CV_DATA.forEach(grp=>{
+      html+='<div class="cv-grp">'+esc(grp.big)+'</div>';
+      grp.types.forEach(t=>{
+        const done=passedMap[t.id];
+        html+='<button class="cv-item'+(done?' done':'')+'" data-id="'+t.id+'"><span class="cv-dot"></span>'
+             +esc(t.name)+'<span class="cv-tag">'+(done?'통과 ✓':'말하기 ▶')+'</span></button>';
+      });
+    });
+    menuEl.innerHTML=html;
+    menuEl.querySelectorAll('.cv-item').forEach(b=> b.addEventListener('click', ()=> start(b.dataset.id)) );
+  }
+  function open(){
     ['setupCard','questionCard','quizCard'].forEach(id=>{ const el=$(id); if(el) el.style.display='none'; });
-    $('convoCard').style.display='block';
-    start(); window.scrollTo({top:0,behavior:'smooth'});
+    $('convoCard').style.display='block'; showMenu(); window.scrollTo({top:0,behavior:'smooth'});
   }
-  function backToSetup(){
-    $('convoCard').style.display='none';
-    const s=$('setupCard'); if(s) s.style.display='block';
-    window.scrollTo({top:0,behavior:'smooth'});
-  }
+  function showMenu(){ titleEl.textContent='어떤 개념을 설명해 볼까?'; renderMenu(); menuEl.style.display='block'; sessionEl.style.display='none'; }
+  function backToSetup(){ $('convoCard').style.display='none'; const s=$('setupCard'); if(s) s.style.display='block'; window.scrollTo({top:0,behavior:'smooth'}); }
+  function findType(id){ for(const g of CV_DATA){ const t=g.types.find(x=>x.id===id); if(t) return t; } return null; }
 
-  function start(){
-    cv=fresh();
-    chat.innerHTML=''; $('cvResult').innerHTML='';
-    $('cvConcept').textContent = CV_TYPE.bigUnit + ' · ' + CV_TYPE.name;
-    callsEl.textContent=0; $('cvInputbar').style.display='';
-    answerEl.value=''; sendBtn.disabled=true; updatePieces();
-    addBubble('t', CV_TYPE.firstQuestion);
-    cv.transcript.push({who:'t', text:CV_TYPE.firstQuestion});
+  function start(id){
+    CUR=findType(id); if(!CUR) return;
+    cv=fresh(); demoMode=false; badgeEl.style.display='none';
+    menuEl.style.display='none'; sessionEl.style.display='block';
+    titleEl.textContent=CUR.name;
+    chat.innerHTML=''; $('cvResult').innerHTML=''; callsEl.textContent=0;
+    $('cvInputbar').style.display=''; answerEl.value=''; sendBtn.disabled=true;
+    renderPieces(); addBubble('t', CUR.firstQuestion); cv.transcript.push({who:'t', text:CUR.firstQuestion});
   }
+  function renderPieces(){
+    let h='<span class="cv-lab">생각 조각</span>';
+    for(let i=0;i<CUR.keyPoints.length;i++) h+='<span class="cv-piece" data-i="'+i+'"></span>';
+    h+='<span class="cv-lab" style="margin-left:auto">핵심을 짚을 때마다 채워져요</span>';
+    piecesEl.innerHTML=h;
+  }
+  function updatePieces(){ piecesEl.querySelectorAll('.cv-piece').forEach((p,i)=> p.classList.toggle('on', i<cv.covered.length)); }
+
   function addBubble(who,text){
     const row=document.createElement('div'); row.className='cv-row '+who;
     row.innerHTML='<div class="cv-av">'+(who==='t'?'🐾':'🙂')+'</div><div class="cv-bubble">'+esc(text)+'</div>';
     chat.appendChild(row); chat.scrollTop=chat.scrollHeight;
   }
-  function addTyping(){
-    const row=document.createElement('div'); row.className='cv-row t'; row.id='cvTyping';
+  function addTyping(){ const row=document.createElement('div'); row.className='cv-row t'; row.id='cvTyping';
     row.innerHTML='<div class="cv-av">🐾</div><div class="cv-bubble"><span class="cv-typing"><i></i><i></i><i></i></span></div>';
-    chat.appendChild(row); chat.scrollTop=chat.scrollHeight;
-  }
+    chat.appendChild(row); chat.scrollTop=chat.scrollHeight; }
   function rmTyping(){ const t=$('cvTyping'); if(t) t.remove(); }
-  function updatePieces(){ pieces.forEach((p,i)=>p.classList.toggle('on', i<cv.covered.length)); }
 
   async function onSend(){
     const text=answerEl.value.trim(); if(!text||cv.finished) return;
     answerEl.value=''; sendBtn.disabled=true; grow();
-    addBubble('me',text); cv.transcript.push({who:'me',text});
-    addTyping();
+    addBubble('me',text); cv.transcript.push({who:'me',text}); addTyping();
     let res; try{ res=await ask(text); }catch(e){ rmTyping(); addBubble('t','앗, 잠깐 문제가 있었어. 다시 보내줄래?'); console.error(e); return; }
     rmTyping();
-    cv.covered=res.covered||cv.covered; updatePieces(); cv.followUps++;
-
-    const stuckStart = res.stuck && cv.covered.length===0 && cv.followUps<=1;
-    const reachedMax = cv.followUps>=CV_SET.maxFollowUps;
+    const inc=(res.covered||[]).filter(id=>CUR.keyPoints.some(k=>k.id===id));
+    cv.covered=Array.from(new Set([...(cv.covered||[]), ...inc]));  // 한번 짚은 건 유지
+    updatePieces(); cv.followUps++;
+    const stuckStart=res.stuck && cv.covered.length===0 && cv.followUps<=1;
+    const reachedMax=cv.followUps>=CV_SET.maxFollowUps;
     if(stuckStart){ addBubble('t', res.reply||'괜찮아! 조금 더 공부하고 다시 오자.'); finish('restudy'); return; }
     if(res.done || reachedMax){ if(res.reply) addBubble('t',res.reply); finish('grade'); return; }
     addBubble('t', res.reply);
   }
 
-  // 실제 AI(callClaude) → 막히면 데모
   async function ask(latestText){
-    if(!demoMode){
-      try{ return await realAsk(); }
-      catch(e){ demoMode=true; badgeEl.style.display='inline-block'; console.warn('AI 불가→데모', e.message||e); }
-    }
+    if(!demoMode){ try{ return await realAsk(); }catch(e){ demoMode=true; badgeEl.style.display='inline-block'; console.warn('AI 불가→데모', e.message||e); } }
     return demoBrain(latestText);
   }
   async function realAsk(){
-    const kp=CV_TYPE.keyPoints.map(k=>'- '+k.id+': '+k.label).join('\n');
+    const kp=CUR.keyPoints.map(k=>'- '+k.id+': '+k.label).join('\n');
     const convo=cv.transcript.map(t=>(t.who==='t'?'뚜삐: ':'아이: ')+t.text).join('\n');
-    const sys="너는 초등 3학년 아이와 대화하는 다정한 수학 친구 '뚜삐'야. 아이가 개념을 '자기 말'로 설명하도록 돕는 게 목적이야.\n규칙:\n- "+CV_SET.tone+"\n- 말은 2~3문장 이내로 짧게. 질문은 한 번에 하나만.\n- 아직 안 짚은 핵심이 있으면 그쪽으로 향하는 쉬운 꼬리질문이나 구체적 숫자 예시를 던져.\n- 범위를 벗어나는 내용("+CV_TYPE.outOfScope+")을 말하면 칭찬하되 '그건 다음에 배울 거야'라고 넘겨.\n- 절대 '틀렸다'고 하지 마.\n반드시 아래 JSON으로만 답해(다른 말 금지):\n{\"covered\":[짚은 id들],\"stuck\":false,\"done\":false,\"reply\":\"뚜삐 다음 한마디\"}";
-    const user="[개념] "+CV_TYPE.name+"\n[핵심 포인트]\n"+kp+"\n\n[지금까지 대화]\n"+convo+"\n\n아이의 최근 답까지 보고 covered/stuck/done/reply를 JSON으로만 답해줘.";
+    const doneList=CUR.keyPoints.filter(k=>cv.covered.includes(k.id)).map(k=>k.id+':'+k.label).join(', ')||'(아직 없음)';
+    const restList=CUR.keyPoints.filter(k=>!cv.covered.includes(k.id)).map(k=>k.id+':'+k.label).join(', ')||'(거의 다 됨)';
+    const lastMsg=(cv.transcript.filter(t=>t.who==='me').slice(-1)[0]||{}).text||'';
+    const sys="너는 초등 3학년 아이와 대화하는 다정한 수학 친구 '뚜삐'야. 아이가 개념을 '자기 말'로 설명하도록 돕는 게 목적이야.\n"
+      +"규칙:\n"
+      +"- "+CV_SET.tone+"\n"
+      +"- 말은 2문장 이내로 짧게. 질문은 한 번에 하나만.\n"
+      +"- 매번 다른 말로 시작해. 같은 문구(예: '맞아, 방법은 똑같아')를 반복하지 마.\n"
+      +"- 칭찬은 아이가 '실제로 옳은 내용'을 말했을 때만 해. 맞지도 않았는데 칭찬하지 마.\n"
+      +"- 아이가 '모르겠어/잘 모르겠다'고 하면 칭찬하지 말고, 더 쉬운 힌트나 아주 작고 구체적인 질문으로 도와줘. 이때 covered는 늘리지 마.\n"
+      +"- 아직 안 짚은 핵심이 있으면 그쪽으로 향하는 쉬운 꼬리질문을 해. 예시는 개념에 맞는 '세 자리 수'로 들고, 한 대화 안에서 예시 숫자를 계속 바꾸지 마.\n"
+      +"- 범위를 벗어나는 내용("+(CUR.outOfScope||'없음')+")을 말하면 칭찬하되 '그건 다음에 배울 거야'라고 넘겨.\n"
+      +"- 절대 '틀렸다'고 하지 마.\n"
+      +"covered에는 아이가 지금까지 '스스로 옳게 설명한' 핵심 id만 넣어. 모르겠다고 한 것은 넣지 마.\n"
+      +"반드시 아래 JSON으로만 답해(다른 말 금지):\n"
+      +"{\"covered\":[옳게 설명한 id들],\"stuck\":false,\"done\":false,\"reply\":\"뚜삐 다음 한마디\"}";
+    const user="[개념] "+CUR.name+"\n[핵심 포인트]\n"+kp
+      +"\n\n[이미 짚은 핵심] "+doneList
+      +"\n[아직 안 짚은 핵심] "+restList
+      +"\n\n[지금까지 대화]\n"+convo
+      +"\n\n[아이의 가장 최근 답] "+lastMsg
+      +"\n\n지시: 아이의 '가장 최근 답'에 먼저 자연스럽게 반응해. 이미 짚은 핵심을 다시 칭찬하거나 같은 질문을 반복하지 마. 다음 질문은 '아직 안 짚은 핵심'에 대해서만 해. 아이가 방금 네 질문에 답했으면 그 답을 인정하고 다음으로 넘어가. 아이가 교과서와 표현이 달라도 맞는 말을 하면 인정하고, 필요하면 보통 쓰는 방법을 알려줘. covered/stuck/done/reply를 JSON으로만 답해줘.";
     const data=await callClaude({ system:sys, max_tokens:800, messages:[{role:'user', content:user}] });
     cv.aiCalls++; callsEl.textContent=cv.aiCalls;
     let raw=((data.content||[]).filter(c=>c.type==='text').map(c=>c.text).join('')||'').trim();
@@ -7897,60 +7961,50 @@ window.addEventListener('load', ()=>{ try{
     return obj;
   }
   function demoBrain(text){
-    const t=(text||'').replace(/\s/g,''); const covered=new Set(cv.covered);
+    const t=(text||'').replace(/\s/g,''); const covered=new Set(cv.covered); const kps=CUR.keyPoints;
     const dunno=/^(모르겠|모름|몰라|글쎄|뭐지|음+|응+|\?+)$/.test(t) || (/(모르|몰라|글쎄)/.test(t)&&t.length<=6);
     if(dunno && covered.size===0) return {covered:[], stuck:true, done:false, reply:"괜찮아! 조금만 더 공부하고 다시 오면 금방 할 수 있어. 🙂"};
-
-    // 1) 아이가 스스로 말한 단어로 채우기 (넉넉하게)
-    if(/같은자리|자리끼리|자리를맞|자리에맞|맞춰서더|맞는자리|각자리|백의자리|십의자리|일의자리/.test(t)) covered.add('kp1');
-    if(/일의자리부터|오른쪽부터|일부터|낮은자리부터|먼저더|먼저.*일|일.*먼저|오른쪽에서/.test(t)) covered.add('kp2');
-    if(/맞춰써|맞춰쓰|맞춰적|줄맞|아래에맞|자리에맞춰써|같은줄|밑에|아래에/.test(t)) covered.add('kp3');
-    // 2) 방금 뚜삐가 물어본 핵심에 뭐라도 답했으면 인정하고 진행 (데모라서 넉넉하게)
-    if(cv._target && !dunno && t.length>=1) covered.add(cv._target);
-
+    if(!dunno){ if(cv._target) covered.add(cv._target); else { const f=kps.find(k=>!covered.has(k.id)); if(f) covered.add(f.id); } }
     cv.covered=[...covered];
-    const done=covered.size>=CV_TYPE.keyPoints.length;
-    if(done){ cv._target=null; return {covered:[...covered], stuck:false, done:true,
-      reply:"완벽해! 같은 자리끼리, 일의 자리부터, 자리 맞춰 쓰기까지 다 말했어. 최고야! 👏"}; }
-
-    let reply;
-    if(!covered.has('kp1')){ cv._target='kp1'; reply="좋아! 그럼 234랑 145를 더할 때, 맨 오른쪽 4는 어떤 숫자랑 더해야 할까?"; }
-    else if(!covered.has('kp2')){ cv._target='kp2'; reply="맞아! 그럼 세 자리 중 어느 자리부터 더하기 시작하면 좋을까?"; }
-    else { cv._target='kp3'; reply="그렇지! 그럼 각 자리를 더한 값은 어디에 써야 할까?"; }
-    return {covered:[...covered], stuck:false, done:false, reply};
+    if(covered.size>=kps.length){ cv._target=null; return {covered:[...covered],stuck:false,done:true,reply:"완벽해! 핵심을 다 짚었어. 최고야! 👏"}; }
+    const next=kps.find(k=>!covered.has(k.id)); cv._target=next.id;
+    const nudges=["좋아! 그다음은 어떻게 하면 될까?","오, 좋은데? 조금 더 자세히 말해줄래?","맞아! 그럼 그다음엔 어떻게 해?"];
+    return {covered:[...covered],stuck:false,done:false,reply:nudges[cv.followUps % nudges.length]};
   }
 
   function finish(kind){
     cv.finished=true; $('cvInputbar').style.display='none';
-    let stars; const c=cv.covered.length, total=CV_TYPE.keyPoints.length;
+    let stars; const c=cv.covered.length, total=CUR.keyPoints.length;
     if(kind==='restudy') stars=1;
-    else if(c>=total && cv.followUps<=2) stars=3;
+    else if(c>=total) stars=(cv.followUps<=2?3:2);
     else if(c>=2) stars=2; else stars=1;
-    const passed=stars>=CV_SET.passStars;
-    if(passed){ totalPoints+=CV_SET.rewardPerPass; }
+    const isPass=stars>=CV_SET.passStars;
+    if(isPass && !passedMap[CUR.id]){ passedMap[CUR.id]=true; totalPoints+=CV_SET.rewardPerPass; }
+    else if(isPass){ passedMap[CUR.id]=true; }
     const grade= stars===3?'상 · 아주 잘 이해했어요':stars===2?'중 · 잘하고 있어요':'하 · 조금 더 공부해요';
     const starHtml=[1,2,3].map(n=>'<span style="color:'+(n<=stars?'#F5B72E':'#E7E1D3')+'">★</span>').join('');
-    let study=''; if(!passed) study='<div class="cv-study">📘 <b>다시 한 번 공부해 볼까?</b><br>'+esc(CV_TYPE.shortConcept)+'<span class="cv-book">👉 '+esc(CV_TYPE.bookPage)+'</span></div>';
-    const earn=passed?'<div class="cv-earn">🎉 +'+CV_SET.rewardPerPass+' 포인트! (누적 '+totalPoints+')</div>'
-                     :'<div class="cv-earn" style="color:#F0865B">이번엔 통과 못했어요 · 다음에 다시 도전! 🙂</div>';
-    const msg=passed?'핵심을 잘 짚었어! 개념이 머릿속에 정리됐구나. 최고야 👏':'여기까지 온 것도 멋져. 위 설명을 보고 다시 오면 금방 통과할 거야!';
+    let study=''; if(!isPass) study='<div class="cv-study">📘 <b>다시 한 번 공부해 볼까?</b><br>'+esc(CUR.shortConcept)+'<span class="cv-book">👉 '+esc(CUR.bookPage)+'</span></div>';
+    const earn=isPass?'<div class="cv-earn">🎉 +'+CV_SET.rewardPerPass+' 포인트! (누적 '+totalPoints+')</div>':'<div class="cv-earn" style="color:#F0865B">이번엔 통과 못했어요 · 다음에 다시 도전! 🙂</div>';
+    const msg=isPass?'핵심을 잘 짚었어! 개념이 머릿속에 정리됐구나. 최고야 👏':'여기까지 온 것도 멋져. 위 설명을 보고 다시 오면 금방 통과할 거야!';
     $('cvResult').innerHTML='<div class="cv-result"><h3>대화 끝!</h3><div class="cv-stars">'+starHtml+'</div>'
       +'<div style="font-size:13.5px;color:#8A8698;margin-bottom:6px;">이해도: '+grade+'</div>'
       +'<div style="font-size:14.5px;line-height:1.55;">'+msg+'</div>'+study+earn
-      +'<div style="margin-top:12px;text-align:center;"><button class="cv-send" style="background:#3FB98C" id="cvAgain">다시 해보기</button></div></div>';
+      +'<div style="margin-top:12px;text-align:center;display:flex;gap:8px;justify-content:center;">'
+      +'<button class="cv-send" style="background:#3FB98C" id="cvAgain">다시 해보기</button>'
+      +'<button class="cv-send" style="background:#5B6EE1" id="cvGoMenu">다른 개념 ▶</button></div></div>';
     $('cvResult').scrollIntoView({behavior:'smooth'});
-    const ag=$('cvAgain'); if(ag) ag.addEventListener('click', start);
+    const ag=$('cvAgain'); if(ag) ag.addEventListener('click', ()=>start(CUR.id));
+    const gm=$('cvGoMenu'); if(gm) gm.addEventListener('click', showMenu);
   }
 
-  // 입력 도우미
   function grow(){ answerEl.style.height='auto'; answerEl.style.height=Math.min(answerEl.scrollHeight,110)+'px'; }
   answerEl.addEventListener('input', ()=>{ sendBtn.disabled=!answerEl.value.trim(); grow(); });
   answerEl.addEventListener('keydown', e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); onSend(); }});
   sendBtn.addEventListener('click', onSend);
   $('cvBack').addEventListener('click', backToSetup);
+  $('cvToMenu').addEventListener('click', showMenu);
   $('cvEntryBtn') && $('cvEntryBtn').addEventListener('click', open);
 
-  // 마이크 (기존 앱처럼 SpeechRecognition)
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(SR){
     const rec=new SR(); rec.lang='ko-KR'; rec.interimResults=true; rec.continuous=false;
@@ -7966,7 +8020,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v53.0-대화형체험';
+  const APP_VERSION = 'v53.3-대화개선2';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
