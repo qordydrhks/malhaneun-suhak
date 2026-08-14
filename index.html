@@ -1006,6 +1006,25 @@ window.DDOOPI = {
         #convoCard .cv-item .cv-dot{width:9px;height:9px;border-radius:50%;background:#CFE9DC;flex:0 0 9px;}
         #convoCard .cv-item.done .cv-dot{background:#3FB98C;}
         #convoCard .cv-item .cv-tag{margin-left:auto;font-size:11px;color:#8A8698;}
+        #convoCard .cv-navq{font-size:17px;font-weight:800;margin:6px 0 12px;}
+        #convoCard .cv-crumb{display:flex;align-items:center;gap:8px;margin:2px 0 10px;}
+        #convoCard .cv-back{border:1.5px solid #EFE9DC;background:#fff;border-radius:10px;width:30px;height:30px;font-size:15px;color:#5B6EE1;cursor:pointer;flex:0 0 30px;}
+        #convoCard .cv-back:hover{border-color:#5B6EE1;}
+        #convoCard .cv-path{font-size:12.5px;color:#8A8698;font-weight:700;}
+        #convoCard .cv-path b{color:#5B6EE1;}
+        #convoCard .cv-list{display:flex;flex-direction:column;gap:9px;animation:cvpop .25s ease;}
+        #convoCard .cv-nav{display:flex;align-items:center;gap:11px;width:100%;text-align:left;border:2px solid #EFE9DC;background:#fff;border-radius:16px;padding:14px 15px;font-family:inherit;font-size:15px;font-weight:600;color:#2A2740;cursor:pointer;transition:border-color .15s,transform .08s,box-shadow .15s;}
+        #convoCard .cv-nav:hover{border-color:#5B6EE1;box-shadow:0 8px 20px rgba(91,110,225,.10);}
+        #convoCard .cv-nav:active{transform:scale(.99);}
+        #convoCard .cv-nav.locked{background:#F6F3EC;border-color:#EFE9DC;color:#B4AFA2;cursor:default;}
+        #convoCard .cv-nav.locked:hover{box-shadow:none;transform:none;border-color:#EFE9DC;}
+        #convoCard .cv-num{width:30px;height:30px;flex:0 0 30px;border-radius:9px;background:#EEF0FD;color:#5B6EE1;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px;}
+        #convoCard .cv-nav.locked .cv-num{background:#ECE7DC;color:#BBB4A5;}
+        #convoCard .cv-nm{flex:1;}
+        #convoCard .cv-chev{color:#C7C2B6;font-size:16px;}
+        #convoCard .cv-tag.lock{font-size:11px;font-weight:700;color:#B4AFA2;background:#ECE7DC;padding:3px 9px;border-radius:999px;margin-left:auto;}
+        #convoCard .cv-tag.go{font-size:11px;font-weight:700;color:#3FB98C;background:#E7F6EF;padding:3px 9px;border-radius:999px;margin-left:auto;}
+        #convoCard .cv-tag.done{font-size:11px;font-weight:700;color:#fff;background:#3FB98C;padding:3px 9px;border-radius:999px;margin-left:auto;}
       </style>
       <div class="card" id="convoCard" style="display:none;">
         <p class="step-eyebrow">새 기능 · 대화형</p>
@@ -7823,8 +7842,9 @@ window.addEventListener('load', ()=>{ try{
 (function(){
   // ── 개념 목록: 여기만 채우면 개념이 늘어남 ──
   // 유형 하나 = {id, name, firstQuestion, keyPoints:[{id,label}], outOfScope, shortConcept, bookPage}
-  const CV_DATA = [
-    { big:"1. 덧셈과 뺄셈", types:[
+  const CV_DATA = { grades:[
+    { id:"e3", name:"초등 3학년", ready:true, units:[
+      { id:"u1", name:"덧셈과 뺄셈", ready:true, types:[
       { id:"add1", name:"받아올림 없는 세 자리 수의 덧셈",
         firstQuestion:"세 자리 수 두 개를 더하는 방법을, 네 말로 설명해 볼래?",
         keyPoints:[{id:"a",label:"같은 자리 수끼리 더한다"},{id:"b",label:"일의 자리부터 차례로 계산한다"},{id:"c",label:"더한 값을 자리에 맞춰 쓴다"}],
@@ -7861,8 +7881,17 @@ window.addEventListener('load', ()=>{ try{
         outOfScope:"",
         shortConcept:"받아내림이 여러 번 생겨도 방법은 같아요. 일의 자리부터 차례로 빼면서, 뺄 수 없는 자리마다 윗자리에서 10을 빌려와요. 빌려준 자리는 1씩 줄어들어요.",
         bookPage:"디딤돌 3-1 · 1단원 (20쪽 부근)" }
-    ]}
-  ];
+      ]},
+      { id:"u2", name:"평면도형", ready:false },
+      { id:"u3", name:"나눗셈", ready:false },
+      { id:"u4", name:"곱셈", ready:false },
+      { id:"u5", name:"길이와 시간", ready:false },
+      { id:"u6", name:"분수와 소수", ready:false }
+    ]},
+    { id:"e4", name:"초등 4학년", ready:false },
+    { id:"e5", name:"초등 5학년", ready:false },
+    { id:"e6", name:"초등 6학년", ready:false }
+  ]};
   const CV_SET = { maxFollowUps:4, passStars:2, rewardPerPass:10,
     tone:"아주 다정하고 친근하게, 짧게. 절대 '틀렸다'고 하지 않기." };
 
@@ -7876,26 +7905,62 @@ window.addEventListener('load', ()=>{ try{
   function fresh(){ return { transcript:[], covered:[], followUps:0, finished:false, aiCalls:0, _target:null }; }
   function esc(s){ return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
-  function renderMenu(){
-    let html='';
-    CV_DATA.forEach(grp=>{
-      html+='<div class="cv-grp">'+esc(grp.big)+'</div>';
-      grp.types.forEach(t=>{
-        const done=passedMap[t.id];
-        html+='<button class="cv-item'+(done?' done':'')+'" data-id="'+t.id+'"><span class="cv-dot"></span>'
-             +esc(t.name)+'<span class="cv-tag">'+(done?'통과 ✓':'말하기 ▶')+'</span></button>';
-      });
-    });
-    menuEl.innerHTML=html;
-    menuEl.querySelectorAll('.cv-item').forEach(b=> b.addEventListener('click', ()=> start(b.dataset.id)) );
-  }
+  let nav={ level:'grade', grade:null, unit:null };
   function open(){
     ['setupCard','questionCard','quizCard'].forEach(id=>{ const el=$(id); if(el) el.style.display='none'; });
-    $('convoCard').style.display='block'; showMenu(); window.scrollTo({top:0,behavior:'smooth'});
+    $('convoCard').style.display='block';
+    nav={ level:'grade', grade:null, unit:null };
+    showMenu(); window.scrollTo({top:0,behavior:'smooth'});
   }
-  function showMenu(){ titleEl.textContent='어떤 개념을 설명해 볼까?'; renderMenu(); menuEl.style.display='block'; sessionEl.style.display='none'; }
+  function showMenu(){ sessionEl.style.display='none'; menuEl.style.display='block'; renderNav(); }
   function backToSetup(){ $('convoCard').style.display='none'; const s=$('setupCard'); if(s) s.style.display='block'; window.scrollTo({top:0,behavior:'smooth'}); }
-  function findType(id){ for(const g of CV_DATA){ const t=g.types.find(x=>x.id===id); if(t) return t; } return null; }
+  function findType(id){
+    for(const g of CV_DATA.grades){ if(!g.units) continue;
+      for(const u of g.units){ if(!u.types) continue;
+        const t=u.types.find(x=>x.id===id); if(t) return t; } }
+    return null;
+  }
+  function navItem(name, ready, data, num){
+    const locked=!ready;
+    const numHtml = (num!=null) ? '<span class="cv-num">'+num+'</span>' : '';
+    let tag;
+    if(data.done) tag='<span class="cv-tag done">통과 ✓</span>';
+    else if(locked) tag='<span class="cv-tag lock">준비 중</span>';
+    else if(data.kind==='type') tag='<span class="cv-tag go">말하기 ▶</span>';
+    else tag='<span class="cv-chev">▸</span>';
+    let attrs=''; if(!locked){ attrs=' data-kind="'+data.kind+'"'; if(data.name) attrs+=' data-name="'+esc(data.name)+'"'; if(data.id) attrs+=' data-id="'+data.id+'"'; }
+    return '<button class="cv-nav'+(locked?' locked':'')+'"'+attrs+'>'+numHtml+'<span class="cv-nm">'+esc(name)+'</span>'+tag+'</button>';
+  }
+  function navCrumb(parts){
+    return '<div class="cv-crumb"><button class="cv-back">‹</button><span class="cv-path">'+parts.map(p=>'<b>'+esc(p)+'</b>').join(' › ')+'</span></div>';
+  }
+  function navBack(){ if(nav.level==='type') nav.level='unit'; else if(nav.level==='unit') nav.level='grade'; renderNav(); }
+  function renderNav(){
+    let crumb='', q='', items='';
+    if(nav.level==='grade'){
+      titleEl.textContent='대화형으로 설명하기';
+      q='어떤 학년을 배우고 있어?';
+      CV_DATA.grades.forEach(g=> items+=navItem(g.name, g.ready, {kind:'grade', name:g.name}) );
+    }else if(nav.level==='unit'){
+      titleEl.textContent=nav.grade.name;
+      crumb=navCrumb([nav.grade.name]); q='어떤 단원을 설명해 볼까?';
+      (nav.grade.units||[]).forEach((u,i)=> items+=navItem(u.name, u.ready, {kind:'unit', name:u.name}, i+1) );
+    }else if(nav.level==='type'){
+      titleEl.textContent=nav.unit.name;
+      crumb=navCrumb([nav.grade.name, nav.unit.name]); q='어떤 것을 말해볼까?';
+      (nav.unit.types||[]).forEach((t,i)=> items+=navItem(t.name, true, {kind:'type', id:t.id, done:passedMap[t.id]}, i+1) );
+    }
+    menuEl.innerHTML = crumb + '<div class="cv-navq">'+esc(q)+'</div><div class="cv-list">'+items+'</div>';
+    const back=menuEl.querySelector('.cv-back'); if(back) back.onclick=navBack;
+    menuEl.querySelectorAll('.cv-nav[data-kind]').forEach(el=>{
+      el.onclick=()=>{
+        const kind=el.dataset.kind;
+        if(kind==='grade'){ nav.grade=CV_DATA.grades.find(g=>g.name===el.dataset.name); nav.level='unit'; renderNav(); }
+        else if(kind==='unit'){ nav.unit=nav.grade.units.find(u=>u.name===el.dataset.name); nav.level='type'; renderNav(); }
+        else if(kind==='type'){ start(el.dataset.id); }
+      };
+    });
+  }
 
   function start(id){
     CUR=findType(id); if(!CUR) return;
@@ -8066,7 +8131,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v53.5-대화마무리·마이크수정';
+  const APP_VERSION = 'v54.0-드릴다운메뉴';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
