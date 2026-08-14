@@ -5814,6 +5814,18 @@ function goToNextQuestion(){
    ============================================================ */
 const QUIZ_COUNT = 2; // 생성할 문제 수 (방금 설명한 질문에 딱 붙는 객관식 2문항)
 
+// 보기 순서를 무작위로 섞어 정답이 1·2번에 몰리지 않게 함 (정답 텍스트로 새 위치 추적)
+function shuffleQuizChoices(quiz){
+  return (quiz||[]).map(q=>{
+    if(!Array.isArray(q.choices) || q.choices.length<2) return q;
+    const correctText = (q.choices[q.answer]!=null) ? q.choices[q.answer] : (q.answer_text!=null ? q.answer_text : q.choices[0]);
+    const arr = q.choices.slice();
+    for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=arr[i];arr[i]=arr[j];arr[j]=t; }
+    let newAns = arr.indexOf(correctText); if(newAns<0) newAns=0;
+    return Object.assign({}, q, { choices:arr, answer:newAns, answer_text:correctText });
+  });
+}
+
 async function startQuiz(){
   stopRecognitionIfActive();
   const grade = GRADES.find(g=>g.id===state.gradeId);
@@ -5827,7 +5839,7 @@ async function startQuiz(){
   try{
     const quiz = await getOrGenerateQuiz(grade, unit);
     if(!quiz || !quiz.length) throw new Error('두 번 시도했지만 문제 형식이 깨졌어요.');
-    state.quiz = quiz;
+    state.quiz = shuffleQuizChoices(quiz);   // 정답 위치 무작위로 섞기
     state.quizAnswers = {};   // {qi: 고른 보기 index}
     renderQuiz();
   }catch(e){
@@ -6264,7 +6276,7 @@ async function getOrGenerateQuiz(grade, unit){
 
   const isElem = grade.id.startsWith('e');
   const levelNote = isElem
-    ? '초등학생 대상이야. 숫자는 간단하게, 하지만 개념을 정확히 알아야만 풀 수 있게 만들어.'
+    ? "초등학생 대상이야. 단, '디딤돌 기본+응용' 교재의 응용·심화 수준으로 출제해. 숫자 계산 자체는 복잡하지 않게 하되, 개념을 정확히 이해하고 한 단계 더 생각해야(적용·비교·판단·거꾸로 생각하기) 풀 수 있는 문제로 만들어. 개념만 대충 알면 틀리고, 확실히 알아야 맞게. 단순 사실 확인·정의 되묻기는 금지."
     : '중학생 대상이야. 교과 수준에 맞게, 개념을 정확히 알아야만 풀 수 있게 만들어.';
 
   const targetQ = (state.questions || [])[qi] || unit.label;
@@ -6281,7 +6293,8 @@ ${levelNote}
 
 [출제 원칙 — 매우 중요]
 - 두 문제 모두 반드시 [질문]이 묻는 그 개념 하나를 겨냥해야 해. 단원의 다른 내용으로 새지 마.
-- 1번: 그 개념의 기본 적용. 2번: 조건이 살짝 바뀌거나 함정이 있는 상황 (개념을 정확히 아는 학생만 맞힘).
+- 1번: 그 개념을 실제 상황에 적용하는 문제(단순 확인 금지). 2번: 조건을 바꾸거나 거꾸로 묻거나 함정을 넣어, 개념을 확실히 아는 학생만 맞히는 심화 문제.
+- 초등이라도 '한 번 더 생각해야' 풀리게 만들어. 예: 조건을 살짝 비틀기, 왜 그런지 판단하기, 결과로부터 거꾸로 찾기, 비슷하지만 다른 경우와 비교하기.
 - 단순 용어 암기·정의 되묻기 금지. 계산량으로 어렵게 만드는 것도 금지. 어려움의 원천은 '개념의 정확한 이해'.
 - [학생이 약했던 부분]이 주어지면 그 지점을 정확히 찌르는 문제로 만들어.
 
@@ -8086,7 +8099,7 @@ window.addEventListener('load', ()=>{ try{
         piecesEl=$('cvPieces'), answerEl=$('cvAnswer'), sendBtn=$('cvSend'),
         micBtn=$('cvMic'), callsEl=$('cvCalls'), badgeEl=$('cvBadge'), titleEl=$('cvTitle');
 
-  let CUR=null, cv, demoMode=false, totalPoints=0;
+  let CUR=null, cv, failStreak=0, demoLocked=false, totalPoints=0;
   const passedMap={};
   function fresh(){ return { transcript:[], covered:[], followUps:0, finished:false, aiCalls:0, _target:null }; }
   function esc(s){ return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
@@ -8150,7 +8163,7 @@ window.addEventListener('load', ()=>{ try{
 
   function start(id){
     CUR=findType(id); if(!CUR) return;
-    cv=fresh(); demoMode=false; badgeEl.style.display='none';
+    cv=fresh(); failStreak=0; demoLocked=false; badgeEl.style.display='none';
     menuEl.style.display='none'; sessionEl.style.display='block';
     titleEl.textContent=CUR.name;
     chat.innerHTML=''; $('cvResult').innerHTML=''; callsEl.textContent=0;
@@ -8263,7 +8276,17 @@ window.addEventListener('load', ()=>{ try{
   }
 
   async function ask(latestText){
-    if(!demoMode){ try{ return await realAsk(); }catch(e){ demoMode=true; badgeEl.style.display='inline-block'; console.warn('AI 불가→데모', e.message||e); } }
+    if(!demoLocked){
+      try{
+        const r=await realAsk();
+        failStreak=0; badgeEl.style.display='none';   // 성공 → 데모 배지 끄고 회복
+        return r;
+      }catch(e){
+        failStreak++; console.warn('AI 실패('+failStreak+'회):', e.message||e);
+        if(failStreak>=3) demoLocked=true;            // 3번 연속 실패면 키 문제로 보고 데모 고정
+        badgeEl.style.display='inline-block';          // 이번 턴은 데모로 대체
+      }
+    }
     return demoBrain(latestText);
   }
   async function realAsk(){
@@ -8314,20 +8337,36 @@ window.addEventListener('load', ()=>{ try{
 
   function finish(kind){
     cv.finished=true; $('cvInputbar').style.display='none';
-    let stars; const c=cv.covered.length, total=CUR.keyPoints.length;
-    if(kind==='restudy') stars=1;
-    else if(c>=total) stars=(cv.followUps<=2?3:2);
-    else if(c>=2) stars=2; else stars=1;
-    const isPass=stars>=CV_SET.passStars;
-    if(isPass && !passedMap[CUR.id]){ passedMap[CUR.id]=true; totalPoints+=CV_SET.rewardPerPass; }
-    else if(isPass){ passedMap[CUR.id]=true; }
-    const grade= stars===3?'상 · 아주 잘 이해했어요':stars===2?'중 · 잘하고 있어요':'하 · 조금 더 공부해요';
+    const c=cv.covered.length, total=CUR.keyPoints.length;
+
+    // 이해도 % 채점: 핵심을 얼마나 짚었나(80%) + 얼마나 군더더기 없이 했나(20%)
+    let percent;
+    if(kind==='restudy'){ percent=20; }
+    else {
+      const coverage = total ? c/total : 0;                                   // 0~1
+      const speed = Math.max(0, (CV_SET.maxFollowUps - Math.max(0, cv.followUps-1)) / CV_SET.maxFollowUps); // 0~1
+      percent = Math.round(coverage*80 + speed*20);
+      if(c<total) percent = Math.min(percent, 84);   // 핵심을 다 못 짚으면 '상'(85%+)은 안 됨
+      percent = Math.max(10, Math.min(100, percent));
+    }
+    const stars = percent>=85?3 : percent>=60?2 : 1;   // 상/중/하
+    const isPass = stars>=CV_SET.passStars;            // 60%(중) 이상 통과
+
+    // 통과 시, %에 비례해 1~10점 (예: 88%→9점, 60%→6점)
+    let earnedPts=0;
+    if(isPass){
+      earnedPts = Math.min(10, Math.max(1, Math.round(percent/10)));
+      if(!passedMap[CUR.id]){ passedMap[CUR.id]=true; totalPoints+=earnedPts; }
+      else { passedMap[CUR.id]=true; }   // 이미 통과한 유형은 중복 적립 안 함
+    }
+
+    const gradeLabel = (stars===3?'상':stars===2?'중':'하');
     const starHtml=[1,2,3].map(n=>'<span style="color:'+(n<=stars?'#F5B72E':'#E7E1D3')+'">★</span>').join('');
     let study=''; if(!isPass) study='<div class="cv-study">📘 <b>다시 한 번 공부해 볼까?</b><br>'+esc(CUR.shortConcept)+'<span class="cv-book">👉 '+esc(CUR.bookPage)+'</span></div>';
-    const earn=isPass?'<div class="cv-earn">🎉 +'+CV_SET.rewardPerPass+' 포인트! (누적 '+totalPoints+')</div>':'<div class="cv-earn" style="color:#F0865B">이번엔 통과 못했어요 · 다음에 다시 도전! 🙂</div>';
+    const earn=isPass?'<div class="cv-earn">🎉 +'+earnedPts+' 포인트! (누적 '+totalPoints+')</div>':'<div class="cv-earn" style="color:#F0865B">이번엔 통과 못했어요 · 다음에 다시 도전! 🙂</div>';
     const msg=isPass?'핵심을 잘 짚었어! 개념이 머릿속에 정리됐구나. 최고야 👏':'여기까지 온 것도 멋져. 위 설명을 보고 다시 오면 금방 통과할 거야!';
     $('cvResult').innerHTML='<div class="cv-result"><h3>대화 끝!</h3><div class="cv-stars">'+starHtml+'</div>'
-      +'<div style="font-size:13.5px;color:#8A8698;margin-bottom:6px;">이해도: '+grade+'</div>'
+      +'<div style="font-size:13.5px;color:#8A8698;margin-bottom:6px;">이해도 '+percent+'% · '+gradeLabel+'</div>'
       +'<div style="font-size:14.5px;line-height:1.55;">'+msg+'</div>'+study+earn
       +'<div style="margin-top:12px;text-align:center;display:flex;gap:8px;justify-content:center;">'
       +'<button class="cv-send" style="background:#3FB98C" id="cvAgain">다시 해보기</button>'
@@ -8380,7 +8419,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v56.0-초3-1완성·도형';
+  const APP_VERSION = 'v56.2-보상%·문제난이도';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
