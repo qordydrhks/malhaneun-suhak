@@ -5273,6 +5273,23 @@ async function handleSpeakTimeoutZero(){
   if(needTeacher){ try{ await saveFlag(grade, unit, result); }catch(e){} }
 }
 
+/* 음성인식 자동교정: 초등 수학에서 자주 잘못 들리는 말만 안전하게 고침.
+   (실제 단어가 아닌 오인식만 골라 담아서 엉뚱한 교정 방지. 필요하면 여기 계속 추가) */
+window.fixMathSpeech = function(text){
+  if(!text) return text;
+  let s = ' ' + text + ' ';
+  const map = {
+    '바다올림':'받아올림','바다 올림':'받아올림','받아 올림':'받아올림',
+    '바다내림':'받아내림','바다 내림':'받아내림','받아 내림':'받아내림',
+    '분보':'분모','곰셈':'곱셈','곱 셈':'곱셈',
+    '나누셈':'나눗셈','나눈셈':'나눗셈','나눗 셈':'나눗셈',
+    '지각삼각형':'직각삼각형','직각 삼각형':'직각삼각형',
+    '정 사각형':'정사각형','직 사각형':'직사각형'
+  };
+  for(const k in map){ s = s.split(k).join(map[k]); }
+  return s.replace(/\s+/g,' ').trim();
+};
+
 function startRecording(){
   const recognition = new SpeechRecognitionCtor();
   // interimResults=false: 확정된 문장만 받는다 → 중간 결과가 겹쳐 반복되는 문제 원천 차단
@@ -5287,10 +5304,10 @@ function startRecording(){
     state.altTranscript = altPieces.join(' | ');   // 채점에 함께 넘길 대안 후보
     const parts = finalPieces.slice();
     if(pending) parts.push(pending);
-    const full = parts.join(' ').replace(/\s+/g,' ').trim();
+    const full = window.fixMathSpeech(parts.join(' ').replace(/\s+/g,' ').trim());
     const lt = $('liveTranscript');
     if(full){ lt.textContent = full; lt.classList.remove('empty'); }
-    state.transcript = finalPieces.join(' ').replace(/\s+/g,' ').trim();
+    state.transcript = window.fixMathSpeech(finalPieces.join(' ').replace(/\s+/g,' ').trim());
   }
 
   // 시작 감시 타이머
@@ -8007,20 +8024,33 @@ window.addEventListener('load', ()=>{ try{
 
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(SR){
-    const rec=new SR(); rec.lang='ko-KR'; rec.interimResults=true; rec.continuous=false;
-    let recging=false, base='';
-    rec.onresult=e=>{ let s=''; for(let i=e.resultIndex;i<e.results.length;i++) s+=e.results[i][0].transcript;
-      answerEl.value=(base+s).trim(); sendBtn.disabled=!answerEl.value.trim(); grow(); };
-    rec.onend=()=>{ recging=false; micBtn.classList.remove('rec'); };
-    rec.onerror=()=>{ recging=false; micBtn.classList.remove('rec'); };
-    micBtn.addEventListener('click', ()=>{ if(recging){ rec.stop(); return; }
-      base=answerEl.value?answerEl.value+' ':''; try{ rec.start(); recging=true; micBtn.classList.add('rec'); }catch(_){}});
+    const rec=new SR(); rec.lang='ko-KR'; rec.interimResults=true; rec.continuous=true; rec.maxAlternatives=3;
+    let recging=false, base='', finals='';
+    rec.onresult=e=>{
+      let interim='';
+      for(let i=e.resultIndex;i<e.results.length;i++){
+        const r=e.results[i];
+        if(r.isFinal) finals+=(finals?' ':'')+r[0].transcript;
+        else interim+=r[0].transcript;
+      }
+      let combined=(base?base+' ':'')+(finals?finals+' ':'')+interim;
+      combined=combined.replace(/\s+/g,' ').trim();
+      answerEl.value=window.fixMathSpeech?window.fixMathSpeech(combined):combined;
+      sendBtn.disabled=!answerEl.value.trim(); grow();
+    };
+    rec.onend=()=>{ if(recging){ try{ rec.start(); return; }catch(_){} } micBtn.classList.remove('rec'); };
+    rec.onerror=(ev)=>{ if(ev && ev.error==='no-speech' && recging) return; recging=false; micBtn.classList.remove('rec'); };
+    micBtn.addEventListener('click', ()=>{
+      if(recging){ recging=false; try{ rec.stop(); }catch(_){} micBtn.classList.remove('rec'); return; }
+      base=answerEl.value?answerEl.value.trim():''; finals='';
+      try{ rec.start(); recging=true; micBtn.classList.add('rec'); }catch(_){}
+    });
   }else{ micBtn.style.display='none'; }
 })();
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v53.3-대화개선2';
+  const APP_VERSION = 'v53.4-마이크개선';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
