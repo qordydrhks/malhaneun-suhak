@@ -8405,7 +8405,52 @@ window.addEventListener('load', ()=>{ try{
           shortConcept:"574÷5는 백의 자리부터 차례로 나누며 내림을 해요. 몫 114, 나머지 4예요. '5×114+4=574'로 확인해요.",
           bookPage:"디딤돌 3-2 · 2단원 54쪽" }
       ]},
-      { id:"u23", name:"원", ready:false },
+      { id:"u23", name:"원", ready:true, types:[
+        { id:"cir1", name:"원의 중심·반지름·지름",
+          figure:"circle-parts", figureDesc:"원 그림에 중심(가운데 점), 중심에서 원 위 한 점까지의 반지름(파란 선), 원을 가로지르는 지름(주황 선)이 표시돼 있다.",
+          firstQuestions:[
+            "이 원에서 중심, 반지름, 지름이 각각 무엇인지 설명해 볼래?",
+            "원의 중심에서 원 위의 한 점까지 그은 선을 뭐라고 할까? 말해볼래?",
+            "지름은 어떤 선인지, 반지름과 어떻게 다른지 말해볼래?",
+            "그림에서 반지름과 지름을 각각 찾아 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"원의 한가운데 점이 중심이다"},{id:"b",label:"중심에서 원 위의 점까지 그은 선이 반지름이다"},{id:"c",label:"중심을 지나 원을 가로지르는 선이 지름이다"}],
+          outOfScope:"",
+          shortConcept:"원의 한가운데 점을 중심, 중심에서 원 위의 한 점까지 그은 선을 반지름, 중심을 지나 원의 양 끝을 잇는 선을 지름이라고 해요.",
+          bookPage:"디딤돌 3-2 · 3단원 72쪽" },
+        { id:"cir2", name:"원의 성질 (지름 = 반지름 × 2)",
+          figure:"circle-rd", figureDesc:"원에 지름이 그려져 있고, 지름이 반지름 두 개(파란 반지름 + 민트 반지름)로 이루어진 것이 표시돼 있다.",
+          firstQuestions:[
+            "지름과 반지름은 어떤 관계가 있을까? 그림을 보고 설명해 볼래?",
+            "지름이 반지름의 몇 배인지, 왜 그런지 말해볼래?",
+            "반지름이 5cm이면 지름은 몇 cm일까? 어떻게 구하는지 말해볼래?",
+            "한 원에서 반지름은 모두 길이가 같을까? 왜 그런지 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"지름은 반지름의 2배다"},{id:"b",label:"한 원에서 반지름(지름)의 길이는 모두 같다"}],
+          outOfScope:"",
+          shortConcept:"지름은 반지름 두 개를 이은 것이라 반지름의 2배예요. 반지름 5cm이면 지름 10cm. 한 원에서 반지름은 모두 길이가 같아요.",
+          bookPage:"디딤돌 3-2 · 3단원 73쪽" },
+        { id:"cir3", name:"컴퍼스를 이용하여 원 그리기",
+          figure:"circle-compass", figureDesc:"컴퍼스로 원을 그리는 모습(점선 원, 컴퍼스의 두 다리, 노란 침 끝)이 그려져 있다.",
+          firstQuestions:[
+            "컴퍼스로 원을 그리려면 어떻게 해야 할까? 순서를 말해볼래?",
+            "컴퍼스의 침을 어디에 꽂아야 하는지, 왜 그런지 설명해 볼래?",
+            "컴퍼스를 얼마나 벌리는지가 원의 무엇을 정하는지 말해볼래?",
+            "더 큰 원을 그리려면 컴퍼스를 어떻게 해야 하는지 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"컴퍼스 침을 원의 중심에 꽂는다"},{id:"b",label:"컴퍼스를 벌린 만큼이 반지름이 된다"}],
+          outOfScope:"",
+          shortConcept:"컴퍼스 침을 중심에 꽂고, 벌린 만큼(반지름)으로 한 바퀴 돌리면 원이 그려져요. 많이 벌릴수록 큰 원이 돼요.",
+          bookPage:"디딤돌 3-2 · 3단원 74쪽" },
+        { id:"cir4", name:"원을 이용하여 여러 가지 모양 그리기",
+          figure:"circle-pattern", figureDesc:"여러 개의 원이 규칙적으로 겹쳐진 꽃 모양 무늬가 그려져 있다.",
+          firstQuestions:[
+            "이 모양은 원을 어떻게 이용해서 그렸을까? 설명해 볼래?",
+            "규칙적인 무늬를 그리려면 컴퍼스 침(중심)을 어떻게 옮기는지 말해볼래?",
+            "원의 중심과 반지름을 어떻게 정하면 이런 무늬가 되는지 설명해 볼래?",
+            "무늬에서 원의 규칙(중심·반지름)을 찾아 말해볼래?"],
+          keyPoints:[{id:"a",label:"중심의 위치를 규칙적으로 옮겨 가며 그린다"},{id:"b",label:"반지름을 같게(또는 규칙적으로) 하여 그린다"}],
+          outOfScope:"",
+          shortConcept:"여러 모양은 원의 중심을 규칙적으로 옮기고 반지름을 정해 그려요. 중심과 반지름의 규칙을 찾으면 무늬를 이해할 수 있어요.",
+          bookPage:"디딤돌 3-2 · 3단원 75쪽" }
+      ]},
       { id:"u24", name:"분수", ready:true, types:[
         { id:"fr2_1", name:"분수로 나타내기",
           firstQuestions:[
@@ -8530,7 +8575,41 @@ window.addEventListener('load', ()=>{ try{
           shortConcept:"무게의 덧셈·뺄셈은 kg는 kg끼리, g는 g끼리 해요. g가 1000을 넘으면 1kg으로 올려줘요.",
           bookPage:"디딤돌 3-2 · 5단원 135쪽" }
       ]},
-      { id:"u26", name:"그림그래프", ready:false }
+      { id:"u26", name:"그림그래프", ready:true, types:[
+        { id:"gg1", name:"그림그래프 알아보기",
+          figure:"picto", figureDesc:"반별 학생 수를 나타낸 그림그래프. 큰 그림은 10명, 작은 그림은 1명을 나타낸다.",
+          firstQuestions:[
+            "이 그래프처럼 그림으로 수량을 나타낸 것을 뭐라고 할까? 설명해 볼래?",
+            "그림그래프에서 큰 그림과 작은 그림은 각각 무엇을 나타낼까? 말해볼래?",
+            "그림그래프가 좋은 점(한눈에 알 수 있는 것)은 무엇인지 말해볼래?",
+            "큰 그림 하나가 10명일 때, 큰 그림 2개는 몇 명인지 말해볼래?"],
+          keyPoints:[{id:"a",label:"그림의 크기(큰 그림·작은 그림)로 수량을 나타낸다"},{id:"b",label:"큰 그림과 작은 그림이 나타내는 수가 다르다"}],
+          outOfScope:"",
+          shortConcept:"그림그래프는 그림의 크기로 수량을 나타내요. 큰 그림은 큰 수(예: 10), 작은 그림은 작은 수(예: 1)를 나타내요.",
+          bookPage:"디딤돌 3-2 · 6단원 154쪽" },
+        { id:"gg2", name:"그림그래프의 내용 알아보기",
+          figure:"picto", figureDesc:"반별 학생 수 그림그래프. 큰 그림 10명, 작은 그림 1명.",
+          firstQuestions:[
+            "이 그림그래프를 보고 어느 반이 학생이 가장 많은지 어떻게 알 수 있을까? 말해볼래?",
+            "1반의 학생 수를 그림을 보고 어떻게 세는지 설명해 볼래?",
+            "큰 그림 3개와 작은 그림 2개는 모두 몇 명인지 말해볼래?",
+            "그림그래프에서 가장 많은/적은 것을 찾는 방법을 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"큰 그림 수와 작은 그림 수를 각각의 단위로 곱해 더해 값을 읽는다"},{id:"b",label:"그림의 많고 적음으로 크기를 비교한다"}],
+          outOfScope:"",
+          shortConcept:"각 그림이 나타내는 수를 곱해 더하면 값을 읽을 수 있어요. 큰 그림 3개(30)+작은 그림 2개(2)=32명. 그림이 많을수록 큰 값이에요.",
+          bookPage:"디딤돌 3-2 · 6단원 158쪽" },
+        { id:"gg3", name:"그림그래프로 나타내기",
+          figure:"picto", figureDesc:"반별 학생 수를 큰 그림(10)·작은 그림(1)으로 나타낸 완성된 그림그래프 예시.",
+          firstQuestions:[
+            "표의 자료를 그림그래프로 어떻게 나타낼까? 순서를 말해볼래?",
+            "그림그래프를 그릴 때 큰 그림과 작은 그림의 단위를 어떻게 정하는지 설명해 볼래?",
+            "24명을 큰 그림(10)과 작은 그림(1)으로 어떻게 나타내는지 말해볼래?",
+            "그림그래프를 그릴 때 먼저 단위를 정하는 게 왜 중요한지 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"큰 그림·작은 그림이 나타낼 단위를 먼저 정한다"},{id:"b",label:"수에 맞게 큰 그림과 작은 그림의 개수를 그린다"}],
+          outOfScope:"",
+          shortConcept:"먼저 큰 그림·작은 그림이 나타낼 수(단위)를 정해요. 24명이면 큰 그림(10) 2개와 작은 그림(1) 4개로 그려요.",
+          bookPage:"디딤돌 3-2 · 6단원 160쪽" }
+      ]},
     ]},
     { id:"e4", name:"초등 4학년", ready:false },
     { id:"e5", name:"초등 5학년", ready:false },
@@ -8748,6 +8827,70 @@ window.addEventListener('load', ()=>{ try{
         + tickH((x1+x2)/2,y1,1)+tickH((x1+x2)/2,y2,1)+tickV(x1,(y1+y2)/2,1)+tickV(x2,(y1+y2)/2,1)  // 네 변 모두 같음
         + E;
     }
+
+    // ── 원 그림들 (그라데이션 채움 + 그림자로 깔끔하게) ──
+    const coral='#F0865B', star='#F5B72E', paper='#FBF9F4';
+    const CS='<svg viewBox="0 0 340 205" width="100%" style="max-width:340px;display:block;margin:0 auto" xmlns="http://www.w3.org/2000/svg">'
+      +'<defs><radialGradient id="cf" cx="42%" cy="38%" r="70%"><stop offset="0%" stop-color="#F2F4FF"/><stop offset="100%" stop-color="#DFE4FF"/></radialGradient>'
+      +'<linearGradient id="cg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7C8BEF"/><stop offset="100%" stop-color="#5B6EE1"/></linearGradient>'
+      +'<filter id="cs" x="-25%" y="-25%" width="150%" height="150%"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#2A2740" flood-opacity="0.12"/></filter></defs>';
+    const TT=(x,y,t,c,a)=>'<text x="'+x+'" y="'+y+'" font-family="Noto Sans KR,sans-serif" font-size="13" font-weight="700" fill="'+c+'" text-anchor="'+(a||'start')+'">'+t+'</text>';
+
+    if(kind==='circle-parts'){
+      const cx=170,cy=102,r=66;
+      const ex=(cx+r*Math.cos(-52*Math.PI/180)).toFixed(0), ey=(cy+r*Math.sin(-52*Math.PI/180)).toFixed(0);
+      return CS
+        +'<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="url(#cf)" stroke="'+ink+'" stroke-width="3" filter="url(#cs)"/>'
+        +'<line x1="'+(cx-r)+'" y1="'+cy+'" x2="'+(cx+r)+'" y2="'+cy+'" stroke="'+coral+'" stroke-width="3" stroke-linecap="round"/>'
+        +'<line x1="'+cx+'" y1="'+cy+'" x2="'+ex+'" y2="'+ey+'" stroke="url(#cg)" stroke-width="3.4" stroke-linecap="round"/>'
+        +'<circle cx="'+cx+'" cy="'+cy+'" r="4.5" fill="'+ink+'"/>'
+        +TT(cx+8,cy+20,'중심',ink)+TT((+ex)+4,(+ey)+4,'반지름',blue)+TT(cx,cy-r-8,'지름',coral,'middle')
+        +'</svg>';
+    }
+    if(kind==='circle-rd'){
+      const cx=170,cy=98,r=64;
+      return CS
+        +'<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="url(#cf)" stroke="'+ink+'" stroke-width="3" filter="url(#cs)"/>'
+        +'<line x1="'+(cx-r)+'" y1="'+cy+'" x2="'+cx+'" y2="'+cy+'" stroke="'+blue+'" stroke-width="4" stroke-linecap="round"/>'
+        +'<line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+r)+'" y2="'+cy+'" stroke="'+mint+'" stroke-width="4" stroke-linecap="round"/>'
+        +'<circle cx="'+cx+'" cy="'+cy+'" r="4.5" fill="'+ink+'"/>'
+        +TT(cx-r/2,cy-10,'반지름',blue,'middle')+TT(cx+r/2,cy-10,'반지름',mint,'middle')
+        +'<text x="'+cx+'" y="'+(cy+r+26)+'" font-family="Noto Sans KR,sans-serif" font-size="14" font-weight="800" fill="'+ink+'" text-anchor="middle">지름 = 반지름 × 2</text>'
+        +'</svg>';
+    }
+    if(kind==='circle-compass'){
+      const cx=140,cy=112,r=54,tx1=210,ty1=28;
+      return CS
+        +'<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+blue+'" stroke-width="2.6" stroke-dasharray="6 5" opacity="0.9"/>'
+        +'<circle cx="'+cx+'" cy="'+cy+'" r="4" fill="'+ink+'"/>'
+        +'<line x1="'+cx+'" y1="'+cy+'" x2="'+tx1+'" y2="'+ty1+'" stroke="'+ink+'" stroke-width="4.5" stroke-linecap="round"/>'
+        +'<line x1="'+(cx+r)+'" y1="'+cy+'" x2="'+tx1+'" y2="'+ty1+'" stroke="'+coral+'" stroke-width="4.5" stroke-linecap="round"/>'
+        +'<circle cx="'+tx1+'" cy="'+ty1+'" r="6" fill="'+star+'" stroke="'+ink+'" stroke-width="2"/>'
+        +'<circle cx="'+(cx+r)+'" cy="'+cy+'" r="4" fill="'+coral+'"/>'
+        +TT(cx,cy+r+28,'컴퍼스로 원 그리기',ink,'middle')
+        +'</svg>';
+    }
+    if(kind==='circle-pattern'){
+      const cx=170,cy=98,r=36; const cols=[coral,star,mint,blue,coral,star];
+      let cc='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+blue+'" stroke-width="2.4"/>';
+      for(let i=0;i<6;i++){ const a=i*60*Math.PI/180; const x=(cx+r*Math.cos(a)).toFixed(0), y=(cy+r*Math.sin(a)).toFixed(0);
+        cc+='<circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="none" stroke="'+cols[i]+'" stroke-width="2.2" opacity="0.9"/>'; }
+      return CS+cc+TT(cx,cy+r+72,'원을 이용한 여러 가지 모양',ink,'middle')+'</svg>';
+    }
+    if(kind==='picto'){
+      const w=340,h=210;
+      let g='<svg viewBox="0 0 '+w+' '+h+'" width="100%" style="max-width:340px;display:block;margin:0 auto" xmlns="http://www.w3.org/2000/svg">';
+      g+='<rect x="8" y="8" width="'+(w-16)+'" height="'+(h-16)+'" rx="16" fill="'+paper+'" stroke="#ECE7DC" stroke-width="1.5"/>';
+      g+='<text x="22" y="34" font-family="Noto Sans KR,sans-serif" font-size="14" font-weight="800" fill="'+ink+'">반별 학생 수</text>';
+      const rows=[['1반',2,3,58],['2반',3,1,104],['3반',1,4,150]];
+      rows.forEach(rw=>{ const name=rw[0],big=rw[1],small=rw[2],y=rw[3]; let x=66;
+        g+='<text x="24" y="'+(y+14)+'" font-family="Noto Sans KR,sans-serif" font-size="12" font-weight="700" fill="'+ink+'">'+name+'</text>';
+        for(let i=0;i<big;i++){ g+='<circle cx="'+(x+11)+'" cy="'+(y+9)+'" r="11" fill="'+star+'" stroke="'+ink+'" stroke-width="1.4"/>'; x+=27; }
+        for(let i=0;i<small;i++){ g+='<circle cx="'+(x+6)+'" cy="'+(y+9)+'" r="6" fill="'+mint+'" stroke="'+ink+'" stroke-width="1.2"/>'; x+=16; } });
+      g+='<circle cx="70" cy="188" r="7" fill="'+star+'" stroke="'+ink+'" stroke-width="1.2"/><text x="82" y="192" font-family="Noto Sans KR,sans-serif" font-size="11" fill="'+soft+'">10명</text>';
+      g+='<circle cx="150" cy="188" r="4.5" fill="'+mint+'" stroke="'+ink+'" stroke-width="1.2"/><text x="160" y="192" font-family="Noto Sans KR,sans-serif" font-size="11" fill="'+soft+'">1명</text>';
+      return g+'</svg>';
+    }
     return '';
   }
   function updatePieces(){ piecesEl.querySelectorAll('.cv-piece').forEach((p,i)=> p.classList.toggle('on', i<cv.covered.length)); }
@@ -8936,7 +9079,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v60.1-초3-2분수들이무게';
+  const APP_VERSION = 'v61.0-초3-2완성';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
