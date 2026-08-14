@@ -1007,6 +1007,8 @@ window.DDOOPI = {
         #convoCard .cv-item.done .cv-dot{background:#3FB98C;}
         #convoCard .cv-item .cv-tag{margin-left:auto;font-size:11px;color:#8A8698;}
         #convoCard .cv-navq{font-size:17px;font-weight:800;margin:6px 0 12px;}
+        #convoCard .cv-points{display:inline-block;background:#FFF3D6;color:#9A6B00;font-weight:800;font-size:13px;padding:6px 12px;border-radius:999px;margin:2px 0 8px;}
+        #convoCard .cv-points b{color:#C9860B;font-size:15px;}
         #convoCard .cv-crumb{display:flex;align-items:center;gap:8px;margin:2px 0 10px;}
         #convoCard .cv-back{border:1.5px solid #EFE9DC;background:#fff;border-radius:10px;width:30px;height:30px;font-size:15px;color:#5B6EE1;cursor:pointer;flex:0 0 30px;}
         #convoCard .cv-back:hover{border-color:#5B6EE1;}
@@ -7869,7 +7871,7 @@ window.addEventListener('load', ()=>{ try{
   // ── 개념 목록: 여기만 채우면 개념이 늘어남 ──
   // 유형 하나 = {id, name, firstQuestion, keyPoints:[{id,label}], outOfScope, shortConcept, bookPage}
   const CV_DATA = { grades:[
-    { id:"e3", name:"초등 3학년", ready:true, units:[
+    { id:"e3", name:"초등 3학년 1학기", ready:true, units:[
       { id:"u1", name:"덧셈과 뺄셈", ready:true, types:[
       { id:"add1", name:"받아올림 없는 세 자리 수의 덧셈",
         firstQuestions:[
@@ -7880,7 +7882,7 @@ window.addEventListener('load', ()=>{ try{
         keyPoints:[{id:"a",label:"같은 자리 수끼리 더한다"},{id:"b",label:"일의 자리부터 차례로 계산한다"},{id:"c",label:"더한 값을 자리에 맞춰 쓴다"}],
         outOfScope:"받아올림(한 자리 합이 10을 넘는 경우)",
         shortConcept:"세 자리 수의 덧셈은 같은 자리 수끼리 더해요. 일의 자리끼리, 십의 자리끼리, 백의 자리끼리요. 일의 자리부터 차례로 더하고, 더한 값을 그 자리에 맞춰 써요.",
-        bookPage:"디딤돌 3-1 · 1단원 (8쪽 부근)" },
+        bookPage:"디딤돌 3-1 · 1단원 8쪽" },
       { id:"add2", name:"받아올림이 있는 덧셈 (한 번)",
         firstQuestions:[
           "두 수를 더하다가 한 자리 합이 10을 넘으면 어떻게 해야 할까? 말해볼래?",
@@ -7890,7 +7892,7 @@ window.addEventListener('load', ()=>{ try{
         keyPoints:[{id:"a",label:"합이 10을 넘으면 윗자리로 1을 올린다(받아올림)"},{id:"b",label:"올린 1을 윗자리 합에 더한다"}],
         outOfScope:"받아올림이 여러 번인 경우",
         shortConcept:"같은 자리끼리 더하다가 합이 10을 넘으면, 넘은 1을 바로 윗자리로 올려줘요. 이걸 받아올림이라고 해요. 올린 1은 그 윗자리 합에 더해요.",
-        bookPage:"디딤돌 3-1 · 1단원 (10쪽 부근)" },
+        bookPage:"디딤돌 3-1 · 1단원 10쪽" },
       { id:"add3", name:"받아올림이 여러 번 있는 덧셈",
         firstQuestions:[
           "받아올림이 두 번 넘게 생겨도 방법은 똑같을까? 어떻게 하는지 말해볼래?",
@@ -7900,7 +7902,7 @@ window.addEventListener('load', ()=>{ try{
         keyPoints:[{id:"a",label:"10이 넘는 자리마다 윗자리로 1씩 올린다"},{id:"b",label:"일의 자리부터 차례로 하면 빠뜨리지 않는다"}],
         outOfScope:"",
         shortConcept:"받아올림이 여러 번 생겨도 방법은 같아요. 일의 자리부터 차례대로 더하면서, 합이 10을 넘는 자리마다 윗자리로 1씩 올려줘요.",
-        bookPage:"디딤돌 3-1 · 1단원 (12쪽 부근)" },
+        bookPage:"디딤돌 3-1 · 1단원 12쪽" },
       { id:"sub1", name:"받아내림 없는 세 자리 수의 뺄셈",
         firstQuestions:[
           "세 자리 수 두 개를 빼는 방법을, 네 말로 설명해 볼래?",
@@ -7910,7 +7912,7 @@ window.addEventListener('load', ()=>{ try{
         keyPoints:[{id:"a",label:"같은 자리 수끼리 뺀다"},{id:"b",label:"일의 자리부터 차례로 뺀다"}],
         outOfScope:"받아내림",
         shortConcept:"뺄셈도 같은 자리끼리 빼요. 일의 자리끼리, 십의 자리끼리, 백의 자리끼리요. 일의 자리부터 차례로 빼면 돼요.",
-        bookPage:"디딤돌 3-1 · 1단원 (16쪽 부근)" },
+        bookPage:"디딤돌 3-1 · 1단원 18쪽" },
       { id:"sub2", name:"받아내림이 있는 뺄셈 (한 번)",
         firstQuestions:[
           "윗자리 수가 작아서 뺄 수 없으면 어떻게 할까? 말해볼래?",
@@ -7920,7 +7922,7 @@ window.addEventListener('load', ()=>{ try{
         keyPoints:[{id:"a",label:"뺄 수 없으면 윗자리에서 10을 빌려온다(받아내림)"},{id:"b",label:"빌려준 자리는 1이 줄어든다"}],
         outOfScope:"받아내림이 여러 번인 경우",
         shortConcept:"일의 자리끼리 뺄 수 없으면, 십의 자리에서 10을 빌려와요. 이걸 받아내림이라고 해요. 빌려준 십의 자리는 1이 줄어들어요.",
-        bookPage:"디딤돌 3-1 · 1단원 (18쪽 부근)" },
+        bookPage:"디딤돌 3-1 · 1단원 20쪽" },
       { id:"sub3", name:"받아내림이 여러 번 있는 뺄셈",
         firstQuestions:[
           "받아내림을 두 번 넘게 해야 할 때도 방법은 똑같을까? 어떻게 하는지 말해볼래?",
@@ -7930,7 +7932,7 @@ window.addEventListener('load', ()=>{ try{
         keyPoints:[{id:"a",label:"뺄 수 없는 자리마다 윗자리에서 10을 빌려온다"},{id:"b",label:"일의 자리부터 차례로 하면 헷갈리지 않는다"}],
         outOfScope:"",
         shortConcept:"받아내림이 여러 번 생겨도 방법은 같아요. 일의 자리부터 차례로 빼면서, 뺄 수 없는 자리마다 윗자리에서 10을 빌려와요. 빌려준 자리는 1씩 줄어들어요.",
-        bookPage:"디딤돌 3-1 · 1단원 (20쪽 부근)" }
+        bookPage:"디딤돌 3-1 · 1단원 22쪽" }
       ]},
       { id:"u2", name:"평면도형", ready:true, types:[
         { id:"geo1", name:"선분·반직선·직선 알아보기",
@@ -7943,7 +7945,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"선분은 두 점을 곧게 이은 선(양 끝이 있다)"},{id:"b",label:"반직선은 한쪽으로만 끝없이 늘인 선(끝점 1개)"},{id:"c",label:"직선은 양쪽으로 끝없이 늘인 선(끝점 없다)"}],
           outOfScope:"",
           shortConcept:"선분은 두 점을 곧게 이은 선이라 양 끝이 있어요. 반직선은 한쪽으로만 끝없이 늘여 끝점이 하나예요. 직선은 양쪽으로 끝없이 늘여 끝점이 없어요.",
-          bookPage:"디딤돌 3-1 · 2단원 (40쪽 부근)" },
+          bookPage:"디딤돌 3-1 · 2단원 40쪽" },
         { id:"geo2", name:"각과 직각 알아보기",
           figure:"angle-both", figureDesc:"왼쪽에 일반적인 각(꼭짓점에서 두 선이 벌어짐, '각'), 오른쪽에 직각(직각 표시가 있는 각, '직각')이 그려져 있다.",
           firstQuestions:[
@@ -7954,7 +7956,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"각은 한 점에서 그은 두 반직선으로 이루어진다"},{id:"b",label:"뾰족한 점을 꼭짓점, 두 반직선을 변이라 한다"},{id:"c",label:"반듯한(90도) 각을 직각이라 한다"}],
           outOfScope:"",
           shortConcept:"각은 한 점에서 그은 두 반직선으로 이루어져요. 그 점을 꼭짓점, 두 반직선을 변이라고 해요. 종이를 반듯하게 두 번 접었을 때 생기는 각처럼 반듯한 각을 직각이라고 해요.",
-          bookPage:"디딤돌 3-1 · 2단원 (44쪽 부근)" },
+          bookPage:"디딤돌 3-1 · 2단원 42쪽" },
         { id:"geo3", name:"직각삼각형 알아보기",
           figure:"right-triangle", figureDesc:"한 각에 직각 표시가 있는 직각삼각형이 그려져 있다.",
           firstQuestions:[
@@ -7965,7 +7967,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"한 각이 직각인 삼각형이다"},{id:"b",label:"직각은 반듯한 각(90도)이다"}],
           outOfScope:"",
           shortConcept:"직각삼각형은 한 각이 직각인 삼각형이에요. 직각은 반듯하게 접었을 때 생기는 90도 각이에요.",
-          bookPage:"디딤돌 3-1 · 2단원 (48쪽 부근)" },
+          bookPage:"디딤돌 3-1 · 2단원 48쪽" },
         { id:"geo4", name:"직사각형 알아보기",
           figure:"rectangle", figureDesc:"네 각에 직각 표시가 있고, 마주 보는 변에 같음 눈금이 있는 직사각형이 그려져 있다.",
           firstQuestions:[
@@ -7976,7 +7978,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"네 각이 모두 직각인 사각형이다"},{id:"b",label:"마주 보는 두 변의 길이가 같다"}],
           outOfScope:"",
           shortConcept:"직사각형은 네 각이 모두 직각인 사각형이에요. 마주 보는 두 변의 길이는 서로 같아요.",
-          bookPage:"디딤돌 3-1 · 2단원 (52쪽 부근)" },
+          bookPage:"디딤돌 3-1 · 2단원 50쪽" },
         { id:"geo5", name:"정사각형 알아보기",
           figure:"square", figureDesc:"네 각에 직각 표시가 있고, 네 변에 모두 같음 눈금이 있는 정사각형이 그려져 있다.",
           firstQuestions:[
@@ -7987,7 +7989,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"네 각이 모두 직각이다"},{id:"b",label:"네 변의 길이가 모두 같다"}],
           outOfScope:"",
           shortConcept:"정사각형은 네 각이 모두 직각이고, 네 변의 길이가 모두 같은 사각형이에요. 그래서 정사각형은 직사각형이라고도 할 수 있어요.",
-          bookPage:"디딤돌 3-1 · 2단원 (56쪽 부근)" }
+          bookPage:"디딤돌 3-1 · 2단원 52쪽" }
       ]},
       { id:"u3", name:"나눗셈", ready:true, types:[
         { id:"div1", name:"똑같이 나누기 (몇 명에게 나누기)",
@@ -7999,7 +8001,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"전체를 사람 수만큼 똑같이 나눈다"},{id:"b",label:"나눗셈식으로 나타낸다 (15÷5)"},{id:"c",label:"몫은 한 명이 갖는 수다"}],
           outOfScope:"나머지가 있는 나눗셈",
           shortConcept:"똑같이 나누기는 전체를 똑같은 크기로 가르는 거예요. 15개를 5명에게 똑같이 나누면 15÷5로 쓰고, 몫 3은 한 명이 갖는 수예요.",
-          bookPage:"디딤돌 3-1 · 3단원 (68쪽 부근)" },
+          bookPage:"디딤돌 3-1 · 3단원 70쪽" },
         { id:"div2", name:"몇 개씩 묶어 덜어내기",
           firstQuestions:[
             "사과 12개를 4개씩 담으면 접시가 몇 개 필요할까? 어떻게 알 수 있는지 말해볼래?",
@@ -8009,7 +8011,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"전체를 몇 개씩 묶는다"},{id:"b",label:"묶음의 수가 몫이다 (12÷4=3)"},{id:"c",label:"12에서 4씩 덜어내는 것과 같다"}],
           outOfScope:"나머지가 있는 나눗셈",
           shortConcept:"몇 개씩 묶어서 나누는 방법이에요. 12개를 4개씩 묶으면 3묶음이라 12÷4=3이에요. 12에서 4를 3번 덜어내는 것과 같아요.",
-          bookPage:"디딤돌 3-1 · 3단원 (72쪽 부근)" },
+          bookPage:"디딤돌 3-1 · 3단원 72쪽" },
         { id:"div3", name:"곱셈과 나눗셈의 관계",
           firstQuestions:[
             "3×5=15를 보고 만들 수 있는 나눗셈식이 있을까? 어떻게 되는지 말해볼래?",
@@ -8019,7 +8021,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"곱셈식 하나로 나눗셈식 2개를 만들 수 있다"},{id:"b",label:"나눗셈식 하나로 곱셈식 2개를 만들 수 있다"},{id:"c",label:"곱셈과 나눗셈은 서로 반대되는 계산이다"}],
           outOfScope:"",
           shortConcept:"곱셈과 나눗셈은 서로 반대예요. 3×5=15면 15÷3=5, 15÷5=3을 만들 수 있어요. 반대로 나눗셈식 하나로 곱셈식 2개도 만들 수 있어요.",
-          bookPage:"디딤돌 3-1 · 3단원 (74쪽 부근)" },
+          bookPage:"디딤돌 3-1 · 3단원 74쪽" },
         { id:"div4", name:"나눗셈의 몫을 곱셈식으로 구하기",
           firstQuestions:[
             "24÷6의 몫을 곱셈을 이용해서 구하려면 어떻게 생각하면 좋을까? 말해볼래?",
@@ -8029,7 +8031,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"'6에 얼마를 곱하면 24가 될까'로 바꿔 생각한다"},{id:"b",label:"6×□=24에서 □가 몫이다"}],
           outOfScope:"",
           shortConcept:"나눗셈의 몫은 곱셈으로 찾을 수 있어요. 24÷6은 '6×□=24'에서 □를 찾는 거예요. 6×4=24니까 몫은 4예요.",
-          bookPage:"디딤돌 3-1 · 3단원 (76쪽 부근)" },
+          bookPage:"디딤돌 3-1 · 3단원 76쪽" },
         { id:"div5", name:"나눗셈의 몫을 곱셈구구로 구하기",
           firstQuestions:[
             "42÷7의 몫을 곱셈구구(구구단)로 빠르게 구하려면 어떻게 할까? 말해볼래?",
@@ -8039,7 +8041,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"나누는 수의 단(7단)에서 나누어지는 수(42)를 찾는다"},{id:"b",label:"7×6=42이므로 몫은 6이다"}],
           outOfScope:"",
           shortConcept:"곱셈구구로 몫을 빠르게 찾을 수 있어요. 42÷7은 7단에서 42를 찾으면 돼요. 7×6=42니까 몫은 6이에요.",
-          bookPage:"디딤돌 3-1 · 3단원 (78쪽 부근)" }
+          bookPage:"디딤돌 3-1 · 3단원 78쪽" }
       ]},
       { id:"u4", name:"곱셈", ready:true, types:[
         { id:"mul1", name:"(몇십)×(몇)",
@@ -8051,7 +8053,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"2×3을 먼저 계산한다"},{id:"b",label:"결과에 0을 하나 붙인다"},{id:"c",label:"20을 3번 더한 것과 같다"}],
           outOfScope:"올림이 있는 곱셈",
           shortConcept:"(몇십)×(몇)은 먼저 몇×몇을 하고 0을 붙여요. 20×3은 2×3=6에 0을 붙여 60이에요. 20을 3번 더한 것과 같아요.",
-          bookPage:"디딤돌 3-1 · 4단원 (96쪽 부근)" },
+          bookPage:"디딤돌 3-1 · 4단원 98쪽" },
         { id:"mul2", name:"올림이 없는 (몇십몇)×(몇)",
           firstQuestions:[
             "12×4는 어떻게 계산할까? 12를 어떻게 나눠서 곱하면 좋을지 말해볼래?",
@@ -8061,7 +8063,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"12를 10과 2로 나눠 각각 곱한다 (10×4, 2×4)"},{id:"b",label:"두 값을 더한다"}],
           outOfScope:"올림이 있는 곱셈",
           shortConcept:"올림이 없는 (몇십몇)×(몇)은 각 자리를 곱해 더해요. 12×4는 10×4=40과 2×4=8을 더해 48이에요.",
-          bookPage:"디딤돌 3-1 · 4단원 (100쪽 부근)" },
+          bookPage:"디딤돌 3-1 · 4단원 100쪽" },
         { id:"mul3", name:"십의 자리에서 올림이 있는 곱셈",
           firstQuestions:[
             "41×3처럼 십의 자리를 곱한 값이 십을 넘으면 어떻게 할까? 말해볼래?",
@@ -8071,7 +8073,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"십의 자리 곱이 넘치면 백의 자리로 올린다"},{id:"b",label:"일의 자리부터 차례로 계산한다"}],
           outOfScope:"",
           shortConcept:"십의 자리를 곱한 값이 크면 백의 자리로 올려줘요. 41×3은 1×3=3, 40×3=120이라 123이에요.",
-          bookPage:"디딤돌 3-1 · 4단원 (102쪽 부근)" },
+          bookPage:"디딤돌 3-1 · 4단원 102쪽" },
         { id:"mul4", name:"일의 자리에서 올림이 있는 곱셈",
           firstQuestions:[
             "13×4처럼 일의 자리를 곱한 값이 10을 넘으면 어떻게 할까? 말해볼래?",
@@ -8081,7 +8083,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"일의 자리 곱이 10을 넘으면 십의 자리로 올린다"},{id:"b",label:"올린 수를 십의 자리 곱에 더한다"}],
           outOfScope:"",
           shortConcept:"일의 자리 곱이 10을 넘으면 십의 자리로 올려요. 13×4는 3×4=12라 2를 쓰고 1을 올려서, 10×4=40에 더해 52예요.",
-          bookPage:"디딤돌 3-1 · 4단원 (104쪽 부근)" },
+          bookPage:"디딤돌 3-1 · 4단원 104쪽" },
         { id:"mul5", name:"올림이 여러 번 있는 곱셈",
           firstQuestions:[
             "26×4처럼 올림이 여러 번 생겨도 방법은 똑같을까? 어떻게 하는지 말해볼래?",
@@ -8091,7 +8093,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"일의 자리부터 차례로 곱한다"},{id:"b",label:"올림이 생기는 자리마다 윗자리로 올려 더한다"}],
           outOfScope:"",
           shortConcept:"올림이 여러 번 생겨도 방법은 같아요. 일의 자리부터 곱하면서 올림을 윗자리에 더해요. 26×4는 6×4=24(4쓰고 2올림), 20×4=80에 20 더해 104예요.",
-          bookPage:"디딤돌 3-1 · 4단원 (106쪽 부근)" }
+          bookPage:"디딤돌 3-1 · 4단원 106쪽" }
       ]},
       { id:"u5", name:"길이와 시간", ready:true, types:[
         { id:"len1", name:"밀리미터(mm) 알아보기",
@@ -8103,7 +8105,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"1cm를 똑같이 10칸으로 나눈 한 칸이 1mm다"},{id:"b",label:"1cm는 10mm다"}],
           outOfScope:"",
           shortConcept:"1cm를 똑같이 10칸으로 나눈 한 칸이 1mm예요. 그래서 1cm=10mm이고, 3cm 5mm는 35mm예요.",
-          bookPage:"디딤돌 3-1 · 5단원 (124쪽 부근)" },
+          bookPage:"디딤돌 3-1 · 5단원 126쪽" },
         { id:"len2", name:"킬로미터(km) 알아보기",
           firstQuestions:[
             "아주 먼 거리는 어떤 단위로 나타낼까? km에 대해 말해볼래?",
@@ -8113,7 +8115,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"1000m를 1km라고 한다"},{id:"b",label:"1km는 1000m다"}],
           outOfScope:"",
           shortConcept:"1000m를 1km라고 해요. 그래서 1km=1000m이고, 2km 300m는 2300m예요.",
-          bookPage:"디딤돌 3-1 · 5단원 (128쪽 부근)" },
+          bookPage:"디딤돌 3-1 · 5단원 128쪽" },
         { id:"len3", name:"길이와 거리 어림하기",
           firstQuestions:[
             "자로 재지 않고 길이를 대충 알아보는 걸 뭐라고 할까? 어떻게 하면 좋을지 말해볼래?",
@@ -8123,7 +8125,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"재지 않고 대략 알아보는 것을 어림이라고 한다"},{id:"b",label:"이미 아는 길이(뼘, 걸음 등)를 기준으로 삼는다"}],
           outOfScope:"",
           shortConcept:"어림은 자로 재지 않고 대략 알아보는 거예요. 내 뼘이나 걸음처럼 아는 길이를 기준으로 삼으면 잘 어림할 수 있어요.",
-          bookPage:"디딤돌 3-1 · 5단원 (132쪽 부근)" },
+          bookPage:"디딤돌 3-1 · 5단원 130쪽" },
         { id:"len4", name:"초 알아보기",
           firstQuestions:[
             "1분보다 짧은 시간은 어떻게 나타낼까? 초에 대해 말해볼래?",
@@ -8133,7 +8135,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"1분을 똑같이 60칸으로 나눈 한 칸이 1초다"},{id:"b",label:"1분은 60초다"}],
           outOfScope:"",
           shortConcept:"1분을 똑같이 60칸으로 나눈 한 칸이 1초예요. 그래서 1분=60초이고, 2분 30초는 150초예요.",
-          bookPage:"디딤돌 3-1 · 5단원 (136쪽 부근)" },
+          bookPage:"디딤돌 3-1 · 5단원 136쪽" },
         { id:"len5", name:"시간의 덧셈",
           firstQuestions:[
             "시간을 더할 때는 어떻게 계산할까? 네 방법을 말해볼래?",
@@ -8143,7 +8145,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"시는 시끼리, 분은 분끼리, 초는 초끼리 더한다"},{id:"b",label:"60초가 넘으면 1분으로 받아올림한다"}],
           outOfScope:"",
           shortConcept:"시간의 덧셈은 초는 초끼리, 분은 분끼리, 시는 시끼리 더해요. 초가 60을 넘으면 1분으로 올려줘요.",
-          bookPage:"디딤돌 3-1 · 5단원 (140쪽 부근)" },
+          bookPage:"디딤돌 3-1 · 5단원 138쪽" },
         { id:"len6", name:"시간의 뺄셈",
           firstQuestions:[
             "시간을 뺄 때는 어떻게 계산할까? 초끼리 뺄 수 없으면 어떻게 할지 말해볼래?",
@@ -8153,7 +8155,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"시는 시끼리, 분은 분끼리, 초는 초끼리 뺀다"},{id:"b",label:"초끼리 뺄 수 없으면 1분을 60초로 바꿔 받아내림한다"}],
           outOfScope:"",
           shortConcept:"시간의 뺄셈도 같은 단위끼리 빼요. 초끼리 뺄 수 없으면 1분을 60초로 바꿔서 빌려와요.",
-          bookPage:"디딤돌 3-1 · 5단원 (144쪽 부근)" }
+          bookPage:"디딤돌 3-1 · 5단원 140쪽" }
       ]},
       { id:"u6", name:"분수와 소수", ready:true, types:[
         { id:"fr1", name:"전체를 똑같이 나누기",
@@ -8165,7 +8167,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"나눈 조각의 크기가 모두 같아야 한다"},{id:"b",label:"똑같이 나눠야 분수로 나타낼 수 있다"}],
           outOfScope:"",
           shortConcept:"똑같이 나눈다는 건 조각의 크기가 모두 같다는 뜻이에요. 똑같이 나눠야 분수로 나타낼 수 있어요.",
-          bookPage:"디딤돌 3-1 · 6단원 (156쪽 부근)" },
+          bookPage:"디딤돌 3-1 · 6단원 158쪽" },
         { id:"fr2", name:"분수 알아보기",
           firstQuestions:[
             "전체를 똑같이 4로 나눈 것 중 1을 분수로 어떻게 나타낼까? 분모와 분자가 뭔지 말해볼래?",
@@ -8175,7 +8177,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"전체를 똑같이 나눈 수가 분모다(아래)"},{id:"b",label:"그중 몇 개인지가 분자다(위)"}],
           outOfScope:"",
           shortConcept:"분수는 전체를 똑같이 나눈 것 중 몇 개인지를 나타내요. 4분의 1에서 아래 4는 나눈 수(분모), 위 1은 그중 개수(분자)예요.",
-          bookPage:"디딤돌 3-1 · 6단원 (160쪽 부근)" },
+          bookPage:"디딤돌 3-1 · 6단원 160쪽" },
         { id:"fr3", name:"단위분수 알아보기",
           firstQuestions:[
             "분자가 1인 분수를 뭐라고 할까? 어떤 분수들이 그런지 말해볼래?",
@@ -8185,7 +8187,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"분자가 1인 분수를 단위분수라고 한다"},{id:"b",label:"2분의 1, 3분의 1처럼 분자가 1이다"}],
           outOfScope:"",
           shortConcept:"분자가 1인 분수를 단위분수라고 해요. 2분의 1, 3분의 1, 4분의 1 같은 거예요.",
-          bookPage:"디딤돌 3-1 · 6단원 (164쪽 부근)" },
+          bookPage:"디딤돌 3-1 · 6단원 162쪽" },
         { id:"fr4", name:"분모가 같은 분수의 크기 비교",
           firstQuestions:[
             "5분의 2와 5분의 4 중 어느 게 더 클까? 왜 그런지 말해볼래?",
@@ -8195,7 +8197,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"분모가 같으면 분자가 클수록 크다"},{id:"b",label:"나눈 조각의 크기가 같기 때문이다"}],
           outOfScope:"",
           shortConcept:"분모가 같으면 분자가 클수록 커요. 조각의 크기가 같으니 조각이 더 많은 쪽이 크죠. 그래서 5분의 4가 5분의 2보다 커요.",
-          bookPage:"디딤돌 3-1 · 6단원 (166쪽 부근)" },
+          bookPage:"디딤돌 3-1 · 6단원 164쪽" },
         { id:"fr5", name:"단위분수의 크기 비교",
           firstQuestions:[
             "2분의 1과 4분의 1 중 어느 게 더 클까? 왜 그런지 말해볼래?",
@@ -8205,7 +8207,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"단위분수는 분모가 클수록 작다"},{id:"b",label:"많이 나눌수록 한 조각이 작기 때문이다"}],
           outOfScope:"",
           shortConcept:"단위분수는 분모가 클수록 작아요. 많이 나눌수록 한 조각이 작아지니까요. 그래서 2분의 1이 4분의 1보다 커요.",
-          bookPage:"디딤돌 3-1 · 6단원 (168쪽 부근)" },
+          bookPage:"디딤돌 3-1 · 6단원 166쪽" },
         { id:"fr6", name:"소수 한 자리 수 알아보기",
           firstQuestions:[
             "10분의 1을 소수로 어떻게 쓸까? 0.1에 대해 말해볼래?",
@@ -8215,7 +8217,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"10분의 1을 0.1로 쓴다"},{id:"b",label:"분수 10분의 1과 소수 0.1은 같은 수다"}],
           outOfScope:"",
           shortConcept:"10분의 1을 소수로 0.1이라고 써요. 분수 10분의 1과 소수 0.1은 같은 수예요. 가운데 점(.)을 소수점이라고 해요.",
-          bookPage:"디딤돌 3-1 · 6단원 (172쪽 부근)" },
+          bookPage:"디딤돌 3-1 · 6단원 174쪽" },
         { id:"fr7", name:"1보다 큰 소수 알아보기",
           firstQuestions:[
             "1과 0.3을 합하면 소수로 어떻게 쓸까? 2.4에서 2와 4가 뭘 나타내는지 말해볼래?",
@@ -8225,7 +8227,7 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"자연수 부분과 소수 부분으로 이루어진다"},{id:"b",label:"2.4는 2와 0.4(0.1이 4개)를 합한 수다"}],
           outOfScope:"",
           shortConcept:"1보다 큰 소수는 자연수와 소수 부분을 합해요. 2.4는 2와 0.4를 합한 거고, 소수 첫째 자리 4는 0.1이 4개라는 뜻이에요.",
-          bookPage:"디딤돌 3-1 · 6단원 (174쪽 부근)" },
+          bookPage:"디딤돌 3-1 · 6단원 176쪽" },
         { id:"fr8", name:"소수의 크기 비교",
           firstQuestions:[
             "0.3과 0.7 중 어느 게 더 클까? 어떻게 비교하는지 말해볼래?",
@@ -8235,8 +8237,300 @@ window.addEventListener('load', ()=>{ try{
           keyPoints:[{id:"a",label:"자연수 부분을 먼저 비교한다"},{id:"b",label:"자연수가 같으면 소수 첫째 자리(0.1의 개수)를 비교한다"}],
           outOfScope:"",
           shortConcept:"소수는 자연수 부분을 먼저 비교하고, 같으면 소수 첫째 자리를 비교해요. 0.7은 0.1이 7개, 0.3은 3개라 0.7이 더 커요.",
-          bookPage:"디딤돌 3-1 · 6단원 (176쪽 부근)" }
+          bookPage:"디딤돌 3-1 · 6단원 178쪽" }
       ]}
+    ]},
+    { id:"e3_2", name:"초등 3학년 2학기", ready:true, units:[
+      { id:"u21", name:"곱셈", ready:true, types:[
+        { id:"m2_1", name:"올림이 없는 (세 자리 수)×(한 자리 수)",
+          firstQuestions:[
+            "123×3은 어떻게 계산할까? 네 방법을 말해볼래?",
+            "세 자리 수에 한 자리 수를 곱할 때 어떤 자리끼리 곱하는지 설명해 볼래?",
+            "212×4를 각 자리로 나눠서 곱하는 방법을 말해볼래?",
+            "123×3을 100×3, 20×3, 3×3으로 나눠 더하면 왜 답이 같은지 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"일·십·백의 각 자리를 한 자리 수와 각각 곱한다"},{id:"b",label:"곱한 값을 자리에 맞춰 더한다"}],
+          outOfScope:"올림이 있는 경우",
+          shortConcept:"세 자리 수 × 한 자리 수는 일·십·백의 각 자리를 한 자리 수와 각각 곱해요. 123×3은 3×3=9, 20×3=60, 100×3=300을 더해 369예요.",
+          bookPage:"디딤돌 3-2 · 1단원 8쪽" },
+        { id:"m2_2", name:"일의 자리에서 올림이 있는 (세 자리 수)×(한 자리 수)",
+          firstQuestions:[
+            "216×4처럼 일의 자리를 곱한 값이 10을 넘으면 어떻게 할까? 말해볼래?",
+            "곱셈에서 일의 자리 올림은 어떻게 처리하는지 설명해 볼래?",
+            "128×3을 계산할 때 일의 자리에서 무슨 일이 생기는지 말해볼래?",
+            "올림한 수를 어느 자리 곱에 더해 주는지, 왜 그런지 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"일의 자리 곱이 10을 넘으면 십의 자리로 올린다"},{id:"b",label:"올린 수를 십의 자리 곱에 더한다"}],
+          outOfScope:"",
+          shortConcept:"일의 자리를 곱한 값이 10을 넘으면 십의 자리로 올려요. 216×4는 6×4=24라 4를 쓰고 2를 올려 십의 자리 계산에 더해요.",
+          bookPage:"디딤돌 3-2 · 1단원 9쪽" },
+        { id:"m2_3", name:"십의 자리에서 올림이 있는 (세 자리 수)×(한 자리 수)",
+          firstQuestions:[
+            "162×4처럼 십의 자리를 곱한 값이 십을 넘으면 어떻게 할까? 말해볼래?",
+            "곱셈에서 십의 자리 올림은 어떻게 처리하는지 설명해 볼래?",
+            "271×3을 계산할 때 백의 자리는 어떻게 되는지 말해볼래?",
+            "십의 자리에서 생긴 올림을 어디로 올려 주는지 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"십의 자리 곱이 십을 넘으면 백의 자리로 올린다"},{id:"b",label:"일의 자리부터 차례로 계산한다"}],
+          outOfScope:"",
+          shortConcept:"십의 자리를 곱한 값이 크면 백의 자리로 올려요. 162×4는 60×4=240이라 백의 자리로 올려 계산해요.",
+          bookPage:"디딤돌 3-2 · 1단원 10쪽" },
+        { id:"m2_4", name:"올림이 여러 번 있는 (세 자리 수)×(한 자리 수)",
+          firstQuestions:[
+            "275×6처럼 올림이 여러 번 생겨도 방법은 똑같을까? 어떻게 하는지 말해볼래?",
+            "올림이 여러 번 있는 곱셈은 어떤 순서로 계산하면 좋을까?",
+            "348×5를 어떻게 계산하는지 말해볼래?",
+            "올림이 많을 때 빠뜨리지 않으려면 어떻게 하면 좋을지 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"일의 자리부터 차례로 곱한다"},{id:"b",label:"올림이 생기는 자리마다 윗자리로 올려 더한다"}],
+          outOfScope:"",
+          shortConcept:"올림이 여러 번 생겨도 방법은 같아요. 일의 자리부터 곱하면서 생기는 올림을 윗자리에 더해요.",
+          bookPage:"디딤돌 3-2 · 1단원 11쪽" },
+        { id:"m2_5", name:"(몇십)×(몇십), (몇십몇)×(몇십)",
+          firstQuestions:[
+            "30×40은 어떻게 계산할까? 네 방법을 말해볼래?",
+            "(몇십)×(몇십)은 어떻게 계산하는지 설명해 볼래?",
+            "25×30을 계산하는 방법을 말해볼래?",
+            "30×40이 왜 3×4에 0을 두 개 붙인 것과 같은지 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"3×4를 먼저 계산하고 0을 두 개 붙인다"},{id:"b",label:"(몇십몇)×(몇십)은 (몇십몇)×(몇) 뒤에 0을 붙인다"}],
+          outOfScope:"",
+          shortConcept:"30×40은 3×4=12에 0을 두 개 붙여 1200이에요. 25×30은 25×3=75에 0을 붙여 750이에요.",
+          bookPage:"디딤돌 3-2 · 1단원 20쪽" },
+        { id:"m2_6", name:"(몇)×(몇십몇)",
+          firstQuestions:[
+            "4×23은 어떻게 계산할까? 23을 어떻게 나눠서 곱하면 좋을지 말해볼래?",
+            "(몇)×(몇십몇)을 어떻게 계산하는지 설명해 볼래?",
+            "6×15를 각 자리로 나눠서 곱하는 방법을 말해볼래?",
+            "4×23을 4×20과 4×3으로 나눠 더하면 왜 답이 같은지 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"몇십몇을 몇십과 몇으로 나눠 각각 곱한다"},{id:"b",label:"두 곱을 더한다"}],
+          outOfScope:"",
+          shortConcept:"4×23은 4×20=80과 4×3=12를 더해 92예요. 곱하는 수를 자리별로 나눠 곱한 뒤 더해요.",
+          bookPage:"디딤돌 3-2 · 1단원 21쪽" },
+        { id:"m2_7", name:"올림이 한 번 있는 (몇십몇)×(몇십몇)",
+          firstQuestions:[
+            "14×12는 어떻게 계산할까? 12를 어떻게 나눠서 곱하면 좋을지 말해볼래?",
+            "(몇십몇)×(몇십몇)을 어떻게 계산하는지 설명해 볼래?",
+            "14×12에서 14×2와 14×10을 각각 구한 뒤 어떻게 하는지 말해볼래?",
+            "세로셈에서 각 부분의 곱을 자리에 맞춰 더해야 하는 이유를 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"한 수를 몇십과 몇으로 나눠 각각 곱한다(14×2, 14×10)"},{id:"b",label:"두 곱을 자리에 맞춰 더한다"}],
+          outOfScope:"",
+          shortConcept:"14×12는 14×2=28과 14×10=140을 더해 168이에요. 곱한 값을 자리에 맞춰 더하는 게 중요해요.",
+          bookPage:"디딤돌 3-2 · 1단원 22쪽" },
+        { id:"m2_8", name:"올림이 여러 번 있는 (몇십몇)×(몇십몇)",
+          firstQuestions:[
+            "47×36처럼 올림이 여러 번 생겨도 방법은 똑같을까? 어떻게 하는지 말해볼래?",
+            "올림이 여러 번 있는 (몇십몇)×(몇십몇)을 어떻게 계산하는지 설명해 볼래?",
+            "47×36에서 47×6과 47×30을 각각 구한 뒤 어떻게 하는지 말해볼래?",
+            "두 부분의 곱을 더할 때 자리를 잘못 맞추면 왜 답이 틀리는지 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"한 수를 몇십과 몇으로 나눠 각각 곱한다(47×6, 47×30)"},{id:"b",label:"올림을 하며 두 곱을 자리에 맞춰 더한다"}],
+          outOfScope:"",
+          shortConcept:"47×36은 47×6=282와 47×30=1410을 더해 1692예요. 올림이 여러 번 생겨도 방법은 같고 자리를 잘 맞춰 더해요.",
+          bookPage:"디딤돌 3-2 · 1단원 23쪽" }
+      ]},
+      { id:"u22", name:"나눗셈", ready:true, types:[
+        { id:"d2_1", name:"내림이 없는 (몇십)÷(몇)",
+          firstQuestions:[
+            "60÷3은 어떻게 계산할까? 네 방법을 말해볼래?",
+            "(몇십)÷(몇)을 어떻게 계산하는지 설명해 볼래?",
+            "80÷4를 8÷4를 이용해 구하는 방법을 말해볼래?",
+            "60÷3이 왜 6÷3의 결과에 0을 붙인 것과 같은지 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"십의 자리를 먼저 나눈다"},{id:"b",label:"(몇십)÷(몇)은 (몇)÷(몇)에 0을 붙인 것과 같다"}],
+          outOfScope:"내림이나 나머지가 있는 경우",
+          shortConcept:"60÷3은 6÷3=2에 0을 붙여 20이에요. 십이 몇 개인지로 생각하면 쉬워요.",
+          bookPage:"디딤돌 3-2 · 2단원 40쪽" },
+        { id:"d2_2", name:"내림이 있는 (몇십)÷(몇)",
+          firstQuestions:[
+            "40÷3처럼 십의 자리가 나누어떨어지지 않으면 어떻게 할까? 말해볼래?",
+            "나눗셈에서 '내림'이 무엇인지 설명해 볼래?",
+            "50÷4를 계산할 때 십의 자리에서 남는 것을 어떻게 하는지 말해볼래?",
+            "십의 자리에서 남은 것을 어느 자리로 내려 계산하는지 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"십의 자리를 나누고 남은 것을 일의 자리로 내린다"},{id:"b",label:"내린 수와 일의 자리를 합쳐 계속 나눈다"}],
+          outOfScope:"나머지가 있는 경우",
+          shortConcept:"40÷3은 십의 자리 4를 3으로 나누면 1이 되고 1(십)이 남아요. 남은 10을 일의 자리로 내려 계속 나눠요.",
+          bookPage:"디딤돌 3-2 · 2단원 41쪽" },
+        { id:"d2_3", name:"내림이 없는 (몇십몇)÷(몇)",
+          firstQuestions:[
+            "48÷4는 어떻게 계산할까? 어느 자리부터 나누는지 말해볼래?",
+            "(몇십몇)÷(몇)을 어떻게 계산하는지 설명해 볼래?",
+            "36÷3을 십의 자리와 일의 자리로 나눠 계산하는 방법을 말해볼래?",
+            "나눗셈은 왜 높은 자리부터 계산하는지 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"높은 자리(십)부터 나눈다"},{id:"b",label:"각 자리를 나눈 몫을 자리에 맞춰 쓴다"}],
+          outOfScope:"내림이나 나머지가 있는 경우",
+          shortConcept:"48÷4는 십의 자리 40÷4=10, 일의 자리 8÷4=2를 합해 12예요. 높은 자리부터 차례로 나눠요.",
+          bookPage:"디딤돌 3-2 · 2단원 42쪽" },
+        { id:"d2_4", name:"내림이 있는 (몇십몇)÷(몇)",
+          firstQuestions:[
+            "52÷4처럼 십의 자리를 나눈 뒤 남는 게 있으면 어떻게 할까? 말해볼래?",
+            "내림이 있는 (몇십몇)÷(몇)을 어떻게 계산하는지 설명해 볼래?",
+            "75÷5를 계산할 때 십의 자리에서 남는 것을 어떻게 하는지 말해볼래?",
+            "내림을 빠뜨리면 몫이 어떻게 달라지는지 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"십의 자리를 나누고 남은 것을 일의 자리로 내린다"},{id:"b",label:"내린 수와 일의 자리를 합쳐 나눈다"}],
+          outOfScope:"나머지가 있는 경우",
+          shortConcept:"52÷4는 십의 자리 5÷4=1, 남은 1(십)을 내려 12÷4=3. 합해서 13이에요.",
+          bookPage:"디딤돌 3-2 · 2단원 43쪽" },
+        { id:"d2_5", name:"나머지가 있는 나눗셈 (내림 없음)",
+          firstQuestions:[
+            "17÷5처럼 똑같이 나누고 남는 수를 뭐라고 할까? 말해볼래?",
+            "나머지가 무엇인지, 어떤 규칙이 있는지 설명해 볼래?",
+            "23÷4의 몫과 나머지를 어떻게 구하는지 말해볼래?",
+            "나머지가 항상 나누는 수보다 작아야 하는 이유를 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"똑같이 나누고 남는 수를 나머지라고 한다"},{id:"b",label:"나머지는 나누는 수보다 작다"}],
+          outOfScope:"내림이 있는 경우",
+          shortConcept:"17÷5는 5씩 3묶음이면 15, 2가 남아요. 이 남은 2가 나머지예요. 나머지는 항상 나누는 수보다 작아요.",
+          bookPage:"디딤돌 3-2 · 2단원 51쪽" },
+        { id:"d2_6", name:"나머지가 있는 나눗셈 (내림 있음)",
+          firstQuestions:[
+            "53÷4처럼 내림도 있고 나머지도 있으면 어떻게 계산할까? 말해볼래?",
+            "내림과 나머지가 모두 있는 나눗셈을 어떻게 계산하는지 설명해 볼래?",
+            "67÷5의 몫과 나머지를 구하는 과정을 말해볼래?",
+            "'나누는 수×몫+나머지=나누어지는 수'로 검산하는 이유를 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"내림을 하며 높은 자리부터 나눈다"},{id:"b",label:"마지막에 남는 수가 나머지다"}],
+          outOfScope:"",
+          shortConcept:"53÷4는 5÷4=1(남은 1 내림), 13÷4=3 나머지 1. 몫 13, 나머지 1이에요. '4×13+1=53'으로 확인해요.",
+          bookPage:"디딤돌 3-2 · 2단원 52쪽" },
+        { id:"d2_7", name:"나머지가 없는 (세 자리 수)÷(한 자리 수)",
+          firstQuestions:[
+            "936÷3은 어떻게 계산할까? 어느 자리부터 나누는지 말해볼래?",
+            "(세 자리 수)÷(한 자리 수)를 어떻게 계산하는지 설명해 볼래?",
+            "848÷4를 백·십·일의 자리로 나눠 계산하는 방법을 말해볼래?",
+            "나머지가 0이면 왜 '나누어떨어진다'고 하는지 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"백의 자리부터 차례로 나눈다"},{id:"b",label:"각 자리에서 남은 것은 다음 자리로 내린다"}],
+          outOfScope:"나머지가 있는 경우",
+          shortConcept:"936÷3은 백의 자리부터 나눠요. 9÷3=3, 3÷3=1, 6÷3=2라 312예요. 나머지가 0이면 나누어떨어진다고 해요.",
+          bookPage:"디딤돌 3-2 · 2단원 53쪽" },
+        { id:"d2_8", name:"나머지가 있는 (세 자리 수)÷(한 자리 수)",
+          firstQuestions:[
+            "574÷5처럼 세 자리 수를 나눌 때도 나머지가 생길까? 어떻게 하는지 말해볼래?",
+            "(세 자리 수)÷(한 자리 수)에서 몫과 나머지를 어떻게 구하는지 설명해 볼래?",
+            "725÷6의 몫과 나머지를 구하는 과정을 말해볼래?",
+            "큰 나눗셈도 '나누는 수×몫+나머지'로 검산하는 방법을 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"높은 자리부터 내림을 하며 나눈다"},{id:"b",label:"마지막에 남는 수가 나머지다"}],
+          outOfScope:"",
+          shortConcept:"574÷5는 백의 자리부터 차례로 나누며 내림을 해요. 몫 114, 나머지 4예요. '5×114+4=574'로 확인해요.",
+          bookPage:"디딤돌 3-2 · 2단원 54쪽" }
+      ]},
+      { id:"u23", name:"원", ready:false },
+      { id:"u24", name:"분수", ready:true, types:[
+        { id:"fr2_1", name:"분수로 나타내기",
+          firstQuestions:[
+            "전체를 똑같이 나눈 것 중 몇 개를 분수로 어떻게 나타낼까? 분자와 분모로 말해볼래?",
+            "색칠한 부분을 분수로 나타내는 방법을 설명해 볼래?",
+            "6칸 중 2칸이 색칠됐으면 분수로 어떻게 쓰는지 말해볼래?",
+            "분모와 분자가 각각 무엇을 나타내는지 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"전체를 똑같이 나눈 수가 분모다"},{id:"b",label:"그중 몇 개인지가 분자다"}],
+          outOfScope:"",
+          shortConcept:"전체를 똑같이 나눈 수가 분모(아래), 그중 몇 개인지가 분자(위)예요. 6칸 중 2칸이면 6분의 2로 써요.",
+          bookPage:"디딤돌 3-2 · 4단원 92쪽" },
+        { id:"fr2_2", name:"분수만큼은 얼마인지 알아보기 (1)",
+          firstQuestions:[
+            "12개의 3분의 1은 몇 개일까? 어떻게 구하는지 말해볼래?",
+            "전체 개수의 분수만큼이 얼마인지 어떻게 구하는지 설명해 볼래?",
+            "구슬 10개의 5분의 2는 몇 개인지 구하는 방법을 말해볼래?",
+            "12의 4분의 3을 구할 때 먼저 무엇을 하는지 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"전체를 분모 수만큼 똑같이 나눈다"},{id:"b",label:"그중 분자 수만큼이 답이다"}],
+          outOfScope:"",
+          shortConcept:"12개의 3분의 1은 12를 3묶음으로 나눈 한 묶음, 즉 4개예요. 3분의 2는 두 묶음이라 8개예요.",
+          bookPage:"디딤돌 3-2 · 4단원 94쪽" },
+        { id:"fr2_3", name:"분수만큼은 얼마인지 알아보기 (2)",
+          firstQuestions:[
+            "6cm의 3분의 1은 몇 cm일까? 어떻게 구하는지 말해볼래?",
+            "길이의 분수만큼이 얼마인지 어떻게 구하는지 설명해 볼래?",
+            "10cm의 5분의 2는 몇 cm인지 구하는 방법을 말해볼래?",
+            "길이를 분모 수만큼 나누는 게 왜 필요한지 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"전체 길이를 분모 수만큼 똑같이 나눈다"},{id:"b",label:"그중 분자 수만큼이 답이다"}],
+          outOfScope:"",
+          shortConcept:"6cm의 3분의 1은 6을 3으로 나눈 2cm예요. 3분의 2는 4cm예요. 개수든 길이든 방법은 같아요.",
+          bookPage:"디딤돌 3-2 · 4단원 95쪽" },
+        { id:"fr2_4", name:"여러 가지 분수 알아보기 (진분수·가분수·대분수)",
+          firstQuestions:[
+            "분자가 분모보다 작은 분수, 같거나 큰 분수를 각각 뭐라고 할까? 말해볼래?",
+            "진분수·가분수·대분수가 각각 무엇인지 설명해 볼래?",
+            "5분의 3, 5분의 7, 1과 5분의 2는 각각 어떤 분수인지 말해볼래?",
+            "가분수와 대분수가 어떻게 다른지 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"분자<분모이면 진분수"},{id:"b",label:"분자≥분모이면 가분수"},{id:"c",label:"자연수와 진분수로 된 것이 대분수"}],
+          outOfScope:"",
+          shortConcept:"분자가 분모보다 작으면 진분수, 같거나 크면 가분수, 자연수와 진분수를 함께 쓴 것이 대분수예요.",
+          bookPage:"디딤돌 3-2 · 4단원 102쪽" },
+        { id:"fr2_5", name:"대분수와 가분수로 나타내기",
+          firstQuestions:[
+            "대분수 1과 3분의 2를 가분수로 어떻게 바꿀까? 말해볼래?",
+            "가분수를 대분수로 바꾸는 방법을 설명해 볼래?",
+            "7분의 9를 대분수로 바꾸는 방법을 말해볼래?",
+            "대분수와 가분수가 같은 수를 나타낼 수 있는 이유를 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"대분수→가분수: (자연수×분모+분자)를 분자로 한다"},{id:"b",label:"가분수→대분수: 분자÷분모의 몫이 자연수, 나머지가 분자"}],
+          outOfScope:"",
+          shortConcept:"대분수 1과 3분의2는 (1×3+2)=5, 즉 3분의5예요. 가분수 3분의5는 5÷3=1…2라 1과 3분의2로 바꿔요.",
+          bookPage:"디딤돌 3-2 · 4단원 104쪽" },
+        { id:"fr2_6", name:"분모가 같은 분수의 크기 비교",
+          firstQuestions:[
+            "6분의 5와 6분의 3 중 어느 게 더 클까? 왜 그런지 말해볼래?",
+            "분모가 같은 분수는 어떻게 크기를 비교하는지 설명해 볼래?",
+            "가분수 5분의 7과 5분의 9 중 어느 게 큰지, 왜 그런지 말해볼래?",
+            "대분수끼리는 무엇을 먼저 비교하는지 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"분모가 같으면 분자가 클수록 크다"},{id:"b",label:"대분수는 자연수 부분을 먼저 비교한다"}],
+          outOfScope:"",
+          shortConcept:"분모가 같으면 분자가 클수록 커요. 6분의5>6분의3이에요. 대분수끼리는 자연수 부분을 먼저 비교해요.",
+          bookPage:"디딤돌 3-2 · 4단원 110쪽" }
+      ]},
+      { id:"u25", name:"들이와 무게", ready:true, types:[
+        { id:"lw1", name:"들이 비교하기",
+          firstQuestions:[
+            "어느 그릇에 물이 더 많이 들어가는지 어떻게 비교할 수 있을까? 말해볼래?",
+            "두 그릇의 들이를 비교하는 방법을 설명해 볼래?",
+            "컵을 이용해 들이를 비교하는 방법을 말해볼래?",
+            "물을 옮겨 담아 비교하는 방법과 컵으로 세어 비교하는 방법을 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"한 그릇의 물을 다른 그릇에 옮겨 담아 비교한다"},{id:"b",label:"같은 컵으로 몇 컵인지 세어 비교한다"}],
+          outOfScope:"",
+          shortConcept:"들이는 그릇에 담을 수 있는 양이에요. 물을 옮겨 담거나, 같은 컵으로 몇 컵인지 세어 비교해요.",
+          bookPage:"디딤돌 3-2 · 5단원 120쪽" },
+        { id:"lw2", name:"들이의 단위(L, mL)와 어림하기",
+          firstQuestions:[
+            "들이를 나타내는 단위에는 무엇이 있을까? L와 mL에 대해 말해볼래?",
+            "1L와 1mL의 관계를 설명해 볼래?",
+            "2L 300mL는 몇 mL인지, 왜 그런지 말해볼래?",
+            "우유갑이나 음료수병의 들이를 어림하는 방법을 말해볼래?"],
+          keyPoints:[{id:"a",label:"1L는 1000mL다"},{id:"b",label:"L·mL를 상황에 맞게 골라 어림한다"}],
+          outOfScope:"",
+          shortConcept:"들이의 단위는 L(리터)와 mL(밀리리터)예요. 1L=1000mL이고, 2L 300mL는 2300mL예요.",
+          bookPage:"디딤돌 3-2 · 5단원 122쪽" },
+        { id:"lw3", name:"들이의 덧셈과 뺄셈",
+          firstQuestions:[
+            "들이를 더하거나 뺄 때는 어떻게 계산할까? 네 방법을 말해볼래?",
+            "L는 L끼리, mL는 mL끼리 계산하는 이유를 설명해 볼래?",
+            "1L 500mL + 800mL를 어떻게 계산하는지 말해볼래?",
+            "mL끼리 더한 값이 1000을 넘으면 어떻게 하는지 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"L는 L끼리, mL는 mL끼리 계산한다"},{id:"b",label:"1000mL가 넘으면 1L로 받아올림(내림)한다"}],
+          outOfScope:"",
+          shortConcept:"들이의 덧셈·뺄셈은 L는 L끼리, mL는 mL끼리 해요. mL가 1000을 넘으면 1L로 올려줘요.",
+          bookPage:"디딤돌 3-2 · 5단원 124쪽" },
+        { id:"lw4", name:"무게 비교하기",
+          firstQuestions:[
+            "두 물건 중 어느 것이 더 무거운지 어떻게 비교할 수 있을까? 말해볼래?",
+            "양팔저울로 무게를 비교하는 방법을 설명해 볼래?",
+            "손으로 들어 비교하는 것과 저울로 비교하는 것의 차이를 말해볼래?",
+            "같은 물건 몇 개인지로 무게를 비교하는 방법을 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"양팔저울에서 내려가는 쪽이 더 무겁다"},{id:"b",label:"같은 물건 몇 개와 같은지로 비교한다"}],
+          outOfScope:"",
+          shortConcept:"무게는 양팔저울에서 더 무거운 쪽이 내려가요. 또는 같은 물건(예: 바둑돌) 몇 개와 같은지로 비교해요.",
+          bookPage:"디딤돌 3-2 · 5단원 132쪽" },
+        { id:"lw5", name:"무게의 단위(g, kg, t)와 어림하기",
+          firstQuestions:[
+            "무게를 나타내는 단위에는 무엇이 있을까? g, kg, t에 대해 말해볼래?",
+            "1kg와 1g, 1t의 관계를 설명해 볼래?",
+            "2kg 500g은 몇 g인지, 왜 그런지 말해볼래?",
+            "가벼운 것과 무거운 것에 알맞은 단위를 고르는 방법을 말해볼래?"],
+          keyPoints:[{id:"a",label:"1kg는 1000g, 1t은 1000kg다"},{id:"b",label:"무게에 맞는 단위를 골라 어림한다"}],
+          outOfScope:"",
+          shortConcept:"무게의 단위는 g, kg, t이에요. 1kg=1000g, 1t=1000kg이고, 2kg 500g은 2500g이에요.",
+          bookPage:"디딤돌 3-2 · 5단원 133쪽" },
+        { id:"lw6", name:"무게의 덧셈과 뺄셈",
+          firstQuestions:[
+            "무게를 더하거나 뺄 때는 어떻게 계산할까? 네 방법을 말해볼래?",
+            "kg는 kg끼리, g는 g끼리 계산하는 이유를 설명해 볼래?",
+            "1kg 700g + 500g을 어떻게 계산하는지 말해볼래?",
+            "g끼리 더한 값이 1000을 넘으면 어떻게 하는지 설명해 볼래?"],
+          keyPoints:[{id:"a",label:"kg는 kg끼리, g는 g끼리 계산한다"},{id:"b",label:"1000g이 넘으면 1kg으로 받아올림(내림)한다"}],
+          outOfScope:"",
+          shortConcept:"무게의 덧셈·뺄셈은 kg는 kg끼리, g는 g끼리 해요. g가 1000을 넘으면 1kg으로 올려줘요.",
+          bookPage:"디딤돌 3-2 · 5단원 135쪽" }
+      ]},
+      { id:"u26", name:"그림그래프", ready:false }
     ]},
     { id:"e4", name:"초등 4학년", ready:false },
     { id:"e5", name:"초등 5학년", ready:false },
@@ -8251,12 +8545,24 @@ window.addEventListener('load', ()=>{ try{
         micBtn=$('cvMic'), callsEl=$('cvCalls'), badgeEl=$('cvBadge'), titleEl=$('cvTitle');
 
   let CUR=null, cv, failStreak=0, demoLocked=false, totalPoints=0;
-  const passedMap={};
+  let passedMap={};
+  // 포인트·통과기록을 계정별로 저장/불러오기 (새로고침해도 유지)
+  function cvSid(){ const s=(window.session&&window.session.student)?window.session.student:null; return s? s.id : 'guest'; }
+  function loadPoints(){
+    try{ totalPoints=parseInt(localStorage.getItem('cv:points:'+cvSid())||'0',10)||0; }catch(_){ totalPoints=0; }
+    passedMap={};
+    try{ (JSON.parse(localStorage.getItem('cv:passed:'+cvSid())||'[]')||[]).forEach(id=>{ passedMap[id]=true; }); }catch(_){}
+  }
+  function savePoints(){
+    try{ localStorage.setItem('cv:points:'+cvSid(), String(totalPoints));
+         localStorage.setItem('cv:passed:'+cvSid(), JSON.stringify(Object.keys(passedMap))); }catch(_){}
+  }
   function fresh(){ return { transcript:[], covered:[], followUps:0, finished:false, aiCalls:0, _target:null }; }
   function esc(s){ return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
   let nav={ level:'grade', grade:null, unit:null };
   function open(){
+    loadPoints();    // 저장된 포인트·통과기록 불러오기
     ['setupCard','questionCard','quizCard'].forEach(id=>{ const el=$(id); if(el) el.style.display='none'; });
     $('convoCard').style.display='block';
     nav={ level:'grade', grade:null, unit:null };
@@ -8347,7 +8653,8 @@ window.addEventListener('load', ()=>{ try{
       crumb=navCrumb([nav.grade.name, nav.unit.name]); q='어떤 것을 말해볼까?';
       (nav.unit.types||[]).forEach((t,i)=> items+=navItem(t.name, true, {kind:'type', id:t.id, done:passedMap[t.id]}, i+1) );
     }
-    menuEl.innerHTML = crumb + '<div class="cv-navq">'+esc(q)+'</div><div class="cv-list">'+items+'</div>';
+    const ptsBar = '<div class="cv-points">🌟 내 포인트 <b>'+totalPoints+'</b></div>';
+    menuEl.innerHTML = ptsBar + crumb + '<div class="cv-navq">'+esc(q)+'</div><div class="cv-list">'+items+'</div>';
     const back=menuEl.querySelector('.cv-back'); if(back) back.onclick=navBack;
     menuEl.querySelectorAll('.cv-nav[data-kind]').forEach(el=>{
       el.onclick=()=>{
@@ -8561,7 +8868,7 @@ window.addEventListener('load', ()=>{ try{
     let earnedPts=0;
     if(isPass){
       earnedPts = Math.min(10, Math.max(1, Math.round(percent/10)));
-      if(!passedMap[CUR.id]){ passedMap[CUR.id]=true; totalPoints+=earnedPts; }
+      if(!passedMap[CUR.id]){ passedMap[CUR.id]=true; totalPoints+=earnedPts; savePoints(); }
       else { passedMap[CUR.id]=true; }   // 이미 통과한 유형은 중복 적립 안 함
     }
 
@@ -8629,7 +8936,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v58.1-예문·채점완화·통과70';
+  const APP_VERSION = 'v60.1-초3-2분수들이무게';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
