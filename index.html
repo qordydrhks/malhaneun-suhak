@@ -8930,17 +8930,30 @@ window.addEventListener('load', ()=>{ try{
     addBubble('t', res.reply);
   }
 
+  function cvWait(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
   async function ask(latestText){
-    if(!demoLocked){
+    const waits=[0, 2500, 6000];   // 최대 3번 시도(2.5초, 6초 기다렸다가) → 순간 한도/과부하면 회복
+    let lastErr=null;
+    for(let i=0;i<waits.length;i++){
+      if(waits[i]) await cvWait(waits[i]);
       try{
         const r=await realAsk();
-        failStreak=0; badgeEl.style.display='none';   // 성공 → 데모 배지 끄고 회복
+        badgeEl.style.display='none';   // 성공 → 데모 배지 끄고 복구
         return r;
-      }catch(e){
-        failStreak++; console.warn('AI 실패('+failStreak+'회):', e.message||e);
-        if(failStreak>=3) demoLocked=true;            // 3번 연속 실패면 키 문제로 보고 데모 고정
-        badgeEl.style.display='inline-block';          // 이번 턴은 데모로 대체
-      }
+      }catch(e){ lastErr=e; console.warn('AI 실패('+(i+1)+'/'+waits.length+'):', e.message||e); }
+    }
+    // 여러 번 실패 → 이번 턴만 데모로 잇고, 원인을 한 번 안내 (다음 턴엔 다시 진짜 AI 시도)
+    badgeEl.style.display='inline-block';
+    const msg=(lastErr&&lastErr.message)?String(lastErr.message):'';
+    badgeEl.title=msg;
+    if(cv && !cv._warned){
+      cv._warned=true;
+      let hint;
+      if(/429|한도|천천히|무료/.test(msg)) hint='앗, AI를 너무 빨리 여러 번 불러서 잠깐 막혔어(사용량 한도). 조금 천천히, 또는 잠시 후 다시 하면 잘 될 거야!';
+      else if(/529|과부하|overload|붐/.test(msg)) hint='앗, 지금 AI가 잠깐 붐벼서 느려. 조금 뒤 다시 하면 잘 될 거야!';
+      else if(/키|401|403|400|올바르/.test(msg)) hint='앗, AI 키에 문제가 있는 것 같아. 선생님 화면에서 키를 확인해 줘.';
+      else hint='앗, AI 연결이 잠깐 막혔어. 잠시 후 다시 시도해 볼게.';
+      addBubble('t', hint + (msg?('  (원인: '+msg+')'):''));   // 진짜 이유도 함께 표시(원인 확인용)
     }
     return demoBrain(latestText);
   }
@@ -9079,7 +9092,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v61.0-초3-2완성';
+  const APP_VERSION = 'v61.1-AI재시도';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
