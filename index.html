@@ -984,8 +984,10 @@ window.DDOOPI = {
         #convoCard .cv-box{display:flex;gap:8px;align-items:flex-end;}
         #convoCard #cvAnswer{flex:1;resize:none;border:2px solid #E7E1D3;border-radius:16px;padding:11px 13px;font-family:inherit;font-size:15px;max-height:110px;line-height:1.4;}
         #convoCard #cvAnswer:focus{outline:none;border-color:#5B6EE1;}
-        #convoCard .cv-mic{width:46px;height:46px;flex:0 0 46px;border:2px solid #E7E1D3;background:#fff;border-radius:14px;font-size:20px;cursor:pointer;}
-        #convoCard .cv-mic.rec{background:#F0865B;border-color:#F0865B;color:#fff;}
+        #convoCard .cv-mic{width:46px;height:46px;flex:0 0 46px;border:none;background:#4C6FFF;color:#fff;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(76,111,255,.32);transition:transform .12s ease;}
+        #convoCard .cv-mic svg{width:22px;height:22px;}
+        #convoCard .cv-mic:active{transform:scale(.94);}
+        #convoCard .cv-mic.rec{background:#3355E6;}
         #convoCard .cv-send{height:46px;padding:0 16px;border:none;border-radius:14px;background:#5B6EE1;color:#fff;font-weight:700;font-size:15px;cursor:pointer;}
         #convoCard .cv-send:disabled{opacity:.4;cursor:default;}
         #convoCard .cv-meter{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:11px;color:#8A8698;}
@@ -1045,7 +1047,7 @@ window.DDOOPI = {
           <div id="cvResult"></div>
           <div class="cv-inputbar" id="cvInputbar">
             <div class="cv-box">
-              <button class="cv-mic" id="cvMic" title="말하기">🎤</button>
+              <button class="cv-mic" id="cvMic" title="말하기" aria-label="말하기"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg></button>
               <textarea id="cvAnswer" rows="1" placeholder="말하거나 적어보세요"></textarea>
               <button class="cv-send" id="cvSend" disabled>보내기</button>
             </div>
@@ -9058,32 +9060,36 @@ window.addEventListener('load', ()=>{ try{
   window.cvHasType = (id)=>!!findType(id);
 
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  let cvRec=null, cvRecging=false, cvBase='', cvFinals='';
-  function cvStopMic(){                     // 마이크 확실히 끄기
+  // [v61.2] 기존 Step2 마이크와 동일하게 interimResults=false 로 처리 → 중간결과가 겹쳐 반복되는 눈덩이 버그 차단.
+  let cvRec=null, cvRecging=false, cvBase='', cvPieces=[];
+  function cvRenderMic(){                    // 모은 조각들을 합쳐 입력칸에 표시
+    const full=(cvBase?cvBase+' ':'')+cvPieces.join(' ');
+    const clean=(window.fixMathSpeech?window.fixMathSpeech(full):full).replace(/\s+/g,' ').trim();
+    answerEl.value=clean;
+    sendBtn.disabled=!clean; grow();
+  }
+  function cvStopMic(){                      // 마이크 확실히 끄기
     cvRecging=false;
     if(cvRec){ try{ cvRec.onend=null; cvRec.stop(); }catch(_){} }
     micBtn.classList.remove('rec');
   }
   if(SR){
-    cvRec=new SR(); cvRec.lang='ko-KR'; cvRec.interimResults=true; cvRec.continuous=true; cvRec.maxAlternatives=3;
+    cvRec=new SR(); cvRec.lang='ko-KR'; cvRec.interimResults=false; cvRec.continuous=true; cvRec.maxAlternatives=3;
     cvRec.onresult=e=>{
-      let interim='';
+      // interimResults=false 이므로 여기 오는 건 모두 '확정된' 결과. 새로 확정된 조각만 골라 누적.
       for(let i=e.resultIndex;i<e.results.length;i++){
-        const r=e.results[i];
-        if(r.isFinal) cvFinals+=(cvFinals?' ':'')+r[0].transcript;
-        else interim+=r[0].transcript;
+        if(e.results[i].isFinal){
+          const t=(e.results[i][0].transcript||'').trim();
+          if(t) cvPieces.push(t);
+        }
       }
-      let combined=(cvBase?cvBase+' ':'')+(cvFinals?cvFinals+' ':'')+interim;
-      combined=combined.replace(/\s+/g,' ').trim();
-      answerEl.value=window.fixMathSpeech?window.fixMathSpeech(combined):combined;
-      sendBtn.disabled=!answerEl.value.trim(); grow();
+      cvRenderMic();
     };
     cvRec.onend=()=>{ if(cvRecging){ try{ cvRec.start(); return; }catch(_){} } micBtn.classList.remove('rec'); };
     cvRec.onerror=(ev)=>{ if(ev && ev.error==='no-speech' && cvRecging) return; cvStopMic(); };
     micBtn.addEventListener('click', ()=>{
       if(cvRecging){ cvStopMic(); return; }
-      cvBase=answerEl.value?answerEl.value.trim():''; cvFinals='';
-      // onend이 재시작을 방해하지 않도록 핸들러 복구
+      cvBase=answerEl.value?answerEl.value.trim():''; cvPieces=[];   // 이미 적어둔 글은 앞에 유지, 새 조각만 이어붙임
       cvRec.onend=()=>{ if(cvRecging){ try{ cvRec.start(); return; }catch(_){} } micBtn.classList.remove('rec'); };
       try{ cvRec.start(); cvRecging=true; micBtn.classList.add('rec'); }catch(_){}
     });
@@ -9092,7 +9098,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v61.1-AI재시도';
+  const APP_VERSION = 'v61.2-마이크수정';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
