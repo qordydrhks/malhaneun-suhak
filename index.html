@@ -782,6 +782,78 @@
 .cp-item .cp-chev{color:#B0ACC0;flex:0 0 auto;}
 .cp-item.active .cp-chev{color:var(--purple);}
 .cp-question{justify-content:flex-start;gap:7px;}
+
+/* ===== [v62] 트리형 선택기 ===== */
+.cpt-legend{display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-size:12px;font-weight:700;color:var(--ink-soft);margin:2px 0 12px;}
+.cpt-legend .cpt-lg{display:inline-flex;align-items:center;gap:6px;}
+.cpt-lg .cpt-dot{width:10px;height:10px;border-radius:50%;display:inline-block;}
+.cpt-dot.pass{background:#1F9D63;} .cpt-dot.redo{background:#E0483D;} .cpt-dot.none{background:#CFCADA;}
+.cpt-grid{display:grid;grid-template-columns:230px 1fr;gap:14px;}
+@media(max-width:760px){ .cpt-grid{grid-template-columns:1fr;} }
+.cpt-courses{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#FCFBFE;align-self:start;}
+.cpt-cogroup{border-bottom:1px solid var(--line);} .cpt-cogroup:last-child{border-bottom:none;}
+.cpt-cohead{font-size:11px;font-weight:800;color:var(--purple);background:#F4EFFF;padding:8px 12px;letter-spacing:.03em;}
+.cpt-coitem{width:100%;text-align:left;border:0;background:transparent;padding:9px 12px;font:inherit;font-size:13.5px;font-weight:650;color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:8px;}
+.cpt-coitem:hover{background:#F1EEF9;}
+.cpt-coitem.on{background:var(--blue-dim);color:var(--blue-deep);font-weight:800;}
+.cpt-coitem .cpt-rd{width:15px;height:15px;border-radius:50%;border:2px solid #C6C2D6;flex:0 0 auto;}
+.cpt-coitem.on .cpt-rd{border-color:var(--blue);background:radial-gradient(circle at center,var(--blue) 44%,transparent 46%);}
+.cpt-treewrap{border:1px solid var(--line);border-radius:14px;background:#fff;overflow:hidden;}
+.cpt-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 14px;border-bottom:1px solid var(--line);background:#FCFBFE;}
+.cpt-title{font-size:13.5px;font-weight:800;} .cpt-sub{font-size:11.5px;color:var(--ink-soft);font-weight:600;margin-top:2px;}
+.cpt-tools{display:flex;gap:6px;flex:0 0 auto;}
+.cpt-tools button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:5px 10px;font:inherit;font-size:11.5px;font-weight:700;color:var(--ink-soft);cursor:pointer;}
+.cpt-tree{padding:6px 4px 8px;max-height:60vh;overflow-y:auto;}
+.cpt-empty{padding:20px;color:#A7A2B8;font-size:13px;text-align:center;}
+.cpt-row{display:flex;align-items:center;gap:7px;padding:8px 8px;border-radius:9px;cursor:pointer;user-select:none;}
+.cpt-row:hover{background:#F6F4FC;}
+.cpt-tw{width:18px;height:18px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;border-radius:5px;font-size:12px;font-weight:800;color:#7A7690;background:#EFEDF6;}
+.cpt-lbl{flex:1;font-size:13.5px;font-weight:650;line-height:1.35;}
+.cpt-row.big > .cpt-lbl{font-weight:800;font-size:14px;}
+.cpt-row.small > .cpt-lbl{font-weight:750;}
+.cpt-kids{margin-left:16px;border-left:1.5px dashed #ECE9F5;padding-left:6px;display:none;}
+.cpt-node.open > .cpt-kids{display:block;}
+.cpt-roll{display:inline-flex;gap:6px;flex:0 0 auto;font-size:10.5px;font-weight:800;}
+.cpt-roll .rp{color:#1F9D63;} .cpt-roll .rr{color:#E0483D;}
+.cpt-st{flex:0 0 auto;font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;}
+.cpt-st.pass{background:#E1F4EA;color:#1F9D63;} .cpt-st.redo{background:#FCE7E5;color:#E0483D;}
+.cpt-row.small.st-pass > .cpt-lbl{color:#1F9D63;text-decoration:underline;text-decoration-color:#9BD9B8;text-underline-offset:3px;}
+.cpt-row.small.st-redo > .cpt-lbl{color:#E0483D;text-decoration:underline wavy;text-decoration-color:#F1B0AB;text-underline-offset:3px;}
+.cpt-q{display:flex;align-items:flex-start;gap:8px;width:100%;text-align:left;border:1.5px solid #EFEBF6;background:#fff;border-radius:11px;padding:9px 11px;margin:4px 0;font-family:inherit;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer;line-height:1.4;}
+.cpt-q:hover{border-color:var(--blue);background:var(--blue-dim);}
+.cpt-q:active{transform:scale(.995);}
+.cpt-qico{flex:0 0 auto;}
+
+/* ===== [v63] 학습 공간 오버레이 ===== */
+.learn-overlay{position:fixed;inset:0;background:rgba(28,22,52,.55);z-index:1200;display:none;
+  align-items:flex-start;justify-content:center;padding:22px 14px;overflow-y:auto;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);}
+.learn-overlay.open{display:flex;}
+.learn-modal{background:#fff;border-radius:22px;width:100%;max-width:520px;margin:auto;overflow:hidden;
+  box-shadow:0 24px 60px -18px rgba(40,33,63,.55);animation:learnPop .22s ease;}
+@keyframes learnPop{from{opacity:0;transform:translateY(10px) scale(.98);}to{opacity:1;transform:none;}}
+.learn-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;
+  background:linear-gradient(100deg,#3A2568,#5B34A8);color:#fff;}
+.learn-title{font-size:16px;font-weight:800;letter-spacing:-.02em;}
+.learn-x{border:none;background:rgba(255,255,255,.16);color:#fff;width:32px;height:32px;border-radius:50%;
+  font-size:19px;cursor:pointer;line-height:1;}
+.learn-body{padding:18px 20px 22px;}
+.learn-sec{margin-bottom:16px;}
+.learn-eyebrow{font-size:.72rem;font-weight:800;letter-spacing:.05em;color:var(--purple);text-transform:uppercase;margin-bottom:8px;}
+.learn-concept{margin:0;font-size:15px;line-height:1.7;color:var(--ink);background:#F8F6FD;border-radius:14px;padding:15px 16px;}
+.learn-book{margin-top:9px;font-size:12.5px;font-weight:700;color:var(--purple-deep);}
+.learn-media{margin:10px 0;border-radius:14px;overflow:hidden;border:1px solid var(--line);}
+.learn-media img,.learn-media video{width:100%;display:block;}
+.learn-stem{margin:0 0 12px;font-size:15px;font-weight:700;line-height:1.6;color:var(--ink);}
+.learn-choice{display:block;width:100%;text-align:left;border:2px solid #E7E4F0;background:#fff;border-radius:12px;
+  padding:12px 14px;margin-bottom:8px;font-family:inherit;font-size:14.5px;font-weight:650;color:var(--ink);cursor:pointer;}
+.learn-choice:hover:not(:disabled){border-color:var(--purple);background:var(--purple-dim);}
+.learn-choice:disabled{cursor:default;}
+.learn-choice.correct{border-color:var(--sage);background:#E4F5EC;color:#1c7a4e;font-weight:800;}
+.learn-choice.wrong{border-color:#E0483D;background:#FCE7E5;color:#c0392b;}
+.learn-explain{margin-top:6px;background:#FBF7EF;border-radius:12px;padding:12px 14px;font-size:13.5px;line-height:1.6;color:var(--ink);}
+.learn-retry{width:100%;margin-top:8px;border:none;border-radius:14px;padding:15px;
+  background:linear-gradient(135deg,#7343E6,#9B6BFF);color:#fff;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer;}
+.learn-retry:disabled{background:#C9CDD6;cursor:not-allowed;}
 .cp-qicon{flex:0 0 auto;}
 .cp-empty{padding:18px 10px;text-align:center;color:#A9A5B8;font-size:11.5px;line-height:1.5;}
 .cp-compact-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
@@ -895,7 +967,22 @@ window.DDOOPI = {
         <div class="concept-picker" id="conceptPicker">
           <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;font-size:11.5px;color:var(--ink-soft);"><span>교재 기반 통합 질문 데이터</span><span style="background:#E9F5EE;color:#2C8459;padding:4px 9px;border-radius:999px;font-weight:800;">746문항 연결</span></div>
           <div class="cp-breadcrumb" id="cpBreadcrumb">과정부터 골라주세요</div>
-          <div class="cp-columns" id="cpColumns"></div>
+          <div class="cpt-legend">
+            <span class="cpt-lg"><span class="cpt-dot pass"></span>합격 (통과함)</span>
+            <span class="cpt-lg"><span class="cpt-dot redo"></span>재도전 필요 (불합격)</span>
+            <span class="cpt-lg"><span class="cpt-dot none"></span>미응시</span>
+          </div>
+          <div class="cpt-grid">
+            <div class="cpt-courses" id="cpCourses"></div>
+            <div class="cpt-treewrap">
+              <div class="cpt-head">
+                <div><div class="cpt-title" id="cpTreeTitle">과정을 선택하세요</div><div class="cpt-sub" id="cpTreeSub">왼쪽에서 과정을 먼저 골라주세요</div></div>
+                <div class="cpt-tools"><button type="button" onclick="cpExpandAll()">모두 펼치기</button><button type="button" onclick="cpCollapseAll()">모두 접기</button></div>
+              </div>
+              <div class="cpt-tree" id="cpTree"></div>
+            </div>
+          </div>
+          <div class="cp-columns" id="cpColumns" style="display:none"></div>
         </div>
 
         <!-- 기존 로직 호환용: 화면에서는 숨기고 컬럼 선택과 동기화 -->
@@ -4387,6 +4474,7 @@ function enterStudentView(){
   populateUnitSelect();
   checkStartReady();
   renderMyHistory();   // 학생 본인 학습 이력 요약
+  if(typeof cpLoadRecords==='function') cpLoadRecords();   // 트리 합격/재도전 색 최신화
   $('setupCard').style.display = 'block'; if(typeof setLearnStep==='function') setLearnStep(1);
   $('questionCard').style.display = 'none';
   $('quizCard').style.display = 'none';
@@ -4785,6 +4873,134 @@ populateUnitSelect();
    ============================================================ */
 const CP = { grade:null, big:null, small:null, type:null, qIndex:null };
 
+/* ============================================================
+   [v62.1] 개념 카드 (Concept Card) — 0단계: 그릇만 정의, 내용은 나중에
+   ------------------------------------------------------------
+   개념 하나에 딸리는 "학습 자료 묶음"의 형식입니다.
+   · hints        : 힌트 1~2개  → 말하기 화면에서만 (막혔을 때)
+   · concept      : 짧은 개념 설명(텍스트) → 학습 공간에서만
+   · media        : 이미지/영상 자료들 → 학습 공간에서만
+   · basicProblem : 성공 경험용 기본 문제 1개 → 학습 공간에서만
+   · bookPage     : 교재 쪽수(참고)
+   · by / scope   : 만든 사람(app / teacher:이름) / 공개 범위(me·academy·public)
+
+   ★ 카드를 추가·수정하려면 아래 DD_CARDS 에만 넣으면 됩니다.
+      (거대한 DD_CURRICULUM 은 건드릴 필요 없음 → 수정 쉬움)
+
+   [추가 예시 — 복사해서 채우면 끝]
+   DD_CARDS[ ddConceptId('e3-1','1. 덧셈과 뺄셈','04. (세 자리 수)-(세 자리 수) (1)') ] = {
+     hints: ['같은 자리끼리 빼는 거였지?', '일의 자리부터 차근차근!'],
+     concept: '세 자리 수의 뺄셈은 자리를 맞춰, 같은 자리끼리 빼요.',
+     media: [ { form:'image', url:'https://...', title:'자리 맞춰 빼기', by:'app', scope:'me' } ],
+     basicProblem: { stem:'358 - 135 = ?', choices:['223','233','225','123'], answer:0,
+                     explain:'일·십·백 자리를 각각 빼요.', by:'app', scope:'me' },
+     bookPage: '디딤돌 3-1 · 30쪽', by:'app', scope:'me'
+   };
+   ============================================================ */
+function ddEmptyCard(){
+  return { hints:[], concept:'', media:[], basicProblem:null, bookPage:'', by:'app', scope:'me' };
+}
+// 개념의 고유 id (트리 위치 기반, 안정적) — 카드 저장/조회 키
+function ddConceptId(gradeId, bigName, smallName){
+  return gradeId + '::' + bigName + '::' + smallName;
+}
+// 카드 저장소 (지금은 비어 있음 = 빈 자리). 나중에 여기 채우거나 선생님 편집 화면이 채웁니다.
+const DD_CARDS = {};
+// 개념 카드 가져오기 — 저장된 카드가 없으면 '빈 카드'를 돌려줌(호출부는 항상 완전한 형태를 받음)
+function ddGetCard(gradeId, bigName, smallName){
+  const base = ddEmptyCard();
+  const saved = DD_CARDS[ ddConceptId(gradeId, bigName, smallName) ];
+  return saved ? Object.assign(base, saved) : base;
+}
+// 카드가 실제로 채워졌는지 (힌트/설명/자료/문제 중 하나라도 있으면 true)
+function ddHasCard(card){
+  if(!card) return false;
+  return !!((card.hints&&card.hints.length) || card.concept || (card.media&&card.media.length) || card.basicProblem);
+}
+// 나중에 다른 화면(선생님 편집 등)에서 쓰도록 노출
+window.ddGetCard = ddGetCard; window.ddConceptId = ddConceptId;
+window.ddEmptyCard = ddEmptyCard; window.ddHasCard = ddHasCard; window.DD_CARDS = DD_CARDS;
+
+// 지금 말하고 있는 개념의 카드를 찾아줌 (못 찾으면 빈 카드 → 아무 것도 안 뜸, 안전)
+function ddCurrentCard(){
+  try{
+    const g = (window.state && state.gradeId) || (typeof CP!=='undefined' && CP.grade);
+    if(!g || typeof CP==='undefined' || CP.big==null || CP.small==null) return ddEmptyCard();
+    const m = cpModel(g); if(!m) return ddEmptyCard();
+    const big = m.bigUnits[CP.big]; if(!big) return ddEmptyCard();
+    const small = big.smalls[CP.small]; if(!small) return ddEmptyCard();
+    return ddGetCard(g, big.name, small.name);
+  }catch(e){ return ddEmptyCard(); }
+}
+// 학습 공간 오버레이 (필요할 때 만들어 붙임 — 기존 HTML 안 건드림)
+function ddEnsureLearnOverlay(){
+  if(document.getElementById('learnOverlay')) return;
+  const ov=document.createElement('div'); ov.id='learnOverlay'; ov.className='learn-overlay';
+  ov.innerHTML='<div class="learn-modal"><div class="learn-head"><div class="learn-title">📚 학습 공간</div>'
+    +'<button class="learn-x" id="learnX" aria-label="닫기">×</button></div><div class="learn-body" id="learnBody"></div></div>';
+  document.body.appendChild(ov);
+  ov.addEventListener('click', e=>{ if(e.target===ov) ddCloseLearn(); });
+  document.getElementById('learnX').addEventListener('click', ddCloseLearn);
+}
+function ddCloseLearn(){ const ov=document.getElementById('learnOverlay'); if(ov) ov.classList.remove('open'); }
+function ddOpenLearn(card){
+  ddEnsureLearnOverlay();
+  const body=document.getElementById('learnBody');
+  const c=card||ddEmptyCard();
+  let html='<div class="learn-sec"><div class="learn-eyebrow">개념 이해</div><p class="learn-concept">'
+    + escapeHtml(c.concept||'이 개념 설명이 아직 준비 중이에요.') + '</p>';
+  if(c.bookPage) html += '<div class="learn-book">📖 '+escapeHtml(c.bookPage)+'</div>';
+  html += '</div>';
+  (c.media||[]).forEach(m=>{
+    if(m && m.form==='image' && m.url) html += '<div class="learn-media"><img src="'+escapeHtml(m.url)+'" alt="'+escapeHtml(m.title||'')+'"></div>';
+    else if(m && m.form==='video' && m.url) html += '<div class="learn-media"><video src="'+escapeHtml(m.url)+'" controls playsinline></video></div>';
+  });
+  if(c.basicProblem){
+    const bp=c.basicProblem;
+    html += '<div class="learn-sec"><div class="learn-eyebrow">기본 문제로 확인</div><p class="learn-stem">'+escapeHtml(bp.stem||'')+'</p><div id="learnChoices">';
+    (bp.choices||[]).forEach((ch,i)=>{ html += '<button class="learn-choice" data-i="'+i+'">'+escapeHtml(ch)+'</button>'; });
+    html += '</div><div id="learnExplain" class="learn-explain" style="display:none"></div></div>';
+  }
+  html += '<button class="learn-retry" id="learnRetry"'+(c.basicProblem?' disabled':'')+'>💪 이제 다시 말해볼래요</button>';
+  body.innerHTML=html;
+  if(c.basicProblem){
+    const bp=c.basicProblem;
+    body.querySelectorAll('.learn-choice').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const i=Number(btn.dataset.i);
+        body.querySelectorAll('.learn-choice').forEach((b,j)=>{ b.disabled=true; if(j===bp.answer) b.classList.add('correct'); });
+        if(i!==bp.answer) btn.classList.add('wrong');
+        const ex=document.getElementById('learnExplain');
+        if(ex){ ex.style.display='block'; ex.innerHTML='<b>'+(i===bp.answer?'정답이에요! 🎉 ':'아쉬워요. ')+'</b>'+escapeHtml(bp.explain||''); }
+        const lr=document.getElementById('learnRetry'); if(lr) lr.disabled=false;
+      });
+    });
+  }
+  const lr=document.getElementById('learnRetry');
+  if(lr) lr.addEventListener('click', ()=>{ ddCloseLearn(); if(typeof resetRecordingUI==='function') resetRecordingUI(); window.scrollTo({top:0,behavior:'smooth'}); });
+  document.getElementById('learnOverlay').classList.add('open');
+}
+window.ddCurrentCard=ddCurrentCard; window.ddOpenLearn=ddOpenLearn;
+
+// ── 초3-1 · 분수와 소수 · 분수 알아보기 (첫 예시 카드 · 디딤돌 3-1 160쪽 기준) ──
+DD_CARDS[ ddConceptId('e3-1','6. 분수와 소수','02. 분수 알아보기') ] = {
+  hints: [
+    '전체를 똑같이 몇으로 나눴는지부터 세어보자.',
+    '그중에서 몇 개를 말하는 건지도 확인해볼까?'
+  ],
+  concept: '전체를 똑같이 나눈 것 중 몇 개를 나타내는 수를 분수라고 해요. 아래에 있는 수(분모)는 전체를 똑같이 나눈 수, 위에 있는 수(분자)는 그중 몇 개인지를 나타내요. 예를 들어 전체를 똑같이 2로 나눈 것 중의 1은 2분의 1이라고 써요. 읽을 때는 분모를 먼저, 분자를 나중에 읽어요.',
+  media: [],
+  basicProblem: {
+    stem: '전체를 똑같이 5로 나눈 것 중 2칸이 색칠되어 있어요. 색칠한 부분을 분수로 나타내면?',
+    choices: ['5분의 2','2분의 5','5분의 3','2분의 3'],
+    answer: 0,
+    explain: '똑같이 5로 나눴으니 분모는 5, 색칠한 칸이 2개이니 분자는 2 → 5분의 2.',
+    by: 'app', scope: 'me'
+  },
+  bookPage: '디딤돌 3-1 · 160쪽',
+  by: 'app', scope: 'me'
+};
+
 function cpModel(gradeId){
   const dd=DD_CURRICULUM[gradeId];
   if(dd) return dd;
@@ -4844,58 +5060,143 @@ function cpSyncLegacy(){
   if(typeof updateTimerNote==='function') updateTimerNote();
   if(typeof checkStartReady==='function') checkStartReady();
 }
-function cpRender(){
-  const host=document.getElementById('cpColumns'); if(!host) return; host.innerHTML='';
-  cpAddColumn('과정', GRADES.map(g=>({key:g.id,label:g.name})), CP.grade, key=>{
-    CP.grade=key; CP.big=null; CP.small=null; CP.type=null; CP.qIndex=null; state.unitId=null; cpSyncLegacy(); cpRender();
+/* ===== [v62] 트리형 선택기 — 기존 CP·cpModel·cpSyncLegacy·startSelectedQuestion 재사용 ===== */
+let cpRecords = [];   // 학생 본인 기록(합격/재도전 판정용)
+async function cpLoadRecords(){
+  try{
+    const all = await getAllSubmissions();
+    const s = session.student;
+    cpRecords = (all||[]).filter(x => s && x.studentId === s.id);
+  }catch(e){ cpRecords = []; }
+  cpRender();
+}
+// 한 개념(유형)의 상태: 'pass'(합격) | 'redo'(재도전) | 'none'(미응시)
+function cpStatusFor(gradeId, typeObj, smallName){
+  if(!cpRecords || !cpRecords.length || !typeObj) return 'none';
+  const qs = [].concat(typeObj.low||[], typeObj.high||[]);
+  let attempted=false, passed=false;
+  for(const r of cpRecords){
+    if(r.courseId !== gradeId) continue;
+    const hit = (smallName && r.unitLabel===smallName)
+             || (typeObj.name && r.unitLabel===typeObj.name)
+             || (r.question && qs.indexOf(r.question)>=0);
+    if(hit){ attempted=true; if(r.pass) passed=true; }
+  }
+  return passed ? 'pass' : (attempted ? 'redo' : 'none');
+}
+function cpRollup(gradeId, big){
+  let pass=0, redo=0;
+  (big.smalls||[]).forEach(sm=>{
+    const t0=(sm.types||[])[0];
+    const st=cpStatusFor(gradeId, t0, sm.name);
+    if(st==='pass')pass++; else if(st==='redo')redo++;
   });
-  const model=CP.grade?cpModel(CP.grade):null;
-  const bigs=model?model.bigUnits:[];
-  cpAddColumn('대단원', bigs.map((b,i)=>({key:i,label:b.name})), CP.big, key=>{
-    CP.big=Number(key); CP.small=null; CP.type=null; CP.qIndex=null; state.unitId=null; cpRender();
-  }, false, !CP.grade);
-  const big=cpCurrentBig(), smalls=big?big.smalls:[];
-  cpAddColumn('소단원', smalls.map((s,i)=>({key:i,label:s.name})), CP.small, key=>{
-    CP.small=Number(key); CP.type=null; CP.qIndex=null; state.unitId=null; cpRender();
-  }, false, CP.big===null);
-  const small=cpCurrentSmall(), types=small?small.types:[];
-  cpAddColumn('개념 · 문제 유형', types.map((t,i)=>({key:i,label:t.name})), CP.type, key=>{
-    CP.type=Number(key); CP.qIndex=null; cpSyncLegacy(); cpRender();
-  }, false, CP.small===null);
-  // 마지막 컬럼: 쉬운 질문(low)과 깊은 질문(high)을 한 화면에 함께 표시
-  const typForQ=cpCurrentType();
-  let questionItems=[];
-  if(CP.type!==null && typForQ){
-    if(state.level==='blank'){
-      questionItems=[{key:'blank:0',label:'AI가 이 개념에 맞는 빈칸 질문을 만들어 줍니다.'}];
-    }else{
-      (typForQ.low||[]).forEach((q,i)=>questionItems.push({key:'low:'+i,label:'🟢 쉬운 · '+q}));
-      (typForQ.high||[]).forEach((q,i)=>questionItems.push({key:'high:'+i,label:'🟣 깊은 · '+q}));
+  return {pass,redo};
+}
+function cpMakeNode(cls, name, open){
+  const wrap=document.createElement('div'); wrap.className='cpt-node'+(open?' open':'');
+  const row=document.createElement('div'); row.className='cpt-row '+cls;
+  const tw=document.createElement('span'); tw.className='cpt-tw'; tw.textContent=open?'−':'+';
+  const lbl=document.createElement('span'); lbl.className='cpt-lbl'; lbl.textContent=name;
+  row.appendChild(tw); row.appendChild(lbl); wrap.appendChild(row);
+  const kids=document.createElement('div'); kids.className='cpt-kids'; wrap.appendChild(kids);
+  row.addEventListener('click', ()=>{ const o=wrap.classList.toggle('open'); tw.textContent=o?'−':'+'; });
+  return {wrap, row, kids};
+}
+function cpAppendQuestions(host, bi, si, typ, ti){
+  const items=[];
+  if(state.level==='blank'){
+    items.push({key:'blank:0', label:'AI가 이 개념에 맞는 빈칸 질문을 만들어 줍니다.'});
+  }else{
+    (typ.low||[]).forEach((q,i)=>items.push({key:'low:'+i, label:'🟢 쉬운 · '+q}));
+    (typ.high||[]).forEach((q,i)=>items.push({key:'high:'+i, label:'🟣 깊은 · '+q}));
+  }
+  items.forEach(it=>{
+    const b=document.createElement('button'); b.type='button'; b.className='cpt-q';
+    const ic=document.createElement('span'); ic.className='cpt-qico'; ic.textContent='🗣️';
+    const tx=document.createElement('span'); tx.textContent=it.label;
+    b.appendChild(ic); b.appendChild(tx);
+    b.addEventListener('click', async ()=>{
+      CP.big=bi; CP.small=si; CP.type=ti;
+      const parts=String(it.key).split(':');
+      const pickedLevel=parts[0], pickedIndex=Number(parts[1]||0);
+      if(pickedLevel==='low'||pickedLevel==='high') state.level=pickedLevel;
+      CP.qIndex=pickedIndex; state._pickerQIndex=CP.qIndex;
+      if(pickedLevel==='low') state._directSelectedQuestion=(typ.low||[])[pickedIndex]||'';
+      else if(pickedLevel==='high') state._directSelectedQuestion=(typ.high||[])[pickedIndex]||'';
+      cpSyncLegacy();
+      await startSelectedQuestion();
+    });
+    host.appendChild(b);
+  });
+}
+function cpExpandAll(){ document.querySelectorAll('#cpTree .cpt-node').forEach(n=>{ const k=n.querySelector(':scope>.cpt-kids'); if(k&&k.children.length){ n.classList.add('open'); const tw=n.querySelector(':scope>.cpt-row>.cpt-tw'); if(tw)tw.textContent='−'; } }); }
+function cpCollapseAll(){ document.querySelectorAll('#cpTree .cpt-node').forEach(n=>{ n.classList.remove('open'); const tw=n.querySelector(':scope>.cpt-row>.cpt-tw'); if(tw)tw.textContent='+'; }); }
+
+function cpRender(){
+  // 좌: 과정 목록
+  const coursesHost=document.getElementById('cpCourses');
+  if(coursesHost){
+    coursesHost.innerHTML='';
+    const groups={'초등':[], '중등':[], '고등':[]};
+    GRADES.forEach(g=>{ const band = g.id[0]==='e'?'초등':(g.id[0]==='m'?'중등':'고등'); groups[band].push(g); });
+    for(const band in groups){
+      if(!groups[band].length) continue;
+      const gd=document.createElement('div'); gd.className='cpt-cogroup';
+      const gh=document.createElement('div'); gh.className='cpt-cohead'; gh.textContent=band; gd.appendChild(gh);
+      groups[band].forEach(g=>{
+        const b=document.createElement('button'); b.type='button'; b.className='cpt-coitem'+(CP.grade===g.id?' on':'');
+        const rd=document.createElement('span'); rd.className='cpt-rd';
+        const nm=document.createElement('span'); nm.textContent=g.name;
+        b.appendChild(rd); b.appendChild(nm);
+        b.addEventListener('click', ()=>{ CP.grade=g.id; CP.big=null; CP.small=null; CP.type=null; CP.qIndex=null; state.unitId=null; cpSyncLegacy(); cpRender(); });
+        gd.appendChild(b);
+      });
+      coursesHost.appendChild(gd);
     }
   }
-  const activeQuestionKey = CP.qIndex===null ? null : ((state.level==='high'?'high':state.level==='blank'?'blank':'low')+':'+CP.qIndex);
-  cpAddColumn(state.level==='blank'?'채워보기':'말하기 질문', questionItems, activeQuestionKey, async key=>{
-    const parts=String(key).split(':');
-    const pickedLevel=parts[0];
-    const pickedIndex=Number(parts[1]||0);
-    if(pickedLevel==='low' || pickedLevel==='high') state.level=pickedLevel;
-    CP.qIndex=pickedIndex;
-    state._pickerQIndex=CP.qIndex;
-
-    // 실제 클릭한 질문 텍스트를 직접 기억해서 정확히 그 질문으로 시작
-    if(pickedLevel==='low') state._directSelectedQuestion = (typForQ.low||[])[pickedIndex] || '';
-    else if(pickedLevel==='high') state._directSelectedQuestion = (typForQ.high||[])[pickedIndex] || '';
-
-    cpSyncLegacy();
-    cpRender();
-    // 질문 자체를 클릭하면 해당 난이도로 바로 말하기 화면 진입
-    await startSelectedQuestion();
-  }, true, CP.type===null);
+  // 우: 트리
+  const treeHost=document.getElementById('cpTree'); if(!treeHost) return;
+  treeHost.innerHTML='';
+  const model = CP.grade ? cpModel(CP.grade) : null;
+  const titleEl=document.getElementById('cpTreeTitle'), subEl=document.getElementById('cpTreeSub');
+  if(titleEl) titleEl.textContent = model ? model.name+' 단원' : '과정을 선택하세요';
+  if(subEl) subEl.textContent = model ? '단원을 펼쳐 개념·질문을 고르세요' : '왼쪽에서 과정을 먼저 골라주세요';
+  if(!model){ treeHost.innerHTML='<div class="cpt-empty">왼쪽에서 과정을 골라주세요.</div>'; }
+  else{
+    (model.bigUnits||[]).forEach((big, bi)=>{
+      const bigN=cpMakeNode('big', big.name, CP.big===bi);
+      const roll=cpRollup(CP.grade, big);
+      if(roll.pass||roll.redo){
+        bigN.row.insertAdjacentHTML('beforeend','<span class="cpt-roll">'
+          +(roll.pass?'<span class="rp">✓'+roll.pass+'</span>':'')
+          +(roll.redo?'<span class="rr">✗'+roll.redo+'</span>':'')+'</span>');
+      }
+      (big.smalls||[]).forEach((small, si)=>{
+        const t0=(small.types||[])[0];
+        const st=cpStatusFor(CP.grade, t0, small.name);
+        const smallN=cpMakeNode('small st-'+st, small.name, CP.big===bi&&CP.small===si);
+        if(st==='pass') smallN.row.insertAdjacentHTML('beforeend','<span class="cpt-st pass">✓ 합격</span>');
+        else if(st==='redo') smallN.row.insertAdjacentHTML('beforeend','<span class="cpt-st redo">재도전</span>');
+        (small.types||[]).forEach((t, ti)=>{
+          if((small.types||[]).length>1){
+            const tN=cpMakeNode('type', t.name, false);
+            cpAppendQuestions(tN.kids, bi, si, t, ti);
+            smallN.kids.appendChild(tN.wrap);
+          }else{
+            cpAppendQuestions(smallN.kids, bi, si, t, ti);
+          }
+        });
+        bigN.kids.appendChild(smallN.wrap);
+      });
+      treeHost.appendChild(bigN.wrap);
+    });
+  }
+  // breadcrumb
   const parts=[];
   if(model) parts.push(model.name);
-  if(CP.big!==null&&bigs[CP.big]) parts.push(bigs[CP.big].name);
-  if(small) parts.push(small.name);
-  const typ=cpCurrentType(); if(typ) parts.push(typ.name);
+  const cbig=cpCurrentBig(); if(cbig) parts.push(cbig.name);
+  const csmall=cpCurrentSmall(); if(csmall) parts.push(csmall.name);
   parts.push(LEVEL_NAMES[state.level]||state.level);
   const bc=document.getElementById('cpBreadcrumb'); if(bc) bc.textContent=parts.filter(Boolean).join('  ›  ')||'과정부터 골라주세요';
 }
@@ -4904,7 +5205,7 @@ setTimeout(()=>{
   let saved=''; try{saved=localStorage.getItem('dd:lastCourse:'+sid)||'';}catch(e){}
   CP.grade=state.gradeId||saved||null;
   if(CP.grade){ const gs=document.getElementById('gradeSelect'); if(gs){ gs.value=CP.grade; state.gradeId=CP.grade; populateUnitSelect(); } }
-  cpRender();
+  cpLoadRecords();   // 기록 불러오며 트리 렌더(합격/재도전 색 반영)
 },0);
 
 $('gradeSelect').addEventListener('change', e=>{
@@ -5683,6 +5984,8 @@ ${blankGuide}
 
 function renderFeedback(result, advance, needTeacher){
   const fbArea = $('fbArea');
+  const ddCard = (typeof ddCurrentCard==='function') ? ddCurrentCard() : null;
+  const ddCardHas = !!(ddCard && typeof ddHasCard==='function' && ddHasCard(ddCard));
   const scoreColor = result.score >= 85 ? 'var(--sage)' : (advance ? 'var(--blue)' : 'var(--purple)');
   const circumference = 2*Math.PI*26;
   const offset = circumference - (result.score/100)*circumference;
@@ -5715,13 +6018,19 @@ function renderFeedback(result, advance, needTeacher){
       <button class="primary-btn accent" id="retryBtn">💪 한 번 더 말해볼래요</button>
       <button class="ghost-btn" id="skipQBtn">${isLast ? '이 개념 마치기' : '이 질문 건너뛰고 다음으로'}</button>`;
   } else {
+    const hintHtml = (ddCardHas && ddCard.hints && ddCard.hints.length)
+      ? `<div class="fb-block hint"><div class="fb-eyebrow">뚜삐의 힌트</div><p>${ddCard.hints.map(h=>'· '+escapeHtml(h)).join('<br>')}</p></div>` : '';
+    const learnBtnHtml = ddCardHas
+      ? `<button class="ghost-btn" id="learnBtn" style="border-color:var(--purple);color:var(--purple-deep);">📚 학습 공간에서 공부하고 오기</button>` : '';
     bottom = `
+      ${hintHtml}
       <div class="fb-block retry">
         <div class="fb-eyebrow">다시 말해볼 포인트</div>
         <p>${escapeHtml(result.retry_point || '힌트를 참고해서 빠진 부분을 채워 다시 설명해 볼까요?')}</p>
       </div>
       <p class="review-note">80점을 넘으면 다음 질문으로 넘어갈 수 있어요. (지금 ${result.score}점)</p>
       <button class="primary-btn accent" id="retryBtn">🎙️ 다시 설명해볼게요</button>
+      ${learnBtnHtml}
       <button class="ghost-btn" id="skipQBtn">${isLast ? '이 개념 마치기' : '이 질문 건너뛰고 다음으로'}</button>`;
   }
 
@@ -5791,6 +6100,8 @@ function renderFeedback(result, advance, needTeacher){
     resetRecordingUI();
     window.scrollTo({top:0, behavior:'smooth'});
   });
+  const learnBtn = $('learnBtn');
+  if(learnBtn) learnBtn.addEventListener('click', ()=>{ if(typeof ddOpenLearn==='function') ddOpenLearn(ddCard); });
   // 다음 질문으로 (통과 시)
   const nextQBtn = $('nextQBtn');
   if(nextQBtn) nextQBtn.addEventListener('click', ()=>{
@@ -9101,7 +9412,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v61.4-초3단원완성';
+  const APP_VERSION = 'v63.0-학습공간흐름';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
