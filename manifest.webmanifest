@@ -1,16 +1,14 @@
 {
-  "name": "말하는 수학 - 뚜삐",
-  "short_name": "말하는 수학",
-  "description": "개념을 말로 설명하면 뚜삐가 듣고 콕 짚어주는 수학 인출 학습 앱",
-  "start_url": "./index.html",
-  "scope": "./",
+  "name": "말하는 수학",
+  "short_name": "말하는수학",
+  "id": "/malhaneun-suhak/dodream",
+  "start_url": "dodream.html",
+  "scope": ".",
   "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#F5F4FB",
+  "background_color": "#ffffff",
   "theme_color": "#4C6FFF",
-  "lang": "ko",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ]
 }
