@@ -819,10 +819,11 @@
 .cpt-st.pass{background:#E1F4EA;color:#1F9D63;} .cpt-st.redo{background:#FCE7E5;color:#E0483D;}
 .cpt-row.small.st-pass > .cpt-lbl{color:#1F9D63;text-decoration:underline;text-decoration-color:#9BD9B8;text-underline-offset:3px;}
 .cpt-row.small.st-redo > .cpt-lbl{color:#E0483D;text-decoration:underline wavy;text-decoration-color:#F1B0AB;text-underline-offset:3px;}
-.cpt-q{display:flex;align-items:flex-start;gap:8px;width:100%;text-align:left;border:1.5px solid #EFEBF6;background:#fff;border-radius:11px;padding:9px 11px;margin:4px 0;font-family:inherit;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer;line-height:1.4;}
+.cpt-q{display:flex;align-items:center;gap:8px;width:100%;text-align:left;border:1.5px solid #EFEBF6;background:#fff;border-radius:11px;padding:9px 11px;margin:4px 0;font-family:inherit;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer;line-height:1.4;}
 .cpt-q:hover{border-color:var(--blue);background:var(--blue-dim);}
 .cpt-q:active{transform:scale(.995);}
 .cpt-qico{flex:0 0 auto;}
+.cpt-qtxt{flex:1;min-width:0;}
 
 /* ===== [v63] 학습 공간 오버레이 ===== */
 .learn-overlay{position:fixed;inset:0;background:rgba(28,22,52,.55);z-index:1200;display:none;
@@ -5336,12 +5337,24 @@ function cpStatusFor(gradeId, typeObj, smallName){
 }
 function cpRollup(gradeId, big){
   let pass=0, redo=0;
+  const lvl = (window.state && state.level) || 'low';
   (big.smalls||[]).forEach(sm=>{
-    const t0=(sm.types||[])[0];
-    const st=cpStatusFor(gradeId, t0, sm.name);
-    if(st==='pass')pass++; else if(st==='redo')redo++;
+    (sm.types||[]).forEach(t=>{
+      const qs = (lvl==='high') ? (t.high||[]) : (t.low||[]);
+      qs.forEach(q=>{ const st=cpStatusForQuestion(gradeId, q); if(st==='pass')pass++; else if(st==='redo')redo++; });
+    });
   });
   return {pass,redo};
+}
+// 질문 하나의 상태: 저장된 기록에서 그 질문 텍스트로 매칭
+function cpStatusForQuestion(gradeId, questionText){
+  if(!cpRecords || !cpRecords.length || !questionText) return 'none';
+  let attempted=false, passed=false;
+  for(const r of cpRecords){
+    if(r.courseId !== gradeId) continue;
+    if(r.question && r.question === questionText){ attempted=true; if(r.pass) passed=true; }
+  }
+  return passed ? 'pass' : (attempted ? 'redo' : 'none');
 }
 function cpMakeNode(cls, name, open){
   const wrap=document.createElement('div'); wrap.className='cpt-node'+(open?' open':'');
@@ -5356,16 +5369,21 @@ function cpMakeNode(cls, name, open){
 function cpAppendQuestions(host, bi, si, typ, ti){
   const items=[];
   if(state.level==='blank'){
-    items.push({key:'blank:0', label:'AI가 이 개념에 맞는 빈칸 질문을 만들어 줍니다.'});
-  }else{
-    (typ.low||[]).forEach((q,i)=>items.push({key:'low:'+i, label:'🟢 쉬운 · '+q}));
-    (typ.high||[]).forEach((q,i)=>items.push({key:'high:'+i, label:'🟣 깊은 · '+q}));
+    items.push({key:'blank:0', label:'AI가 이 개념에 맞는 빈칸 질문을 만들어 줍니다.', q:''});
+  }else if(state.level==='high'){
+    (typ.high||[]).forEach((q,i)=>items.push({key:'high:'+i, label:q, q:q}));
+  }else{ // low = 설명하기
+    (typ.low||[]).forEach((q,i)=>items.push({key:'low:'+i, label:q, q:q}));
   }
   items.forEach(it=>{
     const b=document.createElement('button'); b.type='button'; b.className='cpt-q';
     const ic=document.createElement('span'); ic.className='cpt-qico'; ic.textContent='🗣️';
-    const tx=document.createElement('span'); tx.textContent=it.label;
+    const tx=document.createElement('span'); tx.className='cpt-qtxt'; tx.textContent=it.label;
     b.appendChild(ic); b.appendChild(tx);
+    // 질문 옆 합격/재도전 배지
+    const st = it.q ? cpStatusForQuestion(CP.grade, it.q) : 'none';
+    if(st==='pass'){ const s=document.createElement('span'); s.className='cpt-st pass'; s.textContent='✓ 합격'; b.appendChild(s); }
+    else if(st==='redo'){ const s=document.createElement('span'); s.className='cpt-st redo'; s.textContent='재도전'; b.appendChild(s); }
     b.addEventListener('click', async ()=>{
       CP.big=bi; CP.small=si; CP.type=ti;
       const parts=String(it.key).split(':');
@@ -5423,11 +5441,7 @@ function cpRender(){
           +(roll.redo?'<span class="rr">✗'+roll.redo+'</span>':'')+'</span>');
       }
       (big.smalls||[]).forEach((small, si)=>{
-        const t0=(small.types||[])[0];
-        const st=cpStatusFor(CP.grade, t0, small.name);
-        const smallN=cpMakeNode('small st-'+st, small.name, CP.big===bi&&CP.small===si);
-        if(st==='pass') smallN.row.insertAdjacentHTML('beforeend','<span class="cpt-st pass">✓ 합격</span>');
-        else if(st==='redo') smallN.row.insertAdjacentHTML('beforeend','<span class="cpt-st redo">재도전</span>');
+        const smallN=cpMakeNode('small', small.name, CP.big===bi&&CP.small===si);
         (small.types||[]).forEach((t, ti)=>{
           if((small.types||[]).length>1){
             const tN=cpMakeNode('type', t.name, false);
@@ -9662,7 +9676,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v63.5-초3-1완성';
+  const APP_VERSION = 'v63.6-난이도분리';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
