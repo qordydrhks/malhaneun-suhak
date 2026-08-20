@@ -5001,6 +5001,50 @@ DD_CARDS[ ddConceptId('e3-1','6. 분수와 소수','02. 분수 알아보기') ] 
   by: 'app', scope: 'me'
 };
 
+// ── 초3-1 · 1. 덧셈과 뺄셈 (개념 이해 8·10·12·18·20·22쪽) ──
+DD_CARDS[ ddConceptId('e3-1','1. 덧셈과 뺄셈','01. (세 자리 수)+(세 자리 수) (1)') ] = {
+  hints: ['일·십·백의 자리를 줄 맞춰 써봤어?', '같은 자리끼리 더하면 돼!'],
+  concept: '세 자리 수의 덧셈은 각 자리를 맞춰 쓰고, 일의 자리끼리·십의 자리끼리·백의 자리끼리 같은 자리 수를 더해요. (받아올림이 없을 때)',
+  media: [],
+  basicProblem: { stem:'123 + 135 = ?', choices:['258','248','358','268'], answer:0, explain:'일:3+5=8, 십:2+3=5, 백:1+1=2 → 258.', by:'app', scope:'me' },
+  bookPage: '디딤돌 3-1 · 8쪽', by:'app', scope:'me'
+};
+DD_CARDS[ ddConceptId('e3-1','1. 덧셈과 뺄셈','02. (세 자리 수)+(세 자리 수) (2)') ] = {
+  hints: ['어느 자리에서 10이 넘는지 봐볼까?', '10이 넘으면 윗자리로 1을 올려줘!'],
+  concept: '같은 자리끼리 더한 값이 10이거나 넘으면, 윗자리로 1을 올려서 계산해요. 이것을 받아올림이라고 해요.',
+  media: [],
+  basicProblem: { stem:'126 + 118 = ?', choices:['244','234','254','245'], answer:0, explain:'일:6+8=14 → 4 쓰고 1 올림. 십:2+1+1=4. 백:1+1=2 → 244.', by:'app', scope:'me' },
+  bookPage: '디딤돌 3-1 · 10쪽', by:'app', scope:'me'
+};
+DD_CARDS[ ddConceptId('e3-1','1. 덧셈과 뺄셈','03. (세 자리 수)+(세 자리 수) (3)') ] = {
+  hints: ['일의 자리부터 차례로 올림이 생기는지 확인해봐.', '올림은 바로 윗자리에 더해주는 거야!'],
+  concept: '받아올림이 여러 번 생길 수 있어요. 일의 자리부터 차례로 더하면서, 10이 넘을 때마다 윗자리로 1씩 올려 계산해요.',
+  media: [],
+  basicProblem: { stem:'168 + 175 = ?', choices:['343','333','353','344'], answer:0, explain:'일:8+5=13→3(올림1). 십:6+7+1=14→4(올림1). 백:1+1+1=3 → 343.', by:'app', scope:'me' },
+  bookPage: '디딤돌 3-1 · 12쪽', by:'app', scope:'me'
+};
+DD_CARDS[ ddConceptId('e3-1','1. 덧셈과 뺄셈','04. (세 자리 수)-(세 자리 수) (1)') ] = {
+  hints: ['일·십·백의 자리를 줄 맞춰 썼어?', '같은 자리끼리 빼면 돼!'],
+  concept: '세 자리 수의 뺄셈은 자리를 맞춰 쓰고, 일의 자리끼리·십의 자리끼리·백의 자리끼리 같은 자리 수를 빼요. (받아내림이 없을 때)',
+  media: [],
+  basicProblem: { stem:'358 - 135 = ?', choices:['223','233','213','323'], answer:0, explain:'일:8-5=3, 십:5-3=2, 백:3-1=2 → 223.', by:'app', scope:'me' },
+  bookPage: '디딤돌 3-1 · 18쪽', by:'app', scope:'me'
+};
+DD_CARDS[ ddConceptId('e3-1','1. 덧셈과 뺄셈','05. (세 자리 수)-(세 자리 수) (2)') ] = {
+  hints: ['위의 수가 아래 수보다 작은 자리가 있어?', '뺄 수 없으면 윗자리에서 10을 빌려와!'],
+  concept: '같은 자리끼리 뺄 수 없을 때(위 수가 더 작을 때), 바로 윗자리에서 10을 빌려와 계산해요. 이것을 받아내림이라고 해요.',
+  media: [],
+  basicProblem: { stem:'352 - 128 = ?', choices:['224','234','214','324'], answer:0, explain:'일:12-8=4(십에서 빌림). 십:4-2=2. 백:3-1=2 → 224.', by:'app', scope:'me' },
+  bookPage: '디딤돌 3-1 · 20쪽', by:'app', scope:'me'
+};
+DD_CARDS[ ddConceptId('e3-1','1. 덧셈과 뺄셈','06. (세 자리 수)-(세 자리 수) (3)') ] = {
+  hints: ['일의 자리부터 빌림이 필요한 자리를 찾아봐.', '빌려오면 윗자리는 1이 줄어드는 거 잊지 마!'],
+  concept: '받아내림이 여러 번 필요할 수 있어요. 일의 자리부터 빼면서, 뺄 수 없으면 윗자리에서 10을 빌려오고, 빌려준 자리는 1이 줄어요.',
+  media: [],
+  basicProblem: { stem:'523 - 256 = ?', choices:['267','277','257','367'], answer:0, explain:'일:13-6=7(십에서 빌림). 십:11-5=6(백에서 빌림). 백:4-2=2 → 267.', by:'app', scope:'me' },
+  bookPage: '디딤돌 3-1 · 22쪽', by:'app', scope:'me'
+};
+
 function cpModel(gradeId){
   const dd=DD_CURRICULUM[gradeId];
   if(dd) return dd;
@@ -9412,7 +9456,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v63.0-학습공간흐름';
+  const APP_VERSION = 'v63.1-1단원카드';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
