@@ -825,6 +825,41 @@
 .cpt-qico{flex:0 0 auto;}
 .cpt-qtxt{flex:1;min-width:0;}
 
+/* ===== [v65] 개념 카드 편집기 (ce~) ===== */
+.ce-searchbar{display:flex;gap:8px;margin-bottom:10px;}
+.ce-searchbar input{flex:1;font-family:inherit;font-size:14px;border:1.5px solid var(--line);border-radius:10px;padding:11px 14px;background:#fff;}
+.ce-searchbar input:focus{outline:none;border-color:var(--blue);}
+.ce-searchbar button{border:none;background:var(--blue);color:#fff;border-radius:10px;padding:0 20px;font-family:inherit;font-weight:800;font-size:13.5px;cursor:pointer;}
+.ce-legend{font-size:11.5px;color:var(--ink-soft);margin-bottom:12px;line-height:1.6;}
+.ce-legend code{background:#EEF0FD;color:#3355E6;padding:1px 6px;border-radius:5px;font-weight:700;}
+.ce-info{font-size:12.5px;font-weight:700;color:#3355E6;margin-bottom:10px;min-height:16px;}
+.ce-empty{text-align:center;color:#9A9DB0;font-size:14px;font-weight:600;line-height:1.7;padding:52px 20px;border:2px dashed var(--line);border-radius:16px;}
+.ce-empty span{font-size:12.5px;color:#B7B4C6;} .ce-empty b{color:#3355E6;}
+.ce-card{border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:12px;background:#fff;}
+.ce-card-h{display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;}
+.ce-code{font-size:11.5px;font-weight:800;font-family:ui-monospace,monospace;background:#EEF0FD;color:#3355E6;padding:3px 9px;border-radius:6px;}
+.ce-code.sm{font-size:10px;background:#FCF3DD;color:#E0940E;}
+.ce-card-t{font-size:12.5px;font-weight:700;color:var(--ink-soft);}
+.ce-sec{margin-top:13px;padding-top:11px;border-top:1px solid #F0EDF8;}
+.ce-sec-h{font-size:12px;font-weight:800;color:#3355E6;margin-bottom:8px;}
+.ce-qline{display:flex;align-items:center;gap:7px;margin-bottom:6px;padding:2px;border-radius:9px;}
+.ce-qline.ce-hl{background:#FFF6D8;}
+.ce-qcode{flex:0 0 auto;font-size:10px;font-weight:800;font-family:ui-monospace,monospace;padding:4px 6px;border-radius:6px;white-space:nowrap;}
+.ce-qcode.low{background:#E1F4EA;color:#1F9D63;} .ce-qcode.high{background:#EDE6FF;color:#7343E6;}
+.ce-qtext,.ce-f{width:100%;font-family:inherit;font-size:13.5px;border:1.5px solid var(--line);border-radius:9px;padding:9px 11px;background:#FCFBFE;color:var(--ink);margin-bottom:7px;}
+.ce-qtext{flex:1;margin-bottom:0;}
+.ce-f:focus,.ce-qtext:focus{outline:none;border-color:var(--blue);}
+textarea.ce-f{resize:vertical;min-height:56px;line-height:1.6;}
+.ce-choices{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.ce-ch{display:flex;align-items:center;gap:7px;}
+.ce-ch input[type=radio]{width:17px;height:17px;flex:0 0 auto;accent-color:#1F9D63;}
+.ce-ch .ce-f{margin-bottom:0;}
+.ce-actions{display:flex;align-items:center;gap:10px;margin-top:16px;}
+.ce-save{border:none;background:linear-gradient(135deg,#7343E6,#9B6BFF);color:#fff;border-radius:11px;padding:10px 22px;font-family:inherit;font-weight:800;font-size:14px;cursor:pointer;}
+.ce-savenote{font-size:11.5px;color:#A7A2B8;font-weight:600;}
+.ce-editflag{font-size:10.5px;font-weight:800;color:#E0940E;background:#FCF3DD;padding:2px 8px;border-radius:999px;}
+.ce-revert{border:1.5px solid var(--line);background:#fff;color:#E0483D;border-radius:11px;padding:10px 16px;font-family:inherit;font-weight:700;font-size:12.5px;cursor:pointer;}
+
 /* ===== [v63] 학습 공간 오버레이 ===== */
 .learn-overlay{position:fixed;inset:0;background:rgba(28,22,52,.55);z-index:1200;display:none;
   align-items:flex-start;justify-content:center;padding:22px 14px;overflow-y:auto;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);}
@@ -1177,6 +1212,7 @@ window.DDOOPI = {
       <a class="on" data-tab="dash"><span>말하는 수학</span></a>
       <a data-tab="manage"><span>학생 · 설정</span></a>
       <a data-tab="bank"><span>문제은행</span></a>
+      <a data-tab="cecards"><span>개념 카드</span></a>
       <a class="tb-add" style="cursor:default"><span>+ 앱 추가</span></a>
     </nav>
     <div class="tb-right">
@@ -1315,6 +1351,20 @@ window.DDOOPI = {
 
         <!-- 검색 결과 -->
         <div id="bankResult"></div>
+      </div>
+
+      <!-- [개념 카드 편집기] ce~ 로 격리 -->
+      <div id="cecardsTab" style="display:none;">
+        <div class="page-head"><div class="page-title">개념 카드 편집 <span class="sub">코드로 문항을 불러와 힌트·개념·문제를 고쳐요</span></div></div>
+        <div class="card">
+          <div class="ce-searchbar">
+            <input id="ceSearch" placeholder="코드로 찾기 (짧게 칠수록 넓게: E3 / E31 / E3111 / E31112L)">
+            <button id="ceGo">불러오기</button>
+          </div>
+          <div class="ce-legend">코드: <code>E</code>초등 <code>M</code>중등 <code>H</code>고등 · <code>학년 학기 단원 중단원 질문</code> · 난이도 <code>L</code>쉬운/<code>H</code>깊은 · 달린 문제 <code>-1</code></div>
+          <div id="ceInfo" class="ce-info"></div>
+          <div id="ceList"></div>
+        </div>
       </div>
 
     </div>
@@ -4911,7 +4961,20 @@ const DD_CARDS = {};
 function ddGetCard(gradeId, bigName, smallName){
   const base = ddEmptyCard();
   const saved = DD_CARDS[ ddConceptId(gradeId, bigName, smallName) ];
-  return saved ? Object.assign(base, saved) : base;
+  const card = saved ? Object.assign(base, saved) : base;
+  // 선생님 편집기 저장본이 있으면 덮어쓰기 (원본 DD_CARDS는 그대로)
+  try{
+    if(typeof ceGetOverride==='function'){
+      const ov = ceGetOverride(gradeId, bigName, smallName);
+      if(ov){
+        if(ov.hints) card.hints = ov.hints.slice();
+        if(ov.concept!=null && ov.concept!=='') card.concept = ov.concept;
+        if(ov.bookPage!=null && ov.bookPage!=='') card.bookPage = ov.bookPage;
+        if(ov.basicProblem && ov.basicProblem.stem) card.basicProblem = ov.basicProblem;
+      }
+    }
+  }catch(e){}
+  return card;
 }
 // 카드가 실제로 채워졌는지 (힌트/설명/자료/문제 중 하나라도 있으면 true)
 function ddHasCard(card){
@@ -4982,6 +5045,184 @@ function ddOpenLearn(card){
   document.getElementById('learnOverlay').classList.add('open');
 }
 window.ddCurrentCard=ddCurrentCard; window.ddOpenLearn=ddOpenLearn;
+
+/* ============================================================
+   [v65] 개념 카드 편집기 (ce~ 로 격리) — 선생님 화면 "개념 카드" 탭
+   · 코드 체계: 학교급(E/M/H) + 학년 + 학기 + 단원번호 + 중단원번호  (예: E3111)
+     - 질문:  코드+질문번호+난이도(L/H)   예: E31112L
+     - 기본문제: 코드+"-1"               예: E3111-1
+   · 원본(DD_CURRICULUM/DD_CARDS)은 읽기만. 저장은 다음 단계에서 붙임.
+   ============================================================ */
+const CE_GRADE_PREFIX = { 'e3-1':'E31', 'e3-2':'E32', 'e4-1':'E41', 'e4-2':'E42',
+  'e5-1':'E51','e5-2':'E52','e6-1':'E61','e6-2':'E62' };
+// 대단원/소단원 이름 앞의 번호를 뽑아냄 ("6. 분수와 소수"→6, "02. 분수 알아보기"→2)
+function ceNum(name){ const m=String(name||'').match(/^\s*0*(\d+)/); return m?parseInt(m[1],10):0; }
+// 개념(중단원) 하나의 코드 만들기
+function ceCode(gradeId, bigName, smallName){
+  const p=CE_GRADE_PREFIX[gradeId]; if(!p) return '';
+  return p + ceNum(bigName) + ceNum(smallName);
+}
+// gradeId를 코드 앞부분으로 역추적 (검색 시 학년 자동 판별)
+function ceGradeFromCode(code){
+  for(const g in CE_GRADE_PREFIX){ if(code.startsWith(CE_GRADE_PREFIX[g])) return g; }
+  // E3 처럼 학기 안 친 경우: 초3 전체는 판별 불가 → 첫 매칭 학년 반환
+  for(const g in CE_GRADE_PREFIX){ if(CE_GRADE_PREFIX[g].startsWith(code) || code.startsWith(CE_GRADE_PREFIX[g].slice(0,code.length))) return g; }
+  return null;
+}
+let ceInited=false;
+function ceInit(){
+  if(ceInited) return; ceInited=true;
+  const go=document.getElementById('ceGo'), inp=document.getElementById('ceSearch');
+  if(go) go.addEventListener('click', ceSearch);
+  if(inp) inp.addEventListener('keydown', e=>{ if(e.key==='Enter') ceSearch(); });
+  ceRender(null);
+}
+function ceSearch(){
+  const raw=(document.getElementById('ceSearch').value||'').trim().toUpperCase();
+  const base=raw.replace(/-.*$/,'').replace(/[LH]$/,''); // 개념 base 코드만
+  ceRender(base||null, raw);
+}
+// 모든 개념을 코드와 함께 순회 (초등 과정 중 DD_CURRICULUM에 있는 것)
+function ceEachConcept(cb){
+  Object.keys(CE_GRADE_PREFIX).forEach(g=>{
+    let m; try{ m=cpModel(g); }catch(e){ m=null; }
+    if(!m) return;
+    (m.bigUnits||[]).forEach(big=>{
+      (big.smalls||[]).forEach(small=>{
+        const code=ceCode(g, big.name, small.name);
+        if(code) cb({ gradeId:g, big, small, code, type:(small.types||[])[0] });
+      });
+    });
+  });
+}
+function ceRender(baseCode, rawCode){
+  const listEl=document.getElementById('ceList'), info=document.getElementById('ceInfo');
+  if(!listEl) return;
+  listEl.innerHTML=''; if(info) info.textContent='';
+  if(!baseCode){
+    listEl.innerHTML='<div class="ce-empty">위 칸에 코드를 입력하면 해당 문항이 여기에 나타나요.<br>'
+      +'<span>예) <b>E3111</b> 한 개념 · <b>E311</b> 1단원 전체 · <b>E31112L</b> 특정 질문</span></div>';
+    return;
+  }
+  let n=0;
+  ceEachConcept(item=>{
+    const b=item.code;
+    if(!(b.startsWith(baseCode) || baseCode.startsWith(b))) return;
+    n++;
+    listEl.appendChild(ceCard(item, rawCode));
+  });
+  if(info) info.textContent = n ? ('코드 "'+baseCode+'"에 해당하는 개념 '+n+'개를 불러왔어요.') : ('코드 "'+baseCode+'"에 해당하는 개념이 없어요.');
+  // 특정 질문 코드까지 쳤으면 그 줄 강조
+  if(rawCode && /[LH]$/.test(rawCode)){
+    const tag=[...listEl.querySelectorAll('.ce-qcode')].find(x=>x.textContent===rawCode.replace(/-.*$/,''));
+    if(tag){ const line=tag.closest('.ce-qline'); if(line){ line.classList.add('ce-hl'); tag.scrollIntoView({behavior:'smooth',block:'center'}); } }
+  }
+}
+function ceCard(item, rawCode){
+  const { gradeId, big, small, code, type:baseType } = item;
+  const baseCard = (typeof ddGetCard==='function') ? ddGetCard(gradeId, big.name, small.name) : null;
+  // 저장된 수정본을 원본 위에 얹기
+  const applied = ceApply(gradeId, big.name, small.name, baseType, baseCard);
+  const type = applied.type, card = applied.card;
+  const hasOverride = !!ceGetOverride(gradeId, big.name, small.name);
+  const low=(type&&type.low)||[], high=(type&&type.high)||[];
+  const wrap=document.createElement('div'); wrap.className='ce-card';
+  const esc=(s)=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const qline=(qcode,cls,txt)=> '<div class="ce-qline"><span class="ce-qcode '+cls+'">'+qcode+'</span>'
+      +'<input class="ce-qtext" data-q="'+qcode+'" type="text" value="'+esc(txt)+'"></div>';
+  const gradeName = (GRADES.find(x=>x.id===gradeId)||{}).name||gradeId;
+  let html='<div class="ce-card-h"><span class="ce-code">'+code+'</span>'
+    +'<span class="ce-card-t">'+esc(gradeName)+' · '+esc(big.name)+' · '+esc(small.name)+'</span>'
+    +(hasOverride?'<span class="ce-editflag">수정됨</span>':'')+'</div>';
+  html+='<div class="ce-sec"><div class="ce-sec-h">🗣️ 말하기 질문 · 쉬운(L)</div>'
+    + low.map((q,i)=>qline(code+(i+1)+'L','low',q)).join('') + '</div>';
+  html+='<div class="ce-sec"><div class="ce-sec-h">🗣️ 말하기 질문 · 깊은(H)</div>'
+    + high.map((q,i)=>qline(code+(i+1)+'H','high',q)).join('') + '</div>';
+  if(card){
+    html+='<div class="ce-sec"><div class="ce-sec-h">💡 힌트</div>'
+      +'<input class="ce-f" data-f="hint0" type="text" value="'+esc(card.hints&&card.hints[0]||'')+'">'
+      +'<input class="ce-f" data-f="hint1" type="text" value="'+esc(card.hints&&card.hints[1]||'')+'"></div>';
+    html+='<div class="ce-sec"><div class="ce-sec-h">📖 개념 설명</div>'
+      +'<textarea class="ce-f" data-f="concept">'+esc(card.concept||'')+'</textarea>'
+      +'<input class="ce-f" data-f="page" type="text" value="'+esc(card.bookPage||'')+'" placeholder="교재 쪽수"></div>';
+    const bp=card.basicProblem||{stem:'',choices:['','','',''],answer:0,explain:''};
+    html+='<div class="ce-sec"><div class="ce-sec-h">✅ 기본문제 <span class="ce-code sm">'+code+'-1</span></div>'
+      +'<input class="ce-f" data-f="stem" type="text" value="'+esc(bp.stem)+'" placeholder="문제">'
+      +'<div class="ce-choices">'
+      + (bp.choices||['','','','']).map((t,i)=>'<label class="ce-ch"><input type="radio" name="ce_ans_'+code+'" data-ans="'+i+'" '+(i===bp.answer?'checked':'')+'><input class="ce-f" data-f="choice'+i+'" type="text" value="'+esc(t)+'"></label>').join('')
+      +'</div>'
+      +'<textarea class="ce-f" data-f="explain" placeholder="풀이">'+esc(bp.explain||'')+'</textarea></div>';
+  }
+  html+='<div class="ce-actions"><button class="ce-save">저장</button>'
+    +(hasOverride?'<button class="ce-revert">원래대로 되돌리기</button>':'')
+    +'<span class="ce-savenote" style="display:none">저장됨 ✓</span></div>';
+  wrap.innerHTML=html;
+  // 버튼 배선
+  const saveBtn=wrap.querySelector('.ce-save');
+  saveBtn.addEventListener('click', ()=>{
+    ceDoSave(wrap, gradeId, big.name, small.name);
+    const note=wrap.querySelector('.ce-savenote'); if(note){ note.style.display='inline'; setTimeout(()=>{ note.style.display='none'; }, 1800); }
+    // 카드 다시 그려 '수정됨' 표시·되돌리기 버튼 갱신
+    const parent=wrap.parentElement; const fresh=ceCard(item, rawCode); parent.replaceChild(fresh, wrap);
+  });
+  const revBtn=wrap.querySelector('.ce-revert');
+  if(revBtn) revBtn.addEventListener('click', ()=>{
+    if(!confirm('이 개념을 원본(교재 기준)으로 되돌릴까요? 수정한 내용은 사라져요.')) return;
+    ceDoRevert(gradeId, big.name, small.name);
+    const parent=wrap.parentElement; const fresh=ceCard(item, rawCode); parent.replaceChild(fresh, wrap);
+  });
+  return wrap;
+}
+window.ceInit=ceInit;
+
+/* ── [v66] 편집기 저장: 원본은 그대로, 고친 것만 localStorage에 보관 ── */
+const CE_STORE_KEY = 'ce:overrides:v1';
+function ceLoadOverrides(){ try{ return JSON.parse(localStorage.getItem(CE_STORE_KEY)||'{}'); }catch(e){ return {}; } }
+function ceSaveOverrides(o){ try{ localStorage.setItem(CE_STORE_KEY, JSON.stringify(o)); }catch(e){} }
+// 한 개념의 override 가져오기 (없으면 null)
+function ceGetOverride(gradeId, bigName, smallName){
+  const o=ceLoadOverrides(); return o[ceCode(gradeId,bigName,smallName)]||null;
+}
+// 원본 위에 override를 얹어 '최종' 값 돌려주기 (학습 화면/편집기 공용)
+function ceApply(gradeId, bigName, smallName, baseType, baseCard){
+  const ov=ceGetOverride(gradeId,bigName,smallName);
+  const type = Object.assign({}, baseType||{});
+  const card = Object.assign({}, baseCard||{});
+  if(ov){
+    if(ov.low)  type.low  = ov.low.slice();
+    if(ov.high) type.high = ov.high.slice();
+    if(ov.hints)   card.hints   = ov.hints.slice();
+    if(ov.concept!=null) card.concept = ov.concept;
+    if(ov.bookPage!=null) card.bookPage = ov.bookPage;
+    if(ov.basicProblem)   card.basicProblem = ov.basicProblem;
+  }
+  return { type, card };
+}
+window.ceGetOverride=ceGetOverride; window.ceApply=ceApply;
+
+// 편집기 카드에서 값 읽어 저장
+function ceDoSave(wrap, gradeId, bigName, smallName){
+  const low=[...wrap.querySelectorAll('.ce-qcode.low')].map(t=>t.parentElement.querySelector('.ce-qtext').value.trim()).filter(Boolean);
+  const high=[...wrap.querySelectorAll('.ce-qcode.high')].map(t=>t.parentElement.querySelector('.ce-qtext').value.trim()).filter(Boolean);
+  const f=(name)=>{ const el=wrap.querySelector('.ce-f[data-f="'+name+'"]'); return el?el.value:''; };
+  const choices=[0,1,2,3].map(i=>f('choice'+i));
+  const ansEl=wrap.querySelector('input[name^="ce_ans_"]:checked');
+  const answer = ansEl ? parseInt(ansEl.dataset.ans,10) : 0;
+  const ov = {
+    low, high,
+    hints: [f('hint0'), f('hint1')].filter(x=>x!=null),
+    concept: f('concept'),
+    bookPage: f('page'),
+    basicProblem: { stem:f('stem'), choices, answer, explain:f('explain'), by:'teacher', scope:'me' }
+  };
+  const store=ceLoadOverrides();
+  store[ceCode(gradeId,bigName,smallName)] = ov;
+  ceSaveOverrides(store);
+}
+// 되돌리기
+function ceDoRevert(gradeId, bigName, smallName){
+  const store=ceLoadOverrides(); delete store[ceCode(gradeId,bigName,smallName)]; ceSaveOverrides(store);
+}
 
 // ── 초3-1 · 분수와 소수 · 분수 알아보기 (첫 예시 카드 · 디딤돌 3-1 160쪽 기준) ──
 DD_CARDS[ ddConceptId('e3-1','6. 분수와 소수','02. 분수 알아보기') ] = {
@@ -5625,6 +5866,13 @@ function cpMakeNode(cls, name, open){
   return {wrap, row, kids};
 }
 function cpAppendQuestions(host, bi, si, typ, ti){
+  // 선생님 편집기 저장본(말하기 질문) 반영 — 원본 DD_CURRICULUM은 안 건드리고 사본에 얹음
+  try{
+    if(typeof ceApply==='function' && CP.grade){
+      const m=cpModel(CP.grade); const bg=m&&m.bigUnits[bi]; const sm=bg&&bg.smalls[si];
+      if(bg&&sm){ typ = ceApply(CP.grade, bg.name, sm.name, typ, null).type; }
+    }
+  }catch(e){}
   const items=[];
   if(state.level==='blank'){
     items.push({key:'blank:0', label:'AI가 이 개념에 맞는 빈칸 질문을 만들어 줍니다.', q:''});
@@ -8616,6 +8864,11 @@ window.addEventListener('load', ()=>{ try{
           bank.style.display = (tab==='bank') ? 'block' : 'none';
           if(tab==='bank') initBankTab();
         }
+        const cecards = document.getElementById('cecardsTab');
+        if(cecards){
+          cecards.style.display = (tab==='cecards') ? 'block' : 'none';
+          if(tab==='cecards' && typeof ceInit==='function') ceInit();
+        }
       });
     });
   }
@@ -9934,7 +10187,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v64.0-초3-2완성';
+  const APP_VERSION = 'v66.0-편집기저장';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
