@@ -879,6 +879,7 @@ textarea.ce-f{resize:vertical;min-height:56px;line-height:1.6;}
 .learn-book{margin-top:9px;font-size:12.5px;font-weight:700;color:var(--purple-deep);}
 .learn-media{margin:10px 0;border-radius:14px;overflow:hidden;border:1px solid var(--line);}
 .learn-media img,.learn-media video{width:100%;display:block;}
+.learn-media iframe{width:100%;aspect-ratio:16/9;display:block;border:0;}
 .learn-stem{margin:0 0 12px;font-size:15px;font-weight:700;line-height:1.6;color:var(--ink);}
 .learn-choice{display:block;width:100%;text-align:left;border:2px solid #E7E4F0;background:#fff;border-radius:12px;
   padding:12px 14px;margin-bottom:8px;font-family:inherit;font-size:14.5px;font-weight:650;color:var(--ink);cursor:pointer;}
@@ -4957,12 +4958,31 @@ function ddConceptId(gradeId, bigName, smallName){
 }
 // 카드 저장소 (지금은 비어 있음 = 빈 자리). 나중에 여기 채우거나 선생님 편집 화면이 채웁니다.
 const DD_CARDS = {};
+
+/* ============================================================
+   [영상연결] 개념 영상 링크 모음  ★ 시간·링크는 여기 한 곳만 고치면 됩니다 ★
+   - ?t=초  = 영상에서 그 지점부터 재생 (예: ?t=343 → 5분43초부터)
+   - 영상 자체를 바꾸려면 주소 전체를 교체하세요.
+   ============================================================ */
+const DD_VIDEO_LINKS = {};
+(function(){
+  var g='e3-1', big='1. 덧셈과 뺄셈';
+  var V1='https://youtu.be/dEDCzkio2Mc';   // 영상1 (덧셈 중심)
+  var V2='https://youtu.be/83G0FxV2fLM';   // 영상2 (뺄셈 중심)
+  DD_VIDEO_LINKS[ddConceptId(g,big,'01. (세 자리 수)+(세 자리 수) (1)')] = V1+'?t=343'; // 영상1 05:43
+  DD_VIDEO_LINKS[ddConceptId(g,big,'02. (세 자리 수)+(세 자리 수) (2)')] = V1+'?t=780'; // 영상1 13:00
+  DD_VIDEO_LINKS[ddConceptId(g,big,'03. (세 자리 수)+(세 자리 수) (3)')] = V1+'?t=946'; // 영상1 15:46
+  DD_VIDEO_LINKS[ddConceptId(g,big,'04. (세 자리 수)-(세 자리 수) (1)')] = V1+'?t=178'; // 영상1 02:58
+  DD_VIDEO_LINKS[ddConceptId(g,big,'05. (세 자리 수)-(세 자리 수) (2)')] = V2;          // 영상2 00:00
+  DD_VIDEO_LINKS[ddConceptId(g,big,'06. (세 자리 수)-(세 자리 수) (3)')] = V2+'?t=180'; // 영상2 03:00
+})();
 // 개념 카드 가져오기 — 저장된 카드가 없으면 '빈 카드'를 돌려줌(호출부는 항상 완전한 형태를 받음)
 function ddGetCard(gradeId, bigName, smallName){
   const base = ddEmptyCard();
   const saved = DD_CARDS[ ddConceptId(gradeId, bigName, smallName) ];
   const card = saved ? Object.assign(base, saved) : base;
   // 선생님 편집기 저장본이 있으면 덮어쓰기 (원본 DD_CARDS는 그대로)
+  var _ovVideo = null; // 선생님이 지정한 영상 링크 (null = 미지정)
   try{
     if(typeof ceGetOverride==='function'){
       const ov = ceGetOverride(gradeId, bigName, smallName);
@@ -4971,8 +4991,17 @@ function ddGetCard(gradeId, bigName, smallName){
         if(ov.concept!=null && ov.concept!=='') card.concept = ov.concept;
         if(ov.bookPage!=null && ov.bookPage!=='') card.bookPage = ov.bookPage;
         if(ov.basicProblem && ov.basicProblem.stem) card.basicProblem = ov.basicProblem;
+        if(ov.videoUrl!=null) _ovVideo = ov.videoUrl;
       }
     }
+  }catch(e){}
+  // [영상연결] 개념 영상: 선생님 링크가 있으면 그것, 없으면 앱 기본(DD_VIDEO_LINKS)
+  try{
+    var _cid = ddConceptId(gradeId, bigName, smallName);
+    var _def = (typeof DD_VIDEO_LINKS!=='undefined' && DD_VIDEO_LINKS[_cid]) ? DD_VIDEO_LINKS[_cid] : '';
+    var _url = (_ovVideo!=null) ? _ovVideo : _def;
+    var _bm = (card.media||[]).filter(function(m){return m&&m.form!=='youtube';});
+    card.media = _url ? _bm.concat([{form:'youtube', url:_url, by:(_ovVideo!=null?'teacher':'app'), scope:'all'}]) : _bm;
   }catch(e){}
   return card;
 }
@@ -5007,6 +5036,25 @@ function ddEnsureLearnOverlay(){
   document.getElementById('learnX').addEventListener('click', ddCloseLearn);
 }
 function ddCloseLearn(){ const ov=document.getElementById('learnOverlay'); if(ov) ov.classList.remove('open'); }
+/* [영상연결] 유튜브 주소 → 앱에 삽입할 embed 주소로 변환 (시간지정 ?t=90 도 반영) */
+function ddYouTubeEmbed(url){
+  if(!url) return '';
+  url=String(url).trim();
+  var id='', start=0, m;
+  m=url.match(/youtu\.be\/([A-Za-z0-9_-]{6,})/);              if(m) id=m[1];
+  if(!id){ m=url.match(/[?&]v=([A-Za-z0-9_-]{6,})/);          if(m) id=m[1]; }
+  if(!id){ m=url.match(/embed\/([A-Za-z0-9_-]{6,})/);         if(m) id=m[1]; }
+  if(!id){ m=url.match(/shorts\/([A-Za-z0-9_-]{6,})/);        if(m) id=m[1]; }
+  if(!id && /^[A-Za-z0-9_-]{11}$/.test(url)) id=url;
+  var t=url.match(/[?&](?:t|start)=([0-9hms]+)/);
+  if(t){ var s=t[1];
+    if(/^\d+$/.test(s)) start=parseInt(s,10);
+    else{ var h=(s.match(/(\d+)h/)||[])[1]||0, mm=(s.match(/(\d+)m/)||[])[1]||0, ss=(s.match(/(\d+)s/)||[])[1]||0;
+      start=(+h)*3600+(+mm)*60+(+ss); }
+  }
+  if(!id) return '';
+  return 'https://www.youtube.com/embed/'+id+(start? '?start='+start : '');
+}
 function ddOpenLearn(card){
   ddEnsureLearnOverlay();
   const body=document.getElementById('learnBody');
@@ -5018,6 +5066,7 @@ function ddOpenLearn(card){
   (c.media||[]).forEach(m=>{
     if(m && m.form==='image' && m.url) html += '<div class="learn-media"><img src="'+escapeHtml(m.url)+'" alt="'+escapeHtml(m.title||'')+'"></div>';
     else if(m && m.form==='video' && m.url) html += '<div class="learn-media"><video src="'+escapeHtml(m.url)+'" controls playsinline></video></div>';
+    else if(m && m.form==='youtube' && m.url){ var _src=ddYouTubeEmbed(m.url); if(_src) html += '<div class="learn-media"><iframe src="'+_src+'" allowfullscreen allow="encrypted-media; picture-in-picture"></iframe></div>'; }
   });
   if(c.basicProblem){
     const bp=c.basicProblem;
@@ -5145,6 +5194,9 @@ function ceCard(item, rawCode){
     html+='<div class="ce-sec"><div class="ce-sec-h">📖 개념 설명</div>'
       +'<textarea class="ce-f" data-f="concept">'+esc(card.concept||'')+'</textarea>'
       +'<input class="ce-f" data-f="page" type="text" value="'+esc(card.bookPage||'')+'" placeholder="교재 쪽수"></div>';
+    var _yt=((card.media||[]).find(function(m){return m&&m.form==='youtube';})||{}).url||'';
+    html+='<div class="ce-sec"><div class="ce-sec-h">🎬 영상 링크 (유튜브)</div>'
+      +'<input class="ce-f" data-f="video" type="text" value="'+esc(_yt)+'" placeholder="유튜브 주소 붙여넣기 (시간 지정 ?t=90 도 가능)"></div>';
     const bp=card.basicProblem||{stem:'',choices:['','','',''],answer:0,explain:''};
     html+='<div class="ce-sec"><div class="ce-sec-h">✅ 기본문제 <span class="ce-code sm">'+code+'-1</span></div>'
       +'<input class="ce-f" data-f="stem" type="text" value="'+esc(bp.stem)+'" placeholder="문제">'
@@ -5195,6 +5247,10 @@ function ceApply(gradeId, bigName, smallName, baseType, baseCard){
     if(ov.concept!=null) card.concept = ov.concept;
     if(ov.bookPage!=null) card.bookPage = ov.bookPage;
     if(ov.basicProblem)   card.basicProblem = ov.basicProblem;
+    if(ov.videoUrl!=null){
+      var _base=(card.media||[]).filter(function(m){return m&&m.form!=='youtube';});
+      card.media = ov.videoUrl ? _base.concat([{form:'youtube', url:ov.videoUrl, by:'teacher', scope:'me'}]) : _base;
+    }
   }
   return { type, card };
 }
@@ -5213,7 +5269,8 @@ function ceDoSave(wrap, gradeId, bigName, smallName){
     hints: [f('hint0'), f('hint1')].filter(x=>x!=null),
     concept: f('concept'),
     bookPage: f('page'),
-    basicProblem: { stem:f('stem'), choices, answer, explain:f('explain'), by:'teacher', scope:'me' }
+    basicProblem: { stem:f('stem'), choices, answer, explain:f('explain'), by:'teacher', scope:'me' },
+    videoUrl: (f('video')||'').trim()
   };
   const store=ceLoadOverrides();
   store[ceCode(gradeId,bigName,smallName)] = ov;
@@ -10187,7 +10244,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v66.0-편집기저장';
+  const APP_VERSION = 'v68.0-초3영상';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
