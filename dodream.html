@@ -880,6 +880,9 @@ textarea.ce-f{resize:vertical;min-height:56px;line-height:1.6;}
 .ce-or{text-align:center;color:var(--ink-soft);font-size:12px;font-weight:700;margin:10px 0 8px;}
 .ce-qadd .ce-qcode{background:#FFF3D6;color:#F0A81E;}
 .ce-qlist{margin-bottom:6px;}
+.dd-emph{background:#FFF8E1;border:1.5px solid #FFD98A;border-radius:12px;padding:10px 13px;margin:0 0 12px;font-size:13.5px;line-height:1.5;color:#7A5A00;}
+.dd-emph .dd-emph-item{display:block;}
+.dd-emph .dd-emph-item + .dd-emph-item{margin-top:5px;padding-top:5px;border-top:1px dashed #FFD98A;}
 .ce-actions{display:flex;align-items:center;gap:10px;margin-top:16px;}
 .ce-save{border:none;background:linear-gradient(135deg,#7343E6,#9B6BFF);color:#fff;border-radius:11px;padding:10px 22px;font-family:inherit;font-weight:800;font-size:14px;cursor:pointer;}
 .ce-savenote{font-size:11.5px;color:#A7A2B8;font-weight:600;}
@@ -1073,6 +1076,7 @@ window.DDOOPI = {
       <div class="card" id="questionCard" style="display:none;">
         <p class="step-eyebrow">Step 2</p>
         <p class="step-title">오늘의 질문</p>
+        <div id="ddEmphasis" class="dd-emph" style="display:none;"></div>
 
         <div class="q-box">
           <div class="q-meta" id="qMeta"></div>
@@ -5088,6 +5092,20 @@ function ddYouTubeEmbed(url){
   if(!id) return '';
   return 'https://www.youtube.com/embed/'+id+(start? '?start='+start : '');
 }
+/* [강조고정] 말하기 화면 상단에 대단원+개념 고정멘트 표시 */
+function ddShowEmphasis(){
+  try{
+    var el=document.getElementById('ddEmphasis'); if(!el) return;
+    var g=state.gradeId;
+    var bg=(typeof cpCurrentBig==='function')?cpCurrentBig():null;
+    var sm=(typeof cpCurrentSmall==='function')?cpCurrentSmall():null;
+    var parts=[];
+    if(bg){ var be=ceGetBigEmph(g,bg.name); if(be) parts.push('<span class="dd-emph-item">📌 '+escapeHtml(be)+'</span>'); }
+    if(bg&&sm){ var cn=ceGetConceptNote(g,bg.name,sm.name); if(cn) parts.push('<span class="dd-emph-item">📌 '+escapeHtml(cn)+'</span>'); }
+    if(parts.length){ el.innerHTML=parts.join(''); el.style.display='block'; }
+    else { el.innerHTML=''; el.style.display='none'; }
+  }catch(e){}
+}
 function ddOpenLearn(card){
   ddEnsureLearnOverlay();
   const body=document.getElementById('learnBody');
@@ -5203,7 +5221,28 @@ function cePickOpenSmall(){
   if(info) info.textContent='"'+item.code+'" · '+small.name+' 개념을 불러왔어요.';
   if(listEl){ listEl.innerHTML=''; listEl.appendChild(ceCard(item, item.code)); }
 }
-function cePickOpenBig(){ /* [2단계 예정] 대단원 고정 멘트 입력 자리 */ }
+function cePickOpenBig(){
+  var m=null; try{ m=cpModel(cePick.grade); }catch(e){} if(!m) return;
+  var big=m.bigUnits[cePick.big]; if(!big) return;
+  var listEl=document.getElementById('ceList'), info=document.getElementById('ceInfo');
+  var gname=(GRADES.find(function(x){return x.id===cePick.grade;})||{}).name||'';
+  if(info) info.textContent=big.name+' 대단원 · 고정 강조 멘트 편집 (또는 아래 중단원을 골라 개념 편집)';
+  if(!listEl) return;
+  var cur=ceGetBigEmph(cePick.grade, big.name);
+  var wrap=document.createElement('div'); wrap.className='ce-card';
+  wrap.innerHTML='<div class="ce-card-h"><span class="ce-code">'+ceBigCode(cePick.grade,big.name)+'</span>'
+    +'<span class="ce-card-t">'+ceEsc(gname)+' · '+ceEsc(big.name)+' <b>(대단원)</b></span></div>'
+    +'<div class="ce-sec"><div class="ce-sec-h">📌 대단원 고정 강조 멘트</div>'
+    +'<textarea class="ce-f" id="ceBigNote" placeholder="예: 닮음 푸는 순서 ① 닮음 찾기 → ② 증명 → ③ 닮음비 → ④ 문제 해결">'+ceEsc(cur)+'</textarea>'
+    +'<div style="font-size:11.5px;color:var(--ink-soft);margin-top:4px">이 대단원의 모든 개념 말하기 화면에 계속 떠 있어요.</div></div>'
+    +'<button type="button" class="ce-save" id="ceBigSave">저장</button>';
+  listEl.innerHTML=''; listEl.appendChild(wrap);
+  var btn=wrap.querySelector('#ceBigSave');
+  if(btn) btn.addEventListener('click', function(){
+    ceSetBigEmph(cePick.grade, big.name, wrap.querySelector('#ceBigNote').value);
+    btn.textContent='저장됨 ✓'; setTimeout(function(){ btn.textContent='저장'; }, 1500);
+  });
+}
 function ceSearch(){
   const raw=(document.getElementById('ceSearch').value||'').trim().toUpperCase();
   const base=raw.replace(/-.*$/,'').replace(/[LH]$/,''); // 개념 base 코드만
@@ -5318,6 +5357,9 @@ function ceCard(item, rawCode){
     var _yt=((card.media||[]).find(function(m){return m&&m.form==='youtube';})||{}).url||'';
     html+='<div class="ce-sec"><div class="ce-sec-h">🎬 영상 링크 (유튜브)</div>'
       +'<input class="ce-f" data-f="video" type="text" value="'+esc(_yt)+'" placeholder="유튜브 주소 붙여넣기 (시간 지정 ?t=90 도 가능)"></div>';
+    // 📌 이 개념 고정 강조 멘트
+    html+='<div class="ce-sec"><div class="ce-sec-h">📌 고정 강조 멘트 (이 개념에서 계속 표시)</div>'
+      +'<textarea class="ce-f" data-f="note" placeholder="예: 단위를 꼭 붙여서 말하기!">'+esc(_ov.note||'')+'</textarea></div>';
     // ✅ 기본문제 (여러 개)
     var _probs=(card.problems&&card.problems.length)?card.problems:(card.basicProblem?[card.basicProblem]:[{stem:'',choices:['','','',''],answer:0,explain:''}]);
     html+='<div class="ce-sec"><div class="ce-sec-h">✅ 기본문제</div>'
@@ -5375,6 +5417,14 @@ window.ceInit=ceInit;
 const CE_STORE_KEY = 'ce:overrides:v1';
 function ceLoadOverrides(){ try{ return JSON.parse(localStorage.getItem(CE_STORE_KEY)||'{}'); }catch(e){ return {}; } }
 function ceSaveOverrides(o){ try{ localStorage.setItem(CE_STORE_KEY, JSON.stringify(o)); }catch(e){} }
+/* [강조고정] 대단원 고정멘트는 별도 저장소, 개념 고정멘트는 개념 override의 note 필드 */
+const CE_EMPH_KEY='ce:emphasis:v1';
+function ceLoadEmph(){ try{ return JSON.parse(localStorage.getItem(CE_EMPH_KEY)||'{}'); }catch(e){ return {}; } }
+function ceSaveEmph(o){ try{ localStorage.setItem(CE_EMPH_KEY, JSON.stringify(o)); }catch(e){} }
+function ceBigCode(gradeId, bigName){ var p=CE_GRADE_PREFIX[gradeId]; if(!p) return ''; return p+ceNum(bigName); }
+function ceGetBigEmph(gradeId, bigName){ var k=ceBigCode(gradeId,bigName); return k?(ceLoadEmph()[k]||''):''; }
+function ceSetBigEmph(gradeId, bigName, text){ var k=ceBigCode(gradeId,bigName); if(!k) return; var o=ceLoadEmph(); if(text&&text.trim()) o[k]=text.trim(); else delete o[k]; ceSaveEmph(o); }
+function ceGetConceptNote(gradeId, bigName, smallName){ var ov=ceGetOverride(gradeId,bigName,smallName); return (ov&&ov.note)||''; }
 // 한 개념의 override 가져오기 (없으면 null)
 function ceGetOverride(gradeId, bigName, smallName){
   const o=ceLoadOverrides(); return o[ceCode(gradeId,bigName,smallName)]||null;
@@ -5427,6 +5477,7 @@ function ceDoSave(wrap, gradeId, bigName, smallName){
     concepts,
     concept: concepts[0]||'',          // 옛 읽기 호환
     bookPage: f('page'),
+    note: (f('note')||'').trim(),
     problems,
     basicProblem: problems[0]||null,   // 옛 읽기 호환
     videoUrl: (f('video')||'').trim()
@@ -6457,6 +6508,7 @@ async function startSelectedQuestion(){
   $('setupCard').style.display = 'none';
   $('quizCard').style.display = 'none';
   $('questionCard').style.display = 'block';
+  if(typeof ddShowEmphasis==='function') ddShowEmphasis();
   if(typeof setLearnStep==='function') setLearnStep(2);
   resetRecordingUI();
   window.scrollTo({top:0, behavior:'smooth'});
@@ -10413,7 +10465,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v71.1-통과70통일';
+  const APP_VERSION = 'v72.0-강조고정';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
