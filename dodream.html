@@ -854,6 +854,30 @@ textarea.ce-f{resize:vertical;min-height:56px;line-height:1.6;}
 .ce-ch{display:flex;align-items:center;gap:7px;}
 .ce-ch input[type=radio]{width:17px;height:17px;flex:0 0 auto;accent-color:#1F9D63;}
 .ce-ch .ce-f{margin-bottom:0;}
+/* [추가기능] 여러 개 항목 추가/삭제 UI */
+.ce-row{display:flex;gap:7px;align-items:flex-start;margin-bottom:7px;}
+.ce-row .ce-f{flex:1;margin-bottom:0;}
+.ce-del{flex:0 0 auto;width:32px;height:36px;border:1.5px solid var(--line);border-radius:9px;background:#fff;color:#C0392B;font-size:16px;line-height:1;cursor:pointer;}
+.ce-del:hover{background:#FDECEA;border-color:#F5B7B1;}
+.ce-add{width:100%;margin-top:2px;background:#EDE6FF;color:#7343E6;border:1.5px dashed #B69BF5;border-radius:9px;padding:8px 12px;font-weight:800;font-size:12.5px;cursor:pointer;}
+.ce-add:hover{background:#E3D6FF;}
+.ce-prob{position:relative;border:1.5px solid var(--line);border-radius:11px;padding:11px;margin-bottom:8px;background:#FCFBFE;}
+.ce-prob .ce-del-prob{position:absolute;top:9px;right:9px;}
+.ce-plabel{font-size:11.5px;font-weight:800;color:#7343E6;margin-bottom:7px;}
+.learn-concept + .learn-concept{margin-top:8px;}
+/* [화면고르기] 편집기 드릴다운 */
+.ce-pick{margin-bottom:12px;}
+.ce-pick-h{font-size:13px;font-weight:800;color:var(--ink);margin-bottom:8px;}
+.ce-pick-h span{font-weight:600;color:var(--ink-soft);font-size:11.5px;margin-left:6px;}
+.ce-pick-cols{display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:8px;}
+@media(max-width:640px){ .ce-pick-cols{grid-template-columns:1fr;} }
+.ce-pick-col{border:1.5px solid var(--line);border-radius:11px;background:#FCFBFE;padding:7px;min-height:60px;max-height:230px;overflow-y:auto;}
+.ce-pick-head{font-size:11px;font-weight:800;color:#7343E6;padding:3px 5px 6px;}
+.ce-pick-item{display:block;width:100%;text-align:left;border:none;background:transparent;border-radius:8px;padding:8px 9px;font-size:12.5px;font-family:inherit;color:var(--ink);cursor:pointer;line-height:1.35;}
+.ce-pick-item:hover{background:#EDE6FF;}
+.ce-pick-item.active{background:#8B5CF6;color:#fff;font-weight:700;}
+.ce-pick-empty{color:var(--ink-soft);font-size:12px;padding:8px 9px;}
+.ce-or{text-align:center;color:var(--ink-soft);font-size:12px;font-weight:700;margin:10px 0 8px;}
 .ce-actions{display:flex;align-items:center;gap:10px;margin-top:16px;}
 .ce-save{border:none;background:linear-gradient(135deg,#7343E6,#9B6BFF);color:#fff;border-radius:11px;padding:10px 22px;font-family:inherit;font-weight:800;font-size:14px;cursor:pointer;}
 .ce-savenote{font-size:11.5px;color:#A7A2B8;font-weight:600;}
@@ -1358,6 +1382,11 @@ window.DDOOPI = {
       <div id="cecardsTab" style="display:none;">
         <div class="page-head"><div class="page-title">개념 카드 편집 <span class="sub">코드로 문항을 불러와 힌트·개념·문제를 고쳐요</span></div></div>
         <div class="card">
+          <div class="ce-pick">
+            <div class="ce-pick-h">📂 화면으로 고르기 <span>학년·학기 → 대단원 → 중단원 순으로 눌러 찾기</span></div>
+            <div id="cePicker" class="ce-pick-cols"></div>
+          </div>
+          <div class="ce-or">또는 코드로 찾기</div>
           <div class="ce-searchbar">
             <input id="ceSearch" placeholder="코드로 찾기 (짧게 칠수록 넓게: E3 / E31 / E3111 / E31112L)">
             <button id="ceGo">불러오기</button>
@@ -4989,8 +5018,10 @@ function ddGetCard(gradeId, bigName, smallName){
       if(ov){
         if(ov.hints) card.hints = ov.hints.slice();
         if(ov.concept!=null && ov.concept!=='') card.concept = ov.concept;
+        if(ov.concepts && ov.concepts.length) card.concepts = ov.concepts.slice();
         if(ov.bookPage!=null && ov.bookPage!=='') card.bookPage = ov.bookPage;
         if(ov.basicProblem && ov.basicProblem.stem) card.basicProblem = ov.basicProblem;
+        if(ov.problems && ov.problems.length) card.problems = ov.problems.slice();
         if(ov.videoUrl!=null) _ovVideo = ov.videoUrl;
       }
     }
@@ -5059,8 +5090,9 @@ function ddOpenLearn(card){
   ddEnsureLearnOverlay();
   const body=document.getElementById('learnBody');
   const c=card||ddEmptyCard();
-  let html='<div class="learn-sec"><div class="learn-eyebrow">개념 이해</div><p class="learn-concept">'
-    + escapeHtml(c.concept||'이 개념 설명이 아직 준비 중이에요.') + '</p>';
+  let html='<div class="learn-sec"><div class="learn-eyebrow">개념 이해</div>';
+  var _cons=(c.concepts&&c.concepts.length)?c.concepts:[(c.concept||'이 개념 설명이 아직 준비 중이에요.')];
+  _cons.forEach(function(cx){ html += '<p class="learn-concept">'+escapeHtml(cx)+'</p>'; });
   if(c.bookPage) html += '<div class="learn-book">📖 '+escapeHtml(c.bookPage)+'</div>';
   html += '</div>';
   (c.media||[]).forEach(m=>{
@@ -5068,24 +5100,25 @@ function ddOpenLearn(card){
     else if(m && m.form==='video' && m.url) html += '<div class="learn-media"><video src="'+escapeHtml(m.url)+'" controls playsinline></video></div>';
     else if(m && m.form==='youtube' && m.url){ var _src=ddYouTubeEmbed(m.url); if(_src) html += '<div class="learn-media"><iframe src="'+_src+'" allowfullscreen allow="encrypted-media; picture-in-picture"></iframe></div>'; }
   });
-  if(c.basicProblem){
-    const bp=c.basicProblem;
-    html += '<div class="learn-sec"><div class="learn-eyebrow">기본 문제로 확인</div><p class="learn-stem">'+escapeHtml(bp.stem||'')+'</p><div id="learnChoices">';
-    (bp.choices||[]).forEach((ch,i)=>{ html += '<button class="learn-choice" data-i="'+i+'">'+escapeHtml(ch)+'</button>'; });
-    html += '</div><div id="learnExplain" class="learn-explain" style="display:none"></div></div>';
-  }
-  html += '<button class="learn-retry" id="learnRetry"'+(c.basicProblem?' disabled':'')+'>💪 이제 다시 말해볼래요</button>';
+  var _probs=(c.problems&&c.problems.length)?c.problems:(c.basicProblem?[c.basicProblem]:[]);
+  _probs.forEach(function(bp,pi){
+    html += '<div class="learn-sec"><div class="learn-eyebrow">기본 문제로 확인'+(_probs.length>1?' ('+(pi+1)+')':'')+'</div><p class="learn-stem">'+escapeHtml(bp.stem||'')+'</p><div class="learnChoices" data-pi="'+pi+'">';
+    (bp.choices||[]).forEach(function(ch,i){ html += '<button class="learn-choice" data-pi="'+pi+'" data-i="'+i+'">'+escapeHtml(ch)+'</button>'; });
+    html += '</div><div class="learn-explain" data-pi="'+pi+'" style="display:none"></div></div>';
+  });
+  html += '<button class="learn-retry" id="learnRetry"'+(_probs.length?' disabled':'')+'>💪 이제 다시 말해볼래요</button>';
   body.innerHTML=html;
-  if(c.basicProblem){
-    const bp=c.basicProblem;
-    body.querySelectorAll('.learn-choice').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        const i=Number(btn.dataset.i);
-        body.querySelectorAll('.learn-choice').forEach((b,j)=>{ b.disabled=true; if(j===bp.answer) b.classList.add('correct'); });
+  if(_probs.length){
+    var answered={};
+    body.querySelectorAll('.learn-choice').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var pi=Number(btn.dataset.pi), i=Number(btn.dataset.i), bp=_probs[pi];
+        body.querySelectorAll('.learn-choice[data-pi="'+pi+'"]').forEach(function(b){ b.disabled=true; if(Number(b.dataset.i)===bp.answer) b.classList.add('correct'); });
         if(i!==bp.answer) btn.classList.add('wrong');
-        const ex=document.getElementById('learnExplain');
+        var ex=body.querySelector('.learn-explain[data-pi="'+pi+'"]');
         if(ex){ ex.style.display='block'; ex.innerHTML='<b>'+(i===bp.answer?'정답이에요! 🎉 ':'아쉬워요. ')+'</b>'+escapeHtml(bp.explain||''); }
-        const lr=document.getElementById('learnRetry'); if(lr) lr.disabled=false;
+        answered[pi]=true;
+        if(Object.keys(answered).length>=_probs.length){ var lr=document.getElementById('learnRetry'); if(lr) lr.disabled=false; }
       });
     });
   }
@@ -5125,7 +5158,50 @@ function ceInit(){
   if(go) go.addEventListener('click', ceSearch);
   if(inp) inp.addEventListener('keydown', e=>{ if(e.key==='Enter') ceSearch(); });
   ceRender(null);
+  try{ cePickRender(); }catch(e){}
 }
+/* [화면고르기] 편집기 드릴다운 — 학생 선택기 데이터(cpModel/GRADES) 재사용, 학생 UI는 안 건드림 */
+var cePick = { grade:null, big:null, small:null };
+function cePickGrades(){
+  return Object.keys(CE_GRADE_PREFIX).filter(function(g){ try{ return !!cpModel(g); }catch(e){ return false; } });
+}
+function cePickCol(host, head, items, active, onClick){
+  var col=document.createElement('div'); col.className='ce-pick-col';
+  var h=document.createElement('div'); h.className='ce-pick-head'; h.textContent=head; col.appendChild(h);
+  if(!items.length){ var e=document.createElement('div'); e.className='ce-pick-empty'; e.textContent='왼쪽에서 먼저 고르세요'; col.appendChild(e); }
+  items.forEach(function(it){
+    var b=document.createElement('button'); b.type='button';
+    b.className='ce-pick-item'+(String(it.key)===String(active)?' active':'');
+    b.textContent=it.label;
+    b.addEventListener('click', function(){ onClick(it.key); });
+    col.appendChild(b);
+  });
+  host.appendChild(col);
+}
+function cePickRender(){
+  var host=document.getElementById('cePicker'); if(!host) return;
+  host.innerHTML='';
+  var grades=cePickGrades().map(function(g){ return {key:g, label:(GRADES.find(function(x){return x.id===g;})||{}).name||g}; });
+  cePickCol(host,'학년·학기',grades,cePick.grade,function(k){ cePick.grade=k; cePick.big=null; cePick.small=null; cePickRender(); });
+  if(cePick.grade==null) return;
+  var m=null; try{ m=cpModel(cePick.grade); }catch(e){}
+  var bigs=((m&&m.bigUnits)||[]).map(function(b,i){ return {key:i, label:b.name}; });
+  cePickCol(host,'대단원',bigs,cePick.big,function(k){ cePick.big=k; cePick.small=null; cePickRender(); cePickOpenBig(); });
+  if(cePick.big==null) return;
+  var big=m.bigUnits[cePick.big];
+  var smalls=((big&&big.smalls)||[]).map(function(s,i){ return {key:i, label:s.name}; });
+  cePickCol(host,'중단원(개념)',smalls,cePick.small,function(k){ cePick.small=k; cePickRender(); cePickOpenSmall(); });
+}
+function cePickOpenSmall(){
+  var m=null; try{ m=cpModel(cePick.grade); }catch(e){} if(!m) return;
+  var big=m.bigUnits[cePick.big]; if(!big) return;
+  var small=(big.smalls||[])[cePick.small]; if(!small) return;
+  var item={ gradeId:cePick.grade, big:big, small:small, code:ceCode(cePick.grade,big.name,small.name), type:(small.types||[])[0] };
+  var listEl=document.getElementById('ceList'), info=document.getElementById('ceInfo');
+  if(info) info.textContent='"'+item.code+'" · '+small.name+' 개념을 불러왔어요.';
+  if(listEl){ listEl.innerHTML=''; listEl.appendChild(ceCard(item, item.code)); }
+}
+function cePickOpenBig(){ /* [2단계 예정] 대단원 고정 멘트 입력 자리 */ }
 function ceSearch(){
   const raw=(document.getElementById('ceSearch').value||'').trim().toUpperCase();
   const base=raw.replace(/-.*$/,'').replace(/[LH]$/,''); // 개념 base 코드만
@@ -5167,6 +5243,27 @@ function ceRender(baseCode, rawCode){
     if(tag){ const line=tag.closest('.ce-qline'); if(line){ line.classList.add('ce-hl'); tag.scrollIntoView({behavior:'smooth',block:'center'}); } }
   }
 }
+/* [추가기능] 여러 개 항목용 템플릿 (초기 렌더 + '추가' 버튼 공용) */
+let ceUid = 0;
+function ceEsc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+function ceRowHint(v){
+  return '<div class="ce-row"><input class="ce-f ce-hint" type="text" value="'+ceEsc(v)+'" placeholder="힌트 문장"><button type="button" class="ce-del">×</button></div>';
+}
+function ceRowConcept(v){
+  return '<div class="ce-row"><textarea class="ce-f ce-concept" placeholder="개념 설명">'+ceEsc(v)+'</textarea><button type="button" class="ce-del">×</button></div>';
+}
+function ceProbBlock(p){
+  p = p || {stem:'',choices:['','','',''],answer:0,explain:''};
+  var name='ce_ans_'+(++ceUid);
+  var ch=(p.choices||['','','','']).map(function(t,i){
+    return '<label class="ce-ch"><input type="radio" name="'+name+'" data-ans="'+i+'" '+(i===p.answer?'checked':'')+'><input class="ce-f ce-choice" type="text" value="'+ceEsc(t)+'"></label>';
+  }).join('');
+  return '<div class="ce-prob"><button type="button" class="ce-del ce-del-prob">×</button>'
+    +'<div class="ce-plabel">문제</div>'
+    +'<input class="ce-f ce-stem" type="text" value="'+ceEsc(p.stem)+'" placeholder="문제">'
+    +'<div class="ce-choices">'+ch+'</div>'
+    +'<textarea class="ce-f ce-explain" placeholder="풀이">'+ceEsc(p.explain||'')+'</textarea></div>';
+}
 function ceCard(item, rawCode){
   const { gradeId, big, small, code, type:baseType } = item;
   const baseCard = (typeof ddGetCard==='function') ? ddGetCard(gradeId, big.name, small.name) : null;
@@ -5188,27 +5285,46 @@ function ceCard(item, rawCode){
   html+='<div class="ce-sec"><div class="ce-sec-h">🗣️ 말하기 질문 · 깊은(H)</div>'
     + high.map((q,i)=>qline(code+(i+1)+'H','high',q)).join('') + '</div>';
   if(card){
+    // 💡 힌트 (여러 개)
+    var _hints=(card.hints&&card.hints.length)?card.hints:[''];
     html+='<div class="ce-sec"><div class="ce-sec-h">💡 힌트</div>'
-      +'<input class="ce-f" data-f="hint0" type="text" value="'+esc(card.hints&&card.hints[0]||'')+'">'
-      +'<input class="ce-f" data-f="hint1" type="text" value="'+esc(card.hints&&card.hints[1]||'')+'"></div>';
+      +'<div class="ce-list" data-list="hints">'+_hints.map(function(h){return ceRowHint(h);}).join('')+'</div>'
+      +'<button type="button" class="ce-add" data-add="hints">+ 힌트 추가</button></div>';
+    // 📖 개념 설명 (여러 개) + 교재 쪽수 (1개)
+    var _concepts=(card.concepts&&card.concepts.length)?card.concepts:[(card.concept||'')];
     html+='<div class="ce-sec"><div class="ce-sec-h">📖 개념 설명</div>'
-      +'<textarea class="ce-f" data-f="concept">'+esc(card.concept||'')+'</textarea>'
-      +'<input class="ce-f" data-f="page" type="text" value="'+esc(card.bookPage||'')+'" placeholder="교재 쪽수"></div>';
+      +'<div class="ce-list" data-list="concepts">'+_concepts.map(function(c){return ceRowConcept(c);}).join('')+'</div>'
+      +'<button type="button" class="ce-add" data-add="concepts">+ 개념 설명 추가</button>'
+      +'<input class="ce-f" data-f="page" type="text" value="'+esc(card.bookPage||'')+'" placeholder="교재 쪽수" style="margin-top:8px"></div>';
+    // 🎬 영상 (1개)
     var _yt=((card.media||[]).find(function(m){return m&&m.form==='youtube';})||{}).url||'';
     html+='<div class="ce-sec"><div class="ce-sec-h">🎬 영상 링크 (유튜브)</div>'
       +'<input class="ce-f" data-f="video" type="text" value="'+esc(_yt)+'" placeholder="유튜브 주소 붙여넣기 (시간 지정 ?t=90 도 가능)"></div>';
-    const bp=card.basicProblem||{stem:'',choices:['','','',''],answer:0,explain:''};
-    html+='<div class="ce-sec"><div class="ce-sec-h">✅ 기본문제 <span class="ce-code sm">'+code+'-1</span></div>'
-      +'<input class="ce-f" data-f="stem" type="text" value="'+esc(bp.stem)+'" placeholder="문제">'
-      +'<div class="ce-choices">'
-      + (bp.choices||['','','','']).map((t,i)=>'<label class="ce-ch"><input type="radio" name="ce_ans_'+code+'" data-ans="'+i+'" '+(i===bp.answer?'checked':'')+'><input class="ce-f" data-f="choice'+i+'" type="text" value="'+esc(t)+'"></label>').join('')
-      +'</div>'
-      +'<textarea class="ce-f" data-f="explain" placeholder="풀이">'+esc(bp.explain||'')+'</textarea></div>';
+    // ✅ 기본문제 (여러 개)
+    var _probs=(card.problems&&card.problems.length)?card.problems:(card.basicProblem?[card.basicProblem]:[{stem:'',choices:['','','',''],answer:0,explain:''}]);
+    html+='<div class="ce-sec"><div class="ce-sec-h">✅ 기본문제</div>'
+      +'<div class="ce-list" data-list="probs">'+_probs.map(function(p){return ceProbBlock(p);}).join('')+'</div>'
+      +'<button type="button" class="ce-add" data-add="probs">+ 문제 추가</button></div>';
   }
   html+='<div class="ce-actions"><button class="ce-save">저장</button>'
     +(hasOverride?'<button class="ce-revert">원래대로 되돌리기</button>':'')
     +'<span class="ce-savenote" style="display:none">저장됨 ✓</span></div>';
   wrap.innerHTML=html;
+  // [추가기능] +추가 / ×삭제 배선
+  wrap.querySelectorAll('.ce-add').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var kind=btn.dataset.add;
+      var list=wrap.querySelector('.ce-list[data-list="'+kind+'"]'); if(!list) return;
+      if(kind==='hints') list.insertAdjacentHTML('beforeend', ceRowHint(''));
+      else if(kind==='concepts') list.insertAdjacentHTML('beforeend', ceRowConcept(''));
+      else if(kind==='probs') list.insertAdjacentHTML('beforeend', ceProbBlock(null));
+    });
+  });
+  wrap.addEventListener('click', function(e){
+    if(e.target.classList && e.target.classList.contains('ce-del')){
+      var box=e.target.closest('.ce-row, .ce-prob'); if(box) box.remove();
+    }
+  });
   // 버튼 배선
   const saveBtn=wrap.querySelector('.ce-save');
   saveBtn.addEventListener('click', ()=>{
@@ -5245,8 +5361,10 @@ function ceApply(gradeId, bigName, smallName, baseType, baseCard){
     if(ov.high) type.high = ov.high.slice();
     if(ov.hints)   card.hints   = ov.hints.slice();
     if(ov.concept!=null) card.concept = ov.concept;
+    if(ov.concepts) card.concepts = ov.concepts.slice();
     if(ov.bookPage!=null) card.bookPage = ov.bookPage;
     if(ov.basicProblem)   card.basicProblem = ov.basicProblem;
+    if(ov.problems) card.problems = ov.problems.slice();
     if(ov.videoUrl!=null){
       var _base=(card.media||[]).filter(function(m){return m&&m.form!=='youtube';});
       card.media = ov.videoUrl ? _base.concat([{form:'youtube', url:ov.videoUrl, by:'teacher', scope:'me'}]) : _base;
@@ -5261,15 +5379,24 @@ function ceDoSave(wrap, gradeId, bigName, smallName){
   const low=[...wrap.querySelectorAll('.ce-qcode.low')].map(t=>t.parentElement.querySelector('.ce-qtext').value.trim()).filter(Boolean);
   const high=[...wrap.querySelectorAll('.ce-qcode.high')].map(t=>t.parentElement.querySelector('.ce-qtext').value.trim()).filter(Boolean);
   const f=(name)=>{ const el=wrap.querySelector('.ce-f[data-f="'+name+'"]'); return el?el.value:''; };
-  const choices=[0,1,2,3].map(i=>f('choice'+i));
-  const ansEl=wrap.querySelector('input[name^="ce_ans_"]:checked');
-  const answer = ansEl ? parseInt(ansEl.dataset.ans,10) : 0;
+  const hints=[...wrap.querySelectorAll('.ce-hint')].map(x=>x.value.trim()).filter(Boolean);
+  const concepts=[...wrap.querySelectorAll('.ce-concept')].map(x=>x.value.trim()).filter(Boolean);
+  const problems=[...wrap.querySelectorAll('.ce-prob')].map(pb=>{
+    const stem=((pb.querySelector('.ce-stem')||{}).value||'').trim();
+    const choices=[...pb.querySelectorAll('.ce-choice')].map(x=>x.value);
+    const ansEl=pb.querySelector('input[type=radio]:checked');
+    const answer=ansEl?parseInt(ansEl.dataset.ans,10):0;
+    const explain=(pb.querySelector('.ce-explain')||{}).value||'';
+    return { stem, choices, answer, explain, by:'teacher', scope:'me' };
+  }).filter(p=>p.stem);
   const ov = {
     low, high,
-    hints: [f('hint0'), f('hint1')].filter(x=>x!=null),
-    concept: f('concept'),
+    hints,
+    concepts,
+    concept: concepts[0]||'',          // 옛 읽기 호환
     bookPage: f('page'),
-    basicProblem: { stem:f('stem'), choices, answer, explain:f('explain'), by:'teacher', scope:'me' },
+    problems,
+    basicProblem: problems[0]||null,   // 옛 읽기 호환
     videoUrl: (f('video')||'').trim()
   };
   const store=ceLoadOverrides();
@@ -10244,7 +10371,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v68.0-초3영상';
+  const APP_VERSION = 'v70.0-화면고르기';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
