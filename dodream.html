@@ -878,6 +878,8 @@ textarea.ce-f{resize:vertical;min-height:56px;line-height:1.6;}
 .ce-pick-item.active{background:#8B5CF6;color:#fff;font-weight:700;}
 .ce-pick-empty{color:var(--ink-soft);font-size:12px;padding:8px 9px;}
 .ce-or{text-align:center;color:var(--ink-soft);font-size:12px;font-weight:700;margin:10px 0 8px;}
+.ce-qadd .ce-qcode{background:#FFF3D6;color:#F0A81E;}
+.ce-qlist{margin-bottom:6px;}
 .ce-actions{display:flex;align-items:center;gap:10px;margin-top:16px;}
 .ce-save{border:none;background:linear-gradient(135deg,#7343E6,#9B6BFF);color:#fff;border-radius:11px;padding:10px 22px;font-family:inherit;font-weight:800;font-size:14px;cursor:pointer;}
 .ce-savenote{font-size:11.5px;color:#A7A2B8;font-weight:600;}
@@ -1077,7 +1079,7 @@ window.DDOOPI = {
           <div id="qList"></div>
         </div>
 
-        <div class="info-box" style="margin-top:-6px;margin-bottom:6px;">💡 <b>이 질문 하나</b>에 대해 말로 설명해 주세요. 뚜삐가 듣고 점수와 힌트를 줄 거예요. <b>80점을 넘으면</b> 다음 질문으로 넘어갈 수 있어요!</div>
+        <div class="info-box" style="margin-top:-6px;margin-bottom:6px;">💡 <b>이 질문 하나</b>에 대해 말로 설명해 주세요. 뚜삐가 듣고 점수와 힌트를 줄 거예요. <b>70점을 넘으면</b> 다음 질문으로 넘어갈 수 있어요!</div>
 
         <div class="timer-wrap" id="speakTimer" style="display:none;">
           <div class="timer-head"><span>남은 시간</span><b id="speakTimerNum">0:00</b></div>
@@ -4017,7 +4019,7 @@ const GRADE_TO_COURSE = {"초4":"e4-2","초5":"e5-1","초6":"e6-1","중1":"m1-2"
 // 두 번째 앱을 실제로 만들 때 Supabase submissions에 app 컬럼을 추가하고 저장에도 반영하면 됨.
 const APP_ID = 'speaking-math';
 const PASS_SCORE = 70;
-const ADVANCE_SCORE = 80; // 이 점수 이상이면 다음 질문으로 바로 진행
+const ADVANCE_SCORE = 70; // 통과 기준(PASS_SCORE)과 동일하게 통일 — 70점 넘으면 통과+진급
 
 /* ============================================================
    제한 시간 (초) — 학년대 × 난이도
@@ -5252,6 +5254,10 @@ function ceRowHint(v){
 function ceRowConcept(v){
   return '<div class="ce-row"><textarea class="ce-f ce-concept" placeholder="개념 설명">'+ceEsc(v)+'</textarea><button type="button" class="ce-del">×</button></div>';
 }
+function ceQRowAdd(qcode, cls, txt){
+  return '<div class="ce-qline ce-qadd"><span class="ce-qcode '+cls+'">'+ceEsc(qcode)+'</span>'
+    +'<input class="ce-qtext" type="text" value="'+ceEsc(txt||'')+'" placeholder="새 질문 입력"><button type="button" class="ce-del ce-del-q">×</button></div>';
+}
 function ceProbBlock(p){
   p = p || {stem:'',choices:['','','',''],answer:0,explain:''};
   var name='ce_ans_'+(++ceUid);
@@ -5270,8 +5276,12 @@ function ceCard(item, rawCode){
   // 저장된 수정본을 원본 위에 얹기
   const applied = ceApply(gradeId, big.name, small.name, baseType, baseCard);
   const type = applied.type, card = applied.card;
+  const _ov = ceGetOverride(gradeId, big.name, small.name) || {};
   const hasOverride = !!ceGetOverride(gradeId, big.name, small.name);
-  const low=(type&&type.low)||[], high=(type&&type.high)||[];
+  const low  = (_ov.low  && _ov.low.length)  ? _ov.low  : ((baseType&&baseType.low)||[]);
+  const high = (_ov.high && _ov.high.length) ? _ov.high : ((baseType&&baseType.high)||[]);
+  const lowAdd  = _ov.lowAdd  || [];
+  const highAdd = _ov.highAdd || [];
   const wrap=document.createElement('div'); wrap.className='ce-card';
   const esc=(s)=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const qline=(qcode,cls,txt)=> '<div class="ce-qline"><span class="ce-qcode '+cls+'">'+qcode+'</span>'
@@ -5281,9 +5291,17 @@ function ceCard(item, rawCode){
     +'<span class="ce-card-t">'+esc(gradeName)+' · '+esc(big.name)+' · '+esc(small.name)+'</span>'
     +(hasOverride?'<span class="ce-editflag">수정됨</span>':'')+'</div>';
   html+='<div class="ce-sec"><div class="ce-sec-h">🗣️ 말하기 질문 · 쉬운(L)</div>'
-    + low.map((q,i)=>qline(code+(i+1)+'L','low',q)).join('') + '</div>';
+    +'<div class="ce-qlist" data-qlist="low">'
+    + low.map((q,i)=>qline(code+(i+1)+'L','low',q)).join('')
+    + lowAdd.map((q,i)=>ceQRowAdd(code+'L-n'+(i+1),'low',q)).join('')
+    +'</div>'
+    +'<button type="button" class="ce-add ce-addq" data-addq="low">+ 질문 추가 (쉬운)</button></div>';
   html+='<div class="ce-sec"><div class="ce-sec-h">🗣️ 말하기 질문 · 깊은(H)</div>'
-    + high.map((q,i)=>qline(code+(i+1)+'H','high',q)).join('') + '</div>';
+    +'<div class="ce-qlist" data-qlist="high">'
+    + high.map((q,i)=>qline(code+(i+1)+'H','high',q)).join('')
+    + highAdd.map((q,i)=>ceQRowAdd(code+'H-n'+(i+1),'high',q)).join('')
+    +'</div>'
+    +'<button type="button" class="ce-add ce-addq" data-addq="high">+ 질문 추가 (깊은)</button></div>';
   if(card){
     // 💡 힌트 (여러 개)
     var _hints=(card.hints&&card.hints.length)?card.hints:[''];
@@ -5314,15 +5332,25 @@ function ceCard(item, rawCode){
   wrap.querySelectorAll('.ce-add').forEach(function(btn){
     btn.addEventListener('click', function(){
       var kind=btn.dataset.add;
-      var list=wrap.querySelector('.ce-list[data-list="'+kind+'"]'); if(!list) return;
-      if(kind==='hints') list.insertAdjacentHTML('beforeend', ceRowHint(''));
-      else if(kind==='concepts') list.insertAdjacentHTML('beforeend', ceRowConcept(''));
-      else if(kind==='probs') list.insertAdjacentHTML('beforeend', ceProbBlock(null));
+      if(kind){
+        var list=wrap.querySelector('.ce-list[data-list="'+kind+'"]'); if(!list) return;
+        if(kind==='hints') list.insertAdjacentHTML('beforeend', ceRowHint(''));
+        else if(kind==='concepts') list.insertAdjacentHTML('beforeend', ceRowConcept(''));
+        else if(kind==='probs') list.insertAdjacentHTML('beforeend', ceProbBlock(null));
+        return;
+      }
+      var q=btn.dataset.addq;
+      if(q){
+        var ql=wrap.querySelector('.ce-qlist[data-qlist="'+q+'"]'); if(!ql) return;
+        var n=ql.querySelectorAll('.ce-qadd').length + 1;
+        var suffix=(q==='low'?'L':'H');
+        ql.insertAdjacentHTML('beforeend', ceQRowAdd(code+suffix+'-n'+n, q, ''));
+      }
     });
   });
   wrap.addEventListener('click', function(e){
     if(e.target.classList && e.target.classList.contains('ce-del')){
-      var box=e.target.closest('.ce-row, .ce-prob'); if(box) box.remove();
+      var box=e.target.closest('.ce-row, .ce-prob, .ce-qline'); if(box) box.remove();
     }
   });
   // 버튼 배선
@@ -5357,8 +5385,9 @@ function ceApply(gradeId, bigName, smallName, baseType, baseCard){
   const type = Object.assign({}, baseType||{});
   const card = Object.assign({}, baseCard||{});
   if(ov){
-    if(ov.low)  type.low  = ov.low.slice();
-    if(ov.high) type.high = ov.high.slice();
+    var _bLow=(baseType&&baseType.low)||[], _bHigh=(baseType&&baseType.high)||[];
+    type.low  = ((ov.low&&ov.low.length)?ov.low.slice():_bLow.slice()).concat(ov.lowAdd||[]);
+    type.high = ((ov.high&&ov.high.length)?ov.high.slice():_bHigh.slice()).concat(ov.highAdd||[]);
     if(ov.hints)   card.hints   = ov.hints.slice();
     if(ov.concept!=null) card.concept = ov.concept;
     if(ov.concepts) card.concepts = ov.concepts.slice();
@@ -5376,8 +5405,11 @@ window.ceGetOverride=ceGetOverride; window.ceApply=ceApply;
 
 // 편집기 카드에서 값 읽어 저장
 function ceDoSave(wrap, gradeId, bigName, smallName){
-  const low=[...wrap.querySelectorAll('.ce-qcode.low')].map(t=>t.parentElement.querySelector('.ce-qtext').value.trim()).filter(Boolean);
-  const high=[...wrap.querySelectorAll('.ce-qcode.high')].map(t=>t.parentElement.querySelector('.ce-qtext').value.trim()).filter(Boolean);
+  const qtxt=(el)=>{ const inp=el.parentElement.querySelector('.ce-qtext'); return inp?inp.value.trim():''; };
+  const low    =[...wrap.querySelectorAll('.ce-qline:not(.ce-qadd) .ce-qcode.low')].map(qtxt).filter(Boolean);
+  const high   =[...wrap.querySelectorAll('.ce-qline:not(.ce-qadd) .ce-qcode.high')].map(qtxt).filter(Boolean);
+  const lowAdd =[...wrap.querySelectorAll('.ce-qline.ce-qadd .ce-qcode.low')].map(qtxt).filter(Boolean);
+  const highAdd=[...wrap.querySelectorAll('.ce-qline.ce-qadd .ce-qcode.high')].map(qtxt).filter(Boolean);
   const f=(name)=>{ const el=wrap.querySelector('.ce-f[data-f="'+name+'"]'); return el?el.value:''; };
   const hints=[...wrap.querySelectorAll('.ce-hint')].map(x=>x.value.trim()).filter(Boolean);
   const concepts=[...wrap.querySelectorAll('.ce-concept')].map(x=>x.value.trim()).filter(Boolean);
@@ -5390,7 +5422,7 @@ function ceDoSave(wrap, gradeId, bigName, smallName){
     return { stem, choices, answer, explain, by:'teacher', scope:'me' };
   }).filter(p=>p.stem);
   const ov = {
-    low, high,
+    low, high, lowAdd, highAdd,
     hints,
     concepts,
     concept: concepts[0]||'',          // 옛 읽기 호환
@@ -6250,7 +6282,17 @@ async function pickQuestion(){
     pool = await getOrGenerateBlanks(grade, unit);
     if(!pool) return false; // 생성 실패
   } else {
-    pool = (state.level === 'low' ? unit.low : unit.high).slice();
+    let _q = (state.level === 'low' ? unit.low : unit.high) || [];
+    try{
+      if(typeof cpCurrentBig==='function' && typeof ceApply==='function'){
+        var _bg=cpCurrentBig(), _sm=cpCurrentSmall();
+        if(_bg&&_sm){
+          var _ap=ceApply(state.gradeId,_bg.name,_sm.name,{low:unit.low,high:unit.high},null).type;
+          _q=(state.level==='low'?_ap.low:_ap.high)||_q;
+        }
+      }
+    }catch(e){}
+    pool = _q.slice();
   }
   state.questions = pool;
   state.qIndex = (Number.isInteger(state._pickerQIndex) && state._pickerQIndex >= 0 && state._pickerQIndex < pool.length) ? state._pickerQIndex : 0;
@@ -6982,7 +7024,7 @@ function renderFeedback(result, advance, needTeacher){
         <div class="fb-eyebrow">다시 말해볼 포인트</div>
         <p>${escapeHtml(result.retry_point || '힌트를 참고해서 빠진 부분을 채워 다시 설명해 볼까요?')}</p>
       </div>
-      <p class="review-note">80점을 넘으면 다음 질문으로 넘어갈 수 있어요. (지금 ${result.score}점)</p>
+      <p class="review-note">70점을 넘으면 다음 질문으로 넘어갈 수 있어요. (지금 ${result.score}점)</p>
       <button class="primary-btn accent" id="retryBtn">🎙️ 다시 설명해볼게요</button>
       ${learnBtnHtml}
       <button class="ghost-btn" id="skipQBtn">${isLast ? '이 개념 마치기' : '이 질문 건너뛰고 다음으로'}</button>`;
@@ -10371,7 +10413,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v70.0-화면고르기';
+  const APP_VERSION = 'v71.1-통과70통일';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
