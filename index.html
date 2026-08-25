@@ -5256,7 +5256,8 @@ window.ddCurrentCard=ddCurrentCard; window.ddOpenLearn=ddOpenLearn;
    · 원본(DD_CURRICULUM/DD_CARDS)은 읽기만. 저장은 다음 단계에서 붙임.
    ============================================================ */
 const CE_GRADE_PREFIX = { 'e3-1':'E31', 'e3-2':'E32', 'e4-1':'E41', 'e4-2':'E42',
-  'e5-1':'E51','e5-2':'E52','e6-1':'E61','e6-2':'E62' };
+  'e5-1':'E51','e5-2':'E52','e6-1':'E61','e6-2':'E62',
+  'm1-2':'M12' };  // 중1-2학기: 지금은 "1. 기본 도형·점,선,면"만 있음. 다른 중/고 학년은 옮길 때 여기 추가.
 // 대단원/소단원 이름 앞의 번호를 뽑아냄 ("6. 분수와 소수"→6, "02. 분수 알아보기"→2)
 function ceNum(name){ const m=String(name||'').match(/^\s*0*(\d+)/); return m?parseInt(m[1],10):0; }
 // 개념(중단원) 하나의 코드 만들기
@@ -10667,7 +10668,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v74.0-중1점선면';
+  const APP_VERSION = 'v74.1-편집기중1노출';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
