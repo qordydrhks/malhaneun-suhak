@@ -910,6 +910,8 @@ textarea.ce-f{resize:vertical;min-height:56px;line-height:1.6;}
 .learn-media{margin:10px 0;border-radius:14px;overflow:hidden;border:1px solid var(--line);}
 .learn-media img,.learn-media video{width:100%;display:block;}
 .learn-media iframe{width:100%;aspect-ratio:16/9;display:block;border:0;}
+.learn-figure,.q-figure{background:#fff;border-radius:14px;padding:8px;}
+.q-figure{margin-bottom:10px;border:1px solid var(--line);}
 .learn-stem{margin:0 0 12px;font-size:15px;font-weight:700;line-height:1.6;color:var(--ink);}
 .learn-choice{display:block;width:100%;text-align:left;border:2px solid #E7E4F0;background:#fff;border-radius:12px;
   padding:12px 14px;margin-bottom:8px;font-family:inherit;font-size:14.5px;font-weight:650;color:var(--ink);cursor:pointer;}
@@ -5195,6 +5197,154 @@ function ddYouTubeEmbed(url){
   if(!id) return '';
   return 'https://www.youtube.com/embed/'+id+(start? '?start='+start : '');
 }
+
+/* ============================================================
+   [도형 생성기] ddFig — 명령(장면 설명 객체) → 좌표 계산 → SVG 문자열.
+   손으로 좌표/각도를 계산하지 않도록, 접기 반사·각도 부채꼴·평행 표시 등을
+   함수가 대신 계산해준다. 초등용 cvDrawFigure와는 완전히 별도(격리).
+   ============================================================ */
+function ddVec(a,b){ return [b[0]-a[0], b[1]-a[1]]; }
+function ddLen(v){ return Math.sqrt(v[0]*v[0]+v[1]*v[1]); }
+function ddNorm(v){ const l=ddLen(v)||1; return [v[0]/l, v[1]/l]; }
+function ddAddV(a,v,s){ s=(s==null?1:s); return [a[0]+v[0]*s, a[1]+v[1]*s]; }
+function ddAngleOf(v){ return Math.atan2(v[1], v[0]); } // SVG(y-아래) 좌표계 기준
+
+// 점 P를 직선 AB에 대해 반사(접기)한 점을 구한다.
+function ddReflect(P, A, B){
+  const d=ddNorm(ddVec(A,B));
+  const v=ddVec(A,P);
+  const t=v[0]*d[0]+v[1]*d[1];
+  const proj=[d[0]*t, d[1]*t];
+  const perp=[v[0]-proj[0], v[1]-proj[1]];
+  return [A[0]+proj[0]-perp[0], A[1]+proj[1]-perp[1]];
+}
+
+// vertex에서 p1,p2 방향으로 반지름 r인 부채꼴 path (항상 180도보다 작은 쪽으로 그려짐)
+function ddWedgePath(vertex, p1, p2, r){
+  let a1=ddAngleOf(ddVec(vertex,p1)), a2=ddAngleOf(ddVec(vertex,p2));
+  let diff=a2-a1;
+  while(diff<=-Math.PI) diff+=2*Math.PI;
+  while(diff>Math.PI) diff-=2*Math.PI;
+  const sweep=diff>=0?1:0;
+  const q1=ddAddV(vertex,[Math.cos(a1),Math.sin(a1)],r);
+  const q2=ddAddV(vertex,[Math.cos(a2),Math.sin(a2)],r);
+  return 'M '+vertex[0]+','+vertex[1]+' L '+q1[0].toFixed(1)+','+q1[1].toFixed(1)+' A '+r+' '+r+' 0 0 '+sweep+' '+q2[0].toFixed(1)+','+q2[1].toFixed(1)+' Z';
+}
+// 실제 각도(도)를 계산 (라벨에 "45°" 자동으로 넣기 위함)
+function ddAngleDeg(vertex, p1, p2){
+  let a1=ddAngleOf(ddVec(vertex,p1)), a2=ddAngleOf(ddVec(vertex,p2));
+  let diff=Math.abs(a2-a1);
+  if(diff>Math.PI) diff=2*Math.PI-diff;
+  return Math.round((diff*180/Math.PI)*10)/10;
+}
+function ddWedgeLabelPos(vertex, p1, p2, rLabel){
+  let a1=ddAngleOf(ddVec(vertex,p1)), a2=ddAngleOf(ddVec(vertex,p2));
+  let diff=a2-a1;
+  while(diff<=-Math.PI) diff+=2*Math.PI;
+  while(diff>Math.PI) diff-=2*Math.PI;
+  const mid=a1+diff/2;
+  return ddAddV(vertex,[Math.cos(mid),Math.sin(mid)],rLabel);
+}
+
+// scene = {title, width, axes:{xMin,xMax,yMin,yMax,ox,oy,scale}, points:{name:[x,y]},
+//   derive:[{name,type:'reflect'|'mid'|'along',...}], shapes:[{points:[names],style:'solid'|'dashed'|'ghost',fill,stroke}],
+//   angles:[{at,to:[name,name],color,stroke,label,deg,r}], rightAngles:[{at,to:[name,name]}],
+//   parallelMarks:[{points:[name,name],count}], labels:[{point,dx,dy,text,color,dot}], caption:'...'|['...']}
+function ddFig(scene){
+  const W = scene.width || 320;
+  const pts = {};
+  Object.keys(scene.points||{}).forEach(k=>pts[k]=scene.points[k].slice());
+  (scene.derive||[]).forEach(d=>{
+    if(d.type==='reflect') pts[d.name]=ddReflect(pts[d.point], pts[d.over[0]], pts[d.over[1]]);
+    else if(d.type==='mid') pts[d.name]=[(pts[d.a][0]+pts[d.b][0])/2, (pts[d.a][1]+pts[d.b][1])/2];
+    else if(d.type==='along'){ const dir=ddNorm(ddVec(pts[d.a],pts[d.b])); pts[d.name]=ddAddV(pts[d.a],dir,d.t); }
+  });
+
+  let body='', maxY=0;
+
+  if(scene.axes){
+    const ax=scene.axes;
+    const toPx=(x,y)=>[ax.ox+x*ax.scale, ax.oy-y*ax.scale];
+    let grid='';
+    const top = ax.oy-ax.yMax*ax.scale, bot = ax.oy-ax.yMin*ax.scale;
+    const left = ax.ox+ax.xMin*ax.scale, right = ax.ox+ax.xMax*ax.scale;
+    for(let gx=Math.ceil(ax.xMin); gx<=ax.xMax; gx++){ const px=ax.ox+gx*ax.scale; grid+='<line x1="'+px+'" y1="'+top+'" x2="'+px+'" y2="'+bot+'" stroke="#E5E3DC" stroke-width="1"/>'; }
+    for(let gy=Math.ceil(ax.yMin); gy<=ax.yMax; gy++){ const py=ax.oy-gy*ax.scale; grid+='<line x1="'+left+'" y1="'+py+'" x2="'+right+'" y2="'+py+'" stroke="#E5E3DC" stroke-width="1"/>'; }
+    body+=grid;
+    body+='<line x1="'+left+'" y1="'+ax.oy+'" x2="'+right+'" y2="'+ax.oy+'" stroke="#888780" stroke-width="1.5"/>';
+    body+='<line x1="'+ax.ox+'" y1="'+bot+'" x2="'+ax.ox+'" y2="'+top+'" stroke="#888780" stroke-width="1.5"/>';
+    body+='<text x="'+(right-4)+'" y="'+(ax.oy-6)+'" font-size="12" fill="#888780" text-anchor="end">x</text>';
+    body+='<text x="'+(ax.ox+8)+'" y="'+(top+12)+'" font-size="12" fill="#888780">y</text>';
+    Object.keys(pts).forEach(k=>{ const p=pts[k]; pts[k]=toPx(p[0],p[1]); });
+  }
+
+  (scene.shapes||[]).forEach(sh=>{
+    const P=sh.points.map(n=>pts[n]);
+    const d='M '+P.map(p=>p[0]+','+p[1]).join(' L ')+(sh.close!==false?' Z':'');
+    const style=sh.style||'solid';
+    if(style==='ghost') body+='<path d="'+d+'" fill="none" stroke="'+(sh.stroke||'#9A9890')+'" stroke-width="1.8" stroke-dasharray="7,6"/>';
+    else if(style==='dashed') body+='<path d="'+d+'" fill="'+(sh.fill||'none')+'" stroke="'+(sh.stroke||'#2C2C2A')+'" stroke-width="'+(sh.strokeWidth||2)+'" stroke-dasharray="7,6"/>';
+    else body+='<path d="'+d+'" fill="'+(sh.fill||'none')+'" stroke="'+(sh.stroke||'#2C2C2A')+'" stroke-width="'+(sh.strokeWidth||2)+'"/>';
+  });
+
+  (scene.angles||[]).forEach(an=>{
+    const v=pts[an.at], p1=pts[an.to[0]], p2=pts[an.to[1]];
+    const r=an.r||34;
+    body+='<path d="'+ddWedgePath(v,p1,p2,r)+'" fill="'+(an.color||'#85B7EB')+'" fill-opacity="'+(an.opacity!=null?an.opacity:0.5)+'" stroke="'+(an.stroke||'#185FA5')+'" stroke-width="1.5"/>';
+    if(an.label!==false){
+      const deg=an.deg||ddAngleDeg(v,p1,p2);
+      const lp=ddWedgeLabelPos(v,p1,p2,r+(an.labelOffset||22));
+      const text=an.label||(deg+'°');
+      body+='<text x="'+lp[0]+'" y="'+lp[1]+'" font-size="13" font-weight="500" fill="'+(an.textColor||'#0C447C')+'" text-anchor="middle">'+text+'</text>';
+    }
+  });
+
+  (scene.rightAngles||[]).forEach(ra=>{
+    const v=pts[ra.at], p1=pts[ra.to[0]], p2=pts[ra.to[1]];
+    const s=ra.size||14;
+    const d1=ddNorm(ddVec(v,p1)), d2=ddNorm(ddVec(v,p2));
+    const q1=ddAddV(v,d1,s), q2=ddAddV(v,d2,s), q3=ddAddV(q1,d2,s);
+    body+='<path d="M '+q1[0]+','+q1[1]+' L '+q3[0]+','+q3[1]+' L '+q2[0]+','+q2[1]+'" fill="none" stroke="'+(ra.stroke||'#3FB98C')+'" stroke-width="2"/>';
+  });
+
+  (scene.parallelMarks||[]).forEach(pm=>{
+    const a=pts[pm.points[0]], b=pts[pm.points[1]];
+    const mid=[(a[0]+b[0])/2, (a[1]+b[1])/2];
+    const dir=ddNorm(ddVec(a,b));
+    const perp=[-dir[1], dir[0]];
+    const n=pm.count||1;
+    for(let i=0;i<n;i++){
+      const off=(i-(n-1)/2)*9;
+      const c=ddAddV(mid,dir,off);
+      const t1=ddAddV(c,dir,-6), t1p=ddAddV(t1,perp,5);
+      const t2=ddAddV(c,dir,6);
+      body+='<line x1="'+t1p[0]+'" y1="'+t1p[1]+'" x2="'+t2[0]+'" y2="'+t2[1]+'" stroke="'+(pm.stroke||'#2C2C2A')+'" stroke-width="2"/>';
+    }
+  });
+
+  (scene.labels||[]).forEach(lb=>{
+    const p=pts[lb.point];
+    const x=p[0]+(lb.dx||0), y=p[1]+(lb.dy||0);
+    if(lb.dot!==false) body+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="3" fill="'+(lb.dotColor||'#2C2C2A')+'"/>';
+    body+='<text x="'+x+'" y="'+y+'" font-size="14" fill="'+(lb.color||'#2C2C2A')+'">'+escapeHtml(lb.text!=null?lb.text:lb.point)+'</text>';
+  });
+
+  Object.values(pts).forEach(p=>{ maxY=Math.max(maxY,p[1]); });
+  (scene.labels||[]).forEach(lb=>{ maxY=Math.max(maxY, pts[lb.point][1]+(lb.dy||0)+20); });
+  const H = scene.height || Math.ceil(maxY+40);
+
+  let extra='';
+  let totalH=H;
+  if(scene.caption){
+    const cap = Array.isArray(scene.caption)?scene.caption:[scene.caption];
+    const capH = 22*cap.length+16;
+    extra+='<rect x="20" y="'+H+'" width="'+(W-40)+'" height="'+capH+'" rx="8" fill="#F1EFE8"/>';
+    cap.forEach((line,i)=>{ extra+='<text x="36" y="'+(H+24+i*18)+'" font-size="12.5" fill="#444441">'+escapeHtml(line)+'</text>'; });
+    totalH = H+capH+10;
+  }
+
+  return '<svg width="100%" viewBox="0 0 '+W+' '+totalH+'" role="img" style="max-width:520px;display:block;margin:0 auto"><title>'+escapeHtml(scene.title||'도형')+'</title>'+body+extra+'</svg>';
+}
 /* [강조고정] 말하기 화면 상단에 대단원+개념 고정멘트 표시 */
 function ddShowEmphasis(){
   try{
@@ -5222,6 +5372,8 @@ function ddOpenLearn(card){
     if(m && m.form==='image' && m.url) html += '<div class="learn-media"><img src="'+escapeHtml(m.url)+'" alt="'+escapeHtml(m.title||'')+'"></div>';
     else if(m && m.form==='video' && m.url) html += '<div class="learn-media"><video src="'+escapeHtml(m.url)+'" controls playsinline></video></div>';
     else if(m && m.form==='youtube' && m.url){ var _src=ddYouTubeEmbed(m.url); if(_src) html += '<div class="learn-media"><iframe src="'+_src+'" allowfullscreen allow="encrypted-media; picture-in-picture"></iframe></div>'; }
+    else if(m && m.form==='svg' && m.svg){ html += '<div class="learn-media learn-figure">'+m.svg+'</div>'; }
+    else if(m && m.form==='ddfig' && m.scene){ try{ html += '<div class="learn-media learn-figure">'+ddFig(m.scene)+'</div>'; }catch(e){} }
   });
   var _probs=(c.problems&&c.problems.length)?c.problems:(c.basicProblem?[c.basicProblem]:[]);
   _probs.forEach(function(bp,pi){
@@ -6348,14 +6500,51 @@ DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','28. 두 직선이 평행하기 
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','29. 평행선에서 각의 크기 구하기') ] = {
   hints: ['꺾인 점이 있을 때 무엇을 그으면 좋을까?', '보조선은 어떤 방향으로 그어야 할까?'],
   concept: '동위각과 엇각을 이용하려면 평행선과 한 직선이 만나야 해. 그래서 중간에 꺾인 점이 있는 문제에서는 그 꺾인 점을 지나면서 평행선 l, m과 평행한 보조선을 긋고 엇각의 크기가 같다는 성질을 쓰면 돼. 꺾인 점이 2개면 각각의 꺾인 점에서 평행한 보조선을 그으면 되고, 그러면 구하는 각을 두 엇각의 합으로 나누어 구할 수 있어.',
-  media: [],
+  media: [ { form:'ddfig', by:'app', scope:'me', scene: {
+    title: '꺾인 점에 보조선을 그어 엇각으로 나누기',
+    points: { L1:[60,60], L2:[620,60], M1:[60,280], M2:[620,280], X:[180,60], Y:[300,280], P:[420,170], AuxL:[220,170], AuxR:[600,170] },
+    shapes: [
+      { points:['L1','L2'], style:'solid', close:false },
+      { points:['M1','M2'], style:'solid', close:false },
+      { points:['AuxL','AuxR'], style:'dashed', stroke:'#888780', close:false },
+      { points:['X','P','Y'], style:'solid', stroke:'#534AB7', close:false }
+    ],
+    angles: [
+      { at:'X', to:['L2','P'], color:'#F0997B', stroke:'#993C1D' },
+      { at:'P', to:['AuxL','X'], color:'#F0997B', stroke:'#993C1D' },
+      { at:'Y', to:['M1','P'], color:'#85B7EB', stroke:'#185FA5' },
+      { at:'P', to:['AuxR','Y'], color:'#85B7EB', stroke:'#185FA5' }
+    ],
+    parallelMarks: [ { points:['L1','L2'] }, { points:['M1','M2'] } ],
+    labels: [
+      { point:'L1', dx:-14, dy:-8, text:'l' }, { point:'M1', dx:-14, dy:22, text:'m' },
+      { point:'X', dx:-8, dy:-10 }, { point:'Y', dx:8, dy:24 }, { point:'P', dx:10, dy:-8 }
+    ],
+    caption: ['꺾인 점 P를 지나 l, m과 평행한 보조선(점선)을 그으면', '주황 두 각이 서로 같고(엇각), 파란 두 각도 서로 같아요(엇각) — 구하는 각 = 주황 + 파랑']
+  } } ],
   basicProblem: { stem:'l∥m이고 중간에 꺾인 점이 있는 각도 문제를 풀 때 가장 먼저 할 일은?', choices:['꺾인 점을 지나고 l, m과 평행한 보조선을 긋는다','꺾인 점에서 수선을 내린다','각을 자로 직접 잰다','두 직선을 끝까지 연장한다'], answer:0, explain:'꺾인 점을 지나는 평행한 보조선을 그으면 엇각을 이용해 각을 나누어 구할 수 있어요.', by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 59쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','30. 직사각형 종이접기와 각의 크기') ] = {
   hints: ['종이를 접으면 접은 각과 원래 각의 크기는 어떨까?', '직사각형의 마주 보는 두 변은 어떤 관계일까?'],
   concept: '직사각형 모양의 종이를 접었을 때 각의 크기를 구하는 문제는 두 가지만 기억하면 돼. ① 접은 각의 크기는 서로 같다. ② 직사각형의 마주 보는 변은 평행하므로 엇각의 크기가 같다. 이 두 가지를 이어 붙이면 접힌 부분에 있는 여러 각이 서로 같다는 걸 알 수 있어서 구하는 각을 찾을 수 있어.',
-  media: [],
+  media: [ { form:'ddfig', by:'app', scope:'me', scene: {
+    title: '접은 각 = 원래 각',
+    points: { A:[140,80], B:[540,80], C:[540,320], D:[140,320], E:[440,320], F:[540,220] },
+    derive: [ { name:'C2', type:'reflect', point:'C', over:['E','F'] } ],
+    shapes: [
+      { points:['A','B','F','E','D'], style:'solid', fill:'#F8F7F4' },
+      { points:['E','F','C'], style:'ghost' },
+      { points:['E','F','C2'], style:'solid', fill:'#F5C4B3', stroke:'#993C1D' }
+    ],
+    angles: [ { at:'F', to:['C','E'] }, { at:'F', to:['E','C2'] } ],
+    labels: [
+      { point:'A', dx:-18, dy:-8 }, { point:'B', dx:8, dy:-8 },
+      { point:'D', dx:-18, dy:14 }, { point:'E', dx:-14, dy:24 },
+      { point:'F', dx:10, dy:-4 }, { point:'C2', dx:6, dy:-10, text:'C′', color:'#993C1D' }
+    ],
+    caption: ['실선 = 접은 뒤 지금 종이 모양 · 점선 = 접기 전 C가 있던 자리(지금은 빈 자리)', '파란 두 각(접은각·원래각)은 크기가 같아요']
+  } } ],
   basicProblem: { stem:'직사각형 모양의 종이를 접는 문제에서 이용하는 두 가지 성질은?', choices:['접은 각의 크기가 같다는 것과 평행선의 엇각이 같다는 것','넓이가 같다는 것과 둘레가 같다는 것','대각선이 같다는 것과 수직이라는 것','맞꼭지각이 같다는 것과 평각이 180°라는 것'], answer:0, explain:'접은 각은 크기가 같고, 직사각형의 마주 보는 변이 평행하므로 엇각의 크기도 같아요.', by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 60쪽', by:'app', scope:'me'
 };
@@ -6864,9 +7053,21 @@ function renderCurrentQuestion(){
   const i = state.qIndex;
   const q = state.questions[i];
   $('qMeta').textContent = grade.name + ' · ' + unit.label + ' · ' + LEVEL_NAMES[state.level];
+  // [그림] 이 개념에 도형이 있으면 질문 위에 같이 보여준다 (텍스트만으로 알기 어려운 문제 보완)
+  var figHtml = '';
+  try{
+    var _bg=(typeof cpCurrentBig==='function')?cpCurrentBig():null;
+    var _sm=(typeof cpCurrentSmall==='function')?cpCurrentSmall():null;
+    if(_bg && _sm){
+      var _card = ddGetCard(state.gradeId, _bg.name, _sm.name);
+      var _figMedia = (_card.media||[]).find(function(m){ return m && ((m.form==='svg' && m.svg) || (m.form==='ddfig' && m.scene)); });
+      if(_figMedia) figHtml = '<div class="q-figure">'+(_figMedia.form==='ddfig'?ddFig(_figMedia.scene):_figMedia.svg)+'</div>';
+    }
+  }catch(e){}
   $('qList').innerHTML = `
     <div class="q-progress">질문 ${i+1} / ${total}</div>
     <div class="q-item">
+      ${figHtml}
       <div class="q-item-text">${escapeHtml(q)}</div>
       <button class="hint-btn" data-qi="${i}">💡 힌트 보기</button>
       <div class="hint-box" id="hintBox-${i}"></div>
@@ -10993,7 +11194,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v74.3-기본도형완료';
+  const APP_VERSION = 'v74.4-도형생성기';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
