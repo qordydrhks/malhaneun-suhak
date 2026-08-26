@@ -5251,7 +5251,6 @@ function ddWedgeLabelPos(vertex, p1, p2, rLabel){
 //   angles:[{at,to:[name,name],color,stroke,label,deg,r}], rightAngles:[{at,to:[name,name]}],
 //   parallelMarks:[{points:[name,name],count}], labels:[{point,dx,dy,text,color,dot}], caption:'...'|['...']}
 function ddFig(scene){
-  const W = scene.width || 320;
   const pts = {};
   Object.keys(scene.points||{}).forEach(k=>pts[k]=scene.points[k].slice());
   (scene.derive||[]).forEach(d=>{
@@ -5329,8 +5328,14 @@ function ddFig(scene){
     body+='<text x="'+x+'" y="'+y+'" font-size="14" fill="'+(lb.color||'#2C2C2A')+'">'+escapeHtml(lb.text!=null?lb.text:lb.point)+'</text>';
   });
 
-  Object.values(pts).forEach(p=>{ maxY=Math.max(maxY,p[1]); });
-  (scene.labels||[]).forEach(lb=>{ maxY=Math.max(maxY, pts[lb.point][1]+(lb.dy||0)+20); });
+  let maxX=0;
+  Object.values(pts).forEach(p=>{ maxX=Math.max(maxX,p[0]); maxY=Math.max(maxY,p[1]); });
+  (scene.labels||[]).forEach(lb=>{
+    const p=pts[lb.point];
+    maxX=Math.max(maxX, p[0]+(lb.dx||0)+30);
+    maxY=Math.max(maxY, p[1]+(lb.dy||0)+20);
+  });
+  const W = scene.width || Math.ceil(maxX+40);
   const H = scene.height || Math.ceil(maxY+40);
 
   let extra='';
@@ -11194,7 +11199,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v74.4-도형생성기';
+  const APP_VERSION = 'v74.5-도형크기수정';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
