@@ -7528,7 +7528,8 @@ async function ensureHintStep(box, qi, stepIndex){
   const grade = GRADES.find(g=>g.id===state.gradeId);
   const unit = currentUnits().find(u=>u.id===state.unitId);
   const question = state.questions[qi];
-  const cacheKey = 'hstep:' + grade.id + ':' + unit.id + ':' + state.level + ':' + qi + ':' + step.key;
+  // [캐시 열쇠] 문제(quiz)와 같은 이유로 질문 '번호'가 아니라 질문 '글자'로 만든다. (v74.8 수정)
+  const cacheKey = 'hstep:' + grade.id + ':' + unit.id + ':' + state.level + ':' + quizKeyOf(question) + ':' + step.key + ':v2';
 
   const cached = await storageGet(cacheKey);
   if(cached && cached.text){ box._hints[step.key] = cached.text; return true; }
@@ -8777,9 +8778,21 @@ async function countProblems(filter){
   return list.length;
 }
 
+// 질문 글자 → 짧은 열쇠 문자열. 캐시 열쇠를 '질문 내용'으로 만들기 위해 씀.
+function quizKeyOf(text){
+  var s = String(text||''), h = 5381;
+  for(var i=0;i<s.length;i++){ h = ((h*33) ^ s.charCodeAt(i)) >>> 0; }
+  return h.toString(36);
+}
+
 async function getOrGenerateQuiz(grade, unit){
   const qi = state.qIndex || 0;
-  const cacheKey = 'quiz:' + grade.id + ':' + unit.id + ':' + state.level + ':q' + qi + ':v3';
+  // [캐시 열쇠] 질문 '번호'가 아니라 질문 '글자'로 만든다. (v74.8 수정)
+  //   화면에서 질문을 직접 클릭해 들어오면 질문이 1개만 담기고 번호가 항상 0이 된다.
+  //   그래서 번호로 열쇠를 만들면 같은 개념의 질문 ①②③이 전부 같은 열쇠(q0)가 되어,
+  //   질문①에서 만든 문제가 ②③에서도 그대로 다시 나왔다.
+  const quizQ = (state.questions || [])[qi] || unit.label || '';
+  const cacheKey = 'quiz:' + grade.id + ':' + unit.id + ':' + state.level + ':q' + quizKeyOf(quizQ) + ':v4';
   try{
     const cached = await storageGet(cacheKey);
     if(cached && cached.quiz && cached.quiz.length) return cached.quiz;
@@ -11602,7 +11615,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-  const APP_VERSION = 'v74.7-입체도형완료';
+  const APP_VERSION = 'v74.8-문제캐시수정';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
