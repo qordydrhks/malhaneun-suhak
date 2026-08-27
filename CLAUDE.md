@@ -64,10 +64,33 @@
 
 **배포:** GitHub Pages `qordydrhks.github.io/malhaneun-suhak/dodream.html`
 (index.html = 가짜 404. manifest start_url = dodream.html)
-⚠️ 마스터는 **GitHub Desktop**으로 직접 올림. (커밋·푸시는 마스터가 시킬 때만.)
-
 **작업 폴더 [2026-08-27 이동]:** `C:\Users\qordy\Documents\GitHub\malhaneun-suhak`
-(예전 `바탕화면\말하는 수학 코드\...`는 더 이상 쓰지 않음. remote = `origin` github qordydrhks/malhaneun-suhak)
+(예전 `바탕화면\말하는 수학 코드\...`는 더 이상 쓰지 않음. remote = `origin` → github qordydrhks/malhaneun-suhak)
+
+### 🚀 배포 절차 (버전 올릴 때마다 이대로) [2026-08-27 확정]
+**Claude가 커밋까지 하고, 마스터는 GitHub Desktop에서 `Push origin` 버튼만 누른다.**
+
+Claude가 할 일 (한 단원 끝날 때마다 묶어서):
+1. `APP_VERSION` 올리기
+2. `CLAUDE.md` 갱신(진행상황·버전 히스토리)
+3. 검증 통과 확인 (아래 "검증 방법")
+4. **줄바꿈 CRLF 확인** — `dodream.html`은 CRLF다. 파이썬으로 저장하면 LF로 바뀌어
+   diff가 1만 줄로 부풀어 리뷰가 불가능해진다. 저장 후 반드시 확인하고, LF면 되돌릴 것:
+   ```bash
+   python -c "p='dodream.html'; d=open(p,'rb').read(); d=d.replace(b'\r\n',b'\n').replace(b'\n',b'\r\n'); open(p,'wb').write(d)"
+   ```
+   `git diff --stat`이 수백 줄이면 정상, 수천~수만 줄이면 줄바꿈 사고다.
+5. `git add` + `git commit` (푸시는 하지 말 것)
+6. 마스터에게 "커밋 완료 — GitHub Desktop에서 Push origin 눌러주세요" 라고 알리기
+
+⚠️ **Claude는 push 못 한다** (remote가 없어서가 아니라 **인증 때문**).
+이 저장소는 `credential.helper=manager`(Git Credential Manager) 라서 push할 때 로그인 창이 뜨는데,
+Claude 터미널은 창을 띄우거나 클릭할 수 없어 그냥 멈춘다(타임아웃). `gh` CLI도 이 PC엔 없다.
+→ 시도해서 시간 낭비하지 말고 커밋까지만 하고 마스터에게 넘길 것. 읽기(`git ls-remote`)는 공개 저장소라 됨.
+
+⚠️ **단, 푸시가 타임아웃돼도 "실패"라고 단정하지 말 것.** 2026-08-27에 실제로 이런 일이 있었다:
+터미널은 2번 다 타임아웃으로 끊겼는데 서버 쪽 전송은 이미 끝나 있었다(중간에 확인했을 땐 아직 옛 커밋이었음).
+→ 마스터에게 실패했다고 말하기 전에 반드시 `git ls-remote origin main`으로 **원격의 실제 커밋을 확인**할 것.
 
 ---
 
@@ -175,7 +198,8 @@
 - 버전 배지(`APP_VERSION`) 올리기 — 마스터가 배포 확인용.
 - 변경은 작게 나눠서, 각 단계 미리보기·승인.
 - Claude Code에서는 권한 보수적으로(읽기 허용, 수정·설치·커밋은 물어보게, 파괴적 명령 차단).
-- **커밋은 마스터가 시킬 때만.** push는 불가(remote 없음) — 마스터가 GitHub Desktop으로 올림.
+- **커밋은 한 단원 끝날 때 (또는 마스터가 시킬 때).** push는 Claude가 못 함(인증 창) — 마스터가 `Push origin` 누름.
+  자세한 건 위 "🚀 배포 절차" 참고.
 
 ### 검증 방법 (node 없음 / 배포 접근 없음)
 `node`도 `pdftoppm`도 이 PC엔 없다. 대신:
