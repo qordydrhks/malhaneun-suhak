@@ -5956,13 +5956,7 @@ DD_CARDS[ ddConceptId('e3-1','6. 분수와 소수','02. 분수 알아보기') ] 
   ],
   concept: '전체를 똑같이 나눈 것 중 몇 개를 나타내는 수를 분수라고 해요. 아래에 있는 수(분모)는 전체를 똑같이 나눈 수, 위에 있는 수(분자)는 그중 몇 개인지를 나타내요. 예를 들어 전체를 똑같이 2로 나눈 것 중의 1은 2분의 1이라고 써요. 읽을 때는 분모를 먼저, 분자를 나중에 읽어요.',
   media: [],
-  basicProblem: {
-    stem: '전체를 똑같이 5로 나눈 것 중 2칸이 색칠되어 있어요. 색칠한 부분을 분수로 나타내면?',
-    choices: ['5분의 2','2분의 5','5분의 3','2분의 3'],
-    answer: 0,
-    explain: '똑같이 5로 나눴으니 분모는 5, 색칠한 칸이 2개이니 분자는 2 → 5분의 2.',
-    by: 'app', scope: 'me'
-  },
+  basicProblem: { stem:"전체를 똑같이 5로 나눈 것 중 2칸이 색칠되어 있어요. 색칠한 부분을 분수로 나타내면?", choices:["2분의 5", "5분의 3", "2분의 3", "5분의 2"], answer:3, explain:"똑같이 5로 나눴으니 분모는 5, 색칠한 칸이 2개이니 분자는 2 → 5분의 2.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 160쪽',
   by: 'app', scope: 'me'
 };
@@ -5972,42 +5966,42 @@ DD_CARDS[ ddConceptId('e3-1','1. 덧셈과 뺄셈','01. (세 자리 수)+(세 �
   hints: ['일·십·백의 자리를 줄 맞춰 써봤어?', '같은 자리끼리 더하면 돼!'],
   concept: '세 자리 수의 덧셈은 각 자리를 맞춰 쓰고, 일의 자리끼리·십의 자리끼리·백의 자리끼리 같은 자리 수를 더해요. (받아올림이 없을 때)',
   media: [],
-  basicProblem: { stem:'123 + 135 = ?', choices:['258','248','358','268'], answer:0, explain:'일:3+5=8, 십:2+3=5, 백:1+1=2 → 258.', by:'app', scope:'me' },
+  basicProblem: { stem:"123 + 135 = ?", choices:["248", "358", "268", "258"], answer:3, explain:"일:3+5=8, 십:2+3=5, 백:1+1=2 → 258.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 8쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','1. 덧셈과 뺄셈','02. (세 자리 수)+(세 자리 수) (2)') ] = {
   hints: ['어느 자리에서 10이 넘는지 봐볼까?', '10이 넘으면 윗자리로 1을 올려줘!'],
   concept: '같은 자리끼리 더한 값이 10이거나 넘으면, 윗자리로 1을 올려서 계산해요. 이것을 받아올림이라고 해요.',
   media: [],
-  basicProblem: { stem:'126 + 118 = ?', choices:['244','234','254','245'], answer:0, explain:'일:6+8=14 → 4 쓰고 1 올림. 십:2+1+1=4. 백:1+1=2 → 244.', by:'app', scope:'me' },
+  basicProblem: { stem:"126 + 118 = ?", choices:["244", "245", "254", "234"], answer:0, explain:"일:6+8=14 → 4 쓰고 1 올림. 십:2+1+1=4. 백:1+1=2 → 244.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 10쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','1. 덧셈과 뺄셈','03. (세 자리 수)+(세 자리 수) (3)') ] = {
   hints: ['일의 자리부터 차례로 올림이 생기는지 확인해봐.', '올림은 바로 윗자리에 더해주는 거야!'],
   concept: '받아올림이 여러 번 생길 수 있어요. 일의 자리부터 차례로 더하면서, 10이 넘을 때마다 윗자리로 1씩 올려 계산해요.',
   media: [],
-  basicProblem: { stem:'168 + 175 = ?', choices:['343','333','353','344'], answer:0, explain:'일:8+5=13→3(올림1). 십:6+7+1=14→4(올림1). 백:1+1+1=3 → 343.', by:'app', scope:'me' },
+  basicProblem: { stem:"168 + 175 = ?", choices:["343", "344", "353", "333"], answer:0, explain:"일:8+5=13→3(올림1). 십:6+7+1=14→4(올림1). 백:1+1+1=3 → 343.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 12쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','1. 덧셈과 뺄셈','04. (세 자리 수)-(세 자리 수) (1)') ] = {
   hints: ['일·십·백의 자리를 줄 맞춰 썼어?', '같은 자리끼리 빼면 돼!'],
   concept: '세 자리 수의 뺄셈은 자리를 맞춰 쓰고, 일의 자리끼리·십의 자리끼리·백의 자리끼리 같은 자리 수를 빼요. (받아내림이 없을 때)',
   media: [],
-  basicProblem: { stem:'358 - 135 = ?', choices:['223','233','213','323'], answer:0, explain:'일:8-5=3, 십:5-3=2, 백:3-1=2 → 223.', by:'app', scope:'me' },
+  basicProblem: { stem:"358 - 135 = ?", choices:["213", "223", "233", "323"], answer:1, explain:"일:8-5=3, 십:5-3=2, 백:3-1=2 → 223.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 18쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','1. 덧셈과 뺄셈','05. (세 자리 수)-(세 자리 수) (2)') ] = {
   hints: ['위의 수가 아래 수보다 작은 자리가 있어?', '뺄 수 없으면 윗자리에서 10을 빌려와!'],
   concept: '같은 자리끼리 뺄 수 없을 때(위 수가 더 작을 때), 바로 윗자리에서 10을 빌려와 계산해요. 이것을 받아내림이라고 해요.',
   media: [],
-  basicProblem: { stem:'352 - 128 = ?', choices:['224','234','214','324'], answer:0, explain:'일:12-8=4(십에서 빌림). 십:4-2=2. 백:3-1=2 → 224.', by:'app', scope:'me' },
+  basicProblem: { stem:"352 - 128 = ?", choices:["324", "214", "224", "234"], answer:2, explain:"일:12-8=4(십에서 빌림). 십:4-2=2. 백:3-1=2 → 224.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 20쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','1. 덧셈과 뺄셈','06. (세 자리 수)-(세 자리 수) (3)') ] = {
   hints: ['일의 자리부터 빌림이 필요한 자리를 찾아봐.', '빌려오면 윗자리는 1이 줄어드는 거 잊지 마!'],
   concept: '받아내림이 여러 번 필요할 수 있어요. 일의 자리부터 빼면서, 뺄 수 없으면 윗자리에서 10을 빌려오고, 빌려준 자리는 1이 줄어요.',
   media: [],
-  basicProblem: { stem:'523 - 256 = ?', choices:['267','277','257','367'], answer:0, explain:'일:13-6=7(십에서 빌림). 십:11-5=6(백에서 빌림). 백:4-2=2 → 267.', by:'app', scope:'me' },
+  basicProblem: { stem:"523 - 256 = ?", choices:["367", "267", "257", "277"], answer:1, explain:"일:13-6=7(십에서 빌림). 십:11-5=6(백에서 빌림). 백:4-2=2 → 267.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 22쪽', by:'app', scope:'me'
 };
 
@@ -6016,35 +6010,35 @@ DD_CARDS[ ddConceptId('e3-1','2. 평면도형','01. 선의 종류') ] = {
   hints: ['선의 양쪽 끝이 어떻게 생겼는지 봐볼까?', '끝점이 있는지, 한쪽/양쪽으로 늘어나는지 살펴봐!'],
   concept: '선분은 두 점을 곧게 이은 선, 직선은 선분을 양쪽으로 끝없이 늘인 곧은 선, 반직선은 한 점에서 시작해 한쪽으로만 끝없이 늘인 곧은 선이에요. 선분은 끝점이 둘, 반직선은 시작점 하나, 직선은 끝점이 없어요.',
   media: [],
-  basicProblem: { stem:'두 점을 곧게 이은 선을 무엇이라고 할까요?', choices:['선분','직선','반직선','곡선'], answer:0, explain:'두 점을 곧게 이은 선은 선분이에요. 양쪽으로 늘이면 직선, 한쪽으로만 늘이면 반직선이에요.', by:'app', scope:'me' },
+  basicProblem: { stem:"두 점을 곧게 이은 선을 무엇이라고 할까요?", choices:["곡선", "반직선", "직선", "선분"], answer:3, explain:"두 점을 곧게 이은 선은 선분이에요. 양쪽으로 늘이면 직선, 한쪽으로만 늘이면 반직선이에요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 40쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','2. 평면도형','02. 각과 직각') ] = {
   hints: ['각이 몇 개의 선(반직선)으로 이루어졌는지 봐볼까?', '두 선이 만나는 뾰족한 점이 어디야?'],
   concept: '각은 한 점에서 그은 두 반직선으로 이루어진 도형이에요. 두 반직선이 만나는 점을 꼭짓점, 두 반직선을 변이라고 해요. 직각은 삼각자의 ㄱ자 모양 각과 꼭 맞게 겹쳐지는 각이에요.',
   media: [],
-  basicProblem: { stem:'각을 이루는 두 반직선이 만나는 점을 무엇이라고 할까요?', choices:['꼭짓점','변','직각','선분'], answer:0, explain:'두 반직선이 만나는 점은 꼭짓점, 두 반직선은 변이라고 해요.', by:'app', scope:'me' },
+  basicProblem: { stem:"각을 이루는 두 반직선이 만나는 점을 무엇이라고 할까요?", choices:["직각", "꼭짓점", "변", "선분"], answer:1, explain:"두 반직선이 만나는 점은 꼭짓점, 두 반직선은 변이라고 해요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 42쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','2. 평면도형','03. 직각삼각형') ] = {
   hints: ['삼각형 안에 직각(ㄱ자 각)이 있는지 찾아봐!', '삼각자를 대보면 직각인지 알 수 있어.'],
   concept: '직각삼각형은 한 각이 직각인 삼각형이에요. 삼각형은 변이 3개, 꼭짓점이 3개이고, 그중 한 각이 직각이면 직각삼각형이라고 해요.',
   media: [],
-  basicProblem: { stem:'직각삼각형은 어떤 삼각형일까요?', choices:['한 각이 직각인 삼각형','세 변의 길이가 같은 삼각형','두 변의 길이가 같은 삼각형','모든 각이 직각인 삼각형'], answer:0, explain:'한 각이 직각인 삼각형을 직각삼각형이라고 해요.', by:'app', scope:'me' },
+  basicProblem: { stem:"직각삼각형은 어떤 삼각형일까요?", choices:["두 변의 길이가 같은 삼각형", "세 변의 길이가 같은 삼각형", "한 각이 직각인 삼각형", "모든 각이 직각인 삼각형"], answer:2, explain:"한 각이 직각인 삼각형을 직각삼각형이라고 해요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 48쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','2. 평면도형','04. 직사각형') ] = {
   hints: ['네 각이 모두 어떤 각인지 삼각자로 확인해봐!', '마주 보는 변의 길이도 비교해볼까?'],
   concept: '직사각형은 네 각이 모두 직각인 사각형이에요. 마주 보는 두 변의 길이가 서로 같아요.',
   media: [],
-  basicProblem: { stem:'직사각형에 대한 설명으로 옳은 것은?', choices:['네 각이 모두 직각이다','네 변의 길이가 모두 같다','각이 3개이다','직각이 하나뿐이다'], answer:0, explain:'직사각형은 네 각이 모두 직각인 사각형이에요. 마주 보는 변끼리 길이가 같아요.', by:'app', scope:'me' },
+  basicProblem: { stem:"직사각형에 대한 설명으로 옳은 것은?", choices:["네 각이 모두 직각이다", "네 변의 길이가 모두 같다", "직각이 하나뿐이다", "각이 3개이다"], answer:0, explain:"직사각형은 네 각이 모두 직각인 사각형이에요. 마주 보는 변끼리 길이가 같아요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 50쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','2. 평면도형','05. 정사각형') ] = {
   hints: ['네 각과 네 변을 모두 살펴봐. 각은? 변은?', '직사각형인데 네 변까지 같으면 뭘까?'],
   concept: '정사각형은 네 각이 모두 직각이고, 네 변의 길이가 모두 같은 사각형이에요. 네 각이 직각이므로 정사각형은 직사각형이라고도 할 수 있어요.',
   media: [],
-  basicProblem: { stem:'정사각형에 대한 설명으로 옳은 것은?', choices:['네 각이 직각이고 네 변의 길이가 모두 같다','네 변의 길이만 같으면 된다','마주 보는 변만 길이가 같다','각이 3개이다'], answer:0, explain:'정사각형은 네 각이 모두 직각이고 네 변의 길이가 모두 같아요. 그래서 직사각형이라고도 할 수 있어요.', by:'app', scope:'me' },
+  basicProblem: { stem:"정사각형에 대한 설명으로 옳은 것은?", choices:["각이 3개이다", "네 각이 직각이고 네 변의 길이가 모두 같다", "네 변의 길이만 같으면 된다", "마주 보는 변만 길이가 같다"], answer:1, explain:"정사각형은 네 각이 모두 직각이고 네 변의 길이가 모두 같아요. 그래서 직사각형이라고도 할 수 있어요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 52쪽', by:'app', scope:'me'
 };
 
@@ -6053,35 +6047,35 @@ DD_CARDS[ ddConceptId('e3-1','3. 나눗셈','01. 똑같이 나누어 볼까요 (
   hints: ['전체를 몇 묶음(몇 곳)으로 똑같이 나누는지 봐볼까?', '한 묶음에 몇 개씩 가는지 세어봐!'],
   concept: '전체를 똑같이 나누는 계산을 나눗셈이라고 해요. 10을 5로 똑같이 나누면 한 곳에 2개씩 → 10÷5=2. 나누어지는 수 ÷ 나누는 수 = 몫이라 하고, "10 나누기 5는 2와 같습니다"로 읽어요.',
   media: [],
-  basicProblem: { stem:'사과 12개를 접시 3개에 똑같이 나누면, 한 접시에 몇 개씩 놓을까요?', choices:['4개','3개','6개','5개'], answer:0, explain:'12÷3=4. 한 접시에 4개씩 놓여요.', by:'app', scope:'me' },
+  basicProblem: { stem:"사과 12개를 접시 3개에 똑같이 나누면, 한 접시에 몇 개씩 놓을까요?", choices:["6개", "5개", "4개", "3개"], answer:2, explain:"12÷3=4. 한 접시에 4개씩 놓여요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 70쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','3. 나눗셈','02. 똑같이 나누어 볼까요 (2)') ] = {
   hints: ['전체에서 몇 개씩 덜어내는지 봐볼까?', '몇 번 덜어낼 수 있는지가 답이야!'],
   concept: '전체를 몇 개씩 똑같이 덜어내며 나눌 수도 있어요. 10개를 5개씩 덜어내면 2번 덜어낼 수 있어요 → 10÷5=2. 이때 몫은 "몇 묶음(몇 번)"을 나타내요.',
   media: [],
-  basicProblem: { stem:'풍선 28개를 한 사람에게 4개씩 나누어 주면, 몇 명에게 줄 수 있을까요?', choices:['7명','6명','8명','9명'], answer:0, explain:'28÷4=7. 7명에게 나누어 줄 수 있어요.', by:'app', scope:'me' },
+  basicProblem: { stem:"풍선 28개를 한 사람에게 4개씩 나누어 주면, 몇 명에게 줄 수 있을까요?", choices:["9명", "8명", "6명", "7명"], answer:3, explain:"28÷4=7. 7명에게 나누어 줄 수 있어요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 72쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','3. 나눗셈','03. 곱셈과 나눗셈의 관계') ] = {
   hints: ['곱셈을 거꾸로 하면 뭐가 될까?', '3×4=12를 나눗셈 2개로 바꿔볼까?'],
   concept: '곱셈과 나눗셈은 서로 반대 관계예요. 하나의 곱셈식 3×4=12로 나눗셈식 두 개(12÷3=4, 12÷4=3)를 만들 수 있어요.',
   media: [],
-  basicProblem: { stem:'곱셈식 6×4=24를 나눗셈식으로 바르게 나타낸 것은?', choices:['24÷6=4','24÷4=5','6÷24=4','24÷6=6'], answer:0, explain:'6×4=24 → 24÷6=4, 24÷4=6 로 바꿀 수 있어요.', by:'app', scope:'me' },
+  basicProblem: { stem:"곱셈식 6×4=24를 나눗셈식으로 바르게 나타낸 것은?", choices:["6÷24=4", "24÷6=6", "24÷4=5", "24÷6=4"], answer:3, explain:"6×4=24 → 24÷6=4, 24÷4=6 로 바꿀 수 있어요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 74쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','3. 나눗셈','04. 나눗셈의 몫을 곱셈식으로 구하기') ] = {
   hints: ['곱셈식으로 바꿔서 생각해볼까?', '□에 얼마를 넣어야 곱이 맞을까?'],
   concept: '나눗셈의 몫은 곱셈식으로 구할 수 있어요. 21÷3의 몫은 3×□=21에서 □를 찾으면 돼요. 3×7=21이므로 21÷3=7이에요.',
   media: [],
-  basicProblem: { stem:'20÷5의 몫을 곱셈식 5×□=20으로 구하면?', choices:['4','3','5','6'], answer:0, explain:'5×4=20이므로 20÷5=4예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"20÷5의 몫을 곱셈식 5×□=20으로 구하면?", choices:["5", "6", "3", "4"], answer:3, explain:"5×4=20이므로 20÷5=4예요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 76쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','3. 나눗셈','05. 나눗셈의 몫을 곱셈구구로 구하기') ] = {
   hints: ['나누는 수의 곱셈구구(단)를 떠올려봐!', '몇 곱하기 나누는 수가 나누어지는 수가 될까?'],
   concept: '나눗셈의 몫은 곱셈구구(구구단)로 빠르게 구할 수 있어요. 30÷6은 6단에서 6×5=30을 떠올리면 몫이 5예요.',
   media: [],
-  basicProblem: { stem:'곱셈구구를 이용해 30÷6의 몫을 구하면?', choices:['5','4','6','7'], answer:0, explain:'6단에서 6×5=30이므로 30÷6=5예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"곱셈구구를 이용해 30÷6의 몫을 구하면?", choices:["6", "4", "7", "5"], answer:3, explain:"6단에서 6×5=30이므로 30÷6=5예요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 78쪽', by:'app', scope:'me'
 };
 
@@ -6090,35 +6084,35 @@ DD_CARDS[ ddConceptId('e3-1','4. 곱셈','01. (몇십)×(몇)') ] = {
   hints: ['(몇)×(몇)을 먼저 계산해볼까?', '몇십은 0을 하나 더 붙이는 거 기억나?'],
   concept: '(몇십)×(몇)은 (몇)×(몇)을 계산한 뒤 0을 하나 붙이면 돼요. 예를 들어 20×4는 2×4=8에 0을 붙여 80이에요.',
   media: [],
-  basicProblem: { stem:'30 × 3 = ?', choices:['90','60','33','93'], answer:0, explain:'3×3=9에 0을 붙여 90이에요.', by:'app', scope:'me' },
+  basicProblem: { stem:"30 × 3 = ?", choices:["60", "90", "33", "93"], answer:1, explain:"3×3=9에 0을 붙여 90이에요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 98쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','4. 곱셈','02. (몇십몇)×(몇) (1)') ] = {
   hints: ['일의 자리, 십의 자리를 따로 곱해볼까?', '각 자리에 몇을 곱하는지 생각해봐!'],
   concept: '(몇십몇)×(몇)은 일의 자리와 십의 자리에 각각 곱해서 더해요. 올림이 없을 때는 자리별로 곱한 값을 그대로 써요. 예: 12×3 → 일 2×3=6, 십 10×3=30 → 36.',
   media: [],
-  basicProblem: { stem:'21 × 4 = ?', choices:['84','24','88','82'], answer:0, explain:'일:1×4=4, 십:20×4=80 → 84.', by:'app', scope:'me' },
+  basicProblem: { stem:"21 × 4 = ?", choices:["24", "82", "88", "84"], answer:3, explain:"일:1×4=4, 십:20×4=80 → 84.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 100쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','4. 곱셈','03. (몇십몇)×(몇) (2)') ] = {
   hints: ['일의 자리를 곱했더니 10이 넘어?', '넘으면 십의 자리로 올려줘!'],
   concept: '일의 자리를 곱한 값이 10이거나 넘으면, 십의 자리 계산에 올려서 더해요. 예: 16×3 → 일 6×3=18(6 쓰고 1 올림), 십 1×3=3에 1 더해 4 → 48.',
   media: [],
-  basicProblem: { stem:'24 × 3 = ?', choices:['72','62','74','82'], answer:0, explain:'일:4×3=12→2 쓰고 1 올림. 십:2×3=6에 1 더해 7 → 72.', by:'app', scope:'me' },
+  basicProblem: { stem:"24 × 3 = ?", choices:["62", "74", "72", "82"], answer:2, explain:"일:4×3=12→2 쓰고 1 올림. 십:2×3=6에 1 더해 7 → 72.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 102쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','4. 곱셈','04. (몇십몇)×(몇) (3)') ] = {
   hints: ['십의 자리를 곱한 값이 큰지 봐볼까?', '십의 자리에서도 올림이 생길 수 있어!'],
   concept: '십의 자리를 곱한 값이 크면 백의 자리로 올림이 생겨요. 예: 41×3 → 일 1×3=3, 십 4×3=12 → 123.',
   media: [],
-  basicProblem: { stem:'52 × 3 = ?', choices:['156','126','166','153'], answer:0, explain:'일:2×3=6, 십:5×3=15 → 156.', by:'app', scope:'me' },
+  basicProblem: { stem:"52 × 3 = ?", choices:["153", "156", "126", "166"], answer:1, explain:"일:2×3=6, 십:5×3=15 → 156.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 104쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','4. 곱셈','05. (몇십몇)×(몇) (4)') ] = {
   hints: ['일과 십 두 곳 모두 올림이 생기는지 확인해봐!', '올림을 빠뜨리지 않게 차근차근!'],
   concept: '올림이 여러 번 생길 수 있어요. 일의 자리부터 곱하면서 올림을 윗자리에 더해요. 예: 48×6 → 일 8×6=48(8 쓰고 4 올림), 십 4×6=24에 4 더해 28 → 288.',
   media: [],
-  basicProblem: { stem:'37 × 4 = ?', choices:['148','128','158','144'], answer:0, explain:'일:7×4=28→8 쓰고 2 올림. 십:3×4=12에 2 더해 14 → 148.', by:'app', scope:'me' },
+  basicProblem: { stem:"37 × 4 = ?", choices:["148", "158", "128", "144"], answer:0, explain:"일:7×4=28→8 쓰고 2 올림. 십:3×4=12에 2 더해 14 → 148.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 106쪽', by:'app', scope:'me'
 };
 
@@ -6127,42 +6121,42 @@ DD_CARDS[ ddConceptId('e3-1','5. 길이와 시간','01. 1 cm보다 작은 단위
   hints: ['1 cm를 더 작게 나누면 어떤 단위가 될까?', '1 cm 안에 mm가 몇 칸 있는지 떠올려봐!'],
   concept: '1 cm보다 작은 길이는 밀리미터(mm)로 나타내요. 1 cm를 똑같이 10칸으로 나눈 것 중 한 칸이 1 mm예요. 즉 1 cm = 10 mm예요.',
   media: [],
-  basicProblem: { stem:'3 cm는 몇 mm일까요?', choices:['30 mm','3 mm','13 mm','300 mm'], answer:0, explain:'1 cm=10 mm이므로 3 cm=30 mm예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"3 cm는 몇 mm일까요?", choices:["3 mm", "30 mm", "13 mm", "300 mm"], answer:1, explain:"1 cm=10 mm이므로 3 cm=30 mm예요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 126쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','5. 길이와 시간','02. 1 m보다 큰 단위 (km)') ] = {
   hints: ['1 m보다 훨씬 긴 거리는 어떤 단위로 잴까?', '1 km 안에 m가 몇 개 있는지 떠올려봐!'],
   concept: '1 m보다 긴 거리는 킬로미터(km)로 나타내요. 1 km = 1000 m예요. 도시 사이처럼 먼 거리를 잴 때 써요.',
   media: [],
-  basicProblem: { stem:'2 km는 몇 m일까요?', choices:['2000 m','200 m','20 m','2 m'], answer:0, explain:'1 km=1000 m이므로 2 km=2000 m예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"2 km는 몇 m일까요?", choices:["2000 m", "20 m", "200 m", "2 m"], answer:0, explain:"1 km=1000 m이므로 2 km=2000 m예요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 128쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','5. 길이와 시간','03. 길이와 거리를 어림하고 재기') ] = {
   hints: ['재려는 게 짧아, 길어? 알맞은 단위를 골라봐!', '실제로 재기 전에 대략 얼마쯤일지 짐작해볼까?'],
   concept: '길이를 재기 전에 어림하면 어떤 단위·도구가 알맞은지 알 수 있어요. 짧은 것은 mm·cm, 긴 것은 m·km로 어림하고 실제로 재어 확인해요.',
   media: [],
-  basicProblem: { stem:'교실 문의 높이를 재기에 알맞은 단위는?', choices:['m','mm','km','g'], answer:0, explain:'문 높이는 약 2 m 정도라 m가 알맞아요. mm는 너무 작고 km는 너무 커요.', by:'app', scope:'me' },
+  basicProblem: { stem:"교실 문의 높이를 재기에 알맞은 단위는?", choices:["g", "km", "m", "mm"], answer:2, explain:"문 높이는 약 2 m 정도라 m가 알맞아요. mm는 너무 작고 km는 너무 커요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 130쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','5. 길이와 시간','04. 1분보다 작은 단위 (초)') ] = {
   hints: ['1분을 더 작게 나누면 어떤 단위가 될까?', '1분 안에 몇 초가 있는지 떠올려봐!'],
   concept: '1분보다 짧은 시간은 초로 나타내요. 1분 = 60초예요. 시계의 긴 초바늘이 한 칸 움직이면 1초예요.',
   media: [],
-  basicProblem: { stem:'2분은 몇 초일까요?', choices:['120초','60초','20초','200초'], answer:0, explain:'1분=60초이므로 2분=120초예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"2분은 몇 초일까요?", choices:["200초", "120초", "60초", "20초"], answer:1, explain:"1분=60초이므로 2분=120초예요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 136쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','5. 길이와 시간','05. 시간의 덧셈') ] = {
   hints: ['시는 시끼리, 분은 분끼리, 초는 초끼리 더해볼까?', '초가 60이 넘으면 1분으로 올려줘!'],
   concept: '시간의 덧셈은 시는 시끼리, 분은 분끼리, 초는 초끼리 더해요. 초가 60이거나 넘으면 60초를 1분으로, 분이 60이거나 넘으면 60분을 1시간으로 올려줘요.',
   media: [],
-  basicProblem: { stem:'2시간 20분 + 1시간 30분 = ?', choices:['3시간 50분','3시간 40분','4시간 50분','3시간 30분'], answer:0, explain:'시:2+1=3시간, 분:20+30=50분 → 3시간 50분.', by:'app', scope:'me' },
+  basicProblem: { stem:"2시간 20분 + 1시간 30분 = ?", choices:["3시간 30분", "3시간 50분", "4시간 50분", "3시간 40분"], answer:1, explain:"시:2+1=3시간, 분:20+30=50분 → 3시간 50분.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 138쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','5. 길이와 시간','06. 시간의 뺄셈') ] = {
   hints: ['시는 시끼리, 분은 분끼리 빼볼까?', '뺄 수 없으면 1시간을 60분으로 바꿔 빌려와!'],
   concept: '시간의 뺄셈은 시는 시끼리, 분은 분끼리, 초는 초끼리 빼요. 뺄 수 없을 때는 1시간을 60분으로, 1분을 60초로 바꿔 빌려와 빼요.',
   media: [],
-  basicProblem: { stem:'3시간 50분 - 1시간 20분 = ?', choices:['2시간 30분','2시간 20분','1시간 30분','2시간 40분'], answer:0, explain:'시:3-1=2시간, 분:50-20=30분 → 2시간 30분.', by:'app', scope:'me' },
+  basicProblem: { stem:"3시간 50분 - 1시간 20분 = ?", choices:["2시간 30분", "1시간 30분", "2시간 40분", "2시간 20분"], answer:0, explain:"시:3-1=2시간, 분:50-20=30분 → 2시간 30분.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 140쪽', by:'app', scope:'me'
 };
 
@@ -6171,49 +6165,49 @@ DD_CARDS[ ddConceptId('e3-1','6. 분수와 소수','01. 똑같이 나누어 보�
   hints: ['나뉜 조각들이 모두 크기가 같은지 봐볼까?', '똑같이 나눈다는 건 조각 크기가 다 같다는 뜻이야!'],
   concept: '전체를 똑같이 나눈다는 것은 나눈 조각들의 크기가 모두 같다는 뜻이에요. 조각의 크기가 다르면 똑같이 나눈 것이 아니에요.',
   media: [],
-  basicProblem: { stem:'전체를 똑같이 나눈 것은 어느 것일까요?', choices:['크기가 모두 같은 4조각','크기가 다른 4조각','2조각인데 하나가 더 큼','3조각인데 하나가 더 작음'], answer:0, explain:'똑같이 나누면 조각들의 크기가 모두 같아야 해요.', by:'app', scope:'me' },
+  basicProblem: { stem:"전체를 똑같이 나눈 것은 어느 것일까요?", choices:["3조각인데 하나가 더 작음", "크기가 다른 4조각", "2조각인데 하나가 더 큼", "크기가 모두 같은 4조각"], answer:3, explain:"똑같이 나누면 조각들의 크기가 모두 같아야 해요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 158쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','6. 분수와 소수','03. 단위분수 알아보기') ] = {
   hints: ['분자(위의 수)가 얼마인지 봐볼까?', '전체를 똑같이 나눈 것 중 딱 1개면 뭘까?'],
   concept: '분자가 1인 분수를 단위분수라고 해요. 2분의 1, 3분의 1, 4분의 1처럼 "전체를 똑같이 나눈 것 중의 하나"를 나타내는 분수예요.',
   media: [],
-  basicProblem: { stem:'다음 중 단위분수는 어느 것일까요?', choices:['5분의 1','5분의 3','3분의 2','4분의 3'], answer:0, explain:'분자가 1인 분수가 단위분수예요. 5분의 1은 분자가 1이라 단위분수예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"다음 중 단위분수는 어느 것일까요?", choices:["4분의 3", "5분의 3", "5분의 1", "3분의 2"], answer:2, explain:"분자가 1인 분수가 단위분수예요. 5분의 1은 분자가 1이라 단위분수예요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 162쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','6. 분수와 소수','04. 분모가 같은 분수의 크기 비교') ] = {
   hints: ['분모가 같으면 어디를 비교하면 될까?', '분자가 클수록 어떨까?'],
   concept: '분모가 같은 분수는 분자가 클수록 큰 수예요. 예를 들어 5분의 3과 5분의 2는 분모가 같으니 분자가 큰 5분의 3이 더 커요.',
   media: [],
-  basicProblem: { stem:'7분의 5와 7분의 3 중 더 큰 수는?', choices:['7분의 5','7분의 3','같다','알 수 없다'], answer:0, explain:'분모가 같으면 분자가 큰 쪽이 더 커요. 5>3이므로 7분의 5가 더 커요.', by:'app', scope:'me' },
+  basicProblem: { stem:"7분의 5와 7분의 3 중 더 큰 수는?", choices:["알 수 없다", "7분의 5", "7분의 3", "같다"], answer:1, explain:"분모가 같으면 분자가 큰 쪽이 더 커요. 5>3이므로 7분의 5가 더 커요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 164쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','6. 분수와 소수','05. 단위분수의 크기 비교') ] = {
   hints: ['분모가 클수록 한 조각은 어떻게 될까?', '똑같은 걸 더 많이 나누면 한 조각은 작아져!'],
   concept: '단위분수는 분모가 클수록 작은 수예요. 전체를 더 많이 나눌수록 한 조각이 작아지기 때문이에요. 예: 2분의 1 > 3분의 1 > 4분의 1.',
   media: [],
-  basicProblem: { stem:'3분의 1과 5분의 1 중 더 큰 수는?', choices:['3분의 1','5분의 1','같다','알 수 없다'], answer:0, explain:'단위분수는 분모가 작을수록 커요. 3<5이므로 3분의 1이 더 커요.', by:'app', scope:'me' },
+  basicProblem: { stem:"3분의 1과 5분의 1 중 더 큰 수는?", choices:["알 수 없다", "같다", "3분의 1", "5분의 1"], answer:2, explain:"단위분수는 분모가 작을수록 커요. 3<5이므로 3분의 1이 더 커요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 166쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','6. 분수와 소수','06. 소수 알아보기 (1)') ] = {
   hints: ['1을 똑같이 10칸으로 나눈 것 중 1칸은 어떻게 쓸까?', '분수 10분의 1을 소수로 바꾸면?'],
   concept: '분수 10분의 1을 0.1이라 쓰고 "영 점 일"이라고 읽어요. 이런 수를 소수라 하고, 가운데 점을 소수점이라고 해요. 예: 10분의 3은 0.3이에요.',
   media: [],
-  basicProblem: { stem:'10분의 7을 소수로 나타내면?', choices:['0.7','7.0','0.07','1.7'], answer:0, explain:'10분의 1이 0.1이므로 10분의 7은 0.7이에요.', by:'app', scope:'me' },
+  basicProblem: { stem:"10분의 7을 소수로 나타내면?", choices:["0.7", "0.07", "1.7", "7.0"], answer:0, explain:"10분의 1이 0.1이므로 10분의 7은 0.7이에요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 174쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','6. 분수와 소수','07. 소수 알아보기 (2)') ] = {
   hints: ['자연수 부분과 소수 부분을 나눠서 생각해봐!', '3과 0.5를 합치면 어떻게 쓸까?'],
   concept: '1보다 큰 소수는 자연수 부분과 소수 부분으로 이루어져요. 예를 들어 2와 10분의 3은 2.3이라 쓰고 "이 점 삼"이라고 읽어요.',
   media: [],
-  basicProblem: { stem:'4와 10분의 5는 소수로 어떻게 쓸까요?', choices:['4.5','45','0.45','4.05'], answer:0, explain:'자연수 4와 소수 0.5를 합쳐 4.5로 써요.', by:'app', scope:'me' },
+  basicProblem: { stem:"4와 10분의 5는 소수로 어떻게 쓸까요?", choices:["4.5", "4.05", "45", "0.45"], answer:0, explain:"자연수 4와 소수 0.5를 합쳐 4.5로 써요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 176쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-1','6. 분수와 소수','08. 소수의 크기 비교') ] = {
   hints: ['자연수 부분부터 비교해볼까?', '자연수 부분이 같으면 소수 부분(점 뒤)을 비교해!'],
   concept: '소수의 크기는 자연수 부분부터 비교하고, 자연수 부분이 같으면 소수 부분(소수점 아래 수)을 비교해요. 예: 0.7 > 0.5, 1.2 > 0.9.',
   media: [],
-  basicProblem: { stem:'0.8과 0.5 중 더 큰 수는?', choices:['0.8','0.5','같다','알 수 없다'], answer:0, explain:'소수 부분을 비교하면 8>5이므로 0.8이 더 커요.', by:'app', scope:'me' },
+  basicProblem: { stem:"0.8과 0.5 중 더 큰 수는?", choices:["0.5", "0.8", "같다", "알 수 없다"], answer:1, explain:"소수 부분을 비교하면 8>5이므로 0.8이 더 커요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-1 · 178쪽', by:'app', scope:'me'
 };
 
@@ -6223,56 +6217,56 @@ DD_CARDS[ ddConceptId('e3-2','1. 곱셈','01. 올림이 없는 (세 자리 수)�
   hints: ['일·십·백의 자리를 각각 곱해볼까?', '같은 자리 순서로 차근차근!'],
   concept: '(세 자리 수)×(한 자리 수)는 일·십·백의 자리 수에 각각 곱해서 더해요. 올림이 없을 때는 자리별 곱을 그대로 써요. 예: 142×2 → 일 2×2=4, 십 40×2=80, 백 100×2=200 → 284.',
   media: [],
-  basicProblem: { stem:'211 × 4 = ?', choices:['844','824','814','214'], answer:0, explain:'일:1×4=4, 십:10×4=40, 백:200×4=800 → 844.', by:'app', scope:'me' },
+  basicProblem: { stem:"211 × 4 = ?", choices:["824", "814", "214", "844"], answer:3, explain:"일:1×4=4, 십:10×4=40, 백:200×4=800 → 844.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 8쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','1. 곱셈','02. 일의 자리에서 올림이 있는 곱셈') ] = {
   hints: ['일의 자리 곱이 10 넘는지 봐볼까?', '넘으면 십의 자리 곱에 더해줘!'],
   concept: '일의 자리를 곱한 값이 10이거나 넘으면, 올림한 수를 십의 자리 곱에 더해요.',
   media: [],
-  basicProblem: { stem:'126 × 3 = ?', choices:['378','368','388','376'], answer:0, explain:'일:6×3=18→8 쓰고 1 올림. 십:20×3=60에 10 더해 70. 백:100×3=300 → 378.', by:'app', scope:'me' },
+  basicProblem: { stem:"126 × 3 = ?", choices:["378", "368", "376", "388"], answer:0, explain:"일:6×3=18→8 쓰고 1 올림. 십:20×3=60에 10 더해 70. 백:100×3=300 → 378.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 9쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','1. 곱셈','03. 십의 자리에서 올림이 있는 곱셈') ] = {
   hints: ['십의 자리 곱이 큰지 봐볼까?', '십의 자리에서 올림한 수는 백의 자리로!'],
   concept: '십의 자리를 곱한 값이 크면 백의 자리로 올림이 생겨요. 올림한 수를 백의 자리 곱에 더해요.',
   media: [],
-  basicProblem: { stem:'182 × 4 = ?', choices:['728','628','738','724'], answer:0, explain:'일:2×4=8. 십:80×4=320→백에 3 올림. 백:100×4=400에 300 더해 700 → 728.', by:'app', scope:'me' },
+  basicProblem: { stem:"182 × 4 = ?", choices:["724", "728", "628", "738"], answer:1, explain:"일:2×4=8. 십:80×4=320→백에 3 올림. 백:100×4=400에 300 더해 700 → 728.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 10쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','1. 곱셈','04. 올림이 여러 번 있는 곱셈') ] = {
   hints: ['일·십 두 곳 모두 올림이 생기는지 확인해봐!', '올림을 빠뜨리지 않게 차근차근!'],
   concept: '올림이 여러 번 생길 수 있어요. 일의 자리부터 차례로 곱하면서 각 올림을 윗자리에 더해요.',
   media: [],
-  basicProblem: { stem:'257 × 3 = ?', choices:['771','761','781','671'], answer:0, explain:'일:7×3=21→1(올림2). 십:5×3=15+2=17→7(올림1). 백:2×3=6+1=7 → 771.', by:'app', scope:'me' },
+  basicProblem: { stem:"257 × 3 = ?", choices:["671", "761", "771", "781"], answer:2, explain:"일:7×3=21→1(올림2). 십:5×3=15+2=17→7(올림1). 백:2×3=6+1=7 → 771.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 11쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','1. 곱셈','05. (몇십)×(몇십), (몇십몇)×(몇십)') ] = {
   hints: ['(몇)×(몇)을 먼저 하고 0을 붙여볼까?', '0이 몇 개 붙는지 세어봐!'],
   concept: '(몇십)×(몇십)이나 (몇십몇)×(몇십)은 (몇)×(몇) 또는 (몇십몇)×(몇)을 계산한 뒤, 두 수의 0의 개수만큼 0을 붙여요. 예: 60×30 → 6×3=18에 0 두 개 붙여 1800.',
   media: [],
-  basicProblem: { stem:'40 × 30 = ?', choices:['1200','120','12000','400'], answer:0, explain:'4×3=12에 0을 두 개 붙여 1200이에요.', by:'app', scope:'me' },
+  basicProblem: { stem:"40 × 30 = ?", choices:["1200", "12000", "400", "120"], answer:0, explain:"4×3=12에 0을 두 개 붙여 1200이에요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 20쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','1. 곱셈','06. (몇)×(몇십몇)') ] = {
   hints: ['몇십몇을 몇십과 몇으로 나눠 곱해볼까?', '두 곱을 더하면 돼!'],
   concept: '(몇)×(몇십몇)은 몇십몇을 몇십과 몇으로 나누어 각각 곱한 뒤 더해요. 예: 4×23 → 4×20=80과 4×3=12를 더해 92. (곱하는 순서를 바꿔도 결과는 같아요.)',
   media: [],
-  basicProblem: { stem:'3 × 24 = ?', choices:['72','62','74','82'], answer:0, explain:'3×20=60과 3×4=12를 더해 72예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"3 × 24 = ?", choices:["74", "82", "72", "62"], answer:2, explain:"3×20=60과 3×4=12를 더해 72예요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 21쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','1. 곱셈','07. 올림이 한 번 있는 (몇십몇)×(몇십몇)') ] = {
   hints: ['뒤 수를 몇십과 몇으로 나눠 두 번 곱해볼까?', '두 곱을 자리 맞춰 더해!'],
   concept: '(몇십몇)×(몇십몇)은 뒤의 수를 몇십과 몇으로 나누어 두 번 곱한 뒤, 자리를 맞춰 더해요. 예: 19×12 → 19×10=190과 19×2=38을 더해 228.',
   media: [],
-  basicProblem: { stem:'21 × 13 = ?', choices:['273','253','283','263'], answer:0, explain:'21×10=210과 21×3=63을 더해 273이에요.', by:'app', scope:'me' },
+  basicProblem: { stem:"21 × 13 = ?", choices:["253", "283", "263", "273"], answer:3, explain:"21×10=210과 21×3=63을 더해 273이에요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 22쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','1. 곱셈','08. 올림이 여러 번 있는 (몇십몇)×(몇십몇)') ] = {
   hints: ['올림이 여러 번 생겨도 두 번 곱하는 건 같아!', '각 부분의 곱을 자리 맞춰 차근차근 더해!'],
   concept: '올림이 여러 번 있어도 (몇십몇)×(몇십몇)은 두 번 곱해서 더하는 방법은 같아요. 각 부분의 곱을 자리를 맞춰 더해요. 예: 48×12 → 48×10=480과 48×2=96을 더해 576.',
   media: [],
-  basicProblem: { stem:'37 × 24 = ?', choices:['888','848','878','788'], answer:0, explain:'37×20=740과 37×4=148을 더해 888이에요.', by:'app', scope:'me' },
+  basicProblem: { stem:"37 × 24 = ?", choices:["878", "848", "888", "788"], answer:2, explain:"37×20=740과 37×4=148을 더해 888이에요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 23쪽', by:'app', scope:'me'
 };
 
@@ -6281,56 +6275,56 @@ DD_CARDS[ ddConceptId('e3-2','2. 나눗셈','01. 내림이 없는 (몇십)÷(몇
   hints: ['(몇)÷(몇)을 먼저 생각해볼까?', '몇십은 그 몫에 0을 붙이면 돼!'],
   concept: '(몇십)÷(몇)은 (몇)÷(몇)을 이용해요. 예: 80÷4는 8÷4=2를 구한 뒤 0을 붙여 20이에요.',
   media: [],
-  basicProblem: { stem:'60 ÷ 3 = ?', choices:['20','2','30','6'], answer:0, explain:'6÷3=2에 0을 붙여 20이에요.', by:'app', scope:'me' },
+  basicProblem: { stem:"60 ÷ 3 = ?", choices:["2", "20", "6", "30"], answer:1, explain:"6÷3=2에 0을 붙여 20이에요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 40쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','2. 나눗셈','02. 내림이 있는 (몇십)÷(몇)') ] = {
   hints: ['높은 자리(십)부터 나눠볼까?', '십의 자리에서 남은 수는 일의 자리로 내려!'],
   concept: '(몇십)÷(몇)에서 나누어떨어지지 않으면, 십의 자리부터 나누고 남은 수를 일의 자리로 내려 계산해요. 세로셈은 높은 자리부터 해요.',
   media: [],
-  basicProblem: { stem:'70 ÷ 5 = ?', choices:['14','12','15','17'], answer:0, explain:'십:7÷5=1(남2), 20÷5=4 → 14.', by:'app', scope:'me' },
+  basicProblem: { stem:"70 ÷ 5 = ?", choices:["17", "12", "14", "15"], answer:2, explain:"십:7÷5=1(남2), 20÷5=4 → 14.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 41쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','2. 나눗셈','03. 내림이 없는 (몇십몇)÷(몇)') ] = {
   hints: ['십의 자리부터 나눠볼까?', '십의 자리 몫은 몫의 십의 자리에 써!'],
   concept: '(몇십몇)÷(몇)은 십의 자리부터 차례로 나눠요. 십의 자리를 나눈 몫은 몫의 십의 자리에 써요. 예: 48÷2 → 십 4÷2=2, 일 8÷2=4 → 24.',
   media: [],
-  basicProblem: { stem:'36 ÷ 3 = ?', choices:['12','11','13','21'], answer:0, explain:'십:3÷3=1, 일:6÷3=2 → 12.', by:'app', scope:'me' },
+  basicProblem: { stem:"36 ÷ 3 = ?", choices:["21", "11", "12", "13"], answer:2, explain:"십:3÷3=1, 일:6÷3=2 → 12.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 42쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','2. 나눗셈','04. 내림이 있는 (몇십몇)÷(몇)') ] = {
   hints: ['십의 자리를 나누고 남은 수가 있어?', '남은 수를 일의 자리와 함께 나눠!'],
   concept: '십의 자리를 나누고 남은 수가 생기면, 그 수를 일의 자리로 내려 함께 나눠요. 예: 56÷2 → 십 5÷2=2(남1), 16÷2=8 → 28.',
   media: [],
-  basicProblem: { stem:'52 ÷ 4 = ?', choices:['13','12','14','23'], answer:0, explain:'십:5÷4=1(남1), 12÷4=3 → 13.', by:'app', scope:'me' },
+  basicProblem: { stem:"52 ÷ 4 = ?", choices:["23", "13", "14", "12"], answer:1, explain:"십:5÷4=1(남1), 12÷4=3 → 13.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 43쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','2. 나눗셈','05. 내림이 없고 나머지가 있는 (몇십몇)÷(몇)') ] = {
   hints: ['똑같이 나누고 남는 수가 있어?', '남는 수를 나머지라고 해!'],
   concept: '똑같이 나누고 남는 수를 나머지라고 해요. 나머지는 항상 나누는 수보다 작아요. 예: 23÷2 → 몫 11, 나머지 1 (23=2×11+1).',
   media: [],
-  basicProblem: { stem:'25 ÷ 2의 나머지는?', choices:['1','2','0','3'], answer:0, explain:'25÷2=12 …나머지 1이에요. (2×12=24, 25-24=1)', by:'app', scope:'me' },
+  basicProblem: { stem:"25 ÷ 2의 나머지는?", choices:["3", "1", "0", "2"], answer:1, explain:"25÷2=12 …나머지 1이에요. (2×12=24, 25-24=1)", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 52쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','2. 나눗셈','06. 내림이 있고 나머지가 있는 (몇십몇)÷(몇)') ] = {
   hints: ['내림도 있고 나머지도 있으면 순서대로 차근차근!', '마지막에 남은 수가 나머지야!'],
   concept: '내림과 나머지가 함께 있어도 십의 자리부터 차례로 나눠요. 마지막까지 나누고 남은 수가 나머지예요. 검산: 나누는 수×몫+나머지=나누어지는 수.',
   media: [],
-  basicProblem: { stem:'53 ÷ 4의 몫과 나머지는?', choices:['몫 13, 나머지 1','몫 12, 나머지 5','몫 13, 나머지 2','몫 14, 나머지 0'], answer:0, explain:'53÷4=13 …나머지 1. (4×13=52, 53-52=1)', by:'app', scope:'me' },
+  basicProblem: { stem:"53 ÷ 4의 몫과 나머지는?", choices:["몫 13, 나머지 1", "몫 12, 나머지 5", "몫 14, 나머지 0", "몫 13, 나머지 2"], answer:0, explain:"53÷4=13 …나머지 1. (4×13=52, 53-52=1)", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 53쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','2. 나눗셈','07. 나머지가 없는 (세 자리 수)÷(한 자리 수)') ] = {
   hints: ['백의 자리부터 차례로 나눠볼까?', '백의 자리에서 못 나누면 십의 자리로 내려!'],
   concept: '(세 자리 수)÷(한 자리 수)는 백의 자리부터 차례로 나눠요. 어느 자리에서 나눌 수 없으면 그 자리 몫에 0을 쓰고 다음 자리로 내려요. 예: 380÷2.',
   media: [],
-  basicProblem: { stem:'246 ÷ 2 = ?', choices:['123','122','124','132'], answer:0, explain:'백:2÷2=1, 십:4÷2=2, 일:6÷2=3 → 123.', by:'app', scope:'me' },
+  basicProblem: { stem:"246 ÷ 2 = ?", choices:["124", "123", "122", "132"], answer:1, explain:"백:2÷2=1, 십:4÷2=2, 일:6÷2=3 → 123.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 54쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','2. 나눗셈','08. 나머지가 있는 (세 자리 수)÷(한 자리 수)') ] = {
   hints: ['세 자리 수 나눗셈도 나머지가 생길 수 있어!', '마지막까지 나누고 남은 수가 나머지야!'],
   concept: '(세 자리 수)÷(한 자리 수)에서도 나머지가 생길 수 있어요. 백·십·일의 자리를 차례로 나누고, 마지막에 남은 수가 나머지예요. 검산으로 확인할 수 있어요.',
   media: [],
-  basicProblem: { stem:'125 ÷ 3의 나머지는?', choices:['2','1','0','3'], answer:0, explain:'125÷3=41 …나머지 2. (3×41=123, 125-123=2)', by:'app', scope:'me' },
+  basicProblem: { stem:"125 ÷ 3의 나머지는?", choices:["2", "0", "1", "3"], answer:0, explain:"125÷3=41 …나머지 2. (3×41=123, 125-123=2)", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 60쪽', by:'app', scope:'me'
 };
 
@@ -6339,28 +6333,28 @@ DD_CARDS[ ddConceptId('e3-2','3. 원','01. 원의 중심, 반지름, 지름') ] 
   hints: ['원 한가운데 점은 뭐라고 부를까?', '중심에서 원까지, 원을 가로질러 잰 선을 떠올려봐!'],
   concept: '원의 한가운데 점을 원의 중심이라고 해요. 중심에서 원 위의 한 점까지 이은 선분을 반지름, 원 위의 두 점을 이으면서 중심을 지나는 선분을 지름이라고 해요.',
   media: [],
-  basicProblem: { stem:'원의 중심을 지나며 원 위의 두 점을 잇는 선분을 무엇이라고 할까요?', choices:['지름','반지름','중심','둘레'], answer:0, explain:'중심을 지나 원 위 두 점을 잇는 선분이 지름이에요. 중심에서 원까지는 반지름이에요.', by:'app', scope:'me' },
+  basicProblem: { stem:"원의 중심을 지나며 원 위의 두 점을 잇는 선분을 무엇이라고 할까요?", choices:["중심", "둘레", "반지름", "지름"], answer:3, explain:"중심을 지나 원 위 두 점을 잇는 선분이 지름이에요. 중심에서 원까지는 반지름이에요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 72쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','3. 원','02. 원의 성질') ] = {
   hints: ['한 원에서 반지름들의 길이는 어떨까?', '지름은 반지름의 몇 배일까?'],
   concept: '한 원에서 반지름의 길이는 모두 같아요. 지름은 반지름의 2배이고, 원에서 가장 긴 선분이에요. 지름은 원을 똑같이 둘로 나눠요.',
   media: [],
-  basicProblem: { stem:'반지름이 4 cm인 원의 지름은?', choices:['8 cm','4 cm','2 cm','16 cm'], answer:0, explain:'지름은 반지름의 2배이므로 4×2=8 cm예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"반지름이 4 cm인 원의 지름은?", choices:["16 cm", "8 cm", "2 cm", "4 cm"], answer:1, explain:"지름은 반지름의 2배이므로 4×2=8 cm예요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 73쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','3. 원','03. 컴퍼스를 이용하여 원 그리기') ] = {
   hints: ['컴퍼스의 뾰족한 침은 어디에 꽂을까?', '컴퍼스를 벌린 길이가 무엇이 될까?'],
   concept: '컴퍼스로 원을 그릴 때 침을 원의 중심에 꽂고, 컴퍼스를 반지름만큼 벌려 한 바퀴 돌려요. 컴퍼스를 많이 벌릴수록 큰 원이 그려져요.',
   media: [],
-  basicProblem: { stem:'반지름 3 cm인 원을 그리려면 컴퍼스를 얼마만큼 벌릴까요?', choices:['3 cm','6 cm','1.5 cm','9 cm'], answer:0, explain:'컴퍼스를 벌린 길이가 반지름이 되므로 3 cm만큼 벌려요.', by:'app', scope:'me' },
+  basicProblem: { stem:"반지름 3 cm인 원을 그리려면 컴퍼스를 얼마만큼 벌릴까요?", choices:["1.5 cm", "3 cm", "9 cm", "6 cm"], answer:1, explain:"컴퍼스를 벌린 길이가 반지름이 되므로 3 cm만큼 벌려요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 74쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','3. 원','04. 원을 이용하여 여러 가지 모양 그리기') ] = {
   hints: ['원의 중심을 옮기면 무엇이 달라질까?', '반지름을 바꾸면 원 크기가 어떻게 될까?'],
   concept: '원의 중심과 반지름을 바꿔 가며 여러 원을 그리면 예쁜 모양이나 규칙적인 무늬를 만들 수 있어요. 중심을 옮기면 원의 위치가, 반지름을 바꾸면 원의 크기가 달라져요.',
   media: [],
-  basicProblem: { stem:'원을 그릴 때 원의 크기를 바꾸려면 무엇을 바꿀까요?', choices:['반지름(컴퍼스 벌린 길이)','원의 중심 위치','종이의 크기','연필의 색'], answer:0, explain:'반지름(컴퍼스를 벌린 길이)을 바꾸면 원의 크기가 달라져요.', by:'app', scope:'me' },
+  basicProblem: { stem:"원을 그릴 때 원의 크기를 바꾸려면 무엇을 바꿀까요?", choices:["반지름(컴퍼스 벌린 길이)", "종이의 크기", "원의 중심 위치", "연필의 색"], answer:0, explain:"반지름(컴퍼스를 벌린 길이)을 바꾸면 원의 크기가 달라져요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 75쪽', by:'app', scope:'me'
 };
 
@@ -6369,42 +6363,42 @@ DD_CARDS[ ddConceptId('e3-2','4. 분수','01. 분수로 나타내기') ] = {
   hints: ['전체를 똑같이 몇 묶음으로 나눴는지 봐볼까?', '그중 몇 묶음인지 세어봐!'],
   concept: '전체를 똑같이 여러 묶음으로 나눈 것 중 몇 묶음인지를 분수로 나타내요. 부분은 분자(위), 전체 묶음 수는 분모(아래)에 써요. 예: 12개를 4개씩 3묶음으로 나눴을 때 1묶음은 전체의 3분의 1.',
   media: [],
-  basicProblem: { stem:'전체를 똑같이 5묶음으로 나눈 것 중 2묶음은 분수로?', choices:['5분의 2','2분의 5','5분의 3','3분의 5'], answer:0, explain:'전체 5묶음(분모), 그중 2묶음(분자) → 5분의 2.', by:'app', scope:'me' },
+  basicProblem: { stem:"전체를 똑같이 5묶음으로 나눈 것 중 2묶음은 분수로?", choices:["2분의 5", "5분의 2", "5분의 3", "3분의 5"], answer:1, explain:"전체 5묶음(분모), 그중 2묶음(분자) → 5분의 2.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 92쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','4. 분수','02. 분수만큼은 얼마인지 알아보기 (1)') ] = {
   hints: ['전체를 분모만큼 똑같이 나눠볼까?', '그중 분자만큼 세면 돼!'],
   concept: '전체의 분수만큼을 구하려면, 전체를 분모 수만큼 똑같이 나눈 뒤 분자만큼 세어요. 예: 12의 3분의 1은 12를 3묶음으로 나눈 1묶음 = 4.',
   media: [],
-  basicProblem: { stem:'12의 3분의 2는 얼마일까요?', choices:['8','4','6','9'], answer:0, explain:'12를 3묶음(각 4개)으로 나눈 것 중 2묶음 = 8.', by:'app', scope:'me' },
+  basicProblem: { stem:"12의 3분의 2는 얼마일까요?", choices:["6", "4", "9", "8"], answer:3, explain:"12를 3묶음(각 4개)으로 나눈 것 중 2묶음 = 8.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 94쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','4. 분수','03. 분수만큼은 얼마인지 알아보기 (2)') ] = {
   hints: ['1 m나 1시간을 분모만큼 나눠볼까?', '1 m는 몇 cm, 1시간은 몇 분인지 떠올려봐!'],
   concept: '길이나 시간에도 분수만큼 구하기를 똑같이 쓸 수 있어요. 예: 1시간의 4분의 1은 60분을 4묶음으로 나눈 1묶음 = 15분.',
   media: [],
-  basicProblem: { stem:'1시간의 4분의 1은 몇 분일까요?', choices:['15분','20분','30분','10분'], answer:0, explain:'1시간=60분, 60을 4묶음으로 나눈 1묶음 = 15분.', by:'app', scope:'me' },
+  basicProblem: { stem:"1시간의 4분의 1은 몇 분일까요?", choices:["30분", "20분", "10분", "15분"], answer:3, explain:"1시간=60분, 60을 4묶음으로 나눈 1묶음 = 15분.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 95쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','4. 분수','04. 여러 가지 분수') ] = {
   hints: ['분자와 분모 중 어느 게 큰지 봐볼까?', '자연수와 진분수가 함께 있으면 뭘까?'],
   concept: '분자가 분모보다 작으면 진분수, 분자가 분모와 같거나 크면 가분수, 자연수와 진분수로 이루어진 분수는 대분수라고 해요.',
   media: [],
-  basicProblem: { stem:'다음 중 가분수는? (분자가 분모와 같거나 큰 분수)', choices:['4분의 5','5분의 3','4분의 3','7분의 2'], answer:0, explain:'4분의 5는 분자(5)가 분모(4)보다 커서 가분수예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"다음 중 가분수는? (분자가 분모와 같거나 큰 분수)", choices:["7분의 2", "4분의 5", "4분의 3", "5분의 3"], answer:1, explain:"4분의 5는 분자(5)가 분모(4)보다 커서 가분수예요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 102쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','4. 분수','05. 대분수와 가분수 서로 나타내기') ] = {
   hints: ['대분수의 자연수를 가분수로 바꿔볼까?', '가분수를 자연수 부분과 진분수로 나눠봐!'],
   concept: '대분수와 가분수는 서로 바꿔 나타낼 수 있어요. 예: 대분수 2와 3분의 1 = 가분수 3분의 7. (2 = 3분의 6, 여기에 3분의 1을 더하면 3분의 7.)',
   media: [],
-  basicProblem: { stem:'대분수 1과 2분의 1을 가분수로 바꾸면?', choices:['2분의 3','2분의 1','3분의 2','2분의 2'], answer:0, explain:'1 = 2분의 2, 여기에 2분의 1을 더해 2분의 3이에요.', by:'app', scope:'me' },
+  basicProblem: { stem:"대분수 1과 2분의 1을 가분수로 바꾸면?", choices:["3분의 2", "2분의 3", "2분의 2", "2분의 1"], answer:1, explain:"1 = 2분의 2, 여기에 2분의 1을 더해 2분의 3이에요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 104쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','4. 분수','06. 분모가 같은 분수의 크기 비교') ] = {
   hints: ['분모가 같은 가분수는 무엇을 볼까?', '대분수는 자연수 부분을 먼저 비교!'],
   concept: '분모가 같은 분수는 분자가 클수록 커요. 대분수끼리 비교할 때는 자연수 부분을 먼저 비교하고, 같으면 분수 부분을 비교해요.',
   media: [],
-  basicProblem: { stem:'5분의 7과 5분의 4 중 더 큰 수는?', choices:['5분의 7','5분의 4','같다','알 수 없다'], answer:0, explain:'분모가 같으면 분자가 큰 쪽이 커요. 7>4이므로 5분의 7이 더 커요.', by:'app', scope:'me' },
+  basicProblem: { stem:"5분의 7과 5분의 4 중 더 큰 수는?", choices:["같다", "알 수 없다", "5분의 4", "5분의 7"], answer:3, explain:"분모가 같으면 분자가 큰 쪽이 커요. 7>4이므로 5분의 7이 더 커요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 105쪽', by:'app', scope:'me'
 };
 
@@ -6413,42 +6407,42 @@ DD_CARDS[ ddConceptId('e3-2','5. 들이와 무게','01. 들이 비교하기') ] 
   hints: ['어느 그릇에 물이 더 많이 담기는지 어떻게 알까?', '같은 컵으로 옮겨 담아 세어볼까?'],
   concept: '그릇에 담을 수 있는 물의 양을 들이라고 해요. 두 그릇의 들이는 한 그릇의 물을 다른 그릇에 옮겨 담거나, 같은 컵으로 몇 번 담기는지 세어 비교해요.',
   media: [],
-  basicProblem: { stem:'두 그릇의 들이를 정확히 비교하는 방법은?', choices:['같은 컵으로 옮겨 담아 컵 수를 센다','겉모습 크기만 본다','무게를 잰다','색깔을 비교한다'], answer:0, explain:'같은 컵으로 옮겨 담아 몇 컵인지 세면 들이를 정확히 비교할 수 있어요.', by:'app', scope:'me' },
+  basicProblem: { stem:"두 그릇의 들이를 정확히 비교하는 방법은?", choices:["같은 컵으로 옮겨 담아 컵 수를 센다", "겉모습 크기만 본다", "무게를 잰다", "색깔을 비교한다"], answer:0, explain:"같은 컵으로 옮겨 담아 몇 컵인지 세면 들이를 정확히 비교할 수 있어요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 120쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','5. 들이와 무게','02. 들이의 단위와 들이 어림하기') ] = {
   hints: ['들이의 단위에는 무엇이 있을까?', '1 L 안에 mL가 몇 개 있는지 떠올려봐!'],
   concept: '들이의 단위에는 리터(L)와 밀리리터(mL)가 있어요. 1 L = 1000 mL예요. 작은 들이는 mL, 큰 들이는 L로 나타내요.',
   media: [],
-  basicProblem: { stem:'1 L 500 mL는 몇 mL일까요?', choices:['1500 mL','150 mL','1005 mL','15000 mL'], answer:0, explain:'1 L=1000 mL이므로 1 L 500 mL=1500 mL예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"1 L 500 mL는 몇 mL일까요?", choices:["15000 mL", "1005 mL", "150 mL", "1500 mL"], answer:3, explain:"1 L=1000 mL이므로 1 L 500 mL=1500 mL예요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 122쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','5. 들이와 무게','03. 들이의 덧셈과 뺄셈') ] = {
   hints: ['L는 L끼리, mL는 mL끼리 계산해볼까?', 'mL끼리 더한 값이 1000 넘으면 어떻게 할까?'],
   concept: '들이의 덧셈·뺄셈은 L는 L끼리, mL는 mL끼리 계산해요. mL끼리 더한 값이 1000이거나 넘으면 1000 mL를 1 L로 받아올려요.',
   media: [],
-  basicProblem: { stem:'2 L 300 mL + 1 L 400 mL = ?', choices:['3 L 700 mL','3 L 400 mL','4 L 700 mL','3 L 300 mL'], answer:0, explain:'L:2+1=3 L, mL:300+400=700 mL → 3 L 700 mL.', by:'app', scope:'me' },
+  basicProblem: { stem:"2 L 300 mL + 1 L 400 mL = ?", choices:["3 L 400 mL", "3 L 700 mL", "4 L 700 mL", "3 L 300 mL"], answer:1, explain:"L:2+1=3 L, mL:300+400=700 mL → 3 L 700 mL.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 124쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','5. 들이와 무게','04. 무게 비교하기') ] = {
   hints: ['어느 것이 더 무거운지 어떻게 알까?', '양팔 저울로 비교해볼까?'],
   concept: '두 물건의 무게는 양팔 저울로 비교하거나, 같은 단위(바둑돌 등)로 몇 개인지 세어 비교해요. 크기가 크다고 항상 무거운 것은 아니에요.',
   media: [],
-  basicProblem: { stem:'물건의 무게를 정확히 비교하려면?', choices:['양팔 저울이나 같은 단위로 잰다','크기만 눈으로 본다','색을 비교한다','길이를 잰다'], answer:0, explain:'양팔 저울이나 같은 단위(추 등)로 재야 무게를 정확히 비교할 수 있어요.', by:'app', scope:'me' },
+  basicProblem: { stem:"물건의 무게를 정확히 비교하려면?", choices:["크기만 눈으로 본다", "길이를 잰다", "색을 비교한다", "양팔 저울이나 같은 단위로 잰다"], answer:3, explain:"양팔 저울이나 같은 단위(추 등)로 재야 무게를 정확히 비교할 수 있어요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 132쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','5. 들이와 무게','05. 무게의 단위와 무게 어림하기') ] = {
   hints: ['무게의 단위에는 무엇이 있을까?', '1 kg 안에 g이 몇 개인지 떠올려봐!'],
   concept: '무게의 단위에는 그램(g), 킬로그램(kg), 톤(t)이 있어요. 1 kg = 1000 g, 1 t = 1000 kg이에요. 가벼운 것은 g, 무거운 것은 kg, 아주 무거운 것은 t로 나타내요.',
   media: [],
-  basicProblem: { stem:'1 kg 500 g은 몇 g일까요?', choices:['1500 g','150 g','1005 g','15000 g'], answer:0, explain:'1 kg=1000 g이므로 1 kg 500 g=1500 g이에요.', by:'app', scope:'me' },
+  basicProblem: { stem:"1 kg 500 g은 몇 g일까요?", choices:["1500 g", "15000 g", "1005 g", "150 g"], answer:0, explain:"1 kg=1000 g이므로 1 kg 500 g=1500 g이에요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 134쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','5. 들이와 무게','06. 무게의 덧셈과 뺄셈') ] = {
   hints: ['kg는 kg끼리, g은 g끼리 계산해볼까?', 'g끼리 더한 값이 1000 넘으면 어떻게 할까?'],
   concept: '무게의 덧셈·뺄셈은 kg는 kg끼리, g은 g끼리 계산해요. g끼리 더한 값이 1000이거나 넘으면 1000 g을 1 kg으로 받아올려요.',
   media: [],
-  basicProblem: { stem:'2 kg 600 g + 1 kg 300 g = ?', choices:['3 kg 900 g','3 kg 300 g','4 kg 900 g','3 kg 600 g'], answer:0, explain:'kg:2+1=3 kg, g:600+300=900 g → 3 kg 900 g.', by:'app', scope:'me' },
+  basicProblem: { stem:"2 kg 600 g + 1 kg 300 g = ?", choices:["4 kg 900 g", "3 kg 900 g", "3 kg 300 g", "3 kg 600 g"], answer:1, explain:"kg:2+1=3 kg, g:600+300=900 g → 3 kg 900 g.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 136쪽', by:'app', scope:'me'
 };
 
@@ -6457,21 +6451,21 @@ DD_CARDS[ ddConceptId('e3-2','6. 그림그래프','01. 그림그래프 알아보
   hints: ['수를 그림으로 나타낸 그래프를 떠올려봐!', '큰 그림과 작은 그림이 각각 몇을 나타내는지 봐볼까?'],
   concept: '조사한 수를 그림으로 나타낸 그래프를 그림그래프라고 해요. 큰 그림과 작은 그림이 각각 몇을 나타내는지(단위)를 정해서, 수량을 그림의 개수로 표현해요.',
   media: [],
-  basicProblem: { stem:'그림그래프는 무엇을 그림으로 나타낸 그래프일까요?', choices:['조사한 수(수량)','색깔','길이','시간'], answer:0, explain:'그림그래프는 조사한 수량을 그림으로 나타낸 그래프예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"그림그래프는 무엇을 그림으로 나타낸 그래프일까요?", choices:["시간", "길이", "조사한 수(수량)", "색깔"], answer:2, explain:"그림그래프는 조사한 수량을 그림으로 나타낸 그래프예요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 154쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','6. 그림그래프','02. 그림그래프의 내용 알아보기') ] = {
   hints: ['큰 그림부터 비교해볼까?', '그림 개수만 세지 말고 그림이 나타내는 수도 봐!'],
   concept: '그림그래프를 읽을 때는 큰 그림의 수를 먼저 비교하고, 같으면 작은 그림을 비교해요. 그림이 나타내는 단위를 꼭 확인해야 정확한 수를 알 수 있어요.',
   media: [],
-  basicProblem: { stem:'그림그래프에서 가장 많은 항목을 찾으려면 무엇을 먼저 볼까요?', choices:['큰 그림의 개수','작은 그림만','제목','색깔'], answer:0, explain:'큰 그림의 수를 먼저 비교하고, 같으면 작은 그림을 비교해요.', by:'app', scope:'me' },
+  basicProblem: { stem:"그림그래프에서 가장 많은 항목을 찾으려면 무엇을 먼저 볼까요?", choices:["제목", "색깔", "작은 그림만", "큰 그림의 개수"], answer:3, explain:"큰 그림의 수를 먼저 비교하고, 같으면 작은 그림을 비교해요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 156쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('e3-2','6. 그림그래프','03. 그림그래프로 나타내기') ] = {
   hints: ['먼저 그림이 나타낼 단위를 정해볼까?', '큰 수는 큰 그림, 작은 수는 작은 그림으로!'],
   concept: '그림그래프를 그릴 때는 ①어떤 그림으로 나타낼지 정하고 ②그림 하나가 나타내는 단위를 정한 뒤 ③수에 맞게 그림을 그리고 ④제목을 써요. 예: 32은 10 그림 3개와 1 그림 2개로 나타내요.',
   media: [],
-  basicProblem: { stem:'그림그래프를 그릴 때 가장 먼저 정하는 것은?', choices:['어떤 그림과 그림 하나의 단위','제목','색깔','종이 크기'], answer:0, explain:'먼저 어떤 그림으로 나타낼지와 그림 하나가 몇을 나타내는지(단위)를 정해요.', by:'app', scope:'me' },
+  basicProblem: { stem:"그림그래프를 그릴 때 가장 먼저 정하는 것은?", choices:["색깔", "종이 크기", "어떤 그림과 그림 하나의 단위", "제목"], answer:2, explain:"먼저 어떤 그림으로 나타낼지와 그림 하나가 몇을 나타내는지(단위)를 정해요.", by:'app', scope:'me' },
   bookPage: '디딤돌 3-2 · 160쪽', by:'app', scope:'me'
 };
 
@@ -6483,196 +6477,196 @@ DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','01. 점, 선, 면') ] = {
   hints: ['점이 움직이면 무엇이 될까?', '선이 움직이면 무엇이 될까?'],
   concept: '도형을 이루는 가장 기본적인 요소는 점, 선, 면이야. 점은 크기 없이 위치만 나타내고, 선은 두께 없이 길이만 있어. 점이 움직인 자리는 선이 되고, 선이 움직인 자리는 면이 돼. 그래서 선은 무수히 많은 점으로, 면은 무수히 많은 선으로 이루어져 있다고 볼 수 있어.',
   media: [],
-  basicProblem: { stem:'점이 움직인 자리는 무엇이 되는가?', choices:['선','면','각','도형'], answer:0, explain:'점이 움직인 자리는 선이 되고, 선이 움직인 자리는 면이 돼요.', by:'app', scope:'me' },
+  basicProblem: { stem:"점이 움직인 자리는 무엇이 되는가?", choices:["선", "도형", "각", "면"], answer:0, explain:"점이 움직인 자리는 선이 되고, 선이 움직인 자리는 면이 돼요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 19쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','02. 교점과 교선') ] = {
   hints: ['선과 선(또는 선과 면)이 만나면 무엇이 생길까?', '면과 면이 만나면 무엇이 생길까?'],
   concept: '두 도형이 만나면 점이나 선이 생겨. 선과 선, 또는 선과 면이 만나서 생기는 점을 교점이라고 하고, 면과 면이 만나서 생기는 선을 교선이라고 해. 예를 들어 직육면체에서 교점의 개수는 꼭짓점의 개수와 같고, 교선의 개수는 모서리의 개수와 같아.',
   media: [],
-  basicProblem: { stem:'직육면체에서 교점의 개수는 어떤 것의 개수와 같은가?', choices:['꼭짓점의 개수','모서리의 개수','면의 개수','대각선의 개수'], answer:0, explain:'교점은 선과 선(또는 선과 면)이 만나 생기는 점이므로 꼭짓점의 개수와 같아요.', by:'app', scope:'me' },
+  basicProblem: { stem:"직육면체에서 교점의 개수는 어떤 것의 개수와 같은가?", choices:["대각선의 개수", "모서리의 개수", "꼭짓점의 개수", "면의 개수"], answer:2, explain:"교점은 선과 선(또는 선과 면)이 만나 생기는 점이므로 꼭짓점의 개수와 같아요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 20쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','03. 직선, 반직선, 선분') ] = {
   hints: ['양 끝이 모두 없으면 뭐라고 부를까?', '시작점은 있는데 한쪽으로만 뻗어나가면?'],
   concept: '직선, 반직선, 선분은 양 끝이 있는지 없는지로 구분해. 직선 AB는 두 점 A, B를 지나 양쪽으로 끝없이 뻗은 선이고, 선분 AB는 점 A에서 점 B까지의 부분이야. 반직선 AB는 점 A에서 시작해서 점 B 방향으로 끝없이 뻗은 선인데, 시작점과 뻗는 방향이 모두 같아야 같은 반직선이야. 그래서 반직선 AB와 반직선 BA는 시작점이 달라서 서로 달라.',
   media: [],
-  basicProblem: { stem:'반직선 AB와 반직선 BA에 대한 설명으로 옳은 것은?', choices:['시작점이 달라서 서로 다른 반직선이다','완전히 같은 반직선이다','길이가 서로 다르다','평행한 관계이다'], answer:0, explain:'반직선은 시작점과 뻗는 방향이 모두 같아야 같은 반직선이에요. AB와 BA는 시작점이 다르므로 서로 달라요.', by:'app', scope:'me' },
+  basicProblem: { stem:"반직선 AB와 반직선 BA에 대한 설명으로 옳은 것은?", choices:["길이가 서로 다르다", "평행한 관계이다", "완전히 같은 반직선이다", "시작점이 달라서 서로 다른 반직선이다"], answer:3, explain:"반직선은 시작점과 뻗는 방향이 모두 같아야 같은 반직선이에요. AB와 BA는 시작점이 다르므로 서로 달라요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 21쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','04. 두 점을 지나는 직선·선분·반직선의 개수') ] = {
   hints: ['서로 다른 두 점을 지나는 직선은 몇 개일까?', '반직선은 방향이 다르면 다른 도형이니까 몇 개가 될까?'],
   concept: '서로 다른 두 점 A, B를 지나는 직선은 오직 1개뿐이야. 두 점을 지나는 선분도 1개뿐이지만, 반직선은 시작점과 방향이 다른 두 가지(반직선 AB, 반직선 BA)가 만들어지므로 2개가 돼.',
   media: [],
-  basicProblem: { stem:'서로 다른 두 점 A, B를 지나는 직선, 선분, 반직선의 개수를 차례로 나타내면?', choices:['1개, 1개, 2개','2개, 1개, 1개','1개, 2개, 1개','2개, 2개, 2개'], answer:0, explain:'직선과 선분은 각각 1개, 반직선은 방향이 두 가지라 2개예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"서로 다른 두 점 A, B를 지나는 직선, 선분, 반직선의 개수를 차례로 나타내면?", choices:["2개, 2개, 2개", "2개, 1개, 1개", "1개, 1개, 2개", "1개, 2개, 1개"], answer:2, explain:"직선과 선분은 각각 1개, 반직선은 방향이 두 가지라 2개예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 22쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','05. 일렬로 나열된 세 점을 지나는 직선·선분·반직선의 개수') ] = {
   hints: ['세 점이 한 직선 위에 있으면 직선은 몇 개가 될까?', '반직선은 겹치는 경우가 있으니 그림으로 하나씩 확인해볼까?'],
   concept: '한 직선 위에 나열된 세 점 A, B, C가 있을 때 직선은 1개뿐이야. 선분은 두 점을 고르는 방법의 수만큼 3개(AB, BC, AC)가 생겨. 반직선은 방향이 겹치는 경우가 있어서 무작정 2배로 세면 안 되고, 그림으로 하나씩 확인하면 4개가 나와.',
   media: [],
-  basicProblem: { stem:'한 직선 위에 점 A, B, C가 순서대로 있을 때, 만들 수 있는 서로 다른 선분의 개수는?', choices:['3개','1개','4개','6개'], answer:0, explain:'두 점을 고르는 방법은 AB, BC, AC로 3가지예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"한 직선 위에 점 A, B, C가 순서대로 있을 때, 만들 수 있는 서로 다른 선분의 개수는?", choices:["6개", "3개", "1개", "4개"], answer:1, explain:"두 점을 고르는 방법은 AB, BC, AC로 3가지예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 23쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','06. 두 점 사이의 거리') ] = {
   hints: ['두 점을 잇는 선 중에 가장 짧은 건 어떤 선일까?', '그 선분의 길이를 뭐라고 부를까?'],
   concept: '두 점 A, B를 잇는 선은 무수히 많지만, 그중 가장 짧은 것은 선분 AB야. 이 선분 AB의 길이를 두 점 A, B 사이의 거리라고 해. 즉 거리는 항상 최단 거리를 뜻해.',
   media: [],
-  basicProblem: { stem:'두 점 A, B 사이의 거리란 무엇인가?', choices:['선분 AB의 길이','직선 AB의 길이','두 점을 잇는 아무 곡선의 길이','반직선 AB의 길이'], answer:0, explain:'두 점을 잇는 선 중 가장 짧은 선분 AB의 길이가 두 점 사이의 거리예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"두 점 A, B 사이의 거리란 무엇인가?", choices:["두 점을 잇는 아무 곡선의 길이", "선분 AB의 길이", "반직선 AB의 길이", "직선 AB의 길이"], answer:1, explain:"두 점을 잇는 선 중 가장 짧은 선분 AB의 길이가 두 점 사이의 거리예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 24쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','07. 선분의 중점') ] = {
   hints: ['선분을 똑같이 둘로 나누는 점을 뭐라고 부를까?', '중점이면 AM과 MB의 길이는 어떤 관계일까?'],
   concept: '선분 AB 위의 한 점 M이 선분 AB의 길이를 이등분할 때, 점 M을 선분 AB의 중점이라고 해. 즉 AM = MB = (1/2)AB가 성립해.',
   media: [],
-  basicProblem: { stem:'점 M이 선분 AB의 중점이고 AB=10cm일 때, AM의 길이는?', choices:['5cm','10cm','2.5cm','20cm'], answer:0, explain:'중점은 선분을 이등분하므로 AM=MB=(1/2)×10=5cm예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"점 M이 선분 AB의 중점이고 AB=10cm일 때, AM의 길이는?", choices:["20cm", "10cm", "5cm", "2.5cm"], answer:2, explain:"중점은 선분을 이등분하므로 AM=MB=(1/2)×10=5cm예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 25쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','08. 각') ] = {
   hints: ['한 점에서 그은 두 반직선이 만드는 도형을 뭐라고 할까?', '각을 기호로 쓸 때 꼭짓점은 어디에 쓸까?'],
   concept: '한 점 O에서 시작하는 두 반직선 OA, OB로 이루어진 도형을 각 AOB라고 해. 이때 점 O를 각의 꼭짓점, 두 반직선 OA와 OB를 각의 변이라고 하지. 기호로는 ∠AOB, ∠BOA, ∠O, ∠a처럼 여러 가지로 나타낼 수 있는데, 세 글자로 쓸 때는 꼭짓점이 항상 가운데 오도록 써야 해.',
   media: [],
-  basicProblem: { stem:'각 AOB를 기호로 나타낼 때, 꼭짓점 O는 어느 자리에 써야 하는가?', choices:['가운데','맨 앞','맨 뒤','어디든 상관없다'], answer:0, explain:'각을 세 글자로 나타낼 때는 꼭짓점이 항상 가운데 오도록 써요. 그래서 ∠AOB, ∠BOA로 쓰죠.', by:'app', scope:'me' },
+  basicProblem: { stem:"각 AOB를 기호로 나타낼 때, 꼭짓점 O는 어느 자리에 써야 하는가?", choices:["가운데", "어디든 상관없다", "맨 앞", "맨 뒤"], answer:0, explain:"각을 세 글자로 나타낼 때는 꼭짓점이 항상 가운데 오도록 써요. 그래서 ∠AOB, ∠BOA로 쓰죠.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 29쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','09. 각을 두 반직선으로 정의하는 이유') ] = {
   hints: ['선분과 반직선의 가장 큰 차이는 뭘까?', '각의 크기는 변의 길이와 관계가 있을까?'],
   concept: '각을 두 선분이 아니라 두 반직선으로 정의하는 이유는 선분은 길이가 정해져 있기 때문이야. 만약 선분으로 각을 나타내면 크기가 같은 각이라도 변의 길이가 다르면 서로 다른 도형이 돼 버려. 그런데 각에서 중요한 건 변의 길이가 아니라 두 변이 만나 이룬 모양이야. 그래서 길이를 고려하지 않는 반직선으로 각의 변을 정의하는 거지.',
   media: [],
-  basicProblem: { stem:'각을 두 선분이 아닌 두 반직선으로 정의하는 이유는?', choices:['선분은 길이가 정해져 있어서 크기가 같은 각도 다른 도형이 되기 때문','반직선이 그리기 더 쉬워서','선분은 기호가 없어서','반직선이 더 길어서'], answer:0, explain:'각에서 중요한 것은 변의 길이가 아니라 두 변이 이룬 모양이라서, 길이가 정해지지 않는 반직선을 써요.', by:'app', scope:'me' },
+  basicProblem: { stem:"각을 두 선분이 아닌 두 반직선으로 정의하는 이유는?", choices:["선분은 길이가 정해져 있어서 크기가 같은 각도 다른 도형이 되기 때문", "선분은 기호가 없어서", "반직선이 더 길어서", "반직선이 그리기 더 쉬워서"], answer:0, explain:"각에서 중요한 것은 변의 길이가 아니라 두 변이 이룬 모양이라서, 길이가 정해지지 않는 반직선을 써요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 30쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','10. 각의 분류(예각·직각·둔각·평각)') ] = {
   hints: ['평각은 몇 도이고, 직각은 평각의 얼마일까?', '예각과 둔각을 가르는 기준은 몇 도일까?'],
   concept: '각은 크기에 따라 네 가지로 분류해. 평각은 각의 두 변이 한 직선을 이루는 각으로 180°, 직각은 평각의 1/2인 90°야. 예각은 0°보다 크고 90°보다 작은 각, 둔각은 90°보다 크고 180°보다 작은 각이지. 정리하면 (예각) < (직각) < (둔각) < (평각)=180°이고, 0°·90°·180°는 예각이나 둔각에 포함되지 않아.',
   media: [],
-  basicProblem: { stem:'크기가 120°인 각은 무엇인가?', choices:['둔각','예각','직각','평각'], answer:0, explain:'둔각은 90°보다 크고 180°보다 작은 각이므로 120°는 둔각이에요.', by:'app', scope:'me' },
+  basicProblem: { stem:"크기가 120°인 각은 무엇인가?", choices:["예각", "직각", "평각", "둔각"], answer:3, explain:"둔각은 90°보다 크고 180°보다 작은 각이므로 120°는 둔각이에요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 31쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','11. 맞꼭지각') ] = {
   hints: ['두 직선이 한 점에서 만나면 각이 몇 개 생길까?', '그중 서로 마주 보는 각은 어떤 것들일까?'],
   concept: '두 직선이 한 점에서 만날 때 생기는 네 각을 두 직선의 교각이라고 해. 이 교각 중에서 서로 마주 보는 두 각을 맞꼭지각이라고 하지. 두 직선이 만날 때 맞꼭지각은 2쌍 생겨. 이웃해 있는 각은 마주 보는 게 아니니까 맞꼭지각이 아니야.',
   media: [],
-  basicProblem: { stem:'두 직선이 한 점에서 만날 때 생기는 맞꼭지각은 몇 쌍인가?', choices:['2쌍','1쌍','3쌍','4쌍'], answer:0, explain:'네 개의 교각 중 서로 마주 보는 두 각끼리 짝을 지으면 2쌍이 생겨요.', by:'app', scope:'me' },
+  basicProblem: { stem:"두 직선이 한 점에서 만날 때 생기는 맞꼭지각은 몇 쌍인가?", choices:["3쌍", "1쌍", "2쌍", "4쌍"], answer:2, explain:"네 개의 교각 중 서로 마주 보는 두 각끼리 짝을 지으면 2쌍이 생겨요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 34쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','12. 맞꼭지각이 되기 위한 조건') ] = {
   hints: ['맞꼭지각이 생기려면 무엇이 만나야 할까?', '마주 보기만 하면 무조건 맞꼭지각일까?'],
   concept: '서로 마주 보는 각이라고 해서 모두 맞꼭지각인 건 아니야. 맞꼭지각은 반드시 두 개의 직선이 한 점에서 만날 때 생기는 교각 중에서 마주 보는 각이어야 해. 그래서 두 직선이 만나서 생긴 경우가 아니라면 아무리 마주 보고 있어도 맞꼭지각이 아니야. 평각도 서로 다른 두 직선이 만나 이루어지는 교각이 아니라서 맞꼭지각이 없어.',
   media: [],
-  basicProblem: { stem:'맞꼭지각이 생기기 위한 조건으로 옳은 것은?', choices:['두 직선이 한 점에서 만나야 한다','두 반직선이 마주 보기만 하면 된다','두 선분의 길이가 같아야 한다','세 직선이 필요하다'], answer:0, explain:'맞꼭지각은 두 직선이 한 점에서 만날 때 생기는 교각 중 마주 보는 각이에요.', by:'app', scope:'me' },
+  basicProblem: { stem:"맞꼭지각이 생기기 위한 조건으로 옳은 것은?", choices:["두 반직선이 마주 보기만 하면 된다", "세 직선이 필요하다", "두 선분의 길이가 같아야 한다", "두 직선이 한 점에서 만나야 한다"], answer:3, explain:"맞꼭지각은 두 직선이 한 점에서 만날 때 생기는 교각 중 마주 보는 각이에요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 35쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','13. 맞꼭지각의 성질') ] = {
   hints: ['한 직선이 이루는 각은 몇 도일까?', '∠a+∠b=180°이고 ∠b+∠c=180°이면 ∠a와 ∠c는 어떤 관계일까?'],
   concept: '맞꼭지각의 크기는 항상 서로 같아. 평각이 180°라는 사실을 쓰면 설명할 수 있어. ∠a+∠b=180°이므로 ∠a=180°-∠b이고, ∠b+∠c=180°이므로 ∠c=180°-∠b야. 따라서 ∠a=∠c가 되지. 같은 방법으로 ∠b=∠d도 성립해.',
   media: [],
-  basicProblem: { stem:'두 직선이 만나 생긴 맞꼭지각 중 한 각이 50°일 때, 그 맞꼭지각의 크기는?', choices:['50°','130°','90°','40°'], answer:0, explain:'맞꼭지각의 크기는 서로 같으므로 50°예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"두 직선이 만나 생긴 맞꼭지각 중 한 각이 50°일 때, 그 맞꼭지각의 크기는?", choices:["130°", "50°", "40°", "90°"], answer:1, explain:"맞꼭지각의 크기는 서로 같으므로 50°예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 35쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','14. 세 직선이 만날 때 맞꼭지각의 쌍의 개수') ] = {
   hints: ['두 직선이 만나면 맞꼭지각이 몇 쌍 생길까?', '세 직선 중 두 직선씩 짝지으면 몇 가지 짝이 나올까?'],
   concept: '두 직선이 한 점에서 만나면 맞꼭지각이 2쌍 생겨. 3개의 직선이 한 점에서 만나면 서로 다른 직선 중 2개씩 골라야 각이 만들어지니까, 두 직선을 고르는 방법이 3가지이고 각각 2쌍씩 생겨서 2×3=6(쌍)이야. 일반적으로 서로 다른 n개의 직선이 한 점에서 만나면 맞꼭지각은 n(n-1)쌍 생겨.',
   media: [],
-  basicProblem: { stem:'3개의 직선이 한 점에서 만날 때 생기는 맞꼭지각은 모두 몇 쌍인가?', choices:['6쌍','3쌍','4쌍','12쌍'], answer:0, explain:'두 직선을 고르는 방법이 3가지이고 각각 2쌍씩 생기므로 2×3=6쌍이에요.', by:'app', scope:'me' },
+  basicProblem: { stem:"3개의 직선이 한 점에서 만날 때 생기는 맞꼭지각은 모두 몇 쌍인가?", choices:["3쌍", "6쌍", "12쌍", "4쌍"], answer:1, explain:"두 직선을 고르는 방법이 3가지이고 각각 2쌍씩 생기므로 2×3=6쌍이에요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 36쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','15. 직교와 수선') ] = {
   hints: ['두 직선의 교각이 직각일 때 두 직선의 관계를 뭐라고 할까?', '직교를 기호로 어떻게 쓸까?'],
   concept: '두 직선 AB, CD의 교각이 직각일 때 두 직선은 직교한다고 하고, 기호로 AB⊥CD와 같이 나타내. 직교한다는 말은 두 직선이 서로 수직이다, 직선 CD는 직선 AB의 수선이다라고 표현할 수도 있어. 또 직선 l이 선분 AB의 중점 M을 지나면서 선분 AB에 수직일 때, 직선 l을 선분 AB의 수직이등분선이라고 해.',
   media: [],
-  basicProblem: { stem:'두 직선 AB, CD가 직교할 때 기호로 바르게 나타낸 것은?', choices:['AB⊥CD','AB∥CD','AB=CD','AB≡CD'], answer:0, explain:'직교는 수직을 뜻하는 기호 ⊥를 써서 AB⊥CD로 나타내요.', by:'app', scope:'me' },
+  basicProblem: { stem:"두 직선 AB, CD가 직교할 때 기호로 바르게 나타낸 것은?", choices:["AB⊥CD", "AB=CD", "AB∥CD", "AB≡CD"], answer:0, explain:"직교는 수직을 뜻하는 기호 ⊥를 써서 AB⊥CD로 나타내요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 37쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','16. 점과 직선 사이의 거리') ] = {
   hints: ['점에서 직선에 수직으로 그은 선이 만나는 점을 뭐라 할까?', '점과 직선을 잇는 선 중 가장 짧은 건 어느 것일까?'],
   concept: '직선 l 위에 있지 않은 점 P에서 직선 l에 수선을 그어서 생기는 교점 H를 점 P에서 직선 l에 내린 수선의 발이라고 해. 점 P와 직선 l 위의 점을 잇는 선은 무수히 많지만 그중 가장 짧은 것은 선분 PH야. 수학에서 거리는 최단 거리를 뜻하니까, 선분 PH의 길이를 점 P와 직선 l 사이의 거리라고 해.',
   media: [],
-  basicProblem: { stem:'점 P와 직선 l 사이의 거리는 무엇인가?', choices:['점 P에서 직선 l에 내린 수선의 발 H까지의 거리','점 P에서 직선 l 위 아무 점까지의 거리','직선 l의 길이','점 P를 지나는 직선의 길이'], answer:0, explain:'거리는 최단 거리이고, 그것이 바로 수선의 발 H까지 이은 선분 PH의 길이예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"점 P와 직선 l 사이의 거리는 무엇인가?", choices:["점 P에서 직선 l 위 아무 점까지의 거리", "직선 l의 길이", "점 P에서 직선 l에 내린 수선의 발 H까지의 거리", "점 P를 지나는 직선의 길이"], answer:2, explain:"거리는 최단 거리이고, 그것이 바로 수선의 발 H까지 이은 선분 PH의 길이예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 38쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','17. 점과 직선, 점과 평면의 위치 관계') ] = {
   hints: ['점이 직선 위에 있다는 건 무슨 뜻일까?', '점이 평면 위에 있다는 것을 다르게 표현하면?'],
   concept: '점과 직선의 위치 관계는 점이 직선 위에 있는 경우와 있지 않은 경우 두 가지야. 점 A는 직선 l 위에 있다는 말은 직선 l이 점 A를 지난다는 말과 같고, 점 B는 직선 l 위에 있지 않다는 말은 점 B는 직선 l 밖에 있다는 말과 같아. 점과 평면도 마찬가지로 두 가지인데, 점 A는 평면 P 위에 있다는 말은 평면 P가 점 A를 포함한다는 뜻이야.',
   media: [],
-  basicProblem: { stem:'점 A는 직선 l 위에 있다와 같은 뜻인 것은?', choices:['직선 l은 점 A를 지난다','점 A는 직선 l 밖에 있다','직선 l은 점 A보다 위쪽에 있다','점 A는 직선 l과 평행하다'], answer:0, explain:'점이 직선 위에 있다는 것은 그 직선이 그 점을 지난다는 뜻이에요.', by:'app', scope:'me' },
+  basicProblem: { stem:"점 A는 직선 l 위에 있다와 같은 뜻인 것은?", choices:["점 A는 직선 l과 평행하다", "직선 l은 점 A를 지난다", "점 A는 직선 l 밖에 있다", "직선 l은 점 A보다 위쪽에 있다"], answer:1, explain:"점이 직선 위에 있다는 것은 그 직선이 그 점을 지난다는 뜻이에요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 43쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','18. 평면에서 두 직선의 위치 관계') ] = {
   hints: ['한 평면에서 두 직선이 만나지 않으면 어떤 관계일까?', '두 직선이 완전히 겹쳐지면 뭐라고 할까?'],
   concept: '한 평면에서 서로 다른 두 직선의 위치 관계는 세 가지야. ① 한 점에서 만난다 ② 일치한다 ③ 평행하다. 한 평면에서 두 직선 l, m이 서로 만나지 않을 때 두 직선은 평행하다고 하고 기호로 l∥m이라고 써. 이때 서로 평행한 두 직선을 평행선이라고 해. 평면에서는 두 직선이 평행하지 않으면 반드시 만나.',
   media: [],
-  basicProblem: { stem:'한 평면 위의 서로 다른 두 직선이 만나지 않을 때, 두 직선의 관계는?', choices:['평행하다','일치한다','꼬인 위치에 있다','수직이다'], answer:0, explain:'한 평면에서 만나지 않는 두 직선은 평행하고, 기호로 l∥m으로 나타내요.', by:'app', scope:'me' },
+  basicProblem: { stem:"한 평면 위의 서로 다른 두 직선이 만나지 않을 때, 두 직선의 관계는?", choices:["수직이다", "평행하다", "꼬인 위치에 있다", "일치한다"], answer:1, explain:"한 평면에서 만나지 않는 두 직선은 평행하고, 기호로 l∥m으로 나타내요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 44쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','19. 공간에서 두 직선의 위치 관계') ] = {
   hints: ['공간에서는 만나지도 평행하지도 않은 두 직선이 있을까?', '꼬인 위치에 있는 두 직선은 한 평면 위에 있을까?'],
   concept: '공간에서 두 직선의 위치 관계는 네 가지야. ① 한 점에서 만난다 ② 일치한다 ③ 평행하다 ④ 꼬인 위치에 있다. 평면에서는 두 직선이 반드시 만나거나 평행하지만, 공간에서는 만나지도 평행하지도 않는 경우가 생기는데 이런 두 직선을 꼬인 위치에 있다고 해. 꼬인 위치에 있는 두 직선은 한 평면 위에 있지 않아.',
   media: [],
-  basicProblem: { stem:'공간에서 만나지도 않고 평행하지도 않은 두 직선의 관계는?', choices:['꼬인 위치에 있다','일치한다','수직이다','평행하다'], answer:0, explain:'만나지도 평행하지도 않으면 꼬인 위치예요. 이때 두 직선은 한 평면 위에 있지 않아요.', by:'app', scope:'me' },
+  basicProblem: { stem:"공간에서 만나지도 않고 평행하지도 않은 두 직선의 관계는?", choices:["수직이다", "일치한다", "평행하다", "꼬인 위치에 있다"], answer:3, explain:"만나지도 평행하지도 않으면 꼬인 위치예요. 이때 두 직선은 한 평면 위에 있지 않아요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 45쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','20. 꼬인 위치에 있는 직선 찾기') ] = {
   hints: ['꼬인 위치를 찾으려면 무엇부터 빼야 할까?', '한 평면 위에 있으면 꼬인 위치가 될 수 있을까?'],
   concept: '꼬인 위치에 있는 직선은 만나는 직선과 평행한 직선을 먼저 찾아 제외하면 쉽게 찾을 수 있어. 예를 들어 직육면체에서 모서리 AB와 꼬인 위치인 모서리를 찾을 때, 먼저 AB와 한 점에서 만나는 모서리를 지우고 다음으로 AB와 평행한 모서리를 지우면, 남는 것이 꼬인 위치에 있는 모서리야. 이때 만나지도 평행하지도 않아 보여도 한 평면 위에 있으면 꼬인 위치가 아니니까 조심해야 해.',
   media: [],
-  basicProblem: { stem:'주어진 직선과 꼬인 위치에 있는 직선을 찾는 방법으로 알맞은 것은?', choices:['만나는 직선과 평행한 직선을 먼저 제외한다','가장 긴 직선을 고른다','수직인 직선만 고른다','평행한 직선만 고른다'], answer:0, explain:'만나는 것과 평행한 것을 지우면 남는 것이 꼬인 위치에 있는 직선이에요.', by:'app', scope:'me' },
+  basicProblem: { stem:"주어진 직선과 꼬인 위치에 있는 직선을 찾는 방법으로 알맞은 것은?", choices:["가장 긴 직선을 고른다", "만나는 직선과 평행한 직선을 먼저 제외한다", "평행한 직선만 고른다", "수직인 직선만 고른다"], answer:1, explain:"만나는 것과 평행한 것을 지우면 남는 것이 꼬인 위치에 있는 직선이에요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 45쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','21. 평면이 하나로 결정되는 경우') ] = {
   hints: ['한 평면을 정하려면 점이 몇 개 필요할까?', '한 직선 위에 있는 세 점으로 평면이 하나로 정해질까?'],
   concept: '주어진 점이나 직선을 지나는 평면을 오직 한 개만 그릴 수 있을 때 평면이 하나로 결정된다고 해. 평면이 하나로 결정되는 경우는 네 가지야. ① 한 직선 위에 있지 않은 서로 다른 세 점 ② 한 직선과 그 직선 밖의 한 점 ③ 한 점에서 만나는 두 직선 ④ 서로 평행한 두 직선. 반대로 한 직선 위에 있는 세 점이나 꼬인 위치에 있는 두 직선은 평면을 결정할 수 없어.',
   media: [],
-  basicProblem: { stem:'평면이 하나로 결정되지 않는 경우는?', choices:['한 직선 위에 있는 서로 다른 세 점','한 직선 위에 있지 않은 서로 다른 세 점','한 점에서 만나는 두 직선','서로 평행한 두 직선'], answer:0, explain:'세 점이 한 직선 위에 있으면 그 직선을 지나는 평면이 무수히 많아서 하나로 정해지지 않아요.', by:'app', scope:'me' },
+  basicProblem: { stem:"평면이 하나로 결정되지 않는 경우는?", choices:["한 점에서 만나는 두 직선", "한 직선 위에 있지 않은 서로 다른 세 점", "서로 평행한 두 직선", "한 직선 위에 있는 서로 다른 세 점"], answer:3, explain:"세 점이 한 직선 위에 있으면 그 직선을 지나는 평면이 무수히 많아서 하나로 정해지지 않아요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 46쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','22. 공간에서 직선과 평면의 위치 관계') ] = {
   hints: ['직선과 평면이 만나는 점이 몇 개인지로 나눠 볼까?', '직선이 평면에 포함된다는 건 어떤 뜻일까?'],
   concept: '공간에서 직선과 평면의 위치 관계는 세 가지야. ① 한 점에서 만난다 ② 직선이 평면에 포함된다 ③ 평행하다. 직선 l과 평면 P가 만나지 않을 때 서로 평행하다고 하고 l∥P로 나타내. 직선 l이 평면 P와 한 점 H에서 만나고 점 H를 지나는 평면 P 위의 모든 직선과 수직이면, 직선 l과 평면 P는 서로 수직이라 하고 l⊥P로 나타내. 직선과 평면 사이에는 꼬인 위치가 없어.',
   media: [],
-  basicProblem: { stem:'공간에서 직선과 평면의 위치 관계가 아닌 것은?', choices:['꼬인 위치에 있다','한 점에서 만난다','직선이 평면에 포함된다','평행하다'], answer:0, explain:'꼬인 위치는 두 직선 사이에만 있는 관계예요. 직선과 평면 사이에는 없어요.', by:'app', scope:'me' },
+  basicProblem: { stem:"공간에서 직선과 평면의 위치 관계가 아닌 것은?", choices:["한 점에서 만난다", "평행하다", "직선이 평면에 포함된다", "꼬인 위치에 있다"], answer:3, explain:"꼬인 위치는 두 직선 사이에만 있는 관계예요. 직선과 평면 사이에는 없어요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 47쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','23. 공간에서 두 평면의 위치 관계') ] = {
   hints: ['두 평면이 만나면 무엇이 생길까?', '만나지 않는 두 평면은 어떤 관계일까?'],
   concept: '공간에서 두 평면의 위치 관계는 세 가지야. ① 한 직선에서 만난다 ② 일치한다 ③ 평행하다. 두 평면이 만나면 그 만나는 선이 교선이 되고, 두 평면 P, Q가 만나지 않을 때 서로 평행하다고 하며 P∥Q로 나타내. 또 평면 P가 평면 Q에 수직인 직선을 포함하면 두 평면은 서로 수직이라 하고 P⊥Q로 나타내.',
   media: [],
-  basicProblem: { stem:'공간에서 두 평면이 만날 때 생기는 것은?', choices:['교선','교점','수선의 발','꼭짓점'], answer:0, explain:'면과 면이 만나면 선이 생기는데 이것을 교선이라고 해요.', by:'app', scope:'me' },
+  basicProblem: { stem:"공간에서 두 평면이 만날 때 생기는 것은?", choices:["수선의 발", "교선", "꼭짓점", "교점"], answer:1, explain:"면과 면이 만나면 선이 생기는데 이것을 교선이라고 해요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 48쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','24. 두 평면에 꼬인 위치가 없는 이유') ] = {
   hints: ['평면은 어디까지 뻗어 나갈까?', '평행하지 않은 두 평면은 결국 어떻게 될까?'],
   concept: '두 평면 사이에는 꼬인 위치가 없어. 겉보기에 만나지도 평행하지도 않아 보여도, 평면은 사방으로 끝없이 뻗어 나가기 때문에 결국 두 평면은 한 직선인 교선에서 만나게 되거든. 즉 서로 다른 두 평면이 평행하지 않다면 반드시 어느 한 직선에서 만나. 그래서 꼬인 위치는 두 직선 사이의 위치 관계에만 존재해.',
   media: [],
-  basicProblem: { stem:'꼬인 위치가 존재하는 것은 어느 경우인가?', choices:['두 직선 사이','직선과 평면 사이','두 평면 사이','점과 평면 사이'], answer:0, explain:'꼬인 위치는 두 직선 사이에만 존재해요. 평면은 끝없이 뻗어 나가 결국 만나기 때문이에요.', by:'app', scope:'me' },
+  basicProblem: { stem:"꼬인 위치가 존재하는 것은 어느 경우인가?", choices:["두 직선 사이", "직선과 평면 사이", "두 평면 사이", "점과 평면 사이"], answer:0, explain:"꼬인 위치는 두 직선 사이에만 존재해요. 평면은 끝없이 뻗어 나가 결국 만나기 때문이에요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 49쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','25. 공간에서 위치 관계 확인하기') ] = {
   hints: ['공간의 위치 관계를 확인할 때 어떤 입체도형을 그리면 편할까?', '한 직선에 수직인 두 직선은 항상 평행할까?'],
   concept: '공간에서 직선과 평면의 위치 관계를 확인할 때는 직육면체를 그려서 모서리를 직선으로, 면을 평면으로 생각하면 편해. 예를 들어 한 직선에 평행한 서로 다른 두 직선은 항상 서로 평행해. 하지만 한 직선에 수직인 서로 다른 두 직선은 공간에서 만나거나, 평행하거나, 꼬인 위치에 있을 수 있어서 항상 평행한 건 아니야. 평면에서라면 항상 평행하지만 공간에서는 다르다는 점을 주의해야 해.',
   media: [],
-  basicProblem: { stem:'공간에서 한 직선에 수직인 서로 다른 두 직선은 항상 평행한가?', choices:['아니다. 만나거나 평행하거나 꼬인 위치일 수 있다','그렇다. 항상 평행하다','그렇다. 항상 수직이다','아니다. 항상 꼬인 위치이다'], answer:0, explain:'평면에서는 항상 평행하지만, 공간에서는 세 가지 경우가 모두 생길 수 있어요.', by:'app', scope:'me' },
+  basicProblem: { stem:"공간에서 한 직선에 수직인 서로 다른 두 직선은 항상 평행한가?", choices:["그렇다. 항상 수직이다", "아니다. 항상 꼬인 위치이다", "아니다. 만나거나 평행하거나 꼬인 위치일 수 있다", "그렇다. 항상 평행하다"], answer:2, explain:"평면에서는 항상 평행하지만, 공간에서는 세 가지 경우가 모두 생길 수 있어요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 49쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','26. 동위각과 엇각') ] = {
   hints: ['한 직선이 두 직선과 만나면 교각이 몇 개 생길까?', '같은 위치에 있는 각과 엇갈린 위치에 있는 각을 각각 뭐라 부를까?'],
   concept: '한 평면 위에서 서로 다른 두 직선이 다른 한 직선과 만나면 8개의 교각이 생겨. 이 중에서 같은 위치에 있는 두 각을 동위각, 엇갈린 위치에 있는 두 각을 엇각이라고 해. 8개의 교각 중 동위각은 4쌍, 엇각은 2쌍이 있어. 엇각은 두 직선 사이에 있는 각이라는 점을 기억해 두면 헷갈리지 않아.',
   media: [],
-  basicProblem: { stem:'한 직선이 다른 두 직선과 만날 때 생기는 8개의 교각 중 동위각과 엇각은 각각 몇 쌍인가?', choices:['동위각 4쌍, 엇각 2쌍','동위각 2쌍, 엇각 4쌍','동위각 4쌍, 엇각 4쌍','동위각 2쌍, 엇각 2쌍'], answer:0, explain:'같은 위치에 있는 동위각은 4쌍, 두 직선 사이에서 엇갈린 위치에 있는 엇각은 2쌍이에요.', by:'app', scope:'me' },
+  basicProblem: { stem:"한 직선이 다른 두 직선과 만날 때 생기는 8개의 교각 중 동위각과 엇각은 각각 몇 쌍인가?", choices:["동위각 4쌍, 엇각 2쌍", "동위각 2쌍, 엇각 4쌍", "동위각 2쌍, 엇각 2쌍", "동위각 4쌍, 엇각 4쌍"], answer:0, explain:"같은 위치에 있는 동위각은 4쌍, 두 직선 사이에서 엇갈린 위치에 있는 엇각은 2쌍이에요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 54쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','27. 평행선의 성질') ] = {
   hints: ['두 직선이 평행할 때 동위각의 크기는 어떨까?', '평행하지 않아도 동위각의 크기가 같을까?'],
   concept: '평행한 두 직선이 다른 한 직선과 만날 때 ① 동위각의 크기는 서로 같고 ② 엇각의 크기도 서로 같아. 즉 l∥m이면 동위각끼리, 엇각끼리 크기가 같아. 동위각과 엇각은 원래 각의 위치만 나타내는 이름이라 크기와는 관계가 없지만, 두 직선이 평행할 때만 특별히 크기가 같아지는 거야.',
   media: [],
-  basicProblem: { stem:'l∥m일 때 성립하는 것은?', choices:['동위각의 크기도 같고 엇각의 크기도 같다','동위각만 같다','엇각만 같다','동위각과 엇각의 합이 90°이다'], answer:0, explain:'평행선에서는 동위각과 엇각의 크기가 각각 서로 같아요.', by:'app', scope:'me' },
+  basicProblem: { stem:"l∥m일 때 성립하는 것은?", choices:["동위각의 크기도 같고 엇각의 크기도 같다", "동위각만 같다", "동위각과 엇각의 합이 90°이다", "엇각만 같다"], answer:0, explain:"평행선에서는 동위각과 엇각의 크기가 각각 서로 같아요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 56쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','28. 두 직선이 평행하기 위한 조건') ] = {
   hints: ['동위각의 크기가 같으면 두 직선은 어떤 관계일까?', '평행하면 동위각이 같다와 동위각이 같으면 평행하다는 같은 문장일까?'],
   concept: '서로 다른 두 직선이 다른 한 직선과 만날 때 ① 동위각의 크기가 서로 같으면 두 직선은 평행하고 ② 엇각의 크기가 서로 같으면 두 직선은 평행해. 앞에서 배운 평행하면 동위각·엇각이 같다는 것은 성질이고, 이번 것은 그 반대 방향인 조건이야. 두 직선을 끝없이 늘여서 만나는지 확인할 수는 없으니, 이 조건을 이용해 평행한지 판단하는 거지.',
   media: [],
-  basicProblem: { stem:'두 직선이 다른 한 직선과 만날 때, 두 직선이 평행하다고 말할 수 있는 경우는?', choices:['동위각의 크기가 서로 같을 때','두 직선의 길이가 같을 때','교각이 모두 예각일 때','엇각의 합이 90°일 때'], answer:0, explain:'동위각(또는 엇각)의 크기가 서로 같으면 두 직선은 평행해요.', by:'app', scope:'me' },
+  basicProblem: { stem:"두 직선이 다른 한 직선과 만날 때, 두 직선이 평행하다고 말할 수 있는 경우는?", choices:["동위각의 크기가 서로 같을 때", "교각이 모두 예각일 때", "두 직선의 길이가 같을 때", "엇각의 합이 90°일 때"], answer:0, explain:"동위각(또는 엇각)의 크기가 서로 같으면 두 직선은 평행해요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 58쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','29. 평행선에서 각의 크기 구하기') ] = {
@@ -6700,7 +6694,7 @@ DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','29. 평행선에서 각의 크�
     ],
     caption: ['꺾인 점 P를 지나 l, m과 평행한 보조선(점선)을 그으면', '주황 두 각이 서로 같고(엇각), 파란 두 각도 서로 같아요(엇각) — 구하는 각 = 주황 + 파랑']
   } } ],
-  basicProblem: { stem:'l∥m이고 중간에 꺾인 점이 있는 각도 문제를 풀 때 가장 먼저 할 일은?', choices:['꺾인 점을 지나고 l, m과 평행한 보조선을 긋는다','꺾인 점에서 수선을 내린다','각을 자로 직접 잰다','두 직선을 끝까지 연장한다'], answer:0, explain:'꺾인 점을 지나는 평행한 보조선을 그으면 엇각을 이용해 각을 나누어 구할 수 있어요.', by:'app', scope:'me' },
+  basicProblem: { stem:"l∥m이고 중간에 꺾인 점이 있는 각도 문제를 풀 때 가장 먼저 할 일은?", choices:["각을 자로 직접 잰다", "꺾인 점을 지나고 l, m과 평행한 보조선을 긋는다", "꺾인 점에서 수선을 내린다", "두 직선을 끝까지 연장한다"], answer:1, explain:"꺾인 점을 지나는 평행한 보조선을 그으면 엇각을 이용해 각을 나누어 구할 수 있어요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 59쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','30. 직사각형 종이접기와 각의 크기') ] = {
@@ -6723,105 +6717,105 @@ DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','30. 직사각형 종이접기�
     ],
     caption: ['실선 = 접은 뒤 지금 종이 모양 · 점선 = 접기 전 C가 있던 자리(지금은 빈 자리)', '파란 두 각(접은각·원래각)은 크기가 같아요']
   } } ],
-  basicProblem: { stem:'직사각형 모양의 종이를 접는 문제에서 이용하는 두 가지 성질은?', choices:['접은 각의 크기가 같다는 것과 평행선의 엇각이 같다는 것','넓이가 같다는 것과 둘레가 같다는 것','대각선이 같다는 것과 수직이라는 것','맞꼭지각이 같다는 것과 평각이 180°라는 것'], answer:0, explain:'접은 각은 크기가 같고, 직사각형의 마주 보는 변이 평행하므로 엇각의 크기도 같아요.', by:'app', scope:'me' },
+  basicProblem: { stem:"직사각형 모양의 종이를 접는 문제에서 이용하는 두 가지 성질은?", choices:["넓이가 같다는 것과 둘레가 같다는 것", "맞꼭지각이 같다는 것과 평각이 180°라는 것", "대각선이 같다는 것과 수직이라는 것", "접은 각의 크기가 같다는 것과 평행선의 엇각이 같다는 것"], answer:3, explain:"접은 각은 크기가 같고, 직사각형의 마주 보는 변이 평행하므로 엇각의 크기도 같아요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 60쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','31. 작도') ] = {
   hints: ['작도할 때 쓸 수 있는 도구는 무엇일까?', '컴퍼스는 어떤 일을 할까?'],
   concept: '눈금 없는 자와 컴퍼스만을 사용하여 도형을 그리는 것을 작도라고 해. 눈금 없는 자는 두 점을 연결하는 선분을 그리거나 선분을 연장할 때 쓰고, 컴퍼스는 원을 그리거나 선분의 길이를 재어서 옮길 때 써. 눈금 있는 자나 각도기는 작도에 쓸 수 없어.',
   media: [],
-  basicProblem: { stem:'작도에서 눈금 없는 자를 쓰는 경우로 알맞은 것은?', choices:['두 점을 연결하는 선분을 그리거나 선분을 연장할 때','선분의 길이를 재어 옮길 때','원을 그릴 때','각의 크기를 잴 때'], answer:0, explain:'길이를 재어 옮기거나 원을 그리는 것은 컴퍼스의 역할이에요.', by:'app', scope:'me' },
+  basicProblem: { stem:"작도에서 눈금 없는 자를 쓰는 경우로 알맞은 것은?", choices:["선분의 길이를 재어 옮길 때", "원을 그릴 때", "각의 크기를 잴 때", "두 점을 연결하는 선분을 그리거나 선분을 연장할 때"], answer:3, explain:"길이를 재어 옮기거나 원을 그리는 것은 컴퍼스의 역할이에요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 68쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','32. 길이가 같은 선분의 작도') ] = {
   hints: ['길이를 옮길 때 어떤 도구를 쓸까?', '컴퍼스로 그린 원의 반지름은 무엇과 같을까?'],
   concept: '선분 AB와 길이가 같은 선분 CD를 작도하는 방법은 이래. ① 눈금 없는 자로 직선 l을 긋고 그 위에 점 C를 잡는다. ② 컴퍼스로 선분 AB의 길이를 잰다. ③ 점 C를 중심으로 반지름의 길이가 AB인 원을 그려 직선 l과의 교점을 D라 하면 선분 CD가 구하는 선분이야. 이 과정을 반복하면 길이가 AB의 2배, 3배인 선분도 작도할 수 있어.',
   media: [],
-  basicProblem: { stem:'선분 AB와 길이가 같은 선분을 작도할 때 컴퍼스의 역할은?', choices:['선분 AB의 길이를 재어 옮기는 것','직선을 긋는 것','선분을 연장하는 것','각의 크기를 재는 것'], answer:0, explain:'컴퍼스로 AB의 길이를 재고, 그 길이를 반지름으로 하는 원을 그려 옮겨요.', by:'app', scope:'me' },
+  basicProblem: { stem:"선분 AB와 길이가 같은 선분을 작도할 때 컴퍼스의 역할은?", choices:["각의 크기를 재는 것", "선분을 연장하는 것", "선분 AB의 길이를 재어 옮기는 것", "직선을 긋는 것"], answer:2, explain:"컴퍼스로 AB의 길이를 재고, 그 길이를 반지름으로 하는 원을 그려 옮겨요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 69쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','33. 크기가 같은 각의 작도') ] = {
   hints: ['같은 각을 작도할 때 무엇을 먼저 그릴까?', '두 원의 교점은 왜 필요할까?'],
   concept: '∠XOY와 크기가 같고 반직선 PQ를 한 변으로 하는 각은 이렇게 작도해. ① 점 O를 중심으로 원을 그려 두 변과의 교점을 각각 A, B라 한다. ② 점 P를 중심으로 반지름이 OA인 원을 그려 반직선 PQ와의 교점을 C라 한다. ③ 컴퍼스로 AB의 길이를 잰다. ④ 점 C를 중심으로 반지름이 AB인 원을 그려 ②의 원과의 교점을 D라 한다. ⑤ 점 P와 D를 이으면 ∠DPQ가 구하는 각이야. 즉 반지름의 길이가 같은 원의 작도를 이용하는 거지.',
   media: [],
-  basicProblem: { stem:'크기가 같은 각을 작도할 때 이용하는 것은?', choices:['반지름의 길이가 같은 원의 작도','각도기로 각을 재는 것','눈금 있는 자로 길이를 재는 것','평각이 180°라는 성질'], answer:0, explain:'두 원의 반지름과 두 교점 사이의 길이를 똑같이 옮겨서 같은 각을 만들어요.', by:'app', scope:'me' },
+  basicProblem: { stem:"크기가 같은 각을 작도할 때 이용하는 것은?", choices:["평각이 180°라는 성질", "반지름의 길이가 같은 원의 작도", "각도기로 각을 재는 것", "눈금 있는 자로 길이를 재는 것"], answer:1, explain:"두 원의 반지름과 두 교점 사이의 길이를 똑같이 옮겨서 같은 각을 만들어요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 69쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','34. 평행선의 작도') ] = {
   hints: ['평행선을 작도할 때 무엇을 같게 만들까?', '동위각의 크기가 같으면 두 직선은 어떤 관계일까?'],
   concept: '평행선의 작도는 동위각(또는 엇각)의 크기가 같으면 두 직선은 평행하다는 조건을 이용해. 직선 l 위에 있지 않은 점 P를 지나고 l에 평행한 직선을 그리려면, 점 P를 지나는 직선을 그어 l과의 교점을 Q라 한 다음, 그 교점에서 생긴 각과 크기가 같은 동위각을 점 P에서 작도하고 그 변을 그으면 l과 평행한 직선이 돼. 결국 크기가 같은 각의 작도를 그대로 쓰는 셈이야.',
   media: [],
-  basicProblem: { stem:'평행선을 작도할 때 이용하는 성질은?', choices:['동위각(또는 엇각)의 크기가 같으면 두 직선은 평행하다','맞꼭지각의 크기는 서로 같다','평각은 180°이다','두 점 사이의 최단 거리는 선분이다'], answer:0, explain:'크기가 같은 동위각을 작도해서 두 직선이 평행하게 만들어요.', by:'app', scope:'me' },
+  basicProblem: { stem:"평행선을 작도할 때 이용하는 성질은?", choices:["동위각(또는 엇각)의 크기가 같으면 두 직선은 평행하다", "맞꼭지각의 크기는 서로 같다", "두 점 사이의 최단 거리는 선분이다", "평각은 180°이다"], answer:0, explain:"크기가 같은 동위각을 작도해서 두 직선이 평행하게 만들어요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 70쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','35. 삼각형의 대변과 대각') ] = {
   hints: ['한 각과 마주 보는 변을 뭐라 부를까?', '∠A의 대변은 어느 변일까?'],
   concept: '세 점 A, B, C를 꼭짓점으로 하는 삼각형을 기호로 △ABC와 같이 나타내. 삼각형에서 어떤 각과 마주 보는 변을 그 각의 대변, 어떤 변과 마주 보는 각을 그 변의 대각이라고 해. 예를 들어 ∠A의 대변은 변 BC이고, 변 BC의 대각은 ∠A야. △ABC에서 ∠A, ∠B, ∠C의 대변의 길이를 차례로 a, b, c로 나타내기도 해.',
   media: [],
-  basicProblem: { stem:'△ABC에서 ∠A의 대변은?', choices:['변 BC','변 AB','변 AC','∠B'], answer:0, explain:'대변은 그 각과 마주 보는 변이므로 ∠A의 대변은 변 BC예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"△ABC에서 ∠A의 대변은?", choices:["변 AB", "∠B", "변 BC", "변 AC"], answer:2, explain:"대변은 그 각과 마주 보는 변이므로 ∠A의 대변은 변 BC예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 72쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','36. 삼각형의 세 변의 길이 사이의 관계') ] = {
   hints: ['가장 긴 변과 나머지 두 변의 합을 비교하면 어떨까?', '3, 4, 8로 삼각형을 만들 수 있을까?'],
   concept: '삼각형의 한 변의 길이는 나머지 두 변의 길이의 합보다 작아. 두 점을 잇는 선 중 가장 짧은 것이 선분이기 때문이야. 세 변의 길이가 a, b, c일 때 c<a+b, a<b+c, b<c+a가 모두 성립해야 하는데, 실제로는 (가장 긴 변의 길이) < (나머지 두 변의 길이의 합) 하나만 확인하면 삼각형을 만들 수 있는지 알 수 있어.',
   media: [],
-  basicProblem: { stem:'다음 중 삼각형의 세 변의 길이가 될 수 있는 것은?', choices:['3cm, 4cm, 5cm','1cm, 2cm, 3cm','3cm, 5cm, 10cm','2cm, 3cm, 6cm'], answer:0, explain:'가장 긴 변 5가 3+4=7보다 작으므로 삼각형이 돼요. 나머지는 가장 긴 변이 나머지 두 변의 합보다 크거나 같아서 안 돼요.', by:'app', scope:'me' },
+  basicProblem: { stem:"다음 중 삼각형의 세 변의 길이가 될 수 있는 것은?", choices:["1cm, 2cm, 3cm", "2cm, 3cm, 6cm", "3cm, 4cm, 5cm", "3cm, 5cm, 10cm"], answer:2, explain:"가장 긴 변 5가 3+4=7보다 작으므로 삼각형이 돼요. 나머지는 가장 긴 변이 나머지 두 변의 합보다 크거나 같아서 안 돼요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 73쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','37. 세 변의 길이가 주어진 삼각형의 작도') ] = {
   hints: ['세 변으로 작도할 때 무엇부터 그릴까?', '두 원이 만나는 점은 무엇이 될까?'],
   concept: '세 변의 길이 a, b, c가 주어졌을 때 △ABC는 이렇게 작도해. ① 직선 l을 긋고 그 위에 길이가 a인 선분 BC를 잡는다. ② 점 B를 중심으로 반지름이 c인 원을 그린다. ③ 점 C를 중심으로 반지름이 b인 원을 그려 ②의 원과 만나는 점을 A라 한다. ④ 점 A와 B, 점 A와 C를 각각 이으면 △ABC가 돼. 단, 작도하기 전에 (가장 긴 변) < (나머지 두 변의 합)인지 꼭 확인해야 해.',
   media: [],
-  basicProblem: { stem:'세 변의 길이가 주어진 삼각형을 작도할 때 두 원이 만나는 점은 무엇이 되는가?', choices:['나머지 한 꼭짓점','변의 중점','수선의 발','무게중심'], answer:0, explain:'두 변의 길이를 반지름으로 하는 원의 교점이 남은 꼭짓점 A가 돼요.', by:'app', scope:'me' },
+  basicProblem: { stem:"세 변의 길이가 주어진 삼각형을 작도할 때 두 원이 만나는 점은 무엇이 되는가?", choices:["나머지 한 꼭짓점", "수선의 발", "변의 중점", "무게중심"], answer:0, explain:"두 변의 길이를 반지름으로 하는 원의 교점이 남은 꼭짓점 A가 돼요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 74쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','38. 두 변과 끼인각이 주어진 삼각형의 작도') ] = {
   hints: ['끼인각은 두 변의 어디에 있는 각일까?', '각과 변 중 무엇부터 작도하면 좋을까?'],
   concept: '두 변의 길이와 그 끼인각의 크기가 주어지면 각→변→변 또는 변→각→변 순서로 작도해. ① 주어진 ∠B와 크기가 같은 ∠XBY를 작도한다. ② 점 B를 중심으로 반지름이 a인 원을 그려 반직선 BY와의 교점을 C라 한다. ③ 점 B를 중심으로 반지름이 c인 원을 그려 반직선 BX와의 교점을 A라 한다. ④ 두 점 A, C를 이으면 △ABC가 돼.',
   media: [],
-  basicProblem: { stem:'두 변의 길이와 그 끼인각이 주어진 삼각형의 작도 순서로 알맞은 것은?', choices:['각 → 변 → 변','각 → 각 → 변','변 → 변 → 변','각 → 각 → 각'], answer:0, explain:'끼인각을 먼저 작도하고 두 변의 길이를 옮기면 삼각형이 하나로 정해져요. 변→각→변 순서도 괜찮아요.', by:'app', scope:'me' },
+  basicProblem: { stem:"두 변의 길이와 그 끼인각이 주어진 삼각형의 작도 순서로 알맞은 것은?", choices:["각 → 변 → 변", "각 → 각 → 변", "각 → 각 → 각", "변 → 변 → 변"], answer:0, explain:"끼인각을 먼저 작도하고 두 변의 길이를 옮기면 삼각형이 하나로 정해져요. 변→각→변 순서도 괜찮아요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 75쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','39. 한 변과 양 끝 각이 주어진 삼각형의 작도') ] = {
   hints: ['한 변과 양 끝 각으로 작도할 때 무엇부터 그릴까?', '두 반직선은 어디서 만날까?'],
   concept: '한 변의 길이와 그 양 끝 각의 크기가 주어지면 변→각→각 또는 각→변→각 순서로 작도해. ① 직선 l 위에 길이가 a인 선분 BC를 작도한다. ② ∠B와 크기가 같은 ∠XBC를 작도한다. ③ ∠C와 크기가 같은 ∠YCB를 작도한다. ④ 반직선 BX와 반직선 CY의 교점을 A라 하면 △ABC가 돼. 이때 두 각의 크기의 합이 180°보다 작아야 삼각형을 작도할 수 있어.',
   media: [],
-  basicProblem: { stem:'한 변과 그 양 끝 각으로 삼각형을 작도할 수 있으려면?', choices:['두 각의 크기의 합이 180°보다 작아야 한다','두 각의 크기가 같아야 한다','두 각이 모두 둔각이어야 한다','두 각의 크기의 합이 180°이어야 한다'], answer:0, explain:'두 각의 합이 180° 이상이면 두 반직선이 만나지 않아서 삼각형이 만들어지지 않아요.', by:'app', scope:'me' },
+  basicProblem: { stem:"한 변과 그 양 끝 각으로 삼각형을 작도할 수 있으려면?", choices:["두 각이 모두 둔각이어야 한다", "두 각의 크기의 합이 180°보다 작아야 한다", "두 각의 크기가 같아야 한다", "두 각의 크기의 합이 180°이어야 한다"], answer:1, explain:"두 각의 합이 180° 이상이면 두 반직선이 만나지 않아서 삼각형이 만들어지지 않아요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 75쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','40. 삼각형이 하나로 정해지는 경우') ] = {
   hints: ['삼각형이 하나로 정해지는 조건은 몇 가지일까?', '세 변의 길이가 주어지면 삼각형이 정해질까?'],
   concept: '삼각형이 하나로 정해지는 경우는 세 가지야. ① 세 변의 길이가 주어질 때 ② 두 변의 길이와 그 끼인각의 크기가 주어질 때 ③ 한 변의 길이와 그 양 끝 각의 크기가 주어질 때. 참고로 한 변의 길이와 두 각의 크기가 주어져도 그 두 각의 위치를 알 수 있으면, 나머지 한 각을 180°에서 빼서 구할 수 있으니 삼각형이 하나로 정해져.',
   media: [],
-  basicProblem: { stem:'삼각형이 하나로 정해지는 경우가 아닌 것은?', choices:['세 각의 크기가 주어질 때','세 변의 길이가 주어질 때','두 변의 길이와 그 끼인각이 주어질 때','한 변의 길이와 그 양 끝 각이 주어질 때'], answer:0, explain:'세 각만 주어지면 모양은 같지만 크기가 다른 삼각형이 무수히 많아요.', by:'app', scope:'me' },
+  basicProblem: { stem:"삼각형이 하나로 정해지는 경우가 아닌 것은?", choices:["세 변의 길이가 주어질 때", "세 각의 크기가 주어질 때", "두 변의 길이와 그 끼인각이 주어질 때", "한 변의 길이와 그 양 끝 각이 주어질 때"], answer:1, explain:"세 각만 주어지면 모양은 같지만 크기가 다른 삼각형이 무수히 많아요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 76쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','41. 삼각형이 하나로 정해지지 않는 경우') ] = {
   hints: ['세 각의 크기만 주어지면 크기까지 정해질까?', '주어진 각이 끼인각이 아니면 어떻게 될까?'],
   concept: '삼각형이 하나로 정해지는 세 가지 경우를 만족하지 않으면 하나로 정해지지 않아. ① 두 변의 길이와 그 끼인각이 아닌 다른 각이 주어지면 삼각형이 아예 그려지지 않거나 1개 또는 2개가 그려질 수 있어. ② 한 변의 길이와 두 각의 크기가 주어져도 그 두 각의 위치를 모르면 여러 경우가 생겨. ③ 세 각의 크기만 주어지면 모양은 같지만 크기가 다른 삼각형이 무수히 많이 그려져. 또 (가장 긴 변)이 (나머지 두 변의 합)보다 짧지 않으면 삼각형 자체가 만들어지지 않아.',
   media: [],
-  basicProblem: { stem:'세 각의 크기만 주어졌을 때 삼각형은?', choices:['모양은 같지만 크기가 다른 삼각형이 무수히 많다','하나로 정해진다','2개만 그려진다','전혀 그려지지 않는다'], answer:0, explain:'세 각만으로는 크기가 정해지지 않아 모양이 같은 삼각형이 무수히 많이 생겨요.', by:'app', scope:'me' },
+  basicProblem: { stem:"세 각의 크기만 주어졌을 때 삼각형은?", choices:["모양은 같지만 크기가 다른 삼각형이 무수히 많다", "2개만 그려진다", "하나로 정해진다", "전혀 그려지지 않는다"], answer:0, explain:"세 각만으로는 크기가 정해지지 않아 모양이 같은 삼각형이 무수히 많이 생겨요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 76쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','42. 도형의 합동과 기호') ] = {
   hints: ['합동을 나타내는 기호는 무엇일까?', '대응하는 꼭짓점 순서를 맞춰 써야 할까?'],
   concept: '모양과 크기가 같아서 한 도형을 다른 도형에 포개었을 때 완전히 겹쳐지는 두 도형을 서로 합동이라고 해. △ABC와 △DEF가 합동이면 기호로 △ABC≡△DEF와 같이 나타내. 이때 서로 포개어지는 꼭짓점과 꼭짓점, 변과 변, 각과 각을 대응한다고 하고, 표기할 때 대응하는 순서를 맞춰 써야 대응변과 대응각을 바로 읽을 수 있어. 합동인 두 도형은 대응변의 길이가 같고 대응각의 크기도 같아.',
   media: [],
-  basicProblem: { stem:'△ABC와 △DEF가 합동임을 기호로 바르게 나타낸 것은?', choices:['△ABC≡△DEF','△ABC=△DEF','△ABC∥△DEF','△ABC⊥△DEF'], answer:0, explain:'합동은 기호 ≡를 쓰고, 대응하는 꼭짓점 순서를 맞춰 써요.', by:'app', scope:'me' },
+  basicProblem: { stem:"△ABC와 △DEF가 합동임을 기호로 바르게 나타낸 것은?", choices:["△ABC∥△DEF", "△ABC≡△DEF", "△ABC⊥△DEF", "△ABC=△DEF"], answer:1, explain:"합동은 기호 ≡를 쓰고, 대응하는 꼭짓점 순서를 맞춰 써요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 81쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','43. 넓이가 같은 도형과 합동') ] = {
   hints: ['넓이가 같아도 모양이 다를 수 있을까?', '합동이려면 무엇까지 같아야 할까?'],
   concept: '합동인 두 도형은 모양과 크기가 같으니 넓이도 당연히 같아. 하지만 넓이가 같다고 해서 반드시 합동인 건 아니야. 예를 들어 밑변이 8, 높이가 6인 두 삼각형은 넓이가 모두 24로 같지만 모양이 다르면 합동이 아니야. 다만 원처럼 모양이 항상 같은 도형은 넓이가 같으면 반지름의 길이가 같아져서 합동이 되고, 정다각형도 넓이가 같으면 한 변의 길이가 같아져 합동이 돼.',
   media: [],
-  basicProblem: { stem:'넓이가 같은 두 도형에 대한 설명으로 옳은 것은?', choices:['넓이가 같아도 모양이 다르면 합동이 아니다','넓이가 같으면 항상 합동이다','넓이가 같으면 둘레도 항상 같다','합동이어도 넓이는 다를 수 있다'], answer:0, explain:'합동이면 넓이가 같지만, 넓이가 같다고 항상 합동인 것은 아니에요.', by:'app', scope:'me' },
+  basicProblem: { stem:"넓이가 같은 두 도형에 대한 설명으로 옳은 것은?", choices:["넓이가 같으면 항상 합동이다", "넓이가 같으면 둘레도 항상 같다", "넓이가 같아도 모양이 다르면 합동이 아니다", "합동이어도 넓이는 다를 수 있다"], answer:2, explain:"합동이면 넓이가 같지만, 넓이가 같다고 항상 합동인 것은 아니에요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 83쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','1. 기본 도형','44. 삼각형의 합동 조건') ] = {
   hints: ['합동조건 세 가지 이름을 말해 볼까?', 'SAS에서 각은 어디에 있어야 할까?'],
   concept: '두 삼각형이 합동임을 보이려면 6요소를 모두 확인할 필요는 없고 다음 세 조건 중 하나만 보이면 돼. ① 세 대응변의 길이가 각각 같을 때 (SSS 합동) ② 두 대응변의 길이가 각각 같고 그 끼인각의 크기가 같을 때 (SAS 합동) ③ 한 대응변의 길이가 같고 그 양 끝 각의 크기가 각각 같을 때 (ASA 합동). SAS에서는 각이 반드시 두 변의 끼인각이어야 하고, ASA에서는 변이 두 각 사이에 있는 변이어야 해.',
   media: [],
-  basicProblem: { stem:'두 삼각형에서 두 대응변의 길이가 각각 같고 그 끼인각의 크기가 같을 때의 합동조건은?', choices:['SAS 합동','SSS 합동','ASA 합동','AAA 합동'], answer:0, explain:'두 변의 길이와 그 끼인각의 크기가 같으면 SAS 합동이에요.', by:'app', scope:'me' },
+  basicProblem: { stem:"두 삼각형에서 두 대응변의 길이가 각각 같고 그 끼인각의 크기가 같을 때의 합동조건은?", choices:["SSS 합동", "SAS 합동", "AAA 합동", "ASA 합동"], answer:1, explain:"두 변의 길이와 그 끼인각의 크기가 같으면 SAS 합동이에요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 83쪽', by:'app', scope:'me'
 };
 /* ── 중1-2학기 · 1. 기본 도형 · 08~44 (Q008~Q044) ─ 숨마쿰라우데 중1-2 개념기본서 29~83쪽 원문 확인 후 작성 ── */
@@ -6880,126 +6874,126 @@ DD_CARDS[ ddConceptId('m1-2','2. 평면도형','45. 다각형의 내각과 외�
   hints: ['다각형 안쪽에 있는 각을 뭐라고 부를까?','한 변을 연장하면 바깥쪽에 어떤 각이 생길까?'],
   concept: '다각형에서 이웃하는 두 변으로 이루어진 내부의 각을 내각이라고 해. 그리고 다각형의 한 꼭짓점에서 한 변과 그 변에 이웃한 변의 연장선이 이루는 각을 외각이라고 해. 한 내각에 대한 외각은 2개가 생기지만 두 외각이 맞꼭지각이라 크기가 서로 같아서 보통 둘 중 하나만 생각해. 참고로 다각형에는 볼록다각형과 오목다각형이 있는데, 교육과정에서는 모든 내각의 크기가 180°보다 작은 볼록다각형만 다뤄.',
   media: [],
-  basicProblem: { stem:'다각형에서 이웃하는 두 변으로 이루어진 내부의 각을 무엇이라고 하는가?', choices:['내각','외각','중심각','맞꼭지각'], answer:0, explain:'내부의 각이 내각, 한 변과 그 변에 이웃한 변의 연장선이 이루는 각이 외각이에요.', by:'app', scope:'me' },
+  basicProblem: { stem:"다각형에서 이웃하는 두 변으로 이루어진 내부의 각을 무엇이라고 하는가?", choices:["중심각", "외각", "내각", "맞꼭지각"], answer:2, explain:"내부의 각이 내각, 한 변과 그 변에 이웃한 변의 연장선이 이루는 각이 외각이에요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 107쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','2. 평면도형','46. 한 꼭짓점에서 내각과 외각의 크기의 합') ] = {
   hints: ['내각과 외각을 나란히 붙이면 어떤 각이 될까?','평각은 몇 도였지?'],
   concept: '다각형의 한 꼭짓점에서 내각과 외각을 합치면 평각이 돼. 평각은 180°이므로 한 꼭짓점에서 (내각의 크기)+(외각의 크기)=180°가 항상 성립해. 그래서 내각의 크기를 알면 외각의 크기를, 외각의 크기를 알면 내각의 크기를 바로 알 수 있어. 예를 들어 내각이 110°이면 외각은 180°-110°=70°야.',
   media: [],
-  basicProblem: { stem:'다각형의 한 꼭짓점에서 내각의 크기가 110°일 때, 그 외각의 크기는?', choices:['70°','80°','90°','110°'], answer:0, explain:'한 꼭짓점에서 (내각)+(외각)=180°이므로 180°-110°=70°예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"다각형의 한 꼭짓점에서 내각의 크기가 110°일 때, 그 외각의 크기는?", choices:["80°", "70°", "90°", "110°"], answer:1, explain:"한 꼭짓점에서 (내각)+(외각)=180°이므로 180°-110°=70°예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 107쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','2. 평면도형','47. 한 꼭짓점에서 그을 수 있는 대각선의 개수') ] = {
   hints: ['한 꼭짓점에서 대각선을 그을 수 없는 꼭짓점은 몇 개일까?','전체 꼭짓점의 개수에서 몇을 빼야 할까?'],
   concept: '다각형에서 서로 이웃하지 않는 두 꼭짓점을 이은 선분을 대각선이라고 해. 한 꼭짓점에서 보면 자기 자신과 이웃하는 두 꼭짓점에는 대각선을 그을 수 없으니까 전체 꼭짓점의 개수에서 3을 빼야 해. 그래서 n각형의 한 꼭짓점에서 그을 수 있는 대각선의 개수는 (n-3)개(단, n≥4)야. 이때 한 꼭짓점에서 대각선을 모두 그으면 다각형은 (n-2)개의 삼각형으로 나누어져.',
   media: [],
-  basicProblem: { stem:'육각형의 한 꼭짓점에서 그을 수 있는 대각선의 개수는?', choices:['3개','4개','5개','6개'], answer:0, explain:'n각형의 한 꼭짓점에서 그을 수 있는 대각선은 (n-3)개이므로 6-3=3개예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"육각형의 한 꼭짓점에서 그을 수 있는 대각선의 개수는?", choices:["4개", "5개", "6개", "3개"], answer:3, explain:"n각형의 한 꼭짓점에서 그을 수 있는 대각선은 (n-3)개이므로 6-3=3개예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 108쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','2. 평면도형','48. 다각형의 대각선의 개수') ] = {
   hints: ['모든 꼭짓점에서 세면 대각선이 몇 개일까?','대각선 하나를 몇 번씩 세게 될까?'],
   concept: 'n각형의 한 꼭짓점에서 그을 수 있는 대각선이 (n-3)개이고 꼭짓점이 n개이므로, 모든 꼭짓점에서 세면 n(n-3)개가 돼. 그런데 대각선 하나는 두 꼭짓점에 걸쳐 있어서 2번씩 중복되어 세어져. 그래서 n각형의 대각선의 개수는 n(n-3)/2야. 예를 들어 오각형의 대각선의 개수는 5×(5-3)÷2=5개야.',
   media: [],
-  basicProblem: { stem:'오각형의 대각선의 개수는?', choices:['5개','7개','9개','10개'], answer:0, explain:'n(n-3)÷2에 n=5를 넣으면 5×2÷2=5개예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"오각형의 대각선의 개수는?", choices:["10개", "5개", "9개", "7개"], answer:1, explain:"n(n-3)÷2에 n=5를 넣으면 5×2÷2=5개예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 109쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','2. 평면도형','49. 삼각형의 세 내각의 크기의 합') ] = {
   hints: ['세 내각을 오려서 한 줄로 이어 붙이면 어떤 각이 될까?','평행한 보조선을 그으면 어떤 각들이 같아질까?'],
   concept: '삼각형의 세 내각의 크기의 합은 항상 180°야. △ABC에서 ∠A+∠B+∠C=180°이지. 초등학교에서는 세 내각을 오려 붙이거나 접어서 일직선 위에 모아 확인했는데, 평행선의 성질로도 확인할 수 있어. 변 BC의 연장선 위에 점 D를 잡고 점 C에서 변 BA에 평행한 반직선 CE를 그으면 ∠A=∠ACE(엇각), ∠B=∠ECD(동위각)이므로 세 내각의 합은 평각 ∠BCD, 즉 180°가 돼.',
   media: [],
-  basicProblem: { stem:'두 내각의 크기가 75°, 60°인 삼각형에서 나머지 한 내각의 크기는?', choices:['45°','55°','35°','65°'], answer:0, explain:'세 내각의 합이 180°이므로 180°-75°-60°=45°예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"두 내각의 크기가 75°, 60°인 삼각형에서 나머지 한 내각의 크기는?", choices:["35°", "65°", "45°", "55°"], answer:2, explain:"세 내각의 합이 180°이므로 180°-75°-60°=45°예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 112쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','2. 평면도형','50. 삼각형의 내각과 외각 사이의 관계') ] = {
   hints: ['외각과 이웃하지 않는 내각은 몇 개일까?','내각의 합이 180°인 것을 이용해 볼까?'],
   concept: '삼각형의 한 외각의 크기는 그와 이웃하지 않는 두 내각의 크기의 합과 같아. △ABC에서 ∠C의 외각인 ∠ACD에 대하여 ∠ACD=∠ACE+∠ECD=∠A+∠B가 성립하지. 이 관계를 쓰면 ∠C의 크기를 구할 필요 없이 ∠A와 ∠B의 합만으로 외각의 크기를 바로 구할 수 있어서 편리해.',
   media: [],
-  basicProblem: { stem:'삼각형에서 어떤 외각과 이웃하지 않는 두 내각의 크기가 85°, 50°일 때 그 외각의 크기는?', choices:['135°','125°','145°','95°'], answer:0, explain:'한 외각의 크기는 이웃하지 않는 두 내각의 크기의 합과 같으므로 85°+50°=135°예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"삼각형에서 어떤 외각과 이웃하지 않는 두 내각의 크기가 85°, 50°일 때 그 외각의 크기는?", choices:["95°", "135°", "125°", "145°"], answer:1, explain:"한 외각의 크기는 이웃하지 않는 두 내각의 크기의 합과 같으므로 85°+50°=135°예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 114쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','2. 평면도형','51. 다각형의 내각의 크기의 합') ] = {
   hints: ['한 꼭짓점에서 대각선을 모두 그으면 삼각형이 몇 개 생길까?','삼각형 하나의 내각의 크기의 합은 몇 도지?'],
   concept: 'n각형의 한 꼭짓점에서 대각선을 모두 그으면 (n-2)개의 삼각형으로 나누어져. 나누어진 삼각형들의 내각이 모두 모여 n각형의 내각이 되고 삼각형 하나의 내각의 크기의 합이 180°이므로, n각형의 내각의 크기의 합은 180°×(n-2)야. 예를 들어 사각형은 180°×2=360°, 오각형은 180°×3=540°, 육각형은 180°×4=720°가 돼.',
   media: [],
-  basicProblem: { stem:'칠각형의 내각의 크기의 합은?', choices:['900°','720°','1080°','540°'], answer:0, explain:'180°×(n-2)에 n=7을 넣으면 180°×5=900°예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"칠각형의 내각의 크기의 합은?", choices:["540°", "720°", "1080°", "900°"], answer:3, explain:"180°×(n-2)에 n=7을 넣으면 180°×5=900°예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 115쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','2. 평면도형','52. 다각형의 외각의 크기의 합') ] = {
   hints: ['한 꼭짓점에서 내각과 외각의 합은 몇 도였지?','내각과 외각의 총합에서 내각의 합을 빼면?'],
   concept: '다각형의 외각의 크기의 합은 변의 개수와 상관없이 항상 360°야. n각형의 각 꼭짓점에서 (내각)+(외각)=180°로 일정하니까 내각과 외각의 총합은 180°×n이야. 여기서 내각의 크기의 합 180°×(n-2)를 빼면 180°×n-180°×(n-2)=180°×2=360°가 나와. 그래서 다각형의 종류에 상관없이 외각의 크기의 합은 항상 360°야.',
   media: [],
-  basicProblem: { stem:'다각형의 외각의 크기의 합에 대한 설명으로 옳은 것은?', choices:['다각형의 종류에 상관없이 항상 360°이다','변의 개수가 늘어날수록 커진다','180°×(n-2)이다','정다각형일 때만 360°이다'], answer:0, explain:'내각과 외각의 총합 180°×n에서 내각의 합 180°×(n-2)를 빼면 항상 360°예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"다각형의 외각의 크기의 합에 대한 설명으로 옳은 것은?", choices:["다각형의 종류에 상관없이 항상 360°이다", "정다각형일 때만 360°이다", "변의 개수가 늘어날수록 커진다", "180°×(n-2)이다"], answer:0, explain:"내각과 외각의 총합 180°×n에서 내각의 합 180°×(n-2)를 빼면 항상 360°예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 116쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','2. 평면도형','53. 보조선을 그어 각의 크기의 합 구하기') ] = {
   hints: ['복잡한 도형에 선을 하나 그으면 어떤 익숙한 도형이 보일까?','맞꼭지각이나 외각의 성질을 쓸 수 있을까?'],
   concept: '각의 크기의 합을 바로 구하기 어려운 도형은 보조선을 그어 삼각형이나 사각형처럼 익숙한 도형을 만들면 돼. 보조선을 그으면 맞꼭지각의 크기가 같다는 성질이나 삼각형의 내각과 외각 사이의 관계를 이용해 흩어져 있던 각들을 한 도형의 내각으로 모을 수 있어. 예를 들어 별 모양 도형에서 다섯 끝각의 크기의 합은 삼각형의 내각의 크기의 합과 같아져서 180°가 돼.',
   media: [],
-  basicProblem: { stem:'별 모양 도형에서 다섯 개 끝각의 크기의 합은?', choices:['180°','360°','540°','720°'], answer:0, explain:'보조선을 긋거나 삼각형의 내각과 외각 사이의 관계를 이용하면 삼각형의 내각의 합과 같아져 180°예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"별 모양 도형에서 다섯 개 끝각의 크기의 합은?", choices:["720°", "540°", "180°", "360°"], answer:2, explain:"보조선을 긋거나 삼각형의 내각과 외각 사이의 관계를 이용하면 삼각형의 내각의 합과 같아져 180°예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 117쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','2. 평면도형','54. 정다각형의 한 내각과 한 외각의 크기') ] = {
   hints: ['정다각형은 내각의 크기가 모두 같을까?','외각의 크기의 합 360°를 꼭짓점의 개수로 나누면?'],
   concept: '변의 길이가 모두 같고 내각의 크기가 모두 같은 다각형을 정다각형이라고 해. 정n각형의 내각의 크기의 합은 180°×(n-2)이고 n개의 내각의 크기가 모두 같으므로, 한 내각의 크기는 180°×(n-2)÷n이야. 또 외각의 크기의 합은 n에 관계없이 360°이고 외각의 크기도 모두 같으므로, 한 외각의 크기는 360°÷n이야. 마름모는 내각의 크기가 같지 않아서, 직사각형은 변의 길이가 같지 않아서 정다각형이 아니야.',
   media: [],
-  basicProblem: { stem:'정오각형의 한 내각의 크기는?', choices:['108°','120°','72°','90°'], answer:0, explain:'180°×(5-2)÷5=540°÷5=108°예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"정오각형의 한 내각의 크기는?", choices:["120°", "90°", "108°", "72°"], answer:2, explain:"180°×(5-2)÷5=540°÷5=108°예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 118쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','2. 평면도형','55. 호와 현') ] = {
   hints: ['원 위의 두 점을 원을 따라 이으면 무엇일까?','두 점을 곧게 선분으로 이으면 무엇일까?'],
   concept: '원 위의 두 점 A, B를 양 끝점으로 하는 원의 일부분을 호 AB라고 해. 원 위의 두 점에 의해 원은 두 부분으로 나누어지므로 호는 항상 두 개 생기는데, 보통 호 AB라고 하면 짧은 쪽을 나타내고 긴 쪽을 나타낼 때는 그 호 위에 점 C를 잡아 호 ACB로 써. 한편 원 위의 두 점을 이은 선분은 현이라고 해. 현은 아무리 길어도 지름보다 길 수 없어서 원의 중심을 지나는 지름이 그 원에서 가장 긴 현이야. 현을 연장한 직선은 할선이라고 불러.',
   media: [],
-  basicProblem: { stem:'원 위의 두 점을 이은 선분을 무엇이라고 하는가?', choices:['현','호','할선','부채꼴'], answer:0, explain:'원 위를 따라 이으면 호, 두 점을 선분으로 이으면 현이에요.', by:'app', scope:'me' },
+  basicProblem: { stem:"원 위의 두 점을 이은 선분을 무엇이라고 하는가?", choices:["현", "할선", "부채꼴", "호"], answer:0, explain:"원 위를 따라 이으면 호, 두 점을 선분으로 이으면 현이에요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 128쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','2. 평면도형','56. 부채꼴과 활꼴') ] = {
   hints: ['호의 양 끝점을 원의 중심과 이으면 어떤 도형이 될까?','호의 양 끝점을 현으로 이으면?'],
   concept: '원 O에서 두 반지름 OA, OB와 호 AB로 이루어진 도형을 부채꼴이라고 하고, 현 CD와 호 CD로 이루어진 도형을 활꼴이라고 해. 즉 호의 양 끝점을 원의 중심과 이으면 부채꼴, 현으로 이으면 활꼴이야. 부채꼴에서 두 반지름 OA, OB가 이루는 ∠AOB를 부채꼴 AOB의 중심각 또는 호 AB에 대한 중심각이라 하고, 호 AB를 ∠AOB에 대한 호라고 해.',
   media: [],
-  basicProblem: { stem:'원에서 두 반지름과 호로 이루어진 도형을 무엇이라고 하는가?', choices:['부채꼴','활꼴','현','할선'], answer:0, explain:'두 반지름과 호로 이루어진 도형이 부채꼴, 현과 호로 이루어진 도형이 활꼴이에요.', by:'app', scope:'me' },
+  basicProblem: { stem:"원에서 두 반지름과 호로 이루어진 도형을 무엇이라고 하는가?", choices:["할선", "현", "활꼴", "부채꼴"], answer:3, explain:"두 반지름과 호로 이루어진 도형이 부채꼴, 현과 호로 이루어진 도형이 활꼴이에요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 129쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','2. 평면도형','57. 부채꼴이면서 활꼴인 도형') ] = {
   hints: ['중심각의 크기가 180°가 되면 두 반지름은 어떻게 될까?','이때 활꼴의 현은 무엇과 같아질까?'],
   concept: '부채꼴의 중심각의 크기를 점점 크게 하여 180°가 되면 두 반지름이 일직선이 되어 지름이 되니까 그 부채꼴은 반원이 돼. 또 활꼴을 이루는 현의 길이를 점점 길게 하여 지름의 길이와 같게 하면 그 활꼴도 반원이 돼. 따라서 반원은 중심각의 크기가 180°인 부채꼴이면서 현이 지름과 같은 활꼴이야. 참고로 중심각의 크기는 0°보다 크고 360°보다 작으므로 반원보다 큰 부채꼴이나 활꼴도 있다는 점을 기억하자.',
   media: [],
-  basicProblem: { stem:'부채꼴이면서 동시에 활꼴이기도 한 도형은?', choices:['반원','원','사분원','부채꼴은 활꼴이 될 수 없다'], answer:0, explain:'중심각이 180°이면 두 반지름이 지름이 되어 반원이 되고, 이때 현도 지름과 같아 활꼴이기도 해요.', by:'app', scope:'me' },
+  basicProblem: { stem:"부채꼴이면서 동시에 활꼴이기도 한 도형은?", choices:["반원", "사분원", "부채꼴은 활꼴이 될 수 없다", "원"], answer:0, explain:"중심각이 180°이면 두 반지름이 지름이 되어 반원이 되고, 이때 현도 지름과 같아 활꼴이기도 해요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 130쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','2. 평면도형','58. 중심각의 크기와 호의 길이·부채꼴의 넓이') ] = {
   hints: ['중심각의 크기가 같은 두 부채꼴은 서로 포개질까?','중심각이 2배가 되면 호의 길이는 몇 배가 될까?'],
   concept: '한 원에서 중심각의 크기가 같은 두 부채꼴은 원의 중심을 기준으로 회전하면 완전히 포갤 수 있어. 그래서 중심각의 크기가 같은 두 부채꼴은 호의 길이와 넓이가 각각 같아. 거꾸로 한 원에서 호의 길이 또는 넓이가 같은 두 부채꼴은 중심각의 크기도 같아. 더 나아가 중심각의 크기가 2배, 3배, …로 커지면 호의 길이와 부채꼴의 넓이도 각각 2배, 3배, …로 커져. 즉 한 원에서 부채꼴의 호의 길이와 넓이는 각각 중심각의 크기에 정비례해서, 관련 문제는 비례식으로 해결하면 돼.',
   media: [],
-  basicProblem: { stem:'한 원에서 부채꼴의 중심각의 크기가 3배가 되면 호의 길이는 어떻게 되는가?', choices:['3배가 된다','변하지 않는다','2배가 된다','9배가 된다'], answer:0, explain:'한 원에서 부채꼴의 호의 길이는 중심각의 크기에 정비례해요.', by:'app', scope:'me' },
+  basicProblem: { stem:"한 원에서 부채꼴의 중심각의 크기가 3배가 되면 호의 길이는 어떻게 되는가?", choices:["9배가 된다", "3배가 된다", "변하지 않는다", "2배가 된다"], answer:1, explain:"한 원에서 부채꼴의 호의 길이는 중심각의 크기에 정비례해요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 131쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','2. 평면도형','59. 중심각의 크기와 현의 길이') ] = {
   hints: ['현은 원을 따라 그릴까, 원을 가로질러 그을까?','삼각형에서 두 변의 길이의 합과 나머지 한 변을 비교해 볼까?'],
   concept: '아니야. 현의 길이는 중심각의 크기에 정비례하지 않아. 한 원에서 중심각의 크기가 같은 두 부채꼴은 회전하면 포개어지므로 중심각의 크기가 같은 두 현의 길이는 같고, 거꾸로 길이가 같은 두 현에 대한 중심각의 크기도 같아. 하지만 호는 원을 따라 그리는 데 비해 현은 원을 가로질러 긋기 때문에 사정이 달라. 원 O에서 ∠AOB=∠BOC이면 △AOB≡△COB(SAS 합동)이므로 AB=CB인데, ∠AOC=2∠AOB일 때 △ACB에서 AC<AB+BC=2AB가 돼. 즉 중심각이 2배가 되어도 현의 길이는 2배보다 작아.',
   media: [],
-  basicProblem: { stem:'한 원에서 부채꼴의 중심각의 크기가 2배가 될 때 옳은 것은?', choices:['호의 길이는 2배가 되지만 현의 길이는 2배가 되지 않는다','호와 현의 길이가 모두 2배가 된다','현의 길이만 2배가 된다','호와 현의 길이가 모두 변하지 않는다'], answer:0, explain:'호의 길이는 중심각에 정비례하지만 현의 길이는 정비례하지 않아 2배보다 작아요.', by:'app', scope:'me' },
+  basicProblem: { stem:"한 원에서 부채꼴의 중심각의 크기가 2배가 될 때 옳은 것은?", choices:["호와 현의 길이가 모두 2배가 된다", "현의 길이만 2배가 된다", "호의 길이는 2배가 되지만 현의 길이는 2배가 되지 않는다", "호와 현의 길이가 모두 변하지 않는다"], answer:2, explain:"호의 길이는 중심각에 정비례하지만 현의 길이는 정비례하지 않아 2배보다 작아요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 132쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','2. 평면도형','60. 원의 둘레의 길이와 넓이') ] = {
   hints: ['원의 둘레의 길이는 지름에 무엇을 곱한 값일까?','원의 넓이는 반지름을 몇 번 곱할까?'],
   concept: '원주율 π를 쓰면 반지름의 길이만 알아도 원의 둘레의 길이와 넓이를 간단히 나타낼 수 있어. (원의 둘레의 길이)=(지름의 길이)×(원주율)=2×(반지름의 길이)×(원주율)이므로, 반지름의 길이가 r인 원의 둘레의 길이는 l=2πr야. 또 (원의 넓이)=(반지름의 길이)×(반지름의 길이)×(원주율)이므로 넓이는 S=πr²야. 3.14나 3.1 같은 소수를 곱하지 않아도 되니 계산 실수도 줄어들어.',
   media: [],
-  basicProblem: { stem:'반지름의 길이가 3인 원의 둘레의 길이 l과 넓이 S는?', choices:['l=6π, S=9π','l=3π, S=6π','l=9π, S=6π','l=6π, S=6π'], answer:0, explain:'l=2π×3=6π, S=π×3²=9π예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"반지름의 길이가 3인 원의 둘레의 길이 l과 넓이 S는?", choices:["l=6π, S=9π", "l=3π, S=6π", "l=9π, S=6π", "l=6π, S=6π"], answer:0, explain:"l=2π×3=6π, S=π×3²=9π예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 137쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','2. 평면도형','61. 부채꼴의 호의 길이와 넓이') ] = {
   hints: ['원은 중심각의 크기가 몇 도인 부채꼴로 볼 수 있을까?','중심각 x°가 원 전체에서 차지하는 비율은 얼마일까?'],
   concept: '원은 중심각의 크기가 360°인 부채꼴로 생각할 수 있어. 부채꼴의 호의 길이와 넓이는 중심각의 크기에 정비례하니까, 원의 둘레의 길이와 넓이에 중심각이 차지하는 비율 x/360을 곱하면 돼. 반지름의 길이가 r이고 중심각의 크기가 x°인 부채꼴에서 호의 길이는 l=2πr×(x/360), 넓이는 S=πr²×(x/360)이야. 또 S의 식을 정리하면 S=½×r×(2πr×(x/360))=½rl이 되어서, 반지름과 호의 길이를 알면 넓이를 바로 구할 수도 있어.',
   media: [],
-  basicProblem: { stem:'반지름의 길이가 3이고 중심각의 크기가 60°인 부채꼴의 호의 길이는?', choices:['π','2π','3π','½π'], answer:0, explain:'l=2π×3×(60/360)=6π×(1/6)=π예요.', by:'app', scope:'me' },
+  basicProblem: { stem:"반지름의 길이가 3이고 중심각의 크기가 60°인 부채꼴의 호의 길이는?", choices:["3π", "½π", "2π", "π"], answer:3, explain:"l=2π×3×(60/360)=6π×(1/6)=π예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 138쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','2. 평면도형','62. 도형의 일부를 이동시켜 둘레·넓이 구하기') ] = {
   hints: ['색칠한 부분을 옮기면 어떤 익숙한 모양이 될까?','모양을 옮기기만 하면 넓이는 변할까?'],
   concept: '원이나 부채꼴을 포함한 도형에서 색칠한 부분의 둘레의 길이나 넓이를 구할 때는, 도형의 일부를 이동시켜 원이나 반원처럼 구하기 쉬운 모양이 되는지 살펴보면 돼. 모양을 옮기기만 한 것이므로 둘레의 길이나 넓이는 변하지 않아. 예를 들어 반지름의 길이가 1 cm인 두 반원 모양을 옮기면 반지름의 길이가 1 cm인 원의 둘레의 길이 2π cm와 같아지고, 넓이도 원의 넓이에서 정사각형의 넓이를 뺀 π-2 cm²처럼 간단히 구할 수 있어. 구하는 방법은 여러 가지니까 더 간편한 방법을 찾아보자.',
   media: [],
-  basicProblem: { stem:'색칠한 부분의 일부를 이동시켜 넓이를 구할 때 옳은 것은?', choices:['모양을 옮기기만 한 것이므로 넓이는 변하지 않는다','옮기면 넓이가 커진다','옮기면 넓이가 작아진다','둘레의 길이가 항상 2배가 된다'], answer:0, explain:'도형의 일부를 옮겨도 둘레의 길이나 넓이는 변하지 않아요. 구하기 쉬운 모양으로 바꾸는 것이 목적이에요.', by:'app', scope:'me' },
+  basicProblem: { stem:"색칠한 부분의 일부를 이동시켜 넓이를 구할 때 옳은 것은?", choices:["둘레의 길이가 항상 2배가 된다", "옮기면 넓이가 커진다", "모양을 옮기기만 한 것이므로 넓이는 변하지 않는다", "옮기면 넓이가 작아진다"], answer:2, explain:"도형의 일부를 옮겨도 둘레의 길이나 넓이는 변하지 않아요. 구하기 쉬운 모양으로 바꾸는 것이 목적이에요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 140쪽', by:'app', scope:'me'
 };
 (function(){
@@ -7028,308 +7022,308 @@ DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"63. 다면체") ] = {
   hints: ["다각형인 면으로만 둘러싸인 입체도형을 뭐라고 할까?","면이 최소 몇 개 있어야 입체도형이 만들어질까?"],
   concept: "다각형인 면으로만 둘러싸인 입체도형을 다면체라고 해. 다면체를 이루고 있는 다각형을 다면체의 면, 다각형의 변을 다면체의 모서리, 다각형의 꼭짓점을 다면체의 꼭짓점이라고 해. 면으로 둘러싸인 입체도형을 만들려면 면이 최소한 4개는 있어야 하므로 다면체는 사면체부터 시작하고, 둘러싸인 면의 개수에 따라 사면체, 오면체, 육면체, …라고 불러. 사면체는 삼각뿔 모양 한 가지뿐이지만 오면체, 육면체 등은 여러 가지 모양이 있어. 원기둥, 원뿔, 구는 다각형이 아닌 면이 있으므로 다면체가 아니야.",
   media: [],
-  basicProblem: { stem:"다음 중 다면체가 아닌 것은?", choices:["원기둥","사각기둥","오각뿔","정육면체"], answer:0, explain:"원기둥은 다각형이 아닌 곡면을 가지고 있으므로 다면체가 아니에요.", by:'app', scope:'me' },
+  basicProblem: { stem:"다음 중 다면체가 아닌 것은?", choices:["오각뿔", "원기둥", "정육면체", "사각기둥"], answer:1, explain:"원기둥은 다각형이 아닌 곡면을 가지고 있으므로 다면체가 아니에요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 161쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"64. 각기둥과 각뿔") ] = {
   hints: ["두 밑면이 평행하고 합동이며 옆면이 모두 직사각형인 다면체는?","밑면이 하나뿐이고 옆면이 모두 삼각형인 다면체는?"],
   concept: "각기둥은 두 밑면이 서로 평행하면서 합동인 다각형이고 옆면이 모두 직사각형인 다면체야. 밑면의 모양에 따라 삼각기둥, 사각기둥, 오각기둥, …이라 하고, 두 밑면에 수직인 선분의 길이를 각기둥의 높이라고 해. 밑면이 n각형인 n각기둥은 꼭짓점이 2n개, 모서리가 3n개, 면이 (n+2)개야. 각뿔은 밑면이 다각형이고 옆면이 모두 삼각형인 다면체로, 밑면의 모양에 따라 삼각뿔, 사각뿔, …이라 하고 각뿔의 꼭짓점에서 밑면에 내린 수선의 길이를 각뿔의 높이라고 해. n각뿔은 꼭짓점이 (n+1)개, 모서리가 2n개, 면이 (n+1)개야. 개수는 외우기보다 밑면의 모양을 이용해 세면 쉬워.",
   media: [],
-  basicProblem: { stem:"육각기둥의 꼭짓점, 모서리, 면의 개수를 차례대로 구한 것은?", choices:["12, 18, 8","12, 12, 6","6, 12, 8","18, 12, 8"], answer:0, explain:"n=6이므로 꼭짓점 2×6=12개, 모서리 3×6=18개, 면 6+2=8개예요.", by:'app', scope:'me' },
+  basicProblem: { stem:"육각기둥의 꼭짓점, 모서리, 면의 개수를 차례대로 구한 것은?", choices:["6, 12, 8", "12, 12, 6", "18, 12, 8", "12, 18, 8"], answer:3, explain:"n=6이므로 꼭짓점 2×6=12개, 모서리 3×6=18개, 면 6+2=8개예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 162쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"65. 삼각뿔의 높이") ] = {
   hints: ["각뿔에서 밑면이 되는 면은 어떤 면일까?","삼각뿔은 모든 면이 무슨 모양일까?"],
   concept: "각뿔은 옆면인 삼각형을 제외한 면이 밑면이 돼. 예를 들어 사각뿔은 옆면인 삼각형을 제외한 사각형이 밑면이야. 하지만 삼각뿔은 모든 면이 삼각형이기 때문에 어느 면이나 밑면이 될 수 있어. 따라서 삼각뿔은 밑면을 어느 것으로 정하느냐에 따라 높이가 달라져. 정육면체의 세 꼭짓점을 지나는 평면으로 잘랐을 때 생기는 삼각뿔에서 면 BCD를 밑면으로 보면 높이는 점 A에서 면 BCD에 내린 수선의 발 H까지의 거리가 되고, 면 ABC를 밑면으로 보면 높이는 DA의 길이가 돼. 이처럼 입체도형을 여러 각도로 볼 수 있는 감각은 뒤에서 배울 겉넓이와 부피에서 아주 유용하게 쓰여.",
   media: [],
-  basicProblem: { stem:"삼각뿔의 높이에 대한 설명으로 옳은 것은?", choices:["밑면을 어느 면으로 정하느냐에 따라 높이가 달라진다","높이는 항상 하나로 정해진다","삼각뿔은 밑면이 될 수 있는 면이 하나뿐이다","삼각뿔의 높이는 가장 긴 모서리의 길이와 같다"], answer:0, explain:"삼각뿔은 모든 면이 삼각형이라 어느 면이나 밑면이 될 수 있어 높이가 여러 개예요.", by:'app', scope:'me' },
+  basicProblem: { stem:"삼각뿔의 높이에 대한 설명으로 옳은 것은?", choices:["높이는 항상 하나로 정해진다", "삼각뿔은 밑면이 될 수 있는 면이 하나뿐이다", "밑면을 어느 면으로 정하느냐에 따라 높이가 달라진다", "삼각뿔의 높이는 가장 긴 모서리의 길이와 같다"], answer:2, explain:"삼각뿔은 모든 면이 삼각형이라 어느 면이나 밑면이 될 수 있어 높이가 여러 개예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 163쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"66. 각뿔대") ] = {
   hints: ["각뿔을 밑면과 평행한 평면으로 자르면 몇 개의 입체도형이 생길까?","그중 각뿔이 아닌 쪽을 뭐라고 부를까?"],
   concept: "각뿔을 밑면과 평행한 평면으로 잘라서 생기는 두 입체도형 중에서 각뿔이 아닌 쪽의 다면체를 각뿔대라고 해. 이때 서로 평행한 두 면을 밑면, 밑면이 아닌 면을 옆면, 두 밑면에 수직인 선분의 길이를 각뿔대의 높이라 하고, 밑면의 모양에 따라 삼각뿔대, 사각뿔대, 오각뿔대, …라고 해. 각뿔대의 두 밑면은 서로 평행하면서 모양은 같지만 크기가 다른 다각형이고, 옆면은 모두 사다리꼴이야. 각기둥은 두 밑면이 서로 합동이지만 각뿔대는 그렇지 않다는 점에 주의하자. n각뿔대는 n각기둥과 유사한 모양이므로 꼭짓점 2n개, 모서리 3n개, 면 (n+2)개로 개수가 n각기둥과 정확하게 일치해.",
   media: [],
-  basicProblem: { stem:"오각뿔대의 옆면의 모양과 면의 개수를 바르게 짝지은 것은?", choices:["사다리꼴, 7개","직사각형, 7개","삼각형, 6개","사다리꼴, 10개"], answer:0, explain:"각뿔대의 옆면은 모두 사다리꼴이고, n=5이므로 면은 5+2=7개예요.", by:'app', scope:'me' },
+  basicProblem: { stem:"오각뿔대의 옆면의 모양과 면의 개수를 바르게 짝지은 것은?", choices:["사다리꼴, 10개", "사다리꼴, 7개", "직사각형, 7개", "삼각형, 6개"], answer:1, explain:"각뿔대의 옆면은 모두 사다리꼴이고, n=5이므로 면은 5+2=7개예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 164쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"67. 다면체의 전개도") ] = {
   hints: ["전개도에서 두 밑면을 뺀 나머지 면이 모두 직사각형이면 어떤 다면체일까?","나머지 면이 모두 사다리꼴이면 무엇일까?"],
   concept: "다면체의 전개도란 다면체에서 적당한 모서리를 잘라 평면에 펼쳐 놓은 그림이야. 어느 모서리를 자르느냐에 따라 여러 가지 전개도가 나오지만, 각기둥·각뿔·각뿔대가 각각 가지고 있는 모양의 특성은 전개도에 그대로 나타나. 그래서 합동인 두 밑면을 제외한 나머지 면이 모두 직사각형이면 각기둥, 한 면을 제외한 나머지 면이 모두 삼각형이면 각뿔, 두 밑면을 제외한 나머지 면이 모두 사다리꼴이면 각뿔대라고 판단하면 돼. 그다음 밑면의 모양에 따라 이름을 결정하면 끝이야. 전개도를 접었을 때 서로 맞닿는 꼭짓점이나 모서리도 눈여겨봐 두자. 맞닿는 두 선분의 길이는 서로 같아.",
   media: [],
-  basicProblem: { stem:"전개도에서 한 면을 제외한 나머지 면이 모두 삼각형이면 어떤 다면체일까?", choices:["각뿔","각기둥","각뿔대","정다면체"], answer:0, explain:"옆면이 모두 삼각형인 다면체는 각뿔이에요. 나머지 한 면이 밑면이 돼요.", by:'app', scope:'me' },
+  basicProblem: { stem:"전개도에서 한 면을 제외한 나머지 면이 모두 삼각형이면 어떤 다면체일까?", choices:["각뿔대", "정다면체", "각뿔", "각기둥"], answer:2, explain:"옆면이 모두 삼각형인 다면체는 각뿔이에요. 나머지 한 면이 밑면이 돼요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 165쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"68. 정다면체") ] = {
   hints: ["모든 면이 어떤 모양이어야 정다면체일까?","각 꼭짓점에 모인 면의 개수는 어때야 할까?"],
   concept: "정다각형은 모든 변의 길이가 같고 모든 각의 크기가 같은 다각형으로 이리저리 돌려보더라도 항상 같은 모양으로 보여. 다면체 중에서도 (i) 모든 면이 합동인 정다각형이고 (ii) 각 꼭짓점에 모이는 면의 개수가 같은 두 조건을 만족시키는 다면체는 이리저리 돌려 보아도 항상 같은 모양으로 보이는데, 이러한 다면체를 정다면체라고 해. 정다면체의 종류는 정사면체, 정육면체, 정팔면체, 정십이면체, 정이십면체의 5가지뿐이야.",
   media: [],
-  basicProblem: { stem:"정다면체가 되기 위한 조건으로 옳은 것은?", choices:["모든 면이 합동인 정다각형이고 각 꼭짓점에 모인 면의 개수가 같다","모든 면이 합동인 정다각형이기만 하면 된다","각 꼭짓점에 모인 면의 개수만 같으면 된다","모든 모서리의 길이만 같으면 된다"], answer:0, explain:"두 조건을 모두 만족해야 정다면체예요. 하나만으로는 부족해요.", by:'app', scope:'me' },
+  basicProblem: { stem:"정다면체가 되기 위한 조건으로 옳은 것은?", choices:["모든 면이 합동인 정다각형이고 각 꼭짓점에 모인 면의 개수가 같다", "모든 면이 합동인 정다각형이기만 하면 된다", "모든 모서리의 길이만 같으면 된다", "각 꼭짓점에 모인 면의 개수만 같으면 된다"], answer:0, explain:"두 조건을 모두 만족해야 정다면체예요. 하나만으로는 부족해요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 167쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"69. 정다면체가 아닌 경우") ] = {
   hints: ["모든 면이 합동인 정삼각형이어도 정다면체가 아닐 수 있을까?","꼭짓점마다 모인 면의 개수를 세어 보면 어때?"],
   concept: "모든 면이 합동인 정다각형이지만 정다면체가 아닌 경우를 쉽게 찾아볼 수 있어. 모든 면이 합동인 정삼각형 6개로 이루어진 육면체는 위, 아래에 있는 2개의 꼭짓점에는 면이 3개, 옆쪽에 있는 3개의 꼭짓점에는 면이 4개 모여 있어. 따라서 위에서 볼 때와 옆에서 볼 때의 모양이 서로 다르므로 정다면체가 아니야. 정삼각형 10개로 이루어진 십면체도 마찬가지야. 모든 면이 합동인 정다각형이기만 하면 정다면체라고 생각하기 쉬운데, 반드시 각 꼭짓점에 모인 면의 개수까지 같아야 함을 기억하자. 그래야만 이리저리 돌려보더라도 항상 같은 모양으로 보이기 때문이야.",
   media: [],
-  basicProblem: { stem:"합동인 정삼각형 6개로 이루어진 육면체가 정다면체가 아닌 이유는?", choices:["꼭짓점마다 모인 면의 개수가 다르기 때문","면이 정다각형이 아니기 때문","모서리의 길이가 서로 다르기 때문","면의 개수가 6개이기 때문"], answer:0, explain:"꼭짓점에 따라 면이 3개 또는 4개 모여 있어 정다면체가 아니에요.", by:'app', scope:'me' },
+  basicProblem: { stem:"합동인 정삼각형 6개로 이루어진 육면체가 정다면체가 아닌 이유는?", choices:["꼭짓점마다 모인 면의 개수가 다르기 때문", "면이 정다각형이 아니기 때문", "면의 개수가 6개이기 때문", "모서리의 길이가 서로 다르기 때문"], answer:0, explain:"꼭짓점에 따라 면이 3개 또는 4개 모여 있어 정다면체가 아니에요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 168쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"70. 정다면체가 5가지뿐인 이유") ] = {
   hints: ["한 꼭짓점에 면이 몇 개 이상 모여야 입체가 될까?","한 꼭짓점에 모인 각의 크기의 합은 몇 도보다 작아야 할까?"],
   concept: "정다면체가 왜 5가지뿐인지 이해하려면 다면체가 만들어지는 조건을 먼저 알아야 해. 다면체가 되려면 ① 한 꼭짓점에 모인 면의 개수가 3개 이상이어야 하고 ② 각 꼭짓점에 모인 각의 크기의 합이 360°보다 작아야 해. 이 두 조건을 만족시키는 경우를 찾아보면, 면이 정삼각형(한 내각 60°)인 경우는 3개, 4개, 5개까지, 정사각형(90°)인 경우는 3개만, 정오각형(108°)인 경우는 3개만 모일 수 있어. 정육각형은 한 내각이 120°이므로 3개만 모여도 360°가 되어 다면체가 만들어지지 않아. 따라서 각 경우에 대해 정다면체를 만들어 보면 정사면체, 정팔면체, 정이십면체, 정육면체, 정십이면체로 5가지만 만들어져.",
   media: [],
-  basicProblem: { stem:"정다면체가 5가지뿐인 이유로 옳은 것은?", choices:["한 꼭짓점에 면이 3개 이상 모이고 모인 각의 합이 360°보다 작아야 하기 때문","면이 반드시 정삼각형이어야 하기 때문","모서리의 개수가 30개를 넘을 수 없기 때문","꼭짓점의 개수가 20개를 넘을 수 없기 때문"], answer:0, explain:"두 조건을 만족시키는 경우가 5가지뿐이라서 정다면체도 5가지예요.", by:'app', scope:'me' },
+  basicProblem: { stem:"정다면체가 5가지뿐인 이유로 옳은 것은?", choices:["모서리의 개수가 30개를 넘을 수 없기 때문", "면이 반드시 정삼각형이어야 하기 때문", "꼭짓점의 개수가 20개를 넘을 수 없기 때문", "한 꼭짓점에 면이 3개 이상 모이고 모인 각의 합이 360°보다 작아야 하기 때문"], answer:3, explain:"두 조건을 만족시키는 경우가 5가지뿐이라서 정다면체도 5가지예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 169쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"71. 정다면체의 꼭짓점과 모서리의 개수") ] = {
   hints: ["정사면체·정육면체·정팔면체의 꼭짓점 개수를 떠올려 볼까?","꼭짓점·모서리·면의 개수 사이에는 어떤 관계가 있을까?"],
   concept: "정다면체를 공부할 때 빠지지 않고 나오는 것이 꼭짓점과 모서리의 개수를 세는 것이야. 정다면체별로 꼭짓점·모서리·면의 개수는 정사면체가 4·6·4, 정육면체가 8·12·6, 정팔면체가 6·12·8, 정십이면체가 20·30·12, 정이십면체가 12·30·20이야. 무작정 외우려고 애쓰기보다는 머릿속으로 정다면체를 이리저리 돌려보며 그 특징을 기억하여 자연스럽게 개수를 구할 수 있도록 하자. 참고로 다면체에서 꼭짓점, 모서리, 면의 개수를 각각 v, e, f라 하면 v-e+f=2가 항상 성립하는데 이를 오일러의 정리라고 해. 개수를 셀 때 확인용으로 이용하면 좋아.",
   media: [],
-  basicProblem: { stem:"정팔면체의 꼭짓점, 모서리, 면의 개수를 차례대로 나타낸 것은?", choices:["6, 12, 8","8, 12, 6","4, 6, 4","12, 30, 20"], answer:0, explain:"정팔면체는 꼭짓점 6개, 모서리 12개, 면 8개예요. 6-12+8=2도 성립해요.", by:'app', scope:'me' },
+  basicProblem: { stem:"정팔면체의 꼭짓점, 모서리, 면의 개수를 차례대로 나타낸 것은?", choices:["12, 30, 20", "8, 12, 6", "6, 12, 8", "4, 6, 4"], answer:2, explain:"정팔면체는 꼭짓점 6개, 모서리 12개, 면 8개예요. 6-12+8=2도 성립해요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 170쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"72. 겨냥도 없이 꼭짓점의 개수 구하기") ] = {
   hints: ["정팔면체는 정삼각형 몇 개로 이루어져 있을까?","한 꼭짓점에 모인 면의 개수로 나누면 무엇을 알 수 있을까?"],
   concept: "겨냥도만 기억하고 있다면 꼭짓점이나 모서리의 개수를 구할 수 있지만, 정십이면체나 정이십면체는 겨냥도가 복잡해서 하나하나 세기가 쉽지 않아. 그런데 정다면체는 각 꼭짓점에 같은 개수의 정다각형이 모여 있다는 특성을 이용하면 굳이 겨냥도를 몰라도 개수를 구할 수 있어. 예를 들어 정팔면체는 정삼각형 8개로 이루어져 있으므로 꼭짓점의 개수의 합은 3×8=24인데, 한 꼭짓점에 정삼각형이 4개씩 모이므로 꼭짓점은 24÷4=6개야. 모서리도 3×8=24를 한 모서리에 모인 면 2개로 나누어 24÷2=12개가 돼. 정십이면체는 정오각형 12개이므로 5×12=60을 각각 3과 2로 나누어 꼭짓점 20개, 모서리 30개를 얻어.",
   media: [],
-  basicProblem: { stem:"정이십면체의 꼭짓점의 개수를 구하는 식으로 옳은 것은?", choices:["(3×20)÷5=12","(3×20)÷2=30","(5×12)÷3=20","20÷2=10"], answer:0, explain:"정삼각형 20개의 꼭짓점 합 60을 한 꼭짓점에 모인 면 5로 나누면 12개예요.", by:'app', scope:'me' },
+  basicProblem: { stem:"정이십면체의 꼭짓점의 개수를 구하는 식으로 옳은 것은?", choices:["20÷2=10", "(5×12)÷3=20", "(3×20)÷5=12", "(3×20)÷2=30"], answer:2, explain:"정삼각형 20개의 꼭짓점 합 60을 한 꼭짓점에 모인 면 5로 나누면 12개예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 171쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"73. 정다면체의 전개도") ] = {
   hints: ["정다면체도 전개도가 여러 가지일까?","정육면체의 전개도는 몇 가지나 될까?"],
   concept: "정다면체도 다면체이므로 어느 모서리를 자르느냐에 따라 여러 가지 모양의 전개도로 나타낼 수 있어. 정사면체는 정삼각형 4개, 정육면체는 정사각형 6개, 정팔면체는 정삼각형 8개, 정십이면체는 정오각형 12개, 정이십면체는 정삼각형 20개로 전개돼. 정사면체, 정육면체와 달리 정팔면체나 정십이면체, 정이십면체의 전개도는 막상 그리려면 막막할 수 있으니 입체가 펼쳐지는 과정을 떠올리며 이해해 두자. 참고로 정육면체의 전개도는 모두 11가지야.",
   media: [],
-  basicProblem: { stem:"정육면체의 전개도는 모두 몇 가지일까?", choices:["11가지","6가지","8가지","1가지"], answer:0, explain:"정육면체의 전개도는 모두 11가지예요.", by:'app', scope:'me' },
+  basicProblem: { stem:"정육면체의 전개도는 모두 몇 가지일까?", choices:["6가지", "8가지", "1가지", "11가지"], answer:3, explain:"정육면체의 전개도는 모두 11가지예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 172쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"74. 쌍대다면체") ] = {
   hints: ["정육면체의 각 면의 한가운데 점을 이으면 무엇이 생길까?","짝이 되는 두 정다면체는 무엇이 서로 바뀔까?"],
   concept: "정다면체는 각 면의 한가운데에 있는 점을 잡아 인접한 점끼리 선분으로 이어 주면 새로운 정다면체가 만들어지는 아주 특별한 성질을 가지고 있어. 예를 들어 정육면체의 각 면의 한가운데에 있는 점을 선분으로 연결하면 정팔면체가 만들어져. 이때 바깥쪽 정육면체의 면의 개수가 곧 안쪽 정팔면체의 꼭짓점의 개수임을 알 수 있어. 다른 정다면체도 똑같이 해 보면 정사면체는 다시 정사면체가 만들어지고, 정육면체와 정팔면체, 정십이면체와 정이십면체가 서로 짝 지어져 만들어져. 이렇게 짝 지어진 두 정다면체를 서로의 쌍대다면체라고 하고, 쌍대다면체끼리는 모서리의 개수가 서로 같아.",
   media: [],
-  basicProblem: { stem:"정육면체의 쌍대다면체는?", choices:["정팔면체","정사면체","정십이면체","정이십면체"], answer:0, explain:"정육면체의 각 면의 한가운데 점을 이으면 정팔면체가 만들어져요.", by:'app', scope:'me' },
+  basicProblem: { stem:"정육면체의 쌍대다면체는?", choices:["정팔면체", "정사면체", "정십이면체", "정이십면체"], answer:0, explain:"정육면체의 각 면의 한가운데 점을 이으면 정팔면체가 만들어져요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 172쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"75. 정육면체의 단면") ] = {
   hints: ["정육면체는 면이 몇 개일까?","단면의 변은 어디에서 생길까?"],
   concept: "정육면체를 세 점을 지나는 평면으로 자를 때, 그 세 점만 이어 삼각형이라고 답하면 틀릴 수 있어. 예를 들어 세 점 B, F, D를 지나는 평면으로 자르면 단면은 삼각형 BFD가 아니라 직사각형 BFHD가 돼. 평면이 지나는 다른 꼭짓점까지 포함하는 다각형임에 유의하자. 이렇게 정육면체를 평면으로 자르면 정삼각형, 정사각형, 직사각형, 마름모, 사다리꼴, 오각형, 육각형 등 여러 단면이 나오지만 칠각형 이상인 단면은 나올 수 없어. 정육면체의 면의 개수가 6이므로 면을 따라 생기는 단면의 변의 개수는 최대 6일 수밖에 없기 때문이야.",
   media: [],
-  basicProblem: { stem:"정육면체를 한 평면으로 잘랐을 때 나올 수 없는 단면은?", choices:["칠각형","육각형","오각형","마름모"], answer:0, explain:"면이 6개이므로 단면의 변은 최대 6개, 즉 육각형까지만 가능해요.", by:'app', scope:'me' },
+  basicProblem: { stem:"정육면체를 한 평면으로 잘랐을 때 나올 수 없는 단면은?", choices:["오각형", "마름모", "육각형", "칠각형"], answer:3, explain:"면이 6개이므로 단면의 변은 최대 6개, 즉 육각형까지만 가능해요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 173쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"76. 회전체") ] = {
   hints: ["평면도형을 한 직선을 축으로 1회전시키면 무엇이 생길까?","축으로 사용한 직선을 뭐라고 부를까?"],
   concept: "평면도형을 한 직선 l을 축으로 하여 1회전 시킬 때 생기는 입체도형을 회전체라 하고, 축으로 사용한 직선을 회전축이라고 해. 또 회전하면서 옆면을 만드는 선분을 모선이라고 해. 모선은 선분만 해당되므로 반원의 호는 모선이라 하지 않고, 구에서는 모선을 생각할 수 없어. 초등학교에서 배운 원기둥, 원뿔, 구가 바로 대표적인 회전체이며 이들은 각각 직사각형, 직각삼각형, 반원을 직선 l을 축으로 하여 1회전 시킨 것이야. 회전체는 앞, 옆 어느 방향에서 보나 회전축에 대하여 좌우대칭이 되는데, 이를 이용하면 회전체인지 아닌지를 쉽게 판단할 수 있어.",
   media: [],
-  basicProblem: { stem:"직각삼각형을 한 변을 회전축으로 하여 1회전 시키면 생기는 회전체는?", choices:["원뿔","원기둥","구","원뿔대"], answer:0, explain:"직각삼각형을 한 변을 축으로 1회전 시키면 원뿔이 만들어져요.", by:'app', scope:'me' },
+  basicProblem: { stem:"직각삼각형을 한 변을 회전축으로 하여 1회전 시키면 생기는 회전체는?", choices:["구", "원뿔대", "원뿔", "원기둥"], answer:2, explain:"직각삼각형을 한 변을 축으로 1회전 시키면 원뿔이 만들어져요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 179쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"77. 원뿔대") ] = {
   hints: ["원뿔을 밑면에 평행한 평면으로 자르면 무엇이 생길까?","사다리꼴을 한 변을 축으로 돌리면 무엇이 될까?"],
   concept: "각뿔대가 각뿔을 잘라 만든 것처럼 원뿔대는 원뿔을 잘라 만든 것이야. 즉 원뿔을 밑면과 평행한 평면으로 잘라서 생기는 두 입체도형 중 원뿔이 아닌 쪽의 입체도형을 원뿔대라고 해. 원뿔대에서 서로 평행한 두 면을 밑면이라 하고, 밑면이 아닌 곡면을 옆면이라고 해. 또 원뿔대의 두 밑면에 수직인 선분의 길이를 원뿔대의 높이라고 해. 원뿔대도 회전체야. 사다리꼴을 직선 l을 회전축으로 하여 1회전 시키면 원뿔대가 만들어져.",
   media: [],
-  basicProblem: { stem:"원뿔대는 어떤 평면도형을 1회전 시킨 회전체일까?", choices:["사다리꼴","직사각형","직각삼각형","반원"], answer:0, explain:"사다리꼴을 한 변을 회전축으로 하여 1회전 시키면 원뿔대가 돼요.", by:'app', scope:'me' },
+  basicProblem: { stem:"원뿔대는 어떤 평면도형을 1회전 시킨 회전체일까?", choices:["사다리꼴", "직각삼각형", "직사각형", "반원"], answer:0, explain:"사다리꼴을 한 변을 회전축으로 하여 1회전 시키면 원뿔대가 돼요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 180쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"78. 구멍이 뚫린 회전체") ] = {
   hints: ["평면도형이 회전축에 붙어 있지 않으면 어떻게 될까?","뚫려 있는 부분도 회전체의 일부일까?"],
   concept: "평면도형이 회전축과 떨어져 있는 경우에는 가운데에 구멍이 뻥 뚫린 회전체가 만들어져. 이때 뚫려 있는 부분도 하나의 회전체가 된다는 것을 기억하자. 떨어져 있는 간격을 달리하면 모양은 비슷하나 엄연히 다른 입체도형이 될 거야. 참고로 구멍이 뚫린 회전체를 회전축에 수직인 평면으로 자르면 단면은 구멍이 뚫린 원 모양이 되고, 회전축을 포함하는 평면으로 자르면 두 평면도형이 서로 떨어져 있는 모양이 돼. 도넛 모양은 특이한 형태이니 기억해 두자.",
   media: [],
-  basicProblem: { stem:"직사각형이 회전축과 떨어져 있을 때 1회전 시키면 생기는 회전체는?", choices:["가운데에 구멍이 뚫린 회전체","원기둥","원뿔","구"], answer:0, explain:"회전축과 떨어져 있으면 가운데가 뚫린 회전체가 만들어져요.", by:'app', scope:'me' },
+  basicProblem: { stem:"직사각형이 회전축과 떨어져 있을 때 1회전 시키면 생기는 회전체는?", choices:["원기둥", "원뿔", "구", "가운데에 구멍이 뚫린 회전체"], answer:3, explain:"회전축과 떨어져 있으면 가운데가 뚫린 회전체가 만들어져요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 180쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"79. 회전체로 평면도형 찾기") ] = {
   hints: ["회전체를 어느 방향에서 보면 좌우대칭이 될까?","좌우를 가르는 선은 무엇이 될까?"],
   concept: "회전체를 보고 회전축이나 회전시킨 평면도형을 찾는 것은 누워서 떡 먹기가 된다는 방법이 있어. 바로 평면도형이 회전축에 대하여 좌우대칭이 된다는 성질을 이용하는 거야. ① 회전축 찾기: 회전체를 먼저 좌우대칭이 되는 방향으로 본 다음, 좌우를 가르는 선을 가운데에 그으면 그것이 회전축이 돼. ② 평면도형 찾기: 회전체를 앞에서 본 모양을 연상하여 회전축을 중심으로 한쪽을 택하면 그것이 회전시킨 평면도형이 돼. 만약 구멍이 뚫린 회전체라면 앞에서 본 모양에서는 구멍 부분이 가려지므로 주의해야 해. 이런 경우 회전축을 포함하는 평면으로 자른 단면을 떠올리는 것이 좋아.",
   media: [],
-  basicProblem: { stem:"회전시킨 평면도형을 찾는 방법으로 옳은 것은?", choices:["앞에서 본 모양을 회전축을 중심으로 나눈 한쪽","위에서 본 모양 전체","회전축에 수직인 단면 전체","앞에서 본 모양 전체"], answer:0, explain:"앞에서 본 모양의 회전축 한쪽이 회전시킨 평면도형이에요.", by:'app', scope:'me' },
+  basicProblem: { stem:"회전시킨 평면도형을 찾는 방법으로 옳은 것은?", choices:["앞에서 본 모양을 회전축을 중심으로 나눈 한쪽", "위에서 본 모양 전체", "회전축에 수직인 단면 전체", "앞에서 본 모양 전체"], answer:0, explain:"앞에서 본 모양의 회전축 한쪽이 회전시킨 평면도형이에요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 181쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"80. 회전축에 수직인 평면으로 자른 단면") ] = {
   hints: ["원기둥·원뿔·구를 회전축에 수직으로 자르면 단면은 무슨 모양일까?","구에서 가장 큰 단면은 언제 생길까?"],
   concept: "회전체를 평면으로 잘라 생긴 단면은 크게 회전축에 수직인 평면으로 자르는 경우와 회전축을 포함하는 평면으로 자르는 경우로 나뉘어. 원기둥, 원뿔, 원뿔대, 구를 회전축에 수직인 평면으로 자르면 그 단면은 항상 원이 돼. 여기에 더해 원기둥은 자른 위치에 상관없이 단면인 원이 모두 합동이 되고, 구에서 가장 큰 단면은 구의 중심을 지날 때 생긴다는 사실도 함께 확인할 수 있어. 구멍이 뚫린 회전체를 회전축에 수직인 평면으로 자른 단면은 구멍이 뚫린 원 모양이 돼.",
   media: [],
-  basicProblem: { stem:"회전체를 회전축에 수직인 평면으로 자른 단면은 항상 어떤 모양일까?", choices:["원","직사각형","삼각형","사다리꼴"], answer:0, explain:"회전축에 수직으로 자르면 단면은 언제나 원이에요.", by:'app', scope:'me' },
+  basicProblem: { stem:"회전체를 회전축에 수직인 평면으로 자른 단면은 항상 어떤 모양일까?", choices:["원", "삼각형", "사다리꼴", "직사각형"], answer:0, explain:"회전축에 수직으로 자르면 단면은 언제나 원이에요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 182쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"81. 회전축을 포함하는 평면으로 자른 단면") ] = {
   hints: ["회전시킨 평면도형이 2개 붙으면 어떤 모양일까?","자르는 위치를 바꾸면 단면들은 어떤 관계일까?"],
   concept: "원기둥, 원뿔, 원뿔대, 구를 회전축을 포함하는 평면으로 자르면 그 단면은 회전시킨 평면도형이 2개 붙은 모양, 즉 선대칭도형이 돼. 원기둥은 직사각형, 원뿔은 이등변삼각형, 원뿔대는 사다리꼴, 구는 원이 되지. 또 회전축을 포함하는 평면으로 한 도형을 자르는 위치는 무수히 많지만 그 단면들은 모두 합동이야. 구멍이 뚫린 회전체를 회전축을 포함하는 평면으로 자른 단면은 두 평면도형이 서로 떨어져 있는 모양이 돼.",
   media: [],
-  basicProblem: { stem:"원뿔을 회전축을 포함하는 평면으로 자른 단면의 모양은?", choices:["이등변삼각형","직사각형","사다리꼴","원"], answer:0, explain:"직각삼각형 2개가 붙은 모양, 즉 이등변삼각형이 돼요.", by:'app', scope:'me' },
+  basicProblem: { stem:"원뿔을 회전축을 포함하는 평면으로 자른 단면의 모양은?", choices:["이등변삼각형", "사다리꼴", "직사각형", "원"], answer:0, explain:"직각삼각형 2개가 붙은 모양, 즉 이등변삼각형이 돼요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 183쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"82. 어느 평면으로 잘라도 단면이 원인 회전체") ] = {
   hints: ["원기둥은 자르는 방향에 따라 단면이 달라질까?","어느 방향으로 잘라도 단면이 원인 도형은 무엇일까?"],
   concept: "회전체를 회전축에 수직이거나 회전축을 포함하는 경우가 아닌 다른 방향으로 자르면 여러 가지 모양의 단면을 얻을 수 있어. 예를 들어 원기둥을 잘랐을 때 생기는 단면은 자르는 방향에 따라 원, 직사각형, 타원, 활꼴 모양 등으로 달라져. 모든 회전체들은 원기둥처럼 어느 방향으로 자르냐에 따라 단면이 달라지는데, 단지 딱 하나의 회전체, 구의 경우만 어느 방향으로 자르더라도 그 단면은 항상 원이 돼. 구를 자른 단면이 가장 큰 경우는 구의 중심을 지나도록 자를 때야.",
   media: [],
-  basicProblem: { stem:"어느 평면으로 자르더라도 단면이 항상 원인 회전체는?", choices:["구","원기둥","원뿔","원뿔대"], answer:0, explain:"구만이 어느 방향으로 잘라도 단면이 항상 원이 돼요.", by:'app', scope:'me' },
+  basicProblem: { stem:"어느 평면으로 자르더라도 단면이 항상 원인 회전체는?", choices:["원뿔대", "원뿔", "구", "원기둥"], answer:2, explain:"구만이 어느 방향으로 잘라도 단면이 항상 원이 돼요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 183쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"83. 회전체의 전개도") ] = {
   hints: ["원기둥의 옆면을 펼치면 무슨 모양일까?","원뿔의 옆면을 펼치면 무슨 모양일까?"],
   concept: "회전체는 어디를 잘라야 평면에 펼칠 수 있는지 모호할 때가 있어. 특히 구와 같은 도형은 펼쳤을 때 일정한 모양으로 평면에 펼쳐지지 않아 완벽한 전개도를 그릴 수가 없어. 우리가 아는 지식으로 전개도를 정확히 그릴 수 있는 회전체에는 원기둥, 원뿔, 원뿔대가 있어. 세 도형의 밑면은 모두 원이므로 전개도에서도 밑면은 원으로 그려지지만, 모선을 따라 잘라 만든 옆면의 모양은 서로 달라. 원기둥의 옆면은 직사각형인데 그 가로의 길이는 밑면인 원의 둘레의 길이와 같아. 원뿔의 옆면은 부채꼴이고 그 호의 길이가 밑면인 원의 둘레의 길이와 같아. 원뿔대의 옆면은 큰 부채꼴에서 작은 부채꼴을 잘라낸 모양이야.",
   media: [],
-  basicProblem: { stem:"원뿔의 전개도에서 옆면의 모양과, 그 호의 길이와 같은 것을 바르게 짝지은 것은?", choices:["부채꼴 – 밑면인 원의 둘레의 길이","직사각형 – 밑면인 원의 둘레의 길이","부채꼴 – 모선의 길이","삼각형 – 밑면의 지름의 길이"], answer:0, explain:"원뿔의 옆면은 부채꼴이고, 그 호의 길이는 밑면인 원의 둘레와 같아요.", by:'app', scope:'me' },
+  basicProblem: { stem:"원뿔의 전개도에서 옆면의 모양과, 그 호의 길이와 같은 것을 바르게 짝지은 것은?", choices:["직사각형 – 밑면인 원의 둘레의 길이", "부채꼴 – 밑면인 원의 둘레의 길이", "부채꼴 – 모선의 길이", "삼각형 – 밑면의 지름의 길이"], answer:1, explain:"원뿔의 옆면은 부채꼴이고, 그 호의 길이는 밑면인 원의 둘레와 같아요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 184쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"84. 기둥의 겉넓이") ] = {
   hints: ["기둥의 전개도는 어떤 면들로 이루어져 있을까?","옆면인 직사각형의 가로의 길이는 무엇과 같을까?"],
   concept: "기둥의 전개도는 서로 합동인 밑면 2개와 직사각형 모양의 옆면으로 이루어져 있어. 따라서 (기둥의 겉넓이)=(밑넓이)×2+(옆넓이)로 구하면 돼. 이때 기둥의 옆면은 전개도에서 하나의 큰 직사각형으로 그려지므로 (옆넓이)=(가로의 길이)×(세로의 길이)=(밑면의 둘레의 길이)×(기둥의 높이)야. 즉 이 두 정보만 찾으면 끝이야. 밑면인 원의 반지름의 길이가 r이고 높이가 h인 원기둥이라면 밑넓이는 πr², 옆넓이는 2πr×h=2πrh이므로 (원기둥의 겉넓이)=2πr²+2πrh가 돼.",
   media: [],
-  basicProblem: { stem:"밑면인 원의 반지름의 길이가 3, 높이가 4인 원기둥의 겉넓이는?", choices:["42π","24π","18π","36π"], answer:0, explain:"밑넓이 9π의 2배 18π, 옆넓이 (2π×3)×4=24π이므로 겉넓이는 42π예요.", by:'app', scope:'me' },
+  basicProblem: { stem:"밑면인 원의 반지름의 길이가 3, 높이가 4인 원기둥의 겉넓이는?", choices:["24π", "42π", "36π", "18π"], answer:1, explain:"밑넓이 9π의 2배 18π, 옆넓이 (2π×3)×4=24π이므로 겉넓이는 42π예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 193쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"85. 뿔의 겉넓이") ] = {
   hints: ["뿔의 전개도는 밑면이 몇 개일까?","원뿔의 옆면인 부채꼴의 넓이는 어떻게 구할까?"],
   concept: "뿔의 전개도는 밑면 1개와 옆면으로 이루어져 있으므로 (뿔의 겉넓이)=(밑넓이)+(옆넓이)로 구하면 돼. 각뿔의 옆면은 모두 삼각형이므로 n각뿔의 옆넓이는 n개의 삼각형의 넓이의 합이야. 원뿔의 전개도는 밑면이 원이고 옆면은 부채꼴이야. 밑면의 반지름의 길이가 r이고 모선의 길이가 l인 원뿔의 밑넓이는 πr²이고, 옆넓이는 ½×(부채꼴의 반지름의 길이)×(부채꼴의 호의 길이)=½×l×2πr=πrl이야. 이때 부채꼴의 호의 길이가 밑면인 원의 둘레의 길이와 같다는 점이 열쇠야. 따라서 (원뿔의 겉넓이)=πr²+πrl이 돼.",
   media: [],
-  basicProblem: { stem:"밑면인 원의 반지름의 길이가 2, 모선의 길이가 6인 원뿔의 겉넓이는?", choices:["16π","12π","4π","24π"], answer:0, explain:"밑넓이 π×2²=4π, 옆넓이 π×2×6=12π이므로 겉넓이는 16π예요.", by:'app', scope:'me' },
+  basicProblem: { stem:"밑면인 원의 반지름의 길이가 2, 모선의 길이가 6인 원뿔의 겉넓이는?", choices:["12π", "4π", "16π", "24π"], answer:2, explain:"밑넓이 π×2²=4π, 옆넓이 π×2×6=12π이므로 겉넓이는 16π예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 194쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"86. 뿔대의 겉넓이") ] = {
   hints: ["뿔대의 두 밑면은 합동일까?","원뿔대의 옆면은 어떤 모양에서 무엇을 잘라낸 것일까?"],
   concept: "뿔대는 기둥과 유사한 모양이지만 두 밑면이 합동이거나 전개도에서 옆면이 직사각형도 아니므로 번거롭지만 밑면과 옆면의 넓이를 모두 따로따로 구하여 더해 주어야 해. 즉 (뿔대의 겉넓이)=(두 밑넓이의 합)+(옆넓이)야. 각뿔대의 옆면은 모두 사다리꼴이므로 n각뿔대의 옆넓이는 n개의 사다리꼴의 넓이의 합이 돼. 원뿔대의 옆면은 큰 부채꼴에서 작은 부채꼴을 잘라낸 모양이므로 원뿔의 옆넓이를 구하는 방법을 적용하여 (옆넓이)=(큰 부채꼴의 넓이)-(작은 부채꼴의 넓이)로 구하면 돼.",
   media: [],
-  basicProblem: { stem:"뿔대의 겉넓이를 구하는 식으로 옳은 것은?", choices:["(두 밑넓이의 합)+(옆넓이)","(밑넓이)×2+(옆넓이)","(밑넓이)+(옆넓이)","(밑넓이)×(높이)"], answer:0, explain:"뿔대는 두 밑면이 합동이 아니므로 두 밑넓이를 각각 구해 더해요.", by:'app', scope:'me' },
+  basicProblem: { stem:"뿔대의 겉넓이를 구하는 식으로 옳은 것은?", choices:["(밑넓이)+(옆넓이)", "(밑넓이)×(높이)", "(두 밑넓이의 합)+(옆넓이)", "(밑넓이)×2+(옆넓이)"], answer:2, explain:"뿔대는 두 밑면이 합동이 아니므로 두 밑넓이를 각각 구해 더해요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 195쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"87. 구의 겉넓이") ] = {
   hints: ["구는 전개도를 그릴 수 있을까?","반구를 감은 실로 원을 만들면 반지름이 몇 배가 될까?"],
   concept: "기둥이나 뿔과는 달리 구는 전개도를 그릴 수 없으므로 다른 아이디어로 접근해야 해. 반구의 표면을 따라 가는 실을 감고, 반구를 감았던 실의 길이를 2배로 하여 평면 위에 원을 만드는 실험을 해 보자. 아주 가는 실을 사용하고 실험이 완벽하게 진행되었다면 만든 원의 반지름의 길이는 정확하게 구의 반지름의 길이의 2배가 된다고 알려져 있어. 즉 (반지름의 길이가 r인 구의 겉넓이)=(반지름의 길이가 2r인 원의 넓이)=π×(2r)²=4πr²이야. 다시 말해 구의 겉넓이는 반지름의 길이가 같은 원의 넓이의 4배야.",
   media: [],
-  basicProblem: { stem:"반지름의 길이가 3인 구의 겉넓이는?", choices:["36π","12π","9π","27π"], answer:0, explain:"4πr²에 r=3을 넣으면 4π×9=36π예요.", by:'app', scope:'me' },
+  basicProblem: { stem:"반지름의 길이가 3인 구의 겉넓이는?", choices:["12π", "27π", "36π", "9π"], answer:2, explain:"4πr²에 r=3을 넣으면 4π×9=36π예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 196쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"88. 잘리거나 구멍 뚫린 입체도형의 겉넓이") ] = {
   hints: ["일부를 잘라내면 겉넓이는 줄어들기만 할까?","자를 때 새로 생기는 면이 있을까?"],
   concept: "입체도형에서 일부분을 잘라내면 겉넓이는 잘라낸 부분의 넓이만큼 줄어든다고 잘못 생각할 수 있어. 하지만 잘라내는 과정에서 생긴 단면의 넓이는 겉넓이에 추가된다는 사실을 꼭 기억해야 해. 예를 들어 반지름의 길이가 4인 반구의 겉넓이는 (구의 겉넓이)×½+(단면인 원의 넓이)=4π×4²×½+π×4²=32π+16π=48π로 구해. 겉넓이를 구할 때 가장 중요한 자세는 도형을 둘러싸고 있는 모든 면을 먼저 체크해 보는 꼼꼼한 자세일 거야.",
   media: [],
-  basicProblem: { stem:"반지름의 길이가 4인 반구의 겉넓이는?", choices:["48π","32π","64π","16π"], answer:0, explain:"구의 겉넓이의 반 32π에 단면인 원의 넓이 16π를 더하면 48π예요.", by:'app', scope:'me' },
+  basicProblem: { stem:"반지름의 길이가 4인 반구의 겉넓이는?", choices:["16π", "48π", "32π", "64π"], answer:1, explain:"구의 겉넓이의 반 32π에 단면인 원의 넓이 16π를 더하면 48π예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 197쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"89. 기둥의 부피") ] = {
   hints: ["직육면체의 부피는 어떻게 구했지?","각기둥이든 원기둥이든 공통으로 쓰는 식은 무엇일까?"],
   concept: "초등학교에서 이미 직육면체의 부피를 구하는 방법을 배웠어. (직육면체의 부피)=(가로의 길이)×(세로의 길이)×(높이)=(직육면체의 밑넓이)×(높이)였지. 이를 바탕으로 하면 각기둥, 원기둥에 상관없이 모든 기둥의 부피는 (기둥의 부피)=(밑넓이)×(높이)로 구할 수 있어. 특히 밑면인 원의 반지름의 길이가 r이고 높이가 h인 원기둥에 대하여 (원기둥의 부피)=πr²h가 돼.",
   media: [],
-  basicProblem: { stem:"밑면인 원의 반지름의 길이가 3, 높이가 5인 원기둥의 부피는?", choices:["45π","30π","15π","75π"], answer:0, explain:"πr²h에 r=3, h=5를 넣으면 π×9×5=45π예요.", by:'app', scope:'me' },
+  basicProblem: { stem:"밑면인 원의 반지름의 길이가 3, 높이가 5인 원기둥의 부피는?", choices:["45π", "75π", "15π", "30π"], answer:0, explain:"πr²h에 r=3, h=5를 넣으면 π×9×5=45π예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 203쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"90. 뿔의 부피") ] = {
   hints: ["뿔 모양 그릇의 물을 기둥 모양 그릇에 몇 번 부으면 가득 찰까?","그래서 뿔의 부피는 기둥의 부피의 몇 분의 몇일까?"],
   concept: "밑면의 모양이 합동인 사각형이고 높이가 같은 사각뿔 모양의 그릇과 사각기둥 모양의 그릇을 준비해서, 사각뿔 그릇에 물을 가득 채워 사각기둥 그릇에 반복하여 옮겨 부어 보자. 실험이 완벽하게 진행되었다면 정확하게 3번 만에 기둥 모양의 그릇에 물이 가득 채워져. 즉 사각뿔의 부피는 밑면이 합동이고 높이가 같은 사각기둥의 부피의 ⅓임을 알 수 있어. 이 결과는 모든 각뿔과 원뿔에서 똑같이 나타나므로 (뿔의 부피)=⅓×(밑넓이)×(높이)로 구하면 돼. 원뿔의 부피 역시 밑면인 원의 반지름의 길이 r와 높이 h로 (원뿔의 부피)=⅓πr²h로 간단히 나타낼 수 있어.",
   media: [],
-  basicProblem: { stem:"밑면인 원의 반지름의 길이가 4, 높이가 9인 원뿔의 부피는?", choices:["48π","144π","36π","16π"], answer:0, explain:"⅓πr²h에 r=4, h=9를 넣으면 ⅓×16π×9=48π예요.", by:'app', scope:'me' },
+  basicProblem: { stem:"밑면인 원의 반지름의 길이가 4, 높이가 9인 원뿔의 부피는?", choices:["48π", "144π", "16π", "36π"], answer:0, explain:"⅓πr²h에 r=4, h=9를 넣으면 ⅓×16π×9=48π예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 205쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"91. 뿔대의 부피") ] = {
   hints: ["뿔대는 어떤 도형에서 무엇을 잘라낸 모양일까?","큰 뿔과 작은 뿔의 부피를 각각 구하면 어떻게 될까?"],
   concept: "뿔대는 뿔을 밑면에 평행한 평면으로 잘라 뿔을 제외한 모양이므로 뿔대의 부피는 원래의 뿔의 부피에서 잘라낸 뿔의 부피를 뺀 것이야. 즉 (뿔대의 부피)=(원래의 뿔의 부피)-(잘라낸 뿔의 부피)로 구하면 돼. 예를 들어 큰 뿔의 부피가 48이고 잘라낸 작은 뿔의 부피가 6이면 뿔대의 부피는 48-6=42가 되고, 원뿔대라면 405π-120π=285π처럼 구하면 돼.",
   media: [],
-  basicProblem: { stem:"뿔대의 부피를 구하는 식으로 옳은 것은?", choices:["(원래의 뿔의 부피)-(잘라낸 뿔의 부피)","(두 밑넓이의 합)×(높이)","⅓×(밑넓이)×(높이)","(밑넓이)×(높이)"], answer:0, explain:"뿔대는 큰 뿔에서 작은 뿔을 잘라낸 모양이므로 부피를 빼서 구해요.", by:'app', scope:'me' },
+  basicProblem: { stem:"뿔대의 부피를 구하는 식으로 옳은 것은?", choices:["(두 밑넓이의 합)×(높이)", "⅓×(밑넓이)×(높이)", "(원래의 뿔의 부피)-(잘라낸 뿔의 부피)", "(밑넓이)×(높이)"], answer:2, explain:"뿔대는 큰 뿔에서 작은 뿔을 잘라낸 모양이므로 부피를 빼서 구해요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 206쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"92. 구의 부피") ] = {
   hints: ["구가 꼭 들어가는 원기둥의 높이는 반지름의 몇 배일까?","구의 부피는 그 원기둥의 부피의 몇 분의 몇일까?"],
   concept: "구의 부피 역시 기둥의 부피를 이용하여 구해. 밑면의 지름의 길이와 높이가 구의 지름의 길이와 같은 원기둥 모양의 그릇에 물을 가득 채운 후 구를 물속에 완전히 잠기게 넣었다가 꺼내면, 그릇에 남은 물의 양은 정확하게 원기둥의 부피의 ⅓이 돼. 빠져 나간 물의 양이 구의 부피와 같으므로 (구의 부피)=⅔×(원기둥의 부피)야. 따라서 반지름의 길이가 r인 구의 부피는 밑면의 지름의 길이와 높이가 각각 2r인 원기둥의 부피의 ⅔이므로 ⅔×(πr²×2r)=(4/3)πr³으로 구해.",
   media: [],
-  basicProblem: { stem:"반지름의 길이가 3인 구의 부피는?", choices:["36π","27π","12π","9π"], answer:0, explain:"(4/3)πr³에 r=3을 넣으면 (4/3)π×27=36π예요.", by:'app', scope:'me' },
+  basicProblem: { stem:"반지름의 길이가 3인 구의 부피는?", choices:["9π", "36π", "12π", "27π"], answer:1, explain:"(4/3)πr³에 r=3을 넣으면 (4/3)π×27=36π예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 207쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','3. 입체도형',"93. 아르키메데스의 도형") ] = {
   hints: ["원기둥에 꼭 맞는 원뿔과 구를 함께 생각해 볼까?","원뿔:구:원기둥의 부피의 비는 어떻게 될까?"],
   concept: "밑면인 원의 반지름의 길이가 r이고 높이가 2r인 원기둥에 대하여 이 원기둥에 꼭 맞게 들어가는 원뿔과 구를 동시에 생각할 수 있어. 앞에서 배운 바에 의하면 (원뿔의 부피)=⅓×(원기둥의 부피)이고 (구의 부피)=⅔×(원기둥의 부피)이므로 (원뿔의 부피):(구의 부피):(원기둥의 부피)=⅓:⅔:1=1:2:3임을 확인할 수 있어. 아르키메데스가 이 사실을 알아내어 이 도형을 아르키메데스의 도형이라고 해. 위의 부피의 비를 알고 있으면 반지름의 길이를 구하는 과정 없이 한 도형의 부피를 이용하여 다른 도형의 부피를 구할 수 있어.",
   media: [],
-  basicProblem: { stem:"아르키메데스의 도형에서 (원뿔):(구):(원기둥)의 부피의 비는?", choices:["1:2:3","1:1:2","2:3:4","1:3:2"], answer:0, explain:"원뿔은 원기둥의 ⅓, 구는 ⅔이므로 ⅓:⅔:1=1:2:3이에요.", by:'app', scope:'me' },
+  basicProblem: { stem:"아르키메데스의 도형에서 (원뿔):(구):(원기둥)의 부피의 비는?", choices:["1:3:2", "1:1:2", "1:2:3", "2:3:4"], answer:2, explain:"원뿔은 원기둥의 ⅓, 구는 ⅔이므로 ⅓:⅔:1=1:2:3이에요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 208쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"94. 대푯값") ] = {
   hints: ["자료 전체를 하나의 수로 나타내면 무엇을 알 수 있을까?", "대푯값에는 어떤 것들이 있을까?"],
   concept: "자료 전체의 중심적인 경향이나 특징을 대표적으로 나타내는 값을 대푯값이라고 해. 자료를 하나하나 다 늘어놓으면 전체 모습을 한눈에 보기 어렵기 때문에, 자료를 대표할 수 있는 값 하나로 나타내는 거야. 대푯값에는 평균, 중앙값, 최빈값이 있고, 이 중에서 평균이 가장 많이 쓰여.",
   media: [],
-  basicProblem: { stem:"다음 중 대푯값이 아닌 것은?", choices:["계급", "평균", "중앙값", "최빈값"], answer:0, explain:"대푯값에는 평균, 중앙값, 최빈값이 있어요. 계급은 도수분포표에서 변량을 나눈 구간이에요.", by:'app', scope:'me' },
+  basicProblem: { stem:"다음 중 대푯값이 아닌 것은?", choices:["평균", "최빈값", "계급", "중앙값"], answer:2, explain:"대푯값에는 평균, 중앙값, 최빈값이 있어요. 계급은 도수분포표에서 변량을 나눈 구간이에요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 233쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"95. 평균") ] = {
   hints: ["자료를 고르게 나누어 가지면 하나가 얼마가 될까?", "평균은 무엇을 무엇으로 나눈 값일까?"],
   concept: "평균은 변량의 총합을 변량의 개수로 나눈 값이야. 즉 (평균)=(변량의 총합)÷(변량의 개수)야. 자료를 고르게 나누어 가졌을 때 하나가 얼마가 되는지를 나타내지. 평균은 모든 변량을 다 사용하기 때문에 자료 전체의 성질을 잘 나타내지만, 극단적으로 크거나 작은 값이 있으면 그 값에 크게 영향을 받아.",
   media: [],
-  basicProblem: { stem:"변량이 6, 8, 10, 12, 14일 때 평균은?", choices:["10", "12", "9", "11"], answer:0, explain:"(6+8+10+12+14)÷5 = 50÷5 = 10이에요.", by:'app', scope:'me' },
+  basicProblem: { stem:"변량이 6, 8, 10, 12, 14일 때 평균은?", choices:["12", "9", "10", "11"], answer:2, explain:"(6+8+10+12+14)÷5 = 50÷5 = 10이에요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 233쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"96. 중앙값") ] = {
   hints: ["자료를 크기순으로 늘어놓으면 한가운데에는 무엇이 있을까?", "변량의 개수가 짝수이면 한가운데 값이 몇 개일까?"],
   concept: "중앙값은 자료를 작은 값부터 크기순으로 나열했을 때 한가운데 있는 값이야. 변량이 n개일 때, n이 홀수이면 (n+1)/2번째 값 하나가 중앙값이고, n이 짝수이면 한가운데 있는 두 값, 즉 n/2번째와 (n/2+1)번째 값의 평균이 중앙값이야. 중앙값은 순서만 보기 때문에 극단적으로 크거나 작은 값이 있어도 영향을 받지 않는 것이 장점이야.",
   media: [],
-  basicProblem: { stem:"자료 3, 1, 8, 7, 10, 6, 60의 중앙값은?", choices:["7", "8", "6", "10"], answer:0, explain:"크기순으로 1, 3, 6, 7, 8, 10, 60이고 7개(홀수)이므로 4번째 값인 7이 중앙값이에요.", by:'app', scope:'me' },
+  basicProblem: { stem:"자료 3, 1, 8, 7, 10, 6, 60의 중앙값은?", choices:["7", "6", "8", "10"], answer:0, explain:"크기순으로 1, 3, 6, 7, 8, 10, 60이고 7개(홀수)이므로 4번째 값인 7이 중앙값이에요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 235쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"97. 최빈값") ] = {
   hints: ["자료에서 가장 여러 번 나오는 값을 뭐라고 할까?", "숫자가 아닌 자료에도 쓸 수 있는 대푯값은 무엇일까?"],
   concept: "최빈값은 자료의 값 중에서 가장 많이 나타나는 값이야. 가장 많이 나온 값이 여러 개이면 최빈값도 여러 개가 될 수 있고, 모든 값이 똑같은 횟수로 나타나면 최빈값은 없어. 최빈값은 좋아하는 색, 혈액형, 신발 크기처럼 숫자가 아닌 자료에도 쓸 수 있다는 것이 큰 장점이야.",
   media: [],
-  basicProblem: { stem:"자료 12, 12, 12, 15, 16, 16, 16의 최빈값은?", choices:["12와 16", "12", "16", "15"], answer:0, explain:"12가 3번, 16이 3번으로 가장 많이 나오므로 최빈값은 12와 16 두 개예요.", by:'app', scope:'me' },
+  basicProblem: { stem:"자료 12, 12, 12, 15, 16, 16, 16의 최빈값은?", choices:["16", "12", "15", "12와 16"], answer:3, explain:"12가 3번, 16이 3번으로 가장 많이 나오므로 최빈값은 12와 16 두 개예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 236쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"98. 표·그래프에서 평균·중앙값·최빈값 구하기") ] = {
   hints: ["표에서 각 값이 몇 개씩 있는지 먼저 무엇을 봐야 할까?", "중앙값을 찾으려면 도수를 어떻게 세어 나가면 될까?"],
   concept: "표나 그래프로 자료가 주어질 때는 먼저 각 변량의 개수(도수)를 파악해야 해. 평균은 (변량)×(도수)를 모두 더한 값을 도수의 총합으로 나누어 구하고, 중앙값은 도수를 앞에서부터 차례로 더해 가며 한가운데 순서에 해당하는 변량을 찾고, 최빈값은 도수가 가장 큰 변량이야.",
   media: [],
-  basicProblem: { stem:"표로 주어진 자료에서 중앙값을 구하는 방법으로 옳은 것은?", choices:["도수를 차례로 더해 한가운데 순서에 해당하는 변량을 찾는다", "도수가 가장 큰 변량을 찾는다", "변량을 모두 더해 개수로 나눈다", "가장 큰 변량과 가장 작은 변량의 평균을 구한다"], answer:0, explain:"중앙값은 순서가 한가운데인 값이므로 도수를 앞에서부터 차례로 더해 한가운데 순서의 변량을 찾아요.", by:'app', scope:'me' },
+  basicProblem: { stem:"표로 주어진 자료에서 중앙값을 구하는 방법으로 옳은 것은?", choices:["변량을 모두 더해 개수로 나눈다", "도수를 차례로 더해 한가운데 순서에 해당하는 변량을 찾는다", "가장 큰 변량과 가장 작은 변량의 평균을 구한다", "도수가 가장 큰 변량을 찾는다"], answer:1, explain:"중앙값은 순서가 한가운데인 값이므로 도수를 앞에서부터 차례로 더해 한가운데 순서의 변량을 찾아요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 237쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"99. 대푯값의 선택") ] = {
   hints: ["자료에 유난히 크거나 작은 값이 하나 있으면 평균은 어떻게 될까?", "자료가 숫자가 아니면 어떤 대푯값을 쓸 수 있을까?"],
   concept: "어떤 대푯값이 가장 좋은지는 정해져 있지 않고, 주어진 자료에 따라 달라져. 자료에 극단적으로 크거나 작은 값이 있으면 평균은 그 값에 끌려가므로 중앙값이 더 적절해. 자료가 숫자가 아니거나 특정 값이 유난히 많이 나타나면 최빈값이 적절하고, 극단적인 값이 없고 자료가 고르게 분포하면 모든 값을 사용하는 평균이 가장 적절해.",
   media: [],
-  basicProblem: { stem:"극단적으로 크거나 작은 값이 있는 자료의 대푯값으로 가장 적절한 것은?", choices:["중앙값", "평균", "최빈값", "계급값"], answer:0, explain:"평균은 극단적인 값에 크게 영향을 받지만 중앙값은 영향을 받지 않아요.", by:'app', scope:'me' },
+  basicProblem: { stem:"극단적으로 크거나 작은 값이 있는 자료의 대푯값으로 가장 적절한 것은?", choices:["계급값", "최빈값", "중앙값", "평균"], answer:2, explain:"평균은 극단적인 값에 크게 영향을 받지만 중앙값은 영향을 받지 않아요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 238쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"100. 줄기와 잎 그림") ] = {
   hints: ["변량의 십의 자리와 일의 자리를 나누어 쓰면 어떻게 될까?", "같은 값이 여러 번 나오면 잎에 어떻게 쓸까?"],
   concept: "줄기와 잎 그림은 변량을 줄기와 잎으로 구분하여 나타낸 그림이야. 보통 변량의 십의 자리 숫자를 줄기, 일의 자리 숫자를 잎으로 해. 세로선을 긋고 왼쪽에 줄기를 작은 수부터 크기순으로 세로로 쓴 다음, 오른쪽에 각 줄기에 해당하는 잎을 일정한 간격으로 가로로 써. 이때 같은 잎이 여러 번 나와도 중복하여 모두 쓰고, 그림의 오른쪽 위에 줄기와 잎이 뜻하는 것을 설명해 줘야 해.",
   media: [],
-  basicProblem: { stem:"줄기와 잎 그림에서 같은 값이 여러 번 나올 때 잎은 어떻게 쓰는가?", choices:["중복되어도 모두 쓴다", "한 번만 쓴다", "큰 값만 쓴다", "작은 값만 쓴다"], answer:0, explain:"잎은 변량의 개수를 그대로 보여 주어야 하므로 중복되어도 모두 써요.", by:'app', scope:'me' },
+  basicProblem: { stem:"줄기와 잎 그림에서 같은 값이 여러 번 나올 때 잎은 어떻게 쓰는가?", choices:["한 번만 쓴다", "큰 값만 쓴다", "중복되어도 모두 쓴다", "작은 값만 쓴다"], answer:2, explain:"잎은 변량의 개수를 그대로 보여 주어야 하므로 중복되어도 모두 써요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 246쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"101. 줄기와 잎 그림의 단위 표시") ] = {
   hints: ["설명이 없으면 1|2가 12인지 1.2인지 알 수 있을까?", "단위를 안 쓰면 무엇을 알 수 없게 될까?"],
   concept: "'1|2는 12명'처럼 줄기와 잎이 무엇을 뜻하는지 표시해 주어야 그림을 정확히 읽을 수 있어. 설명이 없으면 1|2가 12를 뜻하는지 1.2를 뜻하는지, 단위가 명인지 kg인지 알 수 없어서 자료를 오해할 수 있기 때문이야. 그래서 줄기와 잎 그림에는 항상 자릿값과 단위를 함께 나타내 줘.",
   media: [],
-  basicProblem: { stem:"줄기와 잎 그림에 '1|2는 12명'이라고 쓰는 이유로 옳은 것은?", choices:["줄기와 잎이 뜻하는 자릿값과 단위를 알려 주기 위해", "잎의 개수를 세기 위해", "줄기를 크기순으로 쓰기 위해", "평균을 구하기 위해"], answer:0, explain:"설명이 없으면 1|2가 12인지 1.2인지, 단위가 무엇인지 알 수 없어요.", by:'app', scope:'me' },
+  basicProblem: { stem:"줄기와 잎 그림에 '1|2는 12명'이라고 쓰는 이유로 옳은 것은?", choices:["평균을 구하기 위해", "줄기와 잎이 뜻하는 자릿값과 단위를 알려 주기 위해", "줄기를 크기순으로 쓰기 위해", "잎의 개수를 세기 위해"], answer:1, explain:"설명이 없으면 1|2가 12인지 1.2인지, 단위가 무엇인지 알 수 없어요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 248쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"102. 줄기와 잎 그림에서 평균·중앙값·최빈값 구하기") ] = {
   hints: ["줄기와 잎 그림에서 변량은 이미 어떤 순서로 놓여 있을까?", "줄기와 잎을 합치면 무엇을 알 수 있을까?"],
   concept: "줄기와 잎 그림은 실제 변량이 크기순으로 나열되어 있어서 중앙값과 최빈값을 조금 더 쉽게 구할 수 있어. 잎의 개수를 모두 세면 변량의 개수를 알 수 있고, 줄기와 잎을 합쳐 실제 변량을 복원하면 평균도 구할 수 있어. 중앙값은 위에서부터 세어 한가운데 순서의 값을 찾고, 최빈값은 가장 여러 번 나온 값이야.",
   media: [],
-  basicProblem: { stem:"줄기와 잎 그림에서 중앙값을 찾기 쉬운 이유는?", choices:["변량이 이미 크기순으로 나열되어 있기 때문", "잎의 개수가 항상 같기 때문", "줄기가 항상 1개이기 때문", "평균을 먼저 알기 때문"], answer:0, explain:"줄기를 작은 수부터 쓰므로 변량이 자연히 크기순으로 놓여 중앙값을 찾기 쉬워요.", by:'app', scope:'me' },
+  basicProblem: { stem:"줄기와 잎 그림에서 중앙값을 찾기 쉬운 이유는?", choices:["줄기가 항상 1개이기 때문", "평균을 먼저 알기 때문", "변량이 이미 크기순으로 나열되어 있기 때문", "잎의 개수가 항상 같기 때문"], answer:2, explain:"줄기를 작은 수부터 쓰므로 변량이 자연히 크기순으로 놓여 중앙값을 찾기 쉬워요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 249쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"103. 줄기와 잎 그림의 장점과 단점") ] = {
   hints: ["줄기와 잎 그림에서는 원래의 값을 알 수 있을까?", "변량이 아주 많아지면 잎은 어떻게 될까?"],
   concept: "줄기와 잎 그림의 가장 큰 장점은 원래의 변량을 그대로 유지하면서 자료를 정리한다는 거야. 그래서 실제 값을 알 수 있고, 크기순으로 나열되어 중앙값·최빈값을 쉽게 구할 수 있으며, 잎의 개수로 자료의 분포도 한눈에 볼 수 있어. 또 두 자료를 줄기를 가운데 두고 양쪽에 나란히 놓아 비교할 수도 있어. 하지만 변량의 개수가 너무 많으면 잎이 너무 길어지고, 변량의 값이 넓게 흩어져 있으면 줄기가 너무 많아져서 한눈에 보기 어려워져.",
   media: [],
-  basicProblem: { stem:"줄기와 잎 그림의 가장 큰 장점은?", choices:["원래의 변량을 그대로 알 수 있다", "변량의 개수가 많을수록 보기 좋다", "계급의 크기를 알 수 있다", "상대도수를 알 수 있다"], answer:0, explain:"줄기와 잎 그림은 변량을 그대로 유지하며 정리하므로 실제 값을 알 수 있어요.", by:'app', scope:'me' },
+  basicProblem: { stem:"줄기와 잎 그림의 가장 큰 장점은?", choices:["상대도수를 알 수 있다", "계급의 크기를 알 수 있다", "원래의 변량을 그대로 알 수 있다", "변량의 개수가 많을수록 보기 좋다"], answer:2, explain:"줄기와 잎 그림은 변량을 그대로 유지하며 정리하므로 실제 값을 알 수 있어요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 250쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"104. 도수분포표") ] = {
   hints: ["변량이 아주 많을 때 하나씩 다 쓰면 보기 편할까?", "변량을 구간으로 묶으면 무엇을 알 수 있을까?"],
   concept: "변량을 몇 개의 구간으로 나누고, 각 구간에 속하는 자료의 개수를 조사하여 나타낸 표를 도수분포표라고 해. 변량의 개수가 아주 많을 때는 줄기와 잎 그림처럼 값을 하나씩 다 쓰면 오히려 보기 어려운데, 도수분포표를 쓰면 자료가 어느 구간에 많이 모여 있는지 분포 상태를 한눈에 파악할 수 있어.",
   media: [],
-  basicProblem: { stem:"도수분포표에 대한 설명으로 옳은 것은?", choices:["변량을 몇 개의 구간으로 나누고 각 구간의 자료의 개수를 나타낸 표", "변량을 줄기와 잎으로 나누어 나타낸 그림", "변량을 가로, 도수를 세로로 하는 직사각형을 그린 그래프", "도수 대신 상대도수를 나타낸 표"], answer:0, explain:"도수분포표는 변량을 구간(계급)으로 나누고 각 구간의 도수를 적은 표예요.", by:'app', scope:'me' },
+  basicProblem: { stem:"도수분포표에 대한 설명으로 옳은 것은?", choices:["변량을 줄기와 잎으로 나누어 나타낸 그림", "도수 대신 상대도수를 나타낸 표", "변량을 몇 개의 구간으로 나누고 각 구간의 자료의 개수를 나타낸 표", "변량을 가로, 도수를 세로로 하는 직사각형을 그린 그래프"], answer:2, explain:"도수분포표는 변량을 구간(계급)으로 나누고 각 구간의 도수를 적은 표예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 252쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"105. 계급, 계급의 크기, 계급값") ] = {
   hints: ["변량을 나눈 구간 하나를 뭐라고 부를까?", "계급을 대표하는 값은 어떻게 구할까?"],
   concept: "변량을 일정한 간격으로 나눈 구간을 계급이라 하고, 그 구간의 너비를 계급의 크기라고 해. 계급의 크기는 (계급의 양 끝 값의 차)로 구해. 계급을 대표하는 값은 계급값이라 하고, (계급값)=(계급의 양 끝 값의 합)÷2, 즉 계급의 한가운데 값이야. 예를 들어 70 이상 80 미만인 계급은 계급의 크기가 80-70=10, 계급값이 (70+80)÷2=75야. 계급, 계급의 크기, 계급값에는 반드시 단위를 붙여 줘.",
   media: [],
-  basicProblem: { stem:"70점 이상 80점 미만인 계급의 계급값은?", choices:["75점", "70점", "80점", "10점"], answer:0, explain:"(70+80)÷2 = 75(점)이에요.", by:'app', scope:'me' },
+  basicProblem: { stem:"70점 이상 80점 미만인 계급의 계급값은?", choices:["10점", "80점", "75점", "70점"], answer:2, explain:"(70+80)÷2 = 75(점)이에요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 253쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"106. 도수분포표를 만드는 순서") ] = {
   hints: ["계급을 정하려면 먼저 무엇을 찾아야 할까?", "계급의 개수는 보통 몇 개 정도가 좋을까?"],
   concept: "도수분포표는 ① 변량 중에서 가장 큰 값과 가장 작은 값을 찾고 ② 계급의 개수와 계급의 크기를 정하여 계급을 나눈 다음 ③ 각 계급에 속하는 변량의 개수를 세어 도수를 적는 순서로 만들어. 계급의 개수가 너무 많으면 자료가 흩어져 보이고 너무 적으면 뭉뚱그려져서, 보통 5~15개 정도로 하고 계급의 크기도 너무 크거나 작지 않게 정하는 것이 좋아.",
   media: [],
-  basicProblem: { stem:"도수분포표를 만들 때 가장 먼저 해야 할 일은?", choices:["변량 중 가장 큰 값과 가장 작은 값을 찾는다", "각 계급의 도수를 센다", "계급값을 구한다", "상대도수를 구한다"], answer:0, explain:"가장 큰 값과 가장 작은 값을 알아야 계급의 범위를 정할 수 있어요.", by:'app', scope:'me' },
+  basicProblem: { stem:"도수분포표를 만들 때 가장 먼저 해야 할 일은?", choices:["변량 중 가장 큰 값과 가장 작은 값을 찾는다", "각 계급의 도수를 센다", "상대도수를 구한다", "계급값을 구한다"], answer:0, explain:"가장 큰 값과 가장 작은 값을 알아야 계급의 범위를 정할 수 있어요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 255쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"107. 도수분포표의 장점과 단점") ] = {
@@ -7343,105 +7337,105 @@ DD_CARDS[ ddConceptId('m1-2','4. 통계',"108. 계급값으로 계급 알아내�
   hints: ["계급값만 알면 계급의 양 끝 값을 정할 수 있을까?", "계급값에서 계급의 크기의 절반만큼 떨어진 값은 무엇일까?"],
   concept: "계급값만으로는 계급을 알 수 없어. 계급값이 같아도 계급의 크기가 다르면 계급이 달라지기 때문이야. 계급을 구하려면 계급값과 계급의 크기를 함께 알아야 해. 계급의 크기가 주어지면 계급값을 중심으로 위아래로 계급의 크기의 절반씩 떨어진 값이 계급의 양 끝 값이 돼. 예를 들어 계급값이 55이고 계급의 크기가 10이면 계급은 50 이상 60 미만이야.",
   media: [],
-  basicProblem: { stem:"계급값이 55이고 계급의 크기가 10인 계급은?", choices:["50 이상 60 미만", "55 이상 65 미만", "45 이상 55 미만", "50 이상 55 미만"], answer:0, explain:"계급값 55에서 계급의 크기의 절반인 5를 빼고 더하면 50 이상 60 미만이에요.", by:'app', scope:'me' },
+  basicProblem: { stem:"계급값이 55이고 계급의 크기가 10인 계급은?", choices:["50 이상 55 미만", "45 이상 55 미만", "55 이상 65 미만", "50 이상 60 미만"], answer:3, explain:"계급값 55에서 계급의 크기의 절반인 5를 빼고 더하면 50 이상 60 미만이에요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 257쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"109. 히스토그램") ] = {
   hints: ["도수분포표를 그래프로 그리면 어떤 모양이 될까?", "가로에는 무엇을, 세로에는 무엇을 나타낼까?"],
   concept: "히스토그램은 도수분포표의 각 계급의 크기를 가로로, 도수를 세로로 하는 직사각형을 차례로 그려 나타낸 그래프야. 그리는 방법은 ① 가로축에 각 계급의 양 끝 값을 표시하고 ② 세로축에 도수를 표시한 다음 ③ 각 계급의 크기를 가로로, 도수를 세로로 하는 직사각형을 그리는 거야. 직사각형이 서로 붙어 있어서 자료의 분포 상태를 한눈에 볼 수 있어.",
   media: [],
-  basicProblem: { stem:"히스토그램에서 직사각형의 가로와 세로가 나타내는 것은?", choices:["가로는 계급의 크기, 세로는 도수", "가로는 도수, 세로는 계급의 크기", "가로는 계급값, 세로는 상대도수", "가로는 변량, 세로는 계급값"], answer:0, explain:"히스토그램은 계급의 크기를 가로로, 도수를 세로로 하는 직사각형을 그려요.", by:'app', scope:'me' },
+  basicProblem: { stem:"히스토그램에서 직사각형의 가로와 세로가 나타내는 것은?", choices:["가로는 계급값, 세로는 상대도수", "가로는 변량, 세로는 계급값", "가로는 도수, 세로는 계급의 크기", "가로는 계급의 크기, 세로는 도수"], answer:3, explain:"히스토그램은 계급의 크기를 가로로, 도수를 세로로 하는 직사각형을 그려요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 262쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"110. 히스토그램에서 직사각형의 넓이") ] = {
   hints: ["직사각형의 가로 길이는 계급마다 같을까 다를까?", "가로가 모두 같다면 넓이는 무엇에 따라 달라질까?"],
   concept: "히스토그램에서 각 직사각형의 가로의 길이는 계급의 크기로 모두 같고, 세로의 길이는 그 계급의 도수야. 그래서 (직사각형의 넓이)=(계급의 크기)×(그 계급의 도수)가 되고, 계급의 크기가 일정하므로 직사각형의 넓이는 그 계급의 도수에 정비례해. 또 직사각형의 넓이의 합은 (계급의 크기)×(도수의 총합)이야.",
   media: [],
-  basicProblem: { stem:"히스토그램에서 각 직사각형의 넓이는 무엇에 정비례하는가?", choices:["그 계급의 도수", "계급의 개수", "계급값", "도수의 총합"], answer:0, explain:"가로(계급의 크기)가 모두 같으므로 넓이는 세로인 도수에 정비례해요.", by:'app', scope:'me' },
+  basicProblem: { stem:"히스토그램에서 각 직사각형의 넓이는 무엇에 정비례하는가?", choices:["그 계급의 도수", "도수의 총합", "계급값", "계급의 개수"], answer:0, explain:"가로(계급의 크기)가 모두 같으므로 넓이는 세로인 도수에 정비례해요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 263쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"111. 히스토그램과 막대그래프의 차이") ] = {
   hints: ["가로축에 종류를 쓰는 그래프는 무엇일까?", "히스토그램의 막대는 왜 서로 붙여서 그릴까?"],
   concept: "히스토그램은 막대그래프와 비슷해 보이지만 달라. 첫째, 막대그래프는 가로축에 종류를 나타내지만 히스토그램은 가로축에 계급, 즉 수량을 나타내. 둘째, 막대그래프는 막대의 폭이 아무 뜻이 없지만 히스토그램은 막대의 폭이 계급의 크기를 나타내. 셋째, 막대그래프는 막대 사이를 띄어 그리지만 히스토그램은 연속적인 수치를 나타내므로 막대를 서로 붙여서 그려.",
   media: [],
-  basicProblem: { stem:"히스토그램이 막대그래프와 달리 막대를 붙여 그리는 이유는?", choices:["가로축이 연속적인 수치인 계급을 나타내기 때문", "도수가 항상 같기 때문", "막대의 폭이 아무 뜻이 없기 때문", "계급의 개수가 적기 때문"], answer:0, explain:"히스토그램의 가로축은 끊어지지 않고 이어지는 계급을 나타내므로 막대를 붙여 그려요.", by:'app', scope:'me' },
+  basicProblem: { stem:"히스토그램이 막대그래프와 달리 막대를 붙여 그리는 이유는?", choices:["가로축이 연속적인 수치인 계급을 나타내기 때문", "도수가 항상 같기 때문", "계급의 개수가 적기 때문", "막대의 폭이 아무 뜻이 없기 때문"], answer:0, explain:"히스토그램의 가로축은 끊어지지 않고 이어지는 계급을 나타내므로 막대를 붙여 그려요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 264쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"112. 도수분포다각형") ] = {
   hints: ["직사각형 윗변의 한가운데에 점을 찍으면 무엇을 이을 수 있을까?", "그래프의 양 끝은 어떻게 처리할까?"],
   concept: "도수분포다각형은 히스토그램에서 각 직사각형의 윗변의 한가운데에 점을 찍고, 그래프의 양 끝에는 도수가 0인 계급이 하나씩 더 있는 것으로 생각하여 그 한가운데에도 점을 찍은 다음, 이 점들을 선분으로 연결하여 그린 그래프야. 히스토그램을 그리지 않아도 계급값과 도수를 좌표로 보고 바로 그릴 수 있어. 자료의 분포 상태를 연속적으로 관찰할 수 있는 것이 특징이야.",
   media: [],
-  basicProblem: { stem:"도수분포다각형을 그릴 때 그래프의 양 끝은 어떻게 하는가?", choices:["도수가 0인 계급이 하나씩 더 있다고 생각하고 점을 찍는다", "그냥 끊어 놓는다", "가장 큰 도수만큼 점을 찍는다", "가로축까지 직선으로 내리지 않는다"], answer:0, explain:"양 끝에 도수가 0인 계급을 하나씩 더 생각해 점을 찍어 가로축에 닿게 그려요.", by:'app', scope:'me' },
+  basicProblem: { stem:"도수분포다각형을 그릴 때 그래프의 양 끝은 어떻게 하는가?", choices:["도수가 0인 계급이 하나씩 더 있다고 생각하고 점을 찍는다", "가로축까지 직선으로 내리지 않는다", "그냥 끊어 놓는다", "가장 큰 도수만큼 점을 찍는다"], answer:0, explain:"양 끝에 도수가 0인 계급을 하나씩 더 생각해 점을 찍어 가로축에 닿게 그려요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 264쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"113. 도수분포다각형과 가로축으로 둘러싸인 부분의 넓이") ] = {
   hints: ["잘려 나간 부분과 새로 더해진 부분의 넓이를 비교해 볼까?", "히스토그램의 직사각형 넓이의 합은 어떻게 구할까?"],
   concept: "도수분포다각형과 가로축으로 둘러싸인 부분의 넓이는 히스토그램의 직사각형의 넓이의 합과 같아. 도수분포다각형을 그릴 때 직사각형에서 잘려 나간 삼각형과 새로 더해진 삼각형의 넓이가 서로 같기 때문이야. 따라서 (넓이)=(계급의 크기)×(도수의 총합)으로 간단히 구할 수 있어.",
   media: [],
-  basicProblem: { stem:"계급의 크기가 10, 도수의 총합이 10인 자료에서 도수분포다각형과 가로축으로 둘러싸인 부분의 넓이는?", choices:["100", "10", "20", "1"], answer:0, explain:"(계급의 크기)×(도수의 총합) = 10×10 = 100이에요.", by:'app', scope:'me' },
+  basicProblem: { stem:"계급의 크기가 10, 도수의 총합이 10인 자료에서 도수분포다각형과 가로축으로 둘러싸인 부분의 넓이는?", choices:["1", "10", "20", "100"], answer:3, explain:"(계급의 크기)×(도수의 총합) = 10×10 = 100이에요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 265쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"114. 도수분포다각형의 좋은 점") ] = {
   hints: ["변화를 나타낼 때 막대와 선 중 무엇이 더 뚜렷할까?", "두 자료를 한 그래프에 그릴 수 있을까?"],
   concept: "도수분포다각형은 점을 선분으로 이어 그리므로 자료의 분포 상태를 연속적으로 관찰할 수 있어. 변화를 나타내는 데는 막대보다 선이 더 뚜렷하기 때문이야. 또 두 개 이상의 자료의 분포를 한 그래프에 동시에 겹쳐 그릴 수 있어서, 두 자료를 비교하기에 아주 편리해.",
   media: [],
-  basicProblem: { stem:"도수분포다각형의 장점으로 옳은 것은?", choices:["두 개 이상의 자료를 한 그래프에 겹쳐 그려 비교할 수 있다", "원래의 변량을 알 수 있다", "계급의 개수를 늘릴 수 있다", "도수의 총합이 항상 1이 된다"], answer:0, explain:"선으로 그리므로 두 자료를 한 그래프에 겹쳐 그려 비교할 수 있어요.", by:'app', scope:'me' },
+  basicProblem: { stem:"도수분포다각형의 장점으로 옳은 것은?", choices:["원래의 변량을 알 수 있다", "계급의 개수를 늘릴 수 있다", "두 개 이상의 자료를 한 그래프에 겹쳐 그려 비교할 수 있다", "도수의 총합이 항상 1이 된다"], answer:2, explain:"선으로 그리므로 두 자료를 한 그래프에 겹쳐 그려 비교할 수 있어요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 266쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"115. 상대도수") ] = {
   hints: ["어떤 계급의 도수가 전체에서 얼마나 차지하는지 어떻게 나타낼까?", "도수를 무엇으로 나누면 비율이 될까?"],
   concept: "상대도수는 도수의 총합에 대한 각 계급의 도수의 비율이야. 즉 (어떤 계급의 상대도수)=(그 계급의 도수)÷(도수의 총합)이야. 도수만 보면 그 계급이 전체에서 많은 편인지 적은 편인지 알기 어려운데, 상대도수를 쓰면 각 계급이 전체에서 차지하는 비중을 바로 알 수 있어. 각 계급의 상대도수를 나타낸 표를 상대도수의 분포표라고 해.",
   media: [],
-  basicProblem: { stem:"도수의 총합이 20이고 어떤 계급의 도수가 5일 때, 이 계급의 상대도수는?", choices:["0.25", "0.2", "4", "5"], answer:0, explain:"5÷20 = 0.25예요.", by:'app', scope:'me' },
+  basicProblem: { stem:"도수의 총합이 20이고 어떤 계급의 도수가 5일 때, 이 계급의 상대도수는?", choices:["4", "0.25", "5", "0.2"], answer:1, explain:"5÷20 = 0.25예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 272쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"116. 도수·상대도수·도수의 총합 사이의 관계") ] = {
   hints: ["상대도수 식을 변형하면 도수는 어떻게 구할까?", "세 값 중 몇 개를 알면 나머지를 구할 수 있을까?"],
   concept: "(상대도수)=(도수)÷(도수의 총합)이라는 식 하나만 기억하면, 이것을 변형해서 나머지도 모두 구할 수 있어. (도수)=(도수의 총합)×(상대도수)이고, (도수의 총합)=(도수)÷(상대도수)야. 도수, 상대도수, 도수의 총합 중 두 개만 알면 나머지 하나는 언제나 구할 수 있어.",
   media: [],
-  basicProblem: { stem:"상대도수가 0.15인 계급의 도수가 30일 때, 도수의 총합은?", choices:["200", "4.5", "45", "150"], answer:0, explain:"(도수의 총합)=(도수)÷(상대도수)=30÷0.15=200이에요.", by:'app', scope:'me' },
+  basicProblem: { stem:"상대도수가 0.15인 계급의 도수가 30일 때, 도수의 총합은?", choices:["4.5", "150", "200", "45"], answer:2, explain:"(도수의 총합)=(도수)÷(상대도수)=30÷0.15=200이에요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 273쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"117. 상대도수의 총합이 1인 이유") ] = {
   hints: ["각 계급의 도수를 모두 더하면 무엇이 될까?", "분모와 분자가 같아지면 값은 얼마일까?"],
   concept: "상대도수의 총합은 언제나 1이야. 각 계급의 상대도수를 모두 더하면 분모는 모두 도수의 총합으로 같고, 분자는 각 계급의 도수를 모두 더한 것이므로 결국 도수의 총합이 되기 때문이야. 즉 (상대도수의 총합)=(도수의 총합)÷(도수의 총합)=1이야. 그래서 각 계급의 상대도수는 0 이상 1 이하의 값이 되고, 상대도수에 100을 곱하면 백분율(%)이 돼.",
   media: [],
-  basicProblem: { stem:"상대도수의 총합은 얼마인가?", choices:["항상 1", "항상 100", "자료마다 다르다", "도수의 총합과 같다"], answer:0, explain:"분자가 도수의 총합이 되어 (도수의 총합)÷(도수의 총합)=1이 되기 때문이에요.", by:'app', scope:'me' },
+  basicProblem: { stem:"상대도수의 총합은 얼마인가?", choices:["자료마다 다르다", "도수의 총합과 같다", "항상 100", "항상 1"], answer:3, explain:"분자가 도수의 총합이 되어 (도수의 총합)÷(도수의 총합)=1이 되기 때문이에요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 273쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"118. 상대도수와 도수의 정비례 관계") ] = {
   hints: ["한 자료 안에서 도수의 총합은 변할까?", "도수가 2배가 되면 상대도수는 어떻게 될까?"],
   concept: "한 자료 안에서는 도수의 총합이 일정하므로, 각 계급의 상대도수는 그 계급의 도수에 정비례해. 도수가 2배가 되면 상대도수도 2배가 되고, 도수가 1/3배가 되면 상대도수도 1/3배가 되지. 따라서 도수가 가장 큰 계급의 상대도수가 가장 크고, 도수가 가장 작은 계급의 상대도수가 가장 작아.",
   media: [],
-  basicProblem: { stem:"도수가 6인 계급의 상대도수가 0.15일 때, 도수가 8인 계급의 상대도수는?", choices:["0.2", "0.15", "0.25", "0.12"], answer:0, explain:"상대도수는 도수에 정비례하므로 6:0.15 = 8:x, x=0.2예요.", by:'app', scope:'me' },
+  basicProblem: { stem:"도수가 6인 계급의 상대도수가 0.15일 때, 도수가 8인 계급의 상대도수는?", choices:["0.2", "0.12", "0.15", "0.25"], answer:0, explain:"상대도수는 도수에 정비례하므로 6:0.15 = 8:x, x=0.2예요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 274쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"119. 상대도수가 필요한 경우") ] = {
   hints: ["도수만 보면 전체에서 많은 편인지 알 수 있을까?", "'상대적'이라는 말은 무엇과 비교한다는 뜻일까?"],
   concept: "상대도수는 도수 자체가 아니라 전체에서 얼마나 차지하는지에 주목할 때 사용해. 도수만 보면 \"몇 명\"인지는 알 수 있지만 그것이 전체에서 많은 편인지 적은 편인지는 알 수 없기 때문이야. \"상대적\"이라는 말이 \"다른 것과 비교하여\"라는 뜻인 것처럼, 전체와 비교하여 얼마나 차지하는지를 알고 싶을 때 상대도수를 써.",
   media: [],
-  basicProblem: { stem:"상대도수를 사용하면 알 수 있는 것은?", choices:["각 계급이 전체에서 차지하는 비율", "각 계급의 실제 변량", "계급의 개수", "자료의 중앙값"], answer:0, explain:"상대도수는 도수의 총합에 대한 비율이므로 전체에서 차지하는 비중을 알려 줘요.", by:'app', scope:'me' },
+  basicProblem: { stem:"상대도수를 사용하면 알 수 있는 것은?", choices:["계급의 개수", "각 계급이 전체에서 차지하는 비율", "각 계급의 실제 변량", "자료의 중앙값"], answer:1, explain:"상대도수는 도수의 총합에 대한 비율이므로 전체에서 차지하는 비중을 알려 줘요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 274쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"120. 도수의 총합이 다른 두 자료의 비교") ] = {
   hints: ["30명 중 10명과 50명 중 10명은 같은 비중일까?", "총합이 서로 다를 때는 무엇을 비교해야 할까?"],
   concept: "도수의 총합이 다른 두 자료는 도수를 그대로 비교하면 안 돼. 예를 들어 한 반은 30명, 다른 반은 50명일 때 똑같이 10명이라도 전체에서 차지하는 비중은 서로 다르기 때문이야. 이럴 때는 상대도수를 비교해야 해. 상대도수는 어느 자료든 총합이 1로 같아지므로 두 자료를 공평하게 비교할 수 있어.",
   media: [],
-  basicProblem: { stem:"도수의 총합이 다른 두 자료를 비교할 때 사용해야 하는 것은?", choices:["상대도수", "도수", "계급값", "계급의 개수"], answer:0, explain:"상대도수는 총합이 모두 1이 되므로 총합이 다른 두 자료도 공평하게 비교할 수 있어요.", by:'app', scope:'me' },
+  basicProblem: { stem:"도수의 총합이 다른 두 자료를 비교할 때 사용해야 하는 것은?", choices:["계급의 개수", "도수", "상대도수", "계급값"], answer:2, explain:"상대도수는 총합이 모두 1이 되므로 총합이 다른 두 자료도 공평하게 비교할 수 있어요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 275쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"121. 상대도수의 분포를 나타낸 그래프") ] = {
   hints: ["히스토그램의 세로축을 상대도수로 바꾸면 어떻게 될까?", "상대도수는 도수와 어떤 관계였지?"],
   concept: "상대도수의 분포를 나타낸 그래프는 히스토그램이나 도수분포다각형과 모양이 똑같고, 세로축에 도수 대신 상대도수를 나타낸다는 점만 달라. 가로축에 계급, 세로축에 상대도수를 잡고 히스토그램이나 도수분포다각형과 같은 방법으로 그리면 돼. 상대도수는 도수에 정비례하므로 그래프의 모양도 도수의 그래프와 같아. 이 그래프와 가로축으로 둘러싸인 부분의 넓이는 (계급의 크기)×(상대도수의 총합)=(계급의 크기)가 돼.",
   media: [],
-  basicProblem: { stem:"상대도수의 분포를 나타낸 그래프에서 세로축에 나타내는 것은?", choices:["상대도수", "도수", "계급값", "변량"], answer:0, explain:"히스토그램·도수분포다각형과 같은 방법으로 그리되 세로축만 상대도수로 바꿔요.", by:'app', scope:'me' },
+  basicProblem: { stem:"상대도수의 분포를 나타낸 그래프에서 세로축에 나타내는 것은?", choices:["계급값", "변량", "상대도수", "도수"], answer:2, explain:"히스토그램·도수분포다각형과 같은 방법으로 그리되 세로축만 상대도수로 바꿔요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 277쪽', by:'app', scope:'me'
 };
 DD_CARDS[ ddConceptId('m1-2','4. 통계',"122. 상대도수의 그래프로 두 자료 비교하기") ] = {
   hints: ["두 그래프를 한 좌표평면에 겹쳐 그리려면 어떤 모양이 좋을까?", "세로축을 상대도수로 하면 두 자료의 총합은 어떻게 될까?"],
   concept: "도수의 총합이 다른 두 자료를 비교할 때는 상대도수의 분포를 나타낸 도수분포다각형 모양의 그래프가 가장 편리해. 도수분포다각형 모양이면 두 자료의 그래프를 한 좌표평면 위에 겹쳐 그릴 수 있고, 세로축이 상대도수이므로 두 자료 모두 총합이 1로 같아져서 공평하게 비교할 수 있기 때문이야.",
   media: [],
-  basicProblem: { stem:"도수의 총합이 다른 두 자료를 비교하는 데 가장 편리한 그래프는?", choices:["상대도수의 분포를 나타낸 도수분포다각형 모양의 그래프", "도수를 나타낸 히스토그램", "줄기와 잎 그림", "막대그래프"], answer:0, explain:"겹쳐 그릴 수 있고 총합이 1로 같아져 공평하게 비교할 수 있어요.", by:'app', scope:'me' },
+  basicProblem: { stem:"도수의 총합이 다른 두 자료를 비교하는 데 가장 편리한 그래프는?", choices:["막대그래프", "줄기와 잎 그림", "상대도수의 분포를 나타낸 도수분포다각형 모양의 그래프", "도수를 나타낸 히스토그램"], answer:2, explain:"겹쳐 그릴 수 있고 총합이 1로 같아져 공평하게 비교할 수 있어요.", by:'app', scope:'me' },
   bookPage: '숨마쿰라우데 중1-2 · 278쪽', by:'app', scope:'me'
 };
 (function(){
@@ -15593,7 +15587,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-const APP_VERSION = 'v75.8-문제검산';
+const APP_VERSION = 'v75.9-문제검산완료';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
