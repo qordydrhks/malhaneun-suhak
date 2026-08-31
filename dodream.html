@@ -1410,6 +1410,19 @@ window.DDOOPI = {
       <!-- [개념 카드 편집기] ce~ 로 격리 -->
       <div id="cecardsTab" style="display:none;">
         <div class="page-head"><div class="page-title">개념 카드 편집 <span class="sub">코드로 문항을 불러와 힌트·개념·문제를 고쳐요</span></div></div>
+        <div class="card" id="ceFreezeCard" style="display:none;">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            <div style="flex:1;min-width:240px;">
+              <div style="font-weight:700;">🔒 기준으로 굳히기 <span style="font-weight:400;opacity:.75;font-size:.9rem;">원장만</span></div>
+              <div id="ceFreezeNote" style="font-size:.9rem;opacity:.8;margin-top:4px;line-height:1.55;">
+                이 기기에서 고친 내용을 파일로 뽑아 둡니다. 개발자가 앱에 넣으면 <b>모든 기기의 기본값</b>이 되고,
+                선생님이 되돌려도 이 기준으로 돌아옵니다.
+              </div>
+            </div>
+            <button id="ceFreezeBtn" class="primary-btn" style="white-space:nowrap;">🔒 기준으로 굳히기</button>
+          </div>
+          <div id="ceFreezeOut" style="margin-top:10px;font-size:.9rem;"></div>
+        </div>
         <div class="card">
           <div class="ce-pick">
             <div class="ce-pick-h">📂 화면으로 고르기 <span>학년·학기 → 대단원 → 중단원 순으로 눌러 찾기</span></div>
@@ -5287,6 +5300,24 @@ const DD_VIDEO_LINKS = {};
 const DD_KEYPOINTS = {};
 
 /* ============================================================
+   [v77.0] DD_FROZEN — 마스터가 「기준으로 굳히기」로 승격한 값
+   · 편집기 수정본(ce:overrides)은 그 기기 localStorage에만 남아서 학생 기기엔 안 간다.
+     그래서 마스터가 승인한 것은 이 표로 옮겨 코드에 박고 배포한다.
+   · 적용 순서: 원본 → DD_FROZEN → 선생님 수정본(ce:overrides)
+     선생님은 자기 화면에서 계속 고칠 수 있지만 그건 그 기기에만 남고,
+     '되돌리기'는 이제 AI 초안이 아니라 **마스터가 굳힌 기준**으로 돌아간다.
+   · 값의 모양은 ce:overrides 한 개념 항목과 똑같다
+     (hints/concept/concepts/keyPoints/bookPage/basicProblem/problems/videoUrl/note/qset/low/high/lowAdd/highAdd).
+   · 채워 넣는 블록은 편집기의 [기준으로 굳히기] 버튼이 만들어 준다. 손으로 쓰지 말 것.
+   ============================================================ */
+const DD_FROZEN = {};
+const DD_FROZEN_EMPH = {};   // 대단원 고정멘트 (대단원코드 → 문구)
+function ddGetFrozen(gradeId, bigName, smallName){
+  try{ return DD_FROZEN[ ddConceptId(gradeId, bigName, smallName) ] || null; }catch(e){ return null; }
+}
+window.DD_FROZEN = DD_FROZEN; window.DD_FROZEN_EMPH = DD_FROZEN_EMPH; window.ddGetFrozen = ddGetFrozen;
+
+/* ============================================================
    [v76.1] DD_QSET — 유형별 말하기 질문 + 기억/이해 채점 기준 + 흔한 오해
    · 기존 low/high 질문은 그대로 둔다. 이건 "나란히" 추가되는 것.
    · 항목이 없는 학년은 지금과 100% 똑같이 동작한다.
@@ -5322,6 +5353,17 @@ const QTYPE_LEVEL = { recall:'low', reason:'high', example:'high', condition:'hi
 function ddGetQSet(gradeId, bigName, smallName){
   const base = DD_QSET[ ddConceptId(gradeId, bigName, smallName) ];
   let out = base ? JSON.parse(JSON.stringify(base)) : null;
+  // [v77.0] 마스터가 굳힌 기준을 원본 위에 먼저 얹는다 (선생님 수정본보다 아래)
+  try{
+    const fz = ddGetFrozen(gradeId, bigName, smallName);
+    if(fz && fz.qset){
+      out = out || { memory:[], understand:[], misconceptions:[], questions:[] };
+      if(fz.qset.memory)         out.memory = fz.qset.memory.slice();
+      if(fz.qset.understand)     out.understand = fz.qset.understand.slice();
+      if(fz.qset.misconceptions) out.misconceptions = fz.qset.misconceptions.slice();
+      if(fz.qset.questions)      out.questions = fz.qset.questions.slice();
+    }
+  }catch(e){}
   try{
     if(typeof ceGetOverride==='function'){
       const ov = ceGetOverride(gradeId, bigName, smallName);
@@ -5417,8 +5459,22 @@ function ddGetCard(gradeId, bigName, smallName){
   const base = ddEmptyCard();
   const saved = DD_CARDS[ ddConceptId(gradeId, bigName, smallName) ];
   const card = saved ? Object.assign(base, saved) : base;
-  // 선생님 편집기 저장본이 있으면 덮어쓰기 (원본 DD_CARDS는 그대로)
   var _ovVideo = null; // 선생님이 지정한 영상 링크 (null = 미지정)
+  // [v77.0] 마스터가 굳힌 기준을 먼저 얹는다 (선생님 수정본보다 아래)
+  try{
+    const fz = ddGetFrozen(gradeId, bigName, smallName);
+    if(fz){
+      if(fz.hints) card.hints = fz.hints.slice();
+      if(fz.concept!=null && fz.concept!=='') card.concept = fz.concept;
+      if(fz.concepts && fz.concepts.length) card.concepts = fz.concepts.slice();
+      if(fz.keyPoints && fz.keyPoints.length) card.keyPoints = fz.keyPoints.slice();
+      if(fz.bookPage!=null && fz.bookPage!=='') card.bookPage = fz.bookPage;
+      if(fz.basicProblem && fz.basicProblem.stem) card.basicProblem = fz.basicProblem;
+      if(fz.problems && fz.problems.length) card.problems = fz.problems.slice();
+      if(fz.videoUrl!=null) _ovVideo = fz.videoUrl;
+    }
+  }catch(e){}
+  // 선생님 편집기 저장본이 있으면 그 위에 덮어쓰기 (원본 DD_CARDS는 그대로)
   try{
     if(typeof ceGetOverride==='function'){
       const ov = ceGetOverride(gradeId, bigName, smallName);
@@ -5745,6 +5801,119 @@ function ceInit(){
   if(inp) inp.addEventListener('keydown', e=>{ if(e.key==='Enter') ceSearch(); });
   ceRender(null);
   try{ cePickRender(); }catch(e){}
+  try{ ceFreezeInit(); }catch(e){}
+}
+
+/* ============================================================
+   [v77.0] 「기준으로 굳히기」 — 이 기기의 수정본을 코드용 파일로 뽑는다
+   왜: 편집기 수정본(ce:overrides)은 이 브라우저 localStorage에만 남는다.
+       마스터 PC에서 고쳐도 학생 태블릿에는 반영되지 않는다.
+       그래서 승인한 것은 파일로 뽑아 코드(DD_FROZEN)에 박고 배포한다.
+   ============================================================ */
+function ceIsOwner(){ try{ return session && session.role === 'owner'; }catch(e){ return false; } }
+
+// 편집기 코드 → {학년, 대단원, 소단원} 역추적표
+function ceCodeMap(){
+  var map = {};
+  Object.keys(CE_GRADE_PREFIX).forEach(function(g){
+    var m=null; try{ m=cpModel(g); }catch(e){ return; }
+    ((m&&m.bigUnits)||[]).forEach(function(b){
+      cpBigMiddles(b).forEach(function(mid){
+        (mid.smalls||[]).forEach(function(sm){
+          var c = ceCode(g, b.name, sm.name);
+          if(c && !map[c]) map[c] = { g:g, big:b.name, small:sm.name };
+        });
+      });
+    });
+  });
+  return map;
+}
+
+function ceFreezeInit(){
+  var card = document.getElementById('ceFreezeCard');
+  if(!card) return;
+  if(!ceIsOwner()){ card.style.display='none'; return; }
+  card.style.display='block';
+  var btn = document.getElementById('ceFreezeBtn');
+  if(btn && !btn._wired){ btn._wired=true; btn.addEventListener('click', ceFreezeRun); }
+  ceFreezeCount();
+}
+
+function ceFreezeCount(){
+  var out = document.getElementById('ceFreezeOut'); if(!out) return;
+  var ov = ceLoadOverrides(), em = ceLoadEmph();
+  var n = Object.keys(ov).length, e = Object.keys(em).length;
+  out.innerHTML = (n||e)
+    ? '지금 이 기기에 <b>개념 ' + n + '개</b>' + (e ? ' · <b>대단원 멘트 ' + e + '개</b>' : '') + '의 수정본이 있습니다.'
+    : '<span style="opacity:.7">아직 고친 내용이 없습니다. 개념을 고치고 저장하면 여기에 나타납니다.</span>';
+}
+
+function ceFreezeRun(){
+  var out = document.getElementById('ceFreezeOut');
+  var ov = ceLoadOverrides(), em = ceLoadEmph();
+  var codes = Object.keys(ov);
+  if(!codes.length && !Object.keys(em).length){
+    if(out) out.innerHTML = '<span style="color:#c0392b">고친 내용이 없어서 굳힐 것이 없습니다.</span>';
+    return;
+  }
+  var map = ceCodeMap(), lines = [], names = [], miss = [];
+  codes.forEach(function(code){
+    var t = map[code];
+    if(!t){ miss.push(code); return; }
+    lines.push('  F(' + JSON.stringify(t.g) + ',' + JSON.stringify(t.big) + ',' + JSON.stringify(t.small) + ',' + JSON.stringify(ov[code]) + ');');
+    names.push(t.g + ' · ' + t.small);
+  });
+
+  // 적용 전 미리보기 → 승인
+  var msg = '아래 ' + lines.length + '개를 기준으로 굳힙니다.\n\n'
+          + names.slice(0,12).join('\n') + (names.length>12 ? '\n… 외 ' + (names.length-12) + '개' : '')
+          + (miss.length ? '\n\n⚠️ 개념을 못 찾아 빠진 코드 ' + miss.length + '개: ' + miss.slice(0,5).join(', ') : '')
+          + '\n\n파일을 만들까요?';
+  if(!confirm(msg)) return;
+
+  var d = new Date();
+  var pad = function(x){ return String(x).padStart(2,'0'); };
+  var stamp = d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()) + '_' + pad(d.getHours()) + pad(d.getMinutes());
+  var txt = '/* ============================================================\n'
+          + '   [굳힘 ' + stamp + '] 마스터 승인 기준 — 개념 ' + lines.length + '개'
+          + (Object.keys(em).length ? ' · 대단원 멘트 ' + Object.keys(em).length + '개' : '') + '\n'
+          + '   붙일 위치: dodream.html 의 function cpModel 바로 앞\n'
+          + '   적용 순서: 원본 → 이 블록(DD_FROZEN) → 선생님 수정본(ce:overrides)\n'
+          + '   ============================================================ */\n'
+          + '(function(){\n'
+          + '  function F(g,b,s,ov){ DD_FROZEN[ ddConceptId(g,b,s) ] = ov; }\n'
+          + lines.join('\n') + '\n'
+          + '})();\n';
+  if(Object.keys(em).length){
+    txt += '(function(){ Object.assign(DD_FROZEN_EMPH, ' + JSON.stringify(em) + '); })();\n';
+  }
+
+  try{
+    var blob = new Blob([txt], {type:'text/javascript;charset=utf-8'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = '굳히기_' + stamp + '.js';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 3000);
+  }catch(e){
+    if(out) out.innerHTML = '<span style="color:#c0392b">파일을 만들지 못했습니다: ' + escapeHtml(String(e.message||e)) + '</span>';
+    return;
+  }
+
+  if(out){
+    out.innerHTML = '✅ <b>굳히기_' + stamp + '.js</b> 를 다운로드 폴더에 저장했습니다. 개발자에게 알려 주세요.'
+                  + '<br><span style="opacity:.8">파일이 실제로 있는지 확인한 뒤 아래를 눌러 이 기기의 수정본을 비우세요.</span>'
+                  + '<br><button id="ceFreezeClear" class="ghost-btn" style="margin-top:8px;">파일 확인했어요 — 이 기기 수정본 비우기</button>';
+    var cb = document.getElementById('ceFreezeClear');
+    if(cb) cb.addEventListener('click', function(){
+      if(!confirm('이 기기의 수정본을 비웁니다.\n(굳히기 파일이 다운로드 폴더에 있는지 먼저 확인하세요)')) return;
+      try{ localStorage.removeItem(CE_STORE_KEY); localStorage.removeItem(CE_EMPH_KEY); }catch(e){}
+      ceFreezeCount();
+      var o=document.getElementById('ceFreezeOut');
+      if(o) o.innerHTML = '✅ 비웠습니다. 개발자가 앱에 넣고 배포하면 그 값이 기본값이 됩니다.';
+      try{ ceRender(null); }catch(e){}
+    });
+  }
 }
 /* [화면고르기] 편집기 드릴다운 — 학생 선택기 데이터(cpModel/GRADES) 재사용, 학생 UI는 안 건드림 */
 var cePick = { grade:null, big:null, middle:null, small:null };
@@ -6046,7 +6215,12 @@ const CE_EMPH_KEY='ce:emphasis:v1';
 function ceLoadEmph(){ try{ return JSON.parse(localStorage.getItem(CE_EMPH_KEY)||'{}'); }catch(e){ return {}; } }
 function ceSaveEmph(o){ try{ localStorage.setItem(CE_EMPH_KEY, JSON.stringify(o)); }catch(e){} }
 function ceBigCode(gradeId, bigName){ var p=CE_GRADE_PREFIX[gradeId]; if(!p) return ''; return p+ceNum(bigName); }
-function ceGetBigEmph(gradeId, bigName){ var k=ceBigCode(gradeId,bigName); return k?(ceLoadEmph()[k]||''):''; }
+function ceGetBigEmph(gradeId, bigName){
+  var k=ceBigCode(gradeId,bigName); if(!k) return '';
+  var loc=ceLoadEmph()[k];                       // 선생님 수정본이 우선
+  if(loc!=null && loc!=='') return loc;
+  try{ return DD_FROZEN_EMPH[k] || ''; }catch(e){ return ''; }   // 없으면 마스터가 굳힌 기준
+}
 function ceSetBigEmph(gradeId, bigName, text){ var k=ceBigCode(gradeId,bigName); if(!k) return; var o=ceLoadEmph(); if(text&&text.trim()) o[k]=text.trim(); else delete o[k]; ceSaveEmph(o); }
 function ceGetConceptNote(gradeId, bigName, smallName){ var ov=ceGetOverride(gradeId,bigName,smallName); return (ov&&ov.note)||''; }
 // 한 개념의 override 가져오기 (없으면 null)
@@ -6058,8 +6232,24 @@ function ceApply(gradeId, bigName, smallName, baseType, baseCard){
   const ov=ceGetOverride(gradeId,bigName,smallName);
   const type = Object.assign({}, baseType||{});
   const card = Object.assign({}, baseCard||{});
+  // [v77.0] 마스터가 굳힌 기준을 먼저 얹는다 (선생님 수정본보다 아래)
+  try{
+    const fz=(typeof ddGetFrozen==='function') ? ddGetFrozen(gradeId,bigName,smallName) : null;
+    if(fz){
+      var _fLow=(baseType&&baseType.low)||[], _fHigh=(baseType&&baseType.high)||[];
+      type.low  = ((fz.low&&fz.low.length)?fz.low.slice():_fLow.slice()).concat(fz.lowAdd||[]);
+      type.high = ((fz.high&&fz.high.length)?fz.high.slice():_fHigh.slice()).concat(fz.highAdd||[]);
+      if(fz.hints)   card.hints   = fz.hints.slice();
+      if(fz.concept!=null) card.concept = fz.concept;
+      if(fz.concepts) card.concepts = fz.concepts.slice();
+      if(fz.keyPoints) card.keyPoints = fz.keyPoints.slice();
+      if(fz.bookPage!=null) card.bookPage = fz.bookPage;
+      if(fz.basicProblem) card.basicProblem = fz.basicProblem;
+      if(fz.problems) card.problems = fz.problems.slice();
+    }
+  }catch(e){}
   if(ov){
-    var _bLow=(baseType&&baseType.low)||[], _bHigh=(baseType&&baseType.high)||[];
+    var _bLow=type.low||((baseType&&baseType.low)||[]), _bHigh=type.high||((baseType&&baseType.high)||[]);
     type.low  = ((ov.low&&ov.low.length)?ov.low.slice():_bLow.slice()).concat(ov.lowAdd||[]);
     type.high = ((ov.high&&ov.high.length)?ov.high.slice():_bHigh.slice()).concat(ov.highAdd||[]);
     if(ov.hints)   card.hints   = ov.hints.slice();
@@ -16028,7 +16218,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-const APP_VERSION = 'v76.4-초6-2쪽수';
+const APP_VERSION = 'v77.0-기준굳히기';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);

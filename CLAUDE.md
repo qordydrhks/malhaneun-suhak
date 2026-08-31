@@ -472,6 +472,12 @@ DD_CURRICULUM의 각 type에 `unitId`도 있어야 한다. 중1-2가 `M1_2_UNITS
 - `DD_MIGRATED_LEGACY_IDS[gradeId]` — 옛 평면배열(M1_2_UNITS 등)에서 DD_CURRICULUM으로 **이미 옮긴 id 목록**.
   학년을 통째로가 아니라 **일부만 옮길 때** 나머지 옛 질문이 사라지지 않게 "교체" 대신 "합치기"로 동작시키는 열쇠.
 - `DD_CARDS[ddConceptId(g,big,small)]` — 개념카드(hints/concept/media/basicProblem/bookPage/keyPoints)
+- `DD_FROZEN[ddConceptId(...)]` — **[v77.0] 마스터가 「기준으로 굳히기」로 승격한 값.**
+  적용 순서는 **원본 → DD_FROZEN → 선생님 수정본(`ce:overrides`)**.
+  값의 모양은 `ce:overrides` 한 항목과 똑같다(hints/concept/keyPoints/bookPage/basicProblem/problems/videoUrl/note/qset/low/high/lowAdd/highAdd).
+  `DD_FROZEN_EMPH`는 대단원 고정멘트용.
+  ⚠️ **손으로 쓰지 말 것.** 편집기의 [기준으로 굳히기] 버튼이 만들어 준 `굳히기_날짜.js` 파일을
+  `function cpModel` 바로 앞에 붙여 넣는다.
 - `DD_VIDEO_LINKS[ddConceptId]` — 앱기본 영상링크(개념→유튜브URL). 상용화 때 비우면 마스터영상 제거.
 - `DD_KEYPOINTS[ddConceptId]` — 앱기본 핵심 채점포인트(초3 71개).
 - `CV_DATA` — 대화형 커리큘럼(유형별 keyPoints/outOfScope/shortConcept 있음).
@@ -532,6 +538,26 @@ DD_CURRICULUM의 각 type에 `unitId`도 있어야 한다. 중1-2가 `M1_2_UNITS
 - 학생 진도: Supabase(submissions: course_id, unit_label, question, score, pass).
 
 **음성:** 브라우저 STT. `window.fixMathSpeech` 자동교정. (Whisper 교체는 후보 과제)
+
+---
+
+### 🔒 「기준으로 굳히기」 — 마스터 승인본을 코드로 올리는 길 [v77.0]
+
+**왜 필요했나:** 편집기 수정본(`ce:overrides`)은 **그 브라우저 localStorage에만** 남는다.
+마스터가 PC에서 고쳐도 **학생 태블릿에는 반영되지 않는다.** 그래서 승인한 것은 코드로 올려야 한다.
+
+**마스터가 하는 일:** 편집기에서 고침 → 편집기 맨 위 **[🔒 기준으로 굳히기]**(원장에게만 보임) 클릭
+→ 미리보기 확인 → `굳히기_날짜.js` 가 다운로드 폴더에 저장됨 → 나에게 "굳히기 파일 만들었어" 라고 알림
+→ 파일 확인 뒤 [이 기기 수정본 비우기] 클릭.
+
+**내가 하는 일:** 다운로드 폴더에서 그 파일을 읽어 `dodream.html`의 `function cpModel` **바로 앞**에
+블록째로 붙이고, `APP_VERSION`을 올리고 커밋한다. 마스터가 푸시하면 전 기기에 반영된다.
+
+**권한:** 굳히기 버튼은 `session.role==='owner'`(PIN 로그인)일 때만 보인다.
+선생님은 자기 기기에서 고칠 수는 있지만 기준은 못 바꾼다. **'되돌리기'는 이제 AI 초안이 아니라
+마스터가 굳힌 기준으로 돌아간다.** 상용화 때 학원이 기준을 못 건드리게 하는 구조가 이것이다.
+
+**핵심 함수:** `ddGetFrozen()` / `ceFreezeRun()`(파일 생성) / `ceCodeMap()`(편집기코드→개념 역추적, 630개).
 
 ---
 
