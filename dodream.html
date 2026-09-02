@@ -12002,7 +12002,11 @@ function cpAppendQuestions(host, bi, mi, si, typ, ti){
   }
   // [v76.1] 유형별 질문(회상·이유·예 만들기·조건·오류 찾기)을 기존 질문 아래에 나란히 붙인다.
   // 이 개념에 DD_QSET 이 없으면 아무것도 안 붙으므로 다른 학년은 지금과 똑같다.
-  if(state.level!=='blank'){
+  // [v77.4] 유형 질문은 '소단원' 단위인데 이 함수는 '유형'마다 불린다.
+  //   그래서 한 소단원에 유형이 2개 이상이면 같은 질문이 유형 수만큼 반복해 그려졌다.
+  //   (전 학년 소단원 341개 중 해당되는 건 3개 — 전부 초3-1 1단원. 그래서 초4~중1-2에선 안 보였다.)
+  //   → 첫 유형(ti===0)에만 붙인다. 유형이 하나뿐인 나머지 학년은 동작이 그대로다.
+  if(state.level!=='blank' && ti===0){
     try{
       const _m=cpModel(CP.grade); const _bg=_m&&_m.bigUnits[bi];
       const _mg=_bg&&cpBigMiddles(_bg)[mi]; const _sm=_mg&&_mg.smalls[si];
@@ -16488,7 +16492,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-const APP_VERSION = 'v77.3-소단원문제';
+const APP_VERSION = 'v77.4-유형질문중복수정';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
