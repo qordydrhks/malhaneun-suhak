@@ -12394,6 +12394,17 @@ ${MF_NOTATION}
   }
 }
 
+/* [v77.5] 질문 화면으로 넘어갈 때의 스크롤.
+   예전엔 window.scrollTo({top:0, behavior:'smooth'})였는데, 설명 카드가 사라지면서
+   문서 길이가 확 줄어드는 순간에 부드러운 스크롤이 겹쳐 '팅기듯' 튀어 올랐다.
+   → 질문 카드 위치로 '즉시' 이동한다(애니메이션 없음). */
+function scrollToQuestionCard(){
+  // 애니메이션 없이 즉시. 배너·단계표시가 조금 늦게 붙어 위치가 밀리는 경우가 있어 한 틱 뒤 한 번 더.
+  // (rAF는 탭이 숨겨져 있으면 안 도는 일이 있어 setTimeout을 쓴다.)
+  try{ window.scrollTo(0, 0); }catch(e){}
+  setTimeout(()=>{ try{ window.scrollTo(0, 0); }catch(e){} }, 0);
+}
+
 async function startSelectedQuestion(){
   if(!state.unitId) return false;
   state.attempt = 0; state.hintsUsed = {};
@@ -12413,7 +12424,7 @@ async function startSelectedQuestion(){
   if(typeof ddShowEmphasis==='function') ddShowEmphasis();
   if(typeof setLearnStep==='function') setLearnStep(2);
   resetRecordingUI();
-  window.scrollTo({top:0, behavior:'smooth'});
+  scrollToQuestionCard();
   return true;
 }
 
@@ -13105,7 +13116,7 @@ function renderFeedback(result, advance, needTeacher){
   const retryBtn = $('retryBtn');
   if(retryBtn) retryBtn.addEventListener('click', ()=>{
     resetRecordingUI();
-    window.scrollTo({top:0, behavior:'smooth'});
+    scrollToQuestionCard();
   });
   const learnBtn = $('learnBtn');
   if(learnBtn) learnBtn.addEventListener('click', ()=>{ if(typeof ddOpenLearn==='function') ddOpenLearn(ddCard); });
@@ -13139,7 +13150,7 @@ function goToNextQuestion(){
   state.hintsUsed = {};
   renderCurrentQuestion();
   resetRecordingUI();
-  window.scrollTo({top:0, behavior:'smooth'});
+  scrollToQuestionCard();
 }
 
 /* ============================================================
@@ -16492,7 +16503,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-const APP_VERSION = 'v77.4-유형질문중복수정';
+const APP_VERSION = 'v77.5-스크롤';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
