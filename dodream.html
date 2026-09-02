@@ -784,6 +784,24 @@
 .cp-question{justify-content:flex-start;gap:7px;}
 
 /* ===== [v62] 트리형 선택기 ===== */
+/* [v77.6-A] STEP 2·3(말로 설명 / 문제 풀기)에서는 위 요약 패널을 접어 질문에 집중시킨다.
+   STEP 1(개념 고르기)로 돌아오면 그대로 다시 보인다. 원래 display 값을 건드리지 않으려고
+   인라인 스타일이 아니라 body 클래스로만 껐다 켠다. */
+body.step-focus #greetSub,
+body.step-focus #myHistoryHost,
+body.step-focus #assignHost,
+body.step-focus #reviewHost{display:none !important;}
+
+/* [v77.6-B] 학년 고르기: 초·중·고 → 학년·학기 → 고른 것만 */
+.cpt-picked{display:flex;align-items:center;gap:9px;padding:10px 12px;background:var(--blue-dim);}
+.cpt-picked .cpt-pband{font-size:10.5px;font-weight:800;color:var(--purple);letter-spacing:.03em;}
+.cpt-picked .cpt-pname{font-size:14px;font-weight:800;color:var(--blue-deep);}
+.cpt-pick-btn{margin-left:auto;border:1px solid #BFCBFF;background:#fff;color:var(--blue-deep);border-radius:8px;padding:5px 10px;font:inherit;font-size:11.5px;font-weight:800;cursor:pointer;}
+.cpt-pick-btn:hover{background:#F4F6FF;}
+.cpt-back{width:100%;display:flex;align-items:center;gap:8px;border:0;background:#F4EFFF;padding:8px 12px;font:inherit;font-size:12px;font-weight:800;color:var(--purple);cursor:pointer;}
+.cpt-back:hover{background:#EDE4FF;}
+.cpt-count{margin-left:auto;font-size:11px;font-weight:700;color:#9A96AE;}
+.cpt-chev{font-size:12px;font-weight:800;color:#9A96AE;}
 .cpt-legend{display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-size:12px;font-weight:700;color:var(--ink-soft);margin:2px 0 12px;}
 .cpt-legend .cpt-lg{display:inline-flex;align-items:center;gap:6px;}
 .cpt-lg .cpt-dot{width:10px;height:10px;border-radius:50%;display:inline-block;}
@@ -4702,6 +4720,8 @@ $('loginBtn').addEventListener('click', async ()=>{
 
 // 학생 화면 3단계 진행 표시 업데이트 (1=고르기, 2=말하기, 3=풀기)
 function setLearnStep(n){
+  // [v77.6-A] 1단계(개념 고르기)에서만 위 요약 패널을 보여준다.
+  try{ document.body.classList.toggle('step-focus', n >= 2); }catch(e){}
   const steps = document.querySelectorAll('#learnSteps .lstep');
   steps.forEach(el=>{
     const s = parseInt(el.dataset.s, 10);
@@ -4981,6 +5001,7 @@ async function loadReviewCards(){
       document.querySelectorAll('#levelSeg button').forEach(b=>b.classList.toggle('active', b.dataset.level===state.level));
       await pickQuestion();
       $('setupCard').style.display='none'; $('questionCard').style.display='block';
+      if(typeof setLearnStep==='function') setLearnStep(2);   // [v77.6] 위 요약 패널 접기
       resetRecordingUI();
       // 맨 위로 올리지 말고, 방금 뜬 문제 카드가 보이도록 그 위치로 부드럽게 이동
       requestAnimationFrame(()=>{
@@ -5234,7 +5255,7 @@ populateUnitSelect();
    과정 → 대단원 → 소단원/유형 → 말하기 단계 → 실제 질문
    기존 gradeSelect/unitSelect와 양방향 동기화하여 기존 학습 로직은 그대로 사용.
    ============================================================ */
-const CP = { grade:null, big:null, middle:null, small:null, type:null, qIndex:null };
+const CP = { grade:null, band:null, big:null, middle:null, small:null, type:null, qIndex:null };
 
 /* ============================================================
    [v62.1] 개념 카드 (Concept Card) — 0단계: 그릇만 정의, 내용은 나중에
@@ -12055,36 +12076,87 @@ function cpAppendQuestions(host, bi, mi, si, typ, ti){
 function cpExpandAll(){ document.querySelectorAll('#cpTree .cpt-node').forEach(n=>{ const k=n.querySelector(':scope>.cpt-kids'); if(k&&k.children.length){ n.classList.add('open'); const tw=n.querySelector(':scope>.cpt-row>.cpt-tw'); if(tw)tw.textContent='−'; } }); }
 function cpCollapseAll(){ document.querySelectorAll('#cpTree .cpt-node').forEach(n=>{ n.classList.remove('open'); const tw=n.querySelector(':scope>.cpt-row>.cpt-tw'); if(tw)tw.textContent='+'; }); }
 
-function cpRender(){
-  // 좌: 과정 목록
-  const coursesHost=document.getElementById('cpCourses');
-  if(coursesHost){
-    coursesHost.innerHTML='';
-    const groups={'초등':[], '중등':[], '고등':[]};
-    GRADES.forEach(g=>{ const band = g.id[0]==='e'?'초등':(g.id[0]==='m'?'중등':'고등'); groups[band].push(g); });
-    for(const band in groups){
-      if(!groups[band].length) continue;
-      const gd=document.createElement('div'); gd.className='cpt-cogroup';
-      const gh=document.createElement('div'); gh.className='cpt-cohead'; gh.textContent=band; gd.appendChild(gh);
-      groups[band].forEach(g=>{
-        const b=document.createElement('button'); b.type='button'; b.className='cpt-coitem'+(CP.grade===g.id?' on':'');
-        const rd=document.createElement('span'); rd.className='cpt-rd';
-        const nm=document.createElement('span'); nm.textContent=g.name;
-        b.appendChild(rd); b.appendChild(nm);
-        b.addEventListener('click', ()=>{ CP.grade=g.id; CP.big=null; CP.small=null; CP.type=null; CP.qIndex=null; state.unitId=null; cpSyncLegacy(); cpRender(); });
-        gd.appendChild(b);
-      });
-      coursesHost.appendChild(gd);
-    }
+/* [v77.6-B] 학년 고르기 3단계.
+   예전엔 학년 17개가 늘 펼쳐져 있어 화면(특히 폰)을 다 먹었다.
+   → ① 초등/중등/고등  ② 그 과정의 학년·학기  ③ 고르면 그 한 줄만 남기고 [선택]으로 다시 열기.
+   CP.band 가 지금 어느 단계인지를 기억한다. 오른쪽 트리·편집기 쪽은 건드리지 않는다. */
+const CP_BANDS = [{key:'e', label:'초등'}, {key:'m', label:'중등'}, {key:'h', label:'고등'}];
+function cpBandOf(gradeId){ if(!gradeId) return null; const c=String(gradeId)[0]; return c==='e'?'e':(c==='m'?'m':'h'); }
+function cpBandLabel(key){ const b=CP_BANDS.find(x=>x.key===key); return b?b.label:''; }
+function cpGradesOfBand(key){ return GRADES.filter(g=>cpBandOf(g.id)===key); }
+function cpChooseGrade(id){
+  CP.grade=id; CP.band=cpBandOf(id);
+  CP.big=null; CP.small=null; CP.type=null; CP.qIndex=null; state.unitId=null;
+  cpSyncLegacy(); cpRender();
+}
+
+function cpRenderCourses(){
+  const host=document.getElementById('cpCourses');
+  if(!host) return;
+  host.innerHTML='';
+  if(CP.grade && !CP.band) CP.band = cpBandOf(CP.grade);
+
+  const mkItem=(label, onClick, extra)=>{
+    const b=document.createElement('button'); b.type='button'; b.className='cpt-coitem';
+    const rd=document.createElement('span'); rd.className='cpt-rd';
+    const nm=document.createElement('span'); nm.textContent=label;
+    b.appendChild(rd); b.appendChild(nm);
+    if(extra && extra.count!=null){ const c=document.createElement('span'); c.className='cpt-count'; c.textContent=extra.count+'개'; b.appendChild(c); }
+    if(extra && extra.chev){ const c=document.createElement('span'); c.className='cpt-chev'; c.textContent='›'; b.appendChild(c); }
+    b.addEventListener('click', onClick);
+    return b;
+  };
+
+  if(CP.grade){
+    // ③ 고른 학년 한 줄
+    const g=GRADES.find(x=>x.id===CP.grade);
+    const row=document.createElement('div'); row.className='cpt-picked';
+    const box=document.createElement('div');
+    const pb=document.createElement('div'); pb.className='cpt-pband'; pb.textContent=cpBandLabel(CP.band);
+    const pn=document.createElement('div'); pn.className='cpt-pname'; pn.textContent=g?g.name:CP.grade;
+    box.appendChild(pb); box.appendChild(pn);
+    const btn=document.createElement('button'); btn.type='button'; btn.className='cpt-pick-btn'; btn.textContent='선택';
+    btn.addEventListener('click', ()=>{
+      CP.grade=null; CP.big=null; CP.small=null; CP.type=null; CP.qIndex=null; state.unitId=null;
+      cpSyncLegacy(); cpRender();
+    });
+    row.appendChild(box); row.appendChild(btn);
+    host.appendChild(row);
+    return;
   }
+
+  if(CP.band){
+    // ② 그 과정의 학년·학기
+    const back=document.createElement('button'); back.type='button'; back.className='cpt-back';
+    const bl=document.createElement('span'); bl.textContent='‹';
+    const bt=document.createElement('span'); bt.textContent=cpBandLabel(CP.band)+' — 다른 과정 고르기';
+    back.appendChild(bl); back.appendChild(bt);
+    back.addEventListener('click', ()=>{ CP.band=null; cpRender(); });
+    host.appendChild(back);
+    const gd=document.createElement('div'); gd.className='cpt-cogroup';
+    cpGradesOfBand(CP.band).forEach(g=>{ gd.appendChild(mkItem(g.name, ()=>cpChooseGrade(g.id))); });
+    host.appendChild(gd);
+    return;
+  }
+
+  // ① 초등 / 중등 / 고등
+  CP_BANDS.forEach(b=>{
+    const list=cpGradesOfBand(b.key);
+    if(!list.length) return;
+    host.appendChild(mkItem(b.label, ()=>{ CP.band=b.key; cpRender(); }, {count:list.length, chev:true}));
+  });
+}
+
+function cpRender(){
+  cpRenderCourses();
   // 우: 트리
   const treeHost=document.getElementById('cpTree'); if(!treeHost) return;
   treeHost.innerHTML='';
   const model = CP.grade ? cpModel(CP.grade) : null;
   const titleEl=document.getElementById('cpTreeTitle'), subEl=document.getElementById('cpTreeSub');
-  if(titleEl) titleEl.textContent = model ? model.name+' 단원' : '과정을 선택하세요';
-  if(subEl) subEl.textContent = model ? '단원을 펼쳐 개념·질문을 고르세요' : '왼쪽에서 과정을 먼저 골라주세요';
-  if(!model){ treeHost.innerHTML='<div class="cpt-empty">왼쪽에서 과정을 골라주세요.</div>'; }
+  if(titleEl) titleEl.textContent = model ? model.name+' 단원' : '학년을 선택하세요';
+  if(subEl) subEl.textContent = model ? '단원을 펼쳐 개념·질문을 고르세요' : '초등·중등·고등에서 학년을 먼저 골라주세요';
+  if(!model){ treeHost.innerHTML='<div class="cpt-empty">학년을 먼저 골라주세요.</div>'; }
   else{
     (model.bigUnits||[]).forEach((big, bi)=>{
       const bigN=cpMakeNode('big', big.name, CP.big===bi);
@@ -12434,6 +12506,7 @@ $('backBtn').addEventListener('click', ()=>{
   $('questionCard').style.display = 'none';
   $('quizCard').style.display = 'none';
   $('setupCard').style.display = 'block';
+  if(typeof setLearnStep==='function') setLearnStep(1);   // [v77.6] 위 요약 패널 다시 보이기
 });
 
 /* ============================================================
@@ -13995,6 +14068,7 @@ function finishQuiz(){
   $('quizCard').style.display = 'none';
   $('questionCard').style.display = 'none';
   $('setupCard').style.display = 'block';
+  if(typeof setLearnStep==='function') setLearnStep(1);   // [v77.6] 위 요약 패널 다시 보이기
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
@@ -16052,7 +16126,7 @@ window.addEventListener('load', ()=>{ try{
     showMenu(); window.scrollTo({top:0,behavior:'smooth'});
   }
   function showMenu(){ sessionEl.style.display='none'; menuEl.style.display='block'; renderNav(); }
-  function backToSetup(){ $('convoCard').style.display='none'; const s=$('setupCard'); if(s) s.style.display='block'; window.scrollTo({top:0,behavior:'smooth'}); }
+  function backToSetup(){ $('convoCard').style.display='none'; const s=$('setupCard'); if(s) s.style.display='block'; if(typeof setLearnStep==='function') setLearnStep(1); window.scrollTo({top:0,behavior:'smooth'}); }
   function findType(id){
     for(const g of CV_DATA.grades){ if(!g.units) continue;
       for(const u of g.units){ if(!u.types) continue;
@@ -16503,7 +16577,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-const APP_VERSION = 'v77.5-스크롤';
+const APP_VERSION = 'v77.6-화면정리';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
