@@ -737,6 +737,11 @@
   .pp-voice .vscore{ font-size:11.5px; font-weight:800; color:#F5CE6A; }
   .pp-growth{ height:110px; padding-top:6px; }
   .pp-empty{ text-align:center; color:#8580AC; font-size:12.5px; padding:18px 0; }
+  /* [v78.6] 학부모 리포트 두 축 */
+  .pp-axis{ margin:2px 0 10px; padding:10px 12px; border-radius:12px; background:#221F45; }
+  .pp-axrow{ display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:12px; font-weight:700; color:#C9C4E8; padding:3px 0; }
+  .pp-axrow .pp-axv{ font-weight:900; color:#fff; }
+  .pp-axnote{ font-size:10.5px; color:#8580AC; font-weight:600; margin-top:6px; line-height:1.5; }
   .pp-foot{ max-width:460px; margin:0 auto; text-align:center; font-size:11px; color:#6B6790; padding:18px; line-height:1.6; background:#12122A; }
 
   /* ============ 문제은행 ============ */
@@ -834,6 +839,17 @@ body.step-focus #reviewHost{display:none !important;}
 .cpt-node.open > .cpt-kids{display:block;}
 .cpt-roll{display:inline-flex;gap:6px;flex:0 0 auto;font-size:10.5px;font-weight:800;}
 .cpt-roll .rp{color:#1F9D63;} .cpt-roll .rr{color:#E0483D;}
+/* [v78.6] 두 축 진도 — 🗣️ 대화형 / ✏️ 본 흐름 (서로 섞지 않고 따로 보여준다) */
+.cvx-axis{padding:10px 14px;border-bottom:1px solid var(--line);background:#FDFDFF;}
+.cvx-row{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;color:var(--ink);margin:3px 0;}
+.cvx-row.off{color:var(--ink-soft);font-weight:700;}
+.cvx-k{flex:0 0 74px;}
+.cvx-bar{flex:1 1 auto;height:7px;border-radius:99px;background:var(--line);overflow:hidden;min-width:60px;}
+.cvx-bar i{display:block;height:100%;border-radius:99px;background:var(--purple);}
+.cvx-row.main .cvx-bar i{background:var(--blue);}
+.cvx-t{color:var(--ink-soft);font-weight:700;}
+.cvx-none{font-size:11.5px;}
+.cvx-note{font-size:11px;color:var(--ink-soft);font-weight:600;margin-top:5px;line-height:1.5;}
 .cpt-st{flex:0 0 auto;font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;}
 .cpt-st.pass{background:#E1F4EA;color:#1F9D63;} .cpt-st.redo{background:#FCE7E5;color:#E0483D;}
 .cpt-row.small.st-pass > .cpt-lbl{color:#1F9D63;text-decoration:underline;text-decoration-color:#9BD9B8;text-underline-offset:3px;}
@@ -1086,6 +1102,7 @@ window.DDOOPI = {
                 <div><div class="cpt-title" id="cpTreeTitle">과정을 선택하세요</div><div class="cpt-sub" id="cpTreeSub">왼쪽에서 과정을 먼저 골라주세요</div></div>
                 <div class="cpt-tools"><button type="button" onclick="cpExpandAll()">모두 펼치기</button><button type="button" onclick="cpCollapseAll()">모두 접기</button></div>
               </div>
+              <div class="cvx-axis" id="cvxAxis" style="display:none"></div>
               <div class="cpt-tree" id="cpTree"></div>
             </div>
           </div>
@@ -15511,6 +15528,8 @@ async function cpLoadRecords(){
     const s = session.student;
     cpRecords = (all||[]).filter(x => s && x.studentId === s.id);
   }catch(e){ cpRecords = []; }
+  // [v78.6] 대화형 통과기록도 서버 기록에서 다시 합친다 (다른 기기에서 한 것 살리기)
+  try{ if(window.cvReloadProgress) window.cvReloadProgress(); }catch(e){}
   cpRender();
 }
 // 한 개념(유형)의 상태: 'pass'(합격) | 'redo'(재도전) | 'none'(미응시)
@@ -15703,8 +15722,101 @@ function cpRenderCourses(){
   });
 }
 
+/* ============================================================
+   [v78.6] cvx — 두 축 진도  🗣️ 대화형 / ✏️ 본 흐름
+   ------------------------------------------------------------
+   · 원본 데이터(DD_CURRICULUM/DD_CARDS)와 대화형 엔진은 건드리지 않는다. 읽어서 세기만 한다.
+   · 두 축을 합치지 않는다. "어디서 뭘 덜 했는지"가 보이는 게 목적.
+   · 짝짓기(대화형 유형 ↔ 본 흐름 소단원)는 두 목록의 '순서'로 맞춘다.
+     개수가 다르면 그 학년은 아예 짝짓지 않는다 (잘못 붙는 것보다 안 붙는 게 낫다).
+   ============================================================ */
+const CVX_GRADE = { 'e3':'e3-1', 'e3_2':'e3-2' };   // 대화형 학년 id → 본 흐름 학년 id
+let _cvxMapCache = null;
+function cvxMap(){
+  if(_cvxMapCache) return _cvxMapCache;
+  const typeToConcept={}, conceptToType={}, gradesReady={};
+  try{
+    const CVD = window.CVX_DATA;
+    if(CVD && CVD.grades){
+      CVD.grades.forEach(g=>{
+        const ddGrade = CVX_GRADE[g.id];
+        if(!ddGrade || !g.units) return;
+        const cvTypes=[];
+        g.units.forEach(u=> (u.types||[]).forEach(t=>{ if(t && t.id) cvTypes.push(t); }));
+        const smalls=[];
+        const model = cpModel(ddGrade);
+        ((model&&model.bigUnits)||[]).forEach(b=> cpBigMiddles(b).forEach(mg=> (mg.smalls||[]).forEach(sm=> smalls.push({big:b.name, small:sm.name}))));
+        if(!cvTypes.length || cvTypes.length !== smalls.length){
+          console.warn('[cvx] 짝짓기 건너뜀 — 개수 불일치', g.id, cvTypes.length, smalls.length);
+          return;
+        }
+        cvTypes.forEach((t,i)=>{
+          const cid = ddConceptId(ddGrade, smalls[i].big, smalls[i].small);
+          typeToConcept[t.id]=cid; conceptToType[cid]=t.id;
+        });
+        gradesReady[ddGrade]=true;
+      });
+    }
+  }catch(e){ console.warn('[cvx] 맵 생성 실패', e); }
+  _cvxMapCache={typeToConcept, conceptToType, gradesReady};
+  return _cvxMapCache;
+}
+// 이 소단원을 '본 흐름'에서 하나라도 통과했나
+function cvxSmallMainPassed(gradeId, big, small, passQ){
+  if(!passQ || !passQ.size) return false;
+  const types = small.types||[];
+  for(const t of types){
+    const qs = [].concat(t.low||[], t.high||[]);
+    for(const q of qs){ if(q && passQ.has(q)) return true; }
+  }
+  try{
+    const qs = (typeof ddGetQSet==='function') ? ddGetQSet(gradeId, big.name, small.name) : null;
+    if(qs && qs.questions){ for(const it of qs.questions){ if(it && it.q && passQ.has(it.q)) return true; } }
+  }catch(e){}
+  return false;
+}
+// 한 학년의 두 축 진도 {total, main, talk, hasTalk}
+function cvxAxis(gradeId){
+  const model = gradeId ? cpModel(gradeId) : null;
+  if(!model) return null;
+  const map = cvxMap();
+  const recs = (typeof cpRecords!=='undefined' && cpRecords) ? cpRecords : [];
+  const passQ = new Set();    // 본 흐름에서 통과한 질문 글자
+  const talkIds = new Set();  // 대화형에서 통과한 유형 id
+  recs.forEach(r=>{
+    if(!r || !r.pass) return;
+    if(r.level==='talk'){ if(r.unitId) talkIds.add(String(r.unitId)); return; }
+    if(r.courseId!==gradeId) return;
+    if(r.question) passQ.add(r.question);
+  });
+  let total=0, main=0, talk=0;
+  (model.bigUnits||[]).forEach(b=> cpBigMiddles(b).forEach(mg=> (mg.smalls||[]).forEach(sm=>{
+    total++;
+    if(cvxSmallMainPassed(gradeId, b, sm, passQ)) main++;
+    const tid = map.conceptToType[ddConceptId(gradeId, b.name, sm.name)];
+    if(tid && talkIds.has(tid)) talk++;
+  })));
+  return { total, main, talk, hasTalk: !!map.gradesReady[gradeId] };
+}
+function cvxBar(done, total){
+  const p = total ? Math.round(done/total*100) : 0;
+  return '<span class="cvx-bar"><i style="width:'+p+'%"></i></span>';
+}
+function cvxRenderAxis(){
+  const host = document.getElementById('cvxAxis'); if(!host) return;
+  let a=null; try{ a = (typeof CP!=='undefined' && CP.grade) ? cvxAxis(CP.grade) : null; }catch(e){}
+  if(!a || !a.total){ host.style.display='none'; host.innerHTML=''; return; }
+  host.style.display='block';
+  const talkRow = a.hasTalk
+    ? '<div class="cvx-row"><span class="cvx-k">🗣️ 대화형</span>'+cvxBar(a.talk,a.total)+'<b>'+a.talk+'</b><span class="cvx-t">/'+a.total+'</span></div>'
+    : '<div class="cvx-row off"><span class="cvx-k">🗣️ 대화형</span><span class="cvx-none">이 학년은 아직 준비 중이에요</span></div>';
+  host.innerHTML = talkRow
+    + '<div class="cvx-row main"><span class="cvx-k">✏️ 본 흐름</span>'+cvxBar(a.main,a.total)+'<b>'+a.main+'</b><span class="cvx-t">/'+a.total+'</span></div>'
+    + '<div class="cvx-note">개념 '+a.total+'개 기준이에요. 대화형은 개념 대화만 하고 문제·복습 알림은 본 흐름에서만 나와요.</div>';
+}
 function cpRender(){
   cpRenderCourses();
+  try{ cvxRenderAxis(); }catch(e){}   // [v78.6] 두 축 진도
   // 우: 트리
   const treeHost=document.getElementById('cpTree'); if(!treeHost) return;
   treeHost.innerHTML='';
@@ -18333,7 +18445,12 @@ function renderParentBody(stu, subs, comment){
 
   // 이번 주 요약
   const weekDays = new Set(weekSubs.map(x => new Date(x.time).toDateString()));
-  const weekConcepts = new Set(weekSubs.filter(x=>x.pass).map(x => x.unitLabel || x.unitId));
+  // [v78.6] 두 축으로 나눠 센다. level==='talk' = 대화형, 나머지 = 본 흐름.
+  const cvIsTalk = x => x && x.level === 'talk';
+  const cvLabel  = x => String((x && (x.unitLabel || x.unitId)) || '').replace(/^\s*🗣️\s*/, '');
+  const weekTalk = new Set(weekSubs.filter(x=>x.pass && cvIsTalk(x)).map(cvLabel));
+  const weekMain = new Set(weekSubs.filter(x=>x.pass && !cvIsTalk(x)).map(cvLabel));
+  const weekConcepts = new Set([...weekMain, ...weekTalk]);
   // 연속 학습일 (오늘부터 거슬러)
   let streak = 0;
   const daySet = new Set(subs.map(x => new Date(x.time).toDateString()));
@@ -18364,11 +18481,19 @@ function renderParentBody(stu, subs, comment){
   }
   const growthHtml = renderGrowthChart(weeks);
 
-  // 마스터한 개념 (이번 주 통과)
-  const mastered = [...weekConcepts];
-  const conceptHtml = mastered.length
-    ? mastered.slice(0,6).map(c => `<div class="pp-concept"><span class="ci">✓</span><span class="cn">${escapeHtml(c)}</span><span class="cd">완료</span></div>`).join('')
-    : '<div class="pp-empty">이번 주 통과한 개념이 곧 여기 표시돼요.</div>';
+  // 마스터한 개념 (이번 주 통과) — [v78.6] 두 축을 나눠서 보여준다
+  const axisHtml = `<div class="pp-axis">
+      <div class="pp-axrow"><span>🗣️ 대화로 설명한 개념</span><span class="pp-axv">${weekTalk.size}개</span></div>
+      <div class="pp-axrow"><span>✏️ 질문·문제로 확인한 개념</span><span class="pp-axv">${weekMain.size}개</span></div>
+      <div class="pp-axnote">대화형은 뚜삐와 개념을 이야기해 보는 가벼운 연습이에요. 문제 풀이와 복습은 아래쪽(질문·문제)에서 진행돼요.</div>
+    </div>`;
+  const mastered = [
+    ...[...weekMain].map(n=>({ n, t:'✏️' })),
+    ...[...weekTalk].filter(n=>!weekMain.has(n)).map(n=>({ n, t:'🗣️' }))
+  ];
+  const conceptHtml = axisHtml + (mastered.length
+    ? mastered.slice(0,6).map(c => `<div class="pp-concept"><span class="ci">${c.t}</span><span class="cn">${escapeHtml(c.n)}</span><span class="cd">완료</span></div>`).join('')
+    : '<div class="pp-empty">이번 주 통과한 개념이 곧 여기 표시돼요.</div>');
 
   // 잘한 음성 (점수 높은 순 2개, transcript 있는 것)
   const goodVoice = subs.filter(x => x.pass && x.transcript && x.transcript.length > 5)
@@ -19700,6 +19825,8 @@ window.addEventListener('load', ()=>{ try{
   ]};
   const CV_SET = { maxFollowUps:4, passStars:2, rewardPerPass:10,
     tone:"아주 다정하고 친근하게, 짧게. 절대 '틀렸다'고 하지 않기." };
+  // [v78.6] 두 축 진도(cvx)가 개념을 짝지을 때 목록만 읽어 간다. 엔진 동작에는 영향 없음.
+  window.CVX_DATA = CV_DATA;
 
   const $=(id)=>document.getElementById(id);
   const menuEl=$('cvMenu'), sessionEl=$('cvSession'), chat=$('cvChat'),
@@ -19709,11 +19836,39 @@ window.addEventListener('load', ()=>{ try{
   let CUR=null, cv, failStreak=0, demoLocked=false, totalPoints=0;
   let passedMap={};
   // 포인트·통과기록을 계정별로 저장/불러오기 (새로고침해도 유지)
-  function cvSid(){ const s=(window.session&&window.session.student)?window.session.student:null; return s? s.id : 'guest'; }
+  // [v78.6] 예전엔 window.session만 봤는데 session은 스크립트 전역 let이라 window에 없다.
+  //   → cvSid()가 늘 'guest'를 돌려줘서, 학원 태블릿을 여러 학생이 쓰면
+  //     대화형 포인트·통과기록이 한 덩어리로 섞였다. 실제 학생 id를 쓰도록 고친다.
+  function cvSid(){
+    let s=null;
+    try{ if(typeof session!=='undefined' && session && session.student) s=session.student; }catch(_){}
+    if(!s && window.session && window.session.student) s=window.session.student;
+    return s ? s.id : 'guest';
+  }
   function loadPoints(){
     try{ totalPoints=parseInt(localStorage.getItem('cv:points:'+cvSid())||'0',10)||0; }catch(_){ totalPoints=0; }
     passedMap={};
     try{ (JSON.parse(localStorage.getItem('cv:passed:'+cvSid())||'[]')||[]).forEach(id=>{ passedMap[id]=true; }); }catch(_){}
+    mergeFromServer();
+  }
+  // [v78.6] 통과기록은 이 기기 localStorage에만 있었다 → 학원 태블릿에서 통과하고
+  //   집에서 열면 사라졌다. 서버(submissions, level==='talk')에 남은 기록도 합친다.
+  //   포인트는 '큰 쪽'을 쓴다 — 합치다가 줄어드는 일이 없게.
+  function mergeFromServer(){
+    try{
+      const recs = (typeof cpRecords!=='undefined' && cpRecords) ? cpRecords : [];
+      if(!recs.length) return;
+      let changed=false, calc=0;
+      const seen={};
+      recs.forEach(r=>{
+        if(!r || r.level!=='talk' || !r.pass || !r.unitId) return;
+        const id=String(r.unitId);
+        if(!passedMap[id]){ passedMap[id]=true; changed=true; }
+        if(!seen[id]){ seen[id]=true; calc += Math.min(10, Math.max(1, Math.round((r.score||0)/10))); }
+      });
+      if(calc > totalPoints){ totalPoints=calc; changed=true; }
+      if(changed) savePoints();
+    }catch(e){ console.warn('[cv] 서버 통과기록 합치기 실패', e); }
   }
   function savePoints(){
     try{ localStorage.setItem('cv:points:'+cvSid(), String(totalPoints));
@@ -20142,6 +20297,8 @@ window.addEventListener('load', ()=>{ try{
   // 최근 학습에서 클릭 연결용 전역 노출
   window.cvOpenType = openType;
   window.cvHasType = (id)=>!!findType(id);
+  // [v78.6] 기록을 새로 읽은 뒤(로그인·서버 응답 도착) 대화형 통과표시도 갱신하려고 노출.
+  window.cvReloadProgress = loadPoints;
 
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   // [v61.2] 기존 Step2 마이크와 동일하게 interimResults=false 로 처리 → 중간결과가 겹쳐 반복되는 눈덩이 버그 차단.
@@ -20182,7 +20339,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-const APP_VERSION = 'v78.5-고1-1학기';
+const APP_VERSION = 'v78.6-두축진도';
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
