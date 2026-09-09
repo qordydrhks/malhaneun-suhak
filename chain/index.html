@@ -107,6 +107,38 @@
     font-size:13px; color:var(--sub); line-height:1.65; animation:fade .22s both;
   }
 
+  /* ── 수식 표시 (말하는 수학 v75.1 mfmt와 같은 서체 — 브랜드 일관) ── */
+  .mf{font-family:"STIX Two Text","Noto Serif KR",Georgia,"Times New Roman",serif;}
+  .mf-v{font-style:italic;}
+  .mf-frac{display:inline-flex; flex-direction:column; text-align:center; margin:0 .18em;
+    font-size:.9em; line-height:1.15; vertical-align:middle; position:relative; top:-.08em;}
+  .mf-num{border-bottom:1px solid currentColor; padding:0 .32em;}
+  .mf-den{padding:1px .32em 0;}
+  .mf-rad{white-space:nowrap;}
+  .mf-rcd{border-top:1px solid currentColor; padding:1px .14em 0 .05em; margin-left:-.06em;}
+  sup.mf-sup{font-size:.68em; vertical-align:.55em; line-height:0;}
+  sub.mf-sub{font-size:.68em; vertical-align:-.2em; line-height:0;}
+
+  /* ── 계산해서 직접 답 넣기 (선택지로 주면 너무 쉬움) ── */
+  .solve{margin-top:12px;}
+  .sq{font-size:14.5px; font-weight:600; line-height:1.6;}
+  .sin{display:flex; align-items:center; gap:8px; margin-top:11px;}
+  .sin input{
+    flex:1; min-width:0; padding:12px 13px; font-size:16px; font-family:inherit;
+    color:var(--ink); background:var(--card);
+    border:1.5px solid var(--line); border-radius:11px;
+  }
+  .sin input:focus{outline:none; border-color:var(--blue);}
+  .sin .su{font-size:14px; font-weight:700; color:var(--sub);}
+  .sin button{
+    flex:0 0 auto; padding:12px 18px; border:none; border-radius:11px;
+    background:var(--ink); color:#fff; font-size:14px; font-weight:800; cursor:pointer;
+  }
+  .sfb{margin-top:9px; font-size:13px; line-height:1.6; color:var(--sub);}
+  .sfb.bad{color:#B4442F;}
+  .solve.done .sin{opacity:.5; pointer-events:none;}
+  .solve.done .sfb{color:var(--ink); font-weight:700;}
+
   /* ── 위에 붙어 따라오는 문제 바 (층이 쌓여 문제가 화면 밖으로 나갈 때) ── */
   .stick{
     position:fixed; left:0; right:0; top:0; z-index:70;  /* 도형 오버레이(60)보다 위 — 문제와 도형을 같이 보게 */
@@ -229,7 +261,16 @@
               end:true → 답에 도착한 노드
    ═══════════════════════════════════════════════════════════ */
 const PROBLEMS = [
-/* ══════════ 중2-2  Ⅴ. 도형의 성질 ══════════ */
+/* ══════════ 중2-2  Ⅴ. 도형의 성질 ══════════
+   ★ 문제를 만들 때 지킬 것
+   1) note/ask는 중립적으로. 답을 암시하면 고를 게 정해져 버린다.
+   2) 정답 선택지에만 괄호 설명을 달지 말 것 — 그게 곧 정답 표시가 된다.
+      오답도 정답과 같은 길이·같은 꼴로 쓴다.
+   3) 오답은 "그 자체로 맞는 말인데 안 이어지는 것" 또는 "실제로 자주 하는 실수"만.
+      말도 안 되는 것은 자리만 차지한다.
+   4) 값이 우연히 맞는 오답은 넣지 않는다 (아이가 억울하고 헷갈린다).
+   5) 계산은 선택지로 주지 말고 solve(직접 입력)로. 식을 고른 뒤 대입까지 골라주면 너무 쉽다.
+   ═══════════════════════════════════════════ */
 {
   id:'t01', unit:'1. 삼각형의 성질', pick:'이등변삼각형 · 각 추적',
   tag:'중2 · 이등변삼각형의 성질 활용',
@@ -260,63 +301,68 @@ const PROBLEMS = [
   ],
   nodes:{
     goal:{ label:'∠DBC를 구해야 한다',
-      ask:'∠DBC는 어느 삼각형 안에 있는 각일까? 그 삼각형부터 봐야겠지?',
-      hint:'D, B, C로 만들어지는 삼각형이 하나 더 있어.',
+      ask:'∠DBC는 어느 삼각형에 들어 있는 각일까?',
+      hint:'D, B, C 세 점으로도 삼각형이 만들어져.',
       items:[
         {t:'△DBC를 따로 떼어 본다', next:'iso2'},
-        {t:'∠ABC에서 ∠ABD를 뺀다', why:'방향은 맞지만 ∠ABD를 아직 모르죠. △DBC를 보는 게 빠릅니다.'},
-        {t:'∠A와 크기가 같다', why:'답은 정말 36°지만, 지금은 그걸 알 방법이 없어요. 위치가 다른 각이 저절로 같아지진 않아요.'},
-        {t:'삼각형의 외각의 성질을 쓴다', why:'여기선 외각이 필요한 자리가 아니에요.'}
+        {t:'△ABD를 따로 떼어 본다', why:'△ABD에는 아직 크기를 아는 각이 하나도 없어요.'},
+        {t:'∠ABC를 반으로 나눈다', why:'BD가 ∠ABC의 이등분선이라는 조건은 없어요.'},
+        {t:'△ABC의 세 각을 모두 구한다', why:'∠DBC는 △ABC의 각이 아니에요. ∠ABC의 일부죠.'}
       ]},
     iso1:{ label:'AB=AC인 이등변삼각형이다',
-      note:'이등변삼각형에서 떠오르는 것들이에요. ∠DBC로 이어지는 걸 골라보세요.',
+      note:'이등변삼각형에서 알 수 있는 것들이에요.',
       hint:'∠A를 알면 알 수 있는 각이 있지.',
       items:[
-        {t:'두 밑각의 크기가 같다 (∠ABC = ∠ACB)', next:'base'},
-        {t:'세 변의 길이가 모두 같다', why:'같은 건 AB와 AC 두 변뿐이에요. BC는 다를 수 있죠.'},
-        {t:'세 각의 크기가 모두 같다', why:'그건 정삼각형이에요.'},
-        {t:'꼭지각의 이등분선이 밑변을 수직이등분한다', why:'맞는 성질이지만 이 문제엔 그 이등분선이 그려져 있지 않아요.'},
-        {t:'∠ABC = 36°이다', why:'36°는 꼭지각 ∠A예요. 밑각과 꼭지각을 섞지 않도록 조심해요.'}
+        {t:'두 밑각의 크기가 같다', next:'base'},
+        {t:'세 각의 크기가 모두 같다', why:'그건 정삼각형이에요. 여기서 같은 변은 두 개뿐이죠.'},
+        {t:'한 밑각의 크기는 꼭지각의 절반이다', why:'그런 관계는 없어요. 세 각의 합으로 구해야 해요.'},
+        {t:'꼭지각의 이등분선이 밑변을 수직이등분한다', why:'맞는 성질이지만 이 문제에는 그 이등분선이 없어요.'},
+        {t:'외심과 내심이 한 직선 위에 있다', why:'맞는 성질이지만 각의 크기와는 이어지지 않아요.'}
       ]},
     angA:{ label:'∠A = 36°이다',
-      note:'이 각을 어디에 쓸 수 있을까요?',
+      note:'이 값을 어디에 쓸 수 있을까요?',
       hint:'삼각형 세 각의 합은 180°.',
       items:[
-        {t:'세 각의 합 180°에서 빼서 두 밑각의 합을 구한다', next:'base'},
-        {t:'나머지 두 각도 36°씩이다', why:'세 각의 합이 108°가 되어버려요.'},
-        {t:'180° − 36° = 144°가 한 밑각이다', why:'144°는 두 밑각을 합친 값이에요. 하나는 그 절반이죠.'}
+        {t:'세 각의 합 180°를 이용한다', next:'base'},
+        {t:'삼각형의 외각의 성질을 이용한다', why:'아직 외각을 쓸 자리가 없어요. 세 각의 합이 더 빠릅니다.'},
+        {t:'∠A가 가장 작으므로 BC가 가장 짧다', why:'맞는 성질이지만 각의 크기를 구하는 데는 안 쓰여요.'},
+        {t:'36°를 3으로 나눠 각 각에 배분한다', why:'세 각이 모두 같은 건 정삼각형일 때예요.'}
       ]},
-    base:{ label:'두 밑각의 합이 144°이다',
-      note:'두 밑각은 크기가 같아요. 하나는 얼마일까요?',
-      hint:'같은 것 두 개를 합쳐서 144°.',
-      items:[
-        {t:'∠ABC = ∠ACB = 72°', next:'iso2'},
-        {t:'∠ABC = ∠ACB = 144°', why:'144°는 둘을 합친 값이에요. 반으로 나눠야 하죠.'},
-        {t:'∠ABC = 72°, ∠ACB = 36°', why:'두 밑각은 크기가 같아요. 서로 다를 수 없죠.'}
-      ]},
+    base:{ label:'세 각의 합으로 밑각을 구한다',
+      solve:{ q:'∠ABC의 크기는 몇 도일까요? 계산해서 넣어보세요.', unit:'°', accept:['72'],
+              wrong:'180°에서 꼭지각을 뺀 값을 두 밑각이 똑같이 나눠 가져요.',
+              say:'맞아요. 두 밑각이 각각 72°예요.' },
+      hint:'세 각의 합은 180°이고, 밑각 두 개는 크기가 같아.',
+      next:'iso2'},
     iso2:{ label:'BD = BC 이다',
-      note:'△DBC도 두 변의 길이가 같아요. 그럼 어느 두 각이 같아지죠?',
-      hint:'같은 두 변이 각각 마주보는 각끼리 같아져.',
+      note:'△DBC의 두 변의 길이가 같아요.',
+      hint:'같은 두 변이 각각 마주보는 각을 찾아봐.',
       items:[
-        {t:'∠BDC = ∠BCD (BD와 BC가 각각 마주보는 각)', next:'calc'},
-        {t:'∠DBC = ∠BCD', why:'BD=BC이면 이 두 변이 마주보는 각이 같아요. ∠DBC는 두 변 사이에 끼인 각이라 달라요.'},
-        {t:'∠BDC = ∠DBC', why:'마주보는 짝을 다시 확인해보세요. BD가 마주보는 각은 ∠BCD예요.'},
-        {t:'△DBC는 정삼각형이다', why:'같은 변은 두 개뿐이에요. DC까지 같다는 조건은 없죠.'}
+        {t:'∠BDC = ∠BCD 이다', next:'calc'},
+        {t:'∠DBC = ∠BCD 이다', why:'BD와 BC가 마주보는 각이 같아요. ∠DBC는 그 두 변 사이에 끼인 각이죠.'},
+        {t:'∠BDC = ∠DBC 이다', why:'BD가 마주보는 각은 ∠BCD예요. 짝을 다시 확인해봐요.'},
+        {t:'D는 변 AC의 중점이다', why:'BD=BC라고 해서 D가 AC의 중점이 되지는 않아요.'}
       ]},
     calc:{ label:'∠BDC = ∠BCD 이다',
-      note:'∠BCD는 이미 구해놓은 각이에요. 어느 각이죠?',
-      hint:'점 D는 변 AC 위에 있어. 그럼 ∠BCD는 △ABC의 어느 각과 같은 각일까?',
+      note:'∠BCD의 크기를 알 수 있을까요?',
+      hint:'점 D가 변 AC 위에 있다는 걸 다시 봐.',
       items:[
-        {t:'D가 AC 위에 있으므로 ∠BCD는 ∠ACB와 같은 각 → 72°', next:'end1'},
-        {t:'∠BCD = 36°이다', why:'36°는 ∠A였어요. ∠BCD는 밑각 자리죠.'},
-        {t:'∠BCD는 새로 구해야 한다', why:'D가 변 AC 위에 있으니 ∠BCD와 ∠ACB는 같은 각이에요. 이미 구했죠.'}
+        {t:'∠BCD는 ∠ACB와 같은 각이다', next:'fin'},
+        {t:'∠BCD는 ∠ACB의 절반이다', why:'D가 변 AC 위에 있어서 두 각은 완전히 같은 각이에요.'},
+        {t:'∠BCD는 새로 구해야 한다', why:'D가 변 AC 위에 있으니 이미 구해둔 각과 같은 각이에요.'},
+        {t:'∠BCD는 ∠A와 같은 각이다', why:'∠A는 꼭지각이에요. ∠BCD는 밑각 자리죠.'}
       ]},
+    fin:{ label:'△DBC의 두 각을 알았다',
+      solve:{ q:'∠DBC의 크기는 몇 도일까요?', unit:'°', accept:['36'],
+              wrong:'△DBC의 세 각의 합도 180°예요. 아는 두 각을 먼저 더해봐요.' },
+      hint:'△DBC에서 두 각이 각각 72°야.',
+      next:'end1'},
     end1:{ end:true,
       lines:['△ABC에서 ∠ABC = ∠ACB = (180° − 36°) ÷ 2 = 72°',
              '△DBC에서 BD=BC이므로 ∠BDC = ∠BCD = 72°',
              '∠DBC = 180° − (72° + 72°)'],
       ans:'∠DBC = 36°',
-      cmt:'이등변삼각형을 두 번 쓴 문제예요. 큰 삼각형에서 한 번, 작은 삼각형에서 또 한 번. "같은 변이 마주보는 각끼리 같다"를 정확히 짚는 게 갈림길이었어요.'}
+      cmt:'이등변삼각형을 두 번 쓴 문제예요. 큰 삼각형에서 한 번, 작은 삼각형에서 또 한 번. "같은 변이 마주보는 각끼리 같다"에서 짝을 정확히 짚는 게 갈림길이었어요.'}
   }
 },
 {
@@ -343,60 +389,61 @@ const PROBLEMS = [
   ],
   nodes:{
     goal:{ label:'내접원의 반지름을 구해야 한다',
-      ask:'반지름이 직접 주어지지 않았어요. 반지름이 들어 있는 식이 뭐가 있었을까?',
-      hint:'내접원의 반지름은 넓이 식 안에 숨어 있어.',
+      ask:'반지름이 직접 주어지지 않았어요. 반지름이 들어갈 수 있는 자리가 어디일까?',
+      hint:'내심에서 세 변까지의 거리가 모두 반지름이야.',
       items:[
-        {t:'삼각형의 넓이를 반지름으로 나타내는 식을 쓴다', next:'areaform'},
-        {t:'접점까지의 길이로 식을 세운다', next:'tangent'},
-        {t:'빗변의 절반이 반지름이다 (5cm)', why:'빗변의 절반은 외접원의 반지름이에요. 외심과 내심을 섞지 않도록 조심해요.'},
-        {t:'가장 짧은 변의 절반이 반지름이다 (3cm)', why:'그런 성질은 없어요.'}
+        {t:'삼각형의 넓이를 반지름으로 다시 써 본다', next:'areaform'},
+        {t:'접점까지의 길이를 반지름으로 써 본다', next:'tangent'},
+        {t:'빗변의 절반을 반지름으로 쓴다', why:'그건 외접원의 반지름이에요. 내접원과 외접원을 섞지 않도록 해요.'},
+        {t:'내심에서 꼭짓점까지의 거리를 쓴다', why:'내심에서 같은 거리인 곳은 세 꼭짓점이 아니라 세 변이에요.'}
       ]},
     sides:{ label:'세 변이 6cm, 8cm, 10cm이다',
-      note:'이 세 숫자에서 먼저 알아낼 수 있는 게 있어요.',
-      hint:'6, 8, 10 … 어디서 본 조합 아니야?',
+      note:'이 세 숫자에서 알아낼 수 있는 것이 있어요.',
+      hint:'세 수를 각각 제곱해서 비교해봐.',
       items:[
         {t:'6² + 8² = 10² 이므로 직각삼각형이다', next:'area'},
         {t:'세 변을 더하면 둘레가 24cm이다', next:'goal'},
-        {t:'세 변의 길이가 모두 다르므로 쓸 성질이 없다', why:'6²+8² = 36+64 = 100 = 10². 직각삼각형이에요.'},
-        {t:'가장 긴 변이 10cm이므로 이등변삼각형이다', why:'세 변의 길이가 모두 달라요.'}
+        {t:'가장 긴 변이 10cm이므로 둔각삼각형이다', why:'6²+8²이 10²과 정확히 같으면 직각이에요. 작을 때가 둔각이죠.'},
+        {t:'세 변의 길이가 모두 달라 쓸 성질이 없다', why:'세 수를 제곱해서 비교해보면 바로 보이는 게 있어요.'}
       ]},
     area:{ label:'직각삼각형이다',
-      note:'직각을 알았으니 넓이를 바로 구할 수 있어요.',
-      hint:'직각을 끼고 있는 두 변이 밑변과 높이야.',
-      items:[
-        {t:'넓이 = ½ × 6 × 8 = 24cm²', next:'goal'},
-        {t:'넓이 = 6 × 8 = 48cm²', why:'삼각형은 그 절반이에요.'},
-        {t:'넓이 = ½ × 8 × 10 = 40cm²', why:'10cm는 빗변이에요. 높이가 아니죠.'}
-      ]},
+      solve:{ q:'△ABC의 넓이는 몇 cm²일까요?', unit:'cm²', accept:['24'],
+              wrong:'직각을 끼고 있는 두 변이 밑변과 높이예요. 삼각형이니 ½도 잊지 말고요.',
+              say:'맞아요. 넓이가 24cm²예요.' },
+      hint:'직각을 낀 두 변은 6cm와 8cm.',
+      next:'goal'},
     areaform:{ label:'넓이를 반지름 r로 나타낸다',
-      note:'내심에서 세 변까지의 거리가 모두 r이에요. 내심과 세 꼭짓점을 이어 삼각형을 세 조각으로 나눠보면?',
+      note:'내심과 세 꼭짓점을 이어 삼각형을 세 조각으로 나눠보세요.',
       hint:'세 조각이 전부 삼각형이고, 높이가 모두 r이야.',
       items:[
-        {t:'넓이 = ½ × r × (둘레)', next:'solve'},
+        {t:'넓이 = ½ × r × (둘레)', next:'rsolve'},
         {t:'넓이 = r × (둘레)', why:'조각이 각각 삼각형이라 ½이 붙어요.'},
         {t:'넓이 = ½ × r × (가장 긴 변)', why:'세 변 모두에 조각이 붙어 있어요. 둘레 전체를 써야 하죠.'},
-        {t:'넓이 = π r²', why:'그건 원의 넓이예요. 지금 구하는 건 삼각형의 넓이죠.'}
+        {t:'넓이 = ½ × r² × (둘레)', why:'세 조각의 높이가 r이에요. r이 두 번 들어갈 자리는 없죠.'}
       ]},
-    solve:{ label:'넓이 = ½ × r × (둘레)',
-      note:'넓이 24cm², 둘레 24cm를 넣어봐요.',
-      hint:'24 = ½ × r × 24.',
-      items:[
-        {t:'24 = ½ × r × 24 = 12r → r = 2', next:'end_a'},
-        {t:'24 ÷ 24 = 1 이므로 r = 1', why:'½을 빠뜨렸어요. 24가 아니라 12로 나눠야 해요.'},
-        {t:'r = 2인데 단위는 cm²이다', why:'r은 길이예요. 단위는 cm죠.'}
-      ]},
+    rsolve:{ label:'넓이 = ½ × r × (둘레)',
+      solve:{ q:'넓이와 둘레를 넣어 r을 구해보세요.', unit:'cm', accept:['2'],
+              wrong:'넓이는 24cm², 둘레는 24cm예요. 24 = ½ × r × 24 를 정리해봐요.' },
+      hint:'½ × 24 = 12.',
+      next:'end_a'},
     tangent:{ label:'접점까지의 길이로 식을 세운다',
-      note:'직각을 낀 두 변에서 직각 쪽 접점까지의 거리는 각각 r이에요. 남은 부분을 빗변으로 이어보면?',
+      note:'직각을 낀 두 변에서 직각 쪽 접점까지의 거리는 각각 r이에요.',
       hint:'한 점에서 원에 그은 두 접선의 길이는 같아.',
       items:[
-        {t:'(6 − r) + (8 − r) = 10', next:'end_b'},
+        {t:'(6 − r) + (8 − r) = 10', next:'tsolve'},
         {t:'(6 + r) + (8 + r) = 10', why:'접점은 변 안쪽에 있어요. 빼야 하죠.'},
-        {t:'6 − r = 8 − r 이다', why:'두 변의 길이가 다르니 남은 부분도 서로 달라요.'}
+        {t:'(6 − r) + (8 − r) = 6 + 8', why:'남은 두 부분을 합치면 빗변의 길이가 돼요.'},
+        {t:'6 − r = 8 − r', why:'두 변의 길이가 다르니 남은 부분도 서로 달라요.'}
       ]},
+    tsolve:{ label:'(6 − r) + (8 − r) = 10',
+      solve:{ q:'이 식을 풀어 r을 구해보세요.', unit:'cm', accept:['2'],
+              wrong:'왼쪽을 정리하면 14 − 2r 이에요.' },
+      hint:'6과 8을 먼저 더해봐.',
+      next:'end_b'},
     end_a:{ end:true,
       lines:['6² + 8² = 10² → 직각삼각형','넓이 = ½ × 6 × 8 = 24cm², 둘레 = 6+8+10 = 24cm','24 = ½ × r × 24 = 12r'],
       ans:'r = 2cm',
-      cmt:'같은 넓이를 두 가지로 쓴 게 열쇠였어요. 하나는 숫자로(24), 하나는 r로(½×r×둘레). 같은 것을 두 방법으로 쓰면 식이 생깁니다.'},
+      cmt:'같은 넓이를 두 가지로 쓴 게 열쇠였어요. 하나는 숫자로(24), 하나는 r로(½ × r × 둘레). 같은 것을 두 방법으로 쓰면 식이 생깁니다.'},
     end_b:{ end:true,
       lines:['6² + 8² = 10² → 직각삼각형','두 접선의 길이가 같으므로 빗변 = (6 − r) + (8 − r)','10 = 14 − 2r'],
       ans:'r = 2cm',
@@ -431,74 +478,73 @@ const PROBLEMS = [
   ],
   nodes:{
     goal:{ label:'EC의 길이를 구해야 한다',
-      ask:'EC는 변 BC의 일부예요. BC와 BE를 알면 되겠죠?',
-      hint:'BC는 어느 변과 길이가 같을까?',
+      ask:'EC는 어느 변의 일부일까?',
+      hint:'BC를 두 조각으로 나눈 것 중 하나야.',
       items:[
-        {t:'BC의 길이와 BE의 길이를 각각 알아본다', next:'para'},
-        {t:'AD에서 AB를 그냥 뺀다 (10 − 6 = 4)', why:'답은 맞지만 왜 그렇게 되는지가 빠졌어요. BE = AB인 이유를 못 대면 숫자가 바뀌면 또 막힙니다.'},
-        {t:'AD의 절반이다 (5cm)', why:'E가 BC의 중점이라는 조건은 없어요.'},
-        {t:'AB와 같다 (6cm)', why:'AB와 같아지는 건 BE예요. EC는 남은 부분이죠.'}
+        {t:'BC 전체와 BE의 길이를 각각 알아본다', next:'para'},
+        {t:'△AEC의 세 변을 먼저 구한다', why:'△AEC에는 아직 아는 길이가 없어요. BC와 BE부터 봐야 하죠.'},
+        {t:'AD의 절반을 구한다', why:'E가 BC의 중점이라는 조건은 없어요.'},
+        {t:'AB와 같은 길이를 찾는다', why:'AB와 같아지는 건 BE예요. EC는 남은 부분이죠.'}
       ]},
     para:{ label:'평행사변형이다',
-      note:'평행사변형에서 떠오르는 것들이에요. EC로 이어지는 걸 골라보세요.',
+      note:'평행사변형에서 알 수 있는 것들이에요.',
       hint:'이등분선이 지나가는 곳에 평행선이 있어.',
       items:[
         {t:'AD ∥ BC 이므로 엇각의 크기가 같다', next:'alt'},
-        {t:'두 쌍의 대변의 길이가 각각 같다 (BC = AD)', next:'bc0'},
-        {t:'두 쌍의 대각의 크기가 각각 같다', why:'맞는 성질이지만 EC의 길이로는 이어지지 않아요.'},
-        {t:'두 대각선이 서로 다른 것을 이등분한다', why:'이 문제에는 대각선이 그려져 있지 않아요.'},
-        {t:'네 변의 길이가 모두 같다', why:'그건 마름모예요. 평행사변형은 마주보는 변끼리만 같죠.'}
+        {t:'두 쌍의 대변의 길이가 각각 같다', next:'bc0'},
+        {t:'두 쌍의 대각의 크기가 각각 같다', why:'맞는 성질이지만 길이로는 이어지지 않아요.'},
+        {t:'이웃하는 두 내각의 합이 180°이다', why:'맞는 성질이지만 EC의 길이와는 이어지지 않아요.'},
+        {t:'두 대각선이 서로 다른 것을 이등분한다', why:'이 문제에는 대각선이 그려져 있지 않아요.'}
       ]},
     bisect:{ label:'∠A의 이등분선이다',
-      note:'∠BAE와 ∠DAE의 크기가 같아요. 이걸 어디에 쓸까요?',
+      note:'∠BAE와 ∠DAE의 크기가 같아요.',
       hint:'∠DAE와 크기가 같은 각이 △ABE 안에 하나 더 있어.',
       items:[
         {t:'평행선의 엇각을 찾아본다', next:'alt'},
+        {t:'△ABE와 △ADE가 합동이다', why:'AE는 공통이지만 나머지가 맞지 않아요. E는 AD 위의 점이 아니죠.'},
         {t:'이등분선이 변 BC도 이등분한다', why:'각의 이등분선이 변까지 이등분하는 건 이등변삼각형일 때뿐이에요.'},
-        {t:'이등분선이 BC와 수직이다', why:'수직이라는 조건은 없어요.'},
-        {t:'∠BAE = ∠ABE 이다', why:'이등분선만으로는 알 수 없어요. 평행선을 한 번 거쳐야 하죠.'}
+        {t:'이등분선이 변 BC와 수직이다', why:'수직이라는 조건은 없어요.'}
       ]},
-    alt:{ label:'AD ∥ BC 이므로 ∠DAE = ∠AEB (엇각)',
-      note:'∠DAE = ∠BAE 였죠. 그럼 ∠BAE와 ∠AEB는 어떤 관계일까요?',
+    alt:{ label:'AD ∥ BC 이므로 ∠DAE = ∠AEB',
+      note:'∠DAE = ∠BAE 였죠.',
       hint:'같은 것과 같은 것은 서로 같아.',
       items:[
-        {t:'∠BAE = ∠AEB → △ABE는 이등변삼각형', next:'iso'},
-        {t:'∠BAE = ∠AEB → △ABE는 정삼각형', why:'두 각이 같다는 것뿐이에요. 세 각이 60°라는 뜻은 아니죠.'},
-        {t:'∠BAE = ∠AEB → △ABE는 직각삼각형', why:'두 각이 같다고 직각이 생기진 않아요.'},
-        {t:'∠DAE와 ∠AEB는 동위각이다', why:'AD와 BC 사이를 AE가 가로지르고 있으니 엇각이에요. 그림에서 두 각의 위치를 확인해보세요.'}
+        {t:'∠BAE = ∠AEB 이므로 △ABE는 이등변삼각형', next:'iso'},
+        {t:'∠BAE = ∠AEB 이므로 △ABE는 정삼각형', why:'두 각이 같다는 것뿐이에요. 세 각이 60°라는 뜻은 아니죠.'},
+        {t:'∠AEB = ∠AEC 이므로 AE는 BC와 수직', why:'그 두 각을 합치면 180°예요. 서로 같지 않죠.'},
+        {t:'∠DAE와 ∠AEB는 동위각이다', why:'AE가 두 평행선 사이를 가로지르고 있으니 엇각이에요.'}
       ]},
     iso:{ label:'△ABE가 이등변삼각형이다',
-      note:'∠BAE = ∠AEB이므로 이 두 각이 각각 마주보는 두 변의 길이가 같아요. 어느 두 변이죠?',
-      hint:'∠BAE가 마주보는 변, ∠AEB가 마주보는 변을 각각 찾아봐.',
+      note:'같은 두 각이 각각 마주보는 변을 찾아보세요.',
+      hint:'∠BAE가 마주보는 변, ∠AEB가 마주보는 변을 각각 짚어봐.',
       items:[
-        {t:'BE = AB = 6cm', next:'sub'},
-        {t:'AE = AB = 6cm', why:'∠BAE가 마주보는 변은 BE예요. AE는 두 각 사이에 끼인 변이죠.'},
-        {t:'BE = AD = 10cm', why:'AD는 △ABE의 변이 아니에요.'},
-        {t:'BE = 3cm (AB의 절반)', why:'이등분된 건 각이지 변이 아니에요.'}
+        {t:'BE = AB 이다', next:'sub'},
+        {t:'AE = AB 이다', why:'∠BAE가 마주보는 변은 BE예요. AE는 두 각 사이에 끼인 변이죠.'},
+        {t:'BE = AE 이다', why:'같은 각은 ∠BAE와 ∠AEB예요. 짝을 다시 확인해봐요.'},
+        {t:'BE = AD 이다', why:'AD는 △ABE의 변이 아니에요.'}
       ]},
-    bc0:{ label:'BC = AD = 10cm 이다',
-      note:'BC 전체를 알았어요. 그런데 EC까지 가려면 하나가 더 필요해요.',
+    bc0:{ label:'BC = AD 이다',
+      note:'BC 전체를 알았어요. 아직 하나가 더 필요해요.',
       hint:'BC = BE + EC 니까, BE를 알아야 해.',
       items:[
-        {t:'BE를 알아야 한다 → ∠A의 이등분선 조건을 본다', next:'bisect'},
-        {t:'BC의 절반이 EC이다 (5cm)', why:'E가 BC의 중점이 아니에요.'},
-        {t:'BC에서 AB를 빼면 된다', why:'결과는 맞지만 AB는 BC 위의 길이가 아니에요. AB와 같은 BE를 먼저 밝혀야 하죠.'}
+        {t:'BE를 알아야 한다 → ∠A의 이등분선을 본다', next:'bisect'},
+        {t:'EC = BC의 절반이다', why:'E가 BC의 중점이 아니에요.'},
+        {t:'EC = AD − BC 이다', why:'AD와 BC는 길이가 같아서 0이 되어버려요.'},
+        {t:'BC를 알았으니 EC도 바로 알 수 있다', why:'BC를 어디서 나눴는지를 모르면 EC는 정해지지 않아요.'}
       ]},
-    sub:{ label:'BE = 6cm 이다',
-      note:'BC 전체는 대변 AD와 같아 10cm예요. 이제 EC는?',
-      hint:'BC = BE + EC.',
-      items:[
-        {t:'EC = BC − BE = 10 − 6', next:'end1'},
-        {t:'EC = BC − AD = 10 − 10 = 0', why:'AD가 아니라 BE(=6cm)를 빼야 해요.'},
-        {t:'EC = BE = 6cm', why:'E가 BC의 중점이 아니라서 두 조각의 길이가 달라요.'}
-      ]},
+    sub:{ label:'BE = AB 이다',
+      solve:{ q:'EC의 길이는 몇 cm일까요?', unit:'cm', accept:['4'],
+              wrong:'BC = BE + EC 예요. BE와 BC의 길이를 각각 다시 확인해봐요.' },
+      hint:'BE = AB = 6cm, BC = AD = 10cm.',
+      next:'end1'},
     len:{ label:'AB=6cm, AD=10cm이다',
       note:'두 길이가 각각 어디에 쓰일까요?',
       hint:'AD는 BC와, AB는 BE와 이어져.',
       items:[
-        {t:'AD는 대변 BC와 같고, AB는 BE와 같아질 것 같다', next:'para'},
-        {t:'AB=6이므로 EC도 6cm이다', why:'AB와 같아지는 건 BE예요.'},
-        {t:'두 길이를 더해 16cm를 쓴다', why:'더할 자리가 아니에요. BC에서 BE를 빼야 하죠.'}
+        {t:'AD는 대변 BC와, AB는 BE와 이어질 것 같다', next:'para'},
+        {t:'AD는 대변 BC와, AB는 AE와 이어질 것 같다', why:'AB와 같아지는 건 AE가 아니라 BE예요.'},
+        {t:'두 길이의 비 6:10을 이용한다', why:'비가 아니라 실제 길이로 풀리는 문제예요.'},
+        {t:'두 길이를 더해 16cm를 쓴다', why:'더할 자리가 아니에요.'}
       ]},
     end1:{ end:true,
       lines:['AD ∥ BC 이므로 ∠DAE = ∠AEB (엇각)',
@@ -758,8 +804,118 @@ const PROBLEMS = [
 }
 ];
 
+/* ============================================================
+   [v75.1] mfmt — 수식을 교재처럼 보이게 하는 '표시 전용' 변환기
+   · 원본 데이터는 절대 바꾸지 않는다. 화면에 그릴 때만 쓴다.
+   · 채점(evaluateWithClaude)·저장에는 쓰지 말 것 — 원래 글자가 그대로 가야 한다.
+   · 편집기의 입력칸(textarea)에도 쓰지 말 것 — 편집이 깨진다.
+   ============================================================ */
+/* mfmt — 수식 표시 전용 포매터 (원본 데이터는 건드리지 않는다)
+   plain text -> HTML. 채점/저장에는 절대 쓰지 말 것. 화면 출력에만. */
+(function(){
+  function esc(s){ return String(s==null?'':s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  var OPS = /[=+\-*\/^√∪∩⊂⊄∈∉≤≥≠×÷²³⁻]/;
+  // 수식 덩어리 후보: 영문/숫자/여는괄호/√ 로 시작
+  var GREEK = 'πθαβγλμφωΔΣΩ';
+  var RUN = /[A-Za-z0-9(√πθ∠][A-Za-z0-9 +\-*\/^=<>≤≥≠()\[\]{}∪∩⊂⊄∈∉∅√|,.×÷·²³⁻¹⁰′°_πθαβγλμφωΔΣΩ∠∽≡∥⊥½⅓¼⅔¾]*/g;
+
+  // 균형 잡힌 괄호 덩어리를 s[i]부터 읽는다. 여는 괄호가 아니면 null.
+  function group(s,i){
+    if(s[i]!=='(') return null;
+    var d=0;
+    for(var j=i;j<s.length;j++){
+      if(s[j]==='(') d++;
+      else if(s[j]===')'){ d--; if(!d) return s.slice(i,j+1); }
+    }
+    return null;
+  }
+  // 분수의 한쪽 피연산자를 뒤/앞에서 읽는다
+  var TOKEN = /[A-Za-z0-9²³ⁿ_.]+$/;
+  function leftOperand(s,i){            // s[0..i-1] 의 끝에서
+    if(s[i-1]===')'){ var d=0; for(var j=i-1;j>=0;j--){ if(s[j]===')')d++; else if(s[j]==='('){d--; if(!d) return [j,s.slice(j,i)];} } return null; }
+    var m=TOKEN.exec(s.slice(0,i)); if(!m||!m[0]) return null;
+    if(s[i-1-m[0].length]==='√') return null;      // √a/… 는 √까지 포함
+    return [i-m[0].length, m[0]];
+  }
+  function rightOperand(s,i){           // s[i..] 의 앞에서
+    var gp=group(s,i); if(gp) return gp;
+    var m=/^[A-Za-z0-9²³ⁿ_.]+/.exec(s.slice(i)); return m?m[0]:null;
+  }
+
+  function strip(t){ return (t.length>1 && t[0]==='(' && group(t,0)===t) ? t.slice(1,-1) : t; }
+
+  // 한 덩어리 안을 재귀적으로 꾸민다
+  function inner(t){
+    var out='', i=0;
+    while(i<t.length){
+      var ch=t[i];
+      // 근호
+      if(ch==='√'){
+        var gp=group(t,i+1), body;
+        if(gp){ body=gp.slice(1,-1); i+=1+gp.length; }
+        else { var m=/^[A-Za-z0-9²³_.]+/.exec(t.slice(i+1)); if(m){ body=m[0]; i+=1+m[0].length; } else { out+='√'; i++; continue; } }
+        out+='<span class="mf-rad">√<span class="mf-rcd">'+inner(body)+'</span></span>';
+        continue;
+      }
+      // 위첨자
+      if(ch==='^'){
+        var gp2=group(t,i+1), sup;
+        if(gp2){ sup=gp2.slice(1,-1); i+=1+gp2.length; }
+        else { var m2=/^-?[A-Za-z0-9]+/.exec(t.slice(i+1)); if(m2){ sup=m2[0]; i+=1+m2[0].length; } else { out+='^'; i++; continue; } }
+        out+='<sup class="mf-sup">'+inner(sup)+'</sup>';
+        continue;
+      }
+      // 아래첨자: 영문자 뒤 숫자
+      if(/[A-Za-z]/.test(ch) && /\d/.test(t[i+1]||'')){
+        var m3=/^\d+/.exec(t.slice(i+1));
+        out+='<i class="mf-v">'+ch+'</i><sub class="mf-sub">'+m3[0]+'</sub>';
+        i+=1+m3[0].length; continue;
+      }
+      if(/[A-Za-z]/.test(ch)){ out+='<i class="mf-v">'+ch+'</i>'; i++; continue; }
+      out+=esc(ch); i++;
+    }
+    return out;
+  }
+
+  // 분수 처리 후 inner()
+  function expr(t){
+    var k=t.indexOf('/');
+    while(k>0){
+      if(t[k-1]!=='/' && t[k+1]!=='/'){
+        var L=leftOperand(t,k), R=L?rightOperand(t,k+1):null;
+        if(L && R){
+          return expr(t.slice(0,L[0]))
+            + '<span class="mf-frac"><span class="mf-num">'+expr(strip(L[1]))+'</span>'
+            + '<span class="mf-den">'+expr(strip(R))+'</span></span>'
+            + expr(t.slice(k+1+R.length));
+        }
+      }
+      k=t.indexOf('/',k+1);
+    }
+    return inner(t);
+  }
+
+  function mfmt(s){
+    var src=String(s==null?'':s), out='', last=0, m;
+    RUN.lastIndex=0;
+    while((m=RUN.exec(src))){
+      var raw=m[0], start=m.index;
+      var trimmed=raw.replace(/\s+$/,'');
+      if(trimmed.length<2 || !OPS.test(trimmed)){ continue; }
+      out += esc(src.slice(last,start)) + '<span class="mf">'+expr(trimmed)+'</span>';
+      last = start + trimmed.length;
+      RUN.lastIndex = last;
+    }
+    return out + esc(src.slice(last));
+  }
+  window.mfmt = mfmt;
+})();
+
+
 /* ─── 상태 ─── */
-let cur = null, openedKeys = [], path = [], hintUsed = 0;
+let cur = null, openedKeys = [], path = [], hintUsed = 0, solveTries = 0;
 function P(){ return PROBLEMS[cur]; }
 
 function shuffle(a){
@@ -828,7 +984,7 @@ function paintSentence(box){
   P().sentence.forEach((s,i)=>{
     const sp = document.createElement('span');
     sp.className = 'tk' + (s.key && openedKeys.includes(s.key) ? ' found' : '');
-    sp.textContent = s.t;
+    sp.innerHTML = mfmt(s.t);
     sp.onclick = ()=> tapPiece(i);
     box.appendChild(sp);
   });
@@ -897,22 +1053,24 @@ function openNode(key, fromSentence){
   const layer = document.createElement('div');
   layer.className = 'layer';
   layer.dataset.key = key;
-  let html = '<div class="hd">' + node.label + '</div>';
-  if(node.ask)  html += '<div class="ask">'  + node.ask  + '</div>';
-  if(node.note) html += '<div class="note">' + node.note + '</div>';
-  html += '<div class="opts"></div>';
+  let html = '<div class="hd">' + mfmt(node.label) + '</div>';
+  if(node.ask)  html += '<div class="ask">'  + mfmt(node.ask)  + '</div>';
+  if(node.note) html += '<div class="note">' + mfmt(node.note) + '</div>';
+  html += node.solve ? solveHTML(node) : '<div class="opts"></div>';
   layer.innerHTML = html;
   document.getElementById('flow').appendChild(layer);
 
+  if(node.solve){ bindSolve(key, layer); }
+
   // 선택지 순서를 매번 섞습니다 (정답이 늘 위에 오지 않도록)
   const br = layer.querySelector('.opts');
-  const order = shuffle(node.items.map((_,i)=>i));
+  const order = shuffle((node.items||[]).map((_,i)=>i));
   order.forEach((origIdx, pos)=>{
     const it = node.items[origIdx];
     const b = document.createElement('button');
     b.className = 'item';
     b.style.animationDelay = (pos*0.05)+'s';
-    b.textContent = it.t;
+    b.innerHTML = mfmt(it.t);
     b.onclick = ()=> choose(key, origIdx, b, layer);
     br.appendChild(b);
   });
@@ -925,7 +1083,7 @@ function openNode(key, fromSentence){
       hintUsed++;
       const tx = document.createElement('div');
       tx.className = 'hinttxt';
-      tx.textContent = node.hint;
+      tx.innerHTML = mfmt(node.hint);
       hb.classList.add('gone');
       layer.insertBefore(tx, hb.nextSibling);
     };
@@ -935,13 +1093,61 @@ function openNode(key, fromSentence){
   setTimeout(()=> layer.scrollIntoView({behavior:'smooth', block:'center'}), 120);
 }
 
+/* ── 계산해서 답 넣기 ──────────────────────────────────────
+   식을 고른 다음 "숫자를 어디에 넣나"를 또 선택지로 주면 너무 쉽다.
+   고른 식에 맞춰 학생이 직접 계산해서 넣게 한다. */
+function solveHTML(node){
+  const sv = node.solve;
+  return '<div class="solve">'
+    + '<div class="sq">' + mfmt(sv.q) + '</div>'
+    + '<div class="sin">'
+    +   '<input type="text" inputmode="decimal" autocomplete="off" placeholder="' + (sv.ph || '숫자만') + '">'
+    +   (sv.unit ? '<span class="su">' + sv.unit + '</span>' : '')
+    +   '<button type="button">확인</button>'
+    + '</div>'
+    + '<div class="sfb"></div>'
+    + '</div>';
+}
+
+function numOnly(v){ return String(v).replace(/[^0-9./]/g, ''); }
+
+function bindSolve(key, layer){
+  const node = P().nodes[key], sv = node.solve;
+  const box = layer.querySelector('.solve');
+  const inp = box.querySelector('input');
+  const btn = box.querySelector('button');
+  const fb  = box.querySelector('.sfb');
+  const ok  = sv.accept.map(numOnly);
+
+  function submit(){
+    if(box.classList.contains('done')) return;
+    const v = numOnly(inp.value);
+    if(!v){ fb.className = 'sfb bad'; fb.textContent = '숫자를 넣어보세요.'; return; }
+    if(ok.includes(v)){
+      box.classList.add('done');
+      layer.classList.add('done');
+      fb.className = 'sfb';
+      fb.innerHTML = '✓ ' + mfmt(sv.say || ('맞았어요. ' + inp.value + (sv.unit||'')));
+      const hb = layer.querySelector('.hintbtn'); if(hb) hb.classList.add('gone');
+      if(node.next) setTimeout(()=> openNode(node.next, false), 420);
+    }else{
+      solveTries++;
+      fb.className = 'sfb bad';
+      fb.innerHTML = mfmt(sv.wrong || '다시 계산해볼까요?');
+      inp.select();
+    }
+  }
+  btn.onclick = submit;
+  inp.onkeydown = e=>{ if(e.key === 'Enter'){ e.preventDefault(); submit(); } };
+}
+
 function choose(key, idx, btn, layer){
   const it = P().nodes[key].items[idx];
   if(btn.classList.contains('pickd') || btn.classList.contains('miss')) return;
 
   if(it.next){
     btn.classList.add('pickd');
-    btn.innerHTML = '<span class="chk">✓</span>' + it.t;
+    btn.innerHTML = '<span class="chk">✓</span>' + mfmt(it.t);
     layer.classList.add('done');
     const others = [...layer.querySelectorAll('.item')].filter(o=>o!==btn);
     others.forEach(o=> o.classList.add('hidden'));
@@ -962,20 +1168,21 @@ function choose(key, idx, btn, layer){
     setTimeout(()=> openNode(it.next, false), 380);
   }else{
     btn.classList.add('miss');
-    btn.innerHTML = it.t + '<span class="why">' + it.why + '</span>';
+    btn.innerHTML = mfmt(it.t) + '<span class="why">' + mfmt(it.why) + '</span>';
   }
 }
 
 function showEnd(node){
   const div = document.createElement('div');
   div.className = 'final';
-  const hmsg = hintUsed === 0 ? '힌트 없이 끝까지 갔어요.' : ('힌트 ' + hintUsed + '번 사용');
+  let hmsg = hintUsed === 0 ? '힌트 없이 끝까지 갔어요.' : ('힌트 ' + hintUsed + '번 사용');
+  if(solveTries) hmsg += ' · 계산 고쳐 넣기 ' + solveTries + '번';
   div.innerHTML = '<h3>식을 세워 답 구하기</h3>'
-    + node.lines.map(l=>'<div class="fl">' + l + '</div>').join('')
-    + '<div class="ans">' + node.ans + '</div>'
-    + '<div class="cmt">' + node.cmt + '</div>'
+    + node.lines.map(l=>'<div class="fl">' + mfmt(l) + '</div>').join('')
+    + '<div class="ans">' + mfmt(node.ans) + '</div>'
+    + '<div class="cmt">' + mfmt(node.cmt) + '</div>'
     + '<div class="pathbox"><span class="pl">네가 따라간 생각의 길</span>'
-    +   path.map((p,i)=> '<span class="step">' + (i ? '<span class="arw">→</span>' : '') + '<span class="chip">' + p + '</span></span>').join('')
+    +   path.map((p,i)=> '<span class="step">' + (i ? '<span class="arw">→</span>' : '') + '<span class="chip">' + mfmt(p) + '</span></span>').join('')
     +   '<span class="hcount">' + hmsg + '</span>'
     + '</div>'
     + '<button class="retry" onclick="restart()">다른 길로도 풀어보기</button>';
@@ -985,7 +1192,7 @@ function showEnd(node){
 
 function restart(){
   if(cur === null) return;
-  openedKeys = []; path = []; hintUsed = 0;
+  openedKeys = []; path = []; hintUsed = 0; solveTries = 0;
   document.getElementById('flow').innerHTML = '';
   renderProblem(); renderFig();
   document.getElementById('stick').classList.remove('on');
