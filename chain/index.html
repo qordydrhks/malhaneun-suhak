@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>생각 사슬</title>
+<style>
+  :root{
+    --ink:#14152B; --blue:#4C6FFF; --paper:#F6F5FA; --card:#FFF;
+    --line:#E6E4EF; --sub:#6E6C85; --dim:#9C9AAE;
+    /* 말하는 수학과 같은 브랜드색 (지금 화면에선 안 씀 — 나중 합칠 때 대비) */
+    --purple:#8B5CF6; --gold:#E9A63C; --sage:#22A06B;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink); line-height:1.6;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+  }
+  button{font-family:inherit;}
+  .wrap{max-width:560px; margin:0 auto; padding:0 18px 76px;}
+
+  /* ── 문제 목록 ── */
+  .home{padding:26px 0 8px;}
+  .home h1{font-size:21px; font-weight:800; letter-spacing:-.5px; margin:0 0 6px;}
+  .home .sub{font-size:13.5px; color:var(--sub); margin:0 0 24px; line-height:1.6;}
+  .grp{font-size:11.5px; font-weight:800; color:var(--dim); letter-spacing:.07em; margin:26px 2px 10px;}
+  .row{
+    display:flex; align-items:center; gap:12px; width:100%; text-align:left;
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:14px 15px; margin-bottom:6px; cursor:pointer;
+  }
+  .row:active{background:#FAFAFD;}
+  .row .no{flex:0 0 16px; font-size:12px; font-weight:800; color:var(--dim);}
+  .row .ttl{flex:1; font-size:14.5px; font-weight:700; color:var(--ink); line-height:1.45;}
+  .row .ttl small{display:block; font-size:12px; font-weight:500; color:var(--sub); margin-top:3px;}
+  .row .go{color:#CFCDDD; font-size:16px; font-weight:700;}
+
+  /* ── 문제 화면 ── */
+  .back{
+    display:inline-block; margin:18px 0 0; padding:6px 0;
+    background:none; border:none; cursor:pointer;
+    font-size:13px; font-weight:700; color:var(--dim);
+  }
+  .back:active{color:var(--sub);}
+  .tag{font-size:11.5px; font-weight:800; letter-spacing:.04em; color:var(--dim); margin:12px 0 7px;}
+  .prob{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:18px 17px; font-size:16.5px; line-height:2.1; font-weight:500;
+  }
+  .tk{display:inline; border-radius:5px; cursor:pointer;}
+  .tk:active{background:#EDECF5; box-shadow:0 0 0 3px #EDECF5;}
+  .tk.found{
+    background:#EAF0FF; box-shadow:0 0 0 3px #EAF0FF;
+    border-bottom:2px solid var(--blue); font-weight:700;
+  }
+
+  .guide{font-size:13px; color:var(--sub); margin:14px 2px 0; line-height:1.65;}
+  .guide b{color:var(--ink); font-weight:700;}
+  .guide .cnt{color:var(--blue); font-weight:800; white-space:nowrap;}
+  .toast{
+    margin:10px 2px 0; padding:9px 12px; font-size:12.5px; color:var(--sub);
+    background:#EDECF5; border-radius:10px; line-height:1.55; animation:fade .22s both;
+  }
+
+  /* ── 생각의 흐름 (타임라인) ── */
+  .flow{margin-top:28px; position:relative; padding-left:22px;}
+  .flow:before{content:''; position:absolute; left:3px; top:9px; bottom:10px; width:1.5px; background:#D3D0E4;}
+  .flow:empty:before{display:none;}
+  .layer{position:relative; margin-bottom:28px;}
+  .layer:last-child{margin-bottom:0;}
+  .layer .hd{position:relative; font-size:14.5px; font-weight:800; line-height:1.5;}
+  .layer .hd:before{
+    content:''; position:absolute; left:-22px; top:8px;
+    width:8px; height:8px; border-radius:50%; background:#fff;
+    box-shadow:0 0 0 1.5px #D3D0E4;
+  }
+  .layer.done .hd:before{background:var(--ink); box-shadow:0 0 0 1.5px var(--ink);}
+  .ask{
+    margin:10px 0 0; padding:13px 14px; border-radius:11px; background:#EFF3FF;
+    font-size:14.5px; font-weight:600; line-height:1.6; color:#1F2C6B;
+  }
+  .note{margin:8px 0 0; font-size:13px; color:var(--sub); line-height:1.65;}
+  .opts{margin-top:12px;}
+  .item{
+    display:block; width:100%; text-align:left; color:var(--ink);
+    background:var(--card); border:1px solid var(--line); border-radius:11px;
+    padding:13px 14px; margin-bottom:6px; font-size:14.5px; line-height:1.5;
+    cursor:pointer; animation:rise .26s ease both;
+  }
+  .item:active{background:#FAFAFD;}
+  .item.pickd{background:var(--ink); border-color:var(--ink); color:#fff; cursor:default;}
+  .item.pickd .chk{margin-right:7px; font-weight:800; opacity:.5;}
+  .item.miss{background:#FAFAFC; color:var(--sub); cursor:default;}
+  .item .why{display:block; margin-top:7px; font-size:12.5px; color:var(--sub); line-height:1.6;}
+  .item.hidden{display:none;}
+
+  .hintbtn, .more{
+    background:none; border:none; cursor:pointer; padding:6px 0;
+    text-decoration:underline; text-underline-offset:3px;
+  }
+  .hintbtn{margin:3px 0 0; font-size:12.5px; font-weight:700; color:var(--dim);}
+  .more{margin:4px 0 0; font-size:12px; color:var(--dim);}
+  .hintbtn:active, .more:active{color:var(--sub);}
+  .hintbtn.gone{display:none;}
+  .hinttxt{
+    margin:8px 0 0; padding:2px 0 2px 12px; border-left:2px solid var(--line);
+    font-size:13px; color:var(--sub); line-height:1.65; animation:fade .22s both;
+  }
+
+  /* ── 도형 ── */
+  .fig{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:15px 12px 11px; margin-top:10px; text-align:center;
+  }
+  .fig svg{max-width:225px; width:100%; height:auto; display:block; margin:0 auto;}
+  .fig .cap{margin-top:9px; font-size:11.5px; color:var(--dim);}
+
+  /* ── 도착 ── */
+  .final{margin-top:32px; background:var(--ink); color:#fff; border-radius:16px; padding:21px 19px;}
+  .final h3{margin:0 0 13px; font-size:11.5px; font-weight:800; letter-spacing:.09em; color:rgba(255,255,255,.45);}
+  .final .fl{margin:8px 0; font-size:14.5px; line-height:1.65; color:rgba(255,255,255,.88);}
+  .final .ans{
+    margin-top:16px; padding-top:15px; border-top:1px solid rgba(255,255,255,.15);
+    font-size:19px; font-weight:800;
+  }
+  .final .cmt{margin-top:13px; font-size:13px; line-height:1.75; color:rgba(255,255,255,.6);}
+  .pathbox{margin-top:18px; padding-top:16px; border-top:1px solid rgba(255,255,255,.15);}
+  .pathbox .pl{
+    display:block; margin-bottom:10px; font-size:11.5px; font-weight:800;
+    letter-spacing:.07em; color:rgba(255,255,255,.42);
+  }
+  .pathbox .chip{
+    display:inline-block; margin:0 4px 5px 0; padding:5px 10px; border-radius:7px;
+    background:rgba(255,255,255,.1); font-size:12.5px; color:rgba(255,255,255,.9);
+  }
+  .pathbox .step{display:inline-block; white-space:nowrap;}
+  .pathbox .arw{margin-right:4px; color:rgba(255,255,255,.28);}
+  .pathbox .hcount{display:block; margin-top:9px; font-size:12px; color:rgba(255,255,255,.42);}
+  .retry{
+    display:block; width:100%; margin-top:18px; padding:13px 0; border:none;
+    border-radius:11px; background:#fff; color:var(--ink);
+    font-size:14.5px; font-weight:800; cursor:pointer;
+  }
+  .again{
+    display:block; width:100%; margin-top:22px; padding:12px 0;
+    border:1px solid var(--line); border-radius:11px; background:transparent;
+    color:var(--sub); font-size:13.5px; font-weight:700; cursor:pointer;
+  }
+  .foot{margin-top:36px; font-size:11.5px; color:#BAB8C9; text-align:center;}
+
+  @keyframes rise{from{opacity:0; transform:translateY(-5px);} to{opacity:1; transform:none;}}
+  @keyframes fade{from{opacity:0;} to{opacity:1;}}
+  @media (prefers-reduced-motion:reduce){ .item, .hinttxt, .toast{animation:none;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="home"></div>
+  <div id="solve" hidden>
+    <button class="back" onclick="goHome()">← 문제 목록</button>
+    <div class="tag" id="tag"></div>
+    <div class="prob" id="prob"></div>
+    <div id="fig"></div>
+    <p class="guide" id="guide"></p>
+    <div class="toast" id="toast" hidden></div>
+    <div class="flow" id="flow"></div>
+    <button class="again" onclick="restart()">처음부터 다시</button>
+  </div>
+  <div class="foot">생각 사슬 · 시제품</div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   문제 데이터 — 문제를 늘릴 땐 여기만 추가하면 됩니다.
+
+   ★ 오답 만드는 요령 (이게 제일 중요합니다)
+     - "말도 안 되는 것"은 넣지 마세요. 아무도 안 고릅니다.
+     - 아이들이 실제로 자주 하는 실수를 넣으세요:
+         · ½ 빠뜨리기        · 제곱 빠뜨리기
+         · 비의 순서 뒤집기   · 길이의 비를 넓이의 비로 착각
+         · 조건이 다른데 맞는 공식 쓰기
+     - 그 자체로는 '맞는 말'인데 이 문제엔 안 쓰이는 것도 좋은 오답입니다.
+     - 선택지 순서는 화면에서 자동으로 섞입니다. 순서 신경 쓰지 마세요.
+
+   sentence : 문제 문장 조각. key가 있으면 눌러지는 부분
+              kind 'cond'=조건(노랑) / 'goal'=구하려는 것(파랑)
+   nodes    : ask(되묻는 질문) / note(중립 안내) / hint(눌러야 나오는 짧은 힌트)
+              items → next 있으면 그 길이 열림(여러 개 가능) / why만 있으면 이유 설명
+              end:true → 답에 도착한 노드
+   ═══════════════════════════════════════════════════════════ */
+const PROBLEMS = [
+/* ══════════ 중2-2  Ⅴ. 도형의 성질 ══════════ */
+{
+  id:'t01', unit:'1. 삼각형의 성질', pick:'이등변삼각형 · 각 추적',
+  tag:'중2 · 이등변삼각형의 성질 활용',
+  svg:'<svg viewBox="0 0 200 208" role="img" aria-label="AB=AC인 이등변삼각형 ABC와 변 AC 위의 점 D">'
+    + '<polygon points="100,25 48,185 152,185" fill="none" stroke="var(--ink)" stroke-width="1.8"/>'
+    + '<line x1="48" y1="185" x2="132" y2="119" stroke="var(--ink)" stroke-width="1.8"/>'
+    + '<path d="M90.7,53.5 A30,30 0 0,0 109.3,53.5" fill="none" stroke="var(--blue)" stroke-width="1.6"/>'
+    + '<text x="100" y="70" text-anchor="middle" font-size="10" fill="var(--blue)">36°</text>'
+    + '<g stroke="var(--ink)" stroke-width="1.5">'
+    +   '<line x1="69" y1="103" x2="79" y2="107"/><line x1="121" y1="107" x2="131" y2="103"/>'
+    +   '<line x1="84.7" y1="152.3" x2="90.5" y2="160.3"/><line x1="89.5" y1="148.7" x2="95.3" y2="156.7"/>'
+    +   '<line x1="97" y1="180" x2="97" y2="190"/><line x1="103" y1="180" x2="103" y2="190"/>'
+    + '</g>'
+    + '<g font-size="11" font-weight="700" fill="var(--ink)">'
+    +   '<text x="100" y="17" text-anchor="middle">A</text><text x="36" y="196">B</text>'
+    +   '<text x="156" y="196">C</text><text x="139" y="116">D</text>'
+    + '</g></svg>',
+  cap:'╱ 표시끼리, ╱╱ 표시끼리 길이가 같습니다',
+  sentence:[
+    {t:'AB=AC인 이등변삼각형', kind:'cond', key:'iso1'},
+    {t:' ABC에서 '},
+    {t:'∠A=36°', kind:'cond', key:'angA'},
+    {t:'이다. 변 AC 위의 점 D를 '},
+    {t:'BD=BC', kind:'cond', key:'iso2'},
+    {t:'가 되도록 잡을 때, '},
+    {t:'∠DBC', kind:'goal', key:'goal'},
+    {t:'의 크기를 구하시오.'}
+  ],
+  nodes:{
+    goal:{ label:'∠DBC를 구해야 한다',
+      ask:'∠DBC는 어느 삼각형 안에 있는 각일까? 그 삼각형부터 봐야겠지?',
+      hint:'D, B, C로 만들어지는 삼각형이 하나 더 있어.',
+      items:[
+        {t:'△DBC를 따로 떼어 본다', next:'iso2'},
+        {t:'∠ABC에서 ∠ABD를 뺀다', why:'방향은 맞지만 ∠ABD를 아직 모르죠. △DBC를 보는 게 빠릅니다.'},
+        {t:'∠A와 크기가 같다', why:'답은 정말 36°지만, 지금은 그걸 알 방법이 없어요. 위치가 다른 각이 저절로 같아지진 않아요.'},
+        {t:'삼각형의 외각의 성질을 쓴다', why:'여기선 외각이 필요한 자리가 아니에요.'}
+      ]},
+    iso1:{ label:'AB=AC인 이등변삼각형이다',
+      note:'이등변삼각형에서 떠오르는 것들이에요. ∠DBC로 이어지는 걸 골라보세요.',
+      hint:'∠A를 알면 알 수 있는 각이 있지.',
+      items:[
+        {t:'두 밑각의 크기가 같다 (∠ABC = ∠ACB)', next:'base'},
+        {t:'세 변의 길이가 모두 같다', why:'같은 건 AB와 AC 두 변뿐이에요. BC는 다를 수 있죠.'},
+        {t:'세 각의 크기가 모두 같다', why:'그건 정삼각형이에요.'},
+        {t:'꼭지각의 이등분선이 밑변을 수직이등분한다', why:'맞는 성질이지만 이 문제엔 그 이등분선이 그려져 있지 않아요.'},
+        {t:'∠ABC = 36°이다', why:'36°는 꼭지각 ∠A예요. 밑각과 꼭지각을 섞지 않도록 조심해요.'}
+      ]},
+    angA:{ label:'∠A = 36°이다',
+      note:'이 각을 어디에 쓸 수 있을까요?',
+      hint:'삼각형 세 각의 합은 180°.',
+      items:[
+        {t:'세 각의 합 180°에서 빼서 두 밑각의 합을 구한다', next:'base'},
+        {t:'나머지 두 각도 36°씩이다', why:'세 각의 합이 108°가 되어버려요.'},
+        {t:'180° − 36° = 144°가 한 밑각이다', why:'144°는 두 밑각을 합친 값이에요. 하나는 그 절반이죠.'}
+      ]},
+    base:{ label:'두 밑각의 합이 144°이다',
+      note:'두 밑각은 크기가 같아요. 하나는 얼마일까요?',
+      hint:'같은 것 두 개를 합쳐서 144°.',
+      items:[
+        {t:'∠ABC = ∠ACB = 72°', next:'iso2'},
+        {t:'∠ABC = ∠ACB = 144°', why:'144°는 둘을 합친 값이에요. 반으로 나눠야 하죠.'},
+        {t:'∠ABC = 72°, ∠ACB = 36°', why:'두 밑각은 크기가 같아요. 서로 다를 수 없죠.'}
+      ]},
+    iso2:{ label:'BD = BC 이다',
+      note:'△DBC도 두 변의 길이가 같아요. 그럼 어느 두 각이 같아지죠?',
+      hint:'같은 두 변이 각각 마주보는 각끼리 같아져.',
+      items:[
+        {t:'∠BDC = ∠BCD (BD와 BC가 각각 마주보는 각)', next:'calc'},
+        {t:'∠DBC = ∠BCD', why:'BD=BC이면 이 두 변이 마주보는 각이 같아요. ∠DBC는 두 변 사이에 끼인 각이라 달라요.'},
+        {t:'∠BDC = ∠DBC', why:'마주보는 짝을 다시 확인해보세요. BD가 마주보는 각은 ∠BCD예요.'},
+        {t:'△DBC는 정삼각형이다', why:'같은 변은 두 개뿐이에요. DC까지 같다는 조건은 없죠.'}
+      ]},
+    calc:{ label:'∠BDC = ∠BCD 이다',
+      note:'∠BCD는 이미 구해놓은 각이에요. 어느 각이죠?',
+      hint:'점 D는 변 AC 위에 있어. 그럼 ∠BCD는 △ABC의 어느 각과 같은 각일까?',
+      items:[
+        {t:'D가 AC 위에 있으므로 ∠BCD는 ∠ACB와 같은 각 → 72°', next:'end1'},
+        {t:'∠BCD = 36°이다', why:'36°는 ∠A였어요. ∠BCD는 밑각 자리죠.'},
+        {t:'∠BCD는 새로 구해야 한다', why:'D가 변 AC 위에 있으니 ∠BCD와 ∠ACB는 같은 각이에요. 이미 구했죠.'}
+      ]},
+    end1:{ end:true,
+      lines:['△ABC에서 ∠ABC = ∠ACB = (180° − 36°) ÷ 2 = 72°',
+             '△DBC에서 BD=BC이므로 ∠BDC = ∠BCD = 72°',
+             '∠DBC = 180° − (72° + 72°)'],
+      ans:'∠DBC = 36°',
+      cmt:'이등변삼각형을 두 번 쓴 문제예요. 큰 삼각형에서 한 번, 작은 삼각형에서 또 한 번. "같은 변이 마주보는 각끼리 같다"를 정확히 짚는 게 갈림길이었어요.'}
+  }
+},
+{
+  id:'t02', unit:'1. 삼각형의 성질', pick:'내심 · 내접원의 반지름',
+  tag:'중2 · 삼각형의 내심',
+  svg:'<svg viewBox="0 0 240 208" role="img" aria-label="세 변이 6, 8, 10cm인 직각삼각형과 내접원">'
+    + '<polygon points="40,60 40,180 200,180" fill="none" stroke="var(--ink)" stroke-width="1.8"/>'
+    + '<rect x="40" y="166" width="14" height="14" fill="none" stroke="var(--ink)" stroke-width="1.2"/>'
+    + '<circle cx="80" cy="140" r="40" fill="none" stroke="var(--blue)" stroke-width="1.6"/>'
+    + '<circle cx="80" cy="140" r="2.2" fill="var(--blue)"/>'
+    + '<text x="87" y="137" font-size="10" font-weight="700" fill="var(--blue)">I</text>'
+    + '<g font-size="10" fill="var(--sub)">'
+    +   '<text x="6" y="124">6 cm</text><text x="103" y="196">8 cm</text><text x="133" y="107">10 cm</text>'
+    + '</g>'
+    + '<g font-size="11" font-weight="700" fill="var(--ink)">'
+    +   '<text x="33" y="53">A</text><text x="28" y="196">B</text><text x="204" y="196">C</text>'
+    + '</g></svg>',
+  cap:'점 I는 △ABC의 내심입니다',
+  sentence:[
+    {t:'세 변의 길이가 6cm, 8cm, 10cm', kind:'cond', key:'sides'},
+    {t:'인 삼각형의 '},
+    {t:'내접원의 반지름', kind:'goal', key:'goal'},
+    {t:'의 길이를 구하시오.'}
+  ],
+  nodes:{
+    goal:{ label:'내접원의 반지름을 구해야 한다',
+      ask:'반지름이 직접 주어지지 않았어요. 반지름이 들어 있는 식이 뭐가 있었을까?',
+      hint:'내접원의 반지름은 넓이 식 안에 숨어 있어.',
+      items:[
+        {t:'삼각형의 넓이를 반지름으로 나타내는 식을 쓴다', next:'areaform'},
+        {t:'접점까지의 길이로 식을 세운다', next:'tangent'},
+        {t:'빗변의 절반이 반지름이다 (5cm)', why:'빗변의 절반은 외접원의 반지름이에요. 외심과 내심을 섞지 않도록 조심해요.'},
+        {t:'가장 짧은 변의 절반이 반지름이다 (3cm)', why:'그런 성질은 없어요.'}
+      ]},
+    sides:{ label:'세 변이 6cm, 8cm, 10cm이다',
+      note:'이 세 숫자에서 먼저 알아낼 수 있는 게 있어요.',
+      hint:'6, 8, 10 … 어디서 본 조합 아니야?',
+      items:[
+        {t:'6² + 8² = 10² 이므로 직각삼각형이다', next:'area'},
+        {t:'세 변을 더하면 둘레가 24cm이다', next:'goal'},
+        {t:'세 변의 길이가 모두 다르므로 쓸 성질이 없다', why:'6²+8² = 36+64 = 100 = 10². 직각삼각형이에요.'},
+        {t:'가장 긴 변이 10cm이므로 이등변삼각형이다', why:'세 변의 길이가 모두 달라요.'}
+      ]},
+    area:{ label:'직각삼각형이다',
+      note:'직각을 알았으니 넓이를 바로 구할 수 있어요.',
+      hint:'직각을 끼고 있는 두 변이 밑변과 높이야.',
+      items:[
+        {t:'넓이 = ½ × 6 × 8 = 24cm²', next:'goal'},
+        {t:'넓이 = 6 × 8 = 48cm²', why:'삼각형은 그 절반이에요.'},
+        {t:'넓이 = ½ × 8 × 10 = 40cm²', why:'10cm는 빗변이에요. 높이가 아니죠.'}
+      ]},
+    areaform:{ label:'넓이를 반지름 r로 나타낸다',
+      note:'내심에서 세 변까지의 거리가 모두 r이에요. 내심과 세 꼭짓점을 이어 삼각형을 세 조각으로 나눠보면?',
+      hint:'세 조각이 전부 삼각형이고, 높이가 모두 r이야.',
+      items:[
+        {t:'넓이 = ½ × r × (둘레)', next:'solve'},
+        {t:'넓이 = r × (둘레)', why:'조각이 각각 삼각형이라 ½이 붙어요.'},
+        {t:'넓이 = ½ × r × (가장 긴 변)', why:'세 변 모두에 조각이 붙어 있어요. 둘레 전체를 써야 하죠.'},
+        {t:'넓이 = π r²', why:'그건 원의 넓이예요. 지금 구하는 건 삼각형의 넓이죠.'}
+      ]},
+    solve:{ label:'넓이 = ½ × r × (둘레)',
+      note:'넓이 24cm², 둘레 24cm를 넣어봐요.',
+      hint:'24 = ½ × r × 24.',
+      items:[
+        {t:'24 = ½ × r × 24 = 12r → r = 2', next:'end_a'},
+        {t:'24 ÷ 24 = 1 이므로 r = 1', why:'½을 빠뜨렸어요. 24가 아니라 12로 나눠야 해요.'},
+        {t:'r = 2인데 단위는 cm²이다', why:'r은 길이예요. 단위는 cm죠.'}
+      ]},
+    tangent:{ label:'접점까지의 길이로 식을 세운다',
+      note:'직각을 낀 두 변에서 직각 쪽 접점까지의 거리는 각각 r이에요. 남은 부분을 빗변으로 이어보면?',
+      hint:'한 점에서 원에 그은 두 접선의 길이는 같아.',
+      items:[
+        {t:'(6 − r) + (8 − r) = 10', next:'end_b'},
+        {t:'(6 + r) + (8 + r) = 10', why:'접점은 변 안쪽에 있어요. 빼야 하죠.'},
+        {t:'6 − r = 8 − r 이다', why:'두 변의 길이가 다르니 남은 부분도 서로 달라요.'}
+      ]},
+    end_a:{ end:true,
+      lines:['6² + 8² = 10² → 직각삼각형','넓이 = ½ × 6 × 8 = 24cm², 둘레 = 6+8+10 = 24cm','24 = ½ × r × 24 = 12r'],
+      ans:'r = 2cm',
+      cmt:'같은 넓이를 두 가지로 쓴 게 열쇠였어요. 하나는 숫자로(24), 하나는 r로(½×r×둘레). 같은 것을 두 방법으로 쓰면 식이 생깁니다.'},
+    end_b:{ end:true,
+      lines:['6² + 8² = 10² → 직각삼각형','두 접선의 길이가 같으므로 빗변 = (6 − r) + (8 − r)','10 = 14 − 2r'],
+      ans:'r = 2cm',
+      cmt:'넓이를 쓰지 않고 접선의 길이만으로 푼 길이에요. 공식이 기억나지 않아도 이렇게 갈 수 있어요.'}
+  }
+},
+{
+  id:'q01', unit:'2. 사각형의 성질', pick:'평행사변형 · 각의 이등분선',
+  tag:'중2 · 평행사변형의 활용',
+  svg:'<svg viewBox="0 0 260 172" role="img" aria-label="평행사변형 ABCD와 각 A의 이등분선이 BC와 만나는 점 E">'
+    + '<polygon points="70,40 30,127 190,127 230,40" fill="none" stroke="var(--ink)" stroke-width="1.8"/>'
+    + '<line x1="70" y1="40" x2="126" y2="127" stroke="var(--ink)" stroke-width="1.8"/>'
+    + '<path d="M59.2,63.6 A26,26 0 0,0 84.1,61.9" fill="none" stroke="var(--blue)" stroke-width="1.5"/>'
+    + '<path d="M88.4,68.6 A34,34 0 0,0 104,40" fill="none" stroke="var(--blue)" stroke-width="1.5"/>'
+    + '<g font-size="10" fill="var(--sub)">'
+    +   '<text x="14" y="86">6 cm</text><text x="140" y="34">10 cm</text>'
+    + '</g>'
+    + '<g font-size="11" font-weight="700" fill="var(--ink)">'
+    +   '<text x="64" y="31">A</text><text x="20" y="140">B</text>'
+    +   '<text x="186" y="140">C</text><text x="234" y="31">D</text><text x="121" y="140">E</text>'
+    + '</g></svg>',
+  cap:'파란 두 각의 크기가 같습니다 (∠A의 이등분선)',
+  sentence:[
+    {t:'평행사변형', kind:'cond', key:'para'},
+    {t:' ABCD에서 '},
+    {t:'∠A의 이등분선', kind:'cond', key:'bisect'},
+    {t:'이 변 BC와 만나는 점을 E라 하자. '},
+    {t:'AB=6cm, AD=10cm', kind:'cond', key:'len'},
+    {t:'일 때, '},
+    {t:'EC', kind:'goal', key:'goal'},
+    {t:'의 길이를 구하시오.'}
+  ],
+  nodes:{
+    goal:{ label:'EC의 길이를 구해야 한다',
+      ask:'EC는 변 BC의 일부예요. BC와 BE를 알면 되겠죠?',
+      hint:'BC는 어느 변과 길이가 같을까?',
+      items:[
+        {t:'BC의 길이와 BE의 길이를 각각 알아본다', next:'para'},
+        {t:'AD에서 AB를 그냥 뺀다 (10 − 6 = 4)', why:'답은 맞지만 왜 그렇게 되는지가 빠졌어요. BE = AB인 이유를 못 대면 숫자가 바뀌면 또 막힙니다.'},
+        {t:'AD의 절반이다 (5cm)', why:'E가 BC의 중점이라는 조건은 없어요.'},
+        {t:'AB와 같다 (6cm)', why:'AB와 같아지는 건 BE예요. EC는 남은 부분이죠.'}
+      ]},
+    para:{ label:'평행사변형이다',
+      note:'평행사변형에서 떠오르는 것들이에요. EC로 이어지는 걸 골라보세요.',
+      hint:'이등분선이 지나가는 곳에 평행선이 있어.',
+      items:[
+        {t:'AD ∥ BC 이므로 엇각의 크기가 같다', next:'alt'},
+        {t:'두 쌍의 대변의 길이가 각각 같다 (BC = AD)', next:'bc0'},
+        {t:'두 쌍의 대각의 크기가 각각 같다', why:'맞는 성질이지만 EC의 길이로는 이어지지 않아요.'},
+        {t:'두 대각선이 서로 다른 것을 이등분한다', why:'이 문제에는 대각선이 그려져 있지 않아요.'},
+        {t:'네 변의 길이가 모두 같다', why:'그건 마름모예요. 평행사변형은 마주보는 변끼리만 같죠.'}
+      ]},
+    bisect:{ label:'∠A의 이등분선이다',
+      note:'∠BAE와 ∠DAE의 크기가 같아요. 이걸 어디에 쓸까요?',
+      hint:'∠DAE와 크기가 같은 각이 △ABE 안에 하나 더 있어.',
+      items:[
+        {t:'평행선의 엇각을 찾아본다', next:'alt'},
+        {t:'이등분선이 변 BC도 이등분한다', why:'각의 이등분선이 변까지 이등분하는 건 이등변삼각형일 때뿐이에요.'},
+        {t:'이등분선이 BC와 수직이다', why:'수직이라는 조건은 없어요.'},
+        {t:'∠BAE = ∠ABE 이다', why:'이등분선만으로는 알 수 없어요. 평행선을 한 번 거쳐야 하죠.'}
+      ]},
+    alt:{ label:'AD ∥ BC 이므로 ∠DAE = ∠AEB (엇각)',
+      note:'∠DAE = ∠BAE 였죠. 그럼 ∠BAE와 ∠AEB는 어떤 관계일까요?',
+      hint:'같은 것과 같은 것은 서로 같아.',
+      items:[
+        {t:'∠BAE = ∠AEB → △ABE는 이등변삼각형', next:'iso'},
+        {t:'∠BAE = ∠AEB → △ABE는 정삼각형', why:'두 각이 같다는 것뿐이에요. 세 각이 60°라는 뜻은 아니죠.'},
+        {t:'∠BAE = ∠AEB → △ABE는 직각삼각형', why:'두 각이 같다고 직각이 생기진 않아요.'},
+        {t:'∠DAE와 ∠AEB는 동위각이다', why:'AD와 BC 사이를 AE가 가로지르고 있으니 엇각이에요. 그림에서 두 각의 위치를 확인해보세요.'}
+      ]},
+    iso:{ label:'△ABE가 이등변삼각형이다',
+      note:'∠BAE = ∠AEB이므로 이 두 각이 각각 마주보는 두 변의 길이가 같아요. 어느 두 변이죠?',
+      hint:'∠BAE가 마주보는 변, ∠AEB가 마주보는 변을 각각 찾아봐.',
+      items:[
+        {t:'BE = AB = 6cm', next:'sub'},
+        {t:'AE = AB = 6cm', why:'∠BAE가 마주보는 변은 BE예요. AE는 두 각 사이에 끼인 변이죠.'},
+        {t:'BE = AD = 10cm', why:'AD는 △ABE의 변이 아니에요.'},
+        {t:'BE = 3cm (AB의 절반)', why:'이등분된 건 각이지 변이 아니에요.'}
+      ]},
+    bc0:{ label:'BC = AD = 10cm 이다',
+      note:'BC 전체를 알았어요. 그런데 EC까지 가려면 하나가 더 필요해요.',
+      hint:'BC = BE + EC 니까, BE를 알아야 해.',
+      items:[
+        {t:'BE를 알아야 한다 → ∠A의 이등분선 조건을 본다', next:'bisect'},
+        {t:'BC의 절반이 EC이다 (5cm)', why:'E가 BC의 중점이 아니에요.'},
+        {t:'BC에서 AB를 빼면 된다', why:'결과는 맞지만 AB는 BC 위의 길이가 아니에요. AB와 같은 BE를 먼저 밝혀야 하죠.'}
+      ]},
+    sub:{ label:'BE = 6cm 이다',
+      note:'BC 전체는 대변 AD와 같아 10cm예요. 이제 EC는?',
+      hint:'BC = BE + EC.',
+      items:[
+        {t:'EC = BC − BE = 10 − 6', next:'end1'},
+        {t:'EC = BC − AD = 10 − 10 = 0', why:'AD가 아니라 BE(=6cm)를 빼야 해요.'},
+        {t:'EC = BE = 6cm', why:'E가 BC의 중점이 아니라서 두 조각의 길이가 달라요.'}
+      ]},
+    len:{ label:'AB=6cm, AD=10cm이다',
+      note:'두 길이가 각각 어디에 쓰일까요?',
+      hint:'AD는 BC와, AB는 BE와 이어져.',
+      items:[
+        {t:'AD는 대변 BC와 같고, AB는 BE와 같아질 것 같다', next:'para'},
+        {t:'AB=6이므로 EC도 6cm이다', why:'AB와 같아지는 건 BE예요.'},
+        {t:'두 길이를 더해 16cm를 쓴다', why:'더할 자리가 아니에요. BC에서 BE를 빼야 하죠.'}
+      ]},
+    end1:{ end:true,
+      lines:['AD ∥ BC 이므로 ∠DAE = ∠AEB (엇각)',
+             '∠BAE = ∠DAE 이므로 ∠BAE = ∠AEB → △ABE는 이등변삼각형',
+             'BE = AB = 6cm,  BC = AD = 10cm'],
+      ans:'EC = 4cm',
+      cmt:'"각의 이등분선 + 평행선 → 이등변삼각형"은 시험에 아주 자주 나오는 사슬이에요. 10−6=4로 답만 맞히면 숫자가 바뀔 때 또 막혀요. 왜 BE=AB인지가 이 문제의 전부입니다.'}
+  }
+},
+{
+  id:'p1', unit:'참고 · 시제품', pick:'삼각형의 높이 구하기', tag:'중1 · 삼각형의 넓이',
+  sentence:[
+    {t:'넓이가 12cm²', kind:'cond', key:'area'},
+    {t:'인 삼각형의 '},
+    {t:'밑변이 6cm', kind:'cond', key:'base'},
+    {t:'일 때, '},
+    {t:'높이', kind:'goal', key:'height'},
+    {t:'를 구하시오.'}
+  ],
+  nodes:{
+    height:{
+      label:'높이를 구해야 한다',
+      ask:'넓이가 주어진 상태에서 높이를 알려면 뭘 이용해야 할까?',
+      hint:'넓이·밑변·높이가 한꺼번에 들어가는 식이 있었지?',
+      items:[
+        {t:'삼각형의 넓이 공식을 이용한다', next:'formula'},
+        {t:'넓이를 밑변으로 나눈다 (12 ÷ 6)', why:'그러면 2가 나오죠. 삼각형 넓이엔 ½이 들어있다는 걸 빠뜨린 거예요.'},
+        {t:'피타고라스 정리를 이용한다', why:'직각삼각형이라는 조건이 없어요.'},
+        {t:'밑변과 높이를 더한 값이 넓이다', why:'넓이는 두 길이를 곱해서 만들어져요.'}
+      ]
+    },
+    formula:{
+      label:'삼각형의 넓이 공식',
+      note:'떠올린 공식을 골라봐요.',
+      hint:'평행사변형을 반으로 자르면 삼각형이지.',
+      items:[
+        {t:'넓이 = ½ × 밑변 × 높이', next:'end1'},
+        {t:'넓이 = 밑변 × 높이', why:'그건 평행사변형 넓이예요. 삼각형은 그 절반이죠.'},
+        {t:'넓이 = ½ × (밑변 + 높이)', why:'더하는 게 아니라 곱해야 해요.'}
+      ]
+    },
+    area:{
+      label:'넓이가 12cm²',
+      note:'이 조건은 공식의 어디에 들어갈까?',
+      hint:'12는 이미 ½까지 다 곱한 결과값이야.',
+      items:[
+        {t:'공식의 결과값 자리(넓이)에 넣는다', next:'height'},
+        {t:'밑변 × 높이 = 12 이다', why:'12는 ½까지 곱한 최종 넓이예요. 밑변×높이는 24가 되죠.'},
+        {t:'밑변으로 쓴다', why:'넓이와 길이는 서로 다른 값이에요.'}
+      ]
+    },
+    base:{
+      label:'밑변이 6cm',
+      note:'이 조건은 공식의 어디에 들어갈까?',
+      hint:'6은 길이야. 어느 길이일까?',
+      items:[
+        {t:'공식의 밑변 자리에 6을 넣는다', next:'height'},
+        {t:'밑변이 6이니 높이도 6이다', why:'특별한 조건이 없으면 밑변과 높이는 서로 달라요.'},
+        {t:'6을 반으로 나눠 3을 넣는다', why:'½은 밑변이 아니라 전체 식에 곱하는 거예요.'}
+      ]
+    },
+    end1:{ end:true,
+      lines:['넓이 = ½ × 밑변 × 높이','12 = ½ × 6 × (높이)','12 = 3 × (높이)'],
+      ans:'높이 = 4cm',
+      cmt:'구하려는 것에서 거꾸로 "뭘 이용하지?"를 물은 게 출발점이었어요.'
+    }
+  }
+},
+{
+  id:'p2', unit:'참고 · 시제품', pick:'정삼각형의 넓이', tag:'중2 · 정삼각형',
+  sentence:[
+    {t:'한 변의 길이가 8cm', kind:'cond', key:'side'},
+    {t:'인 '},
+    {t:'정삼각형', kind:'cond', key:'eq'},
+    {t:'의 '},
+    {t:'넓이', kind:'goal', key:'area'},
+    {t:'를 구하시오.'}
+  ],
+  nodes:{
+    eq:{
+      label:'정삼각형이다',
+      note:'정삼각형이라고 하면 떠오르는 것들이에요. 이 중 넓이까지 이어지는 걸 골라보세요.',
+      hint:'구하려는 건 넓이야.',
+      items:[
+        {t:'세 변의 길이가 모두 같다', why:'맞는 성질이지만 이것만으로는 넓이가 안 나와요.'},
+        {t:'세 각이 모두 60°이다', why:'맞아요. 다만 각만으로는 넓이를 구할 수 없어요.'},
+        {t:'높이 = (√3 ÷ 2) × 한 변', next:'hform'},
+        {t:'넓이 = (√3 ÷ 4) × (한 변)²', next:'side'},
+        {t:'넓이 = (√3 ÷ 2) × (한 변)²', why:'√3÷2는 높이를 구할 때 쓰는 값이에요. 넓이는 √3÷4죠.'},
+        {t:'꼭지각의 이등분선이 밑변을 수직이등분한다', next:'bisect'},
+        {t:'외심·내심·무게중심이 한 점에 모인다', why:'정삼각형의 특징이지만 넓이와는 이어지지 않아요.'}
+      ]
+    },
+    side:{
+      label:'넓이 공식에 한 변을 넣는다',
+      note:'조건의 값을 넣어봐요.',
+      hint:'공식에 제곱이 붙어 있었지.',
+      items:[
+        {t:'(한 변)² 자리에 8² = 64를 넣는다', next:'end_a'},
+        {t:'(한 변)² 자리에 8을 넣는다', why:'제곱을 빠뜨렸어요. 8² = 64예요.'},
+        {t:'√3에 8을 곱한 뒤 4로 나눈다', why:'8도 제곱해서 넣어야 해요.'}
+      ]
+    },
+    hform:{
+      label:'높이 공식으로 높이부터 구한다',
+      note:'높이 = (√3÷2)×8 = 4√3 이에요. 이제 넓이로 가려면?',
+      hint:'밑변도 알고 높이도 알면 쓸 수 있는 공식이 있지.',
+      items:[
+        {t:'½ × 8 × 4√3 을 계산한다', next:'end_b'},
+        {t:'8 × 4√3 을 계산한다', why:'½을 빠뜨렸어요. 그건 평행사변형 넓이가 돼요.'},
+        {t:'½ × 4 × 4√3 을 계산한다', why:'밑변은 8이에요. 반으로 자르는 건 다른 풀이에서 쓰는 거죠.'}
+      ]
+    },
+    bisect:{
+      label:'이등분선을 그으면 직각삼각형이 생긴다',
+      note:'밑변이 반(4cm)으로 갈라지고 빗변이 8cm인 직각삼각형이 생겼어요. 여기서 높이는?',
+      hint:'직각삼각형에서 두 변을 알면 나머지를 구하는 정리가 있어.',
+      items:[
+        {t:'피타고라스 정리로 나머지 변을 구한다', next:'pyth'},
+        {t:'30°-60°-90° 삼각형이니 빗변의 반인 4가 높이다', why:'빗변의 반 4는 밑변이에요. 높이는 그것과 달라요.'},
+        {t:'빗변 8에서 밑변 4를 뺀 4가 높이다', why:'변의 길이는 빼기로 구해지지 않아요.'}
+      ]
+    },
+    pyth:{
+      label:'피타고라스로 높이를 구한다',
+      note:'높이 4√3이 나왔어요. 이제 넓이로 가려면?',
+      hint:'문제가 물은 건 정삼각형 전체의 넓이야.',
+      items:[
+        {t:'½ × 8 × 4√3 을 계산한다', next:'end_c'},
+        {t:'½ × 4 × 4√3 을 계산한다', why:'그건 반으로 자른 쪽 삼각형 넓이예요. 문제는 전체를 물었어요.'},
+        {t:'구한 높이 4√3이 답이다', why:'문제가 물은 건 넓이예요.'}
+      ]
+    },
+    area:{
+      label:'넓이를 구해야 한다',
+      ask:'넓이를 구하려면 무엇부터 봐야 할까?',
+      hint:'삼각형의 "종류"가 힌트야.',
+      items:[
+        {t:'어떤 삼각형인지 조건을 본다', next:'eq'},
+        {t:'밑변과 높이를 찾아 바로 대입한다', why:'높이가 주어지지 않았어요. 조건에서 먼저 알아내야 해요.'},
+        {t:'세 변을 모두 더한다', why:'그건 둘레예요.'}
+      ]
+    },
+    end_a:{ end:true,
+      lines:['넓이 = (√3 ÷ 4) × (한 변)²','= (√3 ÷ 4) × 8²','= (√3 ÷ 4) × 64'],
+      ans:'넓이 = 16√3 cm²',
+      cmt:'공식을 바로 떠올려 간 가장 짧은 길이었어요.'
+    },
+    end_b:{ end:true,
+      lines:['높이 = (√3 ÷ 2) × 8 = 4√3','넓이 = ½ × 밑변 × 높이','= ½ × 8 × 4√3'],
+      ans:'넓이 = 16√3 cm²',
+      cmt:'높이를 먼저 구해서 돌아간 길이에요. 넓이 공식이 기억 안 나도 이렇게 풀 수 있어요.'
+    },
+    end_c:{ end:true,
+      lines:['4² + (높이)² = 8²','(높이)² = 64 − 16 = 48 → 높이 = 4√3','넓이 = ½ × 8 × 4√3'],
+      ans:'넓이 = 16√3 cm²',
+      cmt:'공식을 하나도 외우지 않고 직접 만들어낸 길이에요. 정삼각형 넓이 공식이 왜 그렇게 생겼는지도 알게 됐죠.'
+    }
+  }
+},
+{
+  id:'p3', unit:'참고 · 시제품', pick:'닮음과 넓이의 비', tag:'중2 · 닮음과 넓이',
+  sentence:[
+    {t:'△ABC에서 변 AB, AC의 '},
+    {t:'중점', kind:'cond', key:'mid'},
+    {t:'을 각각 D, E라 할 때, △ADE와 △ABC의 '},
+    {t:'넓이의 비', kind:'goal', key:'ratio'},
+    {t:'를 구하시오.'}
+  ],
+  nodes:{
+    mid:{
+      label:'두 변의 중점이다',
+      note:'"중점"에서 떠올릴 수 있는 것들이에요. 넓이의 비로 이어지는 걸 골라보세요.',
+      hint:'두 삼각형이 서로 어떤 "관계"인지부터 찾아봐.',
+      items:[
+        {t:'AD = DB, AE = EC 이다', why:'맞아요. 여기서 한 걸음 더 나가면 길이의 비 1:2가 보여요 — 그 길을 찾아보세요.'},
+        {t:'DE와 BC는 평행하다 (중점연결정리)', next:'para'},
+        {t:'DE = ½ BC 이다', next:'lenratio'},
+        {t:'△ADE와 △ABC는 닮음이다', next:'sim'},
+        {t:'△ADE의 넓이는 △ABC의 절반이다', why:'가로만 반이 된 게 아니라 세로도 반이 됐어요. 절반보다 훨씬 작아요.'},
+        {t:'중점을 다 이으면 합동인 삼각형 4개가 생긴다', next:'cong'}
+      ]
+    },
+    para:{
+      label:'DE와 BC가 평행하다',
+      note:'평행선이 생겼어요. 여기서 무엇을 알 수 있죠?',
+      hint:'평행선에서 크기가 같아지는 각이 있지.',
+      items:[
+        {t:'동위각이 같다 → 두 삼각형은 닮음', next:'sim'},
+        {t:'엇각이 같다 → 두 삼각형은 합동', why:'각이 같다고 크기까지 같진 않아요. 합동이 아니라 닮음이에요.'},
+        {t:'DE와 BC의 길이가 같다', why:'평행하다고 길이까지 같진 않아요.'}
+      ]
+    },
+    lenratio:{
+      label:'DE = ½ BC 이다',
+      note:'변의 길이 비를 알았어요. AD:AB도 1:2죠. 이게 무슨 뜻일까요?',
+      hint:'세 변의 비가 모두 같으면 두 도형은?',
+      items:[
+        {t:'세 변의 비가 모두 1:2 → 닮음비가 1:2', next:'ratio2'},
+        {t:'DE가 BC의 반이니 넓이도 반이다', why:'가로만이 아니라 세로도 반이에요. 그래서 넓이는 ¼이 되죠.'},
+        {t:'넓이의 비도 1:2 이다', why:'길이의 비와 넓이의 비는 달라요. 한 걸음 더 필요해요.'}
+      ]
+    },
+    sim:{
+      label:'두 삼각형이 닮음이다',
+      note:'닮음이라는 걸 알았어요. 그럼 다음으로 뭘 알 수 있죠?',
+      hint:'닮음이면 대응하는 변의 비를 알 수 있어.',
+      items:[
+        {t:'닮음비는 1:2 이다', next:'ratio2'},
+        {t:'닮음비는 2:1 이다', why:'△ADE를 먼저 썼으니 작은 쪽이 앞이에요. 1:2죠.'},
+        {t:'대응각의 크기가 같다', why:'맞지만 각으로는 넓이를 구할 수 없어요.'},
+        {t:'닮음비가 곧 넓이의 비다', why:'한 걸음 더 필요해요. 길이와 넓이는 다르거든요.'}
+      ]
+    },
+    ratio2:{
+      label:'닮음비가 1:2',
+      note:'닮음비에서 넓이의 비로 넘어가려면?',
+      hint:'길이의 비를 넓이의 비로 바꾸려면 한 번 더 손봐야 해.',
+      items:[
+        {t:'넓이의 비 = 닮음비의 제곱', next:'end_sim'},
+        {t:'넓이의 비 = 닮음비의 2배', why:'제곱과 2배는 달라요. 1:2를 제곱하면 1:4예요.'},
+        {t:'넓이의 비 = 닮음비와 같다', why:'가로도 2배, 세로도 2배니 넓이는 그 이상 커져요.'},
+        {t:'넓이의 비 = 닮음비의 세제곱', why:'세제곱은 부피의 비예요.'}
+      ]
+    },
+    cong:{
+      label:'합동인 삼각형으로 나뉜다',
+      note:'중점끼리 다 이어봤어요. △ADE는 전체의 얼마일까요?',
+      hint:'가운데 뒤집힌 삼각형도 빠뜨리지 말고 세어봐.',
+      items:[
+        {t:'전체의 ¼ 이다', next:'end_cong'},
+        {t:'전체의 ⅓ 이다', why:'가운데 뒤집힌 삼각형까지 세면 모두 4조각이에요.'},
+        {t:'전체의 ½ 이다', why:'가로도 세로도 반이 됐으니 절반보다 작아요.'}
+      ]
+    },
+    ratio:{
+      label:'넓이의 비를 구해야 한다',
+      ask:'넓이의 비를 알려면, 두 삼각형이 어떤 관계인지부터 알아야겠죠?',
+      hint:'주어진 조건이 뭐였는지 다시 봐.',
+      items:[
+        {t:'주어진 조건(중점)을 다시 본다', next:'mid'},
+        {t:'각각의 넓이를 구해서 비교한다', why:'변의 길이가 주어지지 않아 각각은 구할 수 없어요.'},
+        {t:'두 삼각형의 변의 길이를 재본다', why:'길이가 주어지지 않았어요. 비만으로 풀어야 해요.'}
+      ]
+    },
+    end_sim:{ end:true,
+      lines:['△ADE ∽ △ABC','닮음비 = 1 : 2','넓이의 비 = 1² : 2²'],
+      ans:'넓이의 비 = 1 : 4',
+      cmt:'중점 → 닮음 → 닮음비 → 넓이의 비. 한 칸씩 이어간 생각이 그대로 풀이가 됐어요.'
+    },
+    end_cong:{ end:true,
+      lines:['중점을 다 이으면 합동인 삼각형 4개','△ADE는 그중 한 개'],
+      ans:'넓이의 비 = 1 : 4',
+      cmt:'닮음을 쓰지 않고 그림으로 바로 본 길이에요. 답은 같지만 훨씬 빨랐죠.'
+    }
+  }
+}
+];
+
+/* ─── 상태 ─── */
+let cur = null, openedKeys = [], path = [], hintUsed = 0;
+function P(){ return PROBLEMS[cur]; }
+
+function shuffle(a){
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+
+/* 문제 목록 화면 — 단원별로 묶어서 세로 목록 (문제가 늘어도 안 깨짐) */
+function renderHome(){
+  const groups = [];
+  PROBLEMS.forEach((p,i)=>{
+    const name = p.unit || '기타';
+    let g = groups.find(x=>x.name===name);
+    if(!g){ g = {name, rows:[]}; groups.push(g); }
+    g.rows.push({p,i});
+  });
+  let h = '<div class="home"><h1>생각 사슬</h1>'
+        + '<p class="sub">문제에서 단서를 찾아 누르면 관련 개념이 펼쳐집니다. 답까지 이어가 보세요.</p>';
+  groups.forEach(g=>{
+    h += '<div class="grp">' + g.name + '</div>';
+    g.rows.forEach((r,n)=>{
+      h += '<button class="row" onclick="openProblem(' + r.i + ')">'
+         +   '<span class="no">' + (n+1) + '</span>'
+         +   '<span class="ttl">' + r.p.pick + '<small>' + r.p.tag + '</small></span>'
+         +   '<span class="go">›</span>'
+         + '</button>';
+    });
+  });
+  document.getElementById('home').innerHTML = h + '</div>';
+}
+
+function openProblem(i){
+  cur = i;
+  document.getElementById('home').hidden = true;
+  document.getElementById('solve').hidden = false;
+  restart();
+}
+function goHome(){
+  cur = null;
+  document.getElementById('flow').innerHTML = '';
+  document.getElementById('solve').hidden = true;
+  document.getElementById('home').hidden = false;
+  window.scrollTo({top:0});
+}
+
+/* 도형 (SVG를 코드로 직접 그림 — 교재 이미지 사용 금지) */
+function renderFig(){
+  const box = document.getElementById('fig');
+  const p = P();
+  box.innerHTML = p.svg
+    ? '<div class="fig">' + p.svg + (p.cap ? '<div class="cap">' + p.cap + '</div>' : '') + '</div>'
+    : '';
+}
+
+/* 문제 문장 — 조건에 미리 색을 칠하지 않는다.
+   학생이 스스로 "무엇이 단서인가"를 찾는 것이 이 앱의 훈련 대상이기 때문.
+   맞게 누르면 그때 색이 켜지고(찾았다는 표시), 아니면 짧게 알려준다. */
+function renderProblem(){
+  document.getElementById('tag').textContent = P().tag;
+  const box = document.getElementById('prob');
+  box.innerHTML = '';
+  P().sentence.forEach((s,i)=>{
+    const sp = document.createElement('span');
+    sp.className = 'tk' + (s.key && openedKeys.includes(s.key) ? ' found' : '');
+    sp.textContent = s.t;
+    sp.onclick = ()=> tapPiece(i);
+    box.appendChild(sp);
+  });
+  renderGuide();
+}
+
+function renderGuide(){
+  const keys = [...new Set(P().sentence.filter(s=>s.key).map(s=>s.key))];
+  const left = keys.filter(k=>!openedKeys.includes(k)).length;
+  document.getElementById('guide').innerHTML = left
+    ? '문제에서 <b>단서가 될 만한 부분</b>을 눌러보세요. <span class="cnt">남은 단서 ' + left + '개</span>'
+    : '단서를 다 찾았어요. 아래에서 생각을 이어가 보세요.';
+}
+
+function tapPiece(i){
+  const s = P().sentence[i];
+  if(s.key){ hideToast(); openNode(s.key, true); return; }
+  showToast(s.no || '여기선 새로 알 수 있는 게 없어요. 다른 곳을 눌러볼까요?');
+}
+
+let toastTimer = null;
+function showToast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>{ el.hidden = true; }, 3400);
+}
+function hideToast(){
+  document.getElementById('toast').hidden = true;
+  clearTimeout(toastTimer);
+}
+
+function openNode(key, fromSentence){
+  const node = P().nodes[key];
+  if(!node) return;
+
+  const exist = document.querySelector('.layer[data-key="'+key+'"]');
+  if(exist){ exist.scrollIntoView({behavior:'smooth', block:'center'}); return; }
+
+  if(fromSentence && !openedKeys.includes(key)){ openedKeys.push(key); renderProblem(); }
+  if(node.end){ showEnd(node); return; }
+  path.push(node.label);
+
+  const layer = document.createElement('div');
+  layer.className = 'layer';
+  layer.dataset.key = key;
+  let html = '<div class="hd">' + node.label + '</div>';
+  if(node.ask)  html += '<div class="ask">'  + node.ask  + '</div>';
+  if(node.note) html += '<div class="note">' + node.note + '</div>';
+  html += '<div class="opts"></div>';
+  layer.innerHTML = html;
+  document.getElementById('flow').appendChild(layer);
+
+  // 선택지 순서를 매번 섞습니다 (정답이 늘 위에 오지 않도록)
+  const br = layer.querySelector('.opts');
+  const order = shuffle(node.items.map((_,i)=>i));
+  order.forEach((origIdx, pos)=>{
+    const it = node.items[origIdx];
+    const b = document.createElement('button');
+    b.className = 'item';
+    b.style.animationDelay = (pos*0.05)+'s';
+    b.textContent = it.t;
+    b.onclick = ()=> choose(key, origIdx, b, layer);
+    br.appendChild(b);
+  });
+
+  if(node.hint){
+    const hb = document.createElement('button');
+    hb.className = 'hintbtn';
+    hb.textContent = '힌트 보기';
+    hb.onclick = ()=>{
+      hintUsed++;
+      const tx = document.createElement('div');
+      tx.className = 'hinttxt';
+      tx.textContent = node.hint;
+      hb.classList.add('gone');
+      layer.insertBefore(tx, hb.nextSibling);
+    };
+    layer.appendChild(hb);
+  }
+
+  setTimeout(()=> layer.scrollIntoView({behavior:'smooth', block:'center'}), 120);
+}
+
+function choose(key, idx, btn, layer){
+  const it = P().nodes[key].items[idx];
+  if(btn.classList.contains('pickd') || btn.classList.contains('miss')) return;
+
+  if(it.next){
+    btn.classList.add('pickd');
+    btn.innerHTML = '<span class="chk">✓</span>' + it.t;
+    layer.classList.add('done');
+    const others = [...layer.querySelectorAll('.item')].filter(o=>o!==btn);
+    others.forEach(o=> o.classList.add('hidden'));
+    const hb = layer.querySelector('.hintbtn');
+    if(hb) hb.classList.add('gone');
+    if(others.length && !layer.querySelector('.more')){
+      const m = document.createElement('button');
+      m.className = 'more';
+      m.textContent = '다른 선택지 ' + others.length + '개 보기';
+      let open = false;
+      m.onclick = ()=>{
+        open = !open;
+        others.forEach(o=> o.classList.toggle('hidden', !open));
+        m.textContent = open ? '접기' : ('다른 선택지 ' + others.length + '개 보기');
+      };
+      layer.appendChild(m);
+    }
+    setTimeout(()=> openNode(it.next, false), 380);
+  }else{
+    btn.classList.add('miss');
+    btn.innerHTML = it.t + '<span class="why">' + it.why + '</span>';
+  }
+}
+
+function showEnd(node){
+  const div = document.createElement('div');
+  div.className = 'final';
+  const hmsg = hintUsed === 0 ? '힌트 없이 끝까지 갔어요.' : ('힌트 ' + hintUsed + '번 사용');
+  div.innerHTML = '<h3>식을 세워 답 구하기</h3>'
+    + node.lines.map(l=>'<div class="fl">' + l + '</div>').join('')
+    + '<div class="ans">' + node.ans + '</div>'
+    + '<div class="cmt">' + node.cmt + '</div>'
+    + '<div class="pathbox"><span class="pl">네가 따라간 생각의 길</span>'
+    +   path.map((p,i)=> '<span class="step">' + (i ? '<span class="arw">→</span>' : '') + '<span class="chip">' + p + '</span></span>').join('')
+    +   '<span class="hcount">' + hmsg + '</span>'
+    + '</div>'
+    + '<button class="retry" onclick="restart()">다른 길로도 풀어보기</button>';
+  document.getElementById('flow').appendChild(div);
+  setTimeout(()=> div.scrollIntoView({behavior:'smooth', block:'center'}), 120);
+}
+
+function restart(){
+  if(cur === null) return;
+  openedKeys = []; path = []; hintUsed = 0;
+  document.getElementById('flow').innerHTML = '';
+  renderProblem(); renderFig();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+renderHome();
+</script>
+</body>
+</html>
