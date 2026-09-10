@@ -994,6 +994,7 @@ textarea.ce-f{resize:vertical;min-height:56px;line-height:1.6;}
 }
 
 </style>
+<link rel="stylesheet" href="ui-integration/app-ui.css?v=78.7">
 </head>
 <body>
 <script>
@@ -19839,12 +19840,14 @@ window.addEventListener('load', ()=>{ try{
   // [v78.6] 예전엔 window.session만 봤는데 session은 스크립트 전역 let이라 window에 없다.
   //   → cvSid()가 늘 'guest'를 돌려줘서, 학원 태블릿을 여러 학생이 쓰면
   //     대화형 포인트·통과기록이 한 덩어리로 섞였다. 실제 학생 id를 쓰도록 고친다.
-  function cvSid(){
-    let s=null;
-    try{ if(typeof session!=='undefined' && session && session.student) s=session.student; }catch(_){}
-    if(!s && window.session && window.session.student) s=window.session.student;
-    return s ? s.id : 'guest';
+  //   [v78.7] 같은 원인의 두 번째 자리가 cvSaveRecord였다. 거기선 학생 '객체'가 필요하므로
+  //     객체를 돌려주는 cvStudent()를 만들고 두 곳이 같이 쓰게 한다.
+  function cvStudent(){
+    try{ if(typeof session!=='undefined' && session && session.student) return session.student; }catch(_){}
+    if(window.session && window.session.student) return window.session.student;
+    return null;
   }
+  function cvSid(){ const s=cvStudent(); return s ? s.id : 'guest'; }
   function loadPoints(){
     try{ totalPoints=parseInt(localStorage.getItem('cv:points:'+cvSid())||'0',10)||0; }catch(_){ totalPoints=0; }
     passedMap={};
@@ -19911,7 +19914,10 @@ window.addEventListener('load', ()=>{ try{
   // 대화 결과를 기록으로 저장 (기존 submissions 테이블·형식 재사용, 새 컬럼 안 씀)
   async function cvSaveRecord(percent, isPass, earnedPts){
     try{
-      const s = (window.session && window.session.student) ? window.session.student : null;
+      // [v78.7] 예전엔 window.session을 읽었는데 session은 window에 없어서 s가 늘 null이었다.
+      //   → 여기서 그냥 return 해 버려, 대화형 기록이 서버에 한 번도 저장되지 않았다.
+      //     (그래서 두 축 진도의 '개념 대화' 축이 항상 0으로 보였다.)
+      const s = cvStudent();
       if(!s) return;   // 로그인한 학생일 때만 저장
       const ctx = findContext(CUR.id) || {};
       const openQ = (cv.transcript[0] && cv.transcript[0].text) || '';
@@ -20339,7 +20345,10 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-const APP_VERSION = 'v78.6-두축진도';
+const APP_VERSION = 'v78.7-새UI';
+  // [v78.7] 이 값이 IIFE 안에 갇혀 있어 바깥 스크립트(app-ui.js)가 못 읽었다.
+  //   화면 배지에 버전을 그대로 띄우려면 필요하므로 노출한다.
+  window.APP_VERSION = APP_VERSION;
   const badge = document.createElement('div');
   badge.textContent = APP_VERSION;
   badge.setAttribute('aria-label', '앱 버전 ' + APP_VERSION);
@@ -20360,5 +20369,6 @@ const APP_VERSION = 'v78.6-두축진도';
 })();
 </script>
 
+<script src="ui-integration/app-ui.js?v=78.7"></script>
 </body>
 </html>

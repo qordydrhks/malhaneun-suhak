@@ -1,0 +1,228 @@
+{
+  "baseline": "ec0e179776cc7b62b8f5b0e4db9fa0fdfc7ca17a",
+  "baselineHtmlSHA256": "74b063b6cc5fdd2c5dbd760ad2c407f739f4c2c33499d4e156dfb3051aeb10da",
+  "integrationVersion": "78.6-ui.1",
+  "environment": "Node + jsdom; network disabled; AI transport fixtures",
+  "limitations": [
+    "No live AI/production database calls",
+    "No browser rendering, real microphone or mobile-device visual test"
+  ],
+  "results": [
+    {
+      "name": "Original app and integrated UI boot without runtime errors",
+      "status": "passed"
+    },
+    {
+      "name": "All four original inline scripts and curriculum remain byte-identical",
+      "status": "passed"
+    },
+    {
+      "name": "Teacher authentication rejects wrong PIN; all eight actual menus open",
+      "status": "passed"
+    },
+    {
+      "name": "Moved student registration form saves two independent accounts",
+      "status": "passed"
+    },
+    {
+      "name": "Real student login rejects wrong password and reaches the new home",
+      "status": "passed"
+    },
+    {
+      "name": "All 18 grades and 1058 concept-to-unit mappings resolve",
+      "status": "passed"
+    },
+    {
+      "name": "Concept/type question tabs match the engine completion requirements",
+      "status": "passed"
+    },
+    {
+      "name": "Text fallback, actual submission, 69/70 boundary, skip and saved records work",
+      "status": "passed"
+    },
+    {
+      "name": "Navigation and logout stay locked during AI evaluation and record saving",
+      "status": "passed"
+    },
+    {
+      "name": "AI failures unlock retry and do not fabricate pass records",
+      "status": "passed"
+    },
+    {
+      "name": "Completing required questions opens the original three-question basic quiz",
+      "status": "passed"
+    },
+    {
+      "name": "Records and tasks are reachable and leave learning focus correctly",
+      "status": "passed"
+    },
+    {
+      "name": "Actual talk engine saves current student records without main-flow review or quiz",
+      "status": "passed"
+    },
+    {
+      "name": "Second student does not inherit first student completion or selection",
+      "status": "passed"
+    },
+    {
+      "name": "New teacher tab requires PIN even when a saved student login exists",
+      "status": "passed"
+    },
+    {
+      "name": "A review card synchronizes the actual question and curriculum selection across grades",
+      "status": "passed"
+    },
+    {
+      "name": "High-level and typed question selection preserves original scoring context",
+      "status": "passed"
+    },
+    {
+      "name": "Teacher question editor saves overrides reflected in student questions",
+      "status": "passed"
+    },
+    {
+      "name": "Teacher bank saves a real problem and reports save the selected student comment",
+      "status": "passed"
+    },
+    {
+      "name": "Speech fallback and blank questions remain usable in the integrated shell",
+      "status": "passed"
+    },
+    {
+      "name": "Bright CSS parses and focused panels retain visible/hidden routing",
+      "status": "passed"
+    },
+    {
+      "name": "No duplicate DOM ids or uncaught integration errors remain",
+      "status": "passed"
+    }
+  ],
+  "gradeStats": [
+    {
+      "grade": "e3-1",
+      "concepts": 35,
+      "low": 98,
+      "high": 87,
+      "typed": 147
+    },
+    {
+      "grade": "e3-2",
+      "concepts": 35,
+      "low": 77,
+      "high": 73,
+      "typed": 144
+    },
+    {
+      "grade": "e4-1",
+      "concepts": 27,
+      "low": 59,
+      "high": 55,
+      "typed": 125
+    },
+    {
+      "grade": "e4-2",
+      "concepts": 33,
+      "low": 69,
+      "high": 66,
+      "typed": 154
+    },
+    {
+      "grade": "e5-1",
+      "concepts": 29,
+      "low": 61,
+      "high": 58,
+      "typed": 117
+    },
+    {
+      "grade": "e5-2",
+      "concepts": 29,
+      "low": 61,
+      "high": 58,
+      "typed": 119
+    },
+    {
+      "grade": "e6-1",
+      "concepts": 31,
+      "low": 68,
+      "high": 62,
+      "typed": 130
+    },
+    {
+      "grade": "e6-2",
+      "concepts": 33,
+      "low": 66,
+      "high": 66,
+      "typed": 132
+    },
+    {
+      "grade": "m1-1",
+      "concepts": 107,
+      "low": 298,
+      "high": 295,
+      "typed": 434
+    },
+    {
+      "grade": "m1-2",
+      "concepts": 122,
+      "low": 366,
+      "high": 366,
+      "typed": 489
+    },
+    {
+      "grade": "m2-1",
+      "concepts": 42,
+      "low": 126,
+      "high": 126,
+      "typed": 180
+    },
+    {
+      "grade": "m2-2",
+      "concepts": 81,
+      "low": 243,
+      "high": 243,
+      "typed": 334
+    },
+    {
+      "grade": "m3-1",
+      "concepts": 97,
+      "low": 291,
+      "high": 291,
+      "typed": 396
+    },
+    {
+      "grade": "m3-2",
+      "concepts": 61,
+      "low": 183,
+      "high": 183,
+      "typed": 254
+    },
+    {
+      "grade": "h1-1",
+      "concepts": 91,
+      "low": 273,
+      "high": 273,
+      "typed": 0
+    },
+    {
+      "grade": "h1-2",
+      "concepts": 133,
+      "low": 399,
+      "high": 399,
+      "typed": 543
+    },
+    {
+      "grade": "h-daesu",
+      "concepts": 40,
+      "low": 120,
+      "high": 120,
+      "typed": 0
+    },
+    {
+      "grade": "h-mijeok",
+      "concepts": 32,
+      "low": 96,
+      "high": 96,
+      "typed": 0
+    }
+  ]
+}

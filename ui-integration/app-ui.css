@@ -1,0 +1,254 @@
+/* Bright UI, scoped to the existing student/teacher/auth roots. Parent reports retain their original print layout. */
+body.dd-ui:not(.dd-ui-parent){background:#f7faff;color:#203452;font:16px/1.65 Pretendard,"Noto Sans KR",-apple-system,BlinkMacSystemFont,"Segoe UI","Malgun Gothic",sans-serif}
+body.dd-ui:not(.dd-ui-parent)>.wrap{max-width:none;padding:0}
+body.dd-ui #sessionChip,body.dd-ui #teacherNav,body.dd-ui #railToggleBtn{display:none!important}
+body.dd-ui #greetName{display:none!important}
+body.dd-ui #studentLogoutBtn{background:transparent;border:0;color:#607a9c;font:inherit;font-size:.9375rem;min-height:44px;padding:8px 4px}
+/* [v78.7] 원래 버전 배지는 숨긴다. 새 배지가 APP_VERSION을 그대로 보여주므로 두 개가 겹칠 이유가 없다. */
+body.dd-ui>div[aria-label^="앱 버전 "]{display:none!important}
+.dd-ui-axes .cvx-bar{display:block;clear:both}
+body.dd-ui [hidden]{display:none!important}
+body.dd-ui :is(#viewLanding,#viewTeacherAuth,#viewStudent,#viewTeacher){--ink:#203452;--ink-soft:#687d99;--line:#e0e7f3;--blue:#3d65ed;--blue-deep:#244ac6;--purple:#3d65ed;--purple-deep:#3157c3;--purple-dim:#edf3ff;--sage:#248d72;--surface:#fff;--card:#fff;--bg:#f7faff;color:#203452}
+body.dd-ui :is(#viewStudent,#viewTeacher) .topbar{position:relative;background:#fff;border-bottom:1px solid #e1e9f4;box-shadow:none;color:#203452;padding:22px max(24px,calc((100vw - 1160px)/2));height:auto;min-height:90px;gap:18px;flex-wrap:wrap}
+body.dd-ui :is(#viewStudent,#viewTeacher) .tb-brand{color:#203452;min-width:0;flex-shrink:0}
+body.dd-ui :is(#viewStudent,#viewTeacher) .tb-brand b{color:#203452;font-size:1.2rem}
+body.dd-ui :is(#viewStudent,#viewTeacher) .tb-mark{background:linear-gradient(145deg,#7395ff,#3d65ed);color:white;border-radius:12px;box-shadow:0 3px 0 #b9caff}
+body.dd-ui :is(#viewStudent,#viewTeacher) .tb-right{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-left:auto}
+body.dd-ui :is(#viewStudent,#viewTeacher) .tb-account{border:0;background:transparent;color:#6b819f;font-size:.9375rem;cursor:pointer}
+body.dd-ui #viewStudent .main.centered,body.dd-ui #viewTeacher .main{width:100%;max-width:1160px;min-width:0;margin:0 auto;padding:38px 28px 70px;box-sizing:border-box}
+body.dd-ui button,body.dd-ui a,body.dd-ui input,body.dd-ui select,body.dd-ui textarea{touch-action:manipulation}
+body.dd-ui :is(button,a,input,select,textarea,summary):focus-visible{outline:3px solid #648cf0;outline-offset:4px}
+.dd-ui-version{position:fixed;right:12px;bottom:8px;color:#7188a5;font-size:11px;z-index:100;background:#f7faffed;border-radius:7px;padding:3px 9px;pointer-events:none}
+.dd-ui-sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.dd-ui-primary,.dd-ui-secondary,.dd-ui-text,.dd-ui-grade,.dd-ui-course{font:inherit;cursor:pointer;line-height:1.5}
+.dd-ui-primary{background:#3d65ed;border:1px solid #3158dd;border-radius:14px;box-shadow:0 4px 0 #244ac6;color:white;padding:15px 23px;min-height:53px;font-weight:700}
+.dd-ui-secondary{background:#fff;border:1px solid #dce5f3;border-radius:13px;box-shadow:0 3px 0 #e5ecf7;color:#4a6993;padding:13px 19px;min-height:49px;font-weight:650}
+.dd-ui-text{background:transparent;border:0;box-shadow:none;color:#5d7db0;padding:10px 6px;min-height:44px;font-weight:600}
+.dd-ui-course{background:#edf3ff;border:1px solid #dce6fb;color:#496eae;border-radius:11px;padding:10px 14px;font-weight:650}
+.dd-ui-full{display:block;width:100%;margin-top:17px}
+.dd-ui-primary:hover{background:#3159e3}.dd-ui-secondary:hover{border-color:#adc4ed}.dd-ui-primary:active,.dd-ui-secondary:active{transform:translateY(2px);box-shadow:0 1px 0 #c1d0ea}
+.dd-ui-hello{display:flex;justify-content:space-between;align-items:center;margin:0 0 29px;gap:25px}
+.dd-ui-hello h1{font-size:1.9rem;letter-spacing:-.045em;line-height:1.5;margin:0 0 8px;font-weight:750;color:#274265}
+.dd-ui-hello p,.dd-ui-caption{font-size:.9375rem;color:#647b9a;line-height:1.8;margin:5px 0 12px}
+.dd-ui-mascot{width:160px;flex-shrink:0;filter:drop-shadow(0 11px 9px #4567a512)}
+.dd-ui-mascot svg{width:100%;height:auto}.dd-ui-hello .dd-ui-mascot{width:85px;opacity:.95}
+.dd-ui-home-grid{display:grid;grid-template-columns:1.45fr 1fr;gap:25px;align-items:stretch}
+.dd-ui-study{background:linear-gradient(120deg,#edf3ff,#e7eeff);border:1px solid #d8e4fd;border-radius:26px;padding:31px;box-shadow:0 5px 0 #dce6fa}
+.dd-ui-study-top{display:flex;gap:25px;align-items:center;justify-content:space-between;min-height:166px;margin-bottom:18px}
+.dd-ui-study-top>div:first-child{min-width:0;flex:1}
+.dd-ui-study h2{font-size:1.85rem;line-height:1.6;font-weight:750;letter-spacing:-.04em;color:#274b8e;margin:8px 0 17px}
+.dd-ui-tag{display:inline-block;font-size:.8125rem;font-weight:700;color:#5477b7;background:#ffffffb3;padding:5px 12px;border-radius:99px;line-height:1.6}
+.dd-ui-progress-label{display:flex;justify-content:space-between;color:#5273ae;font-size:.875rem;margin-bottom:10px}
+.dd-ui-study .cvx-bar,.dd-ui-axes .cvx-bar{height:7px;border-radius:8px;overflow:hidden}
+.dd-ui-study>.dd-ui-secondary{background:#ffffffa6;box-shadow:0 2px 0 #d7e2f7}
+.dd-ui-side{display:flex;flex-direction:column;gap:23px}
+.dd-ui-talk,.dd-ui-quiet{border:1px solid #dcebe7;border-radius:24px;padding:28px;box-shadow:0 4px 0 #e4eeeb;background:#edf8f4;flex:1}
+.dd-ui-talk h2,.dd-ui-quiet h2{font-size:1.2rem;line-height:1.5;margin:12px 0 10px;color:#397568;font-weight:730}
+.dd-ui-talk p,.dd-ui-quiet p{font-size:.9375rem;line-height:1.8;color:#608579;margin:0 0 18px}
+.dd-ui-talk .dd-ui-secondary{border-color:#c5e5d9;color:#39836f;box-shadow:0 3px 0 #d9ede5}
+.dd-ui-quiet{background:#fff;border-color:#e1e8f3;box-shadow:0 4px 0 #e7edf7}
+.dd-ui-quiet h2{color:#446186;margin-top:0}.dd-ui-quiet p{color:#7287a2}
+.dd-ui-section-head{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin:30px 0 18px}
+.dd-ui-section-head h2{font-size:1.15rem;font-weight:700;color:#345577;line-height:1.6;margin:0}
+.dd-ui-section-head label{font-size:.875rem;color:#6881a0;line-height:1.5}
+.dd-ui-section-head select{padding:10px 12px;background:#fff;border:1px solid #dce5f3;color:#4a6b98;border-radius:10px;font:inherit;min-height:44px;margin-left:7px}
+.dd-ui-axes{display:grid;grid-template-columns:1fr 1fr;gap:30px;padding:24px 28px;background:#fff;border:1px solid #e0e8f3;border-radius:20px}
+.dd-ui-axes article{font-size:.9375rem;color:#66809f}.dd-ui-axes strong{float:right;color:#496eaa;font-size:1rem;margin:0 0 14px 10px}.dd-ui-axes article>div{clear:both}
+.dd-ui-page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:25px;margin:0 0 26px}
+.dd-ui-page-head h1{font-size:1.8rem;line-height:1.6;letter-spacing:-.045em;color:#284668;margin:0;font-weight:750}
+.dd-ui-tabs{display:flex;align-items:center;gap:7px;padding:6px;background:#eaf0fa;border:1px solid #e3eaf5;border-radius:14px;margin:0 0 23px;flex-wrap:wrap;width:fit-content;max-width:100%}
+.dd-ui-tabs button{background:transparent;box-shadow:none;border:0;border-radius:10px;cursor:pointer;font:inherit;font-size:.9375rem;color:#637b9b;padding:11px 19px;line-height:1.5;min-height:44px}
+.dd-ui-tabs button.active,.dd-ui-tabs button[aria-pressed="true"]{background:#fff;color:#4168aa;box-shadow:0 2px 4px #36578112;font-weight:700}
+.dd-ui-tabs button:disabled{opacity:.45;cursor:default}.dd-ui-tabs button span{font-size:.8125rem;margin-left:6px}
+.dd-ui-grade-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.dd-ui-grade{display:flex;justify-content:center;align-items:center;background:#fff;border:1px solid #e0e7f3;box-shadow:0 4px 0 #e7edf7;border-radius:19px;min-height:96px;padding:20px;color:#48698f;font-size:1.125rem;font-weight:650}
+.dd-ui-grade.selected{border-color:#a9c0f0;background:#eaf1ff;color:#3d67b2}.dd-ui-grade:hover{border-color:#a6bff0}
+.dd-ui-choice-list{display:flex;flex-direction:column;gap:15px}
+.dd-ui-choice,.dd-ui-question{display:flex;gap:20px;align-items:center;text-align:left;background:#fff;border:1px solid #dfe7f3;box-shadow:0 3px 0 #e8edf6;border-radius:19px;padding:23px 25px;color:#335176;cursor:pointer;font:inherit;width:100%;min-width:0;line-height:1.7}
+.dd-ui-choice:hover,.dd-ui-question:hover{border-color:#a6bdeb;background:#fcfdff}
+.dd-ui-number{display:flex;align-items:center;justify-content:center;flex-shrink:0;width:37px;min-height:37px;border-radius:11px;background:#edf3fd;color:#7091c5;font-size:.9375rem;font-weight:650}
+.dd-ui-choice>div,.dd-ui-question>div{flex:1;min-width:0}.dd-ui-choice strong{font-size:1.05rem;flex:1;font-weight:650}
+.dd-ui-choice small,.dd-ui-question small{display:block;font-size:.875rem;color:#647d9b;margin:1px 0 7px}
+.dd-ui-choice>span:last-child,.dd-ui-question>span:last-child{color:#8299ba;margin-left:auto}
+.dd-ui-question>.dd-ui-number{align-self:flex-start}.dd-ui-question>div>div{font-size:1.05rem;line-height:1.9}
+.dd-ui-picker-foot{display:flex;gap:20px;align-items:center;justify-content:space-between;border-top:1px solid #dce6f3;padding-top:24px;margin-top:28px;flex-wrap:wrap}
+.dd-ui-picker-foot strong{font-size:.9375rem;color:#496daf}.dd-ui-picker-foot p{font-size:.875rem;color:#637b9b;margin:7px 0}
+.dd-ui-empty{background:#fff;border:1px dashed #dce5f3;border-radius:17px;padding:30px;line-height:1.85;color:#647e9e;font-size:1rem;text-align:center}
+#viewStudent .dd-ui-legacy-picker,#viewStudent #learnSteps{display:none!important}
+#viewStudent #ddUiUtilities{display:none}
+#viewStudent:is([data-ui-page="records"],[data-ui-page="inbox"]) #ddUiUtilities{display:block}
+#viewStudent[data-ui-page="records"] #ddUiInbox,#viewStudent[data-ui-page="inbox"] #ddUiRecords{display:none}
+#viewStudent #ddUiSettings{margin-top:24px}
+#viewStudent:not([data-ui-page="lesson"]) #questionCard,#viewStudent:not([data-ui-page="quiz"]) #quizCard,#viewStudent:not([data-ui-page="talk"]) #convoCard{display:none!important}
+#viewStudent:not([data-ui-page="lesson"]):not([data-ui-page="quiz"]):not([data-ui-page="talk"]) #ddUiLessonHead{display:none}
+#viewStudent .dd-ui-lesson-head{max-width:760px;margin:0 auto 28px;display:flex;align-items:center;gap:20px;justify-content:space-between}
+.dd-ui-lesson-head>div{flex:1;text-align:center;min-width:0}.dd-ui-lesson-head strong{font-size:.9375rem;color:#5b7497;font-weight:650;display:block}
+.dd-ui-lesson-head progress{display:block;width:100%;height:7px;border:0;border-radius:8px;overflow:hidden;appearance:none;margin-top:11px;background:#dce7fa}
+.dd-ui-lesson-head progress::-webkit-progress-bar{background:#e0e9f8}.dd-ui-lesson-head progress::-webkit-progress-value{background:#6d8ff0;border-radius:8px}.dd-ui-lesson-head progress::-moz-progress-bar{background:#6d8ff0;border-radius:8px}
+body.dd-ui #viewStudent :is(#questionCard,#quizCard,#convoCard){max-width:760px;border:0;box-shadow:none;border-radius:0;padding:0;margin:0 auto;background:transparent;width:100%}
+body.dd-ui #viewStudent :is(#questionCard,#quizCard)>.step-eyebrow,body.dd-ui #questionCard>.step-title,body.dd-ui #questionCard>.info-box,body.dd-ui #quizCard>.info-box,body.dd-ui #questionCard #qMeta,body.dd-ui #questionCard .q-progress{display:none}
+#viewStudent #questionCard .q-box{background:#fff;border:1px solid #dfe7f3;border-radius:24px;box-shadow:0 4px 0 #e5ecf7;padding:30px 33px;margin:0 0 25px}
+#viewStudent #questionCard .q-item{border:0;background:transparent;padding:0;box-shadow:none}
+#viewStudent .q-item-text{font-size:1.6rem;font-weight:680;line-height:1.9;letter-spacing:-.02em;color:#223d64;margin:4px 0 18px}
+.dd-ui-lesson-tools{display:flex;justify-content:space-between;align-items:center;margin-top:15px;padding-top:12px;border-top:1px solid #edf1f7}.dd-ui-lesson-tools .dd-ui-text{font-size:.9375rem;padding:0;min-height:36px}
+#viewStudent .hint-btn{font-size:.875rem;color:#5d7daf;border:1px solid #dce7f9;background:#f3f7ff;border-radius:10px;padding:9px 12px;min-height:42px}
+#viewStudent .hint-box{font-size:1rem;line-height:1.85;border-radius:14px}#viewStudent .q-figure{margin-top:5px;border-color:#e8edf5}
+#viewStudent #questionCard .rec-zone{border:0;box-shadow:none;background:transparent;padding:10px 0;margin-top:0}
+#viewStudent #questionCard .rec-btn{background:#3d65ed;width:88px;height:88px;box-shadow:0 6px 0 #244ac6,0 15px 26px #628af22b;border:0}
+#viewStudent #questionCard .rec-btn.recording{background:#e05e6a;box-shadow:0 6px 0 #b7414c}
+#viewStudent #recStatus{font-size:1rem;color:#607b9d;margin:18px 0 20px}
+#viewStudent #liveTranscript{background:#fff;border:1px solid #e0e8f5;line-height:1.8;border-radius:16px;padding:20px;font-size:1rem}
+#viewStudent #liveTranscript.empty{display:none}
+#viewStudent #questionCard[data-input="text"] :is(#recBtnWrap,#recStatus,#liveTranscript){display:none!important}
+#viewStudent #manualFallback{margin:0}
+#viewStudent #manualText{display:block;width:100%;min-height:170px;font-size:1.05rem;line-height:1.85;padding:23px;background:#fff;border:1px solid #dce5f3;border-radius:19px;color:#294469;resize:vertical}
+#viewStudent #questionCard[data-input="voice"] #manualText{display:none!important}
+#viewStudent #submitBtn,#viewStudent #fbArea :is(.primary-btn,.accent),#viewStudent #quizArea .primary-btn,#viewStudent #convoCard .cv-send{border:1px solid #3158dd;background:#3d65ed;color:#fff;box-shadow:0 4px 0 #244ac6;border-radius:14px;padding:15px 20px;font-size:1rem;min-height:52px;line-height:1.5;font-weight:700}
+#viewStudent #submitBtn:disabled{background:#9eb2ea;border-color:#9eb2ea;box-shadow:0 3px 0 #879bd5;cursor:default}
+#viewStudent #backBtn{font-size:.9375rem;color:#607da3;border:0;background:transparent;box-shadow:none;margin-top:15px}
+#viewStudent #fbArea .fb-wrap{padding:24px;background:#fff;border:1px solid #dee7f4;border-radius:22px;box-shadow:0 3px 0 #e7edf7}
+#viewStudent .fb-block{font-size:1rem;line-height:1.85;border-radius:15px}#viewStudent .fb-eyebrow,#viewStudent .fb-score-label{font-size:.875rem}
+#viewStudent .pass-badge{font-size:1.05rem;line-height:1.7}#viewStudent .review-note{font-size:.9375rem;line-height:1.8}
+#viewStudent .timer-note{font-size:.875rem}#viewStudent .timer-wrap{margin:16px 0 20px}
+.dd-ui-details{background:transparent;border-top:1px solid #dfe7f4;margin:22px 0;padding-top:16px;font-size:.9375rem;line-height:1.8}
+.dd-ui-details>summary{cursor:pointer;color:#5f7798;font-size:.9375rem;font-weight:650;padding:5px 0;min-height:39px}
+.dd-ui-details .seg{margin:15px 0}.dd-ui-details .seg button{font-size:.9375rem;padding:12px}.dd-ui-details[open]>summary{margin-bottom:16px}
+#viewStudent #ddUiEmphasisDetails{margin:0 0 18px;padding:0;border:0}#viewStudent #ddUiEmphasisDetails summary{font-size:.875rem;color:#667f9f}
+#viewStudent #ddEmphasis{font-size:.9375rem;line-height:1.8;background:#f0f5ff;border:1px solid #dce8fc;border-radius:15px}
+#viewStudent .quiz-q{padding:26px;background:#fff;border:1px solid #dfe7f3;border-radius:23px;box-shadow:0 3px 0 #e5ecf7}
+#viewStudent .quiz-stem{font-size:1.35rem;line-height:1.9}#viewStudent .quiz-choice{font-size:1.125rem;padding:17px;line-height:1.8;border-radius:15px;border-color:#dde6f4;background:#fff}
+#viewStudent #convoCard .cv-chat{max-height:60vh}
+#viewStudent #convoCard .cv-bubble{font-size:1.05rem;line-height:1.85;padding:18px;border-radius:18px}
+#viewStudent #convoCard .cv-nav,#viewStudent #convoCard .cv-item{font-size:1rem;padding:17px 20px;border-color:#e0e8f4;box-shadow:0 3px 0 #e6edf7;background:#fff;border-radius:17px}
+#viewStudent #convoCard #cvAnswer{font-size:1rem;border-color:#dce6f5;background:#fff;padding:14px;border-radius:15px}
+#viewStudent #myHistoryHost .my-panel{background:#fff;border:1px solid #e1e8f3;border-radius:22px;padding:23px}
+#viewStudent #myHistoryHost :is(.my-item,.my-cheer,.ms-label){font-size:.9375rem}
+#viewStudent #reviewHost :is(.review-toggle,.review-card),#viewStudent #assignHost button{font-size:.9375rem;line-height:1.75}
+/* Authentication retains its inputs and original listeners. */
+body.dd-ui #viewLanding .login-dark{background:transparent;min-height:calc(100svh - 35px);display:grid;grid-template-columns:1.08fr 1fr;align-items:center;gap:90px;padding:60px 35px;max-width:1080px;margin:0 auto;box-sizing:border-box}
+body.dd-ui #viewLanding .login-dark::before,body.dd-ui #viewLanding .login-dark::after{display:none}
+body.dd-ui #viewLanding .login-card{width:100%;max-width:none;background:#fff;border:1px solid #e0e8f5;border-radius:29px;padding:36px;box-shadow:0 22px 55px #263e640c,0 5px 0 #e6edf8;text-align:left;backdrop-filter:none}
+body.dd-ui #viewLanding .login-logo{background:#3d65ed;border-radius:13px;box-shadow:0 4px 0 #b9caff;width:43px;height:43px;margin:0 0 20px}
+body.dd-ui #viewLanding .login-logo svg{width:24px;height:24px}
+body.dd-ui #viewLanding .login-title{font-size:1.6rem;color:#294265;margin:0 0 10px;letter-spacing:-.05em}
+body.dd-ui #viewLanding .login-desc{font-size:.9375rem;color:#647b9a;margin:0 0 26px;line-height:1.75}
+body.dd-ui #viewLanding .login-input{background:#fbfcff;border:1px solid #dbe4f2;color:#294265;border-radius:13px;font-size:1rem;padding:15px;margin:7px 0 20px;min-height:52px;width:100%;box-sizing:border-box}
+body.dd-ui #viewLanding .login-input::placeholder{color:#8195b0}
+body.dd-ui #viewLanding .login-btn{background:#3d65ed;color:#fff;box-shadow:0 5px 0 #244ac6;border:1px solid #3158dd;border-radius:14px;font-size:1rem;padding:16px;width:100%;font-weight:700}
+body.dd-ui #viewLanding .login-teacher-link{background:transparent;border:0;color:#607da3;font-size:.9375rem;min-height:44px}
+body.dd-ui #viewLanding .login-sub{text-align:center;margin-top:22px}
+.dd-ui-field-label{display:block;font-size:.9375rem;font-weight:600;color:#587190;line-height:1.6}
+.dd-ui-welcome{text-align:left}.dd-ui-welcome .dd-ui-mascot{width:240px;margin:0 auto 27px}
+.dd-ui-welcome h1{font-size:2.5rem;line-height:1.45;letter-spacing:-.06em;color:#243e61;margin:0 0 14px;font-weight:770}
+.dd-ui-welcome p{font-size:1.13rem;line-height:1.9;color:#617b9d;margin:0}
+body.dd-ui #viewTeacherAuth{max-width:550px;margin:10vh auto;padding:0 24px}
+body.dd-ui #viewTeacherAuth .card{background:#fff;border:1px solid #dde6f4;box-shadow:0 5px 0 #e4ecf8;border-radius:24px;padding:32px}
+body.dd-ui #viewTeacherAuth :is(input,button){font-size:1rem}
+body.dd-ui #viewTeacherAuth input{margin-top:9px;border-radius:12px;border-color:#dce5f4;min-height:50px}
+body.dd-ui #viewTeacherAuth .primary-btn{background:#3d65ed;color:#fff;border-radius:13px;box-shadow:0 4px 0 #244ac6;margin:20px 0}
+/* Teacher hub opens each existing feature in a separate authenticated tab. */
+.dd-ui-menu-columns{display:grid;grid-template-columns:repeat(3,1fr);align-items:start;gap:23px;margin-top:32px}
+.dd-ui-menu-group>h2{font-size:1rem;color:#627c9c;margin:0 0 17px 3px;font-weight:650;line-height:1.5}
+.dd-ui-menu-card{display:flex;gap:13px;align-items:flex-start;background:#fff;border:1px solid #e0e7f3;border-radius:20px;padding:24px 20px;color:#2b466c;box-shadow:0 4px 0 #e5ecf7;text-decoration:none;margin-bottom:15px;min-height:132px;transition:transform .15s}
+.dd-ui-menu-card:hover{transform:translateY(-2px);border-color:#9bb5f0}
+.dd-ui-menu-icon{display:grid;place-items:center;flex-shrink:0;width:38px;height:38px;background:#eaf0ff;border-radius:12px;color:#5479c9;font-size:1.45rem}
+.group-1 .dd-ui-menu-icon{background:#e7f6f0;color:#469d87}.group-2 .dd-ui-menu-icon{background:#f0f1fa;color:#7f8ab2}
+.dd-ui-menu-card>div{flex:1;min-width:0}.dd-ui-menu-card strong{display:block;font-size:1.07rem;font-weight:730;margin:4px 0 8px;line-height:1.5}
+.dd-ui-menu-card small{font-size:.875rem;color:#637b99;line-height:1.7;display:block}
+body.dd-ui #viewTeacher #teacherShell{display:block}
+body.dd-ui #viewTeacher #teacherRail{position:static;width:100%;max-width:none;height:auto;max-height:none;overflow:visible;margin:0;border:0;border-radius:0;box-shadow:none;padding:0;background:transparent;transform:none}
+body.dd-ui #viewTeacher #ddUiTeacherList{background:#fff;border:1px solid #dee7f5;border-radius:23px;padding:25px;box-shadow:0 3px 0 #e7edf7}
+body.dd-ui #viewTeacher #railSearch{width:100%;max-width:350px;display:block;font-size:1rem;border-radius:11px;padding:13px 16px;border:1px solid #dde6f4;margin:18px 0;box-sizing:border-box;background:#fafcff}
+body.dd-ui #viewTeacher .rail-head{padding:0;margin:0}
+body.dd-ui #viewTeacher .rstu{padding:19px 10px;border-radius:10px;display:flex;gap:15px;border-bottom:1px solid #eef2f8}
+body.dd-ui #viewTeacher .s-name{font-size:1rem;color:#34537e;font-weight:650}
+body.dd-ui #viewTeacher .s-meta{font-size:.875rem;color:#647d9d;margin-left:auto}
+body.dd-ui #viewTeacher .grade-label{font-size:.9375rem;margin:15px 0 7px;color:#5b769a}
+body.dd-ui #viewTeacher .cnt{font-size:.875rem;color:#5f789b}
+body.dd-ui #viewTeacher :is(.card,.ncard){background:#fff;border:1px solid #e1e8f4;box-shadow:0 3px 0 #e6edf6;border-radius:21px;padding:26px}
+body.dd-ui #viewTeacher :is(#ddUiStudentRegister,#ddUiTeacherAi,#ddUiTeacherAdmin,#ddUiTeacherBaseline){max-width:720px;margin:0 auto}
+body.dd-ui #viewTeacher .page-head,body.dd-ui #viewTeacher .card .step-eyebrow{display:none}
+body.dd-ui #viewTeacher .step-title{font-size:1.25rem;line-height:1.5;color:#33517a}
+body.dd-ui #viewTeacher .field-label{font-size:.9375rem;line-height:1.6;color:#59749a}
+body.dd-ui #viewTeacher :is(input,select,textarea){font-size:1rem;border-radius:11px;border-color:#dce5f3;background:#fcfdff;line-height:1.6}
+body.dd-ui #viewTeacher :is(.primary-btn,.nbtn.primary,.ce-save){background:#3d65ed;border:1px solid #3158dd;color:#fff;border-radius:12px;box-shadow:0 3px 0 #244ac6;font-size:.9375rem;min-height:45px}
+body.dd-ui #viewTeacher :is(.nbtn,.ce-revert,.ce-savenote,.ce-info,.ce-legend,.ce-searchbar input,.bank-filters select){font-size:.875rem;line-height:1.65}
+body.dd-ui #viewTeacher .stat-row{gap:16px;margin-bottom:26px}
+body.dd-ui #viewTeacher .nstat{border:1px solid #dee7f5;border-radius:18px;background:#fff;box-shadow:0 3px 0 #e7edf7;padding:22px}
+body.dd-ui #viewTeacher .s-label{font-size:.9375rem;color:#607998}
+body.dd-ui #viewTeacher .s-num{font-size:1.8rem;color:#4d74b9}
+body.dd-ui #viewTeacher .board-legend{font-size:.875rem;line-height:1.7;flex-wrap:wrap;gap:10px}
+body.dd-ui #viewTeacher :is(.ce-card,.ce-qrow){font-size:1rem;line-height:1.8}
+body.dd-ui #viewTeacher .ce-pick-cols{gap:12px}
+body.dd-ui #viewTeacher .ce-pick-h{font-size:1rem}body.dd-ui #viewTeacher .ce-pick-h span{font-size:.875rem}
+body.dd-ui #viewTeacher .ce-actions{flex-wrap:wrap}
+body.dd-ui #viewTeacher .dd-ui-student-detail{background:#f7faff;padding:25px;backdrop-filter:none}
+body.dd-ui #viewTeacher .dd-ui-student-detail .sh-modal{width:100%;max-width:1100px;max-height:calc(100svh - 50px);height:auto;background:#fff;border:1px solid #dee7f5;border-radius:23px;box-shadow:0 6px 25px #263e640c;overflow:auto}
+body.dd-ui #viewTeacher .sh-name{font-size:1.3rem}
+body.dd-ui #viewTeacher .sh-sub{font-size:.875rem;line-height:1.8}
+body.dd-ui #viewTeacher .sh-edit-btn{font-size:.9375rem;min-height:43px;padding:9px 13px;border-radius:10px}
+body.dd-ui #viewTeacher .sh-body{font-size:1rem;line-height:1.8}
+body.dd-ui #viewTeacher .sh-head{position:sticky;top:0;background:#fff;z-index:1;border-color:#e1e8f3;gap:16px;flex-wrap:wrap}
+.dd-ui-notice{position:fixed;left:50%;bottom:32px;transform:translateX(-50%);background:#294469;color:#fff;border-radius:14px;padding:16px 23px;z-index:5000;font-size:.9375rem;max-width:calc(100vw - 36px);width:max-content;box-shadow:0 12px 35px #1d345323;line-height:1.7}
+@media(max-width:1000px){
+ .dd-ui-menu-columns{gap:17px}.dd-ui-menu-card{padding:21px 17px;gap:10px;flex-wrap:wrap}.dd-ui-menu-card>div{flex-basis:calc(100% - 55px)}
+ body.dd-ui #viewLanding .login-dark{gap:55px;max-width:940px;padding:40px 28px}.dd-ui-welcome h1{font-size:2.1rem}
+}
+@media(max-width:760px){
+ body.dd-ui :is(#viewStudent,#viewTeacher) .topbar{padding:18px 20px;gap:14px;min-height:78px}
+ body.dd-ui #viewStudent .main.centered,body.dd-ui #viewTeacher .main{padding:24px 20px 55px}
+ .dd-ui-hello h1{font-size:1.55rem}.dd-ui-hello .dd-ui-mascot{display:none}.dd-ui-home-grid{grid-template-columns:1fr}
+ .dd-ui-side{display:grid;grid-template-columns:1fr 1fr;gap:17px}.dd-ui-study{padding:27px}.dd-ui-study-top{min-height:145px}
+ .dd-ui-study h2{font-size:1.6rem}.dd-ui-mascot{width:135px}.dd-ui-talk,.dd-ui-quiet{padding:22px}
+ .dd-ui-talk h2,.dd-ui-quiet h2{font-size:1.05rem}.dd-ui-talk p,.dd-ui-quiet p{font-size:.875rem}
+ .dd-ui-grade-grid{grid-template-columns:repeat(2,1fr)}.dd-ui-page-head h1{font-size:1.55rem}
+ .dd-ui-choice,.dd-ui-question{padding:20px;gap:14px}.dd-ui-question>div>div{font-size:1rem}
+ body.dd-ui #viewStudent #questionCard .q-box{padding:27px;border-radius:22px}
+ #viewStudent .dd-ui-lesson-head{gap:12px}.dd-ui-lesson-head .dd-ui-text{font-size:.875rem;white-space:nowrap}.dd-ui-lesson-head strong{font-size:.875rem}
+ body.dd-ui #viewStudent .q-item-text{font-size:1.4rem}
+ .dd-ui-menu-columns{grid-template-columns:1fr;gap:25px}.dd-ui-menu-group{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+ .dd-ui-menu-group h2{grid-column:1/-1;margin:0}.dd-ui-menu-card{margin:0;min-height:135px}.dd-ui-menu-card strong{font-size:1rem}
+ body.dd-ui #viewTeacher .stat-row{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+ body.dd-ui #viewTeacher .nstat{padding:18px}body.dd-ui #viewTeacher .card{padding:22px}
+ body.dd-ui #viewLanding .login-dark{display:flex;flex-direction:column;gap:25px;max-width:510px;padding:25px 26px 50px;min-height:0}
+ .dd-ui-welcome{text-align:center}.dd-ui-welcome .dd-ui-mascot{width:140px;margin-bottom:13px}
+ .dd-ui-welcome h1{font-size:1.85rem;margin-bottom:9px}.dd-ui-welcome p{font-size:1rem}.dd-ui-welcome p br{display:none}
+ body.dd-ui #viewLanding .login-card{padding:29px}body.dd-ui #viewLanding .login-logo{display:none}
+ body.dd-ui #viewTeacher .dd-ui-student-detail{padding:14px}
+ body.dd-ui #viewTeacher .dd-ui-student-detail .sh-modal{max-height:calc(100svh - 28px)}
+}
+@media(max-width:440px){
+ body.dd-ui :is(#viewStudent,#viewTeacher) .topbar{padding:16px 18px}
+ body.dd-ui #viewStudent .main.centered,body.dd-ui #viewTeacher .main{padding:22px 18px 50px}
+ body.dd-ui :is(#viewStudent,#viewTeacher) .tb-brand b{font-size:1.05rem}
+ body.dd-ui :is(#viewStudent,#viewTeacher) .tb-right{gap:9px}
+ body.dd-ui #viewStudent .tb-right>.dd-ui-text{display:none}.dd-ui-course{font-size:.875rem}
+ .dd-ui-study{padding:23px}.dd-ui-study h2{font-size:1.4rem}.dd-ui-study .dd-ui-mascot{width:107px}.dd-ui-study-top{gap:10px}
+ .dd-ui-side{display:flex;gap:15px}.dd-ui-talk,.dd-ui-quiet{padding:22px}
+ .dd-ui-axes{gap:20px;padding:20px}.dd-ui-axes article{font-size:.875rem}.dd-ui-axes strong{font-size:.9375rem}
+ .dd-ui-tabs button{font-size:.9375rem;padding:10px}.dd-ui-choice,.dd-ui-question{padding:18px 15px;gap:12px}
+ .dd-ui-choice>span:last-child,.dd-ui-question>span:last-child{display:none}.dd-ui-choice strong{font-size:1rem}
+ .dd-ui-picker-foot .dd-ui-primary{width:100%}
+ .dd-ui-section-head label{font-size:.875rem;display:flex;align-items:center;justify-content:space-between;flex:1;min-width:240px}.dd-ui-section-head h2{font-size:1.05rem}
+ body.dd-ui #viewStudent .q-item-text{font-size:1.25rem}body.dd-ui #viewStudent #questionCard .q-box{padding:23px}
+ body.dd-ui #viewStudent #fbArea .fb-wrap{padding:21px}
+ #viewStudent .dd-ui-lesson-head{flex-wrap:wrap;margin-bottom:20px}.dd-ui-lesson-head>div{order:3;flex-basis:100%;margin-top:7px}
+ .dd-ui-lesson-head .dd-ui-text{padding:3px 0;min-height:34px}
+ .dd-ui-menu-group{grid-template-columns:1fr}.dd-ui-menu-card{min-height:112px;flex-wrap:nowrap;padding:21px}.dd-ui-menu-card>div{flex:1}
+ .dd-ui-page-head{gap:12px}
+ body.dd-ui #viewTeacher .sh-head{padding:18px}body.dd-ui #viewTeacher .sh-head>div:last-child{flex-wrap:wrap;gap:8px!important}
+ body.dd-ui #viewTeacher .sh-body{padding:18px}body.dd-ui #viewTeacher #ddUiTeacherList{padding:21px}
+ body.dd-ui #viewTeacherAuth .card{padding:27px}body.dd-ui #viewTeacherAuth{padding:0 20px}
+}
+/* [v78.7] 좁은 화면에서 '개념 목록'→'개념 목/록', '설명 수준'→'설명 수/준' 처럼
+   글자 단위로 쪼개지던 문제. 되돌아가는 링크와 라벨은 줄바꿈하지 않는다. */
+.dd-ui-page-head>.dd-ui-text{white-space:nowrap;flex:0 0 auto}
+.dd-ui-section-head label{white-space:nowrap}
+.dd-ui-section-head select{min-width:0;flex:0 1 auto;text-overflow:ellipsis}
+@media(max-width:440px){
+ .dd-ui-section-head{gap:10px}
+ .dd-ui-section-head label{min-width:0;width:100%}
+ .dd-ui-section-head select{flex:1 1 auto;margin-left:10px}
+}
+@media(prefers-reduced-motion:reduce){body.dd-ui *,body.dd-ui *::before,body.dd-ui *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+@media print{.dd-ui-version,.dd-ui-notice{display:none!important}}
