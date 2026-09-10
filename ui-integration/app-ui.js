@@ -29,6 +29,12 @@
   const isOwner = () => !!session.teacher && session.role === 'owner';
   function node(id, tag='div', cls='') { const n=document.createElement(tag); n.id=id; n.className=cls; return n; }
   function notice(text) { $('ddUiNotice').textContent=text; $('ddUiNotice').hidden=false; clearTimeout(notice.timer); notice.timer=setTimeout(()=>$('ddUiNotice').hidden=true,4200); }
+  // [v79.1] 학원 기기에서만 학습(AI)을 연다. 아이 폰에서는 이유를 알려 주고 멈춘다.
+  function academyOk() {
+    if(typeof isAcademyDevice!=='function' || isAcademyDevice() || session.teacher) return true;
+    notice('학원 태블릿에서만 공부할 수 있어요. 선생님께 말씀해 주세요.');
+    return false;
+  }
   function stopTalkMic() { if($('cvMic').classList.contains('rec')) $('cvMic').click(); }
   function stage(page) {
     const focus = ['lesson','quiz','talk'].includes(page);
@@ -89,6 +95,7 @@
   }
   async function startItem(item) {
     if(!item || ui.busy || !isStudent()) return false;
+    if(!academyOk()) return false;   // [v79.1] 학원 기기에서만
     CP.type=item.ti; CP.qIndex=item.index; cpSyncLegacy();
     if(!currentUnits().some(u=>u.id===state.unitId)) { notice('질문과 단원 연결을 확인하지 못했어요. 다른 개념을 골라 주세요.'); return false; }
     state._baseLevel=ui.level; state._qType=item.type||null; state.level=item.type?(QTYPE_LEVEL[item.type]||'high'):ui.level;
@@ -103,6 +110,7 @@
   function home() {
     const sm=cpCurrentSmall(), qs=questionItems(), passed=qs.filter(q=>status(q)==='pass').length;
     return '<div class="dd-ui-hello"><div><h1>'+esc(session.student?.name||'')+' 학생, 어서 와요.</h1><p>알고 있는 수학을 내 말로 꺼내볼까요?</p></div>'+mascot()+'</div>'+
+      (typeof isAcademyDevice==='function'&&!isAcademyDevice()?'<div class="dd-ui-device-note" role="note">📵 이 기기에서는 설명하기를 할 수 없어요. <b>학원 태블릿</b>에서 공부해 주세요. 기록 보기는 여기서도 돼요.</div>':'')+
       '<div class="dd-ui-home-grid"><section class="dd-ui-study"><div class="dd-ui-study-top"><div><span class="dd-ui-tag">'+(sm?'이어서 공부하기':'오늘의 개념')+'</span><p class="dd-ui-caption">'+esc(grade()?.name||'공부할 학년부터 선택해요')+'</p><h2>'+esc(smallTitle(sm))+'</h2></div>'+mascot()+'</div>'+
       (sm&&ui.level!=='blank'?'<div class="dd-ui-progress-label"><span>설명한 질문</span><strong>'+passed+' / '+qs.length+'</strong></div>'+cvxBar(passed,qs.length):'')+
       button((sm?'이어서 공부하기':'학년·개념 고르기')+' →','continue','dd-ui-primary dd-ui-full')+button('개념·질문 고르기','catalog','dd-ui-secondary dd-ui-full')+'</section>'+
@@ -322,7 +330,7 @@
   // The talk save hook expects window.session; always reflect the real lexical session.
   if(!Object.getOwnPropertyDescriptor(window,'session')) Object.defineProperty(window,'session',{configurable:true,get:()=>session});
   const openTalk=window.cvOpenType;
-  window.cvOpenType=function(id) { if(!isStudent()||ui.busy)return; openTalk(id); if($('convoCard').style.display!=='none')stage('talk'); };
+  window.cvOpenType=function(id) { if(!isStudent()||ui.busy)return; if(!academyOk())return; openTalk(id); if($('convoCard').style.display!=='none')stage('talk'); };
   document.addEventListener('click',async e=>{
     const el=e.target.closest('[data-dd-ui]'); if(!el)return;
     // [v78.8] 선생님 메뉴는 <a href> 라서 그냥 두면 페이지가 통째로 새로 열리고
@@ -341,13 +349,13 @@
       case 'small': CP.middle=Number(el.dataset.middle); CP.small=Number(el.dataset.small); CP.type=0; CP.qIndex=null; restoreLevel(); cpSyncLegacy(); ui.kind='concept'; remember(); stage('questions'); break;
       case 'kind': ui.kind=el.dataset.kind; renderStudent(); break;
       case 'question': await startItem(ui.questions[Number(el.dataset.index)]); break;
-      case 'continue': if(!cpCurrentSmall())stage(CP.grade?'catalog':'grades'); else {const left=remaining(); if(left.length)await startItem(left[0]);else await startQuiz();} break;
-      case 'quiz': await startQuiz(); break;
+      case 'continue': if(!cpCurrentSmall())stage(CP.grade?'catalog':'grades'); else {const left=remaining(); if(left.length)await startItem(left[0]);else if(academyOk()) await startQuiz();} break;
+      case 'quiz': if(academyOk()) await startQuiz(); break;
       case 'lesson-back': if(ui.page==='talk')$('cvBack').click(); else $('backBtn').click(); stage(cpCurrentSmall()?'questions':'catalog'); break;
       case 'help': if(ddHasCard(ddCurrentCard()))ddOpenLearn(ddCurrentCard());else notice('이 개념의 학습 자료를 준비 중이에요.'); break;
       case 'voice': stopRecognitionIfActive(); ui.input='voice'; applyInputMode(); break;
       case 'text': stopRecognitionIfActive(); ui.input='text'; $('showManualBtn').click(); applyInputMode(); $('manualText').focus(); break;
-      case 'talk': stopRecognitionIfActive(); Timer.hide(); $('cvEntryBtn').click(); stage('talk'); break;
+      case 'talk': if(!academyOk()) break; stopRecognitionIfActive(); Timer.hide(); $('cvEntryBtn').click(); stage('talk'); break;
       case 'records': renderMyHistory(); stage('records'); break;
       case 'inbox': loadAssignments(); loadReviewCards(); stage('inbox'); break;
       case 'teacher-home': showTeacher(null); break;
