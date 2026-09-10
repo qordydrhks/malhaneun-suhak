@@ -6,7 +6,11 @@ body.dd-ui #greetName{display:none!important}
 body.dd-ui #studentLogoutBtn{background:transparent;border:0;color:#607a9c;font:inherit;font-size:.9375rem;min-height:44px;padding:8px 4px}
 /* [v78.7] 원래 버전 배지는 숨긴다. 새 배지가 APP_VERSION을 그대로 보여주므로 두 개가 겹칠 이유가 없다. */
 body.dd-ui>div[aria-label^="앱 버전 "]{display:none!important}
-.dd-ui-axes .cvx-bar{display:block;clear:both}
+/* [v78.8] .cvx-bar 는 v78.6에서 flex 자식으로만 쓰던 span 이라 height:7px 가 먹었다.
+   새 UI에서 flex 밖에 놓이자 display:inline 이 되어 높이가 무시되고 347px 로 부풀었고,
+   '이어서 공부하기' 버튼이 카드 밖으로 밀려나 보이지 않았다. 어디에 놓이든 막대로 굳힌다. */
+body.dd-ui .cvx-bar{display:block;clear:both;height:7px;width:100%;flex:0 0 auto;box-sizing:border-box}
+body.dd-ui .cvx-bar>i{display:block;height:100%}
 body.dd-ui [hidden]{display:none!important}
 body.dd-ui :is(#viewLanding,#viewTeacherAuth,#viewStudent,#viewTeacher){--ink:#203452;--ink-soft:#687d99;--line:#e0e7f3;--blue:#3d65ed;--blue-deep:#244ac6;--purple:#3d65ed;--purple-deep:#3157c3;--purple-dim:#edf3ff;--sage:#248d72;--surface:#fff;--card:#fff;--bg:#f7faff;color:#203452}
 body.dd-ui :is(#viewStudent,#viewTeacher) .topbar{position:relative;background:#fff;border-bottom:1px solid #e1e9f4;box-shadow:none;color:#203452;padding:22px max(24px,calc((100vw - 1160px)/2));height:auto;min-height:90px;gap:18px;flex-wrap:wrap}
@@ -125,7 +129,12 @@ body.dd-ui #viewStudent :is(#questionCard,#quizCard)>.step-eyebrow,body.dd-ui #q
 #viewStudent #myHistoryHost :is(.my-item,.my-cheer,.ms-label){font-size:.9375rem}
 #viewStudent #reviewHost :is(.review-toggle,.review-card),#viewStudent #assignHost button{font-size:.9375rem;line-height:1.75}
 /* Authentication retains its inputs and original listeners. */
-body.dd-ui #viewLanding .login-dark{background:transparent;min-height:calc(100svh - 35px);display:grid;grid-template-columns:1.08fr 1fr;align-items:center;gap:90px;padding:60px 35px;max-width:1080px;margin:0 auto;box-sizing:border-box}
+/* [v78.8] #viewLanding 은 원래 앱에서 position:fixed 다. 그 안이 화면보다 길어지면
+   문서가 늘어나지 않아 스크롤이 아예 안 됐다. → 키보드가 올라오면 이름·비밀번호 칸과
+   로그인 버튼에 닿을 수 없었다. 이 화면 자체를 스크롤되게 하고,
+   내용이 넘칠 때는 가운데 정렬 대신 위에서부터 쌓이게 한다(safe center). */
+body.dd-ui #viewLanding{overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+body.dd-ui #viewLanding .login-dark{background:transparent;min-height:calc(100svh - 35px);display:grid;grid-template-columns:1.08fr 1fr;align-items:safe center;gap:90px;padding:60px 35px;max-width:1080px;margin:0 auto;box-sizing:border-box}
 body.dd-ui #viewLanding .login-dark::before,body.dd-ui #viewLanding .login-dark::after{display:none}
 body.dd-ui #viewLanding .login-card{width:100%;max-width:none;background:#fff;border:1px solid #e0e8f5;border-radius:29px;padding:36px;box-shadow:0 22px 55px #263e640c,0 5px 0 #e6edf8;text-align:left;backdrop-filter:none}
 body.dd-ui #viewLanding .login-logo{background:#3d65ed;border-radius:13px;box-shadow:0 4px 0 #b9caff;width:43px;height:43px;margin:0 0 20px}
@@ -222,7 +231,10 @@ body.dd-ui #viewTeacher .sh-head{position:sticky;top:0;background:#fff;z-index:1
  body.dd-ui #viewStudent .main.centered,body.dd-ui #viewTeacher .main{padding:22px 18px 50px}
  body.dd-ui :is(#viewStudent,#viewTeacher) .tb-brand b{font-size:1.05rem}
  body.dd-ui :is(#viewStudent,#viewTeacher) .tb-right{gap:9px}
- body.dd-ui #viewStudent .tb-right>.dd-ui-text{display:none}.dd-ui-course{font-size:.875rem}
+ /* [v78.8] 여기서 상단 '학생 홈'을 숨기는 바람에, 폰에서 대단원·소단원·질문목록 화면에
+    홈으로 갈 방법이 아예 없었다(한 단계씩 되돌아가는 링크만 있었다). 다시 보이게 한다. */
+ body.dd-ui #viewStudent .tb-right>.dd-ui-text{display:block;padding:8px 2px;font-size:.875rem;white-space:nowrap}
+ .dd-ui-course{font-size:.875rem}
  .dd-ui-study{padding:23px}.dd-ui-study h2{font-size:1.4rem}.dd-ui-study .dd-ui-mascot{width:107px}.dd-ui-study-top{gap:10px}
  .dd-ui-side{display:flex;gap:15px}.dd-ui-talk,.dd-ui-quiet{padding:22px}
  .dd-ui-axes{gap:20px;padding:20px}.dd-ui-axes article{font-size:.875rem}.dd-ui-axes strong{font-size:.9375rem}
@@ -250,5 +262,9 @@ body.dd-ui #viewTeacher .sh-head{position:sticky;top:0;background:#fff;z-index:1
  .dd-ui-section-head label{min-width:0;width:100%}
  .dd-ui-section-head select{flex:1 1 auto;margin-left:10px}
 }
+/* [v78.8] 설명·기본문제·대화 화면에는 자체 머리말에 '학생 홈'이 있다.
+   상단바 것까지 나오면 같은 버튼이 두 개가 되므로 집중 화면에서는 상단바 쪽을 숨긴다.
+   (선택 화면들에서는 그대로 보인다 — 폰에서 홈으로 갈 유일한 길이다.) */
+body.dd-ui.step-focus #viewStudent .tb-right>.dd-ui-text{display:none!important}
 @media(prefers-reduced-motion:reduce){body.dd-ui *,body.dd-ui *::before,body.dd-ui *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 @media print{.dd-ui-version,.dd-ui-notice{display:none!important}}

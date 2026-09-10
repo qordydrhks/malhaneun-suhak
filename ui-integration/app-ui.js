@@ -136,6 +136,13 @@
     if(!$('ddUiLessonMeta')) return;
     $('ddUiLessonMeta').textContent=ui.page==='quiz'?'기본문제로 확인':ui.page==='talk'?'개념 대화':idx>=0?'질문 '+(idx+1)+' / '+items.length:'말로 설명하기';
     p.max=items.length||1; p.value=items.filter(x=>status(x)==='pass').length; p.hidden=['talk','quiz'].includes(ui.page);
+    // [v78.8] 되돌아가기 글자를 화면에 맞춘다. 대화형은 자기 '단원 선택으로 돌아가기'가 이미 있어서
+    //   여기에 '질문 선택'까지 두면 되돌아가는 버튼이 네 개가 되고 뜻도 맞지 않았다.
+    const back=$('ddUiLessonBack');
+    if(back){
+      back.hidden = (ui.page==='talk');
+      back.textContent = ui.page==='quiz' ? '‹ 질문 목록' : '‹ 질문 선택';
+    }
   }
   // [v78.7] cpRender를 통째로 대신하므로, 여기서 예외가 나면 학생 화면이 빈 채로 멈춘다.
   //   화면 하나가 깨져도 앱 전체가 멎지 않게 감싸고, 아이에게 되돌아갈 길을 준다.
