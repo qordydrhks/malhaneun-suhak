@@ -223,9 +223,14 @@
     for(const id of ['assignHost','reviewHost']) new MutationObserver(updateInbox).observe($(id),{childList:true,subtree:true});
   }
   function teacherUrl(menu) { const u=new URL(location.href); u.search=''; u.hash=''; u.searchParams.set('teacherMenu',menu); return u.href; }
+  // [v78.8] 예전엔 메뉴마다 target="_blank" 로 새 탭을 열었다. 교사 로그인은 탭 안에만
+  //   있는 값이라 새 탭에는 세션이 없고, 그래서 메뉴를 바꿀 때마다 PIN을 다시 물었다.
+  //   → 같은 탭에서 연다. 돌아올 때는 상단 '전체 메뉴'를 쓴다.
+  //   주소(?teacherMenu=)는 그대로 살려 둬서, 즐겨찾기나 Ctrl+클릭으로 새 탭을 열 수도 있다
+  //   (그 경우엔 새 창이므로 PIN을 묻는 게 맞다).
   function teacherOverview() {
-    return '<div class="dd-ui-page-head"><div><p class="dd-ui-caption">선생님 전체 메뉴</p><h1>무엇을 할까요?</h1><p class="dd-ui-caption">필요한 메뉴를 선택하면 새 탭에서 열려요.</p></div></div><div class="dd-ui-menu-columns">'+
-      ['학생과 학습','문항과 수업','앱 설정'].map((group,i)=>'<section class="dd-ui-menu-group group-'+i+'"><h2>'+group+'</h2>'+menus.filter(m=>m[1]===group&&(!['baseline','admin'].includes(m[0])||isOwner())).map(m=>'<a class="dd-ui-menu-card" href="'+esc(teacherUrl(m[0]))+'" target="_blank" rel="noopener noreferrer"><span class="dd-ui-menu-icon">'+m[4]+'</span><div><strong>'+m[2]+'</strong><small>'+m[3]+'</small></div><span aria-hidden="true">↗</span><span class="dd-ui-sr-only">새 탭에서 열기</span></a>').join('')+'</section>').join('')+'</div>';
+    return '<div class="dd-ui-page-head"><div><p class="dd-ui-caption">선생님 전체 메뉴</p><h1>무엇을 할까요?</h1><p class="dd-ui-caption">메뉴를 고르면 바로 열려요. 위쪽 ‘전체 메뉴’로 언제든 돌아옵니다.</p></div></div><div class="dd-ui-menu-columns">'+
+      ['학생과 학습','문항과 수업','앱 설정'].map((group,i)=>'<section class="dd-ui-menu-group group-'+i+'"><h2>'+group+'</h2>'+menus.filter(m=>m[1]===group&&(!['baseline','admin'].includes(m[0])||isOwner())).map(m=>'<a class="dd-ui-menu-card" href="'+esc(teacherUrl(m[0]))+'" data-dd-ui="teacher-menu" data-menu="'+m[0]+'"><span class="dd-ui-menu-icon">'+m[4]+'</span><div><strong>'+m[2]+'</strong><small>'+m[3]+'</small></div><span aria-hidden="true">›</span></a>').join('')+'</section>').join('')+'</div>';
   }
   function showTeacher(menu) {
     if(!session.teacher) { showView('viewTeacherAuth'); return; }
@@ -320,6 +325,10 @@
   window.cvOpenType=function(id) { if(!isStudent()||ui.busy)return; openTalk(id); if($('convoCard').style.display!=='none')stage('talk'); };
   document.addEventListener('click',async e=>{
     const el=e.target.closest('[data-dd-ui]'); if(!el)return;
+    // [v78.8] 선생님 메뉴는 <a href> 라서 그냥 두면 페이지가 통째로 새로 열리고
+    //   교사 로그인이 풀려 PIN을 다시 묻는다. 같은 탭에서 처리하도록 기본 동작을 막는다.
+    //   단 Ctrl/Cmd/Shift/가운데 클릭은 "새 탭으로 열겠다"는 뜻이므로 브라우저에 맡긴다.
+    if(el.tagName==='A' && !(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||e.button===1)) e.preventDefault();
     if(ui.busy&&$('viewStudent').classList.contains('active')) { notice('평가와 기록 저장을 마친 뒤 이동할 수 있어요.'); return; }
     switch(el.dataset.ddUi) {
       case 'home': if($('convoCard').style.display!=='none')$('cvBack').click(); stage('home'); cpLoadRecords(); break;
@@ -342,6 +351,7 @@
       case 'records': renderMyHistory(); stage('records'); break;
       case 'inbox': loadAssignments(); loadReviewCards(); stage('inbox'); break;
       case 'teacher-home': showTeacher(null); break;
+      case 'teacher-menu': showTeacher(el.dataset.menu); window.scrollTo(0,0); break;
       case 'teacher-list': case 'teacher-register': {
         const isList=el.dataset.ddUi==='teacher-list'; $('ddUiTeacherList').hidden=!isList; $('ddUiStudentRegister').hidden=isList;
         $('ddUiTeacherStudentTabs').querySelectorAll('button').forEach(b=>b.classList.toggle('active',b===el)); break;
