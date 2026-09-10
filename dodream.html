@@ -4332,8 +4332,44 @@ const Timer = {
    - Claude 앱 안: 키 없이 자동 작동
    - 외부 배포(넷리파이 등): 선생님 화면에서 등록한 키 사용
    ============================================================ */
-function getApiKey(){ try{ return localStorage.getItem('dd:anthropicKey')||''; }catch(e){ return ''; } }
-function setApiKey(k){ try{ localStorage.setItem('dd:anthropicKey', k); }catch(e){} }
+/* [v79.0] 예전엔 키가 그 브라우저 localStorage 에만 있었다.
+   채점은 '학생 기기'에서 돌기 때문에, 아이가 쓰는 기기마다 키를 넣어야 AI가 작동했다.
+   → 선생님 PIN 과 같은 공유 저장소(storageSet/Get → Supabase)에 두어 한 번만 넣으면 되게 한다.
+   localStorage 는 '빠른 사본'으로 계속 쓴다(서버가 느리거나 끊겨도 바로 동작).
+
+   ⚠️ 이 저장소는 앱을 연 사람이면 읽을 수 있다. 지금은 무료 Gemini 키라 감수하기로 했다.
+      유료 Claude 키(sk-ant…)로 바꿀 때는 반드시 서버 중계(프록시)로 옮길 것.
+      아래 setApiKey 가 유료 키를 감지하면 공유 저장을 하지 않고 이 기기에만 넣는다. */
+let _aiKeyCache = null;
+function getApiKey(){
+  if(_aiKeyCache) return _aiKeyCache;
+  try{ return localStorage.getItem('dd:anthropicKey')||''; }catch(e){ return ''; }
+}
+// 공유 저장소에 키가 있으면 가져와 캐시한다. 없으면 이 기기 값을 쓴다.
+async function ensureApiKey(){
+  if(_aiKeyCache) return _aiKeyCache;
+  try{
+    const row = await storageGet('config:aiKey');
+    if(row && row.key){
+      _aiKeyCache = row.key;
+      try{ localStorage.setItem('dd:anthropicKey', row.key); }catch(e){}
+      return _aiKeyCache;
+    }
+  }catch(e){}
+  return getApiKey();
+}
+// 저장 결과를 알려준다: {shared:true} 면 모든 기기에 반영됨, false 면 이 기기에만.
+async function setApiKey(k){
+  _aiKeyCache = k;
+  try{ localStorage.setItem('dd:anthropicKey', k); }catch(e){}
+  if(k && k.startsWith('sk-ant')) return { shared:false, reason:'paid' };   // 유료 키는 공유 안 함
+  try{
+    const ok = (typeof checkSupabase==='function') ? await checkSupabase() : false;
+    if(!ok) return { shared:false, reason:'offline' };
+    await storageSet('config:aiKey', { key:k });
+    return { shared:true };
+  }catch(e){ return { shared:false, reason:'error' }; }
+}
 
 /* ============================================================
    [v76.3] 무료 Gemini 한도(429) 대응 — 원인 구분 + 자동 대기·재시도
@@ -4383,7 +4419,7 @@ function gemQuotaInfo(bodyText){
 }
 
 async function callClaude(payload){
-  const key = getApiKey();
+  const key = await ensureApiKey();   // [v79.0] 이 기기에 없으면 공유 저장소에서 가져온다
 
   /* --- 구글 Gemini 키(AIza...)면 Gemini 무료 API로 호출 ---
      [중요] gemini-2.5-flash는 '사고(thinking) 토큰'을 maxOutputTokens 예산에서 먼저 차감한다.
@@ -5074,22 +5110,35 @@ function initRegGrade(){
 initRegGrade();
 
 /* --- AI 키 등록 --- */
-function refreshKeyStatus(){
+async function refreshKeyStatus(){
   const st = $('keyStatus');
   if(!st) return;
-  const k = getApiKey();
-  if(k && k.startsWith('sk-ant')){ st.textContent = '✅ Claude 등록됨'; st.style.color = 'var(--sage)'; }
-  else if(k){ st.textContent = '✅ Gemini(무료) 등록됨'; st.style.color = 'var(--sage)'; }
+  const k = await ensureApiKey();   // [v79.0] 공유 저장소까지 확인한 뒤 표시
+  let shared = false;
+  try{ const row = await storageGet('config:aiKey'); shared = !!(row && row.key && row.key === k); }catch(e){}
+  const where = shared ? ' · 모든 기기' : ' · 이 기기만';
+  if(k && k.startsWith('sk-ant')){ st.textContent = '✅ Claude 등록됨' + where; st.style.color = 'var(--sage)'; }
+  else if(k){ st.textContent = '✅ Gemini(무료) 등록됨' + where; st.style.color = 'var(--sage)'; }
   else { st.textContent = '⚠️ 미등록'; st.style.color = 'var(--red)'; }
 }
-$('saveKeyBtn').addEventListener('click', ()=>{
+$('saveKeyBtn').addEventListener('click', async ()=>{
   const k = $('apiKeyInput').value.trim();
   const msg = $('keyMsg');
   if(!k){ msg.innerHTML = '<div class="error-box">키를 붙여넣어 주세요.</div>'; return; }
-  setApiKey(k);
+  const btn = $('saveKeyBtn'); btn.disabled = true;
+  msg.innerHTML = '<div class="info-box">저장하는 중…</div>';
+  const r = await setApiKey(k);
+  btn.disabled = false;
   $('apiKeyInput').value = '';
   const provider = k.startsWith('sk-ant') ? 'Claude' : 'Gemini(무료)';
-  msg.innerHTML = '<div class="info-box">✅ '+provider+' 키가 이 기기에 저장됐어요. 이제 AI 채점이 작동합니다.</div>';
+  // [v79.0] 어디까지 저장됐는지 분명히 알려준다. 기기별인지 학원 전체인지가 중요하다.
+  if(r && r.shared){
+    msg.innerHTML = '<div class="info-box">✅ '+provider+' 키를 저장했어요. <b>학생 기기까지 모두 적용</b>됩니다. 기기마다 넣지 않아도 돼요.</div>';
+  }else if(r && r.reason==='paid'){
+    msg.innerHTML = '<div class="info-box">✅ '+provider+' 키를 <b>이 기기에만</b> 저장했어요.<br>유료 키는 공유 저장소에 두면 앱을 연 사람이 가져갈 수 있어 일부러 공유하지 않습니다. 여러 기기에서 쓰려면 서버 중계를 먼저 만들어야 해요.</div>';
+  }else{
+    msg.innerHTML = '<div class="info-box">✅ '+provider+' 키를 <b>이 기기에만</b> 저장했어요. (서버에 연결되지 않아 다른 기기에는 아직 반영되지 않았어요. 인터넷 연결 후 다시 저장해 주세요.)</div>';
+  }
   refreshKeyStatus();
 });
 
@@ -18365,7 +18414,7 @@ async function openParentManage(){
   // AI 자동 초안
   document.getElementById('pmAiBtn').addEventListener('click', async ()=>{
     const msg = document.getElementById('pmAiMsg');
-    const key = getApiKey();
+    const key = await ensureApiKey();   // [v79.0] 공유 저장소도 확인
     if(!key){ msg.style.color='var(--red)'; msg.textContent='AI 키가 필요해요 (학생·설정 탭)'; return; }
     msg.style.color='var(--ink-soft)'; msg.textContent='초안 만드는 중…';
     try{
@@ -20345,7 +20394,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-const APP_VERSION = 'v78.9-선생님메뉴';
+const APP_VERSION = 'v79.0-AI키공유';
   // [v78.7] 이 값이 IIFE 안에 갇혀 있어 바깥 스크립트(app-ui.js)가 못 읽었다.
   //   화면 배지에 버전을 그대로 띄우려면 필요하므로 노출한다.
   window.APP_VERSION = APP_VERSION;
