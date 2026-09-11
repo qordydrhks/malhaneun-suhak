@@ -132,7 +132,9 @@ function flatten(messages: any[]): string {
 }
 
 // ── Gemini: 예전에 브라우저에서 하던 호출을 그대로 옮겼다(사고 끔, 잘리면 예산 2배로 한 번 더) ──
-async function callGemini(system: string, user: string, maxTokens: number) {
+// think: 문제 만들기·검산(quiz/verify)일 때만 true. 생각 최소로 출제하니 응용 문제 정답 오류가 30문제 중 5개 났다(2026-09-11).
+//   채점 등 나머지는 빠르고 싸게 '최소'. 출제 생각 깊이는 비밀값 DD_GEMINI_THINK_GEN (기본 medium, 되돌리려면 minimal).
+async function callGemini(system: string, user: string, maxTokens: number, think = false) {
   const key = env('GEMINI_API_KEY');
   if (!key) throw httpErr(500, '서버에 GEMINI_API_KEY 비밀값이 없어요.');
   const ask = async (budget: number) => {
@@ -146,7 +148,9 @@ async function callGemini(system: string, user: string, maxTokens: number) {
           contents: [{ role: 'user', parts: [{ text: user }] }],
           generationConfig: { maxOutputTokens: budget, temperature: 0.4,
             // Gemini 3 부터는 생각을 완전히 끌 수 없고 thinkingLevel 로 최소화한다.
-            thinkingConfig: GEMINI_MODEL.startsWith('gemini-2') ? { thinkingBudget: 0 } : { thinkingLevel: 'minimal' } },
+            thinkingConfig: GEMINI_MODEL.startsWith('gemini-2')
+              ? { thinkingBudget: think ? -1 : 0 }
+              : { thinkingLevel: think ? env('DD_GEMINI_THINK_GEN', 'medium') : 'minimal' } },
         }),
       },
     );
@@ -166,11 +170,13 @@ async function callGemini(system: string, user: string, maxTokens: number) {
       outTok: (u.candidatesTokenCount || 0) + (u.thoughtsTokenCount || 0),
     };
   };
-  const base = Math.min(Math.max(maxTokens || 1200, 512), 4000);
+  // 생각 토큰도 출력 한도 안에 들어간다. 생각을 켜면 한도를 넉넉히(안 쓰면 요금 없음).
+  const cap = think ? 16000 : 4000;
+  const base = think ? cap : Math.min(Math.max(maxTokens || 1200, 512), cap);
   let o = await ask(base);
   let inTok = o.inTok, outTok = o.outTok;
-  if ((o.cut || !o.text) && base < 4000) {
-    const o2 = await ask(Math.min(base * 2, 4000));
+  if ((o.cut || !o.text) && base < cap) {
+    const o2 = await ask(Math.min(base * 2, cap));
     inTok += o2.inTok;
     outTok += o2.outTok;
     o = o2;
@@ -310,7 +316,7 @@ Deno.serve(async (req) => {
   try {
     const out = useOpus
       ? await callOpus(task, system, user)
-      : await callGemini(system, user, Number(body.max_tokens) || 1200);
+      : await callGemini(system, user, Number(body.max_tokens) || 1200, GEN_TASKS.has(task));
     const p = PRICE[out.model] || PRICE[useOpus ? OPUS_MODEL : GEMINI_MODEL] || PRICE_UNKNOWN;
     const cost = (out.inTok * p[0] + out.outTok * p[1]) / 1e6;
     const logged = await log({ ...base, model: out.model, input_tokens: out.inTok, output_tokens: out.outTok, cost_usd: cost, ok: true });
