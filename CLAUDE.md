@@ -24,10 +24,24 @@
    ② Anthropic 콘솔 **월 지출 한도 먼저** ③ 출제 비밀번호(긴 문장)
 2. Supabase **SQL Editor** 에 `supabase/sql/ai_usage.sql` 통째로 붙여 넣고 Run
 3. **Edge Functions → Deploy a new function → Via Editor** → 이름 **`ai`** → `supabase/functions/ai/index.ts` 붙여 넣고 Deploy
-4. **JWT 검증 끄기** — 대시보드의 스위치 이름을 공식 문서에서 못 찾았다. 마스터 캡처로 같이 찾기
+   ✅ 2·3단계 완료 (2026-09-11). 함수 주소 `https://cnyrbxsmxwajhlrvcdml.supabase.co/functions/v1/ai`
+4. ✅ **JWT 검증 — 손댈 필요 없었다.** "Via Editor"로 만든 함수는 이미 꺼진 상태였다.
+   확인법: 공개 키(apikey 헤더)만 넣고 `{"task":"ping"}` POST → **HTTP 200** `{"ok":true,…,"logging":true}`.
+   (ping 은 AI를 부르지 않아 비용 0. 이것으로 `index.ts` 첫 실행·SQL 연결까지 검증됨)
 5. **Secrets**: `GEMINI_API_KEY` · `ANTHROPIC_API_KEY` · `DD_GEN_TOKEN` (선택 값은 SETUP.md 표)
+   ✅ `GEMINI_API_KEY` 넣음 (2026-09-11, 새 구글 프로젝트 · **선불 ₩25,000 · 자동충전 끔** → 잔액 0이면 Gemini 즉시 멈춤)
+   🚨 **`gemini-2.5-flash`는 새 프로젝트에서 404** ("no longer available to new users") → 기본 모델을 **`gemini-3.6-flash`**로 바꿈.
+      같이 고친 것: 가격표에 3.x 추가 · 모르는 모델은 `PRICE_UNKNOWN`(비싸게)으로 기록(0이면 예산 브레이크가 안 걸림)
+      · Gemini 3은 `thinkingBudget:0` 대신 `thinkingLevel:'minimal'`.
+      실제 호출 검증: 한글 채점형 요청 → JSON만 정확히 답함, 2.4초, $0.00024. (테스트 기록은 `student_id='claude-test'`)
+      ⚠️ **2027-01-01 `gemini-3.6-flash` 가격 2배** ($0.75/$3.75 → $1.5/$7.5) — 그때 `index.ts` PRICE 줄 고칠 것.
 6. 앱 선생님 → **AI 연결** → 출제 비밀번호 → **서버 연결 확인** → "✅ 서버 연결 · 출제 비밀번호 맞음" 이 **첫 서버 검증**
 7. **시험 생성 10세트** → 1세트 실제 비용·시간 보고 → 마스터 결정 후 **전체 이어서 만들기** (2,636세트, 며칠에 나눠)
+   🔀 **마스터 결정 (2026-09-11): 전체 미리 만들기는 안 한다.** 학생이 소단원을 열 때 Gemini 3.6 Flash가 만들어 저장·공유(원래 구조 그대로).
+      이유: 전체 Opus 추정 수백 달러($400~900, 실측 아님). 채점 모델이 3.6으로 올라가 즉석 문제 품질도 좋아졌을 수 있음.
+      → 시험 10세트(Opus, Anthropic $20 선불 안에서)만 만들어 **같은 소단원 Gemini 문제와 나란히 비교** →
+        차이가 크면 **학원이 실제 쓰는 학년만** Opus로(앱 `#pregenBox`에 학년 고르기 추가 필요 — 지금은 전 학년만 됨).
+      "쓸 때 Opus" 안은 기각: 학생 대기 30초~1분+, 비밀번호 없이 Opus를 열면 공개 키로 누구나 요금 사용.
 8. 서버 확인 뒤 **옛 공유 키 지우기** + 구글에서 옛 무료 키 삭제
 9. 2~4주 쓰고 **이번 달 AI 비용 보기**의 "1명당" 금액으로 가격 결정
 

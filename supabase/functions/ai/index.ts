@@ -50,15 +50,21 @@ function keysOf(name: string): string[] {
   }
 }
 
-const GEMINI_MODEL = env('DD_GEMINI_MODEL', 'gemini-2.5-flash');
+// 2.5-flash 는 새 구글 프로젝트(=새 사용자)에서 404로 막힌다(2026-09-11 확인). 바꾸려면 비밀값 DD_GEMINI_MODEL.
+const GEMINI_MODEL = env('DD_GEMINI_MODEL', 'gemini-3.6-flash');
 const OPUS_MODEL = 'claude-opus-5';
 // 100만 토큰당 달러 [입력, 출력] — 2026-09 공식 가격표. 비용 '기록'용이며 실제 청구는 각 회사 콘솔이 정답.
 const PRICE: Record<string, [number, number]> = {
   'claude-opus-5': [5, 25],
   'claude-opus-4-8': [5, 25], // 거절 시 대체 모델로 넘어갈 수 있다(같은 가격)
+  'gemini-3.6-flash': [0.75, 3.75], // ⚠️ 2027-01-01부터 [1.5, 7.5] — 그때 이 줄을 고칠 것
+  'gemini-3.5-flash-lite': [0.3, 2.5],
+  'gemini-3.1-flash-lite': [0.25, 1.5],
   'gemini-2.5-flash': [0.3, 2.5],
   'gemini-2.5-flash-lite': [0.1, 0.4],
 };
+// 가격표에 없는 모델이면 비싸게 잡는다. 0으로 기록되면 하루 예산 브레이크가 영영 안 걸린다.
+const PRICE_UNKNOWN: [number, number] = [5, 25];
 const TASKS = new Set(['grade', 'hint', 'blanks', 'appeal', 'talk', 'report', 'comment', 'misc', 'quiz', 'verify']);
 const GEN_TASKS = new Set(['quiz', 'verify']);
 
@@ -138,7 +144,9 @@ async function callGemini(system: string, user: string, maxTokens: number) {
         body: JSON.stringify({
           systemInstruction: { parts: [{ text: system }] },
           contents: [{ role: 'user', parts: [{ text: user }] }],
-          generationConfig: { maxOutputTokens: budget, temperature: 0.4, thinkingConfig: { thinkingBudget: 0 } },
+          generationConfig: { maxOutputTokens: budget, temperature: 0.4,
+            // Gemini 3 부터는 생각을 완전히 끌 수 없고 thinkingLevel 로 최소화한다.
+            thinkingConfig: GEMINI_MODEL.startsWith('gemini-2') ? { thinkingBudget: 0 } : { thinkingLevel: 'minimal' } },
         }),
       },
     );
@@ -303,7 +311,7 @@ Deno.serve(async (req) => {
     const out = useOpus
       ? await callOpus(task, system, user)
       : await callGemini(system, user, Number(body.max_tokens) || 1200);
-    const p = PRICE[out.model] || PRICE[useOpus ? OPUS_MODEL : GEMINI_MODEL] || [0, 0];
+    const p = PRICE[out.model] || PRICE[useOpus ? OPUS_MODEL : GEMINI_MODEL] || PRICE_UNKNOWN;
     const cost = (out.inTok * p[0] + out.outTok * p[1]) / 1e6;
     const logged = await log({ ...base, model: out.model, input_tokens: out.inTok, output_tokens: out.outTok, cost_usd: cost, ok: true });
     return json({
