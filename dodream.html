@@ -1398,6 +1398,7 @@ window.DDOOPI = {
               <button class="ghost-btn" id="pgStop" type="button" disabled>멈춤</button>
             </div>
             <label style="display:flex;align-items:center;gap:8px;font-size:.85rem;margin:0 0 6px;"><input type="checkbox" id="pgVerify" checked style="width:auto;margin:0;"> 검산까지 (정답 오류를 한 번 더 걸러냄 · 비용 약 2배)</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:.85rem;margin:0 0 6px;">대상 학년 <select id="pgGrade" style="width:auto;margin:0;"><option value="">전 학년</option></select></label>
             <label style="display:flex;align-items:center;gap:8px;font-size:.85rem;margin:0 0 10px;">동시에 만들기 <select id="pgConc" style="width:auto;margin:0;"><option>1</option><option selected>2</option><option>4</option></select></label>
             <div id="pgProgress" style="font-size:.88rem;line-height:1.7;"></div>
             <div id="pgLog" style="margin-top:8px;max-height:180px;overflow:auto;font:12px/1.6 ui-monospace,Menlo,monospace;color:var(--ink-soft);white-space:pre-wrap;"></div>
@@ -20619,12 +20620,23 @@ window.addEventListener('load', ()=>{ try{
     out.points = out.points.filter(p=>{ const k = String(p).trim(); if(!k || seen[k]) return false; seen[k] = 1; return true; }).slice(0, 6);
     return out;
   }
-  // 전 학년 대상 목록
-  function targets(){
+  // [v80.1] 대상 학년 선택칸 채우기
+  (function fillGrades(){
+    const s = $id('pgGrade'); if(!s) return;
+    GRADES.forEach(g=>{
+      if(!(g.units || []).length) return;
+      const o = document.createElement('option'); o.value = g.id; o.textContent = g.name; s.appendChild(o);
+    });
+  })();
+  // 대상 목록 — '대상 학년'을 고르면 그 학년만. spread(시험 생성)면 그 학년 전체에서 골고루 10세트
+  //   (앞에서부터 10개면 가장 쉬운 첫 단원만 재게 된다. 전 학년일 땐 예전처럼 앞에서부터)
+  function targets(spread){
+    const only = ($id('pgGrade') || {}).value || '';
     const list = [];
     GRADES.forEach(g=>{
       const units = g.units || [];
       if(!units.length) return;
+      if(only && g.id !== only) return;
       const where = {};   // unitId → {big, small}
       const m = cpModel(g.id);
       if(m) (m.bigUnits || []).forEach(b=>cpBigMiddles(b).forEach(mg=>(mg.smalls || []).forEach(sm=>(sm.types || []).forEach(t=>{
@@ -20636,6 +20648,10 @@ window.addEventListener('load', ()=>{ try{
         levels.forEach(lv=>[0,1].forEach(set=>list.push({ g, u, lv, set, big:w.big, small:w.small })));
       });
     });
+    if(spread && only && list.length > 10){
+      const idx = [...new Set(Array.from({ length:10 }, (_, k)=>Math.round(k * (list.length - 1) / 9)))];
+      return idx.map(i=>list[i]);
+    }
     return list;
   }
   async function alreadyOpus(t){
@@ -20677,17 +20693,18 @@ window.addEventListener('load', ()=>{ try{
     setBusy(true); stopFlag = false;
     const verify = !!($id('pgVerify') && $id('pgVerify').checked);
     const conc = Math.max(1, Math.min(4, Number(($id('pgConc') || {}).value) || 2));
-    const all = targets();
+    const all = targets(!!limit);
+    const full = limit ? targets(false) : all;   // 비용 예상은 고른 범위 전체 기준
     const prog = $id('pgProgress');
     let idx = 0, skipped = 0, claimed = 0, made = 0, failed = 0;
     const cost0 = window.__ddAiCost || 0, t0 = Date.now();
     function paint(){
       const spent = (window.__ddAiCost || 0) - cost0;
       const per = made ? spent / made : 0;
-      const left = Math.max(0, all.length - idx);            // 아직 안 본 세트(대부분 만들어야 함)
+      const left = Math.max(0, full === all ? all.length - idx : full.length - made - skipped);   // 아직 안 본 세트(대부분 만들어야 함)
       const secs = (Date.now() - t0) / 1000, perSet = made ? secs * conc / made : 0;
       if(prog) prog.innerHTML =
-        '전체 ' + all.length + '세트 · 확인 ' + idx + ' · <b>이미 완료 ' + skipped + '</b> · 이번에 만듦 <b>' + made + '</b>' + (limit ? ' / ' + limit : '') + ' · 실패 ' + failed + '<br>'
+        '전체 ' + full.length + '세트 · 확인 ' + idx + ' · <b>이미 완료 ' + skipped + '</b> · 이번에 만듦 <b>' + made + '</b>' + (limit ? ' / ' + limit : '') + ' · 실패 ' + failed + '<br>'
         + '이번 비용 <b>$' + spent.toFixed(3) + '</b> (약 ' + won(spent) + ')'
         + (made ? ' · 1세트 평균 <b>$' + per.toFixed(4) + '</b> · 약 ' + Math.round(perSet) + '초' : '')
         + (made ? '<br>남은 약 ' + left + '세트를 모두 만들면: <b>$' + (per * left).toFixed(0) + '</b> (약 ' + won(per * left) + ') · 약 ' + Math.round(perSet * left / conc / 3600 * 10) / 10 + '시간' : '');
@@ -20761,7 +20778,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-const APP_VERSION = 'v80.0-AI서버';
+const APP_VERSION = 'v80.1-학년골라출제';
   // [v78.7] 이 값이 IIFE 안에 갇혀 있어 바깥 스크립트(app-ui.js)가 못 읽었다.
   //   화면 배지에 버전을 그대로 띄우려면 필요하므로 노출한다.
   window.APP_VERSION = APP_VERSION;
