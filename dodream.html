@@ -5837,36 +5837,286 @@ function ddWedgeLabelPos(vertex, p1, p2, rLabel){
   return ddAddV(vertex,[Math.cos(mid),Math.sin(mid)],rLabel);
 }
 
+/* ── [v80.4] ddFig 확장: 함수 그래프 · 원/호 · 직선 · 수직선 (고등 그래프·중등 원 단원용) ──
+   · 나중에 AI가 쓴 '설계도'를 그대로 받을 수 있게: 식은 eval 없이 직접 읽고(ddExpr), 색은 걸러내고(ddCol),
+     새 요소는 하나가 틀려도 그 요소만 빠지고 그림 전체는 그려진다.
+   · 옛 그림(29·30번 등 axes·새 요소가 없는 장면)은 출력이 한 글자도 안 바뀐다. */
+let ddFigUid = 0;
+const DD_HALO = ' paint-order="stroke" stroke="#fff" stroke-width="3.5" stroke-linejoin="round"';   // 선 위에 놓인 글자도 읽히게 흰 테두리
+function ddCol(c, def){ c=String(c==null?'':c).trim(); return /^(#[0-9a-fA-F]{3,8}|[a-zA-Z]{3,20})$/.test(c) ? c : def; }
+function ddNum(v){ return +(+v).toFixed(6); }
+// 수식 → 함수 f(x). 되는 것: + - * / ^ 괄호, 곱셈 생략(2x, 3(x+1), x(x-1)), x² x³, √, π,
+//   sin cos tan sqrt abs log(상용) ln exp, pi e. 앞의 'y=' 'f(x)=' 는 무시. 못 읽으면 null.
+function ddExpr(src){
+  let s=String(src==null?'':src);
+  const eq=s.lastIndexOf('='); if(eq>=0) s=s.slice(eq+1);
+  s=s.replace(/²/g,'^2').replace(/³/g,'^3').replace(/[×·]/g,'*').replace(/÷/g,'/').replace(/[−–]/g,'-').replace(/π/g,'pi').replace(/√/g,'sqrt');
+  if(s.length>300) return null;
+  const NAMES=['sqrt','sin','cos','tan','abs','log','exp','ln','pi','x','e'];
+  const FN={ sqrt:Math.sqrt, sin:Math.sin, cos:Math.cos, tan:Math.tan, abs:Math.abs, log:Math.log10, ln:Math.log, exp:Math.exp };
+  const toks=[]; let i=0;
+  while(i<s.length){
+    const c=s[i];
+    if(/\s/.test(c)){ i++; continue; }
+    if(/[0-9.]/.test(c)){ let j=i; while(j<s.length && /[0-9.]/.test(s[j])) j++; const v=Number(s.slice(i,j)); if(!isFinite(v)) return null; toks.push({t:'n',v}); i=j; continue; }
+    if(/[a-zA-Z]/.test(c)){
+      const rest=s.slice(i).toLowerCase(), w=NAMES.find(n=>rest.startsWith(n)); if(!w) return null;
+      toks.push(FN[w] ? {t:'f',f:FN[w]} : (w==='x' ? {t:'x'} : {t:'n',v:(w==='pi'?Math.PI:Math.E)})); i+=w.length; continue;
+    }
+    if('+-*/^()'.includes(c)){ toks.push({t:c}); i++; continue; }
+    return null;
+  }
+  let p=0;
+  const peek=()=>toks[p], starts=(k)=>k && (k.t==='n'||k.t==='x'||k.t==='f'||k.t==='(');
+  function expr(){ let a=term(); while(peek() && (peek().t==='+'||peek().t==='-')){ const op=toks[p++].t, l=a, r=term(); a = op==='+' ? (x=>l(x)+r(x)) : (x=>l(x)-r(x)); } return a; }
+  function term(){ let a=unary();
+    while(peek() && (peek().t==='*'||peek().t==='/'||starts(peek()))){
+      const op=(peek().t==='*'||peek().t==='/') ? toks[p++].t : '*', l=a, r=unary();
+      a = op==='/' ? (x=>l(x)/r(x)) : (x=>l(x)*r(x));
+    } return a; }
+  function unary(){ if(peek() && peek().t==='-'){ p++; const a=unary(); return x=>-a(x); } if(peek() && peek().t==='+'){ p++; return unary(); } return power(); }
+  function power(){ const b=primary(); if(peek() && peek().t==='^'){ p++; const e=unary(); return x=>Math.pow(b(x), e(x)); } return b; }
+  function primary(){
+    const k=toks[p++]; if(!k) throw 0;
+    if(k.t==='n'){ const v=k.v; return ()=>v; }
+    if(k.t==='x') return x=>x;
+    if(k.t==='f'){ const a=(peek() && peek().t==='(') ? primary() : power(); return x=>k.f(a(x)); }
+    if(k.t==='('){ const a=expr(); if(!peek() || peek().t!==')') throw 0; p++; return a; }
+    throw 0;
+  }
+  try{ const f=expr(); if(p!==toks.length) return null; return f; }catch(e){ return null; }
+}
+// 눈금 간격: 1·2·5·10… 중 target 개 안팎이 되게
+function ddNiceStep(range, target){ const raw=range/(target||10); const k=Math.pow(10, Math.floor(Math.log10(raw))); const m=raw/k; return (m<=1?1:m<=2?2:m<=5?5:10)*k; }
+// 좌표축 설정. ox·oy·scale 을 안 주면 범위만 보고 자동 계산(화면 약 480×400 안에)
+function ddAxesSetup(a){
+  const xMin=+a.xMin, xMax=+a.xMax, yMin=+a.yMin, yMax=+a.yMax;
+  if(!(xMax>xMin) || !(yMax>yMin)) throw new Error('axes 범위가 이상해요');
+  let sx=+a.scale, sy=+(a.yScale||a.scale);
+  if(!(sx>0)){
+    sx=Math.min(480/(xMax-xMin), 400/(yMax-yMin), 60); sy=sx;
+    if(sx<6){ sx=Math.min(480/(xMax-xMin), 60); sy=Math.min(400/(yMax-yMin), 60); }   // 한쪽 범위만 아주 크면 가로·세로 비율을 따로
+  }else if(!(sy>0)) sy=sx;
+  const ox=(a.ox!=null) ? +a.ox : 40-xMin*sx, oy=(a.oy!=null) ? +a.oy : 28+yMax*sy;
+  const step=+a.step>0 ? +a.step : ddNiceStep(xMax-xMin, 10), yStep=+a.yStep>0 ? +a.yStep : (+a.step>0 ? +a.step : ddNiceStep(yMax-yMin, 10));
+  return { xMin, xMax, yMin, yMax, sx, sy, ox, oy, step, yStep, left:ox+xMin*sx, right:ox+xMax*sx, top:oy-yMax*sy, bot:oy-yMin*sy,
+    toPx:(x,y)=>[ox+x*sx, oy-y*sy] };
+}
+// 곡선을 잘게 나눠 점 목록으로. 범위를 크게 벗어나거나 값이 튀면(점근선) 끊는다.
+function ddCurveSegs(f, x0, x1, A, n){
+  const span=A.yMax-A.yMin, lo=A.yMin-span, hi=A.yMax+span, segs=[]; let cur=[], prev=null;
+  for(let k=0;k<=n;k++){
+    const x=x0+(x1-x0)*k/n, y=f(x), ok=isFinite(y) && y>=lo && y<=hi;
+    if(ok && prev!==null && Math.abs(y-prev)>span*1.5){ if(cur.length>1) segs.push(cur); cur=[]; }
+    if(ok){ cur.push([x,y]); prev=y; } else { if(cur.length>1) segs.push(cur); cur=[]; prev=null; }
+  }
+  if(cur.length>1) segs.push(cur);
+  return segs;
+}
+function ddPathOf(P){ return 'M '+P.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' L '); }
+function ddDash(style){ return style==='dashed' ? ' stroke-dasharray="7,6"' : (style==='dotted' ? ' stroke-dasharray="2,5" stroke-linecap="round"' : ''); }
+// 수직선 (중1 수·부등식): numberLine:{min,max,step, points:[{x,label,open}], ranges:[{from,to,fromOpen,toOpen,color}]}
+function ddFigNumberLine(scene){
+  const nl=scene.numberLine, min=+nl.min, max=+nl.max;
+  if(!(max>min)) throw new Error('numberLine 범위가 이상해요');
+  const step=+nl.step>0 ? +nl.step : ddNiceStep(max-min, 10);
+  const ranges=(nl.ranges||[]), L=30, R=530, Y=40+ranges.length*14+(nl.points||[]).some(q=>q&&q.label)*6;
+  const X=v=>L+(v-min)/(max-min)*(R-L);
+  let body='<line x1="'+(L-18)+'" y1="'+Y+'" x2="'+(R+18)+'" y2="'+Y+'" stroke="#2C2C2A" stroke-width="1.6"/>'
+    +'<path d="M '+(R+18)+','+Y+' l -9,-5 l 0,10 Z" fill="#2C2C2A"/><path d="M '+(L-18)+','+Y+' l 9,-5 l 0,10 Z" fill="#2C2C2A"/>';
+  for(let v=Math.ceil(min/step-1e-9)*step; v<=max+1e-9; v+=step){
+    const px=X(v).toFixed(1);
+    body+='<line x1="'+px+'" y1="'+(Y-5)+'" x2="'+px+'" y2="'+(Y+5)+'" stroke="#2C2C2A" stroke-width="1.3"/>'
+      +'<text x="'+px+'" y="'+(Y+21)+'" font-size="12" fill="#444441" text-anchor="middle">'+ddNum(v)+'</text>';
+  }
+  ranges.forEach((r,i)=>{ try{
+    const col=ddCol(r.color,'#D85A30'), h=Y-12-i*14;
+    const a=(r.from==null) ? L-14 : X(+r.from), b=(r.to==null) ? R+14 : X(+r.to);
+    if(!isFinite(a) || !isFinite(b)) return;
+    body+='<line x1="'+a.toFixed(1)+'" y1="'+h+'" x2="'+b.toFixed(1)+'" y2="'+h+'" stroke="'+col+'" stroke-width="3"/>';
+    if(r.from==null) body+='<path d="M '+(a-4).toFixed(1)+','+h+' l 8,-5 l 0,10 Z" fill="'+col+'"/>';
+    else body+='<line x1="'+a.toFixed(1)+'" y1="'+h+'" x2="'+a.toFixed(1)+'" y2="'+Y+'" stroke="'+col+'" stroke-width="2"/>'
+      +'<circle cx="'+a.toFixed(1)+'" cy="'+Y+'" r="5" fill="'+(r.fromOpen?'#fff':col)+'" stroke="'+col+'" stroke-width="2"/>';
+    if(r.to==null) body+='<path d="M '+(b+4).toFixed(1)+','+h+' l -8,-5 l 0,10 Z" fill="'+col+'"/>';
+    else body+='<line x1="'+b.toFixed(1)+'" y1="'+h+'" x2="'+b.toFixed(1)+'" y2="'+Y+'" stroke="'+col+'" stroke-width="2"/>'
+      +'<circle cx="'+b.toFixed(1)+'" cy="'+Y+'" r="5" fill="'+(r.toOpen?'#fff':col)+'" stroke="'+col+'" stroke-width="2"/>';
+  }catch(e){} });
+  (nl.points||[]).forEach(q=>{ try{
+    const px=X(+q.x); if(!isFinite(px)) return; const col=ddCol(q.color,'#185FA5');
+    body+='<circle cx="'+px.toFixed(1)+'" cy="'+Y+'" r="5" fill="'+(q.open?'#fff':col)+'" stroke="'+col+'" stroke-width="2"/>';
+    if(q.label!=null) body+='<text x="'+px.toFixed(1)+'" y="'+(Y-12)+'" font-size="13" font-weight="600" fill="'+col+'" text-anchor="middle">'+escapeHtml(String(q.label))+'</text>';
+  }catch(e){} });
+  const W=560; let H=Y+34;
+  if(scene.caption){
+    const cap=Array.isArray(scene.caption)?scene.caption:[scene.caption], capH=22*cap.length+16;
+    body+='<rect x="20" y="'+H+'" width="'+(W-40)+'" height="'+capH+'" rx="8" fill="#F1EFE8"/>';
+    cap.forEach((line,i)=>{ body+='<text x="36" y="'+(H+24+i*18)+'" font-size="12.5" fill="#444441">'+escapeHtml(line)+'</text>'; });
+    H+=capH+10;
+  }
+  return '<svg width="100%" viewBox="0 0 '+W+' '+H+'" role="img" style="max-width:520px;display:block;margin:0 auto"><title>'+escapeHtml(scene.title||'수직선')+'</title>'+body+'</svg>';
+}
+// 곡선(curves)·직선(lines)·원(circles)·호(arcs)·같은 길이 표시(tickMarks). 좌표축이 있으면 수학 좌표, 없으면 화면 좌표.
+function ddFigCurves(scene, A, pts, mathPts, ext){
+  let out='', clipped='';
+  const M = (ref)=> Array.isArray(ref) ? [+ref[0], +ref[1]] : (A ? mathPts[ref] : pts[ref]);   // 수학(또는 화면) 좌표
+  const S = (ref)=> Array.isArray(ref) ? (A ? A.toPx(+ref[0], +ref[1]) : [+ref[0], +ref[1]]) : pts[ref];   // 화면 좌표
+  const lbl = (p, text, col, dx, dy)=>{ const x=p[0]+(dx==null?6:+dx), y=p[1]+(dy==null?-6:+dy); ext(x-4, y-14); ext(x+String(text).length*8+4, y+4);
+    return '<text x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" font-size="13" font-weight="600" fill="'+col+'"'+DD_HALO+'>'+escapeHtml(String(text))+'</text>'; };
+  if(A){
+    (scene.curves||[]).forEach(cv=>{ try{
+      const f=ddExpr(cv.fn); if(!f) return;
+      const col=ddCol(cv.color,'#185FA5'), x0=Math.max(A.xMin, cv.from!=null ? +cv.from : A.xMin), x1=Math.min(A.xMax, cv.to!=null ? +cv.to : A.xMax);
+      if(!(x1>x0)) return;
+      const segs=ddCurveSegs(f, x0, x1, A, 480).map(sg=>sg.map(q=>A.toPx(q[0], q[1])));
+      if(cv.fill==='above' || cv.fill==='below'){
+        const edge=(cv.fill==='above') ? A.top : A.bot;
+        segs.forEach(P=>{ clipped+='<path d="'+ddPathOf(P)+' L '+P[P.length-1][0].toFixed(1)+','+edge.toFixed(1)+' L '+P[0][0].toFixed(1)+','+edge.toFixed(1)+' Z" fill="'+ddCol(cv.fillColor, col)+'" fill-opacity="0.18" stroke="none"/>'; });
+      }
+      segs.forEach(P=>{ clipped+='<path d="'+ddPathOf(P)+'" fill="none" stroke="'+col+'" stroke-width="'+(+cv.width>0 ? +cv.width : 2.4)+'" stroke-linejoin="round"'+ddDash(cv.style)+'/>'; });
+      if(cv.label){
+        let lx = (cv.labelAt!=null) ? +cv.labelAt : null, ly = lx!=null ? f(lx) : NaN;
+        if(!(isFinite(ly) && ly>=A.yMin && ly<=A.yMax)){   // 자리를 안 줬거나 화면 밖이면: 오른쪽에서부터 화면 안에 보이는 곳
+          lx=null; for(let k=0;k<=60;k++){ const x=x1-(x1-x0)*k/60*0.9-(x1-x0)*0.05, y=f(x); if(isFinite(y) && y>A.yMin+(A.yMax-A.yMin)*0.08 && y<A.yMax-(A.yMax-A.yMin)*0.08){ lx=x; ly=y; break; } }
+        }
+        if(lx!=null){ const p=A.toPx(lx, ly); out+=lbl(p, cv.label, col, cv.dx, cv.dy); }
+      }
+    }catch(e){} });
+  }
+  (scene.lines||[]).forEach(ln=>{ try{
+    const col=ddCol(ln.color,'#534AB7'); let p, q;
+    if(A && ln.x!=null){ p=[+ln.x, A.yMin-1]; q=[+ln.x, A.yMax+1]; }
+    else if(A && ln.y!=null){ p=[A.xMin-1, +ln.y]; q=[A.xMax+1, +ln.y]; }
+    else if(ln.through){
+      const a=M(ln.through[0]), b=M(ln.through[1]), d=ddNorm(ddVec(a,b)), big=A ? 4*Math.max(A.xMax-A.xMin, A.yMax-A.yMin) : 3000;
+      p=ddAddV(a,d,-big); q=ddAddV(a,d,big);
+    }else return;
+    const P=A ? A.toPx(p[0],p[1]) : p, Q=A ? A.toPx(q[0],q[1]) : q;
+    const seg='<line x1="'+P[0].toFixed(1)+'" y1="'+P[1].toFixed(1)+'" x2="'+Q[0].toFixed(1)+'" y2="'+Q[1].toFixed(1)+'" stroke="'+col+'" stroke-width="'+(+ln.width>0 ? +ln.width : 1.8)+'"'+ddDash(ln.style)+'/>';
+    if(A) clipped+=seg; else out+=seg;
+    if(ln.label && A){
+      const at = ln.x!=null ? [+ln.x, A.yMax-(A.yMax-A.yMin)*0.08] : (ln.y!=null ? [A.xMax-(A.xMax-A.xMin)*0.12, +ln.y] : M(ln.through[1]));
+      out+=lbl(A.toPx(at[0], at[1]), ln.label, col, ln.dx, ln.dy);
+    }
+  }catch(e){} });
+  if(clipped){
+    const id='ddclip'+(++ddFigUid);
+    out = '<defs><clipPath id="'+id+'"><rect x="'+A.left.toFixed(1)+'" y="'+A.top.toFixed(1)+'" width="'+(A.right-A.left).toFixed(1)+'" height="'+(A.bot-A.top).toFixed(1)+'"/></clipPath></defs>'
+      + '<g clip-path="url(#'+id+')">'+clipped+'</g>' + out;
+  }
+  (scene.circles||[]).forEach(ci=>{ try{
+    const c=M(ci.center), C=S(ci.center); if(!c || !C) return;
+    const r=(ci.r!=null) ? +ci.r : ddLen(ddVec(c, M(ci.through)));
+    const rx=A ? r*A.sx : r, ry=A ? r*A.sy : r; if(!(rx>0)) return;
+    const col=ddCol(ci.color,'#2C2C2A');
+    out+='<ellipse cx="'+C[0].toFixed(1)+'" cy="'+C[1].toFixed(1)+'" rx="'+rx.toFixed(1)+'" ry="'+ry.toFixed(1)+'" fill="'+(ci.fill ? ddCol(ci.fill,'none') : 'none')+'"'
+      +(ci.fill ? ' fill-opacity="'+(ci.fillOpacity!=null ? Math.max(0,Math.min(1,+ci.fillOpacity)) : 0.18)+'"' : '')+' stroke="'+col+'" stroke-width="'+(+ci.width>0 ? +ci.width : 2)+'"'+ddDash(ci.style)+'/>';
+    ext(C[0]-rx, C[1]-ry); ext(C[0]+rx, C[1]+ry);
+  }catch(e){} });
+  (scene.arcs||[]).forEach(ar=>{ try{
+    const C=S(ar.center), F=S(ar.from), T=S(ar.to); if(!C || !F || !T) return;
+    const r=(ar.r!=null) ? (+ar.r)*(A ? A.sx : 1) : ddLen(ddVec(C,F));
+    const a1=Math.atan2(F[1]-C[1], F[0]-C[0]), a2=Math.atan2(T[1]-C[1], T[0]-C[0]), ccw=(ar.ccw!==false), TAU=2*Math.PI;
+    let span = ccw ? (a1-a2) : (a2-a1); span=((span%TAU)+TAU)%TAU; if(span<1e-9) span=TAU;
+    const q1=[C[0]+r*Math.cos(a1), C[1]+r*Math.sin(a1)], q2=[C[0]+r*Math.cos(a2), C[1]+r*Math.sin(a2)], col=ddCol(ar.color,'#D85A30');
+    out+='<path d="M '+q1[0].toFixed(1)+','+q1[1].toFixed(1)+' A '+r.toFixed(1)+' '+r.toFixed(1)+' 0 '+(span>Math.PI?1:0)+' '+(ccw?0:1)+' '+q2[0].toFixed(1)+','+q2[1].toFixed(1)+'" fill="none" stroke="'+col+'" stroke-width="'+(+ar.width>0 ? +ar.width : 3.5)+'" stroke-linecap="round"'+ddDash(ar.style)+'/>';
+    if(ar.label){ const mid=a1+(ccw?-1:1)*span/2; out+=lbl([C[0]+(r+16)*Math.cos(mid)-6, C[1]+(r+16)*Math.sin(mid)+10], ar.label, col, 0, 0); }
+    ext(C[0]-r, C[1]-r); ext(C[0]+r, C[1]+r);
+  }catch(e){} });
+  (scene.tickMarks||[]).forEach(tm=>{ try{   // 같은 길이 표시(짧은 빗금)
+    const a=S(tm.points[0]), b=S(tm.points[1]), mid=[(a[0]+b[0])/2, (a[1]+b[1])/2], dir=ddNorm(ddVec(a,b)), perp=[-dir[1], dir[0]], n=Math.min(3, Math.max(1, +tm.count||1));
+    for(let i=0;i<n;i++){ const c=ddAddV(mid, dir, (i-(n-1)/2)*6), u=ddAddV(c, perp, 7), v=ddAddV(c, perp, -7);
+      out+='<line x1="'+u[0].toFixed(1)+'" y1="'+u[1].toFixed(1)+'" x2="'+v[0].toFixed(1)+'" y2="'+v[1].toFixed(1)+'" stroke="'+ddCol(tm.color,'#2C2C2A')+'" stroke-width="2"/>'; }
+  }catch(e){} });
+  return out;
+}
+// [v80.4] 설계도 점검 — AI가 쓴 설계도를 쓰기 전에(2단계) 문제를 찾아낸다. 빈 배열이면 통과.
+function ddFigCheck(scene){
+  const issues=[];
+  if(!scene || typeof scene!=='object') return ['설계도가 없어요'];
+  let svg='';
+  try{ svg=ddFig(scene); }catch(e){ issues.push('그림을 못 그림: '+(e && e.message || e)); }
+  if(svg && /NaN|undefined|Infinity/.test(svg)) issues.push('계산 안 된 값(NaN)이 있어요');
+  (scene.curves||[]).forEach(c=>{ if(!ddExpr(c && c.fn)) issues.push('식을 못 읽음: '+(c && c.fn)); });
+  if(!scene.numberLine){
+    const names=new Set(Object.keys(scene.points||{}).concat((scene.derive||[]).map(d=>d && d.name)));
+    const refs=[];
+    (scene.shapes||[]).forEach(s=>refs.push(...((s && s.points)||[])));
+    (scene.labels||[]).forEach(l=>{ if(l && !l.at) refs.push(l.point); });
+    (scene.circles||[]).forEach(c=>{ if(c){ refs.push(c.center); if(c.through!=null) refs.push(c.through); } });
+    (scene.arcs||[]).forEach(a=>{ if(a) refs.push(a.center, a.from, a.to); });
+    (scene.angles||[]).forEach(a=>{ if(a) refs.push(a.at, ...((a.to)||[])); });
+    refs.forEach(r=>{ if(!Array.isArray(r) && !names.has(r)) issues.push('없는 점: '+r); });
+    if(scene.axes){
+      const a=scene.axes;
+      Object.keys(scene.points||{}).forEach(k=>{ const p=scene.points[k]; if(!(p[0]>=a.xMin && p[0]<=a.xMax && p[1]>=a.yMin && p[1]<=a.yMax)) issues.push('화면 밖 점: '+k+'('+p+')'); });
+    }
+  }
+  return [...new Set(issues)];
+}
+
 // scene = {title, width, axes:{xMin,xMax,yMin,yMax,ox,oy,scale}, points:{name:[x,y]},
 //   derive:[{name,type:'reflect'|'mid'|'along',...}], shapes:[{points:[names],style:'solid'|'dashed'|'ghost',fill,stroke}],
 //   angles:[{at,to:[name,name],color,stroke,label,deg,r}], rightAngles:[{at,to:[name,name]}],
 //   parallelMarks:[{points:[name,name],count}], labels:[{point,dx,dy,text,color,dot}], caption:'...'|['...']}
 function ddFig(scene){
+  if(scene && scene.numberLine) return ddFigNumberLine(scene);   // [v80.4] 수직선은 따로 그린다
   const pts = {};
   Object.keys(scene.points||{}).forEach(k=>pts[k]=scene.points[k].slice());
+  const A = scene.axes ? ddAxesSetup(scene.axes) : null;   // [v80.4] 좌표축(수학 좌표 → 화면 좌표)
+  const R = (ref)=> Array.isArray(ref) ? [+ref[0], +ref[1]] : pts[ref];   // 점 이름 또는 [x,y]
   (scene.derive||[]).forEach(d=>{
     if(d.type==='reflect') pts[d.name]=ddReflect(pts[d.point], pts[d.over[0]], pts[d.over[1]]);
     else if(d.type==='mid') pts[d.name]=[(pts[d.a][0]+pts[d.b][0])/2, (pts[d.a][1]+pts[d.b][1])/2];
     else if(d.type==='along'){ const dir=ddNorm(ddVec(pts[d.a],pts[d.b])); pts[d.name]=ddAddV(pts[d.a],dir,d.t); }
+    else { try{   // [v80.4] 새 유도: 원 위의 점 · 곡선 위의 점 · 두 직선의 교점 · 수선의 발
+      if(d.type==='onCircle'){
+        const c=R(d.center), r=(d.r!=null) ? +d.r : ddLen(ddVec(c, R(d.through))), t=(+d.deg||0)*Math.PI/180;
+        pts[d.name]=[c[0]+r*Math.cos(t), c[1]+(A?1:-1)*r*Math.sin(t)];   // 화면에서 늘 시계 반대 방향
+      }else if(d.type==='onCurve'){ const f=ddExpr(d.fn); if(f) pts[d.name]=[+d.x, f(+d.x)]; }
+      else if(d.type==='intersect'){
+        const p1=R(d.a[0]), p2=R(d.a[1]), p3=R(d.b[0]), p4=R(d.b[1]);
+        const den=(p1[0]-p2[0])*(p3[1]-p4[1])-(p1[1]-p2[1])*(p3[0]-p4[0]);
+        if(Math.abs(den)>1e-12){ const t=((p1[0]-p3[0])*(p3[1]-p4[1])-(p1[1]-p3[1])*(p3[0]-p4[0]))/den; pts[d.name]=[p1[0]+t*(p2[0]-p1[0]), p1[1]+t*(p2[1]-p1[1])]; }
+      }else if(d.type==='foot'){
+        const P=R(d.point), a=R(d.over[0]), dir=ddNorm(ddVec(a, R(d.over[1]))), v=ddVec(a,P), t=v[0]*dir[0]+v[1]*dir[1];
+        pts[d.name]=[a[0]+dir[0]*t, a[1]+dir[1]*t];
+      }
+    }catch(e){} }
   });
 
   let body='', maxY=0;
+  let minX=0, minY=0, extX=0, extY=0;   // [v80.4] 새 요소가 차지하는 범위(옛 그림은 0 그대로 → 크기 계산 무변경)
+  const ext=(x,y)=>{ if(!isFinite(x)||!isFinite(y)) return; minX=Math.min(minX,x); minY=Math.min(minY,y); extX=Math.max(extX,x); extY=Math.max(extY,y); };
+  const mathPts = {};   // 화면 좌표로 바꾸기 전 수학 좌표(원의 반지름 계산용)
 
-  if(scene.axes){
-    const ax=scene.axes;
-    const toPx=(x,y)=>[ax.ox+x*ax.scale, ax.oy-y*ax.scale];
-    let grid='';
-    const top = ax.oy-ax.yMax*ax.scale, bot = ax.oy-ax.yMin*ax.scale;
-    const left = ax.ox+ax.xMin*ax.scale, right = ax.ox+ax.xMax*ax.scale;
-    for(let gx=Math.ceil(ax.xMin); gx<=ax.xMax; gx++){ const px=ax.ox+gx*ax.scale; grid+='<line x1="'+px+'" y1="'+top+'" x2="'+px+'" y2="'+bot+'" stroke="#E5E3DC" stroke-width="1"/>'; }
-    for(let gy=Math.ceil(ax.yMin); gy<=ax.yMax; gy++){ const py=ax.oy-gy*ax.scale; grid+='<line x1="'+left+'" y1="'+py+'" x2="'+right+'" y2="'+py+'" stroke="#E5E3DC" stroke-width="1"/>'; }
+  if(A){
+    // [v80.4] 격자 · 축 · 눈금 숫자 · 원점 O. 0이 범위 밖이면 그 축은 가장자리에 둔다.
+    const ax=scene.axes, sx=A.sx, sy=A.sy;
+    const xAt = (A.yMin<=0 && A.yMax>=0) ? A.oy : A.bot, yAt = (A.xMin<=0 && A.xMax>=0) ? A.ox : A.left;
+    let grid='', tick='';
+    for(let gx=Math.ceil(A.xMin/A.step-1e-9)*A.step; gx<=A.xMax+1e-9; gx+=A.step){
+      const px=(A.ox+gx*sx).toFixed(1);
+      if(ax.grid!==false) grid+='<line x1="'+px+'" y1="'+A.top.toFixed(1)+'" x2="'+px+'" y2="'+A.bot.toFixed(1)+'" stroke="#E5E3DC" stroke-width="1"/>';
+      if(ax.ticks!==false && Math.abs(gx)>1e-9) tick+='<text x="'+px+'" y="'+(xAt+15).toFixed(1)+'" font-size="11" fill="#6B6A64" text-anchor="middle"'+DD_HALO+'>'+ddNum(gx)+'</text>';
+    }
+    for(let gy=Math.ceil(A.yMin/A.yStep-1e-9)*A.yStep; gy<=A.yMax+1e-9; gy+=A.yStep){
+      const py=(A.oy-gy*sy).toFixed(1);
+      if(ax.grid!==false) grid+='<line x1="'+A.left.toFixed(1)+'" y1="'+py+'" x2="'+A.right.toFixed(1)+'" y2="'+py+'" stroke="#E5E3DC" stroke-width="1"/>';
+      if(ax.ticks!==false && Math.abs(gy)>1e-9) tick+='<text x="'+(yAt-6).toFixed(1)+'" y="'+(+py+4).toFixed(1)+'" font-size="11" fill="#6B6A64" text-anchor="end"'+DD_HALO+'>'+ddNum(gy)+'</text>';
+    }
     body+=grid;
-    body+='<line x1="'+left+'" y1="'+ax.oy+'" x2="'+right+'" y2="'+ax.oy+'" stroke="#888780" stroke-width="1.5"/>';
-    body+='<line x1="'+ax.ox+'" y1="'+bot+'" x2="'+ax.ox+'" y2="'+top+'" stroke="#888780" stroke-width="1.5"/>';
-    body+='<text x="'+(right-4)+'" y="'+(ax.oy-6)+'" font-size="12" fill="#888780" text-anchor="end">x</text>';
-    body+='<text x="'+(ax.ox+8)+'" y="'+(top+12)+'" font-size="12" fill="#888780">y</text>';
-    Object.keys(pts).forEach(k=>{ const p=pts[k]; pts[k]=toPx(p[0],p[1]); });
+    body+='<line x1="'+(A.left-4).toFixed(1)+'" y1="'+xAt.toFixed(1)+'" x2="'+(A.right+10).toFixed(1)+'" y2="'+xAt.toFixed(1)+'" stroke="#888780" stroke-width="1.5"/>'
+      +'<path d="M '+(A.right+12).toFixed(1)+','+xAt.toFixed(1)+' l -8,-4 l 0,8 Z" fill="#888780"/>';
+    body+='<line x1="'+yAt.toFixed(1)+'" y1="'+(A.bot+4).toFixed(1)+'" x2="'+yAt.toFixed(1)+'" y2="'+(A.top-10).toFixed(1)+'" stroke="#888780" stroke-width="1.5"/>'
+      +'<path d="M '+yAt.toFixed(1)+','+(A.top-12).toFixed(1)+' l -4,8 l 8,0 Z" fill="#888780"/>';
+    body+='<text x="'+(A.right+10).toFixed(1)+'" y="'+(xAt-8).toFixed(1)+'" font-size="13" font-style="italic" fill="#6B6A64">x</text>';
+    body+='<text x="'+(yAt+8).toFixed(1)+'" y="'+(A.top-4).toFixed(1)+'" font-size="13" font-style="italic" fill="#6B6A64">y</text>';
+    if(ax.origin!==false && xAt===A.oy && yAt===A.ox) body+='<text x="'+(A.ox-6).toFixed(1)+'" y="'+(A.oy+15).toFixed(1)+'" font-size="12" font-style="italic" fill="#6B6A64" text-anchor="end">O</text>';
+    body+=tick;
+    ext(A.left-36, A.top-20); ext(A.right-10, A.bot-14);   // 아래 크기 계산이 여기에 +40 을 더한다
+    Object.keys(pts).forEach(k=>{ const p=pts[k]; mathPts[k]=p; pts[k]=A.toPx(p[0],p[1]); });
   }
+  body += ddFigCurves(scene, A, pts, mathPts, ext);   // [v80.4] 곡선·직선·원·호 (옛 그림엔 없음 → 빈 문자열)
 
   (scene.shapes||[]).forEach(sh=>{
     const P=sh.points.map(n=>pts[n]);
@@ -5912,20 +6162,28 @@ function ddFig(scene){
     }
   });
 
-  (scene.labels||[]).forEach(lb=>{
+  // [v80.4] 점 이름 대신 at:[x,y] 로 아무 곳에나 글자를 붙일 수 있다(좌표축이면 수학 좌표). 틀린 라벨은 건너뛴다.
+  const labs=(scene.labels||[]).map((lb,i)=>{
+    if(!lb || !lb.at) return lb;
+    const k=' lb'+i; pts[k]=A ? A.toPx(+lb.at[0], +lb.at[1]) : [+lb.at[0], +lb.at[1]];
+    return Object.assign({}, lb, { point:k, dot: lb.dot===true, text: lb.text!=null ? lb.text : '' });
+  }).filter(lb=>lb && pts[lb.point] && isFinite(pts[lb.point][0]) && isFinite(pts[lb.point][1]));
+  labs.forEach(lb=>{
     const p=pts[lb.point];
     const x=p[0]+(lb.dx||0), y=p[1]+(lb.dy||0);
     if(lb.dot!==false) body+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="3" fill="'+(lb.dotColor||'#2C2C2A')+'"/>';
-    body+='<text x="'+x+'" y="'+y+'" font-size="14" fill="'+(lb.color||'#2C2C2A')+'">'+escapeHtml(lb.text!=null?lb.text:lb.point)+'</text>';
+    body+='<text x="'+x+'" y="'+y+'" font-size="14" fill="'+(lb.color||'#2C2C2A')+'"'+(A?DD_HALO:'')+'>'+escapeHtml(lb.text!=null?lb.text:lb.point)+'</text>';   // 흰 테두리는 좌표축 그림만(옛 그림 무변경)
   });
 
   let maxX=0;
-  Object.values(pts).forEach(p=>{ maxX=Math.max(maxX,p[0]); maxY=Math.max(maxY,p[1]); });
-  (scene.labels||[]).forEach(lb=>{
+  Object.values(pts).forEach(p=>{ if(A && !(isFinite(p[0]) && isFinite(p[1]))) return; maxX=Math.max(maxX,p[0]); maxY=Math.max(maxY,p[1]); });
+  labs.forEach(lb=>{
     const p=pts[lb.point];
     maxX=Math.max(maxX, p[0]+(lb.dx||0)+30);
     maxY=Math.max(maxY, p[1]+(lb.dy||0)+20);
   });
+  maxX=Math.max(maxX, extX); maxY=Math.max(maxY, extY);   // [v80.4] 곡선·원 등(옛 그림은 0이라 무변경)
+  const vx = minX<0 ? Math.floor(minX-20) : 0, vy = minY<0 ? Math.floor(minY-20) : 0;   // 왼쪽·위로 삐져나가면 화면을 넓힘
   const W = scene.width || Math.ceil(maxX+40);
   const H = scene.height || Math.ceil(maxY+40);
 
@@ -5934,12 +6192,12 @@ function ddFig(scene){
   if(scene.caption){
     const cap = Array.isArray(scene.caption)?scene.caption:[scene.caption];
     const capH = 22*cap.length+16;
-    extra+='<rect x="20" y="'+H+'" width="'+(W-40)+'" height="'+capH+'" rx="8" fill="#F1EFE8"/>';
-    cap.forEach((line,i)=>{ extra+='<text x="36" y="'+(H+24+i*18)+'" font-size="12.5" fill="#444441">'+escapeHtml(line)+'</text>'; });
+    extra+='<rect x="'+(vx+20)+'" y="'+H+'" width="'+(W-vx-40)+'" height="'+capH+'" rx="8" fill="#F1EFE8"/>';
+    cap.forEach((line,i)=>{ extra+='<text x="'+(vx+36)+'" y="'+(H+24+i*18)+'" font-size="12.5" fill="#444441">'+escapeHtml(line)+'</text>'; });
     totalH = H+capH+10;
   }
 
-  return '<svg width="100%" viewBox="0 0 '+W+' '+totalH+'" role="img" style="max-width:520px;display:block;margin:0 auto"><title>'+escapeHtml(scene.title||'도형')+'</title>'+body+extra+'</svg>';
+  return '<svg width="100%" viewBox="'+vx+' '+vy+' '+(W-vx)+' '+(totalH-vy)+'" role="img" style="max-width:520px;display:block;margin:0 auto"><title>'+escapeHtml(scene.title||'도형')+'</title>'+body+extra+'</svg>';
 }
 /* [강조고정] 말하기 화면 상단에 대단원+개념 고정멘트 표시 */
 function ddShowEmphasis(){
@@ -6517,6 +6775,13 @@ async function ceqLoad(wrap, item){
     });
   });
   body.innerHTML=html;
+  // [v80.4] 다시 불러와도 내용이 같으면 변화가 안 보여서 '반응 없음'처럼 느껴졌다 → 불러온 시각 표시
+  const lb=wrap.querySelector('.ceq-load');
+  if(lb){
+    let n=lb.nextElementSibling;
+    if(!n || !n.classList.contains('ceq-loaded')){ n=document.createElement('span'); n.className='ceq-note ceq-loaded'; n.style.marginLeft='8px'; lb.after(n); }
+    n.textContent='✓ '+new Date().toLocaleTimeString()+' 불러옴';
+  }
 }
 async function ceqRegen(wrap, item, setEl){
   const out=setEl.querySelector('.ceq-new'), btn=setEl.querySelector('.ceq-regen');
@@ -20971,7 +21236,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-const APP_VERSION = 'v80.3-편집기중1-1';
+const APP_VERSION = 'v80.4-그래프원';
   // [v78.7] 이 값이 IIFE 안에 갇혀 있어 바깥 스크립트(app-ui.js)가 못 읽었다.
   //   화면 배지에 버전을 그대로 띄우려면 필요하므로 노출한다.
   window.APP_VERSION = APP_VERSION;
