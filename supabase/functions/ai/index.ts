@@ -83,8 +83,11 @@ const QUIZ_SCHEMA = {
           answer_text: { type: 'string' },
           explain: { type: 'string' },
           type: { type: 'string' },
+          // [v80.5] 그림 설계도(JSON 문자열, 없으면 ""). 형식 강제는 속이 자유로운 객체를 못 받아서 문자열로 받는다.
+          //   앱의 ddFigFromAI 가 풀어서 점검한 뒤 ddFig 로 그린다.
+          figure: { type: 'string' },
         },
-        required: ['stem', 'choices', 'answer', 'answer_text', 'explain', 'type'],
+        required: ['stem', 'choices', 'answer', 'answer_text', 'explain', 'type', 'figure'],
         additionalProperties: false,
       },
     },
@@ -272,7 +275,7 @@ Deno.serve(async (req) => {
       gemini: !!env('GEMINI_API_KEY'),
       claude: !!env('ANTHROPIC_API_KEY'),
       logging: (await today('student', null)).ok,
-      version: 'v80.0',
+      version: 'v80.5',
     });
   }
   if (task === 'usage') {

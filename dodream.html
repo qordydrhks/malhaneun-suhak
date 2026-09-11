@@ -987,6 +987,8 @@ textarea.ce-f{resize:vertical;min-height:56px;line-height:1.6;}
 .learn-media iframe{width:100%;aspect-ratio:16/9;display:block;border:0;}
 .learn-figure,.q-figure{background:#fff;border-radius:14px;padding:8px;}
 .q-figure{margin-bottom:10px;border:1px solid var(--line);}
+.quiz-figure{margin:8px 0 10px;}
+.quiz-figure svg{max-height:420px;}   /* [v80.5] 세로로 긴 그래프가 태블릿 한 화면을 다 차지하지 않게(비율 유지) */
 .learn-stem{margin:0 0 12px;font-size:15px;font-weight:700;line-height:1.6;color:var(--ink);}
 .learn-choice{display:block;width:100%;text-align:left;border:2px solid #E7E4F0;background:#fff;border-radius:12px;
   padding:12px 14px;margin-bottom:8px;font-family:inherit;font-size:14.5px;font-weight:650;color:var(--ink);cursor:pointer;}
@@ -5894,8 +5896,9 @@ function ddAxesSetup(a){
   if(!(xMax>xMin) || !(yMax>yMin)) throw new Error('axes 범위가 이상해요');
   let sx=+a.scale, sy=+(a.yScale||a.scale);
   if(!(sx>0)){
-    sx=Math.min(480/(xMax-xMin), 400/(yMax-yMin), 60); sy=sx;
-    if(sx<6){ sx=Math.min(480/(xMax-xMin), 60); sy=Math.min(400/(yMax-yMin), 60); }   // 한쪽 범위만 아주 크면 가로·세로 비율을 따로
+    // [v80.5] 판을 400×300 안에 맞춘다(예전 480×400). 판이 크면 화면에 줄여 넣을 때 눈금 글자까지 작아진다.
+    sx=Math.min(400/(xMax-xMin), 300/(yMax-yMin), 50); sy=sx;
+    if(sx<6){ sx=Math.min(400/(xMax-xMin), 50); sy=Math.min(300/(yMax-yMin), 50); }   // 한쪽 범위만 아주 크면 가로·세로 비율을 따로
   }else if(!(sy>0)) sy=sx;
   const ox=(a.ox!=null) ? +a.ox : 40-xMin*sx, oy=(a.oy!=null) ? +a.oy : 28+yMax*sy;
   const step=+a.step>0 ? +a.step : ddNiceStep(xMax-xMin, 10), yStep=+a.yStep>0 ? +a.yStep : (+a.step>0 ? +a.step : ddNiceStep(yMax-yMin, 10));
@@ -6052,6 +6055,32 @@ function ddFigCheck(scene){
     }
   }
   return [...new Set(issues)];
+}
+/* [v80.5] AI가 쓴 그림 설계도 → 안전한 장면 객체. 문제 없으면 {fig}, 있으면 {err}.
+   · 문자열(JSON)·객체 둘 다 받는다(Opus 는 형식 강제 때문에 문자열로 온다).
+   · 아는 칸만 남기고 크기를 제한한다. 각도 라벨이 없으면 실제 각도를 자동으로 쓰지 않게 끈다
+     (도형은 비율이 대략이라, 앱이 잰 각도가 문제 글과 다를 수 있다).
+   · ddFigCheck 를 통과해야 쓴다 → 질문 화면이 try 없이 ddFig 를 불러도 멈추지 않게. */
+function ddFigFromAI(raw){
+  let f=raw;
+  if(typeof f==='string'){ const t=f.trim(); if(!t) return { fig:null }; try{ f=JSON.parse(t); }catch(e){ return { err:'설계도 JSON이 깨졌어요' }; } }
+  if(!f || typeof f!=='object' || Array.isArray(f)) return { fig:null };
+  const KEYS=['title','axes','points','derive','shapes','angles','rightAngles','parallelMarks','labels','caption','curves','lines','circles','arcs','tickMarks','numberLine'];
+  const clean=(v, depth)=>{
+    if(depth>6) return undefined;
+    if(typeof v==='number') return isFinite(v) ? v : undefined;
+    if(typeof v==='string') return v.slice(0, 120);
+    if(typeof v==='boolean') return v;
+    if(Array.isArray(v)) return v.slice(0, 40).map(x=>clean(x, depth+1)).filter(x=>x!==undefined);
+    if(v && typeof v==='object'){ const o={}; Object.keys(v).slice(0, 30).forEach(k=>{ const c=clean(v[k], depth+1); if(c!==undefined) o[k]=c; }); return o; }
+    return undefined;
+  };
+  const s={}; KEYS.forEach(k=>{ if(f[k]!=null){ const c=clean(f[k], 0); if(c!==undefined) s[k]=c; } });
+  (s.angles||[]).forEach(a=>{ if(a && a.label==null) a.label=false; });
+  delete s.width; delete s.height;
+  if(!s.numberLine && !s.axes && !Object.keys(s.points||{}).length && !(s.circles||[]).length) return { err:'그릴 것이 없는 설계도' };
+  const issues=ddFigCheck(s);
+  return issues.length ? { err:issues.join(' · ') } : { fig:s };
 }
 
 // scene = {title, width, axes:{xMin,xMax,yMin,yMax,ox,oy,scale}, points:{name:[x,y]},
@@ -6724,6 +6753,7 @@ function ceqQuizHtml(quiz){
   const marks=['①','②','③','④'];
   return (quiz||[]).map(function(it,i){
     return '<div class="ceq-q"><b>'+(i+1)+'.</b> '+mfmt(it.stem)
+      +(typeof quizFigHtml==='function' ? quizFigHtml(it) : '')
       +'<div class="ceq-ch">'+(it.choices||[]).map(function(c,ci){
         return '<div'+(ci===it.answer?' class="ceq-ans"':'')+'>'+marks[ci]+' '+mfmt(c)+(ci===it.answer?' ✓':'')+'</div>';
       }).join('')+'</div>'
@@ -17673,6 +17703,7 @@ async function autoSaveQuizToBank(grade, unit, quiz){
   for(const q of quiz){
     const stem = (q.stem||'').trim();
     if(!stem || seen.has(stem)) continue;
+    if(q.figure) continue;   // [v80.5] 문제은행 표(problem_bank)엔 그림 칸이 없다 — 그림 없이 저장하면 "그림과 같이"만 남는다
     // 정답 텍스트 (선택지 배열에서 answer 인덱스로)
     const ansText = (Array.isArray(q.choices) && q.choices[q.answer] != null) ? String(q.choices[q.answer]) : '';
     // 문제 본문 = 문항 + 선택지 (나중에 그대로 출제 가능하게)
@@ -18166,6 +18197,33 @@ async function getOrGenerateQuiz(grade, unit, opts){
     ? '- 기본 확인 문제야. 개념을 제대로 이해했으면 한 번에 풀리게 만들어. 억지로 꼬지 마.'
     : "- 초등이라도 '한 번 더 생각해야' 풀리게 만들어. 예: 조건을 살짝 비틀기, 왜 그런지 판단하기, 결과로부터 거꾸로 찾기, 비슷하지만 다른 경우와 비교하기.";
 
+  // [v80.5] 중·고등은 그림(도형·그래프) 설계도를 같이 낸다 → 앱의 ddFig 가 그린다. 초등은 예전대로 글만(초등 도형은 따로 제작 중).
+  const figOn = (band !== 'e');
+  const FIG_NOTE = `[그림 — 도형·그래프가 있어야 제대로 된 문제면 그림 설계도를 함께 내]
+- 각 문항의 "figure" 에 그림 설계도(JSON 객체)를 넣어. 그림이 필요 없는 문항은 "" (빈 문자열).
+- 너는 그림을 그리지 않아. 좌표·함수식만 정확히 쓰면 앱이 계산해서 그려.
+- 그림 속 수치(좌표·함수식·라벨의 길이와 각도)는 문제 글·보기·정답과 반드시 일치해야 해. 어긋나면 그 문항은 버려져.
+- 구하는 값은 그림에 쓰지 마(x, ? 처럼). 그림이 있는 문항은 문제 글에서 "그림과 같이"처럼 그림을 가리켜도 돼.
+- figure 안 JSON의 따옴표 처리는 괜찮아. 역슬래시 금지는 문제 글·보기·해설의 수식 이야기야.
+[설계도 형식 — 필요한 칸만]
+① 좌표평면(수학 좌표, y는 위로): {"axes":{"xMin":-5,"xMax":5,"yMin":-5,"yMax":5},
+   "curves":[{"fn":"x^2-2x-3","label":"y=x²-2x-3"}], "lines":[{"x":1,"style":"dashed"},{"y":2},{"through":["A","B"]}],
+   "points":{"A":[1,-4]}, "labels":[{"point":"A","text":"A(1, -4)","dx":6,"dy":-6}], "circles":[{"center":"O","r":2}]}
+   · fn 은 x에 대한 식: + - * / ^ 괄호, 2x 처럼 곱셈 생략 가능, sqrt abs sin cos tan log ln exp pi. 로그 밑 2는 ln(x)/ln(2).
+   · 부등식의 영역: curves 에 "fill":"above" 또는 "below". 경계를 포함하지 않으면 "style":"dashed".
+   · 점을 곡선 위에 두려면 "derive":[{"name":"P","type":"onCurve","fn":"x^2","x":2}] (좌표를 손으로 계산하지 말 것).
+   · 범위는 중요한 점·교점·꼭짓점이 모두 보이게 잡아.
+② 도형(좌표축 없음, 화면 좌표: 가로 40~500, 세로 40~380, y는 아래로 커짐):
+   {"points":{"A":[80,320],"B":[440,320],"C":[200,90]}, "shapes":[{"points":["A","B","C"]}],
+    "angles":[{"at":"A","to":["B","C"],"label":"40°"}], "rightAngles":[{"at":"H","to":["A","B"]}],
+    "labels":[{"point":"A","dx":-18,"dy":16},{"point":"B","text":"B","dx":8,"dy":16}], "tickMarks":[{"points":["A","B"],"count":1}],
+    "circles":[{"center":"O","r":120}], "derive":[{"name":"P","type":"onCircle","center":"O","r":120,"deg":100}]}
+   · 도형은 모양만 대략 맞으면 돼. 단 조건과 어긋나 보이면 안 돼(이등변삼각형이면 두 변을 같게, 직각이면 직각으로, 평행이면 평행하게 좌표를 잡아).
+   · 길이·각도는 반드시 라벨 글자로 적어("6 cm", "40°", "x"). 각에 label 이 없으면 표시만 되고 숫자는 안 나와.
+   · 선분만 그을 땐 shapes 에 "close":false. 보조선은 "style":"dashed".
+③ 수직선: {"numberLine":{"min":-5,"max":5,"ranges":[{"from":-2,"to":3,"fromOpen":true}],"points":[{"x":1,"label":"A"}]}}
+   · 한쪽으로 끝없이 가면 from 또는 to 를 빼. ○(포함 안 함)은 fromOpen/toOpen true.`;
+
   const systemPrompt = `너는 '말하는 수학'의 수학 선생님 '뚜삐'야. 학생이 방금 아래 [소단원]의 개념을 말로 설명하는 학습을 마쳤어.
 이제 그 소단원의 핵심을 "실제로 적용"해야 풀 수 있는 4지선다 문제를 정확히 ${QUIZ_COUNT}개 만들어.
 ${levelNote}
@@ -18184,7 +18242,7 @@ ${PRIN_DEPTH}
 - 엉뚱한 보기 금지 (소거법으로 찍히면 안 됨). 정답 위치는 ${QUIZ_COUNT}문제에서 서로 다르게.
 
 ${MF_NOTATION}
-- 그림이 있어야만 풀리는 문제 금지. 글만 읽고 풀 수 있게 조건을 문장으로 다 써.
+${figOn ? FIG_NOTE : '- 그림이 있어야만 풀리는 문제 금지. 글만 읽고 풀 수 있게 조건을 문장으로 다 써.'}
 
 [해설]
 - 왜 그 답인지 한두 문장. 정답만 알려주지 말고 '왜 그렇게 되는지'를 짚어.
@@ -18196,7 +18254,7 @@ ${MF_NOTATION}
 - answer(0-based 번호)도 함께 쓰되, 둘이 다르면 answer_text가 우선이야.
 
 반드시 아래 JSON "만" 출력해. 앞뒤 인사말·마크다운 금지. 첫 글자 { 마지막 글자 }.
-{"items":[{"stem":"문제 지문","choices":["보기1","보기2","보기3","보기4"],"answer":0,"answer_text":"정답 보기 텍스트 그대로","explain":"해설 한두 문장","type":"이 문제의 유형을 짧은 명사구로 (예: 기울기 구하기, 외심의 성질, 소인수분해 활용)"}]}`;
+{"items":[{"stem":"문제 지문","choices":["보기1","보기2","보기3","보기4"],"answer":0,"answer_text":"정답 보기 텍스트 그대로","explain":"해설 한두 문장","type":"이 문제의 유형을 짧은 명사구로 (예: 기울기 구하기, 외심의 성질, 소인수분해 활용)"${figOn ? ',"figure":"그림 설계도 객체 또는 빈 문자열"' : ''}}]}`;
 
   // [v80.2] 선생님 출제 지시 — opts.style 이 있으면 그것(편집기에서 시험 중인 지시), 없으면 저장된 지시
   const style = (typeof opts.style === 'string') ? opts.style.trim() : await quizStyleGet(grade.id, unit.id);
@@ -18208,7 +18266,7 @@ ${basis.concept ? '[개념 설명]\n' + basis.concept + '\n' : ''}${basis.points
   for(let attempt = 0; attempt < 2 && !quiz; attempt++){
     const sys = attempt === 0 ? systemPrompt
       : systemPrompt + '\n\n[재시도] 직전 출력이 JSON 파싱에 실패했어. 이번에는 반드시 { 로 시작해서 } 로 끝나는 순수 JSON만, 역슬래시 없이, 문자열 안에서 줄바꿈 없이 출력해.';
-    const data = await callClaude({ task:'quiz', grade_id:grade.id, unit_id:unit.id, model:"claude-sonnet-4-6", max_tokens:3000, system:sys, messages:[{role:"user", content:userMsg}] });
+    const data = await callClaude({ task:'quiz', grade_id:grade.id, unit_id:unit.id, model:"claude-sonnet-4-6", max_tokens:(figOn ? 5000 : 3000), system:sys, messages:[{role:"user", content:userMsg}] });
     lastRaw = (data.content||[]).map(b=>b.text||'').join('\n').trim();
     usedModel = String((data && data.model) || usedModel);
     quiz = parseQuiz(lastRaw);
@@ -18268,14 +18326,21 @@ function parseQuiz(raw){
       const idx = choices.findIndex(c => normTxt(c) === normTxt(it.answer_text));
       if(idx >= 0) answer = idx;
     }
-    return {
+    const out = {
       stem: String(it.stem).trim(),
       choices,
       answer,
       explain: String(it.explain || '').trim(),
       type: String(it.type || '').trim()
     };
-  }).filter(it => it.answer >= 0 && it.answer <= 3);
+    // [v80.5] 그림 설계도. 있는데 깨졌거나 점검에 걸리면 그 문항은 버린다(글이 그림을 가리키고 있을 수 있어서).
+    if(it.figure && typeof ddFigFromAI === 'function'){
+      const r = ddFigFromAI(it.figure);
+      if(r.err){ console.warn('[출제] 그림 설계도 문제로 문항 버림:', r.err); return null; }
+      if(r.fig) out.figure = r.fig;
+    }
+    return out;
+  }).filter(it => it && it.answer >= 0 && it.answer <= 3);
 
   return clean.length ? clean : null;
 }
@@ -18291,13 +18356,16 @@ async function verifyQuiz(items, grade, unit){
   const sys = `너는 수학 검산 담당이야. 아래 4지선다 문항을 네가 직접 처음부터 풀어.
 - 출제자가 어떤 보기를 정답으로 생각했는지는 알려주지 않았어. 스스로 풀어서 판단해.
 - 보기 중 옳은 것이 하나면 그 번호(0-based)를, 옳은 보기가 하나도 없거나 둘 이상이면 -1을 써.
+- [그림 설계도]가 있으면 그 좌표·식이 곧 학생이 보는 그림이야. 그림과 문제 글의 조건이 서로 맞지 않거나, 그림에 정답이 그대로 적혀 있으면 -1.
 - 역슬래시·LaTeX 금지.
 
 반드시 아래 JSON "만" 출력해. 첫 글자 { 마지막 글자 }.
 {"checks":[{"i":0,"correct":2,"why":"근거 한 문장"}]}`;
 
+  // [v80.5] 그림이 있는 문항은 설계도(좌표·식)를 같이 준다 — 검산하는 쪽도 '그림을 보고' 풀 수 있게
   const body = items.map((it, i) =>
-    `[문항 ${i}]\n${it.stem}\n` + it.choices.map((c, ci)=>`${ci}) ${c}`).join('\n')
+    `[문항 ${i}]\n${it.stem}\n` + (it.figure ? `[그림 설계도 — 이 좌표·식대로 그려진 그림이 문제와 함께 보여]\n${JSON.stringify(it.figure)}\n` : '')
+    + it.choices.map((c, ci)=>`${ci}) ${c}`).join('\n')
   ).join('\n\n');
   const userMsg = `[학년] ${grade.name}\n[개념] ${unit.label}\n\n${body}`;
 
@@ -18328,12 +18396,18 @@ async function verifyQuiz(items, grade, unit){
   return out.length ? out : null;
 }
 
+// [v80.5] 문항 그림(AI 설계도 → ddFig). 저장될 때 이미 점검을 통과했지만, 그려지다 틀려도 문제 화면은 멈추지 않게.
+function quizFigHtml(it){
+  if(!it || !it.figure || typeof ddFig !== 'function') return '';
+  try{ return '<div class="q-figure quiz-figure">' + ddFig(it.figure) + '</div>'; }catch(e){ return ''; }
+}
 function renderQuiz(){
   const marks = ['①','②','③','④'];
   const html = state.quiz.map((it, qi)=>`
     <div class="quiz-q" id="quizQ-${qi}">
       <span class="quiz-num">문제 ${qi+1}</span>
       <div class="quiz-stem">${mfmt(it.stem)}</div>
+      ${quizFigHtml(it)}
       ${it.choices.map((c, ci)=>`
         <button class="quiz-choice" data-qi="${qi}" data-ci="${ci}">
           <span class="ch-mark">${marks[ci]}</span><span>${mfmt(c)}</span>
@@ -21236,7 +21310,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-const APP_VERSION = 'v80.4-그래프원';
+const APP_VERSION = 'v80.5-문제그림';
   // [v78.7] 이 값이 IIFE 안에 갇혀 있어 바깥 스크립트(app-ui.js)가 못 읽었다.
   //   화면 배지에 버전을 그대로 띄우려면 필요하므로 노출한다.
   window.APP_VERSION = APP_VERSION;
