@@ -6032,6 +6032,38 @@ function ddFigCurves(scene, A, pts, mathPts, ext){
   }catch(e){} });
   return out;
 }
+/* [v80.7] ddFig 가 실제로 읽는 칸 이름표. 여기 없는 칸은 조용히 무시돼서 "선이 그냥 안 그려지는" 사고가 난다
+   (2026-09-12: AI 가 lines 에 fn 을 써서 y=x 가 통째로 사라졌는데 점검을 통과했다).
+   ddFigFromAI 가 모르는 칸을 버리고, ddFigCheck 가 "그릴 수 없는 것"을 잡는다. */
+const DD_FIG_KEYS = {
+  axes:['xMin','xMax','yMin','yMax','scale','yScale','ox','oy','step','yStep','grid','ticks','origin'],
+  derive:['name','type','point','over','a','b','t','center','r','through','deg','fn','x'],
+  shapes:['points','close','style','fill','stroke','strokeWidth'],
+  angles:['at','to','r','color','opacity','stroke','label','deg','labelOffset','textColor'],
+  rightAngles:['at','to','size','stroke'],
+  parallelMarks:['points','count','stroke'],
+  labels:['point','at','text','dx','dy','color','dot','dotColor'],
+  curves:['fn','color','from','to','fill','fillColor','style','width','label','labelAt','dx','dy'],
+  lines:['x','y','through','color','width','style','label','dx','dy'],
+  circles:['center','r','through','color','fill','fillOpacity','width','style'],
+  arcs:['center','from','to','r','ccw','color','width','style','label'],
+  tickMarks:['points','count','color'],
+  numberLine:['min','max','step','points','ranges']
+};
+const DD_FIG_NL_KEYS = { points:['x','label','open','color'], ranges:['from','to','fromOpen','toOpen','color'] };
+// 설계도의 각 칸을 돌면서 fn(대상객체, 허용목록, 자리이름) 을 부른다. ddFigFromAI(버리기)·ddFigCheck(알리기) 공용.
+function ddFigWalk(scene, fn){
+  Object.keys(DD_FIG_KEYS).forEach(sec=>{
+    const v = scene && scene[sec]; if(v == null) return;
+    if(Array.isArray(v)) v.forEach(it=>{ if(it && typeof it==="object" && !Array.isArray(it)) fn(it, DD_FIG_KEYS[sec], sec); });
+    else if(typeof v==="object") fn(v, DD_FIG_KEYS[sec], sec);
+  });
+  const nl = scene && scene.numberLine;
+  if(nl && typeof nl==="object"){
+    (nl.points||[]).forEach(q=>{ if(q && typeof q==="object") fn(q, DD_FIG_NL_KEYS.points, "numberLine.points"); });
+    (nl.ranges||[]).forEach(q=>{ if(q && typeof q==="object") fn(q, DD_FIG_NL_KEYS.ranges, "numberLine.ranges"); });
+  }
+}
 // [v80.4] 설계도 점검 — AI가 쓴 설계도를 쓰기 전에(2단계) 문제를 찾아낸다. 빈 배열이면 통과.
 function ddFigCheck(scene){
   const issues=[];
@@ -6054,6 +6086,13 @@ function ddFigCheck(scene){
       Object.keys(scene.points||{}).forEach(k=>{ const p=scene.points[k]; if(!(p[0]>=a.xMin && p[0]<=a.xMax && p[1]>=a.yMin && p[1]<=a.yMax)) issues.push('화면 밖 점: '+k+'('+p+')'); });
     }
   }
+  // [v80.7] 칸은 있는데 그려질 수 없는 것 — 문제 글이 그 선·원을 가리키고 있을 수 있어 그냥 두면 안 된다.
+  (scene.lines||[]).forEach(l=>{ if(l && l.x==null && l.y==null && !l.through) issues.push("lines 에 x·y·through 가 없어 안 그려져요(직선은 curves 의 fn 이 아니라 lines 의 through 로)"); });
+  (scene.circles||[]).forEach(c=>{ if(c && c.r==null && c.through==null) issues.push("circles 에 r 도 through 도 없어요"); });
+  (scene.curves||[]).forEach(c=>{ if(c && c.fn==null) issues.push("curves 에 fn(식)이 없어요"); });
+  (scene.shapes||[]).forEach(sh=>{ if(!sh || !Array.isArray(sh.points) || sh.points.length<2) issues.push("shapes 에 점이 2개보다 적어요"); });
+  (scene.angles||[]).concat(scene.rightAngles||[]).forEach(a=>{ if(!a || a.at==null || !Array.isArray(a.to) || a.to.length<2) issues.push("각에 at 또는 to 두 점이 없어요"); });
+  (scene.labels||[]).forEach(l=>{ if(!l || (l.point==null && !Array.isArray(l.at))) issues.push("labels 에 point 도 at 도 없어요"); });
   return [...new Set(issues)];
 }
 /* [v80.5] AI가 쓴 그림 설계도 → 안전한 장면 객체. 문제 없으면 {fig}, 있으면 {err}.
@@ -6076,6 +6115,10 @@ function ddFigFromAI(raw){
     return undefined;
   };
   const s={}; KEYS.forEach(k=>{ if(f[k]!=null){ const c=clean(f[k], 0); if(c!==undefined) s[k]=c; } });
+  // [v80.7] ddFig 가 모르는 칸은 버린다. 남겨 두면 조용히 무시돼서 "썼는데 안 그려진" 줄 모른다.
+  const gone=[];
+  ddFigWalk(s, (obj, allowed, where)=>{ Object.keys(obj).forEach(k=>{ if(allowed.indexOf(k)<0){ gone.push(where+"."+k); delete obj[k]; } }); });
+  if(gone.length) console.warn("[그림] ddFig 가 모르는 칸을 버렸어요:", gone.join(", "));
   (s.angles||[]).forEach(a=>{ if(a && a.label==null) a.label=false; });
   delete s.width; delete s.height;
   if(!s.numberLine && !s.axes && !Object.keys(s.points||{}).length && !(s.circles||[]).length) return { err:'그릴 것이 없는 설계도' };
@@ -21338,7 +21381,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-const APP_VERSION = 'v80.6-출제지시';
+const APP_VERSION = 'v80.7-그림점검';
   // [v78.7] 이 값이 IIFE 안에 갇혀 있어 바깥 스크립트(app-ui.js)가 못 읽었다.
   //   화면 배지에 버전을 그대로 띄우려면 필요하므로 노출한다.
   window.APP_VERSION = APP_VERSION;
