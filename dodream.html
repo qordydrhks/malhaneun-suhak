@@ -5923,7 +5923,9 @@ function ddFigNumberLine(scene){
   const nl=scene.numberLine, min=+nl.min, max=+nl.max;
   if(!(max>min)) throw new Error('numberLine 범위가 이상해요');
   const step=+nl.step>0 ? +nl.step : ddNiceStep(max-min, 10);
-  const ranges=(nl.ranges||[]), L=30, R=530, Y=40+ranges.length*14+(nl.points||[]).some(q=>q&&q.label)*6;
+  const ranges=(nl.ranges||[]), L=30, R=530;
+  // [v80.7] 점 이름표는 구간 막대보다 위에 둔다(겹침 방지). 구간이 없으면 예전과 같은 자리(Y-12).
+  const rangeH=ranges.length*14, lblOff=12+rangeH, Y=40+rangeH+(nl.points||[]).some(q=>q&&q.label)*6;
   const X=v=>L+(v-min)/(max-min)*(R-L);
   let body='<line x1="'+(L-18)+'" y1="'+Y+'" x2="'+(R+18)+'" y2="'+Y+'" stroke="#2C2C2A" stroke-width="1.6"/>'
     +'<path d="M '+(R+18)+','+Y+' l -9,-5 l 0,10 Z" fill="#2C2C2A"/><path d="M '+(L-18)+','+Y+' l 9,-5 l 0,10 Z" fill="#2C2C2A"/>';
@@ -5947,7 +5949,7 @@ function ddFigNumberLine(scene){
   (nl.points||[]).forEach(q=>{ try{
     const px=X(+q.x); if(!isFinite(px)) return; const col=ddCol(q.color,'#185FA5');
     body+='<circle cx="'+px.toFixed(1)+'" cy="'+Y+'" r="5" fill="'+(q.open?'#fff':col)+'" stroke="'+col+'" stroke-width="2"/>';
-    if(q.label!=null) body+='<text x="'+px.toFixed(1)+'" y="'+(Y-12)+'" font-size="13" font-weight="600" fill="'+col+'" text-anchor="middle">'+escapeHtml(String(q.label))+'</text>';
+    if(q.label!=null) body+='<text x="'+px.toFixed(1)+'" y="'+(Y-lblOff)+'" font-size="13" font-weight="600" fill="'+col+'" text-anchor="middle"'+DD_HALO+'>'+escapeHtml(String(q.label))+'</text>';
   }catch(e){} });
   const W=560; let H=Y+34;
   if(scene.caption){
