@@ -5897,7 +5897,7 @@ function ddAxesSetup(a){
   let sx=+a.scale, sy=+(a.yScale||a.scale);
   if(!(sx>0)){
     // [v80.5] 판을 400×300 안에 맞춘다(예전 480×400). 판이 크면 화면에 줄여 넣을 때 눈금 글자까지 작아진다.
-    sx=Math.min(400/(xMax-xMin), 300/(yMax-yMin), 50); sy=sx;
+    sx=Math.min(400/(xMax-xMin), 300/(yMax-yMin), 140); sy=sx;   // [v80.7] 예전 50 — 단위원처럼 범위가 좁으면 그림이 너무 작았다
     if(sx<6){ sx=Math.min(400/(xMax-xMin), 50); sy=Math.min(300/(yMax-yMin), 50); }   // 한쪽 범위만 아주 크면 가로·세로 비율을 따로
   }else if(!(sy>0)) sy=sx;
   const ox=(a.ox!=null) ? +a.ox : 40-xMin*sx, oy=(a.oy!=null) ? +a.oy : 28+yMax*sy;
@@ -5918,6 +5918,29 @@ function ddCurveSegs(f, x0, x1, A, n){
 }
 function ddPathOf(P){ return 'M '+P.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' L '); }
 function ddDash(style){ return style==='dashed' ? ' stroke-dasharray="7,6"' : (style==='dotted' ? ' stroke-dasharray="2,5" stroke-linecap="round"' : ''); }
+/* [v80.7] caption 자동 줄바꿈. 예전엔 긴 설명이 회색 상자 밖으로 그냥 넘쳤다(2026-09-12에 12개 발견).
+   SVG 에는 자동 줄바꿈이 없어서 글자 폭을 어림으로 재서 나눈다(한글 넓은 글자 ~12.2px, 영숫자 ~6.7px @12.5px). */
+function ddTextW(s){ let w=0; for(const ch of String(s)){ const c=ch.codePointAt(0);
+  w += (c>0x1100 && c<0xFFDC) ? 12.2 : (ch===' ' ? 3.6 : 6.7); } return w; }
+function ddCapWrap(cap, avail){
+  const src = Array.isArray(cap) ? cap : [cap], out = [];
+  if(!(avail>40)) avail = 40;
+  src.forEach(raw=>{
+    const words = String(raw==null ? '' : raw).split(/(\s+)/);
+    let cur='';
+    const push=()=>{ if(cur.trim()) out.push(cur.trim()); cur=''; };
+    words.forEach(w=>{
+      if(ddTextW(cur+w) <= avail){ cur += w; return; }
+      push();
+      if(ddTextW(w) <= avail){ cur = w.replace(/^\s+/, ''); return; }
+      let piece = w.replace(/^\s+/, '');   // 한 낱말이 한 줄보다 길면 글자 단위로 자른다
+      while(piece){ let k=1; while(k<piece.length && ddTextW(piece.slice(0,k+1))<=avail) k++;
+        out.push(piece.slice(0,k)); piece = piece.slice(k); }
+    });
+    push();
+  });
+  return out.length ? out : [''];
+}
 // 수직선 (중1 수·부등식): numberLine:{min,max,step, points:[{x,label,open}], ranges:[{from,to,fromOpen,toOpen,color}]}
 function ddFigNumberLine(scene){
   const nl=scene.numberLine, min=+nl.min, max=+nl.max;
@@ -5953,7 +5976,7 @@ function ddFigNumberLine(scene){
   }catch(e){} });
   const W=560; let H=Y+34;
   if(scene.caption){
-    const cap=Array.isArray(scene.caption)?scene.caption:[scene.caption], capH=22*cap.length+16;
+    const cap=ddCapWrap(scene.caption, W-72), capH=22*cap.length+16;
     body+='<rect x="20" y="'+H+'" width="'+(W-40)+'" height="'+capH+'" rx="8" fill="#F1EFE8"/>';
     cap.forEach((line,i)=>{ body+='<text x="36" y="'+(H+24+i*18)+'" font-size="12.5" fill="#444441">'+escapeHtml(line)+'</text>'; });
     H+=capH+10;
@@ -6168,15 +6191,19 @@ function ddFig(scene){
     const ax=scene.axes, sx=A.sx, sy=A.sy;
     const xAt = (A.yMin<=0 && A.yMax>=0) ? A.oy : A.bot, yAt = (A.xMin<=0 && A.xMax>=0) ? A.ox : A.left;
     let grid='', tick='';
-    for(let gx=Math.ceil(A.xMin/A.step-1e-9)*A.step; gx<=A.xMax+1e-9; gx+=A.step){
+    // [v80.7] 눈금 숫자가 붙어서 겹치면 몇 칸씩 건너뛰고 적는다(격자는 그대로 다 그린다).
+    const xEvery=Math.max(1, Math.ceil(30/Math.max(1, A.step*sx))), yEvery=Math.max(1, Math.ceil(16/Math.max(1, A.yStep*sy)));
+    let kx=0;
+    for(let gx=Math.ceil(A.xMin/A.step-1e-9)*A.step; gx<=A.xMax+1e-9; gx+=A.step, kx++){
       const px=(A.ox+gx*sx).toFixed(1);
       if(ax.grid!==false) grid+='<line x1="'+px+'" y1="'+A.top.toFixed(1)+'" x2="'+px+'" y2="'+A.bot.toFixed(1)+'" stroke="#E5E3DC" stroke-width="1"/>';
-      if(ax.ticks!==false && Math.abs(gx)>1e-9) tick+='<text x="'+px+'" y="'+(xAt+15).toFixed(1)+'" font-size="11" fill="#6B6A64" text-anchor="middle"'+DD_HALO+'>'+ddNum(gx)+'</text>';
+      if(ax.ticks!==false && Math.abs(gx)>1e-9 && kx%xEvery===0) tick+='<text x="'+px+'" y="'+(xAt+15).toFixed(1)+'" font-size="11" fill="#6B6A64" text-anchor="middle"'+DD_HALO+'>'+ddNum(gx)+'</text>';
     }
-    for(let gy=Math.ceil(A.yMin/A.yStep-1e-9)*A.yStep; gy<=A.yMax+1e-9; gy+=A.yStep){
+    let ky=0;
+    for(let gy=Math.ceil(A.yMin/A.yStep-1e-9)*A.yStep; gy<=A.yMax+1e-9; gy+=A.yStep, ky++){
       const py=(A.oy-gy*sy).toFixed(1);
       if(ax.grid!==false) grid+='<line x1="'+A.left.toFixed(1)+'" y1="'+py+'" x2="'+A.right.toFixed(1)+'" y2="'+py+'" stroke="#E5E3DC" stroke-width="1"/>';
-      if(ax.ticks!==false && Math.abs(gy)>1e-9) tick+='<text x="'+(yAt-6).toFixed(1)+'" y="'+(+py+4).toFixed(1)+'" font-size="11" fill="#6B6A64" text-anchor="end"'+DD_HALO+'>'+ddNum(gy)+'</text>';
+      if(ax.ticks!==false && Math.abs(gy)>1e-9 && ky%yEvery===0) tick+='<text x="'+(yAt-6).toFixed(1)+'" y="'+(+py+4).toFixed(1)+'" font-size="11" fill="#6B6A64" text-anchor="end"'+DD_HALO+'>'+ddNum(gy)+'</text>';
     }
     body+=grid;
     body+='<line x1="'+(A.left-4).toFixed(1)+'" y1="'+xAt.toFixed(1)+'" x2="'+(A.right+10).toFixed(1)+'" y2="'+xAt.toFixed(1)+'" stroke="#888780" stroke-width="1.5"/>'
@@ -6185,7 +6212,11 @@ function ddFig(scene){
       +'<path d="M '+yAt.toFixed(1)+','+(A.top-12).toFixed(1)+' l -4,8 l 8,0 Z" fill="#888780"/>';
     body+='<text x="'+(A.right+10).toFixed(1)+'" y="'+(xAt-8).toFixed(1)+'" font-size="13" font-style="italic" fill="#6B6A64">x</text>';
     body+='<text x="'+(yAt+8).toFixed(1)+'" y="'+(A.top-4).toFixed(1)+'" font-size="13" font-style="italic" fill="#6B6A64">y</text>';
-    if(ax.origin!==false && xAt===A.oy && yAt===A.ox) body+='<text x="'+(A.ox-6).toFixed(1)+'" y="'+(A.oy+15).toFixed(1)+'" font-size="12" font-style="italic" fill="#6B6A64" text-anchor="end">O</text>';
+    // [v80.7] 설계도가 원점에 직접 라벨을 달았으면 앱이 찍는 'O' 는 생략한다(둘이 겹쳐 보였다).
+    const _ownO=(scene.labels||[]).some(lb=>{ if(!lb) return false;
+      const q = lb.at ? [+lb.at[0], +lb.at[1]] : (lb.point!=null ? pts[lb.point] : null);
+      return q && Math.abs(q[0])<1e-9 && Math.abs(q[1])<1e-9; });
+    if(ax.origin!==false && !_ownO && xAt===A.oy && yAt===A.ox) body+='<text x="'+(A.ox-6).toFixed(1)+'" y="'+(A.oy+15).toFixed(1)+'" font-size="12" font-style="italic" fill="#6B6A64" text-anchor="end">O</text>';
     body+=tick;
     ext(A.left-36, A.top-20); ext(A.right-10, A.bot-14);   // 아래 크기 계산이 여기에 +40 을 더한다
     Object.keys(pts).forEach(k=>{ const p=pts[k]; mathPts[k]=p; pts[k]=A.toPx(p[0],p[1]); });
@@ -6255,16 +6286,18 @@ function ddFig(scene){
     const p=pts[lb.point];
     maxX=Math.max(maxX, p[0]+(lb.dx||0)+30);
     maxY=Math.max(maxY, p[1]+(lb.dy||0)+20);
+    ext(p[0]+(lb.dx||0)-6, p[1]+(lb.dy||0)-13);   // [v80.7] 왼쪽·위로 나가는 라벨도 화면 안에 들어오게
   });
   maxX=Math.max(maxX, extX); maxY=Math.max(maxY, extY);   // [v80.4] 곡선·원 등(옛 그림은 0이라 무변경)
   const vx = minX<0 ? Math.floor(minX-20) : 0, vy = minY<0 ? Math.floor(minY-20) : 0;   // 왼쪽·위로 삐져나가면 화면을 넓힘
-  const W = scene.width || Math.ceil(maxX+40);
+  let W = scene.width || Math.ceil(maxX+40);
+  if(scene.caption && !scene.width) W = Math.max(W, 320);   // [v80.7] 설명 글이 들어갈 최소 폭
   const H = scene.height || Math.ceil(maxY+40);
 
   let extra='';
   let totalH=H;
   if(scene.caption){
-    const cap = Array.isArray(scene.caption)?scene.caption:[scene.caption];
+    const cap = ddCapWrap(scene.caption, (W-vx-40)-32);
     const capH = 22*cap.length+16;
     extra+='<rect x="'+(vx+20)+'" y="'+H+'" width="'+(W-vx-40)+'" height="'+capH+'" rx="8" fill="#F1EFE8"/>';
     cap.forEach((line,i)=>{ extra+='<text x="'+(vx+36)+'" y="'+(H+24+i*18)+'" font-size="12.5" fill="#444441">'+escapeHtml(line)+'</text>'; });
