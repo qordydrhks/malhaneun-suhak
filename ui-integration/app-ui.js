@@ -7,10 +7,12 @@
   const $ = id => document.getElementById(id);
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const ui = {page:'home', level:'high', kind:'concept', band:'e', input:'voice', busy:false, menu:null, questions:[]};
-  // [v81.5] 브라우저·폰 뒤로가기 → 앱 안의 직전 화면 (첫 화면에서만 앱을 나간다)
-  //   stage()/showTeacher() 가 화면을 바꿀 때마다 기억해 두고, 뒤로가기(popstate)가 오면 하나 전으로 되돌린다.
-  //   history 에는 "가짜 한 칸"만 걸어 두고 뒤로가기마다 다시 건다 → 앞으로가기는 지원하지 않는다.
-  const nav = {stack:[], restoring:false, armed:false};
+  // [v81.7] 브라우저·폰 뒤로가기 → 앱 안의 직전 화면 (앱의 첫 화면에서만 앱을 나간다)
+  //   stage()/showTeacher() 가 화면을 바꿀 때마다 — 즉 사람이 누른 순간에 — history 에 한 칸씩 쌓고 그 칸에 화면 정보를 담는다.
+  //   뒤로가기·앞으로가기(popstate)는 그 칸의 화면으로 되돌리기만 한다.
+  //   ⚠️ v81.5 는 뒤로가기가 눌린 순간 앱이 스스로 칸을 다시 넣었다. 크롬은 "사람 조작 없이 넣은 칸"을 뒤로가기 때
+  //      건너뛰어서 두 번째 뒤로가기에 앱을 나가 버렸다. → popstate 안에서는 절대 pushState 하지 말 것.
+  const nav = {restoring:false};
   const original = {showView, enterStudentView, setLearnStep, cpSyncLegacy, renderCurrentQuestion, resetRecordingUI, renderFeedback, saveSubmission, startQuiz, goToNextQuestion, tryAutoLogin, renderRail, openStudentHistory, doLogout, onSpeakTimeout};
   const menus = [
     ['dashboard','학생과 학습','학습 현황','오늘의 학습 · 통과 · 도움 필요','▥'],
@@ -48,19 +50,25 @@
     ui.page=page; renderStudent(); window.scrollTo(0,0);
     navRecord({v:'s', page, grade:CP.grade||null, big:CP.big, middle:CP.middle, small:CP.small});
   }
-  function navArm() {
-    if(nav.armed) return;
-    try { history.pushState({ddNav:1}, ''); nav.armed=true; } catch {}
-  }
   function navRecord(s) {
     if(nav.restoring) return;
-    const top=nav.stack[nav.stack.length-1];
-    if(top && top.v!==s.v) nav.stack=[];
-    if(top && JSON.stringify(top)===JSON.stringify(s)) return;
-    nav.stack.push(s); if(nav.stack.length>60) nav.stack.shift();
-    if(nav.stack.length>1) navArm();
+    const cur=history.state && history.state.ddNav;
+    if(cur && JSON.stringify(cur)===JSON.stringify(s)) return;
+    try {
+      if(!cur) history.replaceState({ddNav:s}, '');   // 앱을 처음 연 칸: 새 칸을 만들지 않고 화면 정보만 적는다
+      else history.pushState({ddNav:s}, '');
+    } catch {}
   }
-  function navReset() { nav.stack=[]; }
+  // 질문·문제·대화 화면은 다시 열 수 없으므로, 그 칸으로 오면 그 소단원의 질문 목록으로 보낸다
+  function navTarget(s) {
+    if(s.v!=='s' || !['lesson','quiz','talk'].includes(s.page)) return s;
+    return Object.assign({}, s, {page: s.small!=null ? 'questions' : (s.grade ? 'catalog' : 'home')});
+  }
+  function navSame(a, b) {
+    if(a.v!==b.v) return false;
+    if(a.v==='t') return a.menu===b.menu;
+    return a.page===b.page && a.grade===b.grade && a.big===b.big && a.middle===b.middle && a.small===b.small;
+  }
   function navRestore(prev) {
     if(prev.v==='t') { showTeacher(prev.menu); window.scrollTo(0,0); return; }
     // 질문·문제·대화 중이면 앱의 '‹ 질문 선택' 버튼과 같은 정리를 먼저 한다 (마이크·타이머 끄기)
@@ -74,18 +82,19 @@
     stage(prev.page);
     if(prev.page==='home') cpLoadRecords();
   }
-  window.addEventListener('popstate', () => {
-    nav.armed=false;
-    if(nav.stack.length<=1) { history.back(); return; }   // 첫 화면: 원래대로 앱을 나간다
-    if(ui.busy) { notice('평가와 기록 저장을 마친 뒤 이동할 수 있어요.'); navArm(); return; }
-    nav.stack.pop();
-    // 질문·문제·대화 화면은 다시 열 수 없으므로 건너뛰고 그 전 화면으로
-    while(nav.stack.length>1 && nav.stack[nav.stack.length-1].v==='s' && ['lesson','quiz','talk'].includes(nav.stack[nav.stack.length-1].page)) nav.stack.pop();
-    const prev=nav.stack[nav.stack.length-1];
+  window.addEventListener('popstate', e => {
+    const s=e.state && e.state.ddNav;
+    if(!s) return;
+    if((s.v==='s' && !isStudent()) || (s.v==='t' && !session.teacher)) return;   // 로그아웃한 뒤의 옛 칸은 무시
+    if(ui.busy) { notice('평가와 기록 저장을 마친 뒤 이동할 수 있어요.'); return; }
+    const target=navTarget(s);
+    const now = session.teacher ? {v:'t', menu:ui.menu} : {v:'s', page:ui.page, grade:CP.grade||null, big:CP.big, middle:CP.middle, small:CP.small};
+    // 되돌아갈 칸이 지금 화면과 같으면(질문 화면 칸 → 질문 목록, 앱 안 버튼으로 같은 화면이 두 번 쌓인 경우) 한 칸 더 뒤로.
+    //   이렇게 안 하면 뒤로가기를 눌러도 화면이 그대로라 "안 눌린 것"처럼 보인다. (코드로 부르는 back() 은 크롬이 건너뛰지 않음)
+    if(navSame(target, navTarget(now))) { history.back(); return; }
     nav.restoring=true;
-    try { navRestore(prev); } catch(err) { console.warn('[dd-ui] 뒤로가기 복원 실패', err); }
+    try { navRestore(target); } catch(err) { console.warn('[dd-ui] 뒤로가기 복원 실패', err); }
     finally { nav.restoring=false; }
-    if(nav.stack.length>1) navArm();
   });
   function restoreLevel() { state.level=ui.level; state._qType=null; state._baseLevel=ui.level; state._directSelectedQuestion=''; state._pickerQIndex=null; }
   function lock(busy) {
@@ -360,13 +369,12 @@
   // Original inline engine remains byte-identical; only its UI boundaries adapt.
   showView=function(name) {
     if(name==='viewTeacher'&&!session.teacher) name='viewTeacherAuth';
-    if(!['viewStudent','viewTeacher'].includes(name)) navReset();   // [v81.5] 로그인·학부모 화면 등에선 뒤로가기 기억을 비움
     original.showView(name); document.body.classList.toggle('dd-ui-parent',name==='viewParent');
     if(name==='viewTeacher') showTeacher(ui.menu||teacherRoute);
   };
   tryAutoLogin=async function() { if(teacherRoute) { showView('viewTeacherAuth'); return; } return original.tryAutoLogin(); };
   enterStudentView=function() {
-    session.teacher=false; session.role=null; ui.level='high'; ui.kind='concept'; lock(false); cpRecords=[]; navReset();
+    session.teacher=false; session.role=null; ui.level='high'; ui.kind='concept'; lock(false); cpRecords=[];
     original.enterStudentView(); restoreSelection(); restoreLevel(); stage('home');
   };
   setLearnStep=function(n) {
