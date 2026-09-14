@@ -71,6 +71,10 @@ body.dd-ui :is(button,a,input,select,textarea,summary):focus-visible{outline:3px
 .dd-ui-choice,.dd-ui-question{display:flex;gap:20px;align-items:center;text-align:left;background:#fff;border:1px solid #dfe7f3;box-shadow:0 3px 0 #e8edf6;border-radius:19px;padding:23px 25px;color:#335176;cursor:pointer;font:inherit;width:100%;min-width:0;line-height:1.7}
 .dd-ui-choice:hover,.dd-ui-question:hover{border-color:#a6bdeb;background:#fcfdff}
 .dd-ui-number{display:flex;align-items:center;justify-content:center;flex-shrink:0;width:37px;min-height:37px;border-radius:11px;background:#edf3fd;color:#7091c5;font-size:.9375rem;font-weight:650}
+/* [v81.4] 대단원·소단원 진도 표시 */
+.dd-ui-prog{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-width:118px;font-size:.8125rem;color:#647d9b;white-space:nowrap;line-height:1.2}
+body.dd-ui .dd-ui-prog .cvx-bar{width:118px}
+.dd-ui-prog.done{color:#1f8a52;font-weight:650}
 .dd-ui-choice>div,.dd-ui-question>div{flex:1;min-width:0}.dd-ui-choice strong{font-size:1.05rem;flex:1;font-weight:650}
 .dd-ui-choice small,.dd-ui-question small{display:block;font-size:.875rem;color:#647d9b;margin:1px 0 7px}
 .dd-ui-choice>span:last-child,.dd-ui-question>span:last-child{color:#8299ba;margin-left:auto}
@@ -240,6 +244,7 @@ body.dd-ui #viewTeacher .sh-head{position:sticky;top:0;background:#fff;z-index:1
  .dd-ui-axes{gap:20px;padding:20px}.dd-ui-axes article{font-size:.875rem}.dd-ui-axes strong{font-size:.9375rem}
  .dd-ui-tabs button{font-size:.9375rem;padding:10px}.dd-ui-choice,.dd-ui-question{padding:18px 15px;gap:12px}
  .dd-ui-choice>span:last-child,.dd-ui-question>span:last-child{display:none}.dd-ui-choice strong{font-size:1rem}
+ .dd-ui-prog{min-width:78px;font-size:.75rem}body.dd-ui .dd-ui-prog .cvx-bar{width:78px}
  .dd-ui-picker-foot .dd-ui-primary{width:100%}
  .dd-ui-section-head label{font-size:.875rem;display:flex;align-items:center;justify-content:space-between;flex:1;min-width:240px}.dd-ui-section-head h2{font-size:1.05rem}
  body.dd-ui #viewStudent .q-item-text{font-size:1.25rem}body.dd-ui #viewStudent #questionCard .q-box{padding:23px}

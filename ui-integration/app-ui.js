@@ -123,12 +123,32 @@
       '<div class="dd-ui-tabs">'+CP_BANDS.map(x=>button(x.label,'band',ui.band===x.key?'active':'','data-band="'+x.key+'" aria-pressed="'+(ui.band===x.key)+'"')).join('')+'</div>'+
       '<div class="dd-ui-grade-grid">'+GRADES.filter(g=>g.id.startsWith(ui.band)).map(g=>button(esc(g.name),'grade','dd-ui-grade '+(CP.grade===g.id?'selected':''),'data-grade="'+g.id+'"')).join('')+'</div>';
   }
+  // [v81.4] 진도 표시 — 소단원 완료 = 설명하기 질문(깊이 질문 + 유형별 질문)을 모두 통과 (기본문제 열리는 조건과 같음)
+  function smallProgress(big, sm) {
+    const it=ddqItemsFor(CP.grade,big.name,sm), list=[].concat(it.high,it.qset);
+    const pass=list.filter(x=>cpStatusForQuestion(CP.grade,x.q,x.id)==='pass').length;
+    return {pass,total:list.length,done:list.length>0&&pass===list.length};
+  }
+  function bigProgress(big) {
+    let done=0,total=0;
+    cpBigMiddles(big).forEach(mid=>(mid.smalls||[]).forEach(sm=>{ total++; if(smallProgress(big,sm).done) done++; }));
+    return {done,total};
+  }
   function catalog() {
     const m=model(); if(!m) return gradePicker();
-    if(CP.big===null) return '<div class="dd-ui-page-head"><div><p class="dd-ui-caption">'+esc(m.name)+'</p><h1>공부할 단원을 골라요.</h1></div>'+button('학년 바꾸기','grades','dd-ui-text')+'</div><div class="dd-ui-choice-list">'+m.bigUnits.map((x,i)=>button('<span class="dd-ui-number">'+(i+1)+'</span><strong>'+esc(x.name)+'</strong><span>›</span>','big','dd-ui-choice','data-big="'+i+'"')).join('')+'</div>';
+    if(CP.big===null) return '<div class="dd-ui-page-head"><div><p class="dd-ui-caption">'+esc(m.name)+'</p><h1>공부할 단원을 골라요.</h1></div>'+button('학년 바꾸기','grades','dd-ui-text')+'</div><div class="dd-ui-choice-list">'+m.bigUnits.map((x,i)=>{
+      const p=bigProgress(x);
+      const prog='<span class="dd-ui-prog'+(p.total&&p.done===p.total?' done':'')+'">'+cvxBar(p.done,p.total)+'<span>'+p.done+' / '+p.total+(p.done?' 소단원 완료':'')+'</span></span>';
+      return button('<span class="dd-ui-number">'+(i+1)+'</span><strong>'+esc(x.name)+'</strong>'+prog+'<span>›</span>','big','dd-ui-choice','data-big="'+i+'"');
+    }).join('')+'</div>';
     let number=0;
-    return '<div class="dd-ui-page-head"><div><p class="dd-ui-caption">'+esc(m.name)+'</p><h1>'+esc(m.bigUnits[CP.big].name)+'</h1></div>'+button('대단원 목록','bigs','dd-ui-text')+'</div><div class="dd-ui-choice-list">'+
-      cpBigMiddles(m.bigUnits[CP.big]).map((mid,mi)=>(mid.smalls||[]).map((sm,si)=>button('<span class="dd-ui-number">'+(++number)+'</span><div><strong>'+esc(smallTitle(sm))+'</strong>'+(mid.name?'<small>'+esc(mid.name)+'</small>':'')+'</div><span>›</span>','small','dd-ui-choice','data-middle="'+mi+'" data-small="'+si+'"')).join('')).join('')+'</div>';
+    const big=m.bigUnits[CP.big];
+    return '<div class="dd-ui-page-head"><div><p class="dd-ui-caption">'+esc(m.name)+'</p><h1>'+esc(big.name)+'</h1></div>'+button('대단원 목록','bigs','dd-ui-text')+'</div><div class="dd-ui-choice-list">'+
+      cpBigMiddles(big).map((mid,mi)=>(mid.smalls||[]).map((sm,si)=>{
+        const p=smallProgress(big,sm);
+        const prog='<span class="dd-ui-prog'+(p.done?' done':'')+'"><span>'+(p.done?'✓ 완료':p.pass?'질문 '+p.pass+' / '+p.total:'시작 전')+'</span></span>';
+        return button('<span class="dd-ui-number">'+(++number)+'</span><div><strong>'+esc(smallTitle(sm))+'</strong>'+(mid.name?'<small>'+esc(mid.name)+'</small>':'')+'</div>'+prog+'<span>›</span>','small','dd-ui-choice','data-middle="'+mi+'" data-small="'+si+'"');
+      }).join('')).join('')+'</div>';
   }
   function questionPicker() {
     const sm=cpCurrentSmall(); if(!sm) return catalog();
