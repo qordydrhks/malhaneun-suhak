@@ -451,6 +451,701 @@ const PROBLEMS = [
   }
 },
 {
+  id:'t03', unit:'1. 삼각형의 성질', pick:'이등분선과 외각의 이등분선',
+  tag:'중2 · 이등변삼각형 · 삼각형의 외각',
+  svg:'<svg viewBox="0 0 260 205" role="img" aria-label="이등변삼각형 ABC와 두 이등분선의 교점 D">'
+    + '<polygon points="80,45 20,180 140,180" fill="none" stroke="var(--ink)" stroke-width="1.8"/>'
+    + '<line x1="140" y1="180" x2="245" y2="180" stroke="var(--ink)" stroke-width="1.8"/>'
+    + '<line x1="20" y1="180" x2="227" y2="45" stroke="var(--ink)" stroke-width="1.5"/>'
+    + '<line x1="140" y1="180" x2="227" y2="45" stroke="var(--ink)" stroke-width="1.5"/>'
+    + '<text x="80" y="74" text-anchor="middle" font-size="10" fill="var(--blue)">48°</text>'
+    + '<g font-size="11" font-weight="700" fill="var(--ink)">'
+    +   '<text x="80" y="36" text-anchor="middle">A</text><text x="8" y="194">B</text>'
+    +   '<text x="134" y="196">C</text><text x="232" y="42">D</text><text x="238" y="196">E</text>'
+    + '</g></svg>',
+  cap:'AB = AC, 점 E는 BC의 연장선 위의 점',
+  sentence:[
+    {t:'AB=AC인 이등변삼각형 ABC', key:'iso'},
+    {t:'에서 '},
+    {t:'∠A=48°', key:'angA'},
+    {t:'이다. '},
+    {t:'∠B의 이등분선', key:'bisB'},
+    {t:'과 '},
+    {t:'∠C의 외각의 이등분선', key:'bisC'},
+    {t:'이 만나는 점을 D라 할 때, '},
+    {t:'∠BDC', key:'goal'},
+    {t:'의 크기를 구하시오.'}
+  ],
+  nodes:{
+    goal:{ label:'∠BDC를 구해야 한다',
+      ask:'∠BDC는 △DBC의 한 각이에요. 어떤 각들을 먼저 알아야 할까?',
+      hint:'점 C에서 BC를 연장한 쪽에 생기는 각을 봐.',
+      items:[
+        {t:'△DBC에서 ∠DBC와 ∠DCE를 먼저 구한다', next:'iso'},
+        {t:'∠BDC = ∠ABD 이다', why:'엇각이 되려면 CD ∥ AB여야 하는데 그런 조건이 없어요.'},
+        {t:'△ABD를 따로 떼어 본다', why:'△ABD에서 크기를 알 수 있는 각은 ∠ABD 하나뿐이에요.'},
+        {t:'△ACD를 따로 떼어 본다', why:'△ACD에서는 아직 아는 각이 없어요.'}
+      ]},
+    iso:{ label:'AB=AC인 이등변삼각형이다',
+      note:'이등변삼각형에서 알 수 있는 것이에요.',
+      hint:'꼭지각을 알면 밑각을 구할 수 있지.',
+      items:[
+        {t:'두 밑각의 크기가 같다', next:'base'},
+        {t:'A에서 BC에 내린 수선이 BC를 이등분한다', why:'맞는 성질이지만 이 문제에는 그 수선이 없어요.'},
+        {t:'∠B의 이등분선이 AC를 이등분한다', why:'각의 이등분선이 대변을 이등분하는 건 꼭지각에서 그을 때뿐이에요.'},
+        {t:'세 내각의 이등분선이 한 점에서 만난다', why:'맞지만 D는 외각의 이등분선과 만나는 점이라 내심이 아니에요.'}
+      ]},
+    angA:{ label:'∠A = 48°이다',
+      note:'이 각을 어떻게 쓸까요?',
+      hint:'세 각의 합.',
+      items:[
+        {t:'세 각의 합으로 밑각을 구한다', next:'base'},
+        {t:'∠C의 외각은 180° − 48°이다', why:'180°에서 빼서 외각이 되는 건 이웃한 내각 ∠ACB예요.'},
+        {t:'∠A의 외각을 이용한다', why:'D와 이어지는 건 ∠C의 외각이에요.'},
+        {t:'∠ABD = 48°이다', why:'48°는 꼭지각이에요. ∠ABD는 밑각의 절반이죠.'}
+      ]},
+    base:{ label:'두 밑각의 크기가 같다',
+      solve:{ q:'∠ABC의 크기는 몇 도일까요?', unit:'°', accept:['66'],
+              wrong:'두 밑각은 크기가 같고, 세 각의 합은 180°예요.' },
+      hint:'180°에서 꼭지각을 빼고 둘로 나눠.',
+      next:'ext'},
+    ext:{ label:'∠ABC = ∠ACB = 66°',
+      note:'∠C의 외각 ∠ACE는 어떻게 구할까요?',
+      hint:'한 직선 위에서 이웃한 두 각.',
+      items:[
+        {t:'∠ACE = 180° − ∠ACB', next:'dce'},
+        {t:'∠ACE = ∠ACB', why:'외각과 내각은 한 직선 위에서 이웃해요. 합이 180°죠.'},
+        {t:'∠ACE = ∠A + ∠ACB', why:'외각은 이웃하지 않은 두 내각의 합이에요. ∠ACB는 이웃한 각이죠.'},
+        {t:'∠ACE = 2∠A', why:'그런 관계는 없어요.'}
+      ]},
+    dce:{ label:'∠ACE = 180° − ∠ACB',
+      solve:{ q:'CD가 ∠ACE를 이등분할 때, ∠DCE는 몇 도일까요?', unit:'°', accept:['57'],
+              wrong:'∠ACE를 먼저 구하고, 그 각을 반으로 나눠요.' },
+      hint:'∠ACE = 114°.',
+      next:'link'},
+    link:{ label:'∠DCE = 57°, ∠DBC = 33°',
+      note:'△DBC에서 ∠BDC로 이어볼까요?',
+      hint:'∠DCE는 △DBC의 외각이야.',
+      items:[
+        {t:'∠DCE = ∠DBC + ∠BDC', next:'fin'},
+        {t:'∠BDC = ∠DCE + ∠DBC', why:'외각이 두 내각의 합이에요. 외각에서 한 내각을 빼야 나머지가 나와요.'},
+        {t:'∠BDC = 180° − ∠DCE − ∠DBC', why:'∠DCE는 △DBC의 내각이 아니라 외각이에요.'},
+        {t:'∠BDC = ∠DCE − ∠ACB', why:'∠ACB는 △DBC의 각이 아니에요.'}
+      ]},
+    fin:{ label:'∠DCE = ∠DBC + ∠BDC',
+      solve:{ q:'∠BDC의 크기는 몇 도일까요?', unit:'°', accept:['24'],
+              wrong:'∠DBC는 ∠ABC의 절반이에요.' },
+      hint:'57° = 33° + ∠BDC.',
+      next:'end1'},
+    bisB:{ label:'∠B의 이등분선이다',
+      note:'BD가 ∠ABC를 반으로 나눠요.',
+      hint:'∠ABC부터 알아야겠지.',
+      items:[
+        {t:'∠ABC의 크기를 먼저 구해야 한다', next:'iso'},
+        {t:'∠ABD = ∠DBC = ∠A', why:'∠B를 반으로 나눈 각이지 ∠A와 같은 건 아니에요.'},
+        {t:'BD는 AC와 수직이다', why:'수직이 되는 건 꼭지각의 이등분선일 때예요.'},
+        {t:'D는 △ABC의 내심이다', why:'내심은 세 내각의 이등분선의 교점이에요. CD는 외각의 이등분선이죠.'}
+      ]},
+    bisC:{ label:'∠C의 외각의 이등분선이다',
+      note:'CD가 ∠ACE를 반으로 나눠요.',
+      hint:'외각의 크기는 이웃한 내각으로 구할 수 있어.',
+      items:[
+        {t:'∠ACB의 크기를 먼저 구해야 한다', next:'iso'},
+        {t:'∠ACD = ∠DCE = ∠ACB', why:'∠ACE를 반으로 나눈 각이에요. ∠ACB와는 달라요.'},
+        {t:'CD와 BD는 수직이다', why:'그런 조건은 없어요.'},
+        {t:'CD ∥ AB 이다', why:'평행하려면 엇각이나 동위각이 같아야 하는데 그런 조건이 없어요.'}
+      ]},
+    end1:{ end:true,
+      lines:['∠ABC = ∠ACB = (180° − 48°) ÷ 2 = 66°, ∠DBC = 33°',
+             '∠ACE = 180° − 66° = 114°, ∠DCE = 57°',
+             '△DBC의 외각: ∠DCE = ∠DBC + ∠BDC → 57° = 33° + ∠BDC'],
+      ans:'∠BDC = 24°',
+      cmt:'외각의 성질을 두 번 쓴 문제예요. 답을 보면 ∠BDC는 ∠A의 딱 절반인데, ∠A가 몇 도로 바뀌어도 늘 그래요. 왜 그런지 식으로 확인해보면 좋아요.'}
+  }
+},
+{
+  id:'t04', unit:'1. 삼각형의 성질', pick:'종이 테이프 접기',
+  tag:'중2 · 이등변삼각형이 되는 조건',
+  svg:'<svg viewBox="0 0 300 120" role="img" aria-label="폭이 일정한 종이 테이프를 접어 생긴 삼각형 ABC">'
+    + '<g stroke="var(--sub)" stroke-width="1.2" stroke-dasharray="4 3">'
+    +   '<line x1="10" y1="40" x2="260" y2="40"/><line x1="10" y1="100" x2="260" y2="100"/>'
+    + '</g>'
+    + '<g stroke="var(--ink)" stroke-width="1.4">'
+    +   '<line x1="240" y1="100" x2="107" y2="0"/><line x1="60" y1="40" x2="7" y2="0"/>'
+    + '</g>'
+    + '<polygon points="60,40 160,40 240,100" fill="#EAF0FF" stroke="var(--ink)" stroke-width="1.8"/>'
+    + '<line x1="272" y1="40" x2="272" y2="100" stroke="var(--sub)" stroke-width="1.2"/>'
+    + '<text x="276" y="74" font-size="10" fill="var(--sub)">6cm</text>'
+    + '<text x="214" y="64" font-size="10" fill="var(--sub)">10cm</text>'
+    + '<g font-size="11" font-weight="700" fill="var(--ink)">'
+    +   '<text x="48" y="36">A</text><text x="166" y="35">B</text>'
+    +   '<text x="236" y="115">C</text><text x="36" y="115">E</text>'
+    + '</g></svg>',
+  cap:'점선은 테이프의 두 가장자리, 점 E는 아래 가장자리 위의 점',
+  sentence:[
+    {t:'폭이 6cm로 일정한 종이 테이프', key:'width'},
+    {t:'를 선분 AC를 따라 '},
+    {t:'접었다', key:'fold'},
+    {t:'. 겹쳐진 부분 △ABC에서 '},
+    {t:'BC=10cm', key:'bc'},
+    {t:'일 때, '},
+    {t:'△ABC의 넓이', key:'goal'},
+    {t:'를 구하시오.'}
+  ],
+  nodes:{
+    goal:{ label:'△ABC의 넓이를 구해야 한다',
+      ask:'밑변과 높이를 어디로 잡으면 좋을까?',
+      hint:'테이프의 폭이 어느 변에 대한 높이가 될 수 있을지 생각해봐.',
+      items:[
+        {t:'밑변을 AB, 높이를 테이프의 폭으로 잡는다', next:'needab'},
+        {t:'밑변을 BC, 높이를 테이프의 폭으로 잡는다', why:'테이프의 폭은 가장자리에 수직인 거리예요. BC는 가장자리 위에 있지 않죠.'},
+        {t:'밑변을 AC, 높이를 테이프의 폭으로 잡는다', why:'AC도 비스듬해서 테이프의 폭이 AC에 대한 높이가 되지 않아요.'},
+        {t:'밑변을 AB, 높이를 BC로 잡는다', why:'BC는 AB에 수직이 아니에요.'}
+      ]},
+    needab:{ label:'밑변 AB, 높이 6cm',
+      note:'AB의 길이는 주어지지 않았어요.',
+      hint:'△ABC가 어떤 삼각형인지 알면 AB를 알 수 있어.',
+      items:[
+        {t:'△ABC가 어떤 삼각형인지 확인한다', next:'fold'},
+        {t:'AB = AC 이다', why:'AB=AC가 되려면 ∠B = ∠C여야 해요. 같은 두 각부터 찾아봐요.'},
+        {t:'AB = 6cm 이다', why:'6cm는 테이프의 폭이에요.'},
+        {t:'AB는 BC의 절반이다', why:'그런 조건은 없어요.'}
+      ]},
+    fold:{ label:'종이를 접었다',
+      note:'접은 선 AC를 기준으로 크기가 같아지는 각이 있어요.',
+      hint:'접기 전의 각과 접은 후의 각은 크기가 같아.',
+      items:[
+        {t:'∠ACB = ∠ACE (접은 각)', next:'para'},
+        {t:'∠BAC = ∠BCA (접은 각)', why:'접어서 겹치는 각은 접은 선 AC를 사이에 두고 마주한 두 각이에요.'},
+        {t:'AB = BC (접은 변)', why:'접어서 AB와 BC가 포개지는 게 아니에요.'},
+        {t:'△ABC ≡ △ACE', why:'E는 가장자리 위의 점일 뿐, 그런 삼각형은 겹쳐지지 않아요.'}
+      ]},
+    para:{ label:'∠ACB = ∠ACE',
+      note:'테이프의 두 가장자리는 평행해요.',
+      hint:'평행선과 AC가 만드는 각.',
+      items:[
+        {t:'∠BAC = ∠ACE (엇각)', next:'iso'},
+        {t:'∠BAC = ∠ACE (동위각)', why:'AC가 두 평행선 사이를 가로지르며 반대쪽에 생긴 각이라 엇각이에요.'},
+        {t:'∠ABC = ∠ACE (엇각)', why:'∠ABC는 AC가 만드는 각이 아니에요.'},
+        {t:'∠BAC + ∠ACE = 180°', why:'합이 180°인 건 같은 쪽 안쪽의 두 각이에요. 여기선 엇각이라 크기가 같죠.'}
+      ]},
+    iso:{ label:'∠BAC = ∠ACE = ∠ACB',
+      note:'△ABC에서 크기가 같은 두 각을 찾았어요.',
+      hint:'같은 두 각이 각각 마주보는 변.',
+      items:[
+        {t:'BA = BC 인 이등변삼각형이다', next:'area'},
+        {t:'AB = AC 인 이등변삼각형이다', why:'∠BAC가 마주보는 변은 BC, ∠BCA가 마주보는 변은 AB예요.'},
+        {t:'AC = BC 인 이등변삼각형이다', why:'같은 각의 짝을 다시 확인해봐요.'},
+        {t:'정삼각형이다', why:'두 각이 같다는 것만 알아요.'}
+      ]},
+    area:{ label:'BA = BC 이다',
+      solve:{ q:'△ABC의 넓이는 몇 cm²일까요?', unit:'cm²', accept:['30'],
+              wrong:'AB의 길이와 AB에 대한 높이를 다시 확인해봐요. 삼각형이니 ½도요.' },
+      hint:'AB = BC = 10cm.',
+      next:'end1'},
+    width:{ label:'폭이 6cm로 일정하다',
+      note:'이 조건에서 알 수 있는 것이에요.',
+      hint:'두 가장자리 사이의 관계.',
+      items:[
+        {t:'두 가장자리는 평행하고, 그 사이의 거리가 6cm이다', next:'goal'},
+        {t:'접은 선 AC의 길이가 6cm이다', why:'6cm는 가장자리 사이의 수직 거리예요.'},
+        {t:'AB의 길이가 6cm이다', why:'AB는 가장자리 위의 길이예요.'},
+        {t:'△ABC는 직각삼각형이다', why:'폭이 일정하다고 직각이 생기지는 않아요.'}
+      ]},
+    bc:{ label:'BC = 10cm 이다',
+      note:'이 길이를 어디에 쓸 수 있을까요?',
+      hint:'△ABC의 모양을 먼저 알아야 해.',
+      items:[
+        {t:'△ABC가 어떤 삼각형인지 먼저 확인한다', next:'fold'},
+        {t:'AC = 10cm 이다', why:'근거가 없어요.'},
+        {t:'BC를 밑변으로 잡는다', why:'BC를 밑변으로 잡으면 높이를 알 수 없어요.'},
+        {t:'테이프의 폭과 BC로 넓이를 바로 구한다', why:'테이프의 폭은 BC에 대한 높이가 아니에요.'}
+      ]},
+    end1:{ end:true,
+      lines:['접은 각이므로 ∠ACB = ∠ACE',
+             '두 가장자리가 평행하므로 ∠BAC = ∠ACE (엇각)',
+             '∠BAC = ∠BCA → BA = BC = 10cm',
+             '넓이 = ½ × 10 × 6'],
+      ans:'30cm²',
+      cmt:'종이를 접으면 이등변삼각형이 생긴다 — 접은 각과 엇각이 한 각으로 모이기 때문이에요. 테이프의 폭이 AB에 대한 높이라는 걸 알아챈 게 출발점이었어요.'}
+  }
+},
+{
+  id:'t05', unit:'1. 삼각형의 성질', pick:'직각이등변삼각형과 수선',
+  tag:'중2 · 직각삼각형의 합동 활용',
+  svg:'<svg viewBox="0 0 250 160" role="img" aria-label="직각이등변삼각형 ABC와 A를 지나는 직선 l, 수선의 발 D, E">'
+    + '<line x1="10" y1="40" x2="235" y2="40" stroke="var(--ink)" stroke-width="1.5"/>'
+    + '<polygon points="100,40 40,140 200,100" fill="none" stroke="var(--ink)" stroke-width="1.8"/>'
+    + '<line x1="40" y1="40" x2="40" y2="140" stroke="var(--ink)" stroke-width="1.5"/>'
+    + '<line x1="200" y1="40" x2="200" y2="100" stroke="var(--ink)" stroke-width="1.5"/>'
+    + '<g fill="none" stroke="var(--ink)" stroke-width="1.1">'
+    +   '<rect x="40" y="40" width="9" height="9"/><rect x="191" y="40" width="9" height="9"/>'
+    +   '<polyline points="95.9,46.9 102.7,51 106.9,44.1"/>'
+    + '</g>'
+    + '<g font-size="10" fill="var(--sub)"><text x="14" y="94">5cm</text><text x="205" y="74">3cm</text></g>'
+    + '<g font-size="11" font-weight="700" fill="var(--ink)">'
+    +   '<text x="34" y="33">D</text><text x="96" y="33">A</text><text x="196" y="33">E</text>'
+    +   '<text x="30" y="154">B</text><text x="206" y="112">C</text></g><text x="226" y="34" font-size="13" font-style="italic" font-family="Georgia,serif" fill="var(--ink)">l</text><g>'
+    + '</g></svg>',
+  cap:'∠A = 90°, AB = AC',
+  sentence:[
+    {t:'∠A=90°, AB=AC인 직각이등변삼각형 ABC', key:'rtiso'},
+    {t:'의 꼭짓점 A를 지나는 '},
+    {t:'직선 l', key:'line'},
+    {t:'에 '},
+    {t:'두 꼭짓점 B, C에서 내린 수선의 발', key:'perp'},
+    {t:'을 각각 D, E라 하자. '},
+    {t:'BD=5cm, CE=3cm', key:'len'},
+    {t:'일 때, '},
+    {t:'□DBCE의 넓이', key:'goal'},
+    {t:'를 구하시오.'}
+  ],
+  nodes:{
+    goal:{ label:'□DBCE의 넓이를 구해야 한다',
+      ask:'□DBCE는 어떤 사각형일까?',
+      hint:'BD와 CE가 모두 직선 l에 수직이야.',
+      items:[
+        {t:'BD ∥ CE 인 사다리꼴이다', next:'trap'},
+        {t:'직사각형이다', why:'BD와 CE의 길이가 달라서 직사각형이 될 수 없어요.'},
+        {t:'평행사변형이다', why:'한 쌍만 평행해요. BD와 CE의 길이도 다르죠.'},
+        {t:'△ABD와 △ACE 두 조각으로만 이루어진다', why:'가운데 △ABC도 있어요.'}
+      ]},
+    trap:{ label:'사다리꼴이다',
+      note:'넓이를 구하려면 무엇이 필요할까요?',
+      hint:'평행한 두 변과 그 사이의 거리.',
+      items:[
+        {t:'평행한 두 변 BD, CE와 높이 DE', next:'needde'},
+        {t:'평행한 두 변 BD, CE와 높이 BC', why:'높이는 평행한 두 변 사이의 수직 거리예요. BC는 비스듬하죠.'},
+        {t:'평행한 두 변 DE, BC와 높이 BD', why:'DE와 BC는 평행하지 않아요.'},
+        {t:'네 변의 길이를 모두 더한다', why:'그건 둘레예요.'}
+      ]},
+    needde:{ label:'DE의 길이가 필요하다',
+      note:'DE는 DA와 AE로 나뉘어요.',
+      hint:'모양이 같은 두 삼각형을 찾아봐.',
+      items:[
+        {t:'△ABD와 △CAE가 합동인지 확인한다', next:'cong'},
+        {t:'DA = AE 이다', why:'A가 DE의 중점이라는 조건은 없어요.'},
+        {t:'DE = BC 이다', why:'BC는 비스듬해서 DE와 길이가 달라요.'},
+        {t:'DE = BD − CE 이다', why:'두 길이를 뺄 이유가 없어요. DA와 AE가 각각 무엇과 같은지 찾아봐요.'}
+      ]},
+    cong:{ label:'△ABD와 △CAE',
+      note:'두 삼각형에서 같은 것을 찾아보세요.',
+      hint:'∠BAD + ∠CAE = 90°, 그리고 ∠ABD + ∠BAD = 90°.',
+      items:[
+        {t:'빗변 AB = CA, ∠ABD = ∠CAE → RHA 합동', next:'corr'},
+        {t:'빗변 AB = CA, BD = AE → RHS 합동', why:'BD = AE는 합동을 보인 뒤에 알게 되는 거예요.'},
+        {t:'AB = CA, BD = CE → SAS 합동', why:'BD와 CE는 길이가 달라요.'},
+        {t:'두 삼각형은 합동이 아니다', why:'∠BAD + ∠CAE = 90°이고 ∠ABD + ∠BAD = 90°라서 ∠ABD = ∠CAE예요.'}
+      ]},
+    corr:{ label:'△ABD ≡ △CAE (RHA)',
+      note:'대응하는 변을 짝지어보세요.',
+      hint:'같은 각이 마주보는 변끼리 대응해.',
+      items:[
+        {t:'AD = CE, BD = AE', next:'de'},
+        {t:'AD = BD, AE = CE', why:'한 삼각형 안의 변끼리가 아니라 두 삼각형 사이의 대응변이에요.'},
+        {t:'AD = AE, BD = CE', why:'대응을 다시 확인해봐요. ∠ABD와 ∠CAE가 같은 각이에요.'},
+        {t:'BD = CE, AB = AC', why:'BD와 CE는 대응변이 아니에요.'}
+      ]},
+    de:{ label:'AD = CE, AE = BD',
+      solve:{ q:'DE의 길이는 몇 cm일까요?', unit:'cm', accept:['8'],
+              wrong:'DE = DA + AE예요. DA와 AE가 각각 어느 길이와 같은지 봐요.' },
+      hint:'AD = 3cm, AE = 5cm.',
+      next:'area'},
+    area:{ label:'DE를 알았다',
+      solve:{ q:'□DBCE의 넓이는 몇 cm²일까요?', unit:'cm²', accept:['32'],
+              wrong:'사다리꼴의 넓이 = (윗변 + 아랫변) × 높이 ÷ 2. 높이는 DE예요.' },
+      hint:'(5 + 3) × 8 ÷ 2.',
+      next:'end1'},
+    rtiso:{ label:'직각이등변삼각형이다',
+      note:'이 조건에서 알 수 있는 것이에요.',
+      hint:'∠A가 90°라는 것과 두 변이 같다는 것을 따로 써봐.',
+      items:[
+        {t:'AB = AC 이고, 직선 l 위에서 ∠BAD + ∠CAE = 90°', next:'needde'},
+        {t:'∠B = 45° 이므로 ∠ABD = 45°', why:'45°는 ∠ABC예요. ∠ABD는 다른 각이죠.'},
+        {t:'AB = BC 이다', why:'같은 건 직각을 낀 두 변 AB, AC예요.'},
+        {t:'AD = AE 이다', why:'직선 l이 기울어져 있어서 두 길이는 달라요.'}
+      ]},
+    line:{ label:'직선 l이 A를 지난다',
+      note:'직선 l 위에서 알 수 있는 것이에요.',
+      hint:'평각은 180°.',
+      items:[
+        {t:'∠BAD + 90° + ∠CAE = 180°', next:'needde'},
+        {t:'∠BAD = ∠CAE', why:'직선이 기울어져 있어 두 각은 달라요.'},
+        {t:'l ∥ BC 이다', why:'평행하다는 조건은 없어요.'},
+        {t:'l은 ∠A의 이등분선이다', why:'그런 조건은 없어요.'}
+      ]},
+    perp:{ label:'수선의 발 D, E',
+      note:'수선에서 알 수 있는 것이에요.',
+      hint:'두 수선은 같은 직선에 수직이야.',
+      items:[
+        {t:'∠ADB = ∠CEA = 90° 이고 BD ∥ CE', next:'goal'},
+        {t:'BD = CE 이다', why:'수선이라고 길이가 같지는 않아요.'},
+        {t:'D와 E는 BC의 중점에서 같은 거리에 있다', why:'근거가 없어요.'},
+        {t:'∠DBA = 45°', why:'직선 l의 기울기에 따라 달라져요.'}
+      ]},
+    len:{ label:'BD = 5cm, CE = 3cm',
+      note:'두 길이는 어디에 쓰일까요?',
+      hint:'사다리꼴의 두 변이 되기도 하고, 다른 변과 같아지기도 해.',
+      items:[
+        {t:'사다리꼴의 평행한 두 변이면서, DE를 이루는 길이와 같아진다', next:'needde'},
+        {t:'DE = 5 − 3 = 2cm', why:'빼는 이유가 없어요.'},
+        {t:'DE = 5 × 3 = 15cm', why:'곱할 이유가 없어요.'},
+        {t:'BC = 5 + 3', why:'BC는 비스듬한 변이라 두 수선을 더한 것과 같지 않아요.'}
+      ]},
+    end1:{ end:true,
+      lines:['∠ABD + ∠BAD = 90°, ∠BAD + ∠CAE = 90° → ∠ABD = ∠CAE',
+             '△ABD ≡ △CAE (RHA) → AD = CE = 3cm, AE = BD = 5cm',
+             'DE = 3 + 5 = 8cm',
+             '넓이 = (5 + 3) × 8 ÷ 2'],
+      ans:'32cm²',
+      cmt:'두 길이가 "자리를 바꿔" DE를 만들었어요. 직각이 두 번 나오면 같은 각이 숨어 있다는 신호예요 — 90°에서 같은 각을 빼면 남는 각도 같으니까요.'}
+  }
+},
+{
+  id:'t06', unit:'1. 삼각형의 성질', pick:'외심과 내심을 함께',
+  tag:'중2 · 삼각형의 외심과 내심',
+  svg:'<svg viewBox="0 0 240 262" role="img" aria-label="이등변삼각형 ABC의 외심 O와 내심 I">'
+    + '<polygon points="120,35 20,240 220,240" fill="none" stroke="var(--ink)" stroke-width="1.8"/>'
+    + '<line x1="120" y1="35" x2="120" y2="240" stroke="var(--sub)" stroke-width="1" stroke-dasharray="3 3"/>'
+    + '<g stroke="var(--ink)" stroke-width="1.2"><line x1="120" y1="162" x2="20" y2="240"/><line x1="120" y1="162" x2="220" y2="240"/></g>'
+    + '<g stroke="var(--blue)" stroke-width="1.2"><line x1="120" y1="177.5" x2="20" y2="240"/><line x1="120" y1="177.5" x2="220" y2="240"/></g>'
+    + '<circle cx="120" cy="162" r="2.4" fill="var(--ink)"/><circle cx="120" cy="177.5" r="2.4" fill="var(--blue)"/>'
+    + '<text x="52" y="234" font-size="10" fill="var(--sub)">64°</text>'
+    + '<g font-size="11" font-weight="700" fill="var(--ink)">'
+    +   '<text x="120" y="27" text-anchor="middle">A</text><text x="8" y="254">B</text><text x="222" y="254">C</text>'
+    +   '<text x="103" y="160">O</text>'
+    + '</g>'
+    + '<text x="127" y="197" font-size="11" font-weight="700" fill="var(--blue)">I</text>'
+    + '</svg>',
+  cap:'AB = AC, 점 O는 외심, 점 I는 내심',
+  sentence:[
+    {t:'AB=AC인 이등변삼각형 ABC', key:'iso'},
+    {t:'에서 '},
+    {t:'점 O는 외심', key:'outer'},
+    {t:', '},
+    {t:'점 I는 내심', key:'inner'},
+    {t:'이다. '},
+    {t:'∠ABC=64°', key:'ang'},
+    {t:'일 때, '},
+    {t:'∠OCI', key:'goal'},
+    {t:'의 크기를 구하시오.'}
+  ],
+  nodes:{
+    goal:{ label:'∠OCI를 구해야 한다',
+      ask:'∠OCI를 두 각으로 나타낼 수 있을까?',
+      hint:'O와 I는 모두 A에서 BC에 그은 수선 위에 있어.',
+      items:[
+        {t:'∠OCI = ∠OCB − ∠ICB', next:'two'},
+        {t:'∠OCI = ∠OCB + ∠ICB', why:'CO와 CI는 겹쳐 있어요. 둘 중 어느 쪽이 더 크게 벌어져 있는지 봐요.'},
+        {t:'∠OCI = ∠OAC − ∠IAC', why:'그 차는 점 A에서 생기는 각이에요.'},
+        {t:'∠OCI = ½∠ACB', why:'그건 ∠ICB 하나예요.'}
+      ]},
+    two:{ label:'∠OCB와 ∠ICB가 필요하다',
+      note:'두 각을 각각 어떻게 구할까요?',
+      hint:'내심은 각을 이등분하고, 외심은 세 꼭짓점까지 거리가 같아.',
+      items:[
+        {t:'∠ICB는 ∠ACB의 절반, ∠OCB는 △OBC에서 구한다', next:'iso'},
+        {t:'∠ICB와 ∠OCB는 크기가 같다', why:'외심과 내심은 이등변삼각형에서도 다른 점이에요.'},
+        {t:'∠OCB는 ∠ACB의 절반이다', why:'각을 이등분하는 건 내심이에요. 외심은 변을 수직이등분하죠.'},
+        {t:'∠ICB = ∠ABC = 64°', why:'64°는 밑각 전체예요. IC가 반으로 나눠요.'}
+      ]},
+    iso:{ label:'AB=AC인 이등변삼각형이다',
+      note:'이등변삼각형에서 알 수 있는 것이에요.',
+      hint:'두 밑각.',
+      items:[
+        {t:'두 밑각의 크기가 같다', next:'angAs'},
+        {t:'외심과 내심이 같은 점이다', why:'정삼각형일 때만 그래요.'},
+        {t:'세 변의 길이가 같다', why:'그건 정삼각형이에요.'},
+        {t:'외심은 항상 내심보다 A에 가깝다', why:'삼각형의 모양에 따라 달라요.'}
+      ]},
+    angAs:{ label:'∠ACB = ∠ABC = 64°',
+      solve:{ q:'∠A의 크기는 몇 도일까요?', unit:'°', accept:['52'],
+              wrong:'두 밑각이 모두 64°예요.' },
+      hint:'180° − 64° − 64°.',
+      next:'base'},
+    base:{ label:'∠A = 52°',
+      note:'외심 O부터 봐요. ∠BOC는 어떻게 구할까요?',
+      hint:'OA, OB, OC로 나눈 세 이등변삼각형.',
+      items:[
+        {t:'∠BOC = 2∠A', next:'ocb'},
+        {t:'∠BOC = ∠A', why:'외심에서 ∠BOC는 ∠A의 2배예요. OA, OB, OC로 나눈 세 이등변삼각형으로 확인할 수 있어요.'},
+        {t:'∠BOC = 90° + ½∠A', why:'그건 내심 I에 대한 식(∠BIC)이에요.'},
+        {t:'∠BOC = 180° − ∠A', why:'그런 관계는 없어요.'}
+      ]},
+    ocb:{ label:'∠BOC = 2∠A',
+      solve:{ q:'△OBC에서 ∠OCB는 몇 도일까요?', unit:'°', accept:['38'],
+              wrong:'∠BOC = 104°이고, OB = OC라서 △OBC는 이등변삼각형이에요.' },
+      hint:'(180° − 104°) ÷ 2.',
+      next:'ici'},
+    ici:{ label:'∠OCB = 38°',
+      note:'이번엔 내심 I 쪽이에요.',
+      hint:'IC는 어떤 각을 반으로 나눠?',
+      items:[
+        {t:'∠ICB = ½∠ACB', next:'fin'},
+        {t:'∠ICB = ½∠A', why:'IC가 나누는 건 ∠ACB예요.'},
+        {t:'∠ICB = ∠OCB', why:'O와 I는 다른 점이라 두 각도 달라요.'},
+        {t:'∠ICB = 90° − ∠A', why:'그런 식은 없어요.'}
+      ]},
+    fin:{ label:'∠ICB = ½∠ACB',
+      solve:{ q:'∠OCI의 크기는 몇 도일까요?', unit:'°', accept:['6'],
+              wrong:'∠ICB를 먼저 구하고, 그림에서 CO와 CI 중 어느 쪽이 더 큰 각을 만드는지 봐요.' },
+      hint:'∠ICB = 32°.',
+      next:'end1'},
+    outer:{ label:'점 O는 외심이다',
+      note:'외심에서 알 수 있는 것이에요.',
+      hint:'세 꼭짓점까지의 거리.',
+      items:[
+        {t:'OA = OB = OC 이다', next:'iso'},
+        {t:'O에서 세 변까지의 거리가 같다', why:'그건 내심이에요.'},
+        {t:'O는 세 내각의 이등분선의 교점이다', why:'그건 내심이에요.'},
+        {t:'O는 항상 삼각형 안에 있다', why:'둔각삼각형이면 밖에 있어요.'}
+      ]},
+    inner:{ label:'점 I는 내심이다',
+      note:'내심에서 알 수 있는 것이에요.',
+      hint:'각의 이등분선.',
+      items:[
+        {t:'CI는 ∠ACB의 이등분선이다', next:'iso'},
+        {t:'IA = IB = IC 이다', why:'그건 외심이에요.'},
+        {t:'I는 세 변의 수직이등분선의 교점이다', why:'그건 외심이에요.'},
+        {t:'∠BIC = 2∠A 이다', why:'그건 외심의 ∠BOC예요. 내심은 ∠BIC = 90° + ½∠A죠.'}
+      ]},
+    ang:{ label:'∠ABC = 64°',
+      note:'이 각을 어디에 쓸까요?',
+      hint:'이등변삼각형이라는 조건과 같이 봐.',
+      items:[
+        {t:'밑각이 같으므로 ∠ACB도 64°이다', next:'angAs'},
+        {t:'∠A = 64° 이다', why:'64°는 밑각이에요.'},
+        {t:'∠OBC = 32° 이다', why:'각을 반으로 나누는 건 내심 쪽이에요.'},
+        {t:'∠IBC = 64° 이다', why:'IB는 ∠ABC를 이등분해요.'}
+      ]},
+    end1:{ end:true,
+      lines:['∠ACB = 64°, ∠A = 180° − 128° = 52°',
+             '∠BOC = 2 × 52° = 104° → ∠OCB = (180° − 104°) ÷ 2 = 38°',
+             '∠ICB = 64° ÷ 2 = 32°',
+             '∠OCI = 38° − 32°'],
+      ans:'∠OCI = 6°',
+      cmt:'외심과 내심을 한 문제에서 쓰면 두 점의 성질을 섞기 쉬워요. "외심은 거리, 내심은 각"으로 나눠 기억하면 흔들리지 않아요.'}
+  }
+},
+{
+  id:'t07', unit:'1. 삼각형의 성질', pick:'내심과 평행선 · 둘레',
+  tag:'중2 · 삼각형의 내심의 활용',
+  svg:'<svg viewBox="0 0 232 208" role="img" aria-label="삼각형 ABC의 내심 I를 지나고 BC에 평행한 선분 DE">'
+    + '<polygon points="92,84 20,190 212,190" fill="none" stroke="var(--ink)" stroke-width="1.8"/>'
+    + '<line x1="48.8" y1="147.7" x2="164" y2="147.7" stroke="var(--ink)" stroke-width="1.6"/>'
+    + '<g stroke="var(--blue)" stroke-width="1.2"><line x1="100" y1="147.7" x2="20" y2="190"/><line x1="100" y1="147.7" x2="212" y2="190"/></g>'
+    + '<circle cx="100" cy="147.7" r="2.4" fill="var(--blue)"/>'
+    + '<g font-size="10" fill="var(--sub)"><text x="28" y="128">8cm</text><text x="160" y="126">10cm</text><text x="104" y="205">12cm</text></g>'
+    + '<g font-size="11" font-weight="700" fill="var(--ink)">'
+    +   '<text x="88" y="76">A</text><text x="8" y="202">B</text><text x="214" y="202">C</text>'
+    +   '<text x="34" y="146">D</text><text x="168" y="146">E</text>'
+    + '</g>'
+    + '<text x="96" y="141" font-size="11" font-weight="700" fill="var(--blue)">I</text>'
+    + '</svg>',
+  cap:'점 I는 내심, DE ∥ BC',
+  sentence:[
+    {t:'점 I는 △ABC의 내심', key:'inner'},
+    {t:'이고, '},
+    {t:'점 I를 지나고 BC에 평행한 직선', key:'par'},
+    {t:'이 AB, AC와 만나는 점을 각각 D, E라 하자. '},
+    {t:'AB=8cm', key:'len'},
+    {t:', '},
+    {t:'BC=12cm', no:'길이는 맞지만, 이 문제에서는 쓰이지 않아요.'},
+    {t:', '},
+    {t:'CA=10cm', key:'len'},
+    {t:'일 때, '},
+    {t:'△ADE의 둘레', key:'goal'},
+    {t:'의 길이를 구하시오.'}
+  ],
+  nodes:{
+    goal:{ label:'△ADE의 둘레를 구해야 한다',
+      ask:'둘레 AD + DE + EA에서, DE를 두 조각으로 나눠볼까?',
+      hint:'DE는 점 I에서 DI와 IE로 나뉘어.',
+      items:[
+        {t:'DE = DI + IE 로 나눠서 각각 다른 길이로 바꿔본다', next:'par'},
+        {t:'DE = ½ BC 이다', why:'D, E가 AB, AC의 중점이라는 조건은 없어요.'},
+        {t:'DE = BC 이다', why:'DE는 BC보다 짧아요.'},
+        {t:'둘레 = AB + BC + CA 이다', why:'그건 △ABC의 둘레예요.'}
+      ]},
+    par:{ label:'DE ∥ BC 이다',
+      note:'BI와 평행선이 만나는 곳을 봐요.',
+      hint:'두 평행선 사이를 BI가 가로질러.',
+      items:[
+        {t:'∠DIB = ∠IBC (엇각)', next:'bis'},
+        {t:'∠DIB = ∠IBC (동위각)', why:'BI가 두 평행선 사이를 가로질러 반대쪽에 생긴 각이라 엇각이에요.'},
+        {t:'∠ADE = ∠ABC 이므로 DE = BC', why:'각이 같다고 길이가 같아지진 않아요.'},
+        {t:'평행선만으로 ∠DIB = ∠DBI 이다', why:'평행선에서 나오는 건 ∠DIB = ∠IBC까지예요. 한 조건이 더 필요해요.'}
+      ]},
+    inner:{ label:'점 I는 내심이다',
+      note:'내심에서 알 수 있는 것이에요.',
+      hint:'각의 이등분선.',
+      items:[
+        {t:'BI는 ∠B의, CI는 ∠C의 이등분선이다', next:'bis'},
+        {t:'IB = IC 이다', why:'그건 외심의 성질이에요.'},
+        {t:'I에서 세 꼭짓점까지 거리가 같다', why:'그건 외심이에요.'},
+        {t:'DI = IE 이다', why:'△ABC가 이등변삼각형이 아니면 달라요.'}
+      ]},
+    bis:{ label:'∠DIB = ∠IBC, ∠DBI = ∠IBC',
+      note:'평행선에서 엇각, 내심에서 이등분선이 나왔어요.',
+      hint:'같은 것과 같은 것.',
+      items:[
+        {t:'∠DBI = ∠DIB 이므로 DB = DI', next:'both'},
+        {t:'∠DBI = ∠DIB 이므로 BI = DI', why:'∠DBI가 마주보는 변은 DI, ∠DIB가 마주보는 변은 DB예요.'},
+        {t:'∠DBI = ∠DIB 이므로 △DBI는 정삼각형', why:'두 각이 같다는 것뿐이에요.'},
+        {t:'∠DBI = ∠IBC 이므로 DB = BC', why:'두 각은 서로 다른 삼각형에 있어요.'}
+      ]},
+    both:{ label:'DB = DI 이다',
+      note:'같은 방법을 C 쪽에도 쓸 수 있을까요?',
+      hint:'CI와 평행선.',
+      items:[
+        {t:'EC = EI 이다', next:'sum'},
+        {t:'EC = DI 이다', why:'C 쪽에서 같아지는 건 E와 I 사이예요.'},
+        {t:'EI = DI 이다', why:'두 길이가 같다는 조건은 없어요.'},
+        {t:'C 쪽에서는 성립하지 않는다', why:'CI도 ∠C의 이등분선이고 DE ∥ BC라 똑같이 성립해요.'}
+      ]},
+    sum:{ label:'DB = DI, EC = EI',
+      note:'이제 둘레를 다시 써볼까요?',
+      hint:'AD + DI + IE + EA.',
+      items:[
+        {t:'둘레 = AD + DB + EC + EA', next:'fin'},
+        {t:'둘레 = AB + BC', why:'BC 조각은 둘레에 들어오지 않아요.'},
+        {t:'둘레 = AB + AC + BC − DE', why:'DE를 뺄 이유가 없어요. 조각을 하나씩 바꿔 써봐요.'},
+        {t:'둘레 = DB + EC', why:'AD와 EA가 빠졌어요.'}
+      ]},
+    fin:{ label:'둘레 = AD + DB + EC + EA',
+      solve:{ q:'△ADE의 둘레는 몇 cm일까요?', unit:'cm', accept:['18'],
+              wrong:'AD + DB와 EC + EA가 각각 어떤 변이 되는지 봐요.' },
+      hint:'AD + DB = AB.',
+      next:'end1'},
+    len:{ label:'AB = 8cm, CA = 10cm',
+      note:'두 길이를 어디에 쓸까요?',
+      hint:'둘레가 어떤 변으로 바뀌는지 먼저.',
+      items:[
+        {t:'둘레가 어떤 변들로 바뀌는지 먼저 알아본다', next:'goal'},
+        {t:'AD = 4cm, AE = 5cm 이다', why:'D, E가 중점이라는 조건은 없어요.'},
+        {t:'DE = 10 − 8 = 2cm', why:'빼는 이유가 없어요.'},
+        {t:'둘레 = 8 + 10 + 12', why:'그건 △ABC의 둘레예요.'}
+      ]},
+    end1:{ end:true,
+      lines:['DE ∥ BC → ∠DIB = ∠IBC (엇각), BI는 이등분선 → ∠DBI = ∠IBC',
+             '∠DBI = ∠DIB → DB = DI, 같은 방법으로 EC = EI',
+             '둘레 = AD + DI + IE + EA = (AD + DB) + (EC + EA) = AB + AC'],
+      ans:'18cm',
+      cmt:'BC = 12cm는 한 번도 쓰지 않았어요. 주어진 조건이 모두 필요한 건 아니에요 — 무엇이 필요한지 가려내는 것도 실력입니다.'}
+  }
+},
+{
+  id:'t08', unit:'1. 삼각형의 성질', pick:'직각삼각형의 외접원과 내접원',
+  tag:'중2 · 외심과 내심 · 넓이',
+  svg:'<svg viewBox="0 0 214 250" role="img" aria-label="직각삼각형 ABC의 외접원과 내접원">'
+    + '<circle cx="104" cy="152" r="80" fill="none" stroke="var(--blue)" stroke-width="1.4"/>'
+    + '<circle cx="72" cy="168" r="32" fill="none" stroke="var(--blue)" stroke-width="1.4"/>'
+    + '<polygon points="40,104 40,200 168,200" fill="none" stroke="var(--ink)" stroke-width="1.8"/>'
+    + '<rect x="40" y="188" width="12" height="12" fill="none" stroke="var(--ink)" stroke-width="1.1"/>'
+    + '<circle cx="104" cy="152" r="2.4" fill="var(--ink)"/><circle cx="72" cy="168" r="2.4" fill="var(--blue)"/>'
+    + '<g font-size="11" font-weight="700" fill="var(--ink)">'
+    +   '<text x="28" y="100">A</text><text x="172" y="213">B</text><text x="26" y="214">C</text>'
+    +   '<text x="108" y="147">O</text>'
+    + '</g>'
+    + '<text x="77" y="166" font-size="11" font-weight="700" fill="var(--blue)">I</text>'
+    + '</svg>',
+  cap:'∠C = 90°, 점 O는 외심, 점 I는 내심',
+  sentence:[
+    {t:'∠C=90°인 직각삼각형 ABC', key:'rt'},
+    {t:'에서 '},
+    {t:'AC=12cm, BC=16cm, AB=20cm', key:'len'},
+    {t:'이다. '},
+    {t:'점 O는 외심', key:'outer'},
+    {t:', '},
+    {t:'점 I는 내심', key:'inner'},
+    {t:'일 때, '},
+    {t:'외접원과 내접원의 넓이의 합', key:'goal'},
+    {t:'을 구하시오.'}
+  ],
+  nodes:{
+    goal:{ label:'두 원의 넓이의 합을 구해야 한다',
+      ask:'두 원의 넓이를 구하려면 무엇이 필요할까?',
+      hint:'각 원의 반지름.',
+      items:[
+        {t:'외접원의 반지름 R과 내접원의 반지름 r을 각각 구한다', next:'rt'},
+        {t:'R + r만 구하면 된다', why:'넓이는 반지름의 제곱이라, 합을 구한 뒤 제곱하면 값이 달라져요.'},
+        {t:'두 원의 반지름은 같다', why:'외접원이 훨씬 커요.'},
+        {t:'내접원의 넓이는 외접원의 절반이다', why:'그런 관계는 없어요.'}
+      ]},
+    rt:{ label:'직각삼각형이다',
+      note:'직각삼각형에서 알 수 있는 것이에요.',
+      hint:'외심의 위치.',
+      items:[
+        {t:'외심은 빗변의 중점에 있다', next:'R'},
+        {t:'외심은 직각인 꼭짓점 C에 있다', why:'외심은 세 꼭짓점에서 거리가 같은 점이에요. C에서는 C까지 거리가 0이죠.'},
+        {t:'내심은 빗변의 중점에 있다', why:'빗변의 중점에 있는 건 외심이에요.'},
+        {t:'외심은 삼각형 밖에 있다', why:'밖에 있는 건 둔각삼각형일 때예요.'}
+      ]},
+    R:{ label:'외심은 빗변의 중점',
+      solve:{ q:'외접원의 반지름 R은 몇 cm일까요?', unit:'cm', accept:['10'],
+              wrong:'외심이 빗변의 중점이므로 R은 빗변의 절반이에요.' },
+      hint:'빗변은 AB.',
+      next:'rway'},
+    rway:{ label:'R = 10cm',
+      note:'이제 내접원의 반지름을 구할 차례예요.',
+      hint:'넓이를 두 방법으로.',
+      items:[
+        {t:'넓이 = ½ × r × (둘레)', next:'areaS'},
+        {t:'넓이 = ½ × R × (둘레)', why:'이 식에 들어가는 반지름은 내접원의 반지름이에요.'},
+        {t:'r = R ÷ 2', why:'그런 관계는 없어요.'},
+        {t:'넓이 = r × (둘레)', why:'½이 빠졌어요.'}
+      ]},
+    areaS:{ label:'넓이 = ½ × r × (둘레)',
+      solve:{ q:'△ABC의 넓이는 몇 cm²일까요?', unit:'cm²', accept:['96'],
+              wrong:'직각을 낀 두 변이 밑변과 높이예요.' },
+      hint:'½ × 12 × 16.',
+      next:'rS'},
+    rS:{ label:'넓이 = 96cm²',
+      solve:{ q:'내접원의 반지름 r은 몇 cm일까요?', unit:'cm', accept:['4'],
+              wrong:'둘레를 먼저 구하고, 96 = ½ × r × (둘레)를 풀어요.' },
+      hint:'둘레는 48cm.',
+      next:'sumS'},
+    sumS:{ label:'R = 10cm, r = 4cm',
+      solve:{ q:'두 원의 넓이의 합은 몇 π cm²일까요? (π 앞의 수만)', unit:'π cm²', accept:['116'],
+              wrong:'각각 π × R², π × r²이에요. 제곱을 잊지 말고요.' },
+      hint:'100π + 16π.',
+      next:'end1'},
+    outer:{ label:'점 O는 외심이다',
+      note:'외심에서 알 수 있는 것이에요.',
+      hint:'세 꼭짓점까지의 거리.',
+      items:[
+        {t:'OA = OB = OC = R 이다', next:'rt'},
+        {t:'O에서 세 변까지의 거리가 같다', why:'그건 내심이에요.'},
+        {t:'O는 세 내각의 이등분선의 교점이다', why:'그건 내심이에요.'},
+        {t:'OC는 AC와 길이가 같다', why:'근거가 없어요. 세 꼭짓점까지 거리가 같다는 걸 떠올려봐요.'}
+      ]},
+    inner:{ label:'점 I는 내심이다',
+      note:'내심에서 알 수 있는 것이에요.',
+      hint:'세 변까지의 거리.',
+      items:[
+        {t:'I에서 세 변까지의 거리가 모두 r이다', next:'rway'},
+        {t:'IA = IB = IC 이다', why:'그건 외심이에요.'},
+        {t:'I는 빗변 위에 있다', why:'내심은 항상 삼각형 안쪽에 있어요.'},
+        {t:'I는 선분 CO 위에 있다', why:'이등변삼각형이 아니면 한 직선 위에 있지 않아요.'}
+      ]},
+    len:{ label:'AC = 12cm, BC = 16cm, AB = 20cm',
+      note:'세 길이를 각각 어디에 쓸까요?',
+      hint:'빗변은 어느 변일까?',
+      items:[
+        {t:'빗변 AB로 R을, AC·BC로 넓이를, 세 변의 합으로 둘레를 구한다', next:'goal'},
+        {t:'가장 짧은 AC가 외접원의 지름이다', why:'외접원의 지름은 빗변이에요.'},
+        {t:'빗변의 절반 10cm가 내접원의 반지름이다', why:'그건 외접원의 반지름이에요.'},
+        {t:'둘레는 12 + 16 = 28cm이다', why:'둘레는 세 변을 모두 더해요.'}
+      ]},
+    end1:{ end:true,
+      lines:['외심은 빗변의 중점 → R = 20 ÷ 2 = 10cm',
+             '넓이 = ½ × 12 × 16 = 96cm², 둘레 = 48cm → 96 = ½ × r × 48 → r = 4cm',
+             '넓이의 합 = π × 10² + π × 4² = 100π + 16π'],
+      ans:'116π cm²',
+      cmt:'반지름 두 개를 서로 다른 방법으로 구했어요. R은 "외심의 위치"로, r은 "넓이를 두 번 쓰기"로. 같은 삼각형이라도 외심과 내심은 쓰는 도구가 달라요.'}
+  }
+},
+{
   id:'q01', unit:'2. 사각형의 성질', pick:'평행사변형 · 각의 이등분선',
   tag:'중2 · 평행사변형의 활용',
   svg:'<svg viewBox="0 0 260 172" role="img" aria-label="평행사변형 ABCD와 각 A의 이등분선이 BC와 만나는 점 E">'
@@ -552,6 +1247,652 @@ const PROBLEMS = [
              'BE = AB = 6cm,  BC = AD = 10cm'],
       ans:'EC = 4cm',
       cmt:'"각의 이등분선 + 평행선 → 이등변삼각형"은 시험에 아주 자주 나오는 사슬이에요. 10−6=4로 답만 맞히면 숫자가 바뀔 때 또 막혀요. 왜 BE=AB인지가 이 문제의 전부입니다.'}
+  }
+},
+{
+  id:'q02', unit:'2. 사각형의 성질', pick:'평행사변형 · 이등분선과 넓이',
+  tag:'중2 · 평행사변형의 활용 · 넓이',
+  svg:'<svg viewBox="0 0 250 178" role="img" aria-label="평행사변형 ABCD와 각 A의 이등분선 AE, 색칠한 사각형 AECD">'
+    + '<polygon points="70,40 148,157.8 180,157.8 230,40" fill="#EAF0FF"/>'
+    + '<polygon points="70,40 20,157.8 180,157.8 230,40" fill="none" stroke="var(--ink)" stroke-width="1.8"/>'
+    + '<line x1="70" y1="40" x2="148" y2="157.8" stroke="var(--ink)" stroke-width="1.6"/>'
+    + '<g font-size="11" font-weight="700" fill="var(--ink)">'
+    +   '<text x="64" y="31">A</text><text x="10" y="171">B</text><text x="178" y="171">C</text>'
+    +   '<text x="232" y="31">D</text><text x="142" y="171">E</text>'
+    + '</g></svg>',
+  cap:'색칠한 부분이 □AECD',
+  sentence:[
+    {t:'평행사변형 ABCD', key:'para'},
+    {t:'에서 '},
+    {t:'∠A의 이등분선', key:'bis'},
+    {t:'이 변 BC와 만나는 점을 E라 하자. '},
+    {t:'AB : AD = 4 : 5', key:'ratio'},
+    {t:'이고 '},
+    {t:'□ABCD의 넓이가 20cm²', key:'area'},
+    {t:'일 때, '},
+    {t:'□AECD의 넓이', key:'goal'},
+    {t:'를 구하시오.'}
+  ],
+  nodes:{
+    goal:{ label:'□AECD의 넓이를 구해야 한다',
+      ask:'□AECD를 바로 구하기 어렵다면?',
+      hint:'전체에서 한 조각을 빼면.',
+      items:[
+        {t:'□ABCD에서 △ABE를 뺀다', next:'abe'},
+        {t:'□AECD는 전체의 절반이다', why:'E가 BC의 중점이 아니라서 절반이 아니에요.'},
+        {t:'□AECD = △ACD × 2', why:'△AEC와 △ACD는 넓이가 같지 않아요.'},
+        {t:'□AECD = □ABCD − △ACD', why:'그러면 △ABC가 남아요. □AECD가 아니죠.'}
+      ]},
+    abe:{ label:'△ABE의 넓이가 필요하다',
+      note:'△ABE와 □ABCD는 BC를 기준으로 높이가 같아요.',
+      hint:'밑변 BE가 BC의 얼마인지.',
+      items:[
+        {t:'BE와 BC의 길이의 비를 알아야 한다', next:'bis'},
+        {t:'△ABE = ½ □ABCD', why:'그건 밑변이 BC 전체일 때예요.'},
+        {t:'△ABE = ¼ □ABCD', why:'근거가 없어요. BE가 BC의 얼마인지 먼저 알아야 해요.'},
+        {t:'AB : AD = 4 : 5 이므로 △ABE : □ABCD = 4 : 5', why:'삼각형이라 ½이 붙어요. 그리고 BE가 AB와 같은지부터 확인해야 하죠.'}
+      ]},
+    para:{ label:'평행사변형이다',
+      note:'평행사변형에서 알 수 있는 것이에요.',
+      hint:'평행선과 이등분선.',
+      items:[
+        {t:'AD ∥ BC 이므로 ∠DAE = ∠AEB (엇각)', next:'bis'},
+        {t:'두 쌍의 대각의 크기가 같다', why:'맞지만 이 문제에서는 넓이로 이어지지 않아요.'},
+        {t:'두 대각선이 넓이를 네 등분한다', why:'맞는 성질이지만 E와는 관계가 없어요.'},
+        {t:'AB = AD 이다', why:'마름모가 아니에요. AB : AD = 4 : 5죠.'}
+      ]},
+    bis:{ label:'∠A의 이등분선이다',
+      note:'∠BAE = ∠DAE, 그리고 AD ∥ BC.',
+      hint:'이등변삼각형이 숨어 있어.',
+      items:[
+        {t:'∠BAE = ∠AEB 이므로 BE = AB', next:'ratioS'},
+        {t:'∠BAE = ∠AEB 이므로 AE = AB', why:'∠BAE가 마주보는 변은 BE예요.'},
+        {t:'E는 BC의 중점이다', why:'각의 이등분선이 변을 이등분하는 건 이등변삼각형의 꼭지각일 때뿐이에요.'},
+        {t:'△ABE ≡ △CDE', why:'그런 합동은 없어요.'}
+      ]},
+    ratioS:{ label:'BE = AB, BC = AD',
+      solve:{ q:'△ABE의 넓이는 몇 cm²일까요?', unit:'cm²', accept:['8'],
+              wrong:'BE : BC를 먼저 구하고, 삼각형이라 ½이 붙는다는 걸 잊지 마요.' },
+      hint:'BE : BC = 4 : 5.',
+      next:'fin'},
+    fin:{ label:'△ABE의 넓이를 알았다',
+      solve:{ q:'□AECD의 넓이는 몇 cm²일까요?', unit:'cm²', accept:['12'],
+              wrong:'전체에서 △ABE를 빼요.' },
+      hint:'20 − 8.',
+      next:'end1'},
+    ratio:{ label:'AB : AD = 4 : 5',
+      note:'이 비를 어디로 옮길 수 있을까요?',
+      hint:'AB와 같은 길이, AD와 같은 길이.',
+      items:[
+        {t:'AB와 같은 길이, AD와 같은 길이를 찾아본다', next:'bis'},
+        {t:'△ABE : □AECD = 4 : 5', why:'길이의 비를 넓이의 비로 바로 옮기면 안 돼요.'},
+        {t:'BE : EC = 4 : 5', why:'BE와 EC를 비교하려면 먼저 BE가 어느 길이와 같은지 알아야 해요.'},
+        {t:'AB = 4cm, AD = 5cm', why:'비만 주어졌어요. 실제 길이는 몰라요.'}
+      ]},
+    area:{ label:'□ABCD의 넓이가 20cm²',
+      note:'이 값은 어디에 쓰일까요?',
+      hint:'□AECD = □ABCD − △ABE.',
+      items:[
+        {t:'전체 넓이에서 필요 없는 조각을 뺄 때 쓴다', next:'goal'},
+        {t:'AB × AD = 20', why:'평행사변형의 넓이는 밑변 × 높이예요. AB는 높이가 아니죠.'},
+        {t:'AB = 4cm, AD = 5cm 이다', why:'AB는 높이가 아니라서 이렇게 정할 수 없어요.'},
+        {t:'△ABE = 10cm²', why:'그건 밑변이 BC 전체일 때예요.'}
+      ]},
+    end1:{ end:true,
+      lines:['AD ∥ BC → ∠DAE = ∠AEB, ∠BAE = ∠DAE → △ABE는 이등변삼각형 → BE = AB',
+             'BC = AD 이므로 BE : BC = AB : AD = 4 : 5',
+             '△ABE = ½ × 4/5 × 20 = 8cm²',
+             '□AECD = 20 − 8'],
+      ans:'12cm²',
+      cmt:'길이의 비(4 : 5)가 이등변삼각형을 거쳐 밑변의 비로, 다시 넓이의 비로 옮겨갔어요. 비를 옮길 때마다 "이 두 길이가 정말 같은가"를 확인한 게 핵심이에요.'}
+  }
+},
+{
+  id:'q03', unit:'2. 사각형의 성질', pick:'네 내각의 이등분선이 만드는 사각형',
+  tag:'중2 · 여러 가지 사각형 사이의 관계',
+  svg:'<svg viewBox="0 0 240 164" role="img" aria-label="직사각형 ABCD의 네 내각의 이등분선으로 만든 사각형 EFGH">'
+    + '<polygon points="80,80 120,40 160,80 120,120" fill="#EAF0FF" stroke="var(--blue)" stroke-width="1.6"/>'
+    + '<polygon points="20,20 20,140 220,140 220,20" fill="none" stroke="var(--ink)" stroke-width="1.8"/>'
+    + '<g stroke="var(--ink)" stroke-width="1.2">'
+    +   '<line x1="20" y1="20" x2="120" y2="120"/><line x1="20" y1="140" x2="120" y2="40"/>'
+    +   '<line x1="220" y1="140" x2="120" y2="40"/><line x1="220" y1="20" x2="120" y2="120"/>'
+    + '</g>'
+    + '<g font-size="11" font-weight="700" fill="var(--ink)">'
+    +   '<text x="8" y="18">A</text><text x="8" y="154">B</text><text x="224" y="154">C</text><text x="224" y="18">D</text>'
+    + '</g>'
+    + '<g font-size="11" font-weight="700" fill="var(--blue)">'
+    +   '<text x="64" y="84">E</text><text x="116" y="33">F</text><text x="166" y="84">G</text><text x="126" y="132">H</text>'
+    + '</g></svg>',
+  cap:'E, F, G, H는 이웃한 두 이등분선이 만나는 점',
+  sentence:[
+    {t:'직사각형 ABCD', key:'rect'},
+    {t:'에서 '},
+    {t:'네 내각의 이등분선', key:'bis'},
+    {t:'으로 만들어지는 사각형을 EFGH라 하자. '},
+    {t:'AB=6cm, AD=10cm', key:'len'},
+    {t:'일 때, '},
+    {t:'□EFGH의 넓이', key:'goal'},
+    {t:'를 구하시오.'}
+  ],
+  nodes:{
+    goal:{ label:'□EFGH의 넓이를 구해야 한다',
+      ask:'□EFGH가 어떤 사각형인지부터 알아야겠지?',
+      hint:'네 각이 모두 몇 도인지 봐.',
+      items:[
+        {t:'□EFGH의 네 각의 크기부터 확인한다', next:'bis'},
+        {t:'□EFGH는 □ABCD의 절반 넓이다', why:'근거가 없어요.'},
+        {t:'□EFGH의 한 변의 길이를 바로 구한다', why:'모양을 모르면 한 변만으로 넓이를 구할 수 없어요.'},
+        {t:'평행사변형이지만 각의 크기는 알 수 없다', why:'이등분선이 모두 변과 같은 각을 이뤄서 각을 알 수 있어요.'}
+      ]},
+    bis:{ label:'네 내각의 이등분선',
+      note:'직사각형의 한 내각은 90°예요.',
+      hint:'이등분하면?',
+      items:[
+        {t:'각 이등분선은 변과 45°를 이룬다', next:'ang'},
+        {t:'이웃한 두 이등분선은 평행하다', why:'A와 B에서 그은 이등분선은 서로 만나요.'},
+        {t:'이등분선은 대각선과 같다', why:'직사각형의 대각선은 변과 45°를 이루지 않아요. 정사각형일 때만이죠.'},
+        {t:'이등분선은 마주 보는 변의 중점을 지난다', why:'그런 성질은 없어요.'}
+      ]},
+    ang:{ label:'이등분선이 변과 45°',
+      note:'A와 B에서 그은 이등분선이 만나는 점 E에서의 각은?',
+      hint:'△ABE의 세 각.',
+      items:[
+        {t:'∠AEB = 180° − 45° − 45° = 90°', next:'shape'},
+        {t:'∠AEB = 45°', why:'△ABE의 세 각의 합으로 다시 구해봐요.'},
+        {t:'∠AEB = 135°', why:'180°에서 한 각만 뺐어요.'},
+        {t:'∠AEB는 AB, AD의 길이에 따라 달라진다', why:'두 각이 모두 45°라서 늘 같아요.'}
+      ]},
+    shape:{ label:'네 각이 모두 90°',
+      note:'□EFGH는 직사각형이에요. 그런데 더 특별할까요?',
+      hint:'두 대각선 EG와 FH를 비교해봐.',
+      items:[
+        {t:'두 대각선의 길이가 같고 서로 수직이므로 정사각형이다', next:'diag'},
+        {t:'직사각형이지만 정사각형은 아니다', why:'두 대각선 EG와 FH의 길이와 방향을 비교해봐요.'},
+        {t:'마름모이지만 직사각형은 아니다', why:'방금 네 각이 90°인 걸 확인했어요.'},
+        {t:'사다리꼴이다', why:'마주 보는 두 쌍이 모두 평행해요.'}
+      ]},
+    diag:{ label:'□EFGH는 정사각형',
+      solve:{ q:'대각선 EG의 길이는 몇 cm일까요?', unit:'cm', accept:['4'],
+              wrong:'E와 G가 각각 변 AB, CD에서 얼마나 떨어져 있는지 구해봐요.' },
+      hint:'△ABE는 빗변이 6cm인 직각이등변삼각형이라, E는 AB에서 3cm 떨어져 있어.',
+      next:'fin'},
+    fin:{ label:'EG = FH',
+      solve:{ q:'□EFGH의 넓이는 몇 cm²일까요?', unit:'cm²', accept:['8'],
+              wrong:'정사각형의 넓이는 (대각선) × (대각선) ÷ 2로도 구할 수 있어요.' },
+      hint:'4 × 4 ÷ 2.',
+      next:'end1'},
+    rect:{ label:'직사각형이다',
+      note:'직사각형에서 알 수 있는 것이에요.',
+      hint:'내각.',
+      items:[
+        {t:'네 내각이 모두 90°이다', next:'bis'},
+        {t:'두 대각선이 수직이다', why:'그건 마름모예요.'},
+        {t:'네 변의 길이가 같다', why:'그건 정사각형이에요.'},
+        {t:'대각선이 내각을 이등분한다', why:'정사각형이나 마름모일 때예요.'}
+      ]},
+    len:{ label:'AB = 6cm, AD = 10cm',
+      note:'두 길이를 어디에 쓸까요?',
+      hint:'이등분선이 만드는 삼각형의 크기.',
+      items:[
+        {t:'이등분선이 만드는 직각이등변삼각형의 크기를 정한다', next:'bis'},
+        {t:'□EFGH의 넓이 = 6 × 10 ÷ 2', why:'근거가 없어요.'},
+        {t:'EF = 10 − 6 = 4cm', why:'한 변을 바로 뺄셈으로 구할 근거가 없어요.'},
+        {t:'EFGH의 한 변은 6cm', why:'근거가 없어요.'}
+      ]},
+    end1:{ end:true,
+      lines:['이등분선은 변과 45° → ∠AEB = 90°, 네 각이 모두 90°',
+             'E, G는 각각 AB, CD에서 3cm 떨어져 있다 (빗변 6cm인 직각이등변삼각형)',
+             'EG = 10 − 3 − 3 = 4cm, FH = 4cm, EG ⊥ FH → 정사각형',
+             '넓이 = 4 × 4 ÷ 2'],
+      ans:'8cm²',
+      cmt:'"직사각형이다"에서 멈추지 않고 "더 특별한가"를 물은 게 갈림길이었어요. 대각선의 길이와 방향은 사각형의 종류를 가려내는 가장 빠른 도구예요.'}
+  }
+},
+{
+  id:'q04', unit:'2. 사각형의 성질', pick:'정사각형의 대각선 위의 점',
+  tag:'중2 · 정사각형의 성질 · 합동',
+  svg:'<svg viewBox="0 0 240 232" role="img" aria-label="정사각형 ABCD의 대각선 BD 위의 점 P">'
+    + '<polygon points="40,40 40,200 200,200 200,40" fill="none" stroke="var(--ink)" stroke-width="1.8"/>'
+    + '<line x1="40" y1="200" x2="200" y2="40" stroke="var(--ink)" stroke-width="1.4"/>'
+    + '<g stroke="var(--blue)" stroke-width="1.4"><line x1="40" y1="40" x2="140" y2="100"/><line x1="200" y1="200" x2="140" y2="100"/></g>'
+    + '<circle cx="140" cy="100" r="2.4" fill="var(--ink)"/>'
+    + '<text x="112" y="112" font-size="10" fill="var(--blue)">76°</text>'
+    + '<g font-size="11" font-weight="700" fill="var(--ink)">'
+    +   '<text x="26" y="36">A</text><text x="26" y="214">B</text><text x="204" y="214">C</text>'
+    +   '<text x="204" y="36">D</text><text x="148" y="98">P</text>'
+    + '</g></svg>',
+  cap:'점 P는 대각선 BD 위의 점',
+  sentence:[
+    {t:'정사각형 ABCD', key:'sq'},
+    {t:'의 대각선 BD 위에 '},
+    {t:'∠APB=76°', key:'ang'},
+    {t:'가 되도록 점 P를 잡을 때, '},
+    {t:'∠PCD', key:'goal'},
+    {t:'의 크기를 구하시오.'}
+  ],
+  nodes:{
+    goal:{ label:'∠PCD를 구해야 한다',
+      ask:'∠PCD는 ∠BCD의 일부예요. 나머지 조각은?',
+      hint:'∠BCD = 90°.',
+      items:[
+        {t:'∠PCD = 90° − ∠BCP', next:'bcp'},
+        {t:'∠PCD = ∠PDC', why:'△PCD가 이등변삼각형이라는 근거가 없어요.'},
+        {t:'∠PCD = 45°', why:'CP는 대각선이 아니에요.'},
+        {t:'∠PCD = ∠APB ÷ 2', why:'그런 관계는 없어요.'}
+      ]},
+    bcp:{ label:'∠BCP가 필요하다',
+      note:'∠BCP와 크기가 같은 각이 있을까요?',
+      hint:'대각선 BD를 기준으로 A와 C는 마주 보고 있어.',
+      items:[
+        {t:'△ABP와 △CBP가 합동인지 확인한다', next:'cong'},
+        {t:'∠BCP = ∠CBP = 45°', why:'P가 BD의 중점이 아니라서 성립하지 않아요.'},
+        {t:'∠BCP = ∠APB', why:'근거가 없어요.'},
+        {t:'∠BCP = 90° − 76°', why:'근거가 없어요.'}
+      ]},
+    sq:{ label:'정사각형이다',
+      note:'정사각형에서 알 수 있는 것이에요.',
+      hint:'대각선이 내각을 어떻게 나눌까?',
+      items:[
+        {t:'AB = CB 이고, 대각선 BD가 ∠B를 이등분한다 (45°)', next:'cong'},
+        {t:'대각선 BD와 AC는 길이가 다르다', why:'정사각형의 두 대각선은 길이가 같아요.'},
+        {t:'P는 두 대각선의 교점이다', why:'P는 ∠APB = 76°가 되도록 잡은 점이에요. 교점이라면 90°죠.'},
+        {t:'PA = PB 이다', why:'근거가 없어요.'}
+      ]},
+    cong:{ label:'△ABP와 △CBP',
+      note:'두 삼각형에서 같은 것을 찾아보세요.',
+      hint:'두 변과 그 끼인각.',
+      items:[
+        {t:'AB = CB, ∠ABP = ∠CBP = 45°, BP 공통 → SAS 합동', next:'corr'},
+        {t:'AB = CB, AP = CP, BP 공통 → SSS 합동', why:'AP = CP는 합동을 보인 뒤에야 알 수 있어요.'},
+        {t:'AB = CB, ∠BAP = ∠BCP → ASA 합동', why:'∠BAP = ∠BCP는 합동의 결과예요.'},
+        {t:'합동이 아니다', why:'두 변과 그 끼인각이 같아요.'}
+      ]},
+    corr:{ label:'△ABP ≡ △CBP (SAS)',
+      note:'대응각을 찾아요.',
+      hint:'∠BAP와 대응하는 각.',
+      items:[
+        {t:'∠BAP = ∠BCP', next:'bap'},
+        {t:'∠APB = ∠BCP', why:'∠APB에 대응하는 건 ∠CPB예요.'},
+        {t:'∠BAP = ∠CBP', why:'대응을 다시 확인해요. ∠CBP는 45°예요.'},
+        {t:'∠ABP = ∠BCP', why:'∠ABP에 대응하는 건 ∠CBP예요.'}
+      ]},
+    bap:{ label:'∠BAP = ∠BCP',
+      solve:{ q:'△ABP에서 ∠BAP는 몇 도일까요?', unit:'°', accept:['59'],
+              wrong:'△ABP의 세 각을 봐요. ∠ABP는 대각선이 만든 각이에요.' },
+      hint:'180° − 45° − 76°.',
+      next:'fin'},
+    fin:{ label:'∠BCP = ∠BAP',
+      solve:{ q:'∠PCD는 몇 도일까요?', unit:'°', accept:['31'],
+              wrong:'∠BCP = ∠BAP이고, ∠BCD = 90°예요.' },
+      hint:'90° − 59°.',
+      next:'end1'},
+    ang:{ label:'∠APB = 76°',
+      note:'이 각은 어느 삼각형에 들어 있을까요?',
+      hint:'△ABP.',
+      items:[
+        {t:'△ABP에서 나머지 각을 구할 때 쓴다', next:'sq'},
+        {t:'∠APD = 76° 이다', why:'∠APB와 ∠APD는 한 직선 위에서 이웃해 합이 180°예요.'},
+        {t:'∠PBC = 76° 이다', why:'∠PBC는 대각선이 만든 45°예요.'},
+        {t:'∠APC = 76° 이다', why:'∠APC는 ∠APB와 ∠BPC를 합친 각이에요.'}
+      ]},
+    end1:{ end:true,
+      lines:['AB = CB, ∠ABP = ∠CBP = 45°, BP 공통 → △ABP ≡ △CBP (SAS)',
+             '∠BCP = ∠BAP = 180° − 45° − 76° = 59°',
+             '∠PCD = 90° − 59°'],
+      ans:'∠PCD = 31°',
+      cmt:'구하는 각(∠PCD) 근처에는 아는 게 하나도 없었어요. 대각선을 사이에 두고 마주한 삼각형으로 옮겨가서 답을 가져온 거예요. 정사각형의 대각선은 합동을 만드는 거울이에요.'}
+  }
+},
+{
+  id:'q05', unit:'2. 사각형의 성질', pick:'사다리꼴의 네 조각',
+  tag:'중2 · 평행선과 넓이',
+  svg:'<svg viewBox="0 0 260 180" role="img" aria-label="사다리꼴 ABCD와 두 대각선의 교점 O">'
+    + '<polygon points="90,40 70,160 190,160 170,40" fill="none" stroke="var(--ink)" stroke-width="1.8"/>'
+    + '<g stroke="var(--ink)" stroke-width="1.3"><line x1="90" y1="40" x2="190" y2="160"/><line x1="70" y1="160" x2="170" y2="40"/></g>'
+    + '<g font-size="11" fill="var(--blue)" font-weight="700" text-anchor="middle"><text x="130" y="62">8</text><text x="97" y="104">12</text></g>'
+    + '<g font-size="11" font-weight="700" fill="var(--ink)">'
+    +   '<text x="84" y="31">A</text><text x="58" y="174">B</text><text x="192" y="174">C</text>'
+    +   '<text x="172" y="31">D</text><text x="138" y="94">O</text>'
+    + '</g></svg>',
+  cap:'AD ∥ BC, 파란 숫자는 삼각형의 넓이(cm²)',
+  sentence:[
+    {t:'AD∥BC인 사다리꼴 ABCD', key:'trap'},
+    {t:'에서 '},
+    {t:'두 대각선의 교점을 O', key:'o'},
+    {t:'라 하자. '},
+    {t:'△AOD의 넓이가 8cm²', key:'aod'},
+    {t:', '},
+    {t:'△ABO의 넓이가 12cm²', key:'abo'},
+    {t:'일 때, '},
+    {t:'사다리꼴 ABCD의 넓이', key:'goal'},
+    {t:'를 구하시오.'}
+  ],
+  nodes:{
+    goal:{ label:'사다리꼴 ABCD의 넓이를 구해야 한다',
+      ask:'네 조각 △AOD, △ABO, △BOC, △DOC 중 모르는 것은?',
+      hint:'평행선 사이에 있는 삼각형들.',
+      items:[
+        {t:'△DOC와 △BOC를 각각 구한다', next:'trap'},
+        {t:'△BOC = △AOD', why:'AD와 BC의 길이가 달라서 넓이도 달라요.'},
+        {t:'전체 = (8 + 12) × 2', why:'△BOC와 △AOD의 넓이가 같지 않아서 그렇게 되지 않아요.'},
+        {t:'△DOC = △AOD', why:'근거가 없어요.'}
+      ]},
+    trap:{ label:'AD ∥ BC 이다',
+      note:'평행선 사이에서 밑변이 같은 두 삼각형을 찾아봐요.',
+      hint:'밑변 AD를 공유하는 두 삼각형.',
+      items:[
+        {t:'△ABD = △ACD (밑변 AD, 높이가 같다)', next:'doc'},
+        {t:'△ABD = △BCD', why:'밑변 AD와 BC의 길이가 달라요.'},
+        {t:'△ABC = △ACD', why:'밑변이 서로 달라요.'},
+        {t:'△ABO ≡ △DCO', why:'넓이가 같아질 수는 있어도 모양이 같지는 않아요.'}
+      ]},
+    doc:{ label:'△ABD = △ACD',
+      solve:{ q:'△DOC의 넓이는 몇 cm²일까요?', unit:'cm²', accept:['12'],
+              wrong:'△ABD와 △ACD에서 똑같이 △AOD를 빼봐요.' },
+      hint:'△ABD = △AOD + △ABO.',
+      next:'boc'},
+    boc:{ label:'△DOC = 12cm²',
+      note:'△BOC는 어떻게 구할까요?',
+      hint:'높이가 같은 두 삼각형의 넓이의 비는 밑변의 비.',
+      items:[
+        {t:'△AOD : △DOC = AO : OC 를 이용한다', next:'ratio'},
+        {t:'△BOC = △DOC', why:'근거가 없어요.'},
+        {t:'△BOC = △ABO + △DOC', why:'근거가 없어요.'},
+        {t:'△BOC = △AOD × 2', why:'근거가 없어요.'}
+      ]},
+    ratio:{ label:'AO : OC = 8 : 12',
+      note:'이 비를 다른 두 삼각형에도 쓸 수 있을까요?',
+      hint:'꼭짓점 B에서 AC에 내린 높이.',
+      items:[
+        {t:'△ABO : △BOC = AO : OC', next:'bocS'},
+        {t:'△ABO : △BOC = BO : OD', why:'두 삼각형의 밑변은 AC 위의 AO, OC예요.'},
+        {t:'△ABO : △BOC = OC : AO', why:'순서가 뒤집혔어요.'},
+        {t:'△ABO : △BOC = 1 : 1', why:'AO와 OC의 길이가 달라요.'}
+      ]},
+    bocS:{ label:'△ABO : △BOC = AO : OC',
+      solve:{ q:'△BOC의 넓이는 몇 cm²일까요?', unit:'cm²', accept:['18'],
+              wrong:'△ABO : △BOC = 8 : 12 에 △ABO = 12를 넣어봐요.' },
+      hint:'12 : △BOC = 2 : 3.',
+      next:'fin'},
+    fin:{ label:'네 조각을 모두 알았다',
+      solve:{ q:'사다리꼴 ABCD의 넓이는 몇 cm²일까요?', unit:'cm²', accept:['50'],
+              wrong:'네 조각을 모두 더해요.' },
+      hint:'8 + 12 + 12 + 18.',
+      next:'end1'},
+    o:{ label:'대각선의 교점 O',
+      note:'O에서 알 수 있는 것이에요.',
+      hint:'사다리꼴을 몇 조각으로 나누는지.',
+      items:[
+        {t:'사다리꼴이 네 삼각형으로 나뉜다', next:'goal'},
+        {t:'O는 두 대각선의 중점이다', why:'그건 평행사변형일 때예요.'},
+        {t:'AO = OC 이다', why:'평행사변형이 아니라서 달라요.'},
+        {t:'두 대각선은 수직이다', why:'근거가 없어요.'}
+      ]},
+    aod:{ label:'△AOD = 8cm²',
+      note:'이 값을 어디에 쓸까요?',
+      hint:'△AOD와 △DOC는 꼭짓점 D에서 AC에 내린 높이가 같아.',
+      items:[
+        {t:'△DOC를 구한 뒤 비교해 AO : OC를 알아낸다', next:'trap'},
+        {t:'△BOC도 8cm²이다', why:'근거가 없어요.'},
+        {t:'AD = 8cm 이다', why:'넓이와 길이는 달라요.'},
+        {t:'△ABD = 8cm²이다', why:'△ABD = △AOD + △ABO예요.'}
+      ]},
+    abo:{ label:'△ABO = 12cm²',
+      note:'△ABO와 넓이가 같은 삼각형이 있을까요?',
+      hint:'평행선.',
+      items:[
+        {t:'평행선을 이용해 넓이가 같은 삼각형을 찾는다', next:'trap'},
+        {t:'△BOC = 12cm²이다', why:'근거가 없어요.'},
+        {t:'△ABO ≡ △DCO 이다', why:'넓이가 같아도 모양은 달라요.'},
+        {t:'△ABC = 12cm²이다', why:'△ABC = △ABO + △BOC예요.'}
+      ]},
+    end1:{ end:true,
+      lines:['△ABD = △ACD (밑변 AD, 높이 같음) → △ABO = △DOC = 12cm²',
+             '△AOD : △DOC = AO : OC = 8 : 12',
+             '△ABO : △BOC = AO : OC → 12 : △BOC = 8 : 12 → △BOC = 18cm²',
+             '넓이 = 8 + 12 + 12 + 18'],
+      ans:'50cm²',
+      cmt:'넓이 두 개만으로 네 조각을 다 알아냈어요. 평행선은 "넓이가 같은 삼각형"을, 한 꼭짓점을 공유하는 두 삼각형은 "밑변의 비"를 줘요. 두 도구를 번갈아 쓴 문제예요.'}
+  }
+},
+{
+  id:'q06', unit:'2. 사각형의 성질', pick:'평행사변형 안의 한 점',
+  tag:'중2 · 평행사변형과 넓이',
+  svg:'<svg viewBox="0 0 260 172" role="img" aria-label="평행사변형 ABCD의 내부의 한 점 P">'
+    + '<polygon points="60,30 20,150 200,150 240,30" fill="none" stroke="var(--ink)" stroke-width="1.8"/>'
+    + '<g stroke="var(--ink)" stroke-width="1.2">'
+    +   '<line x1="110" y1="90" x2="60" y2="30"/><line x1="110" y1="90" x2="20" y2="150"/>'
+    +   '<line x1="110" y1="90" x2="200" y2="150"/><line x1="110" y1="90" x2="240" y2="30"/>'
+    + '</g>'
+    + '<circle cx="110" cy="90" r="2.4" fill="var(--ink)"/>'
+    + '<g font-size="11" fill="var(--blue)" font-weight="700" text-anchor="middle">'
+    +   '<text x="62" y="94">10</text><text x="110" y="136">15</text><text x="182" y="94">14</text><text x="137" y="56">?</text>'
+    + '</g>'
+    + '<g font-size="11" font-weight="700" fill="var(--ink)">'
+    +   '<text x="54" y="22">A</text><text x="8" y="164">B</text><text x="200" y="164">C</text>'
+    +   '<text x="242" y="22">D</text><text x="116" y="86">P</text>'
+    + '</g></svg>',
+  cap:'파란 숫자는 삼각형의 넓이(cm²)',
+  sentence:[
+    {t:'평행사변형 ABCD', key:'para'},
+    {t:'의 '},
+    {t:'내부의 한 점 P', key:'pt'},
+    {t:'에 대하여 '},
+    {t:'△PAB=10cm²', key:'nums'},
+    {t:', '},
+    {t:'△PBC=15cm²', key:'nums'},
+    {t:', '},
+    {t:'△PCD=14cm²', key:'nums'},
+    {t:'일 때, '},
+    {t:'△PDA의 넓이', key:'goal'},
+    {t:'를 구하시오.'}
+  ],
+  nodes:{
+    goal:{ label:'△PDA의 넓이를 구해야 한다',
+      ask:'네 조각 사이에 늘 성립하는 관계가 있을까?',
+      hint:'마주 보는 두 삼각형.',
+      items:[
+        {t:'마주 보는 두 삼각형의 넓이의 합을 생각한다', next:'opp'},
+        {t:'네 삼각형의 넓이는 모두 같다', why:'P가 대각선의 교점일 때만 그래요.'},
+        {t:'△PDA = △PBC', why:'P가 가운데 있지 않으면 달라요.'},
+        {t:'△PDA = △PAB × △PCD ÷ △PBC', why:'넓이끼리 곱하고 나눌 근거가 없어요.'}
+      ]},
+    opp:{ label:'마주 보는 두 삼각형',
+      note:'△PAB와 △PCD를 보세요. 밑변 AB와 CD는 길이가 같아요.',
+      hint:'P에서 AB까지, P에서 CD까지의 두 높이를 더하면?',
+      items:[
+        {t:'두 높이의 합이 평행사변형의 높이 → △PAB + △PCD = ½ □ABCD', next:'total'},
+        {t:'두 높이가 같다 → △PAB = △PCD', why:'P가 AB와 CD 사이의 한가운데 있지 않으면 달라요.'},
+        {t:'△PAB + △PCD = □ABCD', why:'삼각형이라 ½이 붙어요.'},
+        {t:'△PAB + △PBC = ½ □ABCD', why:'이웃한 두 삼각형은 밑변이 달라 그렇게 되지 않아요.'}
+      ]},
+    total:{ label:'△PAB + △PCD = ½ □ABCD',
+      solve:{ q:'□ABCD의 넓이는 몇 cm²일까요?', unit:'cm²', accept:['48'],
+              wrong:'△PAB + △PCD가 전체의 절반이에요.' },
+      hint:'(10 + 14) × 2.',
+      next:'other'},
+    other:{ label:'□ABCD = 48cm²',
+      note:'나머지 마주 보는 짝은 어떨까요?',
+      hint:'같은 방법.',
+      items:[
+        {t:'△PBC + △PDA = ½ □ABCD', next:'fin'},
+        {t:'△PBC + △PDA = □ABCD', why:'삼각형이라 ½이 붙어요.'},
+        {t:'△PDA = ½ □ABCD', why:'한 조각이 아니라 마주 보는 두 조각의 합이에요.'},
+        {t:'△PBC − △PDA = ½ □ABCD', why:'빼는 게 아니라 더해요.'}
+      ]},
+    fin:{ label:'△PBC + △PDA = ½ □ABCD',
+      solve:{ q:'△PDA의 넓이는 몇 cm²일까요?', unit:'cm²', accept:['9'],
+              wrong:'마주 보는 짝의 합이 전체의 절반이에요.' },
+      hint:'24 − 15.',
+      next:'end1'},
+    para:{ label:'평행사변형이다',
+      note:'평행사변형에서 알 수 있는 것이에요.',
+      hint:'마주 보는 변.',
+      items:[
+        {t:'AB = CD 이고, AB와 CD 사이의 거리가 일정하다', next:'opp'},
+        {t:'대각선이 넓이를 이등분한다', why:'맞지만 P가 대각선 위에 있지 않아요.'},
+        {t:'네 변의 길이가 같다', why:'그건 마름모예요.'},
+        {t:'P는 대각선의 교점이다', why:'내부의 한 점일 뿐이에요.'}
+      ]},
+    pt:{ label:'내부의 한 점 P',
+      note:'P를 네 꼭짓점과 이으면?',
+      hint:'네 조각.',
+      items:[
+        {t:'평행사변형이 네 삼각형으로 나뉜다', next:'goal'},
+        {t:'P에서 네 변까지의 거리가 같다', why:'근거가 없어요.'},
+        {t:'PA = PC 이다', why:'근거가 없어요.'},
+        {t:'P는 BD 위에 있다', why:'내부의 한 점일 뿐이에요.'}
+      ]},
+    nums:{ label:'세 삼각형의 넓이',
+      note:'세 넓이를 어떻게 짝지을까요?',
+      hint:'밑변의 길이가 같은 짝.',
+      items:[
+        {t:'△PAB와 △PCD를 짝짓는다', next:'opp'},
+        {t:'△PAB와 △PBC를 짝짓는다', why:'이웃한 삼각형은 밑변의 길이가 달라 짝이 되지 않아요.'},
+        {t:'세 넓이를 더한 것이 전체의 3/4이다', why:'네 조각의 넓이가 같지 않아요.'},
+        {t:'△PDA는 세 넓이의 평균이다', why:'근거가 없어요.'}
+      ]},
+    end1:{ end:true,
+      lines:['△PAB + △PCD = ½ × AB × (두 높이의 합) = ½ □ABCD',
+             '□ABCD = 2 × (10 + 14) = 48cm²',
+             '△PBC + △PDA = 24cm² → △PDA = 24 − 15'],
+      ans:'9cm²',
+      cmt:'P가 어디에 있든 마주 보는 두 삼각형의 넓이의 합은 늘 전체의 절반이에요. P를 움직여도 변하지 않는 것을 찾는 게 이 문제의 전부였어요.'}
+  }
+},
+{
+  id:'q07', unit:'2. 사각형의 성질', pick:'대각선 조건으로 사각형 알아내기',
+  tag:'중2 · 직사각형이 되는 조건',
+  svg:'<svg viewBox="0 0 216 142" role="img" aria-label="사각형 ABCD와 두 대각선의 교점 O">'
+    + '<polygon points="30,30 30,120 186,120 186,30" fill="none" stroke="var(--ink)" stroke-width="1.8"/>'
+    + '<g stroke="var(--ink)" stroke-width="1.3"><line x1="30" y1="30" x2="186" y2="120"/><line x1="30" y1="120" x2="186" y2="30"/></g>'
+    + '<text x="108" y="106" font-size="10" fill="var(--blue)" text-anchor="middle">120°</text>'
+    + '<g font-size="11" font-weight="700" fill="var(--ink)">'
+    +   '<text x="18" y="26">A</text><text x="18" y="134">B</text><text x="190" y="134">C</text>'
+    +   '<text x="190" y="26">D</text><text x="104" y="66">O</text>'
+    + '</g></svg>',
+  cap:'점 O는 두 대각선의 교점',
+  sentence:[
+    {t:'평행사변형 ABCD', key:'para'},
+    {t:'에서 '},
+    {t:'두 대각선의 교점을 O', key:'o'},
+    {t:'라 할 때, '},
+    {t:'∠OAB=∠OBA', key:'eq'},
+    {t:'이다. '},
+    {t:'AC=10cm', key:'ac'},
+    {t:', '},
+    {t:'∠BOC=120°', key:'boc'},
+    {t:'일 때, '},
+    {t:'AB의 길이', key:'goal'},
+    {t:'를 구하시오.'}
+  ],
+  nodes:{
+    goal:{ label:'AB의 길이를 구해야 한다',
+      ask:'AB는 어느 삼각형의 변으로 보면 좋을까?',
+      hint:'O와 이어진 삼각형.',
+      items:[
+        {t:'△AOB의 변으로 본다', next:'aob'},
+        {t:'△ABC의 변으로 본다', why:'△ABC에서 AB를 구하려면 다른 두 변을 알아야 하는데 주어지지 않았어요.'},
+        {t:'AB = AC 이다', why:'대각선과 변의 길이는 달라요.'},
+        {t:'△ABD의 변으로 본다', why:'△ABD에서는 아는 각이 없어요. 교점 O를 이용하는 쪽이 이어져요.'}
+      ]},
+    aob:{ label:'△AOB',
+      note:'△AOB에서 알 수 있는 것부터 찾아요.',
+      hint:'OA와 OB는 대각선의 일부.',
+      items:[
+        {t:'OA와 OB는 각각 대각선의 절반이다', next:'para'},
+        {t:'∠AOB = 120° 이다', why:'120°는 ∠BOC예요. ∠AOB는 그 이웃각이죠.'},
+        {t:'AB = OA + OB 이다', why:'삼각형의 한 변은 나머지 두 변의 합보다 짧아요.'},
+        {t:'△AOB ≡ △COB 이다', why:'∠AOB와 ∠COB의 크기가 달라요.'}
+      ]},
+    para:{ label:'평행사변형이다',
+      note:'평행사변형의 대각선에서 알 수 있는 것이에요.',
+      hint:'대각선끼리의 관계.',
+      items:[
+        {t:'두 대각선이 서로 다른 것을 이등분한다 (OA = OC, OB = OD)', next:'eq'},
+        {t:'두 대각선의 길이가 같다', why:'평행사변형이라는 것만으로는 알 수 없어요.'},
+        {t:'두 대각선이 수직이다', why:'그건 마름모일 때예요.'},
+        {t:'이웃한 두 내각의 크기가 같다', why:'그건 직사각형일 때예요.'}
+      ]},
+    o:{ label:'대각선의 교점 O',
+      note:'교점 O에서 알 수 있는 것이에요.',
+      hint:'평행사변형의 대각선.',
+      items:[
+        {t:'OA = OC, OB = OD 이다', next:'eq'},
+        {t:'OA = OB = OC = OD 이다', why:'평행사변형이라는 것만으로는 알 수 없어요.'},
+        {t:'AC ⊥ BD 이다', why:'그런 조건은 없어요.'},
+        {t:'O에서 네 변까지의 거리가 같다', why:'근거가 없어요.'}
+      ]},
+    eq:{ label:'∠OAB = ∠OBA',
+      note:'△OAB에서 두 각이 같아요.',
+      hint:'같은 두 각이 마주보는 변.',
+      items:[
+        {t:'OA = OB 이다', next:'eqn'},
+        {t:'AB = OA 이다', why:'∠OBA가 마주보는 변은 OA, ∠OAB가 마주보는 변은 OB예요.'},
+        {t:'AB = OB 이다', why:'짝을 다시 확인해봐요.'},
+        {t:'△OAB는 정삼각형이다', why:'두 각이 같다는 것뿐이에요. 세 번째 각은 아직 몰라요.'}
+      ]},
+    eqn:{ label:'OA = OB',
+      note:'평행사변형에서 OA = OC, OB = OD였죠.',
+      hint:'대각선 전체의 길이.',
+      items:[
+        {t:'AC = BD 이므로 □ABCD는 직사각형', next:'rectn'},
+        {t:'AC ⊥ BD 이므로 □ABCD는 마름모', why:'OA = OB는 길이 조건이에요. 수직이라는 조건은 없어요.'},
+        {t:'AB = BC 이므로 □ABCD는 마름모', why:'OA = OB에서 이웃한 변이 같다는 건 나오지 않아요.'},
+        {t:'□ABCD는 정사각형', why:'두 대각선의 길이가 같다는 것까지만 알 수 있어요.'}
+      ]},
+    rectn:{ label:'□ABCD는 직사각형',
+      note:'O에서 네 꼭짓점까지의 거리는?',
+      hint:'대각선의 절반.',
+      items:[
+        {t:'OA = OB = OC = OD = ½ AC', next:'aobS'},
+        {t:'OA = OB = AC', why:'O는 대각선의 중점이에요.'},
+        {t:'OA = AB', why:'근거가 없어요.'},
+        {t:'OB = BC', why:'근거가 없어요.'}
+      ]},
+    aobS:{ label:'OA = OB = 5cm',
+      solve:{ q:'∠AOB의 크기는 몇 도일까요?', unit:'°', accept:['60'],
+              wrong:'∠AOB와 ∠BOC는 한 직선 위에서 이웃한 각이에요.' },
+      hint:'180° − 120°.',
+      next:'shape'},
+    shape:{ label:'∠AOB = 60°, OA = OB',
+      note:'△AOB는 어떤 삼각형일까요?',
+      hint:'이등변삼각형의 꼭지각이 60°이면 밑각은?',
+      items:[
+        {t:'밑각도 60°씩이므로 정삼각형이다', next:'fin'},
+        {t:'직각삼각형이다', why:'세 각의 합으로 밑각을 구해봐요.'},
+        {t:'밑각이 120°인 삼각형이다', why:'밑각 두 개와 꼭지각을 더하면 180°예요.'},
+        {t:'이등변삼각형이지만 정삼각형은 아니다', why:'꼭지각이 60°면 밑각도 60°씩이에요.'}
+      ]},
+    fin:{ label:'△AOB는 정삼각형',
+      solve:{ q:'AB의 길이는 몇 cm일까요?', unit:'cm', accept:['5'],
+              wrong:'정삼각형은 세 변이 같아요. OA가 몇 cm였죠?' },
+      hint:'AB = OA.',
+      next:'end1'},
+    ac:{ label:'AC = 10cm',
+      note:'이 길이를 어디에 쓸까요?',
+      hint:'O는 AC의 중점.',
+      items:[
+        {t:'OA = OC = 5cm 이다', next:'o'},
+        {t:'AB = 10cm 이다', why:'대각선과 변은 길이가 달라요.'},
+        {t:'BC = 10cm 이다', why:'근거가 없어요.'},
+        {t:'BD = 5cm 이다', why:'근거가 없어요.'}
+      ]},
+    boc:{ label:'∠BOC = 120°',
+      note:'이 각의 이웃각은?',
+      hint:'평각은 180°.',
+      items:[
+        {t:'∠AOB = 180° − 120° 이다', next:'aob'},
+        {t:'∠AOB = 120° 이다', why:'∠BOC와 크기가 같은 맞꼭지각은 ∠AOD예요.'},
+        {t:'∠OBC = 120° 이다', why:'한 삼각형에 120°인 각이 둘일 수는 없어요.'},
+        {t:'∠OBC = 60° 이다', why:'근거가 없어요.'}
+      ]},
+    end1:{ end:true,
+      lines:['∠OAB = ∠OBA → OA = OB, 평행사변형이므로 OA = OC, OB = OD → AC = BD → 직사각형',
+             'OA = OB = 10 ÷ 2 = 5cm',
+             '∠AOB = 180° − 120° = 60°, OA = OB → △AOB는 정삼각형'],
+      ans:'AB = 5cm',
+      cmt:'각에 대한 조건(∠OAB = ∠OBA)이 길이(OA = OB)로, 다시 사각형의 종류(직사각형)로, 마지막엔 정삼각형으로 바뀌었어요. 조건 하나가 몇 번이나 모습을 바꿔 쓰였어요.'}
   }
 },
 {
