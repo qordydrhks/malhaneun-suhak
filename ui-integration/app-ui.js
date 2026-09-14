@@ -6,7 +6,7 @@
   'use strict';
   const $ = id => document.getElementById(id);
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const ui = {page:'home', level:'low', kind:'concept', band:'e', input:'voice', busy:false, menu:null, questions:[]};
+  const ui = {page:'home', level:'high', kind:'concept', band:'e', input:'voice', busy:false, menu:null, questions:[]};
   const original = {showView, enterStudentView, setLearnStep, cpSyncLegacy, renderCurrentQuestion, resetRecordingUI, renderFeedback, saveSubmission, startQuiz, goToNextQuestion, tryAutoLogin, renderRail, openStudentHistory, doLogout, onSpeakTimeout};
   const menus = [
     ['dashboard','학생과 학습','학습 현황','오늘의 학습 · 통과 · 도움 필요','▥'],
@@ -135,7 +135,7 @@
     const items=questionItems(); ui.questions=items;
     const list=items.map((q,i)=>({...q,i})).filter(q=>q.kind===ui.kind), left=remaining().length;
     return '<div class="dd-ui-page-head"><div><p class="dd-ui-caption">'+esc(cpCurrentBig().name)+'</p><h1>'+esc(smallTitle(sm))+'</h1></div>'+button('개념 목록','catalog','dd-ui-text')+'</div>'+
-      '<div class="dd-ui-section-head"><h2>질문을 골라 설명해요.</h2><label>설명 수준 <select id="ddUiLevel">'+[['low','기본 개념'],['high','깊이 설명하기'],['blank','채워보기']].map(([v,t])=>'<option value="'+v+'" '+(v===ui.level?'selected':'')+'>'+t+'</option>').join('')+'</select></label></div>'+
+      '<div class="dd-ui-section-head"><h2>질문을 골라 설명해요.</h2><label>설명 수준 <select id="ddUiLevel">'+[['high','설명하기'],['blank','채워보기']].map(([v,t])=>'<option value="'+v+'" '+(v===ui.level?'selected':'')+'>'+t+'</option>').join('')+'</select></label></div>'+
       '<div class="dd-ui-tabs">'+[['concept','개념 질문'],['typed','유형별 질문']].map(([v,t])=>button(t+' <span>'+items.filter(q=>q.kind===v).length+'</span>','kind',ui.kind===v?'active':'','data-kind="'+v+'" aria-pressed="'+(ui.kind===v)+'"')).join('')+'</div>'+
       '<div class="dd-ui-choice-list">'+(list.map(q=>button('<span class="dd-ui-number">'+(status(q)==='pass'?'✓':q.i+1)+'</span><div><small>'+esc(q.type?QTYPE_LABEL[q.type]||q.type:'개념 질문')+(status(q)==='pass'?' · 통과':status(q)==='redo'?' · 다시 설명하기':'')+'</small><div>'+mfmt(q.q)+'</div></div><span>›</span>','question','dd-ui-question','data-index="'+q.i+'"')).join('')||'<div class="dd-ui-empty">이 수준의 유형별 질문은 준비 중이에요. 개념 질문을 먼저 선택해 주세요.</div>')+'</div>'+
       (ui.level==='blank'?'<p class="dd-ui-caption">빈칸 질문은 시작할 때 만들어집니다.</p>':'<div class="dd-ui-picker-foot"><div><strong>'+(items.length-left)+' / '+items.length+' 질문 통과</strong><p>'+(left?'남은 '+left+'개 질문까지 설명하면 기본문제로 이어져요.':'모든 질문을 통과했어요. 기본문제로 확인해요.')+'</p></div>'+button(left?'이어서 설명하기 →':'기본문제로 →',left?'continue':'quiz','dd-ui-primary')+'</div>');
@@ -300,7 +300,7 @@
   };
   tryAutoLogin=async function() { if(teacherRoute) { showView('viewTeacherAuth'); return; } return original.tryAutoLogin(); };
   enterStudentView=function() {
-    session.teacher=false; session.role=null; ui.level='low'; ui.kind='concept'; lock(false); cpRecords=[];
+    session.teacher=false; session.role=null; ui.level='high'; ui.kind='concept'; lock(false); cpRecords=[];
     original.enterStudentView(); restoreSelection(); restoreLevel(); stage('home');
   };
   setLearnStep=function(n) {
@@ -311,7 +311,7 @@
   };
   cpRender=function() { renderStudent(); };
   cpSyncLegacy=function() { state.gradeId=CP.grade||null; return original.cpSyncLegacy(); };
-  renderCurrentQuestion=function() { if(!state._qType&&['low','high','blank'].includes(state.level))ui.level=state.level; syncSelectionFromUnit(); const out=original.renderCurrentQuestion(); syncQuestionChrome(); return out; };
+  renderCurrentQuestion=function() { if(!state._qType&&['low','high','blank'].includes(state.level))ui.level=state.level==='low'?'high':state.level;   /* [v81.3] 기본 개념 → 설명하기 */ syncSelectionFromUnit(); const out=original.renderCurrentQuestion(); syncQuestionChrome(); return out; };
   resetRecordingUI=function() { const out=original.resetRecordingUI(); applyInputMode(); return out; };
   renderFeedback=function(result,advance,needTeacher) { const out=original.renderFeedback(result,advance,needTeacher); decorateFeedback(advance); return out; };
   saveSubmission=async function(...args) { lock(true); try { return await original.saveSubmission(...args); } finally { setTimeout(()=>{lock(false);syncQuestionChrome();},0); } };

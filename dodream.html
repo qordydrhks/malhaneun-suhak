@@ -1107,8 +1107,8 @@ window.DDOOPI = {
         <label class="field-label">난이도</label>
         <div class="seg" id="levelSeg">
           <button data-level="blank">채워보기</button>
-          <button data-level="low" class="active">설명하기</button>
-          <button data-level="high">원리 말하기</button>
+          <button data-level="low" style="display:none">기본 개념</button><!-- [v81.3] 기본 개념 질문 숨김: 설명하기 하나로 -->
+          <button data-level="high" class="active">설명하기</button>
         </div>
 
         <div class="concept-picker" id="conceptPicker">
@@ -6856,7 +6856,7 @@ function ceCard(item, rawCode){
   const { gradeId, big, small, code, type:baseType } = item;
   const baseCard = (typeof ddGetCard==='function') ? ddGetCard(gradeId, big.name, small.name) : null;
   // 저장된 수정본을 원본 위에 얹기
-  const applied = ceApply(gradeId, big.name, small.name, baseType, baseCard);
+  const applied = ceApply(gradeId, big.name, small.name, baseType, baseCard, 0, true);   // [v81.3] 편집기는 숨기기 전 원래 목록
   const type = applied.type, card = applied.card;
   const _ov = ceGetOverride(gradeId, big.name, small.name) || {};
   const hasOverride = !!ceGetOverride(gradeId, big.name, small.name);
@@ -6876,7 +6876,9 @@ function ceCard(item, rawCode){
   let html='<div class="ce-card-h"><span class="ce-code">'+code+'</span>'
     +'<span class="ce-card-t">'+esc(gradeName)+' · '+mfmt(big.name)+' · '+mfmt(small.name)+'</span>'
     +(hasOverride?'<span class="ce-editflag">수정됨</span>':'')+'</div>';
-  html+='<div class="ce-sec"><div class="ce-sec-h">🗣️ 말하기 질문 · 쉬운(L)</div>'
+  const _lowHidden = !!(ceApply(gradeId, big.name, small.name, baseType, null)).type._lowHidden;   // [v81.3]
+  html+='<div class="ce-sec"><div class="ce-sec-h">🗣️ 말하기 질문 · 쉬운(L)'
+    +(_lowHidden?' <span style="font-weight:600;color:#c0392b;font-size:11px">— 학생에게 숨김 (유형별 질문이 있어서 깊은 질문만 나와요)</span>':'')+'</div>'
     +'<div class="ce-qlist" data-qlist="low">'
     + low.map((q,i)=>qline(code+(i+1)+'L','low',q,lowIds[i])).join('')
     + lowAdd.map((q,i)=>ceQRowAdd(code+'L-n'+(i+1),'low',q,lowIds[low.length+i])).join('')
@@ -7176,7 +7178,7 @@ function ceGetOverride(gradeId, bigName, smallName){
   const o=ceLoadOverrides(); return o[ceCode(gradeId,bigName,smallName)]||null;
 }
 // 원본 위에 override를 얹어 '최종' 값 돌려주기 (학습 화면/편집기 공용)
-function ceApply(gradeId, bigName, smallName, baseType, baseCard, ti){
+function ceApply(gradeId, bigName, smallName, baseType, baseCard, ti, raw){
   const ov=ceGetOverride(gradeId,bigName,smallName);
   const type = Object.assign({}, baseType||{});
   const card = Object.assign({}, baseCard||{});
@@ -7223,6 +7225,24 @@ function ceApply(gradeId, bigName, smallName, baseType, baseCard, ti){
       var _base=(card.media||[]).filter(function(m){return m&&m.form!=='youtube';});
       card.media = ov.videoUrl ? _base.concat([{form:'youtube', url:ov.videoUrl, by:'teacher', scope:'me'}]) : _base;
     }
+  }
+  // [v81.3] 학생에게는 "설명하기" 한 가지 개념 질문 목록만 보인다 (마스터 결정 2026-09-14)
+  //   · 유형별 질문이 있는 소단원: 기본 개념(low) 질문은 숨기고 깊이 질문(high)만
+  //   · 유형별 질문이 없는 소단원(고1-1·대수·미적분): 기본+깊이를 합쳐서 전부
+  //   low·high 를 같은 목록으로 맞춰 두므로 어느 난이도로 들어와도 같은 질문이 나온다. 원본은 그대로.
+  //   편집기(raw=true)는 원래 low/high 를 따로 보여 준다.
+  if(!raw){
+    try{
+      var _qs = (typeof ddGetQSet==='function') ? ddGetQSet(gradeId, bigName, smallName) : null;
+      var _typed = !!(_qs && (_qs.questions||[]).some(function(x){ return x && x.q; }));
+      if(_typed){
+        type.low = (type.high||[]).slice(); type.lowIds = (type.highIds||[]).slice();
+      } else {
+        var _all = (type.low||[]).concat(type.high||[]), _allIds = (type.lowIds||[]).concat(type.highIds||[]);
+        type.low = _all.slice(); type.lowIds = _allIds.slice(); type.high = _all; type.highIds = _allIds;
+      }
+      type._lowHidden = _typed;
+    }catch(e){}
   }
   return { type, card };
 }
@@ -21690,7 +21710,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-const APP_VERSION = 'v81.2-검수문항';
+const APP_VERSION = 'v81.3-설명하기';
   // [v78.7] 이 값이 IIFE 안에 갇혀 있어 바깥 스크립트(app-ui.js)가 못 읽었다.
   //   화면 배지에 버전을 그대로 띄우려면 필요하므로 노출한다.
   window.APP_VERSION = APP_VERSION;
@@ -21714,6 +21734,6 @@ const APP_VERSION = 'v81.2-검수문항';
 })();
 </script>
 
-<script src="ui-integration/app-ui.js?v=80.9"></script>
+<script src="ui-integration/app-ui.js?v=81.3"></script>
 </body>
 </html>
