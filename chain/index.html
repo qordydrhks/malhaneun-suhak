@@ -209,6 +209,41 @@
     border:1px solid var(--line); border-radius:11px; background:transparent;
     color:var(--sub); font-size:13.5px; font-weight:700; cursor:pointer;
   }
+  /* ── 오답 기록 (선생님 보기) ── */
+  .who{display:flex; align-items:center; gap:8px; margin:-8px 0 6px;}
+  .who label{font-size:12.5px; font-weight:700; color:var(--sub); white-space:nowrap;}
+  .who input{
+    flex:1; min-width:0; padding:9px 11px; font-size:14px; font-family:inherit; color:var(--ink);
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+  }
+  .who input:focus{outline:none; border-color:var(--blue);}
+  .teacher{background:none; border:none; cursor:pointer; font-size:11.5px; color:#BAB8C9;
+    text-decoration:underline; text-underline-offset:3px; padding:6px;}
+  .rgs{display:flex; gap:6px; margin-top:-8px;}
+  .rg{padding:7px 13px; border-radius:9px; border:1px solid var(--line); background:var(--card);
+    font-size:12.5px; font-weight:700; color:var(--sub); cursor:pointer;}
+  .rg.on{background:var(--ink); border-color:var(--ink); color:#fff;}
+  .rp-note{font-size:13px; color:var(--sub); margin:14px 2px;}
+  .rp-warn{margin:16px 0; padding:13px 14px; border-radius:12px; background:#FFF6E6;
+    border:1px solid #F0DCB4; font-size:13px; line-height:1.7; color:#6B4E12;}
+  .rp-warn code{font-size:12px; background:#fff; padding:1px 5px; border-radius:5px;}
+  .rp-card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 15px; margin-top:12px;}
+  .rp-h{font-size:15px; font-weight:800; line-height:1.4;}
+  .rp-h small{display:block; font-size:11.5px; font-weight:600; color:var(--dim); margin-top:2px;}
+  .rp-kpi{display:flex; gap:14px; flex-wrap:wrap; margin-top:9px; font-size:12.5px; color:var(--sub);}
+  .rp-kpi b{color:var(--ink); font-size:15px; margin-right:2px;}
+  .rp-sec{margin:16px 0 6px; padding-top:12px; border-top:1px solid #F0EEF6; font-size:13px; font-weight:800; line-height:1.5;}
+  .rp-sec em{font-style:normal; font-size:11px; font-weight:700; color:var(--blue); margin-left:4px;}
+  .rp-sub{margin:8px 0 3px; font-size:11.5px; font-weight:700; color:var(--dim);}
+  .rp-row{display:flex; align-items:flex-start; gap:10px; padding:6px 0; font-size:13px; line-height:1.5;}
+  .rp-row span{flex:1;}
+  .rp-row b{flex:0 0 auto; font-size:13px; font-weight:800; color:var(--ink);}
+  .rp-row .tg{display:inline-block; font-style:normal; background:#F1F0F6; color:var(--sub); font-size:10.5px; font-weight:800; margin-left:6px; padding:1px 6px; border-radius:5px; white-space:nowrap;}
+  .rp-row.good .tg{background:#EAF0FF; color:var(--blue);}
+  .rp-row.hot{color:#9A3412;} .rp-row.hot b{color:#9A3412;} .rp-row.hot .tg{background:#FDECE3; color:#9A3412;}
+  .rp-row.zero{color:var(--dim);} .rp-row.zero b{color:var(--dim); font-weight:700;} .rp-row.zero .tg{background:#F1F0F6; color:var(--sub);}
+  .rp-row.dim{color:var(--sub);}
+
   .foot{margin-top:36px; font-size:11.5px; color:#BAB8C9; text-align:center;}
 
   @keyframes rise{from{opacity:0; transform:translateY(-5px);} to{opacity:1; transform:none;}}
@@ -238,7 +273,8 @@
     <div class="flow" id="flow"></div>
     <button class="again" onclick="restart()">처음부터 다시</button>
   </div>
-  <div class="foot">생각 사슬 · 시제품</div>
+  <div id="report" hidden></div>
+  <div class="foot">생각 사슬 · 시제품 · <button class="teacher" onclick="openReport()">선생님 보기</button></div>
 </div>
 
 <script>
@@ -2264,6 +2300,247 @@ function shuffle(a){
   return a;
 }
 
+/* ══════════ 오답 기록 ══════════════════════════════════════
+   학생이 무엇을 골랐는지 쌓아서, 아무도 안 고르는 오답은 바꾸고
+   많이 걸리는 오답은 약한 개념의 신호로 쓴다.
+   · 서버: 말하는 수학과 같은 Supabase 프로젝트, 표 chain_events
+     (supabase/sql/chain_events.sql 을 대시보드에서 한 번 실행해야 생김)
+   · 표가 없거나 인터넷이 끊기면 이 기기에 모아 두었다가 다음에 보낸다
+   · 앱은 넣기만 한다. 읽기는 이름 없는 개수(chain_stats)만 가능
+   ═══════════════════════════════════════════════════════════ */
+const SB_URL = 'https://cnyrbxsmxwajhlrvcdml.supabase.co';
+const SB_KEY = 'sb_publishable_e2iVXV5K1sl7-kJ-d3v1Ow_VEzNUJGv';   // 공개 키 (말하는 수학과 같음)
+const LOG_Q  = 'chain:queue:v1';
+let sessionId = null, sessionStart = 0, sessionDone = false, sessionActive = false, lastNode = null;
+
+function lsGet(k, d){ try{ const v = localStorage.getItem(k); return v == null ? d : v; }catch(e){ return d; } }
+function lsSet(k, v){ try{ localStorage.setItem(k, v); }catch(e){} }
+function studentName(){ return String(lsGet('chain:student', '')).trim().slice(0, 40); }
+
+function newSession(){
+  sessionId = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  sessionStart = Date.now(); sessionDone = false; sessionActive = false; lastNode = null;
+}
+function queueGet(){ try{ return JSON.parse(lsGet(LOG_Q, '[]')) || []; }catch(e){ return []; } }
+function queueSet(a){ lsSet(LOG_Q, JSON.stringify(a.slice(-3000))); }
+
+function logEv(kind, o){
+  if(cur === null || !sessionId) return;
+  o = o || {};
+  if(kind !== 'start') sessionActive = true;
+  if(o.node) lastNode = o.node;
+  const q = queueGet();
+  q.push({
+    session_id: sessionId,
+    student:    studentName() || null,
+    problem_id: P().id,
+    node_key:   o.node || null,
+    kind:       kind,
+    ok:         typeof o.ok === 'boolean' ? o.ok : null,
+    choice:     o.choice == null ? null : String(o.choice).slice(0, 300),
+    extra:      o.extra || null,
+    t:          new Date().toISOString()          // 이 기기 안에서만 씀 (보낼 때 뺌)
+  });
+  queueSet(q);
+  flushQueue();
+}
+
+let flushing = false, flushAgain = false, flushPauseUntil = 0;
+async function flushQueue(force){
+  if(flushing){ flushAgain = true; return; }
+  if(!force && Date.now() < flushPauseUntil) return;   // 서버가 방금 거절했으면 20초 쉬었다가
+  const q = queueGet();
+  if(!q.length) return;
+  flushing = true;
+  try{
+    const batch = q.slice(0, 50);
+    const body  = batch.map(r=>{ const c = Object.assign({}, r); delete c.t; return c; });
+    const res = await fetch(SB_URL + '/rest/v1/chain_events', {
+      method:'POST', keepalive:true,
+      headers:{ apikey:SB_KEY, Authorization:'Bearer ' + SB_KEY,
+                'Content-Type':'application/json', Prefer:'return=minimal' },
+      body: JSON.stringify(body)
+    });
+    if(!res.ok){ flushPauseUntil = Date.now() + 20000; }
+    if(res.ok){
+      flushPauseUntil = 0;
+      queueSet(queueGet().slice(batch.length));
+      lsSet('chain:lastSent', new Date().toISOString());
+      if(queueGet().length) flushAgain = true;
+    }
+  }catch(e){ /* 인터넷 없음 — 다음에 다시 */ }
+  flushing = false;
+  if(flushAgain){ flushAgain = false; setTimeout(flushQueue, 300); }
+}
+window.addEventListener('load', ()=> setTimeout(flushQueue, 800));
+window.addEventListener('online', ()=> flushQueue(true));
+
+/* 풀다가 그만두면 어느 단계였는지 남긴다 */
+function endSessionIfQuit(){
+  if(cur !== null && sessionId && sessionActive && !sessionDone){
+    logEv('quit', { node: lastNode });
+  }
+}
+
+/* ══════════ 선생님 보기 (#report) ══════════════════════════ */
+let reportRange = 'all';
+
+function openReport(){
+  endSessionIfQuit();
+  cur = null;
+  document.getElementById('home').hidden = true;
+  document.getElementById('solve').hidden = true;
+  document.getElementById('report').hidden = false;
+  document.getElementById('stick').classList.remove('on');
+  window.scrollTo({top:0});
+  if(location.hash !== '#report') history.replaceState(null, '', '#report');
+  loadReport();
+}
+function closeReport(){
+  document.getElementById('report').hidden = true;
+  if(location.hash) history.replaceState(null, '', location.pathname + location.search);
+  goHome();
+}
+
+function kstDay(offset){
+  const d = new Date(Date.now() + 9*3600*1000 - offset*86400*1000);
+  return d.toISOString().slice(0, 10);
+}
+
+async function loadReport(){
+  const box = document.getElementById('report');
+  const rangeBtn = (k, label)=> '<button class="rg' + (reportRange === k ? ' on' : '') + '" onclick="reportRange=\'' + k + '\';loadReport()">' + label + '</button>';
+  const head = '<button class="back" onclick="closeReport()">← 문제 목록</button>'
+    + '<div class="home" style="padding-top:12px"><h1>오답 기록</h1>'
+    + '<p class="sub">학생들이 무엇을 골랐는지 모아 봅니다. 이름 없이 개수만 보여요.</p>'
+    + '<div class="rgs">' + rangeBtn('today','오늘') + rangeBtn('week','최근 7일') + rangeBtn('all','전체') + '</div></div>';
+  box.innerHTML = head + '<p class="rp-note">불러오는 중…</p>';
+
+  const from = reportRange === 'today' ? kstDay(0) : reportRange === 'week' ? kstDay(6) : null;
+  let rows = null, source = 'server', err = '';
+  try{
+    const res = await fetch(SB_URL + '/rest/v1/rpc/chain_stats', {
+      method:'POST',
+      headers:{ apikey:SB_KEY, Authorization:'Bearer ' + SB_KEY, 'Content-Type':'application/json' },
+      body: JSON.stringify({ p_from: from, p_to: null })
+    });
+    if(res.ok) rows = await res.json();
+    else err = String(res.status);
+  }catch(e){ err = '인터넷 연결 없음'; }
+
+  const pending = queueGet();
+  if(!rows){
+    source = 'local';
+    rows = aggregateLocal(pending.filter(r => !from || (r.t && r.t.slice(0,10) >= from)));
+  }
+  box.innerHTML = head + reportHTML(rows, source, err, pending.length);
+}
+
+/* 이 기기에 남아 있는 기록을 서버와 같은 모양으로 모은다 */
+function aggregateLocal(list){
+  const m = new Map();
+  list.forEach(r=>{
+    const k = [r.problem_id, r.node_key, r.kind, r.ok, r.choice].join('');
+    let g = m.get(k);
+    if(!g){ g = { problem_id:r.problem_id, node_key:r.node_key, kind:r.kind, ok:r.ok, choice:r.choice, n:0, _s:new Set() }; m.set(k, g); }
+    g.n++; g._s.add(r.session_id);
+  });
+  return [...m.values()].map(g=>{ g.sessions = g._s.size; delete g._s; return g; });
+}
+
+function escH(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function reportHTML(rows, source, err, pendingCount){
+  let h = '';
+  if(source === 'local'){
+    h += '<div class="rp-warn"><b>서버 기록을 불러오지 못했어요' + (err ? ' (' + escH(err) + ')' : '') + '.</b><br>'
+       + '지금은 <b>이 기기에 남아 있는 기록만</b> 보여요. Supabase에 표를 아직 안 만들었다면 '
+       + '<code>supabase/sql/chain_events.sql</code>을 SQL Editor에서 한 번 실행해 주세요. '
+       + '표가 생기면 기기에 모아 둔 기록이 자동으로 올라갑니다.</div>';
+  }else if(pendingCount){
+    h += '<p class="rp-note">이 기기에 아직 안 보낸 기록이 ' + pendingCount + '개 있어요. 인터넷이 연결되면 올라갑니다.</p>';
+  }
+
+  const by = {};
+  rows.forEach(r=>{ (by[r.problem_id] = by[r.problem_id] || []).push(r); });
+  const sum = (list, f)=> list.filter(f).reduce((a,r)=> a + Number(r.n), 0);
+  const ses = (list, f)=> list.filter(f).reduce((a,r)=> a + Number(r.sessions), 0);
+
+  let any = false;
+  PROBLEMS.forEach(p=>{
+    const R = by[p.id];
+    if(!R || !R.length) return;
+    any = true;
+    const started  = ses(R, r=> r.kind === 'start');
+    const finished = ses(R, r=> r.kind === 'finish');
+    const nodeLabel = k => p.nodes[k] ? mfmt(p.nodes[k].label) : escH(k || '(시작 전)');
+
+    h += '<div class="rp-card"><div class="rp-h">' + escH(p.pick) + '<small>' + escH(p.unit) + '</small></div>';
+    h += '<div class="rp-kpi"><span><b>' + started + '</b>번 시작</span><span><b>' + finished + '</b>번 끝까지</span>'
+       + (started ? '<span><b>' + Math.round(finished / started * 100) + '%</b> 완주</span>' : '') + '</div>';
+
+    // 그만둔 곳
+    const quits = R.filter(r=> r.kind === 'quit').sort((a,b)=> b.n - a.n);
+    if(quits.length){
+      h += '<div class="rp-sec">그만둔 곳</div>'
+         + quits.map(r=> '<div class="rp-row"><span>' + nodeLabel(r.node_key) + '</span><b>' + r.n + '</b></div>').join('');
+    }
+
+    // 조건 찾기
+    const keys = [...new Set(p.sentence.filter(s=> s.key).map(s=> s.key))];
+    const noc  = R.filter(r=> r.kind === 'nocond').sort((a,b)=> b.n - a.n);
+    h += '<div class="rp-sec">조건 찾기 <em>문장에서 직접 눌러 찾은 횟수</em></div>';
+    keys.forEach(k=>{
+      const txt = p.sentence.filter(s=> s.key === k).map(s=> s.t).join(' · ');
+      const n = sum(R, r=> r.kind === 'found' && r.node_key === k);
+      h += '<div class="rp-row' + (n ? '' : ' zero') + '"><span>' + mfmt(txt) + '</span><b>' + (n ? n : '0 · 아무도 안 누름') + '</b></div>';
+    });
+    if(noc.length){
+      h += '<div class="rp-sub">조건이 아닌 곳을 누른 횟수</div>'
+         + noc.slice(0, 5).map(r=> '<div class="rp-row dim"><span>' + mfmt(r.choice) + '</span><b>' + r.n + '</b></div>').join('');
+    }
+
+    // 단계별
+    Object.entries(p.nodes).forEach(([k, node])=>{
+      if(node.end) return;
+      const hints = sum(R, r=> r.kind === 'hint' && r.node_key === k);
+      if(node.solve){
+        const right = sum(R, r=> r.kind === 'solve' && r.node_key === k && r.ok === true);
+        const wrongs = R.filter(r=> r.kind === 'solve' && r.node_key === k && r.ok === false).sort((a,b)=> b.n - a.n);
+        const wrongN = wrongs.reduce((a,r)=> a + Number(r.n), 0);
+        if(!right && !wrongN && !hints) return;
+        h += '<div class="rp-sec">' + nodeLabel(k) + ' <em>계산</em></div>'
+           + '<div class="rp-row"><span>맞게 넣음</span><b>' + right + '</b></div>'
+           + '<div class="rp-row' + (wrongN ? ' hot' : '') + '"><span>틀리게 넣음</span><b>' + wrongN + '</b></div>';
+        if(wrongs.length){
+          h += '<div class="rp-sub">자주 넣은 틀린 값</div>'
+             + wrongs.slice(0, 4).map(r=> '<div class="rp-row dim"><span>' + escH(r.choice) + '</span><b>' + r.n + '</b></div>').join('');
+        }
+      }else{
+        const picks = R.filter(r=> r.kind === 'pick' && r.node_key === k);
+        const total = picks.reduce((a,r)=> a + Number(r.n), 0);
+        if(!total && !hints) return;
+        const maxWrong = Math.max(0, ...node.items.filter(it=> !it.next).map(it=> sum(picks, r=> r.choice === it.t)));
+        h += '<div class="rp-sec">' + nodeLabel(k) + '</div>';
+        node.items.forEach(it=>{
+          const n = sum(picks, r=> r.choice === it.t);
+          const cls = it.next ? 'good' : (n === 0 ? 'zero' : (n === maxWrong ? 'hot' : ''));
+          const tag = it.next ? '<mark class="tg">정답</mark>' : (n === 0 ? '<mark class="tg">아무도 안 고름</mark>' : (n === maxWrong ? '<mark class="tg">가장 많이 걸림</mark>' : ''));
+          h += '<div class="rp-row ' + cls + '"><span>' + mfmt(it.t) + tag + '</span><b>' + n + '</b></div>';
+        });
+      }
+      if(hints) h += '<div class="rp-row dim"><span>힌트 본 횟수</span><b>' + hints + '</b></div>';
+    });
+    h += '</div>';
+  });
+
+  if(!any) h += '<p class="rp-note">아직 기록이 없어요. 학생이 문제를 풀기 시작하면 여기에 쌓입니다.</p>';
+  return h;
+}
+
+/* 학생 이름 (선택) */
+function saveStudent(v){ lsSet('chain:student', String(v || '').trim().slice(0, 40)); }
+
 /* 문제 목록 화면 — 단원별로 묶어서 세로 목록 (문제가 늘어도 안 깨짐) */
 function renderHome(){
   const groups = [];
@@ -2274,7 +2551,9 @@ function renderHome(){
     g.rows.push({p,i});
   });
   let h = '<div class="home"><h1>생각 사슬</h1>'
-        + '<p class="sub">문제에서 단서를 찾아 누르면 관련 개념이 펼쳐집니다. 답까지 이어가 보세요.</p>';
+        + '<p class="sub">문제에서 단서를 찾아 누르면 관련 개념이 펼쳐집니다. 답까지 이어가 보세요.</p>'
+        + '<div class="who"><label for="who">이름</label>'
+        +   '<input id="who" maxlength="40" placeholder="선택 — 선생님이 누가 풀었는지 볼 때 써요" value="' + escH(studentName()) + '" oninput="saveStudent(this.value)"></div>';
   groups.forEach(g=>{
     h += '<div class="grp">' + g.name + '</div>';
     g.rows.forEach((r,n)=>{
@@ -2295,7 +2574,9 @@ function openProblem(i){
   restart();
 }
 function goHome(){
+  endSessionIfQuit();
   cur = null;
+  document.getElementById('report').hidden = true;
   document.getElementById('flow').innerHTML = '';
   document.getElementById('solve').hidden = true;
   document.getElementById('home').hidden = false;
@@ -2364,7 +2645,11 @@ function renderGuide(){
 
 function tapPiece(i){
   const s = P().sentence[i];
-  if(s.key){ hideToast(); openNode(s.key, true); return; }
+  if(s.key){
+    if(!openedKeys.includes(s.key)) logEv('found', { node: s.key, choice: s.t });
+    hideToast(); openNode(s.key, true); return;
+  }
+  logEv('nocond', { choice: s.t });
   showToast(s.no || '여기선 새로 알 수 있는 게 없어요. 다른 곳을 눌러볼까요?');
 }
 
@@ -2388,7 +2673,7 @@ function openNode(key, fromSentence){
   if(exist){ exist.scrollIntoView({behavior:'smooth', block:'center'}); return; }
 
   if(fromSentence && !openedKeys.includes(key)){ openedKeys.push(key); renderProblem(); }
-  if(node.end){ showEnd(node); return; }
+  if(node.end){ showEnd(node, key); return; }
   path.push(node.label);
 
   const layer = document.createElement('div');
@@ -2422,6 +2707,7 @@ function openNode(key, fromSentence){
     hb.textContent = '힌트 보기';
     hb.onclick = ()=>{
       hintUsed++;
+      logEv('hint', { node: key });
       const tx = document.createElement('div');
       tx.className = 'hinttxt';
       tx.innerHTML = mfmt(node.hint);
@@ -2464,6 +2750,7 @@ function bindSolve(key, layer){
     if(box.classList.contains('done')) return;
     const v = numOnly(inp.value);
     if(!v){ fb.className = 'sfb bad'; fb.textContent = '숫자를 넣어보세요.'; return; }
+    logEv('solve', { node: key, ok: ok.includes(v), choice: inp.value.trim().slice(0, 40) });
     if(ok.includes(v)){
       box.classList.add('done');
       layer.classList.add('done');
@@ -2485,6 +2772,7 @@ function bindSolve(key, layer){
 function choose(key, idx, btn, layer){
   const it = P().nodes[key].items[idx];
   if(btn.classList.contains('pickd') || btn.classList.contains('miss')) return;
+  logEv('pick', { node: key, ok: !!it.next, choice: it.t });
 
   if(it.next){
     btn.classList.add('pickd');
@@ -2513,7 +2801,12 @@ function choose(key, idx, btn, layer){
   }
 }
 
-function showEnd(node){
+function showEnd(node, key){
+  if(!sessionDone){
+    logEv('finish', { node: key, extra: { hints: hintUsed, tries: solveTries, steps: path.length,
+                                          sec: Math.round((Date.now() - sessionStart) / 1000) } });
+    sessionDone = true;
+  }
   const div = document.createElement('div');
   div.className = 'final';
   let hmsg = hintUsed === 0 ? '힌트 없이 끝까지 갔어요.' : ('힌트 ' + hintUsed + '번 사용');
@@ -2533,6 +2826,9 @@ function showEnd(node){
 
 function restart(){
   if(cur === null) return;
+  endSessionIfQuit();
+  newSession();
+  logEv('start');
   openedKeys = []; path = []; hintUsed = 0; solveTries = 0;
   document.getElementById('flow').innerHTML = '';
   renderProblem(); renderFig();
@@ -2541,6 +2837,7 @@ function restart(){
 }
 
 renderHome();
+if(location.hash === '#report') openReport();
 </script>
 </body>
 </html>
