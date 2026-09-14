@@ -7,6 +7,10 @@
   const $ = id => document.getElementById(id);
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const ui = {page:'home', level:'high', kind:'concept', band:'e', input:'voice', busy:false, menu:null, questions:[]};
+  // [v81.5] 브라우저·폰 뒤로가기 → 앱 안의 직전 화면 (첫 화면에서만 앱을 나간다)
+  //   stage()/showTeacher() 가 화면을 바꿀 때마다 기억해 두고, 뒤로가기(popstate)가 오면 하나 전으로 되돌린다.
+  //   history 에는 "가짜 한 칸"만 걸어 두고 뒤로가기마다 다시 건다 → 앞으로가기는 지원하지 않는다.
+  const nav = {stack:[], restoring:false, armed:false};
   const original = {showView, enterStudentView, setLearnStep, cpSyncLegacy, renderCurrentQuestion, resetRecordingUI, renderFeedback, saveSubmission, startQuiz, goToNextQuestion, tryAutoLogin, renderRail, openStudentHistory, doLogout, onSpeakTimeout};
   const menus = [
     ['dashboard','학생과 학습','학습 현황','오늘의 학습 · 통과 · 도움 필요','▥'],
@@ -42,7 +46,47 @@
     if(page !== 'talk') stopTalkMic();
     document.body.classList.toggle('step-focus',focus);
     ui.page=page; renderStudent(); window.scrollTo(0,0);
+    navRecord({v:'s', page, grade:CP.grade||null, big:CP.big, middle:CP.middle, small:CP.small});
   }
+  function navArm() {
+    if(nav.armed) return;
+    try { history.pushState({ddNav:1}, ''); nav.armed=true; } catch {}
+  }
+  function navRecord(s) {
+    if(nav.restoring) return;
+    const top=nav.stack[nav.stack.length-1];
+    if(top && top.v!==s.v) nav.stack=[];
+    if(top && JSON.stringify(top)===JSON.stringify(s)) return;
+    nav.stack.push(s); if(nav.stack.length>60) nav.stack.shift();
+    if(nav.stack.length>1) navArm();
+  }
+  function navReset() { nav.stack=[]; }
+  function navRestore(prev) {
+    if(prev.v==='t') { showTeacher(prev.menu); window.scrollTo(0,0); return; }
+    // 질문·문제·대화 중이면 앱의 '‹ 질문 선택' 버튼과 같은 정리를 먼저 한다 (마이크·타이머 끄기)
+    if(ui.page==='talk') { if($('convoCard').style.display!=='none') $('cvBack').click(); }
+    else if(['lesson','quiz'].includes(ui.page)) $('backBtn').click();
+    if(prev.grade && prev.grade!==CP.grade) { restoreLevel(); cpChooseGrade(prev.grade); ui.band=cpBandOf(CP.grade); }
+    CP.big=prev.big; CP.middle=prev.middle; CP.small=prev.small; CP.type=prev.small==null?null:0;
+    if(prev.small!=null) cpSyncLegacy();
+    if(prev.page==='records') renderMyHistory();
+    if(prev.page==='inbox') { loadAssignments(); loadReviewCards(); }
+    stage(prev.page);
+    if(prev.page==='home') cpLoadRecords();
+  }
+  window.addEventListener('popstate', () => {
+    nav.armed=false;
+    if(nav.stack.length<=1) { history.back(); return; }   // 첫 화면: 원래대로 앱을 나간다
+    if(ui.busy) { notice('평가와 기록 저장을 마친 뒤 이동할 수 있어요.'); navArm(); return; }
+    nav.stack.pop();
+    // 질문·문제·대화 화면은 다시 열 수 없으므로 건너뛰고 그 전 화면으로
+    while(nav.stack.length>1 && nav.stack[nav.stack.length-1].v==='s' && ['lesson','quiz','talk'].includes(nav.stack[nav.stack.length-1].page)) nav.stack.pop();
+    const prev=nav.stack[nav.stack.length-1];
+    nav.restoring=true;
+    try { navRestore(prev); } catch(err) { console.warn('[dd-ui] 뒤로가기 복원 실패', err); }
+    finally { nav.restoring=false; }
+    if(nav.stack.length>1) navArm();
+  });
   function restoreLevel() { state.level=ui.level; state._qType=null; state._baseLevel=ui.level; state._directSelectedQuestion=''; state._pickerQIndex=null; }
   function lock(busy) {
     ui.busy=busy; $('viewStudent').classList.toggle('dd-ui-busy',busy);
@@ -278,6 +322,7 @@
       $('ddUiStudentRegister').hidden=true; $('ddUiTeacherList').hidden=false; $('ddUiTeacherStudentTabs').hidden=ui.menu==='reports';
       $('railSearch').value=''; renderRail(RAIL_CACHE.students,RAIL_CACHE.subs);
     }
+    navRecord({v:'t', menu:ui.menu});   // [v81.5]
   }
   function setupTeacher() {
     const root=$('viewTeacher'), main=root.querySelector('.main');
@@ -315,12 +360,13 @@
   // Original inline engine remains byte-identical; only its UI boundaries adapt.
   showView=function(name) {
     if(name==='viewTeacher'&&!session.teacher) name='viewTeacherAuth';
+    if(!['viewStudent','viewTeacher'].includes(name)) navReset();   // [v81.5] 로그인·학부모 화면 등에선 뒤로가기 기억을 비움
     original.showView(name); document.body.classList.toggle('dd-ui-parent',name==='viewParent');
     if(name==='viewTeacher') showTeacher(ui.menu||teacherRoute);
   };
   tryAutoLogin=async function() { if(teacherRoute) { showView('viewTeacherAuth'); return; } return original.tryAutoLogin(); };
   enterStudentView=function() {
-    session.teacher=false; session.role=null; ui.level='high'; ui.kind='concept'; lock(false); cpRecords=[];
+    session.teacher=false; session.role=null; ui.level='high'; ui.kind='concept'; lock(false); cpRecords=[]; navReset();
     original.enterStudentView(); restoreSelection(); restoreLevel(); stage('home');
   };
   setLearnStep=function(n) {
