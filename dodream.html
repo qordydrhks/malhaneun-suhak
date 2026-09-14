@@ -4821,7 +4821,7 @@ function rowToSub(r){
     id: r.id, studentId: r.student_id, name: r.name, studentGrade: r.student_grade,
     courseId: r.course_id, courseName: r.course_name,
     unitId: r.unit_id, unitLabel: r.unit_label,
-    level: r.level, question: r.question, transcript: r.transcript,
+    level: r.level, question: r.question, questionId: r.question_id || null, transcript: r.transcript,
     score: r.score, praise: r.praise, hint: r.hint,
     retryPoint: r.retry_point, misconception: r.misconception,
     pass: (r.score||0) >= PASS_SCORE,
@@ -5585,6 +5585,7 @@ const QTYPE_LEVEL = { recall:'low', reason:'high', example:'high', condition:'hi
 function ddGetQSet(gradeId, bigName, smallName){
   const base = DD_QSET[ ddConceptId(gradeId, bigName, smallName) ];
   let out = base ? JSON.parse(JSON.stringify(base)) : null;
+  if(out && out.questions) out.questions = ddqQsetBaseIds(out.questions);   // [v80.9] 질문 번호
   // [v77.0] 마스터가 굳힌 기준을 원본 위에 먼저 얹는다 (선생님 수정본보다 아래)
   try{
     const fz = ddGetFrozen(gradeId, bigName, smallName);
@@ -5593,7 +5594,7 @@ function ddGetQSet(gradeId, bigName, smallName){
       if(fz.qset.memory)         out.memory = fz.qset.memory.slice();
       if(fz.qset.understand)     out.understand = fz.qset.understand.slice();
       if(fz.qset.misconceptions) out.misconceptions = fz.qset.misconceptions.slice();
-      if(fz.qset.questions)      out.questions = fz.qset.questions.slice();
+      if(fz.qset.questions)      out.questions = ddqQsetLayerIds(fz.qset.questions, out.questions);
     }
   }catch(e){}
   try{
@@ -5604,13 +5605,98 @@ function ddGetQSet(gradeId, bigName, smallName){
         if(ov.qset.memory)         out.memory = ov.qset.memory.slice();
         if(ov.qset.understand)     out.understand = ov.qset.understand.slice();
         if(ov.qset.misconceptions) out.misconceptions = ov.qset.misconceptions.slice();
-        if(ov.qset.questions)      out.questions = ov.qset.questions.slice();
+        if(ov.qset.questions)      out.questions = ddqQsetLayerIds(ov.qset.questions, out.questions);
       }
     }
   }catch(e){}
   return out;
 }
 window.DD_QSET = DD_QSET; window.ddGetQSet = ddGetQSet;
+
+/* ============================================================
+   [v80.9] 질문 번호(questionId) — 통과 기록을 "질문 글자" 대신 "번호"로 찾는다
+   · 예전엔 기록을 질문 문장으로 찾아서, 편집기에서 한 글자만 고쳐도 통과 기록이 사라졌다.
+   · 규칙: 편집기에서 **고치면 번호 유지(기록 남음)** / **칸을 비워 지우고 새로 쓰면 새 번호(기록 없이 시작)**.
+     지운 번호는 다시 쓰지 않는다(새 번호는 시각+난수로 만든다).
+   · 원본 질문 번호는 자리로 정한다: 유형 ti 의 쉬운 i번째 = 't0L1', 깊은 = 't0H1', 유형별 질문 = 'q'+type.
+   · 선생님 수정본/굳힌 기준은 lowIds·highIds·lowAddIds·highAddIds·questions[].id 로 번호를 같이 저장한다.
+     번호 없이 저장된 옛 수정본은 아래층과 길이가 같으면 자리대로, 아니면 같은 글자를 찾아 번호를 잇는다.
+   · 기록에 남는 번호 = 개념 해시 + ':' + 위 번호  (예 '1k3x9a:t0L2')
+   · 번호 없는 옛 기록(question_id 없음)은 예전처럼 질문 글자로 찾는다.
+   ============================================================ */
+function ddqHash(s){
+  let h = 0x811c9dc5; s = String(s||'');
+  for(let i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193); }
+  return (h>>>0).toString(36);
+}
+function ddqNewId(prefix){ return (prefix||'n') + Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+function ddqConceptKey(gradeId, bigName, smallName){ return ddqHash(ddConceptId(gradeId, bigName, smallName)); }
+function ddqBaseIds(list, tag){ return (list||[]).map(function(q,i){ return tag + (i+1); }); }
+// 한 층(굳힘·선생님 수정본)의 번호. list 가 null 이면 아래층 번호를 그대로 쓴다.
+function ddqLayerIds(list, ids, belowTexts, belowIds, tag){
+  if(!list) return (belowIds||[]).slice();
+  belowTexts = belowTexts||[]; belowIds = belowIds||[];
+  return list.map(function(q,i){
+    if(ids && ids[i]) return ids[i];
+    if(belowTexts.length===list.length && belowIds[i]) return belowIds[i];   // 옛 수정본: 자리 그대로
+    var k = belowTexts.indexOf(q); if(k>=0 && belowIds[k]) return belowIds[k];
+    return tag + 'x' + ddqHash(q);
+  });
+}
+function ddqAddIds(list, ids, tag){
+  return (list||[]).map(function(q,i){ return (ids && ids[i]) || (tag + ddqHash(q)); });
+}
+function ddqQsetBaseIds(questions){
+  var seen = {};
+  return (questions||[]).map(function(it){
+    if(!it || it.id) return it;
+    var t = it.type || 'q'; seen[t] = (seen[t]||0) + 1;
+    return Object.assign({}, it, { id: 'q' + t + (seen[t]>1 ? seen[t] : '') });
+  });
+}
+function ddqQsetLayerIds(questions, below){
+  return (questions||[]).map(function(it){
+    if(!it || it.id) return it;
+    var b = (below||[]).find(function(x){ return x && x.type===it.type && x.id; });
+    return Object.assign({}, it, { id: b ? b.id : ('q' + (it.type||'') + 'x' + ddqHash(it.q)) });
+  });
+}
+// 한 소단원에서 학생에게 보이는 질문 전부 {low:[{id,q,ti,index}], high:[…], qset:[{id,q,type,index}]}
+function ddqItemsFor(gradeId, bigName, small){
+  var out = { low:[], high:[], qset:[] };
+  if(!small) return out;
+  try{
+    var key = ddqConceptKey(gradeId, bigName, small.name);
+    (small.types||[]).forEach(function(t, ti){
+      var tt = (typeof ceApply==='function') ? ceApply(gradeId, bigName, small.name, t, null, ti).type : t;
+      ['low','high'].forEach(function(lv){
+        var ids = tt[lv+'Ids'] || ddqBaseIds(tt[lv], 't'+ti+(lv==='low'?'L':'H'));
+        (tt[lv]||[]).forEach(function(q, index){ if(q) out[lv].push({ id:key+':'+ids[index], q:q, ti:ti, index:index }); });
+      });
+    });
+    var qs = ddGetQSet(gradeId, bigName, small.name);
+    ((qs && qs.questions)||[]).forEach(function(it, index){
+      if(it && it.q) out.qset.push({ id:key+':'+it.id, q:it.q, type:it.type, index:index });
+    });
+  }catch(e){}
+  return out;
+}
+// 지금 풀고 있는 질문의 번호 (못 찾으면 null — 빈칸 질문 등)
+function ddqCurrentId(text){
+  try{
+    if(!text || typeof cpCurrentBig!=='function' || CP.grade!==state.gradeId) return null;
+    var big = cpCurrentBig(), small = cpCurrentSmall();
+    if(!big || !small) return null;
+    var it = ddqItemsFor(state.gradeId, big.name, small);
+    var order = state._qType ? ['qset','low','high'] : (state.level==='high' ? ['high','low','qset'] : ['low','high','qset']);
+    for(var k=0;k<order.length;k++){
+      var f = it[order[k]].find(function(x){ return x.q===text; });
+      if(f) return f.id;
+    }
+  }catch(e){}
+  return null;
+}
+window.ddqItemsFor = ddqItemsFor; window.ddqCurrentId = ddqCurrentId; window.ddqNewId = ddqNewId;
 
 (function(){
   DD_KEYPOINTS[ddConceptId('e3-1','1. 덧셈과 뺄셈','04. (세 자리 수)-(세 자리 수) (1)')] = ['같은 자리 수끼리 뺀다','일의 자리부터 차례로 뺀다'];
@@ -6739,9 +6825,9 @@ function ceRowUnd(v){
 function ceRowMis(v){
   return '<div class="ce-row"><input class="ce-f ce-mis" type="text" value="'+ceEsc(v)+'" placeholder="흔한 오해 (예: 2로 나누는 것을 잊음)"><button type="button" class="ce-del">×</button></div>';
 }
-function ceRowQS(t, q, hint){
+function ceRowQS(t, q, hint, qid){
   var lab=(typeof QTYPE_LABEL!=='undefined' && QTYPE_LABEL[t]) || t;
-  return '<div class="ce-qline ce-qs" data-qtype="'+t+'">'
+  return '<div class="ce-qline ce-qs" data-qtype="'+t+'"'+(qid?' data-qid="'+ceEsc(qid)+'"':'')+'>'
     + '<span class="cpt-qtype qt-'+t+'" style="margin-left:0">'+ceEsc(lab)+'</span>'
     + '<input class="ce-qtext ce-qs-q" type="text" value="'+ceEsc(q||'')+'" placeholder="'+ceEsc(lab)+' 질문">'
     + '<input class="ce-qtext ce-qs-h" type="text" value="'+ceEsc(hint||'')+'" placeholder="기대 답(선생님만 봄)" style="flex:0 0 34%;margin-left:6px">'
@@ -6750,8 +6836,8 @@ function ceRowQS(t, q, hint){
 function ceRowKey(v){
   return '<div class="ce-row"><input class="ce-f ce-key" type="text" value="'+ceEsc(v)+'" placeholder="핵심 포인트 (예: 같은 자리끼리 더한다)"><button type="button" class="ce-del">×</button></div>';
 }
-function ceQRowAdd(qcode, cls, txt){
-  return '<div class="ce-qline ce-qadd"><span class="ce-qcode '+cls+'">'+ceEsc(qcode)+'</span>'
+function ceQRowAdd(qcode, cls, txt, qid){
+  return '<div class="ce-qline ce-qadd" data-qid="'+ceEsc(qid||ddqNewId('n'))+'"><span class="ce-qcode '+cls+'">'+ceEsc(qcode)+'</span>'
     +'<input class="ce-qtext" type="text" value="'+ceEsc(txt||'')+'" placeholder="새 질문 입력"><button type="button" class="ce-del ce-del-q">×</button></div>';
 }
 function ceProbBlock(p){
@@ -6778,9 +6864,13 @@ function ceCard(item, rawCode){
   const high = (_ov.high && _ov.high.length) ? _ov.high : ((baseType&&baseType.high)||[]);
   const lowAdd  = _ov.lowAdd  || [];
   const highAdd = _ov.highAdd || [];
+  // [v80.9] 질문 번호 — 화면 줄마다 data-qid 로 들고 있다가 저장할 때 같이 저장
+  const _okIds = (lv, a, b)=> (type[lv]||[]).length === a.length + b.length && (type[lv+'Ids']||[]).length === a.length + b.length;
+  const lowIds  = _okIds('low',  low,  lowAdd)  ? type.lowIds  : [];
+  const highIds = _okIds('high', high, highAdd) ? type.highIds : [];
   const wrap=document.createElement('div'); wrap.className='ce-card';
   const esc=(s)=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-  const qline=(qcode,cls,txt)=> '<div class="ce-qline"><span class="ce-qcode '+cls+'">'+qcode+'</span>'
+  const qline=(qcode,cls,txt,qid)=> '<div class="ce-qline"'+(qid?' data-qid="'+esc(qid)+'"':'')+'><span class="ce-qcode '+cls+'">'+qcode+'</span>'
       +'<input class="ce-qtext" data-q="'+qcode+'" type="text" value="'+esc(txt)+'"></div>';
   const gradeName = (GRADES.find(x=>x.id===gradeId)||{}).name||gradeId;
   let html='<div class="ce-card-h"><span class="ce-code">'+code+'</span>'
@@ -6788,14 +6878,14 @@ function ceCard(item, rawCode){
     +(hasOverride?'<span class="ce-editflag">수정됨</span>':'')+'</div>';
   html+='<div class="ce-sec"><div class="ce-sec-h">🗣️ 말하기 질문 · 쉬운(L)</div>'
     +'<div class="ce-qlist" data-qlist="low">'
-    + low.map((q,i)=>qline(code+(i+1)+'L','low',q)).join('')
-    + lowAdd.map((q,i)=>ceQRowAdd(code+'L-n'+(i+1),'low',q)).join('')
+    + low.map((q,i)=>qline(code+(i+1)+'L','low',q,lowIds[i])).join('')
+    + lowAdd.map((q,i)=>ceQRowAdd(code+'L-n'+(i+1),'low',q,lowIds[low.length+i])).join('')
     +'</div>'
     +'<button type="button" class="ce-add ce-addq" data-addq="low">+ 질문 추가 (쉬운)</button></div>';
   html+='<div class="ce-sec"><div class="ce-sec-h">🗣️ 말하기 질문 · 깊은(H)</div>'
     +'<div class="ce-qlist" data-qlist="high">'
-    + high.map((q,i)=>qline(code+(i+1)+'H','high',q)).join('')
-    + highAdd.map((q,i)=>ceQRowAdd(code+'H-n'+(i+1),'high',q)).join('')
+    + high.map((q,i)=>qline(code+(i+1)+'H','high',q,highIds[i])).join('')
+    + highAdd.map((q,i)=>ceQRowAdd(code+'H-n'+(i+1),'high',q,highIds[high.length+i])).join('')
     +'</div>'
     +'<button type="button" class="ce-add ce-addq" data-addq="high">+ 질문 추가 (깊은)</button></div>';
   if(card){
@@ -6834,7 +6924,7 @@ function ceCard(item, rawCode){
       +'<button type="button" class="ce-add" data-add="mis">+ 흔한 오해 추가</button></div>';
     html+='<div class="ce-sec"><div class="ce-sec-h">🗣️ 유형별 말하기 질문 <span style="font-weight:600;color:var(--ink-soft);font-size:11px">— 비워 두면 그 유형은 학생에게 안 나옵니다</span></div>'
       +'<div class="ce-qlist" data-qlist="qset">'
-      + _QORDER.map(function(t){ var q=_qmap[t]||{}; return ceRowQS(t, q.q, q.answerHint); }).join('')
+      + _QORDER.map(function(t){ var q=_qmap[t]||{}; return ceRowQS(t, q.q, q.answerHint, q.q ? q.id : ''); }).join('')
       +'</div></div>';
     // 📌 이 개념 고정 강조 멘트
     html+='<div class="ce-sec"><div class="ce-sec-h">📌 고정 강조 멘트 (이 개념에서 계속 표시)</div>'
@@ -6879,6 +6969,11 @@ function ceCard(item, rawCode){
     if(e.target.classList && e.target.classList.contains('ce-del')){
       var box=e.target.closest('.ce-row, .ce-prob, .ce-qline'); if(box) box.remove();
     }
+  });
+  // [v80.9] 질문 칸을 비우면 = 그 질문 삭제. 다시 쓰면 새 질문(새 번호)이 되도록 번호를 떼어 낸다.
+  wrap.addEventListener('input', function(e){
+    var t=e.target; if(!t.classList || !t.classList.contains('ce-qtext') || t.classList.contains('ce-qs-h')) return;
+    if(t.value.trim()===''){ var line=t.closest('.ce-qline'); if(line) line.removeAttribute('data-qid'); }
   });
   // 버튼 배선
   const saveBtn=wrap.querySelector('.ce-save');
@@ -7081,15 +7176,23 @@ function ceGetOverride(gradeId, bigName, smallName){
   const o=ceLoadOverrides(); return o[ceCode(gradeId,bigName,smallName)]||null;
 }
 // 원본 위에 override를 얹어 '최종' 값 돌려주기 (학습 화면/편집기 공용)
-function ceApply(gradeId, bigName, smallName, baseType, baseCard){
+function ceApply(gradeId, bigName, smallName, baseType, baseCard, ti){
   const ov=ceGetOverride(gradeId,bigName,smallName);
   const type = Object.assign({}, baseType||{});
   const card = Object.assign({}, baseCard||{});
+  // [v80.9] 질문 번호 — 원본은 자리로, 위층은 저장된 번호로 (ddqLayerIds 설명 참고)
+  var _tag='t'+(ti||0);
+  type.lowIds  = ddqBaseIds(type.low,  _tag+'L');
+  type.highIds = ddqBaseIds(type.high, _tag+'H');
   // [v77.0] 마스터가 굳힌 기준을 먼저 얹는다 (선생님 수정본보다 아래)
   try{
     const fz=(typeof ddGetFrozen==='function') ? ddGetFrozen(gradeId,bigName,smallName) : null;
     if(fz){
       var _fLow=(baseType&&baseType.low)||[], _fHigh=(baseType&&baseType.high)||[];
+      type.lowIds  = ddqLayerIds((fz.low&&fz.low.length)?fz.low:null, fz.lowIds, _fLow, type.lowIds, _tag+'L')
+                       .concat(ddqAddIds(fz.lowAdd, fz.lowAddIds, _tag+'La'));
+      type.highIds = ddqLayerIds((fz.high&&fz.high.length)?fz.high:null, fz.highIds, _fHigh, type.highIds, _tag+'H')
+                       .concat(ddqAddIds(fz.highAdd, fz.highAddIds, _tag+'Ha'));
       type.low  = ((fz.low&&fz.low.length)?fz.low.slice():_fLow.slice()).concat(fz.lowAdd||[]);
       type.high = ((fz.high&&fz.high.length)?fz.high.slice():_fHigh.slice()).concat(fz.highAdd||[]);
       if(fz.hints)   card.hints   = fz.hints.slice();
@@ -7103,7 +7206,11 @@ function ceApply(gradeId, bigName, smallName, baseType, baseCard){
   }catch(e){}
   if(ov){
     var _bLow=type.low||((baseType&&baseType.low)||[]), _bHigh=type.high||((baseType&&baseType.high)||[]);
-    type.low  = ((ov.low&&ov.low.length)?ov.low.slice():_bLow.slice()).concat(ov.lowAdd||[]);
+    type.lowIds  = ddqLayerIds((ov.low&&ov.low.length)?ov.low:null, ov.lowIds, _bLow, type.lowIds, _tag+'L')
+                     .concat(ddqAddIds(ov.lowAdd, ov.lowAddIds, _tag+'La'));
+    type.highIds = ddqLayerIds((ov.high&&ov.high.length)?ov.high:null, ov.highIds, _bHigh, type.highIds, _tag+'H')
+                     .concat(ddqAddIds(ov.highAdd, ov.highAddIds, _tag+'Ha'));
+    type.low  =((ov.low&&ov.low.length)?ov.low.slice():_bLow.slice()).concat(ov.lowAdd||[]);
     type.high = ((ov.high&&ov.high.length)?ov.high.slice():_bHigh.slice()).concat(ov.highAdd||[]);
     if(ov.hints)   card.hints   = ov.hints.slice();
     if(ov.concept!=null) card.concept = ov.concept;
@@ -7124,10 +7231,13 @@ window.ceGetOverride=ceGetOverride; window.ceApply=ceApply;
 // 편집기 카드에서 값 읽어 저장
 function ceDoSave(wrap, gradeId, bigName, smallName){
   const qtxt=(el)=>{ const inp=el.parentElement.querySelector('.ce-qtext'); return inp?inp.value.trim():''; };
-  const low    =[...wrap.querySelectorAll('.ce-qline:not(.ce-qadd) .ce-qcode.low')].map(qtxt).filter(Boolean);
-  const high   =[...wrap.querySelectorAll('.ce-qline:not(.ce-qadd) .ce-qcode.high')].map(qtxt).filter(Boolean);
-  const lowAdd =[...wrap.querySelectorAll('.ce-qline.ce-qadd .ce-qcode.low')].map(qtxt).filter(Boolean);
-  const highAdd=[...wrap.querySelectorAll('.ce-qline.ce-qadd .ce-qcode.high')].map(qtxt).filter(Boolean);
+  // [v80.9] 질문과 번호를 짝으로 모은다. 번호가 없는 줄(비웠다가 새로 쓴 줄)은 새 번호를 받는다.
+  const qpairs=(sel)=>[...wrap.querySelectorAll(sel)].map(el=>{
+    const line=el.closest('.ce-qline'); return { q:qtxt(el), id:(line&&line.dataset.qid)||'' };
+  }).filter(p=>p.q).map(p=>({ q:p.q, id:p.id||ddqNewId('n') }));
+  const lowP=qpairs('.ce-qline:not(.ce-qadd) .ce-qcode.low'), highP=qpairs('.ce-qline:not(.ce-qadd) .ce-qcode.high');
+  const lowAddP=qpairs('.ce-qline.ce-qadd .ce-qcode.low'), highAddP=qpairs('.ce-qline.ce-qadd .ce-qcode.high');
+  const low=lowP.map(p=>p.q), high=highP.map(p=>p.q), lowAdd=lowAddP.map(p=>p.q), highAdd=highAddP.map(p=>p.q);
   const f=(name)=>{ const el=wrap.querySelector('.ce-f[data-f="'+name+'"]'); return el?el.value:''; };
   const hints=[...wrap.querySelectorAll('.ce-hint')].map(x=>x.value.trim()).filter(Boolean);
   const concepts=[...wrap.querySelectorAll('.ce-concept')].map(x=>x.value.trim()).filter(Boolean);
@@ -7148,12 +7258,13 @@ function ceDoSave(wrap, gradeId, bigName, smallName){
     const t=row.dataset.qtype;
     const q=((row.querySelector('.ce-qs-q')||{}).value||'').trim();
     const h=((row.querySelector('.ce-qs-h')||{}).value||'').trim();
-    return q ? { type:t, q:q, answerHint:h } : null;
+    return q ? { type:t, q:q, answerHint:h, id:row.dataset.qid||ddqNewId('q'+t) } : null;
   }).filter(Boolean);
   const qset = (memory.length||understand.length||misconceptions.length||qsQuestions.length)
     ? { memory, understand, misconceptions, questions:qsQuestions } : null;
   const ov = {
     low, high, lowAdd, highAdd,
+    lowIds:lowP.map(p=>p.id), highIds:highP.map(p=>p.id), lowAddIds:lowAddP.map(p=>p.id), highAddIds:highAddP.map(p=>p.id),
     qset,
     hints,
     concepts,
@@ -16364,20 +16475,20 @@ function cpRollup(gradeId, big){
   let pass=0, redo=0;
   const lvl = (window.state && state.level) || 'low';
   cpBigMiddles(big).forEach(mg=>(mg.smalls||[]).forEach(sm=>{
-    (sm.types||[]).forEach(t=>{
-      const qs = (lvl==='high') ? (t.high||[]) : (t.low||[]);
-      qs.forEach(q=>{ const st=cpStatusForQuestion(gradeId, q); if(st==='pass')pass++; else if(st==='redo')redo++; });
-    });
+    const items = ddqItemsFor(gradeId, big.name, sm)[lvl==='high' ? 'high' : 'low'];   // [v80.9] 번호로
+    items.forEach(it=>{ const st=cpStatusForQuestion(gradeId, it.q, it.id); if(st==='pass')pass++; else if(st==='redo')redo++; });
   }));
   return {pass,redo};
 }
-// 질문 하나의 상태: 저장된 기록에서 그 질문 텍스트로 매칭
-function cpStatusForQuestion(gradeId, questionText){
-  if(!cpRecords || !cpRecords.length || !questionText) return 'none';
+// 질문 하나의 상태.
+// [v80.9] qid(질문 번호)를 주면: 번호가 있는 기록은 번호로, 번호 없는 옛 기록은 질문 글자로 찾는다.
+function cpStatusForQuestion(gradeId, questionText, qid){
+  if(!cpRecords || !cpRecords.length || !(questionText || qid)) return 'none';
   let attempted=false, passed=false;
   for(const r of cpRecords){
     if(r.courseId !== gradeId) continue;
-    if(r.question && r.question === questionText){ attempted=true; if(r.pass) passed=true; }
+    const hit = (qid && r.questionId) ? (r.questionId === qid) : (!!r.question && r.question === questionText);
+    if(hit){ attempted=true; if(r.pass) passed=true; }
   }
   return passed ? 'pass' : (attempted ? 'redo' : 'none');
 }
@@ -16396,16 +16507,16 @@ function cpAppendQuestions(host, bi, mi, si, typ, ti){
   try{
     if(typeof ceApply==='function' && CP.grade){
       const m=cpModel(CP.grade); const bg=m&&m.bigUnits[bi]; const mg=bg&&cpBigMiddles(bg)[mi]; const sm=mg&&mg.smalls[si];
-      if(bg&&sm){ typ = ceApply(CP.grade, bg.name, sm.name, typ, null).type; }
+      if(bg&&sm){ typ = ceApply(CP.grade, bg.name, sm.name, typ, null, ti).type; typ._qkey = ddqConceptKey(CP.grade, bg.name, sm.name); }
     }
   }catch(e){}
   const items=[];
   if(state.level==='blank'){
     items.push({key:'blank:0', label:'AI가 이 개념에 맞는 빈칸 질문을 만들어 줍니다.', q:''});
   }else if(state.level==='high'){
-    (typ.high||[]).forEach((q,i)=>items.push({key:'high:'+i, label:q, q:q}));
+    (typ.high||[]).forEach((q,i)=>items.push({key:'high:'+i, label:q, q:q, id:(typ._qkey&&typ.highIds)?typ._qkey+':'+typ.highIds[i]:''}));
   }else{ // low = 설명하기
-    (typ.low||[]).forEach((q,i)=>items.push({key:'low:'+i, label:q, q:q}));
+    (typ.low||[]).forEach((q,i)=>items.push({key:'low:'+i, label:q, q:q, id:(typ._qkey&&typ.lowIds)?typ._qkey+':'+typ.lowIds[i]:''}));
   }
   // [v76.1] 유형별 질문(회상·이유·예 만들기·조건·오류 찾기)을 기존 질문 아래에 나란히 붙인다.
   // 이 개념에 DD_QSET 이 없으면 아무것도 안 붙으므로 다른 학년은 지금과 똑같다.
@@ -16421,7 +16532,7 @@ function cpAppendQuestions(host, bi, mi, si, typ, ti){
       if(_qs && _qs.questions && _qs.questions.length){
         _qs.questions.forEach((it,i)=>{
           if(!it || !it.q) return;
-          items.push({key:'qset:'+i, label:it.q, q:it.q, qtype:it.type});
+          items.push({key:'qset:'+i, label:it.q, q:it.q, qtype:it.type, id:it.id?ddqConceptKey(CP.grade,_bg.name,_sm.name)+':'+it.id:''});
         });
       }
     }catch(e){}
@@ -16436,7 +16547,7 @@ function cpAppendQuestions(host, bi, mi, si, typ, ti){
       qt.textContent=QTYPE_LABEL[it.qtype]; b.appendChild(qt);
     }
     // 질문 옆 합격/재도전 배지
-    const st = it.q ? cpStatusForQuestion(CP.grade, it.q) : 'none';
+    const st = it.q ? cpStatusForQuestion(CP.grade, it.q, it.id) : 'none';
     if(st==='pass'){ const s=document.createElement('span'); s.className='cpt-st pass'; s.textContent='✓ 합격'; b.appendChild(s); }
     else if(st==='redo'){ const s=document.createElement('span'); s.className='cpt-st redo'; s.textContent='재도전'; b.appendChild(s); }
     b.addEventListener('click', async ()=>{
@@ -16576,17 +16687,13 @@ function cvxMap(){
   return _cvxMapCache;
 }
 // 이 소단원을 '본 흐름'에서 하나라도 통과했나
-function cvxSmallMainPassed(gradeId, big, small, passQ){
-  if(!passQ || !passQ.size) return false;
-  const types = small.types||[];
-  for(const t of types){
-    const qs = [].concat(t.low||[], t.high||[]);
-    for(const q of qs){ if(q && passQ.has(q)) return true; }
+// [v80.9] passQ = 번호 없는 옛 기록의 질문 글자, passIds = 번호 있는 기록의 질문 번호
+function cvxSmallMainPassed(gradeId, big, small, passQ, passIds){
+  if((!passQ || !passQ.size) && (!passIds || !passIds.size)) return false;
+  const it = ddqItemsFor(gradeId, big.name, small);
+  for(const x of [].concat(it.low, it.high, it.qset)){
+    if((passIds && passIds.has(x.id)) || (passQ && passQ.has(x.q))) return true;
   }
-  try{
-    const qs = (typeof ddGetQSet==='function') ? ddGetQSet(gradeId, big.name, small.name) : null;
-    if(qs && qs.questions){ for(const it of qs.questions){ if(it && it.q && passQ.has(it.q)) return true; } }
-  }catch(e){}
   return false;
 }
 // 한 학년의 두 축 진도 {total, main, talk, hasTalk}
@@ -16595,18 +16702,20 @@ function cvxAxis(gradeId){
   if(!model) return null;
   const map = cvxMap();
   const recs = (typeof cpRecords!=='undefined' && cpRecords) ? cpRecords : [];
-  const passQ = new Set();    // 본 흐름에서 통과한 질문 글자
+  const passQ = new Set();    // 본 흐름에서 통과한 질문 글자 (번호 없는 옛 기록)
+  const passIds = new Set();  // [v80.9] 본 흐름에서 통과한 질문 번호
   const talkIds = new Set();  // 대화형에서 통과한 유형 id
   recs.forEach(r=>{
     if(!r || !r.pass) return;
     if(r.level==='talk'){ if(r.unitId) talkIds.add(String(r.unitId)); return; }
     if(r.courseId!==gradeId) return;
-    if(r.question) passQ.add(r.question);
+    if(r.questionId) passIds.add(r.questionId);
+    else if(r.question) passQ.add(r.question);
   });
   let total=0, main=0, talk=0;
   (model.bigUnits||[]).forEach(b=> cpBigMiddles(b).forEach(mg=> (mg.smalls||[]).forEach(sm=>{
     total++;
-    if(cvxSmallMainPassed(gradeId, b, sm, passQ)) main++;
+    if(cvxSmallMainPassed(gradeId, b, sm, passQ, passIds)) main++;
     const tid = map.conceptToType[ddConceptId(gradeId, b.name, sm.name)];
     if(tid && talkIds.has(tid)) talk++;
   })));
@@ -17274,6 +17383,7 @@ $('submitBtn').addEventListener('click', async ()=>{
           studentId: (session.student && session.student.id) || '',
           courseId: grade.id, unitId: unit.id, unitLabel: unit.label,
           question: (state.questions && state.questions[state.qIndex]) || '',
+          questionId: (typeof ddqCurrentId==='function') ? ddqCurrentId((state.questions && state.questions[state.qIndex]) || '') : null,   // [v80.9]
           pass: passed
         });
       }
@@ -17774,13 +17884,27 @@ function cpUnitQuestionList(){
   }catch(e){ return null; }
 }
 
+// [v80.9] cpUnitQuestionList 와 같은 목록을 번호와 함께 [{id,q}]
+function cpUnitQuestionItems(){
+  try{
+    const big = (typeof cpCurrentBig==='function') ? cpCurrentBig() : null;
+    const small = (typeof cpCurrentSmall==='function') ? cpCurrentSmall() : null;
+    if(!big || !small) return null;
+    const lvl = state._qType ? (state._baseLevel || 'low') : state.level;
+    if(lvl === 'blank') return null;
+    const it = ddqItemsFor(state.gradeId, big.name, small);
+    return [].concat(lvl==='high' ? it.high : it.low, it.qset);
+  }catch(e){ return null; }
+}
+window.cpUnitQuestionItems = cpUnitQuestionItems;
+
 // 아직 통과하지 못한 질문 수. 판정할 수 없으면 0(=막지 않음)을 돌려준다.
 function cpUnitRemaining(){
-  const list = cpUnitQuestionList();
+  const list = cpUnitQuestionItems();
   if(!list || !list.length) return 0;
   if(typeof cpRecords === 'undefined' || !cpRecords || !cpRecords.length) return 0;
   let left = 0;
-  list.forEach(q=>{ if(cpStatusForQuestion(state.gradeId, q) !== 'pass') left++; });
+  list.forEach(x=>{ if(cpStatusForQuestion(state.gradeId, x.q, x.id) !== 'pass') left++; });
   return left;
 }
 
@@ -18759,6 +18883,7 @@ async function saveSubmission(grade, unit, transcript, result, attempt, needTeac
     unit_id: unit.id, unit_label: unit.label,
     level: state.level,
     question: (state.questions && state.questions[state.qIndex]) || '',
+    question_id: ddqCurrentId((state.questions && state.questions[state.qIndex]) || ''),   // [v80.9]
     transcript,
     score: result.score,
     praise: result.praise || '',
@@ -18772,14 +18897,22 @@ async function saveSubmission(grade, unit, transcript, result, attempt, needTeac
   };
   const ok = await checkSupabase();
   if(ok){
-    try{ await sbInsert('submissions', row); return; }catch(e){ console.warn('제출 저장 실패(서버)', e); }
+    // [v80.9] 서버 표에 question_id 칸이 아직 없으면 실패한다 → 번호를 빼고 한 번 더 (그 뒤로는 이 창에서 안 보냄)
+    const sendRow = window._ddqNoColumn ? Object.assign({}, row, {question_id:undefined}) : row;
+    try{ await sbInsert('submissions', sendRow); return; }catch(e){
+      if(!window._ddqNoColumn && /question_id/.test(String(e && e.message))){
+        try{ await sbInsert('submissions', Object.assign({}, row, {question_id:undefined})); window._ddqNoColumn = true;
+             console.warn('[v80.9] submissions 에 question_id 칸이 없어 번호 없이 저장했어요.'); return; }catch(e2){}
+      }
+      console.warn('제출 저장 실패(서버)', e);
+    }
   }
   // 폴백: 로컬
   try{
     const local = {
       id:'sub'+Date.now(), studentId:row.student_id, name:row.name, studentGrade:row.student_grade,
       courseId:row.course_id, courseName:row.course_name, unitId:row.unit_id, unitLabel:row.unit_label,
-      level:row.level, question:row.question, transcript, score:row.score, praise:row.praise, hint:row.hint,
+      level:row.level, question:row.question, questionId:row.question_id||null, transcript, score:row.score, praise:row.praise, hint:row.hint,
       retryPoint:row.retry_point, misconception:row.misconception, pass:passed,
       attempt:row.attempt, needTeacher:row.need_teacher, hintsUsed:row.hints_used,
       reviewDue, time: now.toISOString()
@@ -21505,7 +21638,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-const APP_VERSION = 'v80.8-개념카드그림';
+const APP_VERSION = 'v80.9-질문번호';
   // [v78.7] 이 값이 IIFE 안에 갇혀 있어 바깥 스크립트(app-ui.js)가 못 읽었다.
   //   화면 배지에 버전을 그대로 띄우려면 필요하므로 노출한다.
   window.APP_VERSION = APP_VERSION;
@@ -21529,6 +21662,6 @@ const APP_VERSION = 'v80.8-개념카드그림';
 })();
 </script>
 
-<script src="ui-integration/app-ui.js?v=79.1"></script>
+<script src="ui-integration/app-ui.js?v=80.9"></script>
 </body>
 </html>

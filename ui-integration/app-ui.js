@@ -52,16 +52,17 @@
     const big=cpCurrentBig(), sm=cpCurrentSmall(), list=[];
     if(!big || !sm) return list;
     (sm.types||[]).forEach((type,ti) => {
-      const t=ceApply(CP.grade,big.name,sm.name,type,null).type;
+      const t=ceApply(CP.grade,big.name,sm.name,type,null,ti).type;
+      const key=ddqConceptKey(CP.grade,big.name,sm.name), ids=ui.level==='high'?t.highIds||[]:t.lowIds||[];   // [v80.9] 질문 번호
       if(ui.level==='blank') list.push({q:'빈칸을 채우며 이 개념을 떠올려요.',kind:'concept',ti,index:0,blank:true});
-      else (ui.level==='high'?t.high||[]:t.low||[]).forEach((q,index)=>{if(q)list.push({q,kind:'concept',ti,index});});
+      else (ui.level==='high'?t.high||[]:t.low||[]).forEach((q,index)=>{if(q)list.push({q,kind:'concept',ti,index,id:ids[index]?key+':'+ids[index]:''});});
     });
     if(ui.level!=='blank') ((ddGetQSet(CP.grade,big.name,sm.name)||{}).questions||[]).forEach((q,index)=>{
-      if(q.q) list.push({q:q.q,kind:'typed',ti:0,index,type:q.type});
+      if(q.q) list.push({q:q.q,kind:'typed',ti:0,index,type:q.type,id:q.id?ddqConceptKey(CP.grade,big.name,sm.name)+':'+q.id:''});
     });
     return list;
   }
-  const status = item => item.blank ? 'none' : cpStatusForQuestion(CP.grade,item.q);
+  const status = item => item.blank ? 'none' : cpStatusForQuestion(CP.grade,item.q,item.id);
   const remaining = () => questionItems().filter(q => status(q)!=='pass');
   function remember() {
     if(!session.student) return;
@@ -315,7 +316,7 @@
   renderFeedback=function(result,advance,needTeacher) { const out=original.renderFeedback(result,advance,needTeacher); decorateFeedback(advance); return out; };
   saveSubmission=async function(...args) { lock(true); try { return await original.saveSubmission(...args); } finally { setTimeout(()=>{lock(false);syncQuestionChrome();},0); } };
   onSpeakTimeout=async function() { lock(true); try { return await original.onSpeakTimeout(); } catch(e) { lock(false); throw e; } };
-  cpUnitRemaining=function() { const list=cpUnitQuestionList(); return list?list.filter(q=>cpStatusForQuestion(state.gradeId,q)!=='pass').length:0; };
+  cpUnitRemaining=function() { const list=cpUnitQuestionItems(); return list?list.filter(x=>cpStatusForQuestion(state.gradeId,x.q,x.id)!=='pass').length:0; };
   startQuiz=async function() {
     if(ui.busy||!isStudent()||!cpCurrentSmall()) return;
     cpSyncLegacy(); if(!state.unitId) return;
