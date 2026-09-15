@@ -1,0 +1,116 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>질문 계단 견본 3</title>
+<style>
+  :root{--bg:#f6f5f1;--card:#fff;--ink:#23221f;--sub:#6b6a64;--line:#e4e2da;--blue:#185FA5;--orange:#D85A30;--green:#2f9e76;--purple:#534AB7;--soft:#eef3f9}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.65 system-ui,-apple-system,"Malgun Gothic",sans-serif}
+  .wrap{max-width:980px;margin:0 auto;padding:24px 16px 60px}
+  h1{font-size:24px;margin:0 0 4px}
+  .lead{color:var(--sub);margin:0 0 18px}
+  .box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:0 0 16px}
+  .box h2{font-size:16px;margin:0 0 8px}
+  .box ul{margin:0;padding-left:20px}
+  nav{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 18px}
+  nav a{font-size:13px;text-decoration:none;color:var(--blue);background:var(--soft);border-radius:999px;padding:3px 10px}
+  .lad{background:var(--card);border:1px solid var(--line);border-radius:14px;margin:0 0 22px;overflow:hidden}
+  .lad header{padding:14px 18px 12px;border-bottom:1px solid var(--line)}
+  .tag{display:inline-block;font-size:12px;font-weight:700;color:#fff;border-radius:6px;padding:1px 8px;margin-right:6px;vertical-align:2px}
+  .lad h3{display:inline;font-size:17px;margin:0}
+  .where{font-size:13px;color:var(--sub);margin:4px 0 0}
+  .step{display:grid;grid-template-columns:34px 1fr;gap:0 10px;padding:14px 18px;border-top:1px solid var(--line)}
+  .lad .step:first-of-type{border-top:none}
+  .n{width:28px;height:28px;border-radius:50%;background:var(--soft);color:var(--blue);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px}
+  .kind{font-size:11px;font-weight:700;color:var(--purple);background:#efedfb;border-radius:5px;padding:0 6px;margin-right:6px;vertical-align:1px}
+  .q{font-weight:600}
+  .fig{font-size:12px;font-weight:700;color:var(--orange);margin-left:6px;white-space:nowrap}
+  .lbl{font-size:12px;font-weight:700;margin:8px 0 2px}
+  .ideas{margin:0;padding:0;list-style:none}
+  .ideas li{font-size:14px;display:grid;grid-template-columns:22px 1fr;gap:4px;margin:3px 0}
+  .ideas li i{font-style:normal;font-weight:700;color:var(--green)}
+  .ideas .hq{display:block;color:var(--orange);font-size:13px}
+  .teach{font-size:14px;background:#f7f9fc;border-radius:8px;padding:6px 9px}
+  .again{font-size:14px;color:var(--purple)}
+  .src{font-size:12px;color:var(--sub);margin-top:4px}
+  .ai{margin-top:10px;border:1px dashed #cfd8e3;border-radius:10px;padding:8px 10px;background:#fbfcfe}
+  .ai .t{font-size:12px;font-weight:700;color:var(--blue);margin-bottom:4px}
+  .case{font-size:13.5px;padding:5px 0;border-top:1px solid #edf0f4}
+  .case:first-of-type{border-top:none}
+  .case .who{font-weight:700;margin-right:4px}
+  .v{font-size:11px;font-weight:700;border-radius:5px;padding:0 6px;margin-left:4px}
+  .v.pass{background:#e3f4ec;color:var(--green)} .v.partial{background:#fff3dc;color:#9a6a00} .v.none{background:#fdeee8;color:var(--orange)}
+  .say{display:block;margin-top:2px;color:#2b3a4a}
+  .mis{display:block;font-size:12px;color:var(--sub)}
+  @media (max-width:560px){.step{grid-template-columns:26px 1fr;padding:12px}.n{width:24px;height:24px;font-size:12px}}
+</style>
+
+<div class="wrap">
+  <h1>선생님 질문 계단 — 견본 3</h1>
+  <p class="lead">견본 2 피드백 반영 + <b>실제 AI(앱 서버, Gemini 3.6)로 칸마다 채점해 본 결과</b>를 같이 붙였어요.</p>
+
+  <div class="box">
+    <h2>견본 2에서 바뀐 것</h2>
+    <ul>
+      <li><b>답은 한두 문장</b>이 되도록 질문을 바꿨어요. 유도 과정이나 식을 소리 내어 읽게 하지 않아요.</li>
+      <li><b>통과 = 아이디어 2~3개.</b> 숫자 결과는 안 물어요. (예: α²+β² → "근과 계수 관계로 합·곱 → 곱셈 공식 변형")</li>
+      <li><b>아이디어마다 되묻기 문장을 따로</b> 적었어요. 학생이 빠뜨린 아이디어의 되묻기가 나와요.</li>
+      <li><b>옆 칸은 새로운 걸 묻게</b> 바꿨어요. 판별식 "왜 중근이라 부를까"는 빼서 ②칸 짧은 설명에 넣었어요. 이등변 ④칸은 "중점과 이으면 어떤 합동?"으로 바꿨어요.</li>
+      <li><b>"네/아니요"만으로는 통과 안 돼요.</b> 이유와 한 아이디어로 묶었어요.</li>
+      <li><b>AI가 답을 흘리지 않게:</b> AI는 판정과 "인정 한마디"만 하고, 되묻기 문장은 계단에 적어 둔 걸 앱이 붙여요.</li>
+    </ul>
+  </div>
+  <div class="box" id="summary"><h2>AI 채점 시험 요약</h2><p style="margin:0">결과 파일을 불러오는 중…</p></div>
+
+  <nav id="nav"></nav>
+  <div id="list"></div>
+</div>
+
+<script src="ladder3_data.js"></script>
+<script src="ladder3_results.js"></script>
+<script>
+const esc=s=>String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const R = window.LADDER3_RESULTS || null;
+const VN = {pass:'통과', partial:'일부', none:'못 맞힘'};
+const nav=document.getElementById('nav'), list=document.getElementById('list');
+let cnt={full:[0,0],half:[0,0],wrong:[0,0]};
+LADDER3.forEach((L,i)=>{
+  nav.insertAdjacentHTML('beforeend',`<a href="#${L.id}">${i+1}. ${esc(L.title)}</a>`);
+  const steps=L.steps.map((s,k)=>{
+    const r = R && R[L.id+(k+1)];
+    const cases = r ? [['half','절반 답',s.half],['wrong','틀린 답',s.wrong],['full','모범 답',null]].map(([key,label,ans])=>{
+      const x=r[key]; if(!x) return '';
+      if(x.error) return `<div class="case"><span class="who">${label}</span> 오류: ${esc(x.error)}</div>`;
+      if(key==='full'){ cnt.full[1]++; if(x.verdict==='pass') cnt.full[0]++; }
+      if(key==='half'){ cnt.half[1]++; if(x.verdict==='partial') cnt.half[0]++; }
+      if(key==='wrong'){ cnt.wrong[1]++; if(x.verdict==='none') cnt.wrong[0]++; }
+      return `<div class="case"><span class="who">${label}</span>${ans?'“'+esc(ans)+'”':'(통과 아이디어를 그대로 이어 말함)'}<span class="v ${x.verdict}">${VN[x.verdict]}</span>
+        ${x.say?`<span class="say">🤖 ${esc(x.say)}</span>`:''}${x.misconception?`<span class="mis">기록된 오개념: ${esc(x.misconception)}</span>`:''}</div>`;
+    }).join('') : '';
+    return `<div class="step"><div class="n">${k+1}</div><div>
+      <div class="q"><span class="kind">${esc(s.kind)}</span>${esc(s.q)}${s.fig?'<span class="fig">🖼 그림</span>':''}</div>
+      <div class="lbl" style="color:var(--green)">통과 아이디어 (전부 말하면 통과) · 빠지면 되묻기</div>
+      <ul class="ideas">${s.ideas.map((x,j)=>`<li><i>${'abc'[j]})</i><span>${esc(x[0])}<span class="hq">↳ “${esc(x[1])}”</span></span></li>`).join('')}</ul>
+      <div class="lbl" style="color:var(--blue)">짧은 설명 (되묻기 뒤에도 못 맞히면)</div><div class="teach">${esc(s.teach)}</div>
+      <div class="lbl" style="color:var(--purple)">다시 묻기</div><div class="again">“${esc(s.again)}”</div>
+      ${s.src?`<div class="src">📖 ${esc(s.src)}</div>`:''}
+      ${r?`<div class="ai"><div class="t">AI 채점 시험 (실제 서버)</div>${cases}</div>`:''}
+    </div></div>`;
+  }).join('');
+  list.insertAdjacentHTML('beforeend',`<section class="lad" id="${L.id}"><header>
+    <span class="tag" style="background:${L.lv==='고등'?'#D85A30':'#185FA5'}">${L.lv}</span><h3>${i+1}. ${esc(L.title)}</h3>
+    <p class="where">${esc(L.where)}</p></header>${steps}</section>`);
+});
+document.getElementById('summary').innerHTML = R
+  ? `<h2>AI 채점 시험 요약 (칸 19개 × 답 3가지)</h2><ul>
+      <li>모범 답 → 통과: <b>${cnt.full[0]} / ${cnt.full[1]}</b></li>
+      <li>절반 답 → "일부"로 보고 빠진 것만 되묻기: <b>${cnt.half[0]} / ${cnt.half[1]}</b></li>
+      <li>틀린 답 → "못 맞힘": <b>${cnt.wrong[0]} / ${cnt.wrong[1]}</b></li></ul>
+      <p style="margin:6px 0 0;font-size:13px;color:var(--sub)">🤖 줄은 학생 화면에 나올 말이에요(AI 인정 한마디 + 계단에 적힌 되묻기).</p>
+      <h2 style="margin-top:12px">예상과 다르게 나온 4곳</h2><ul>
+      <li><b>근과 계수 ① 틀린 답</b> "합은 a분의 b, 곱은 a분의 c" → "일부". <b>AI가 맞음</b>: 곱은 맞게 말했어요. 제 예상이 틀렸어요.</li>
+      <li><b>근과 계수 ③ 절반 답</b> "네, 쓸 수 있어요" → "못 맞힘". <b>의도대로</b>: 이유 없는 "네"는 인정하지 않아요.</li>
+      <li><b>이등변 ⑤ 절반 답</b> "두 각이 같아서요" → "못 맞힘". 무엇이 합동이라 같은지 안 말해서 엄격하게 봤어요. 괜찮은 판단이에요.</li>
+      <li>⚠️ <b>이등변 ③ 절반 답</b> "이등분선을 그어요" → 첫 시험에선 "일부", 두 번째 시험에선 "못 맞힘". <b>같은 답인데 판정이 흔들렸어요.</b> 앱에 넣기 전에 판정을 안정시키는 방법이 필요해요.</li>
+      <li>⚠️ <b>판별식 ② 틀린 답</b> "0이면 근이 없어요" → D=0 되묻기가 나와야 하는데, D>0 되묻기가 나왔어요. 틀린 부분에 맞는 되묻기를 고르는 기능이 아직 약해요.</li></ul>`
+  : '<h2>AI 채점 시험 요약</h2><p style="margin:0">결과 파일(ladder3_results.js)이 없어요.</p>';
+</script>

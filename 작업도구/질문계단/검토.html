@@ -1,0 +1,99 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>질문 계단 검토</title>
+<style>
+  :root{--bg:#f6f5f1;--card:#fff;--ink:#23221f;--sub:#6b6a64;--line:#e4e2da;--blue:#185FA5;--orange:#D85A30;--green:#2f9e76;--purple:#534AB7;--soft:#eef3f9}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.65 system-ui,-apple-system,"Malgun Gothic",sans-serif}
+  .wrap{max-width:980px;margin:0 auto;padding:24px 16px 60px}
+  h1{font-size:23px;margin:0 0 4px}
+  .lead{color:var(--sub);margin:0 0 16px}
+  .box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:0 0 16px}
+  .box h2{font-size:16px;margin:0 0 8px}
+  .box ul{margin:0;padding-left:20px}
+  .mid{font-size:18px;font-weight:700;margin:26px 0 10px;color:var(--blue)}
+  details.lad{background:var(--card);border:1px solid var(--line);border-radius:14px;margin:0 0 12px;overflow:hidden}
+  details.lad summary{padding:12px 18px;cursor:pointer;font-weight:700;list-style:none;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  details.lad summary::-webkit-details-marker{display:none}
+  details.lad summary::before{content:'▸';color:var(--sub)}
+  details.lad[open] summary::before{content:'▾'}
+  .cnt{font-size:12px;font-weight:600;color:var(--sub)}
+  .warn{font-size:11px;font-weight:700;color:#fff;background:var(--orange);border-radius:5px;padding:0 6px}
+  .step{display:grid;grid-template-columns:34px 1fr;gap:0 10px;padding:14px 18px;border-top:1px solid var(--line)}
+  .n{width:28px;height:28px;border-radius:50%;background:var(--soft);color:var(--blue);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px}
+  .kind{font-size:11px;font-weight:700;color:var(--purple);background:#efedfb;border-radius:5px;padding:0 6px;margin-right:6px;vertical-align:1px}
+  .q{font-weight:600}
+  .fig{font-size:12px;font-weight:700;color:var(--orange);margin-left:6px;white-space:nowrap}
+  .lbl{font-size:12px;font-weight:700;margin:8px 0 2px}
+  .ideas{margin:0;padding:0;list-style:none}
+  .ideas li{font-size:14px;display:grid;grid-template-columns:22px 1fr;gap:4px;margin:3px 0}
+  .ideas li i{font-style:normal;font-weight:700;color:var(--green)}
+  .ideas .hq{display:block;color:var(--orange);font-size:13px}
+  .teach{font-size:14px;background:#f7f9fc;border-radius:8px;padding:6px 9px}
+  .again{font-size:14px;color:var(--purple)}
+  .src{font-size:12px;color:var(--sub);margin-top:4px}
+  .ai{margin-top:10px;border:1px dashed #cfd8e3;border-radius:10px;padding:8px 10px;background:#fbfcfe}
+  .ai .t{font-size:12px;font-weight:700;color:var(--blue);margin-bottom:4px}
+  .case{font-size:13.5px;padding:5px 0;border-top:1px solid #edf0f4}
+  .case:first-of-type{border-top:none}
+  .who{font-weight:700;margin-right:4px}
+  .v{font-size:11px;font-weight:700;border-radius:5px;padding:0 6px;margin-left:4px}
+  .v.pass{background:#e3f4ec;color:var(--green)} .v.partial{background:#fff3dc;color:#9a6a00} .v.none{background:#fdeee8;color:var(--orange)}
+  .say{display:block;margin-top:2px;color:#2b3a4a}
+  .flip{display:block;font-size:12px;font-weight:700;color:var(--orange)}
+</style>
+<div class="wrap">
+  <h1 id="title">질문 계단 검토</h1>
+  <p class="lead" id="lead"></p>
+  <div class="box" id="summary"></div>
+  <div id="list"></div>
+</div>
+<script>
+// 사용: 검토.html?d=m3/review_m31_1.js
+const d = new URLSearchParams(location.search).get('d') || 'm3/review_m31_1.js';
+document.write('<script src="'+d.replace(/[^\w\/.\-]/g,'')+'"><\/script>');
+</script>
+<script>
+(function(){
+const esc=s=>String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const V={pass:'통과',partial:'일부',none:'못 맞힘'};
+if(!window.REVIEW){ document.getElementById('summary').textContent='검토 데이터 파일이 없어요.'; return; }
+const {ladders, results} = window.REVIEW;
+const L0 = ladders[0]||{};
+document.getElementById('title').textContent = '질문 계단 검토 — '+(L0.grade||'')+' '+(L0.big||'');
+let S={steps:0,full:0,half:0,wrong:0,flip:0};
+let html='', lastMid=null;
+ladders.forEach(L=>{
+  if(L.middle!==lastMid){ html+=`<div class="mid">${esc(L.middle)}</div>`; lastMid=L.middle; }
+  const R = results[L.small]||[];
+  let warns=0;
+  const steps = L.steps.map((s,k)=>{
+    const r=R[k]||{}; S.steps++;
+    if(r.full&&r.full.verdict==='pass')S.full++;
+    if(r.half&&r.half.verdict==='partial')S.half++;
+    if(r.wrong&&r.wrong.verdict==='none')S.wrong++;
+    const flip = r.half&&r.half2&&r.half.verdict!==r.half2.verdict; if(flip)S.flip++;
+    const odd = flip || (r.full&&r.full.verdict!=='pass') || (r.wrong&&r.wrong.verdict==='pass');
+    if(odd) warns++;
+    const c=(label,ans,x)=> !x?'':`<div class="case"><span class="who">${label}</span>${ans?'“'+esc(ans)+'”':'(통과 아이디어를 그대로 이어 말함)'}<span class="v ${x.verdict||''}">${V[x.verdict]||esc(x.error||'?')}</span>${x.say?`<span class="say">🤖 ${esc(x.say)}</span>`:''}</div>`;
+    return `<div class="step"><div class="n">${k+1}</div><div>
+      <div class="q"><span class="kind">${esc(s.kind)}</span>${esc(s.q)}${s.fig?'<span class="fig">🖼 그림</span>':''}</div>
+      <div class="lbl" style="color:var(--green)">통과 아이디어 · 빠지면 되묻기</div>
+      <ul class="ideas">${(s.ideas||[]).map((x,j)=>`<li><i>${'abc'[j]})</i><span>${esc(x[0])}<span class="hq">↳ “${esc(x[1])}”</span></span></li>`).join('')}</ul>
+      <div class="lbl" style="color:var(--blue)">짧은 설명</div><div class="teach">${esc(s.teach)}</div>
+      <div class="lbl" style="color:var(--purple)">다시 묻기</div><div class="again">“${esc(s.again)}”</div>
+      ${s.src?`<div class="src">📖 ${esc(s.src)}</div>`:''}
+      <div class="ai"><div class="t">AI 채점 시험</div>${c('절반 답',s.half,r.half)}${flip?`<span class="flip">⚠ 같은 답을 한 번 더 채점하니 "${V[r.half2.verdict]}" — 판정 흔들림</span>`:''}${c('틀린 답',s.wrong,r.wrong)}${c('모범 답',null,r.full)}</div>
+    </div></div>`;
+  }).join('');
+  html+=`<details class="lad"><summary>${esc(L.small)} <span class="cnt">칸 ${L.steps.length}</span>${warns?`<span class="warn">확인 ${warns}</span>`:''}</summary>${steps}</details>`;
+});
+document.getElementById('list').innerHTML=html;
+document.getElementById('lead').textContent = '소단원 '+ladders.length+'개 · 칸 '+S.steps+'개. 소단원 이름을 누르면 펼쳐져요. 주황색 "확인" 표시는 AI 채점이 예상과 다르게 나온 칸이에요.';
+document.getElementById('summary').innerHTML = `<h2>AI 채점 시험 요약 (실제 앱 서버)</h2><ul>
+  <li>모범 답 → 통과: <b>${S.full} / ${S.steps}</b></li>
+  <li>절반 답 → 일부(빠진 것만 되묻기): <b>${S.half} / ${S.steps}</b></li>
+  <li>틀린 답 → 못 맞힘: <b>${S.wrong} / ${S.steps}</b></li>
+  <li>같은 절반 답을 두 번 채점해 판정이 달라진 칸: <b>${S.flip} / ${S.steps}</b></li></ul>`;
+})();
+</script>
