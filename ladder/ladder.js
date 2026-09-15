@@ -124,6 +124,7 @@
     $('dlCount').textContent = Math.min(R.k + 1, R.ctx.steps.length) + ' / ' + R.ctx.steps.length;
   }
   function figureFor(step) {
+    if (step.figScene) { try { return '<div class="dl-fig">' + ddFig(step.figScene) + '</div>'; } catch { return ''; } }
     if (!step.fig) return '';
     try {
       const card = ddGetCard(R.ctx.grade, R.ctx.big, R.ctx.small);
@@ -275,7 +276,7 @@ body.dl-open{overflow:hidden}
 .dl-msg.ok .dl-bub{background:#e3f4ec;border-color:#bfe5d3}.dl-msg.err .dl-bub{background:#fdeee8;border-color:#f3cdbd}
 .dl-kind{font-size:12px;font-weight:700;color:#534AB7;margin-bottom:3px}
 .dl-teach{background:#eef3f9;border-radius:10px;padding:8px 10px}
-.dl-fig{margin-top:8px}.dl-fig svg{max-width:100%;height:auto}
+.dl-fig{margin-top:8px}.dl-fig svg{display:block;width:100%;max-width:380px;height:auto}
 .dl-typing i{display:inline-block;width:7px;height:7px;margin:0 2px;border-radius:50%;background:#aaa;animation:dlb 1s infinite}.dl-typing i:nth-child(2){animation-delay:.15s}.dl-typing i:nth-child(3){animation-delay:.3s}
 @keyframes dlb{0%,80%,100%{opacity:.3}40%{opacity:1}}
 #dlOverlay .dl-foot{background:#fff;border-top:1px solid #e4e2da;padding:10px max(16px,calc((100% - 780px)/2));display:flex;flex-direction:row;gap:8px;align-items:flex-end;width:100%;box-sizing:border-box}

@@ -10,6 +10,9 @@ ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
 grade, files = sys.argv[1], sys.argv[2:]
 KEEP = ('kind', 'q', 'ideas', 'teach', 'again', 'fig', 'src', 'miscon', 'record')
 data = {}
+FIGS = {}
+_fp = os.path.join(HERE, 'm3', 'figs_m31.json')   # 칸 전용 그림 (없으면 카드 그림을 쓴다)
+if os.path.exists(_fp): FIGS = json.load(io.open(_fp, encoding='utf-8'))
 for f in files:
     for it in json.load(io.open(os.path.join(HERE, f), encoding='utf-8')):
         if it.get('summary'):
@@ -17,7 +20,13 @@ for f in files:
         assert it['grade'] == grade, it['grade']
         key = '%s|%s|%s' % (it['grade'], it['big'], it['small'])
         assert key not in data, key
-        data[key] = [{k: s[k] for k in KEEP if k in s} for s in it['steps']]
+        steps = []
+        for i, st in enumerate(it['steps'], 1):
+            d = {k: st[k] for k in KEEP if k in st}
+            fig = FIGS.get('%s|%d' % (it['small'][:3], i))
+            if fig: d['figScene'] = fig
+            steps.append(d)
+        data[key] = steps
 os.makedirs(os.path.join(ROOT, 'ladder'), exist_ok=True)
 out = os.path.join(ROOT, 'ladder', 'data-%s.js' % grade)
 body = ('/* 질문 계단 데이터 — 작업도구/질문계단/export_app.py 로 만든 파일. 직접 고치지 말 것. */\n'

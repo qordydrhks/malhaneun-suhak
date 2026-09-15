@@ -1,0 +1,1582 @@
+{
+ "03.|2": {
+  "title": "넓이가 5인 정사각형",
+  "points": {
+   "A": [
+    120,
+    80
+   ],
+   "B": [
+    300,
+    80
+   ],
+   "C": [
+    300,
+    260
+   ],
+   "D": [
+    120,
+    260
+   ]
+  },
+  "shapes": [
+   {
+    "points": [
+     "A",
+     "B",
+     "C",
+     "D"
+    ],
+    "fill": "#eef3f9",
+    "stroke": "#185FA5"
+   }
+  ],
+  "labels": [
+   {
+    "text": "넓이 5",
+    "dx": -24,
+    "dy": 6,
+    "at": [
+     210,
+     170
+    ]
+   },
+   {
+    "text": "한 변의 길이 = ?",
+    "dx": -52,
+    "dy": 24,
+    "at": [
+     210,
+     260
+    ]
+   }
+  ]
+ },
+ "10.|1": {
+  "title": "넓이가 3, 5인 두 정사각형",
+  "points": {
+   "A": [
+    60,
+    110
+   ],
+   "B": [
+    190,
+    110
+   ],
+   "C": [
+    190,
+    240
+   ],
+   "D": [
+    60,
+    240
+   ],
+   "E": [
+    240,
+    72
+   ],
+   "F": [
+    408,
+    72
+   ],
+   "G": [
+    408,
+    240
+   ],
+   "H": [
+    240,
+    240
+   ]
+  },
+  "shapes": [
+   {
+    "points": [
+     "A",
+     "B",
+     "C",
+     "D"
+    ],
+    "fill": "#eef3f9",
+    "stroke": "#185FA5"
+   },
+   {
+    "points": [
+     "E",
+     "F",
+     "G",
+     "H"
+    ],
+    "fill": "#fdeee8",
+    "stroke": "#D85A30"
+   }
+  ],
+  "labels": [
+   {
+    "text": "넓이 3",
+    "dx": -22,
+    "dy": 6,
+    "at": [
+     125,
+     175
+    ]
+   },
+   {
+    "text": "넓이 5",
+    "dx": -22,
+    "dy": 6,
+    "at": [
+     324,
+     160
+    ]
+   },
+   {
+    "text": "√3",
+    "dx": -8,
+    "dy": 22,
+    "at": [
+     125,
+     240
+    ]
+   },
+   {
+    "text": "√5",
+    "dx": -8,
+    "dy": 22,
+    "at": [
+     324,
+     240
+    ]
+   }
+  ]
+ },
+ "14.|1": {
+  "title": "한 변이 1인 정사각형과 원",
+  "axes": {
+   "xMin": -2,
+   "xMax": 2.4,
+   "yMin": -1.6,
+   "yMax": 1.8,
+   "ticks": true
+  },
+  "curves": [],
+  "points": {
+   "O": [
+    0,
+    0
+   ],
+   "A": [
+    1,
+    0
+   ],
+   "B": [
+    1,
+    1
+   ],
+   "C": [
+    0,
+    1
+   ],
+   "P": [
+    1.4142,
+    0
+   ]
+  },
+  "labels": [
+   {
+    "text": "",
+    "dx": 0,
+    "dy": 0,
+    "point": "B"
+   },
+   {
+    "text": "P",
+    "dx": 4,
+    "dy": 16,
+    "point": "P"
+   }
+  ],
+  "shapes": [
+   {
+    "points": [
+     "O",
+     "A",
+     "B",
+     "C"
+    ],
+    "stroke": "#185FA5"
+   },
+   {
+    "points": [
+     "O",
+     "B"
+    ],
+    "close": false,
+    "stroke": "#D85A30"
+   }
+  ],
+  "circles": [
+   {
+    "center": "O",
+    "through": "B",
+    "color": "#9A9890",
+    "style": "dashed"
+   }
+  ]
+ },
+ "14.|2": {
+  "title": "점 1을 꼭짓점으로 하는 정사각형",
+  "axes": {
+   "xMin": -1,
+   "xMax": 3.2,
+   "yMin": -1.6,
+   "yMax": 1.8,
+   "ticks": true
+  },
+  "curves": [],
+  "points": {
+   "A": [
+    1,
+    0
+   ],
+   "B": [
+    2,
+    0
+   ],
+   "C": [
+    2,
+    1
+   ],
+   "D": [
+    1,
+    1
+   ],
+   "Q": [
+    2.4142,
+    0
+   ]
+  },
+  "labels": [
+   {
+    "text": "Q",
+    "dx": 4,
+    "dy": 16,
+    "point": "Q"
+   }
+  ],
+  "shapes": [
+   {
+    "points": [
+     "A",
+     "B",
+     "C",
+     "D"
+    ],
+    "stroke": "#185FA5"
+   },
+   {
+    "points": [
+     "A",
+     "C"
+    ],
+    "close": false,
+    "stroke": "#D85A30"
+   }
+  ],
+  "circles": [
+   {
+    "center": "A",
+    "through": "C",
+    "color": "#9A9890",
+    "style": "dashed"
+   }
+  ]
+ },
+ "29.|1": {
+  "points": {
+   "A": [
+    90,
+    60
+   ],
+   "B": [
+    340,
+    60
+   ],
+   "C": [
+    340,
+    310
+   ],
+   "D": [
+    90,
+    310
+   ],
+   "T": [
+    260,
+    60
+   ],
+   "U": [
+    260,
+    310
+   ],
+   "L": [
+    90,
+    230
+   ],
+   "R": [
+    340,
+    230
+   ]
+  },
+  "shapes": [
+   {
+    "points": [
+     "A",
+     "B",
+     "C",
+     "D"
+    ],
+    "fill": "#eef3f9",
+    "stroke": "#185FA5"
+   },
+   {
+    "points": [
+     "T",
+     "U"
+    ],
+    "close": false,
+    "stroke": "#185FA5"
+   },
+   {
+    "points": [
+     "L",
+     "R"
+    ],
+    "close": false,
+    "stroke": "#185FA5"
+   }
+  ],
+  "labels": [
+   {
+    "text": "a",
+    "dx": -6,
+    "dy": -10,
+    "at": [
+     175.0,
+     60
+    ]
+   },
+   {
+    "text": "b",
+    "dx": -6,
+    "dy": -10,
+    "at": [
+     300.0,
+     60
+    ]
+   },
+   {
+    "text": "a",
+    "dx": -26,
+    "dy": 5,
+    "at": [
+     90,
+     145.0
+    ]
+   },
+   {
+    "text": "b",
+    "dx": -26,
+    "dy": 5,
+    "at": [
+     90,
+     270.0
+    ]
+   }
+  ],
+  "title": "한 변이 a+b인 정사각형"
+ },
+ "30.|1": {
+  "title": "한 변이 a인 정사각형에서 한 변이 b인 정사각형을 떼어 냄",
+  "points": {
+   "A": [
+    100,
+    60
+   ],
+   "B": [
+    320,
+    60
+   ],
+   "C": [
+    320,
+    280
+   ],
+   "D": [
+    100,
+    280
+   ],
+   "E": [
+    240,
+    200
+   ],
+   "F": [
+    320,
+    200
+   ],
+   "G": [
+    240,
+    280
+   ]
+  },
+  "shapes": [
+   {
+    "points": [
+     "A",
+     "B",
+     "C",
+     "D"
+    ],
+    "fill": "#eef3f9",
+    "stroke": "#185FA5"
+   },
+   {
+    "points": [
+     "E",
+     "F",
+     "C",
+     "G"
+    ],
+    "fill": "#ffffff",
+    "stroke": "#D85A30",
+    "style": "dashed"
+   }
+  ],
+  "labels": [
+   {
+    "text": "a",
+    "dx": -4,
+    "dy": -10,
+    "at": [
+     210,
+     60
+    ]
+   },
+   {
+    "text": "a",
+    "dx": -20,
+    "dy": 5,
+    "at": [
+     100,
+     170
+    ]
+   },
+   {
+    "text": "b",
+    "dx": -4,
+    "dy": 20,
+    "at": [
+     280,
+     280
+    ]
+   },
+   {
+    "text": "b",
+    "dx": 8,
+    "dy": 5,
+    "at": [
+     320,
+     240
+    ]
+   }
+  ]
+ },
+ "32.|1": {
+  "points": {
+   "A": [
+    100,
+    60
+   ],
+   "B": [
+    350,
+    60
+   ],
+   "C": [
+    350,
+    270
+   ],
+   "D": [
+    100,
+    270
+   ],
+   "T": [
+    280,
+    60
+   ],
+   "U": [
+    280,
+    270
+   ],
+   "L": [
+    100,
+    210
+   ],
+   "R": [
+    350,
+    210
+   ]
+  },
+  "shapes": [
+   {
+    "points": [
+     "A",
+     "B",
+     "C",
+     "D"
+    ],
+    "fill": "#eef3f9",
+    "stroke": "#185FA5"
+   },
+   {
+    "points": [
+     "T",
+     "U"
+    ],
+    "close": false,
+    "stroke": "#185FA5"
+   },
+   {
+    "points": [
+     "L",
+     "R"
+    ],
+    "close": false,
+    "stroke": "#185FA5"
+   }
+  ],
+  "labels": [
+   {
+    "text": "ax",
+    "dx": -6,
+    "dy": -10,
+    "at": [
+     190.0,
+     60
+    ]
+   },
+   {
+    "text": "b",
+    "dx": -6,
+    "dy": -10,
+    "at": [
+     315.0,
+     60
+    ]
+   },
+   {
+    "text": "cx",
+    "dx": -26,
+    "dy": 5,
+    "at": [
+     100,
+     135.0
+    ]
+   },
+   {
+    "text": "d",
+    "dx": -26,
+    "dy": 5,
+    "at": [
+     100,
+     240.0
+    ]
+   }
+  ],
+  "title": "가로 ax+b, 세로 cx+d인 직사각형"
+ },
+ "39.|1": {
+  "title": "세로 m, 가로 a와 b인 두 직사각형",
+  "points": {
+   "A": [
+    80,
+    110
+   ],
+   "T": [
+    240,
+    110
+   ],
+   "B": [
+    360,
+    110
+   ],
+   "C": [
+    360,
+    220
+   ],
+   "U": [
+    240,
+    220
+   ],
+   "D": [
+    80,
+    220
+   ]
+  },
+  "shapes": [
+   {
+    "points": [
+     "A",
+     "B",
+     "C",
+     "D"
+    ],
+    "fill": "#eef3f9",
+    "stroke": "#185FA5"
+   },
+   {
+    "points": [
+     "T",
+     "U"
+    ],
+    "close": false,
+    "stroke": "#185FA5"
+   }
+  ],
+  "labels": [
+   {
+    "text": "a",
+    "dx": -4,
+    "dy": -10,
+    "at": [
+     160,
+     110
+    ]
+   },
+   {
+    "text": "b",
+    "dx": -4,
+    "dy": -10,
+    "at": [
+     300,
+     110
+    ]
+   },
+   {
+    "text": "m",
+    "dx": -22,
+    "dy": 5,
+    "at": [
+     80,
+     165
+    ]
+   }
+  ]
+ },
+ "45.|1": {
+  "title": "한 변이 a인 정사각형에서 한 변이 b인 정사각형을 떼어 냄",
+  "points": {
+   "A": [
+    100,
+    60
+   ],
+   "B": [
+    320,
+    60
+   ],
+   "C": [
+    320,
+    280
+   ],
+   "D": [
+    100,
+    280
+   ],
+   "E": [
+    240,
+    200
+   ],
+   "F": [
+    320,
+    200
+   ],
+   "G": [
+    240,
+    280
+   ]
+  },
+  "shapes": [
+   {
+    "points": [
+     "A",
+     "B",
+     "C",
+     "D"
+    ],
+    "fill": "#eef3f9",
+    "stroke": "#185FA5"
+   },
+   {
+    "points": [
+     "E",
+     "F",
+     "C",
+     "G"
+    ],
+    "fill": "#ffffff",
+    "stroke": "#D85A30",
+    "style": "dashed"
+   }
+  ],
+  "labels": [
+   {
+    "text": "a",
+    "dx": -4,
+    "dy": -10,
+    "at": [
+     210,
+     60
+    ]
+   },
+   {
+    "text": "a",
+    "dx": -20,
+    "dy": 5,
+    "at": [
+     100,
+     170
+    ]
+   },
+   {
+    "text": "b",
+    "dx": -4,
+    "dy": 20,
+    "at": [
+     280,
+     280
+    ]
+   },
+   {
+    "text": "b",
+    "dx": 8,
+    "dy": 5,
+    "at": [
+     320,
+     240
+    ]
+   }
+  ]
+ },
+ "46.|1": {
+  "points": {
+   "A": [
+    100,
+    60
+   ],
+   "B": [
+    330,
+    60
+   ],
+   "C": [
+    330,
+    320
+   ],
+   "D": [
+    100,
+    320
+   ],
+   "T": [
+    270,
+    60
+   ],
+   "U": [
+    270,
+    320
+   ],
+   "L": [
+    100,
+    230
+   ],
+   "R": [
+    330,
+    230
+   ]
+  },
+  "shapes": [
+   {
+    "points": [
+     "A",
+     "B",
+     "C",
+     "D"
+    ],
+    "fill": "#eef3f9",
+    "stroke": "#185FA5"
+   },
+   {
+    "points": [
+     "T",
+     "U"
+    ],
+    "close": false,
+    "stroke": "#185FA5"
+   },
+   {
+    "points": [
+     "L",
+     "R"
+    ],
+    "close": false,
+    "stroke": "#185FA5"
+   }
+  ],
+  "labels": [
+   {
+    "text": "x",
+    "dx": -6,
+    "dy": -10,
+    "at": [
+     185.0,
+     60
+    ]
+   },
+   {
+    "text": "2",
+    "dx": -6,
+    "dy": -10,
+    "at": [
+     300.0,
+     60
+    ]
+   },
+   {
+    "text": "x",
+    "dx": -26,
+    "dy": 5,
+    "at": [
+     100,
+     145.0
+    ]
+   },
+   {
+    "text": "3",
+    "dx": -26,
+    "dy": 5,
+    "at": [
+     100,
+     275.0
+    ]
+   }
+  ],
+  "title": "가로 x+2, 세로 x+3인 직사각형"
+ },
+ "81.|1": {
+  "title": "y=x²의 그래프",
+  "axes": {
+   "xMin": -3.5,
+   "xMax": 3.5,
+   "yMin": -1,
+   "yMax": 9.5,
+   "ticks": true,
+   "yStep": 2
+  },
+  "curves": [
+   {
+    "fn": "x^2",
+    "color": "#185FA5",
+    "label": "y=x²",
+    "labelAt": 2.6
+   }
+  ]
+ },
+ "81.|2": {
+  "title": "y=x²의 그래프와 대칭인 선",
+  "axes": {
+   "xMin": -3.5,
+   "xMax": 3.5,
+   "yMin": -1,
+   "yMax": 9.5,
+   "ticks": true,
+   "yStep": 2
+  },
+  "curves": [
+   {
+    "fn": "x^2",
+    "color": "#185FA5",
+    "label": "y=x²",
+    "labelAt": 2.6
+   }
+  ],
+  "points": {
+   "V": [
+    0,
+    0
+   ]
+  },
+  "labels": [
+   {
+    "text": "",
+    "dx": 0,
+    "dy": 0,
+    "point": "V"
+   }
+  ],
+  "lines": [
+   {
+    "x": 0,
+    "color": "#D85A30",
+    "style": "dashed"
+   }
+  ]
+ },
+ "82.|1": {
+  "title": "y=x²과 y=−x²",
+  "axes": {
+   "xMin": -3.5,
+   "xMax": 3.5,
+   "yMin": -9.5,
+   "yMax": 9.5,
+   "ticks": true,
+   "yStep": 2
+  },
+  "curves": [
+   {
+    "fn": "x^2",
+    "color": "#9A9890",
+    "label": "y=x²",
+    "labelAt": 2.7,
+    "style": "dashed"
+   },
+   {
+    "fn": "-x^2",
+    "color": "#185FA5",
+    "label": "y=−x²",
+    "labelAt": 2.7
+   }
+  ]
+ },
+ "82.|2": {
+  "title": "y=−x²의 그래프",
+  "axes": {
+   "xMin": -3.5,
+   "xMax": 3.5,
+   "yMin": -9.5,
+   "yMax": 2,
+   "ticks": true,
+   "yStep": 2
+  },
+  "curves": [
+   {
+    "fn": "-x^2",
+    "color": "#185FA5",
+    "label": "y=−x²",
+    "labelAt": 2.6
+   }
+  ]
+ },
+ "83.|1": {
+  "title": "y=x²과 y=2x²",
+  "axes": {
+   "xMin": -3,
+   "xMax": 3,
+   "yMin": -1,
+   "yMax": 9.5,
+   "ticks": true,
+   "yStep": 2
+  },
+  "curves": [
+   {
+    "fn": "x^2",
+    "color": "#9A9890",
+    "label": "y=x²",
+    "labelAt": 2.8,
+    "style": "dashed"
+   },
+   {
+    "fn": "2*x^2",
+    "color": "#185FA5",
+    "label": "y=2x²",
+    "labelAt": -1.9
+   }
+  ],
+  "points": {
+   "P": [
+    1,
+    1
+   ],
+   "Q": [
+    1,
+    2
+   ]
+  },
+  "labels": [
+   {
+    "text": "",
+    "dx": 0,
+    "dy": 0,
+    "point": "P"
+   },
+   {
+    "text": "",
+    "dx": 0,
+    "dy": 0,
+    "point": "Q"
+   }
+  ]
+ },
+ "83.|2": {
+  "title": "y=½x²과 y=−½x²",
+  "axes": {
+   "xMin": -4,
+   "xMax": 4,
+   "yMin": -8.5,
+   "yMax": 8.5,
+   "ticks": true,
+   "yStep": 2
+  },
+  "curves": [
+   {
+    "fn": "0.5*x^2",
+    "color": "#185FA5",
+    "label": "y=½x²",
+    "labelAt": 3.3
+   },
+   {
+    "fn": "-0.5*x^2",
+    "color": "#D85A30",
+    "label": "y=−½x²",
+    "labelAt": 3.3
+   }
+  ]
+ },
+ "84.|1": {
+  "title": "a의 값이 다른 y=ax²",
+  "axes": {
+   "xMin": -3.5,
+   "xMax": 3.5,
+   "yMin": -9,
+   "yMax": 9,
+   "ticks": true,
+   "yStep": 2
+  },
+  "curves": [
+   {
+    "fn": "2*x^2",
+    "color": "#185FA5",
+    "label": "a=2",
+    "labelAt": -2
+   },
+   {
+    "fn": "x^2",
+    "color": "#3FB98C",
+    "label": "a=1",
+    "labelAt": 2.8
+   },
+   {
+    "fn": "0.5*x^2",
+    "color": "#534AB7",
+    "label": "a=½",
+    "labelAt": 3.3
+   },
+   {
+    "fn": "-x^2",
+    "color": "#D85A30",
+    "label": "a=−1",
+    "labelAt": -2.8
+   }
+  ]
+ },
+ "84.|2": {
+  "title": "y=−3x²과 y=2x²",
+  "axes": {
+   "xMin": -3,
+   "xMax": 3,
+   "yMin": -9.5,
+   "yMax": 9.5,
+   "ticks": true,
+   "yStep": 2
+  },
+  "curves": [
+   {
+    "fn": "-3*x^2",
+    "color": "#D85A30",
+    "label": "y=−3x²",
+    "labelAt": 1.6
+   },
+   {
+    "fn": "2*x^2",
+    "color": "#185FA5",
+    "label": "y=2x²",
+    "labelAt": 2
+   }
+  ]
+ },
+ "85.|1": {
+  "title": "y=x²과 y=x²+3",
+  "axes": {
+   "xMin": -3.5,
+   "xMax": 3.5,
+   "yMin": -1,
+   "yMax": 10,
+   "ticks": true,
+   "yStep": 2
+  },
+  "curves": [
+   {
+    "fn": "x^2",
+    "color": "#9A9890",
+    "label": "y=x²",
+    "labelAt": 2.9,
+    "style": "dashed"
+   },
+   {
+    "fn": "x^2+3",
+    "color": "#185FA5",
+    "label": "y=x²+3",
+    "labelAt": -2.4
+   }
+  ]
+ },
+ "85.|2": {
+  "title": "어떤 y=ax²+q의 그래프",
+  "axes": {
+   "xMin": -3,
+   "xMax": 3,
+   "yMin": -3,
+   "yMax": 4,
+   "ticks": false
+  },
+  "curves": [
+   {
+    "fn": "-x^2+2",
+    "color": "#185FA5"
+   }
+  ]
+ },
+ "86.|1": {
+  "title": "y=x²과 y=(x−2)²",
+  "axes": {
+   "xMin": -3,
+   "xMax": 5,
+   "yMin": -1,
+   "yMax": 9.5,
+   "ticks": true,
+   "yStep": 2
+  },
+  "curves": [
+   {
+    "fn": "x^2",
+    "color": "#9A9890",
+    "label": "y=x²",
+    "labelAt": -2.6,
+    "style": "dashed"
+   },
+   {
+    "fn": "(x-2)^2",
+    "color": "#185FA5",
+    "label": "y=(x−2)²",
+    "labelAt": 4.6
+   }
+  ]
+ },
+ "86.|2": {
+  "title": "y=x²을 x축 방향으로 2만큼 옮긴 그래프",
+  "axes": {
+   "xMin": -3,
+   "xMax": 5,
+   "yMin": -1,
+   "yMax": 9.5,
+   "ticks": true,
+   "yStep": 2
+  },
+  "curves": [
+   {
+    "fn": "x^2",
+    "color": "#9A9890",
+    "label": "y=x²",
+    "labelAt": -2.6,
+    "style": "dashed"
+   },
+   {
+    "fn": "(x-2)^2",
+    "color": "#185FA5"
+   }
+  ],
+  "points": {
+   "V": [
+    2,
+    0
+   ]
+  },
+  "labels": [
+   {
+    "text": "(2, 0)",
+    "dx": 6,
+    "dy": 16,
+    "point": "V"
+   }
+  ]
+ },
+ "87.|1": {
+  "title": "y=x²과 y=(x−3)²+2",
+  "axes": {
+   "xMin": -3,
+   "xMax": 6.5,
+   "yMin": -1,
+   "yMax": 9.5,
+   "ticks": true,
+   "yStep": 2
+  },
+  "curves": [
+   {
+    "fn": "x^2",
+    "color": "#9A9890",
+    "label": "y=x²",
+    "labelAt": -2.6,
+    "style": "dashed"
+   },
+   {
+    "fn": "(x-3)^2+2",
+    "color": "#185FA5",
+    "label": "y=(x−3)²+2",
+    "labelAt": 5.4
+   }
+  ],
+  "points": {
+   "V": [
+    3,
+    2
+   ]
+  },
+  "labels": [
+   {
+    "text": "",
+    "dx": 0,
+    "dy": 0,
+    "point": "V"
+   }
+  ]
+ },
+ "87.|2": {
+  "title": "y=−2(x+1)²−3의 그래프",
+  "axes": {
+   "xMin": -4,
+   "xMax": 2,
+   "yMin": -10,
+   "yMax": 2,
+   "ticks": true,
+   "yStep": 2
+  },
+  "curves": [
+   {
+    "fn": "-2*(x+1)^2-3",
+    "color": "#185FA5",
+    "label": "y=−2(x+1)²−3",
+    "labelAt": 0.4
+   }
+  ],
+  "points": {
+   "V": [
+    -1,
+    -3
+   ]
+  },
+  "labels": [
+   {
+    "text": "",
+    "dx": 0,
+    "dy": 0,
+    "point": "V"
+   }
+  ]
+ },
+ "88.|1": {
+  "title": "그래프를 평행이동",
+  "axes": {
+   "xMin": -1.5,
+   "xMax": 6,
+   "yMin": -1,
+   "yMax": 9,
+   "ticks": true,
+   "yStep": 2
+  },
+  "curves": [
+   {
+    "fn": "(x-1)^2+1",
+    "color": "#9A9890",
+    "style": "dashed"
+   },
+   {
+    "fn": "(x-3)^2+3",
+    "color": "#185FA5"
+   }
+  ],
+  "points": {
+   "V": [
+    1,
+    1
+   ],
+   "W": [
+    3,
+    3
+   ]
+  },
+  "labels": [
+   {
+    "text": "(p, q)",
+    "dx": -40,
+    "dy": 14,
+    "point": "V"
+   },
+   {
+    "text": "?",
+    "dx": 8,
+    "dy": 14,
+    "point": "W"
+   }
+  ]
+ },
+ "88.|2": {
+  "title": "y=3x²+1을 y축 방향으로 4만큼 옮긴 그래프",
+  "axes": {
+   "xMin": -2.5,
+   "xMax": 2.5,
+   "yMin": -1,
+   "yMax": 10,
+   "ticks": true,
+   "yStep": 2
+  },
+  "curves": [
+   {
+    "fn": "3*x^2+1",
+    "color": "#9A9890",
+    "label": "y=3x²+1",
+    "labelAt": -1.6,
+    "style": "dashed"
+   },
+   {
+    "fn": "3*x^2+5",
+    "color": "#185FA5"
+   }
+  ]
+ },
+ "89.|1": {
+  "title": "x축에 대칭인 두 그래프",
+  "axes": {
+   "xMin": -1,
+   "xMax": 7,
+   "yMin": -7,
+   "yMax": 7,
+   "ticks": true,
+   "yStep": 2
+  },
+  "curves": [
+   {
+    "fn": "0.5*(x-3)^2+1",
+    "color": "#185FA5",
+    "label": "y=½(x−3)²+1",
+    "labelAt": 6.3
+   },
+   {
+    "fn": "-0.5*(x-3)^2-1",
+    "color": "#D85A30",
+    "label": "?",
+    "labelAt": 6.3
+   }
+  ]
+ },
+ "89.|2": {
+  "title": "y축에 대칭인 두 그래프",
+  "axes": {
+   "xMin": -7,
+   "xMax": 7,
+   "yMin": -2,
+   "yMax": 7,
+   "ticks": true,
+   "yStep": 2
+  },
+  "curves": [
+   {
+    "fn": "0.5*(x-3)^2+1",
+    "color": "#185FA5",
+    "label": "y=½(x−3)²+1",
+    "labelAt": 6.2
+   },
+   {
+    "fn": "0.5*(x+3)^2+1",
+    "color": "#D85A30",
+    "label": "?",
+    "labelAt": -6.2
+   }
+  ]
+ },
+ "91.|1": {
+  "title": "y=x²+x−2의 그래프",
+  "axes": {
+   "xMin": -3.5,
+   "xMax": 2.5,
+   "yMin": -3,
+   "yMax": 5,
+   "ticks": true
+  },
+  "curves": [
+   {
+    "fn": "x^2+x-2",
+    "color": "#185FA5",
+    "label": "y=x²+x−2",
+    "labelAt": 1.9
+   }
+  ],
+  "points": {
+   "P": [
+    -2,
+    0
+   ],
+   "Q": [
+    1,
+    0
+   ],
+   "R": [
+    0,
+    -2
+   ]
+  },
+  "labels": [
+   {
+    "text": "",
+    "dx": 0,
+    "dy": 0,
+    "point": "P"
+   },
+   {
+    "text": "",
+    "dx": 0,
+    "dy": 0,
+    "point": "Q"
+   },
+   {
+    "text": "",
+    "dx": 0,
+    "dy": 0,
+    "point": "R"
+   }
+  ]
+ },
+ "91.|2": {
+  "title": "x축과 만나는 모양이 다른 세 포물선",
+  "axes": {
+   "xMin": -3,
+   "xMax": 3,
+   "yMin": -3,
+   "yMax": 6,
+   "ticks": false
+  },
+  "curves": [
+   {
+    "fn": "x^2+1",
+    "color": "#185FA5"
+   },
+   {
+    "fn": "x^2",
+    "color": "#3FB98C"
+   },
+   {
+    "fn": "x^2-2",
+    "color": "#D85A30"
+   }
+  ]
+ },
+ "92.|1": {
+  "title": "y=x²+2x−3의 그래프",
+  "axes": {
+   "xMin": -4.5,
+   "xMax": 2.5,
+   "yMin": -5,
+   "yMax": 6,
+   "ticks": true
+  },
+  "curves": [
+   {
+    "fn": "x^2+2*x-3",
+    "color": "#185FA5",
+    "label": "y=x²+2x−3",
+    "labelAt": 2
+   }
+  ]
+ },
+ "92.|2": {
+  "title": "x축과 두 점에서 만나는 포물선",
+  "axes": {
+   "xMin": -4.5,
+   "xMax": 2.5,
+   "yMin": -5,
+   "yMax": 6,
+   "ticks": true
+  },
+  "curves": [
+   {
+    "fn": "x^2+2*x-3",
+    "color": "#185FA5"
+   }
+  ],
+  "points": {
+   "P": [
+    -3,
+    0
+   ],
+   "Q": [
+    1,
+    0
+   ]
+  },
+  "labels": [
+   {
+    "text": "−3",
+    "dx": -18,
+    "dy": -8,
+    "point": "P"
+   },
+   {
+    "text": "1",
+    "dx": 6,
+    "dy": -8,
+    "point": "Q"
+   }
+  ]
+ },
+ "93.|1": {
+  "title": "어떤 y=ax²+bx+c의 그래프",
+  "axes": {
+   "xMin": -4,
+   "xMax": 2.5,
+   "yMin": -3,
+   "yMax": 5,
+   "ticks": false
+  },
+  "curves": [
+   {
+    "fn": "-x^2-2*x+3",
+    "color": "#185FA5"
+   }
+  ]
+ },
+ "93.|2": {
+  "title": "축이 y축의 오른쪽에 있는 포물선",
+  "axes": {
+   "xMin": -1.5,
+   "xMax": 5.5,
+   "yMin": -3,
+   "yMax": 5,
+   "ticks": false
+  },
+  "curves": [
+   {
+    "fn": "x^2-4*x+2",
+    "color": "#185FA5"
+   }
+  ],
+  "lines": [
+   {
+    "x": 2,
+    "color": "#D85A30",
+    "style": "dashed"
+   }
+  ]
+ }
+}
