@@ -14,8 +14,7 @@ async function gradeChunks(paths, outName, onProgress){
     for(const s of L.steps){
       const r = {};
       const run = async (ans)=>{ try{ return await ladder3Grade(s, ans); }catch(e){ return {error:String(e&&e.message||e)}; } };
-      r.half = await run(s.half);
-      r.half2 = await run(s.half);
+      if(s.half){ r.half = await run(s.half); r.half2 = await run(s.half); }
       r.wrong = await run(s.wrong);
       r.full = await run(s.ideas.map(x=>x[0]).join('. '));
       results[key].push(r);
@@ -28,8 +27,8 @@ async function gradeChunks(paths, outName, onProgress){
   const cnt = (f)=>all.filter(f).length;
   return { steps: all.length,
     fullPass: cnt(r=>r.full.verdict==='pass'),
-    halfPartial: cnt(r=>r.half.verdict==='partial'),
-    wrongNone: cnt(r=>r.wrong.verdict==='none'),
-    halfFlip: cnt(r=>r.half.verdict && r.half2.verdict && r.half.verdict!==r.half2.verdict),
-    errors: cnt(r=>['half','half2','wrong','full'].some(k=>r[k].error || r[k].parsed===false)) };
+    halfTotal: cnt(r=>r.half), halfPartial: cnt(r=>r.half && r.half.verdict==='partial'),
+    wrongNotPass: cnt(r=>r.wrong.verdict!=='pass'),
+    halfFlip: cnt(r=>r.half && r.half2 && r.half.verdict!==r.half2.verdict),
+    errors: cnt(r=>['half','half2','wrong','full'].some(k=>r[k] && (r[k].error || r[k].parsed===false))) };
 }

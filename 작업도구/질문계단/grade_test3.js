@@ -13,7 +13,9 @@ const LADDER3_SYSTEM = `너는 '말하는 수학'의 선생님 '뚜삐'야. 학�
 - 음성 인식은 수학 말을 자주 틀리게 적는다("비 제곱 빼기 사 에이 씨"=b²−4ac, "판결식"=판별식, "디"=D, "근과 개수"=근과 계수). 소리가 비슷하고 문맥상 분명하면 맞게 말한 것으로 봐.
 - 숫자 계산 결과는 요구하지 않는다.
 - [예/아니요 금지] "네", "될 것 같아요", "쓸 수 있어요"처럼 결론만 말하고 이유·내용이 없으면 어떤 아이디어도 인정하지 마.
-- 아이디어의 일부만 말했으면(예: "D>0" 이라고만 하고 무엇이 되는지 안 말함) 인정하지 마.
+- 아이디어의 핵심(무엇을 하는지, 왜 그런지)을 말했으면 예시·세부 표현·계산 결과가 빠져도 인정해. 짧은 답이라도 핵심이 분명하면 인정.
+- 하지만 핵심의 절반만 말했으면(예: "D>0" 이라고만 하고 그때 근이 어떻게 되는지 안 말함) 인정하지 마.
+- 같은 답이면 언제 채점해도 같은 판정이 나오도록, 애매할 때는 "핵심이 분명히 들어 있는가" 하나로만 판단해.
 - [이전 답]이 있으면 이전 답과 이번 답을 합쳐서 판정해.
 - 틀린 내용을 말했으면 misconception 에 학생 생각을 한 줄로 요약. 없으면 "".
 - focus: 아직 못 맞힌 아이디어 중, 학생이 틀리게 말한 내용과 가장 직접 관련된 아이디어의 id. 틀린 말이 없으면 못 맞힌 첫 아이디어의 id. 다 맞았으면 "".
@@ -38,10 +40,12 @@ async function ladder3Grade(step, answer, prev){
   const fi = o && typeof o.focus==='string' ? o.focus.trim().charCodeAt(0)-97 : -1;
   if(missing>=0 && fi>=0 && fi<hits.length && !hits[fi].hit) missing = fi;
   const h = hits.filter(x=>x.hit).length;
-  const verdict = missing<0 ? 'pass' : (h>0 ? 'partial' : 'none');
+  const mis = (o&&o.misconception||'').trim();
+  // [v4] 네 단계 진단: pass 핵심 모두 / partial 핵심 일부 / applied 방법·핵심은 짚었지만 적용(결론)이 틀림 / none 방법도 결론도 못 맞힘
+  const verdict = (h>0 && mis) ? 'applied' : (missing<0 ? 'pass' : (h>0 ? 'partial' : 'none'));
   // 앱이 만드는 말: 인정 한마디 + (빠진 첫 아이디어의 되묻기)
   const say = ((o&&o.ack)||'') + (missing<0 ? '' : ' ' + step.ideas[missing][1]);
-  return { ms:Date.now()-t0, model:data.model||'', verdict, hits, misconception:(o&&o.misconception)||'', ack:(o&&o.ack)||'', say, parsed:!!o };
+  return { ms:Date.now()-t0, model:data.model||'', verdict, hits, misconception:mis, ack:(o&&o.ack)||'', say, parsed:!!o };
 }
 
 async function ladder3Test(){

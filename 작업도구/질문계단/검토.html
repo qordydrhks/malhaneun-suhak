@@ -38,7 +38,10 @@
   .case:first-of-type{border-top:none}
   .who{font-weight:700;margin-right:4px}
   .v{font-size:11px;font-weight:700;border-radius:5px;padding:0 6px;margin-left:4px}
-  .v.pass{background:#e3f4ec;color:var(--green)} .v.partial{background:#fff3dc;color:#9a6a00} .v.none{background:#fdeee8;color:var(--orange)}
+  .v.pass{background:#e3f4ec;color:var(--green)} .v.partial{background:#fff3dc;color:#9a6a00} .v.applied{background:#efedfb;color:var(--purple)} .v.none{background:#fdeee8;color:var(--orange)}
+  .diag{margin-top:8px;font-size:13.5px;background:#fdf8f2;border-radius:8px;padding:6px 9px}
+  .diag b{color:#8a5a1a}
+  .sumtag{font-size:11px;font-weight:700;color:#fff;background:var(--purple);border-radius:5px;padding:0 6px}
   .say{display:block;margin-top:2px;color:#2b3a4a}
   .flip{display:block;font-size:12px;font-weight:700;color:var(--orange)}
 </style>
@@ -56,12 +59,12 @@ document.write('<script src="'+d.replace(/[^\w\/.\-]/g,'')+'"><\/script>');
 <script>
 (function(){
 const esc=s=>String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-const V={pass:'통과',partial:'일부',none:'못 맞힘'};
+const V={pass:'통과 · 핵심 모두',partial:'일부 · 핵심 일부만',applied:'적용 오류 · 방법은 맞고 적용이 틀림',none:'못 맞힘 · 방법도 결론도 틀림'};
 if(!window.REVIEW){ document.getElementById('summary').textContent='검토 데이터 파일이 없어요.'; return; }
 const {ladders, results} = window.REVIEW;
 const L0 = ladders[0]||{};
 document.getElementById('title').textContent = '질문 계단 검토 — '+(L0.grade||'')+' '+(L0.big||'');
-let S={steps:0,full:0,half:0,wrong:0,flip:0};
+let S={steps:0,full:0,halfN:0,half:0,wrongOk:0,flip:0,applied:0};
 let html='', lastMid=null;
 ladders.forEach(L=>{
   if(L.middle!==lastMid){ html+=`<div class="mid">${esc(L.middle)}</div>`; lastMid=L.middle; }
@@ -70,10 +73,10 @@ ladders.forEach(L=>{
   const steps = L.steps.map((s,k)=>{
     const r=R[k]||{}; S.steps++;
     if(r.full&&r.full.verdict==='pass')S.full++;
-    if(r.half&&r.half.verdict==='partial')S.half++;
-    if(r.wrong&&r.wrong.verdict==='none')S.wrong++;
+    if(r.half){S.halfN++; if(r.half.verdict==='partial')S.half++;}
+    const wantW = s.wrongKind||'none'; if(r.wrong&&r.wrong.verdict===wantW)S.wrongOk++; if(r.wrong&&r.wrong.verdict==='applied')S.applied++;
     const flip = r.half&&r.half2&&r.half.verdict!==r.half2.verdict; if(flip)S.flip++;
-    const odd = flip || (r.full&&r.full.verdict!=='pass') || (r.wrong&&r.wrong.verdict==='pass');
+    const odd = flip || (r.full&&r.full.verdict!=='pass') || (r.wrong&&r.wrong.verdict==='pass') || (r.half&&r.half.verdict!=='partial');
     if(odd) warns++;
     const c=(label,ans,x)=> !x?'':`<div class="case"><span class="who">${label}</span>${ans?'“'+esc(ans)+'”':'(통과 아이디어를 그대로 이어 말함)'}<span class="v ${x.verdict||''}">${V[x.verdict]||esc(x.error||'?')}</span>${x.say?`<span class="say">🤖 ${esc(x.say)}</span>`:''}</div>`;
     return `<div class="step"><div class="n">${k+1}</div><div>
@@ -83,17 +86,19 @@ ladders.forEach(L=>{
       <div class="lbl" style="color:var(--blue)">짧은 설명</div><div class="teach">${esc(s.teach)}</div>
       <div class="lbl" style="color:var(--purple)">다시 묻기</div><div class="again">“${esc(s.again)}”</div>
       ${s.src?`<div class="src">📖 ${esc(s.src)}</div>`:''}
-      <div class="ai"><div class="t">AI 채점 시험</div>${c('절반 답',s.half,r.half)}${flip?`<span class="flip">⚠ 같은 답을 한 번 더 채점하니 "${V[r.half2.verdict]}" — 판정 흔들림</span>`:''}${c('틀린 답',s.wrong,r.wrong)}${c('모범 답',null,r.full)}</div>
+      ${s.miscon||s.record?`<div class="diag"><b>대표 오개념</b> ${esc(s.miscon)}<br><b>선생님·부모님 기록 문장</b> ${esc(s.record)}</div>`:''}
+      <div class="ai"><div class="t">AI 채점 시험</div>${s.half?c('절반 답',s.half,r.half):'<div class="case"><span class="who">절반 답</span>(아이디어가 하나뿐인 칸이라 없음)</div>'}${flip?`<span class="flip">⚠ 같은 답을 한 번 더 채점하니 "${V[r.half2.verdict]}" — 판정 흔들림</span>`:''}${c(s.wrongKind==='applied'?'틀린 답(적용 오류 기대)':'틀린 답',s.wrong,r.wrong)}${c('모범 답',null,r.full)}</div>
     </div></div>`;
   }).join('');
-  html+=`<details class="lad"><summary>${esc(L.small)} <span class="cnt">칸 ${L.steps.length}</span>${warns?`<span class="warn">확인 ${warns}</span>`:''}</summary>${steps}</details>`;
+  html+=`<details class="lad"${L.summary?' open':''}><summary>${L.summary?'<span class="sumtag">대단원 종합</span> ':''}${esc(L.small)} <span class="cnt">칸 ${L.steps.length}</span>${warns?`<span class="warn">확인 ${warns}</span>`:''}</summary>${steps}</details>`;
 });
 document.getElementById('list').innerHTML=html;
 document.getElementById('lead').textContent = '소단원 '+ladders.length+'개 · 칸 '+S.steps+'개. 소단원 이름을 누르면 펼쳐져요. 주황색 "확인" 표시는 AI 채점이 예상과 다르게 나온 칸이에요.';
 document.getElementById('summary').innerHTML = `<h2>AI 채점 시험 요약 (실제 앱 서버)</h2><ul>
   <li>모범 답 → 통과: <b>${S.full} / ${S.steps}</b></li>
-  <li>절반 답 → 일부(빠진 것만 되묻기): <b>${S.half} / ${S.steps}</b></li>
-  <li>틀린 답 → 못 맞힘: <b>${S.wrong} / ${S.steps}</b></li>
-  <li>같은 절반 답을 두 번 채점해 판정이 달라진 칸: <b>${S.flip} / ${S.steps}</b></li></ul>`;
+  <li>절반 답(핵심 하나를 담은 답) → 일부: <b>${S.half} / ${S.halfN}</b> <span class="cnt">(아이디어가 하나뿐인 칸은 절반 답 없음)</span></li>
+  <li>틀린 답 → 기대한 진단(못 맞힘 또는 적용 오류): <b>${S.wrongOk} / ${S.steps}</b> <span class="cnt">(그중 적용 오류 ${S.applied})</span></li>
+  <li>같은 절반 답을 두 번 채점해 판정이 달라진 칸: <b>${S.flip} / ${S.halfN}</b></li></ul>
+  <p style="margin:8px 0 0;font-size:13px;color:var(--sub)">판정은 네 단계예요: <b>통과</b>(핵심 모두) · <b>일부</b>(핵심 일부만) · <b>적용 오류</b>(방법은 맞고 적용이 틀림) · <b>못 맞힘</b>(방법도 결론도 틀림). 칸마다 대표 오개념과, 학생이 틀렸을 때 선생님·부모님께 남길 기록 문장을 붙였어요.</p>`;
 })();
 </script>

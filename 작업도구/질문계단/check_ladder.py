@@ -17,9 +17,13 @@ def main(lp, sp):
     nsteps = 0
     for it in L:
         key = (it.get('grade'), it.get('big'), it.get('middle'), it.get('small'))
-        if key not in src:
+        if it.get('summary'):
+            if not any(k[3] == it.get('attachTo') for k in src):
+                bad.append('종합 계단의 attachTo 가 원천에 없음: %s' % (it.get('attachTo'),))
+        elif key not in src:
             bad.append('원천에 없는 소단원: %s' % (it.get('small'),)); continue
-        seen.add(key)
+        else:
+            seen.add(key)
         steps = it.get('steps') or []
         nsteps += len(steps)
         if not 2 <= len(steps) <= 8:
@@ -27,12 +31,14 @@ def main(lp, sp):
         qs = []
         for i, s in enumerate(steps, 1):
             tag = '%s ⑴%d' % (it['small'][:14], i)
-            for f in ('kind', 'q', 'ideas', 'teach', 'again', 'half', 'wrong'):
+            for f in ('kind', 'q', 'ideas', 'teach', 'again', 'wrong', 'miscon', 'record'):
                 if not s.get(f):
                     bad.append('%s: %s 없음' % (tag, f))
             if s.get('kind') not in KINDS:
                 bad.append('%s: 이름표 %r' % (tag, s.get('kind')))
             ideas = s.get('ideas') or []
+            if len(ideas) >= 2 and not s.get('half'):
+                bad.append('%s: 아이디어가 2개 이상인데 절반 답 없음' % tag)
             if not 1 <= len(ideas) <= 3:
                 bad.append('%s: 아이디어 %d개' % (tag, len(ideas)))
             for x in ideas:
