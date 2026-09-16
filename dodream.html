@@ -1108,7 +1108,7 @@ window.DDOOPI = {
         <label class="field-label">난이도</label>
         <div class="seg" id="levelSeg">
           <button data-level="blank">채워보기</button>
-          <button data-level="low" style="display:none">기본 개념</button><!-- [v81.3] 기본 개념 질문 숨김: 설명하기 하나로 -->
+          <button data-level="low">기본 개념</button><!-- [v82.8] 다시 보임 (v81.3 에서 숨겼던 것) -->
           <button data-level="high" class="active">설명하기</button>
         </div>
 
@@ -7364,6 +7364,7 @@ function ceGetOverride(gradeId, bigName, smallName){
   const o=ceLoadOverrides(); return o[ceCode(gradeId,bigName,smallName)]||null;
 }
 // 원본 위에 override를 얹어 '최종' 값 돌려주기 (학습 화면/편집기 공용)
+const CE_HIDE_LOW = false;   // [v82.8] true 로 바꾸면 v81.3 처럼 기본 질문이 다시 숨겨진다
 function ceApply(gradeId, bigName, smallName, baseType, baseCard, ti, raw){
   const ov=ceGetOverride(gradeId,bigName,smallName);
   const type = Object.assign({}, baseType||{});
@@ -7417,7 +7418,8 @@ function ceApply(gradeId, bigName, smallName, baseType, baseCard, ti, raw){
   //   · 유형별 질문이 없는 소단원(고1-1·대수·미적분): 기본+깊이를 합쳐서 전부
   //   low·high 를 같은 목록으로 맞춰 두므로 어느 난이도로 들어와도 같은 질문이 나온다. 원본은 그대로.
   //   편집기(raw=true)는 원래 low/high 를 따로 보여 준다.
-  if(!raw){
+  // [v82.8] 마스터 요청: 기본(low) 질문을 학생에게 다시 보인다. 아래 v81.3 숨기기 규칙은 스위치로 꺼 둔다(되돌리려면 true).
+  if(!raw && CE_HIDE_LOW){
     try{
       var _qs = (typeof ddGetQSet==='function') ? ddGetQSet(gradeId, bigName, smallName) : null;
       var _typed = !!(_qs && (_qs.questions||[]).some(function(x){ return x && x.q; }));
@@ -22000,7 +22002,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-const APP_VERSION = 'v82.7-교재글씨체';
+const APP_VERSION = 'v82.8-기본질문복귀';
   // [v78.7] 이 값이 IIFE 안에 갇혀 있어 바깥 스크립트(app-ui.js)가 못 읽었다.
   //   화면 배지에 버전을 그대로 띄우려면 필요하므로 노출한다.
   window.APP_VERSION = APP_VERSION;
@@ -22024,7 +22026,7 @@ const APP_VERSION = 'v82.7-교재글씨체';
 })();
 </script>
 
-<script src="ui-integration/app-ui.js?v=81.8"></script>
+<script src="ui-integration/app-ui.js?v=82.8"></script>
 <!-- [v82.1] 선생님 질문 계단 (시범, 격리 모듈) — 중3-1 전 대단원 · 칸 그림 (v82.3) -->
 <script src="ladder/data-m3-1.js?v=82.5"></script>
 <script src="ladder/ladder.js?v=82.5"></script>
