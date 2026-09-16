@@ -26,7 +26,8 @@
   function save(k, o){ try{ localStorage.setItem(k, JSON.stringify(o)); }catch(e){} }
   var PLAN = load(PLAN_KEY), EDITS = load(EDIT_KEY), SEEN = load(SEEN_KEY), ORDER = load(ORDER_KEY);
 
-  function defRound(kind){ return kind === 'low' ? 1 : kind === 'high' ? 2 : 3; }
+  // 기본값: 기본→1 · 깊이→2 · 유형별과 계단→마지막 회차(3)
+  function defRound(kind){ return kind === 'low' ? 1 : kind === 'high' ? 2 : ROUNDS; }
   function planOf(qid, kind){
     var p = PLAN[qid] || {};
     return { r: p.r || defRound(kind), off: !!p.off, touched: (p.r != null || p.off != null) };
@@ -73,15 +74,24 @@
   function kindLabel(it){
     if(it.kind === 'low') return '기본';
     if(it.kind === 'high') return '깊이';
+    if(it.kind === 'ladder') return '계단' + (it.type ? '·' + it.type : '');
     var L = (typeof QTYPE_LABEL !== 'undefined' && QTYPE_LABEL[it.type]) || it.type || '';
     return '유형' + (L ? '·' + L : '');
   }
-  // 한 소단원의 질문 전부 (기본 → 깊이 → 유형별 순)
+  // 한 소단원의 질문 전부 (기본 → 깊이 → 유형별 → 계단 순)
+  //   계단 칸의 번호는 앱이 기록에 쓰는 것과 같은 모양으로 맞춘다: ladder:<학년|대단원|소단원>:<칸>
   function itemsOf(gradeId, bigName, small){
     var it = ddqItemsFor(gradeId, bigName, small), out = [];
     (it.low  || []).forEach(function(x){ out.push({ id:x.id, q:x.q, kind:'low',  ti:x.ti, index:x.index }); });
     (it.high || []).forEach(function(x){ out.push({ id:x.id, q:x.q, kind:'high', ti:x.ti, index:x.index }); });
     (it.qset || []).forEach(function(x){ out.push({ id:x.id, q:x.q, kind:'qset', type:x.type, index:x.index }); });
+    try{
+      var key = gradeId + '|' + bigName + '|' + small.name;
+      var steps = (window.DL_LADDERS || {})[key] || [];
+      steps.forEach(function(st, i){
+        if(st && st.q) out.push({ id:'ladder:' + key + ':' + (i + 1), q:st.q, kind:'ladder', type:st.kind, index:i });
+      });
+    }catch(e){}
     return out.filter(function(x){ return x.id && x.q; });
   }
   // 저장된 순서를 얹은 목록 (없으면 원래 순서: 기본 → 깊이 → 유형별)
@@ -166,6 +176,8 @@
     + '#qreviewTab .qr-kind{flex:0 0 66px;font-size:11px;font-weight:800;color:#7343E6;background:#F4EFFF;border-radius:7px;padding:4px 0;text-align:center;}'
     + '#qreviewTab .qr-kind.k-high{color:#2C8459;background:#E9F5EE;}'
     + '#qreviewTab .qr-kind.k-qset{color:#B26B00;background:#FDF3E2;}'
+    + '#qreviewTab .qr-kind.k-ladder{color:#1D6FA5;background:#E6F1F8;}'
+    + '#qreviewTab .qr-kind{flex-basis:78px;}'
     + '#qreviewTab .qr-q{flex:1;min-width:0;font-size:13.5px;color:#2A2350;line-height:1.65;}'
     + '#qreviewTab .qr-q.edited{border-left:3px solid #7343E6;padding-left:8px;}'
     + '#qreviewTab .qr-sim{display:inline-block;font-size:10.5px;font-weight:800;color:#C0392B;background:#FDECEA;border-radius:6px;padding:1px 6px;margin-right:5px;}'
@@ -240,6 +252,8 @@
       + ' data-big="' + esc(big.name) + '" data-small="' + esc(sm.name) + '">'
       + '<div class="qr-sh"><b>' + esc(sm.name) + '</b>'
       +   (row.middle ? '<span class="qr-mid">' + esc(row.middle) + '</span>' : '')
+      +   (function(){ var n = items.filter(function(x){ return x.kind === 'ladder'; }).length;
+             return n ? '<span class="qr-mid">🪜 계단 ' + n + '칸 포함</span>' : ''; })()
       +   (live1 ? '' : '<span class="qr-warn">1회차가 비었어요</span>')
       +   '<button class="qr-seenbtn' + (seen ? ' on' : '') + '" data-qr="seen">' + (seen ? '✓ 다 봤음' : '다 봤음') + '</button>'
       + '</div>'
