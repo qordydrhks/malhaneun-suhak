@@ -20,6 +20,8 @@
   var SIM_THRESHOLD = 0.5;              // 이 이상 겹치면 "비슷한 질문"으로 묶는다
 
   var QR = { grade:null, big:0, view:'all', query:'' };
+  // 고치기 칸에서 눌러 넣는 기호 (분수 1/2 · 제곱 cm^2 은 그냥 치면 되므로 뺐다)
+  var SYMS = ['×','÷','−','±','≤','≥','≠','°','π','√','∠','△','⊥','∥','∽','≡','㎝','①','②','③'];
 
   /* ── 저장소 ───────────────────────────────────────────── */
   function load(k){ try{ return JSON.parse(localStorage.getItem(k) || '{}'); }catch(e){ return {}; } }
@@ -201,7 +203,13 @@
     + '#qreviewTab .qr-foot b{color:#2A2350;}'
     + '#qreviewTab .qr-foot .sp{margin-left:auto;display:flex;gap:7px;}'
     + '#qreviewTab .qr-empty{padding:26px 6px;color:#8A7BB0;font-size:13px;}'
-    + '#qreviewTab .qr-note{margin:-6px 0 11px;font-size:12px;color:#8A7BB0;}';
+    + '#qreviewTab .qr-note{margin:-6px 0 11px;font-size:12px;color:#8A7BB0;}'
+    + '#qreviewTab .qr-syms{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;}'
+    + '#qreviewTab .qr-syms button{min-width:30px;padding:5px 7px;font-size:14px;line-height:1;border:1px solid #DDD6EE;border-radius:7px;background:#fff;color:#2A2350;cursor:pointer;font-family:inherit;}'
+    + '#qreviewTab .qr-syms button:hover{background:#F4EFFF;}'
+    + '#qreviewTab .qr-tip{margin:0 0 6px;font-size:11.5px;color:#8A7BB0;}'
+    + '#qreviewTab .qr-tip b{color:#6B5BA8;}'
+    + '#qreviewTab .qr-prev{margin-top:6px;padding:8px 10px;background:#F7F4FE;border-radius:9px;font-size:13.5px;color:#2A2350;line-height:1.65;}';
     var st = document.createElement('style'); st.id = 'qrStyle'; st.textContent = css;
     document.head.appendChild(st);
   }
@@ -361,6 +369,15 @@
       }
       return;
     }
+    if(act === 'sym' && rowEl){
+      var ta2 = rowEl.querySelector('.qr-ed'); if(!ta2) return;
+      var c = btn.getAttribute('data-c');
+      var a = ta2.selectionStart, b = ta2.selectionEnd;
+      ta2.value = ta2.value.slice(0, a) + c + ta2.value.slice(b);
+      ta2.focus(); ta2.setSelectionRange(a + c.length, a + c.length);
+      updatePreview(rowEl);
+      return;
+    }
     if(act === 'edit' && qid){ startEdit(rowEl, qid); return; }
     if(act === 'editSave' && qid){
       var ta = rowEl.querySelector('.qr-ed');
@@ -390,7 +407,12 @@
     if(!qEl || rowEl.querySelector('.qr-ed')) return;
     // 화면에 보이는 글자는 mfmt 로 꾸민 것이라 그대로 쓰면 안 된다 → 원래 글자를 data-plain 에서 가져온다
     var raw = rowEl.getAttribute('data-plain') || '';
-    qEl.innerHTML = '<textarea class="qr-ed" rows="3">' + esc(raw) + '</textarea>'
+    qEl.innerHTML = '<div class="qr-syms">' + SYMS.map(function(c){
+          return '<button type="button" data-qr="sym" data-c="' + esc(c) + '">' + esc(c) + '</button>'; }).join('')
+        + '</div>'
+      + '<p class="qr-tip">분수는 <b>1/2</b>, 대분수는 <b>2와 1/2</b>, 제곱은 <b>cm^2</b> 처럼 치면 앱이 알아서 그려요.</p>'
+      + '<textarea class="qr-ed" rows="3">' + esc(raw) + '</textarea>'
+      + '<div class="qr-prev" data-qr="prev">' + show(raw) + '</div>'
       + '<div class="qr-edrow">'
       +   '<button class="nbtn primary" data-qr="editSave">저장</button>'
       +   '<button class="nbtn" data-qr="editCancel">취소</button>'
@@ -399,6 +421,10 @@
     var ta = qEl.querySelector('.qr-ed'); ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length);
   }
 
+  function updatePreview(rowEl){
+    var ta = rowEl.querySelector('.qr-ed'), pv = rowEl.querySelector('[data-qr="prev"]');
+    if(ta && pv) pv.innerHTML = show(ta.value) || '<span style="color:#B9AFD4">(비어 있음)</span>';
+  }
   function onChange(e){
     var host = document.getElementById('qreviewTab');
     if(!host || !host.contains(e.target)) return;
@@ -410,6 +436,10 @@
   function onInput(e){
     var host = document.getElementById('qreviewTab');
     if(!host || !host.contains(e.target)) return;
+    if(e.target.classList && e.target.classList.contains('qr-ed')){
+      var row = e.target.closest('.qr-row'); if(row) updatePreview(row);
+      return;
+    }
     if(e.target.getAttribute('data-qr') !== 'query') return;
     QR.query = e.target.value;
     clearTimeout(onInput._t);
