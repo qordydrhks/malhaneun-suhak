@@ -92,7 +92,16 @@
         if(st && st.q) out.push({ id:'ladder:' + key + ':' + (i + 1), q:st.q, kind:'ladder', type:st.kind, index:i });
       });
     }catch(e){}
-    return out.filter(function(x){ return x.id && x.q; });
+    // 글자가 똑같은 질문이 두 번 나오면 뒤엣것을 버린다.
+    //   초3-1 처럼 한 소단원에 유형(types)이 2개 이상이면 같은 low/high 목록이 되풀이되어 딸려 온다.
+    //   (마스터가 이 중복을 손으로 빼고 있었다 — 2026-09-16)
+    var seenQ = {};
+    return out.filter(function(x){
+      if(!x.id || !x.q) return false;
+      var k = String(x.q).replace(/\s+/g, '');
+      if(seenQ[k]) return false;
+      seenQ[k] = 1; return true;
+    });
   }
   // 저장된 순서를 얹은 목록 (없으면 원래 순서: 기본 → 깊이 → 유형별)
   function orderedItems(gradeId, bigName, sm, code){
