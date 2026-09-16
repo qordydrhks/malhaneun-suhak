@@ -82,9 +82,18 @@
     } catch (e) { console.warn('[질문 계단] 서버 저장 실패 → 이 기기에만 저장', e); }
     try { localStorage.setItem('dd:sub:ladder' + Date.now(), JSON.stringify({studentId:s.id, name:s.name, courseId:row.course_id, courseName:row.course_name, unitId:row.unit_id, unitLabel:row.unit_label, level:'ladder', question:row.question, questionId:row.question_id, transcript:row.transcript, score, pass:passed, praise:row.praise, misconception:row.misconception, time:new Date().toISOString()})); } catch {}
   }
-  function lastStages(key, n) {
+  const dayKey = t => { const d = new Date(t); return d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate(); };
+  function lastRecs(key, n) {
     const s = session.student; if (!s) return [];
-    return Array.from({length:n}, (_, k) => { try { return (JSON.parse(localStorage.getItem('dl:rec:' + s.id + ':ladder:' + key + ':' + (k + 1)) || 'null') || {}).stage || null; } catch { return null; } });
+    return Array.from({length:n}, (_, k) => { try { return JSON.parse(localStorage.getItem('dl:rec:' + s.id + ':ladder:' + key + ':' + (k + 1)) || 'null'); } catch { return null; } });
+  }
+  const lastStages = (key, n) => lastRecs(key, n).map(r => (r && r.stage) || null);
+  // [v82.5] 한 칸의 상태: 통과(done) / 오늘은 못 봄(cooling) / 할 차례(todo)
+  //   모범답안까지 본 칸은 그날 바로 다시 하면 외워서 통과하게 되므로 다음 날부터 열린다.
+  function stepState(rec) {
+    if (!rec) return 'todo';
+    if (rec.stage !== 'stuck') return 'done';
+    return dayKey(rec.time || 0) === dayKey(Date.now()) ? 'cooling' : 'todo';
   }
 
   // ── 질문 목록 화면에 입구 카드 끼워 넣기 ───────────────────────────────
@@ -102,18 +111,23 @@
     if (!host || !view || view.dataset.uiPage !== 'questions' || host.querySelector('.dl-entry')) return;
     if (!session.student || session.teacher) return;
     const ctx = currentCtx(); if (!ctx) return;
-    const done = lastStages(ctx.key, ctx.steps.length), passed = done.filter(x => x && x !== 'stuck').length;
+    const recs = lastRecs(ctx.key, ctx.steps.length), states = recs.map(stepState);
+    const passed = states.filter(x => x === 'done').length, cooling = states.filter(x => x === 'cooling').length;
+    const todo = states.filter(x => x === 'todo').length, done = recs.map(r => r && r.stage);
     const card = document.createElement('section'); card.className = 'dl-entry';
     card.innerHTML = '<div><span class="dl-tag">시범</span><h2>🪜 선생님 질문 계단</h2><p>뚜삐 선생님이 한 칸씩 물어볼게요. 막히면 힌트와 설명이 나와요.</p>'
-      + '<p class="dl-meta">질문 ' + ctx.steps.length + '칸' + (done.some(Boolean) ? ' · 지난번 ' + passed + '칸 통과' : '') + '</p></div>'
-      + '<button type="button" class="dd-ui-primary dl-start">' + (done.some(Boolean) ? '다시 해 보기 →' : '시작하기 →') + '</button>';
-    card.querySelector('.dl-start').addEventListener('click', () => open(ctx));
+      + '<p class="dl-meta">질문 ' + ctx.steps.length + '칸'
+        + (recs.some(Boolean) ? ' · 통과 ' + passed + '칸' + (cooling ? ' · 오늘은 쉬는 칸 ' + cooling : '') + (todo ? ' · 남은 ' + todo + '칸' : '') : '') + '</p></div>'
+      + '<button type="button" class="dd-ui-primary dl-start"' + (todo ? '' : ' disabled') + '>'
+        + (todo ? (recs.some(Boolean) ? '남은 칸 이어서 →' : '시작하기 →') : (cooling ? '내일 다시 열려요' : '모두 통과했어요 ✓')) + '</button>';
+    const btn = card.querySelector('.dl-start');
+    if (!btn.disabled) btn.addEventListener('click', () => open(ctx));
     const head = host.querySelector('.dd-ui-page-head');
     if (head) head.after(card); else host.prepend(card);
   }
 
   // ── 채팅 화면 ─────────────────────────────────────────────────────────
-  const R = {ctx:null, k:0, phase:'ask', answers:[], busy:false, recs:[], rec:null, recog:null, heard:''};
+  const R = {ctx:null, k:0, plan:[], pi:0, phase:'ask', answers:[], busy:false, recs:[], rec:null, recog:null, heard:''};
   function el(html) { const t = document.createElement('div'); t.innerHTML = html.trim(); return t.firstChild; }
   function bubble(who, html, extra) {
     const chat = $('dlChat');
@@ -122,8 +136,11 @@
   }
   function progress() {
     const p = $('dlProgress'); if (!p) return;
-    p.innerHTML = R.ctx.steps.map((_, i) => '<span class="dl-dot ' + (R.recs[i] ? 'st-' + R.recs[i].stage : i === R.k ? 'now' : '') + '" title="' + (i + 1) + '칸"></span>').join('');
-    $('dlCount').textContent = Math.min(R.k + 1, R.ctx.steps.length) + ' / ' + R.ctx.steps.length;
+    p.innerHTML = R.ctx.steps.map((_, i) => {
+      const cls = R.recs[i] ? 'st-' + R.recs[i].stage : (R.old[i] ? 'st-' + R.old[i].stage : (i === R.k ? 'now' : ''));
+      return '<span class="dl-dot ' + cls + '" title="' + (i + 1) + '칸"></span>';
+    }).join('');
+    $('dlCount').textContent = Math.min(R.pi + 1, R.plan.length) + ' / ' + R.plan.length + '칸';
   }
   function figureFor(step) {
     if (step.figScene) { try { return '<div class="dl-fig">' + ddFig(step.figScene) + '</div>'; } catch { return ''; } }
@@ -135,6 +152,7 @@
     } catch { return ''; }
   }
   function ask() {
+    R.k = R.plan[R.pi];
     const step = R.ctx.steps[R.k];
     R.phase = 'ask'; R.answers = []; progress();
     bubble('t', '<div class="dl-kind">' + (R.k + 1) + '칸 · ' + esc(step.kind) + '</div>' + fm(step.q) + figureFor(step));
@@ -189,19 +207,26 @@
     const rec = {stage, hits:g.hits, h:g.h, n:g.n, misconception:g.misconception, answers:R.answers.slice()};
     R.recs[R.k] = rec;
     save(R.ctx, R.k, rec);
-    if (stage === 'stuck') bubble('t', '괜찮아. 이 칸은 선생님이 한 번 더 같이 봐 줄 거야. 다음 질문으로 가 보자.');
+    if (stage === 'stuck') {
+      // [v82.5] 세 번까지 해도 못 맞히면 정확한 모범답안을 보여 준다. 대신 이 칸은 오늘은 다시 열리지 않는다.
+      const step = R.ctx.steps[R.k];
+      bubble('t', '<div class="dl-answer"><div class="dl-kind">모범답안</div><ul>'
+        + step.ideas.map(x => '<li>' + fm(x[0]) + '</li>').join('') + '</ul>'
+        + '<p>' + fm(step.teach) + '</p></div>');
+      bubble('t', '오늘은 이 칸을 여기까지 하자. <b>내일 다시 열리면</b> 네 말로 설명해 보는 거야.');
+    }
     else bubble('t', esc(g.ack || '좋아!') + ' ✓', 'ok');
-    R.k++;
+    R.pi++;
     progress();
-    if (R.k < R.ctx.steps.length) setTimeout(ask, 700);
+    if (R.pi < R.plan.length) setTimeout(ask, 700);
     else setTimeout(summary, 700);
   }
   function summary() {
     setInput(false);
     const foot = $('dlFoot'); if (foot) foot.hidden = true;
-    const rows = R.ctx.steps.map((s, i) => { const r = R.recs[i] || {stage:'stuck'}; return '<li class="st-' + r.stage + '"><span>' + (r.stage === 'stuck' ? '✕' : '✓') + '</span><div><b>' + (i + 1) + '칸 · ' + STAGE[r.stage] + '</b><small>' + fm(s.q) + '</small></div></li>'; }).join('');
-    const ok = R.recs.filter(r => r && r.stage !== 'stuck').length;
-    bubble('t', '<div class="dl-sum"><div class="dl-kind">오늘의 계단</div><p><b>' + R.ctx.steps.length + '칸 중 ' + ok + '칸</b>을 설명했어!' + (ok < R.ctx.steps.length ? ' 막힌 칸은 선생님과 다시 볼 거야.' : ' 멋지다!') + '</p><ul>' + rows + '</ul>'
+    const rows = R.plan.map(i => { const s = R.ctx.steps[i], r = R.recs[i] || {stage:'stuck'}; return '<li class="st-' + r.stage + '"><span>' + (r.stage === 'stuck' ? '✕' : '✓') + '</span><div><b>' + (i + 1) + '칸 · ' + STAGE[r.stage] + '</b><small>' + fm(s.q) + '</small></div></li>'; }).join('');
+    const ok = R.plan.filter(i => R.recs[i] && R.recs[i].stage !== 'stuck').length;
+    bubble('t', '<div class="dl-sum"><div class="dl-kind">오늘의 계단</div><p><b>' + R.plan.length + '칸 중 ' + ok + '칸</b>을 설명했어!' + (ok < R.plan.length ? ' 못 푼 칸은 내일 다시 열려.' : ' 멋지다!') + '</p><ul>' + rows + '</ul>'
       + '<button type="button" class="dd-ui-primary" id="dlDone">질문 목록으로</button></div>');
     $('dlDone').addEventListener('click', close);
   }
@@ -239,7 +264,10 @@
   function open(ctx) {
     if (typeof isAcademyDevice === 'function' && !isAcademyDevice() && !session.teacher) { alertBox('학원 태블릿에서만 공부할 수 있어요. 선생님께 말씀해 주세요.'); return; }
     try { if (typeof stopRecognitionIfActive === 'function') stopRecognitionIfActive(); if (typeof Timer !== 'undefined') Timer.hide(); } catch {}
-    Object.assign(R, {ctx, k:0, phase:'ask', answers:[], busy:false, recs:[], last:null});
+    const old = lastRecs(ctx.key, ctx.steps.length), states = old.map(stepState);
+    const plan = states.map((st, i) => st === 'todo' ? i : -1).filter(i => i >= 0);
+    if (!plan.length) { alertBox(states.some(x => x === 'cooling') ? '오늘 막힌 칸은 내일 다시 열려요. 다른 개념을 해 볼까요?' : '이 계단은 모두 통과했어요!'); return; }
+    Object.assign(R, {ctx, k:plan[0], plan, pi:0, old, phase:'ask', answers:[], busy:false, recs:[], last:null});
     const box = el('<div id="dlOverlay" role="dialog" aria-modal="true" aria-label="선생님 질문 계단">'
       + '<div class="dl-head"><button type="button" class="dd-ui-text" id="dlClose">‹ 나가기</button><div class="dl-title"><small>' + esc(ctx.big) + '</small><strong>' + esc(ctx.small) + '</strong></div><span id="dlCount"></span></div>'
       + '<div id="dlProgress"></div><div id="dlChat" aria-live="polite"></div>'
@@ -256,7 +284,12 @@
     if ($('dlMic')) $('dlMic').addEventListener('click', () => R.recog ? stopMic() : startMic());
     $('dlClear').addEventListener('click', () => { stopMic(); $('dlText').value = ''; $('dlText').focus(); });
     $('dlQuit').addEventListener('click', () => $('dlClose').click());
-    bubble('t', '안녕! 오늘은 <b>' + esc(ctx.small) + '</b>를 ' + ctx.steps.length + '칸으로 물어볼게. 생각나는 대로 설명해 줘.');
+    const doneN = R.old.filter(r => r && r.stage !== 'stuck').length;
+    const coolN = R.old.filter((r, i) => stepState(r) === 'cooling').length;
+    bubble('t', '안녕! 오늘은 <b>' + esc(ctx.small) + '</b>를 ' + R.plan.length + '칸 물어볼게.'
+      + (doneN ? ' 지난번에 통과한 ' + doneN + '칸은 건너뛰었어.' : '')
+      + (coolN ? ' 어제 모범답안을 본 ' + coolN + '칸은 내일 다시 열려.' : '')
+      + ' 생각나는 대로 설명해 줘.');
     ask();
   }
   function close() {
@@ -268,6 +301,81 @@
   }
   function alertBox(t) { if (typeof window.DD_UI !== 'undefined' && $('ddUiNotice')) { $('ddUiNotice').textContent = t; $('ddUiNotice').hidden = false; setTimeout(() => $('ddUiNotice').hidden = true, 4200); } else alert(t); }
   window.addEventListener('popstate', () => { if ($('dlOverlay') && !R.busy) close(); });
+
+  // ── [v82.5] 개념 질문(기존 흐름)도 못 맞히면 그날은 다시 못 본다 ──────────────
+  //   마스터 요청: 바로 다시 보면 힌트·설명을 외워서 통과하게 되므로 하루 뒤부터 열리게.
+  const qcoolKey = item => {
+    const sid = session.student && session.student.id; if (!sid || !item) return '';
+    return 'dl:qcool:' + sid + ':' + (item.id || (CP.grade + '|' + item.q));
+  };
+  function qcooling(item) {
+    const k = qcoolKey(item); if (!k) return false;
+    try { const v = localStorage.getItem(k); return !!v && v === dayKey(Date.now()); } catch { return false; }
+  }
+  function markQuestionFail(question, qid) {
+    const sid = session.student && session.student.id; if (!sid) return;
+    const k = 'dl:qcool:' + sid + ':' + (qid || (CP.grade + '|' + question));
+    try { localStorage.setItem(k, dayKey(Date.now())); } catch {}
+  }
+  if (typeof window.saveSubmission === 'function') {
+    const origSave = window.saveSubmission;
+    window.saveSubmission = async function(grade, unit, transcript, result, attempt, needTeacher) {
+      try {
+        if (state.level !== 'ladder' && result && (result.score || 0) < (typeof PASS_SCORE === 'number' ? PASS_SCORE : 70)) {
+          const q = (state.questions && state.questions[state.qIndex]) || '';
+          markQuestionFail(q, typeof ddqCurrentId === 'function' ? ddqCurrentId(q) : '');
+        }
+      } catch {}
+      return origSave.apply(this, arguments);
+    };
+  }
+  document.addEventListener('click', e => {
+    const el = e.target.closest('[data-dd-ui="question"], [data-dd-ui="continue"]'); if (!el) return;
+    if (!session.student || session.teacher || !window.DD_UI) return;
+    let item = null;
+    try {
+      if (el.dataset.ddUi === 'question') item = DD_UI.questionItems()[Number(el.dataset.index)];
+      else { const left = DD_UI.remaining(); item = left && left[0]; }
+    } catch { return; }
+    if (item && qcooling(item)) {
+      e.preventDefault(); e.stopImmediatePropagation();
+      alertBox('오늘은 이 질문을 다시 볼 수 없어요. 설명을 한 번 더 읽고 내일 말해 봐요.');
+    }
+  }, true);
+
+  // ── [v82.5] 선생님 화면(학생 기록)에 질문 계단 칸 기록을 따로 보여 준다 ──────
+  function ladderPanel(subs) {
+    const rows = (subs || []).filter(x => x && x.level === 'ladder');
+    if (!rows.length) return '';
+    const by = {};
+    rows.slice().sort((a, b) => new Date(a.time) - new Date(b.time)).forEach(x => { (by[x.unitLabel || ''] = by[x.unitLabel || ''] || {})[x.questionId || x.question] = x; });
+    const fmtT = t => { const d = new Date(t); return isNaN(d) ? '' : (d.getMonth() + 1) + '/' + d.getDate(); };
+    const body = Object.keys(by).map(label => {
+      const items = Object.values(by[label]).sort((a, b) => String(a.questionId).localeCompare(String(b.questionId), 'ko', {numeric:true}));
+      const okN = items.filter(x => x.pass !== false && (x.score || 0) >= 70).length;
+      return '<div class="dl-rep-unit"><h4>' + esc(label) + ' <span>' + okN + ' / ' + items.length + '칸</span></h4>'
+        + items.map(x => {
+            const ok = (x.score || 0) >= 70;
+            return '<div class="dl-rep-row' + (ok ? '' : ' bad') + '"><b>' + esc(String(x.praise || '').replace(/^질문 계단 /, '')) + '</b>'
+              + (x.misconception ? '<span class="dl-rep-note">' + esc(x.misconception) + '</span>' : '')
+              + '<span class="dl-rep-time">' + fmtT(x.time) + '</span></div>';
+          }).join('') + '</div>';
+    }).join('');
+    return '<section class="dl-report"><h3>🪜 질문 계단 기록</h3><p>칸마다 한 번에 / 되묻기 후 / 설명 보고 / 막힘으로 남습니다. 막힌 칸에는 무엇을 설명하지 못했는지 적혀 있어요.</p>' + body + '</section>';
+  }
+  if (typeof window.openStudentHistory === 'function') {
+    const origHist = window.openStudentHistory;
+    window.openStudentHistory = function(student, subs) {
+      const out = origHist.apply(this, arguments);
+      try {
+        const body = $('shBody'); if (!body) return out;
+        const old = body.querySelector('.dl-report'); if (old) old.remove();
+        const html = ladderPanel(subs);
+        if (html) body.insertAdjacentHTML('afterbegin', html);
+      } catch (e) { console.warn('[질문 계단] 기록 패널 실패', e); }
+      return out;
+    };
+  }
 
   // ── 스타일 ──────────────────────────────────────────────────────────
   const css = document.createElement('style');
@@ -290,6 +398,8 @@ body.dl-open{overflow:hidden}
 .dl-msg.ok .dl-bub{background:#e3f4ec;border-color:#bfe5d3}.dl-msg.err .dl-bub{background:#fdeee8;border-color:#f3cdbd}
 .dl-kind{font-size:12px;font-weight:700;color:#534AB7;margin-bottom:3px}
 .dl-teach{background:#eef3f9;border-radius:10px;padding:8px 10px}
+.dl-answer{background:#fff7ec;border:1px solid #f0ddc2;border-radius:10px;padding:8px 10px}
+.dl-answer ul{margin:4px 0 6px;padding-left:18px}.dl-answer li{margin:2px 0}.dl-answer p{margin:0;color:#6b6a64;font-size:14px}
 .dl-fig{margin-top:8px}.dl-fig svg{display:block;width:100%;max-width:380px;height:auto}
 .dl-typing i{display:inline-block;width:7px;height:7px;margin:0 2px;border-radius:50%;background:#aaa;animation:dlb 1s infinite}.dl-typing i:nth-child(2){animation-delay:.15s}.dl-typing i:nth-child(3){animation-delay:.3s}
 @keyframes dlb{0%,80%,100%{opacity:.3}40%{opacity:1}}
@@ -308,6 +418,11 @@ body.dl-open{overflow:hidden}
 #dlNotice{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#333;color:#fff;border-radius:10px;padding:7px 14px;font-size:14px}
 .dl-sum ul{list-style:none;margin:8px 0 12px;padding:0}.dl-sum li{display:grid;grid-template-columns:22px 1fr;gap:6px;padding:6px 0;border-top:1px solid #eee}
 .dl-sum li span{font-weight:700;color:#2f9e76}.dl-sum li.st-stuck span{color:#D85A30}.dl-sum li small{display:block;color:#777;font-size:13px}
+.dl-report{background:#fff;border:1px solid #e4e2da;border-radius:12px;padding:12px 14px;margin:0 0 12px}
+.dl-report h3{margin:0 0 4px;font-size:15px}.dl-report>p{margin:0 0 8px;font-size:12px;color:#6b6a64}
+.dl-rep-unit{margin:8px 0}.dl-rep-unit h4{margin:0 0 4px;font-size:13.5px}.dl-rep-unit h4 span{color:#2f9e76;font-size:12px}
+.dl-rep-row{font-size:13px;padding:3px 0;border-top:1px solid #f0efe9;display:grid;grid-template-columns:1fr auto;gap:2px 8px}
+.dl-rep-row.bad b{color:#D85A30}.dl-rep-note{grid-column:1/-1;color:#8a5a1a;font-size:12.5px}.dl-rep-time{color:#9a9890;font-size:12px}
 @media (max-width:560px){.dl-bub{max-width:90%;font-size:15px}.dl-mic-wrap{width:62px;height:62px}.dl-rec{width:48px;height:48px}#dlOverlay .dl-foot{gap:8px}}
 `;
   document.head.appendChild(css);
