@@ -11,6 +11,8 @@
   const $ = id => document.getElementById(id);
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const IDS = 'abc';
+  // [v82.4] 수식은 앱의 표시기(mfmt)로 그려 교재 글씨체와 같게 한다
+  const fm = t => (typeof window.mfmt === 'function' ? window.mfmt(String(t == null ? '' : t)) : esc(t));
   const STAGE = {first:'한 번에', hint:'되묻기 후', teach:'설명 보고', stuck:'막힘'};
 
   // ── 채점 지시문 (작업도구/질문계단/grade_test3.js 에서 시험한 것과 같은 규칙) ──────────────
@@ -135,12 +137,12 @@
   function ask() {
     const step = R.ctx.steps[R.k];
     R.phase = 'ask'; R.answers = []; progress();
-    bubble('t', '<div class="dl-kind">' + (R.k + 1) + '칸 · ' + esc(step.kind) + '</div>' + esc(step.q) + figureFor(step));
+    bubble('t', '<div class="dl-kind">' + (R.k + 1) + '칸 · ' + esc(step.kind) + '</div>' + fm(step.q) + figureFor(step));
     setInput(true);
   }
   function setInput(on) {
     R.busy = !on;
-    for (const id of ['dlText', 'dlSend', 'dlMic']) { const x = $(id); if (x) x.disabled = !on; }
+    for (const id of ['dlText', 'dlSend', 'dlMic', 'dlClear']) { const x = $(id); if (x) x.disabled = !on; }
     if (on) { const t = $('dlText'); if (t && !SpeechAvailable()) t.focus(); }
   }
   const SpeechAvailable = () => typeof SpeechRecognitionCtor !== 'undefined' && !!SpeechRecognitionCtor;
@@ -171,14 +173,14 @@
     if (R.phase === 'ask') {
       R.phase = 'hint';
       const mi = g.miss >= 0 ? g.miss : 0;   // 적용 오류(핵심은 다 말했지만 틀린 말이 섞임)면 첫 아이디어부터 다시 짚는다
-      bubble('t', esc(g.ack) + ' <b>' + esc(step.ideas[mi][1]) + '</b>');
+      bubble('t', esc(g.ack) + ' <b>' + fm(step.ideas[mi][1]) + '</b>');
       setInput(true); return;
     }
     if (R.phase === 'hint') {
       R.phase = 'again';
       bubble('t', esc(g.ack || '괜찮아, 같이 정리해 보자.'));
-      bubble('t', '<div class="dl-teach"><div class="dl-kind">짧은 설명</div>' + esc(step.teach) + '</div>');
-      bubble('t', esc(step.again));
+      bubble('t', '<div class="dl-teach"><div class="dl-kind">짧은 설명</div>' + fm(step.teach) + '</div>');
+      bubble('t', '<div class="dl-kind">다시 한 번</div>' + fm(step.again));
       setInput(true); return;
     }
     finishStep('stuck', g);
@@ -197,7 +199,7 @@
   function summary() {
     setInput(false);
     const foot = $('dlFoot'); if (foot) foot.hidden = true;
-    const rows = R.ctx.steps.map((s, i) => { const r = R.recs[i] || {stage:'stuck'}; return '<li class="st-' + r.stage + '"><span>' + (r.stage === 'stuck' ? '✕' : '✓') + '</span><div><b>' + (i + 1) + '칸 · ' + STAGE[r.stage] + '</b><small>' + esc(s.q) + '</small></div></li>'; }).join('');
+    const rows = R.ctx.steps.map((s, i) => { const r = R.recs[i] || {stage:'stuck'}; return '<li class="st-' + r.stage + '"><span>' + (r.stage === 'stuck' ? '✕' : '✓') + '</span><div><b>' + (i + 1) + '칸 · ' + STAGE[r.stage] + '</b><small>' + fm(s.q) + '</small></div></li>'; }).join('');
     const ok = R.recs.filter(r => r && r.stage !== 'stuck').length;
     bubble('t', '<div class="dl-sum"><div class="dl-kind">오늘의 계단</div><p><b>' + R.ctx.steps.length + '칸 중 ' + ok + '칸</b>을 설명했어!' + (ok < R.ctx.steps.length ? ' 막힌 칸은 선생님과 다시 볼 거야.' : ' 멋지다!') + '</p><ul>' + rows + '</ul>'
       + '<button type="button" class="dd-ui-primary" id="dlDone">질문 목록으로</button></div>');
@@ -211,20 +213,27 @@
     try { if (typeof stopRecognitionIfActive === 'function') stopRecognitionIfActive(); } catch {}
     const r = new SpeechRecognitionCtor(); R.recog = r;
     r.lang = 'ko-KR'; r.continuous = true; r.interimResults = true;
+    // [v82.4] 이 인식기에서 새로 들린 것만 이어 붙인다.
+    //   예전엔 ev.results 를 늘 처음부터 다시 읽어, 앞 칸에서 말한 내용이 다음 칸 답에 남았다.
     const base = ($('dlText').value || '').trim();
+    let done = '';
     r.onresult = ev => {
-      let fin = '', mid = '';
-      for (let i = 0; i < ev.results.length; i++) { const t = ev.results[i][0].transcript; if (ev.results[i].isFinal) fin += t + ' '; else mid += t; }
-      $('dlText').value = (base + ' ' + fin + mid).replace(/\s+/g, ' ').trim();
+      let mid = '';
+      for (let i = ev.resultIndex; i < ev.results.length; i++) {
+        const t = ev.results[i][0].transcript;
+        if (ev.results[i].isFinal) done += t + ' '; else mid += t;
+      }
+      $('dlText').value = ((base ? base + ' ' : '') + done + mid).replace(/\s+/g, ' ').trim();
     };
     r.onerror = e => { if (e.error === 'not-allowed') notice('마이크를 쓸 수 없어요. 글로 써 줘.'); stopMic(); };
     r.onend = () => { if (R.recog === r) stopMic(); };
-    try { r.start(); $('dlMic').classList.add('rec'); $('dlMic').textContent = '■ 그만'; } catch { stopMic(); }
+    try { r.start(); $('dlMic').classList.add('recording'); $('dlMicWrap').classList.add('recording'); notice('듣고 있어요. 다 말하면 마이크를 한 번 더 눌러.'); } catch { stopMic(); }
   }
   function stopMic() {
     const r = R.recog; R.recog = null;
     if (r) { try { r.onend = null; r.stop(); } catch {} }
-    const m = $('dlMic'); if (m) { m.classList.remove('rec'); m.textContent = '🎤 말하기'; }
+    const m = $('dlMic'); if (m) m.classList.remove('recording');
+    const w = $('dlMicWrap'); if (w) w.classList.remove('recording');
   }
 
   function open(ctx) {
@@ -235,13 +244,18 @@
       + '<div class="dl-head"><button type="button" class="dd-ui-text" id="dlClose">‹ 나가기</button><div class="dl-title"><small>' + esc(ctx.big) + '</small><strong>' + esc(ctx.small) + '</strong></div><span id="dlCount"></span></div>'
       + '<div id="dlProgress"></div><div id="dlChat" aria-live="polite"></div>'
       + '<div id="dlNotice" hidden></div>'
-      + '<div class="dl-foot" id="dlFoot"><textarea id="dlText" rows="2" placeholder="' + (SpeechAvailable() ? '🎤를 누르고 말하거나 여기에 써 줘' : '여기에 설명을 써 줘') + '"></textarea>'
-      + '<div class="dl-btns">' + (SpeechAvailable() ? '<button type="button" class="dd-ui-secondary" id="dlMic">🎤 말하기</button>' : '') + '<button type="button" class="dd-ui-primary" id="dlSend">보내기</button></div></div></div>');
+      + '<div class="dl-foot" id="dlFoot">'
+      + (SpeechAvailable() ? '<div class="dl-mic-wrap" id="dlMicWrap"><span class="ripple r1"></span><span class="ripple r2"></span><span class="ripple r3"></span>'
+        + '<button type="button" class="dl-rec" id="dlMic" aria-label="말하기 시작"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg></button></div>' : '')
+      + '<div class="dl-in"><textarea id="dlText" rows="2" placeholder="' + (SpeechAvailable() ? '마이크를 누르고 말해 줘. 여기에 고쳐 쓸 수도 있어.' : '여기에 설명을 써 줘') + '"></textarea>'
+      + '<div class="dl-btns"><button type="button" class="dd-ui-text" id="dlClear">지우고 다시</button><button type="button" class="dd-ui-text" id="dlQuit">‹ 질문 목록</button><button type="button" class="dd-ui-primary" id="dlSend">보내기</button></div></div></div></div>');
     document.body.appendChild(box); document.body.classList.add('dl-open');
     $('dlClose').addEventListener('click', () => { if (R.busy) { notice('뚜삐가 듣는 중이에요. 잠깐만!'); return; } if (R.k < ctx.steps.length && R.k > 0 && !confirm('계단을 멈출까요? 지금까지 한 칸은 저장돼요.')) return; close(); });
     $('dlSend').addEventListener('click', submit);
     $('dlText').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); submit(); } });
     if ($('dlMic')) $('dlMic').addEventListener('click', () => R.recog ? stopMic() : startMic());
+    $('dlClear').addEventListener('click', () => { stopMic(); $('dlText').value = ''; $('dlText').focus(); });
+    $('dlQuit').addEventListener('click', () => $('dlClose').click());
     bubble('t', '안녕! 오늘은 <b>' + esc(ctx.small) + '</b>를 ' + ctx.steps.length + '칸으로 물어볼게. 생각나는 대로 설명해 줘.');
     ask();
   }
@@ -279,13 +293,22 @@ body.dl-open{overflow:hidden}
 .dl-fig{margin-top:8px}.dl-fig svg{display:block;width:100%;max-width:380px;height:auto}
 .dl-typing i{display:inline-block;width:7px;height:7px;margin:0 2px;border-radius:50%;background:#aaa;animation:dlb 1s infinite}.dl-typing i:nth-child(2){animation-delay:.15s}.dl-typing i:nth-child(3){animation-delay:.3s}
 @keyframes dlb{0%,80%,100%{opacity:.3}40%{opacity:1}}
-#dlOverlay .dl-foot{background:#fff;border-top:1px solid #e4e2da;padding:10px max(16px,calc((100% - 780px)/2));display:flex;flex-direction:row;gap:8px;align-items:flex-end;width:100%;box-sizing:border-box}
+#dlOverlay .dl-foot{background:#fff;border-top:1px solid #e4e2da;padding:10px max(16px,calc((100% - 780px)/2));display:flex;flex-direction:row;gap:12px;align-items:center;width:100%;box-sizing:border-box}
+.dl-in{flex:1;display:flex;flex-direction:column;gap:6px;min-width:0}
+.dl-mic-wrap{position:relative;width:74px;height:74px;flex:none;display:flex;align-items:center;justify-content:center}
+.dl-mic-wrap .ripple{position:absolute;inset:0;border-radius:50%;border:2px solid #FF6B47;opacity:0;pointer-events:none}
+.dl-mic-wrap.recording .ripple{animation:dlknock 1.6s ease-out infinite}
+.dl-mic-wrap.recording .ripple.r2{animation-delay:.5s}.dl-mic-wrap.recording .ripple.r3{animation-delay:1s}
+@keyframes dlknock{0%{transform:scale(.7);opacity:.55}100%{transform:scale(1.9);opacity:0}}
+.dl-rec{position:relative;width:56px;height:56px;border-radius:50%;border:none;background:#FF6B47;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 18px rgba(255,107,71,.35)}
+.dl-rec.recording{background:#D8442A}.dl-rec:disabled{opacity:.5}
+.dl-btns{align-items:center}
 #dlText{flex:1;font-size:16px;border:1px solid #d6d3ca;border-radius:12px;padding:9px 11px;resize:none;font-family:inherit;min-height:46px}
 .dl-btns{display:flex;flex-direction:row;gap:6px;flex:none}.dl-btns button{white-space:nowrap}#dlMic.rec{background:#D85A30;color:#fff;border-color:#D85A30}
 #dlNotice{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#333;color:#fff;border-radius:10px;padding:7px 14px;font-size:14px}
 .dl-sum ul{list-style:none;margin:8px 0 12px;padding:0}.dl-sum li{display:grid;grid-template-columns:22px 1fr;gap:6px;padding:6px 0;border-top:1px solid #eee}
 .dl-sum li span{font-weight:700;color:#2f9e76}.dl-sum li.st-stuck span{color:#D85A30}.dl-sum li small{display:block;color:#777;font-size:13px}
-@media (max-width:560px){.dl-bub{max-width:90%;font-size:15px}#dlOverlay .dl-foot{flex-direction:column;align-items:stretch}.dl-btns{flex-direction:row}.dl-btns button{flex:1}}
+@media (max-width:560px){.dl-bub{max-width:90%;font-size:15px}.dl-mic-wrap{width:62px;height:62px}.dl-rec{width:48px;height:48px}#dlOverlay .dl-foot{gap:8px}}
 `;
   document.head.appendChild(css);
 
