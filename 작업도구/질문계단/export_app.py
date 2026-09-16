@@ -11,8 +11,11 @@ grade, files = sys.argv[1], sys.argv[2:]
 KEEP = ('kind', 'q', 'ideas', 'teach', 'again', 'fig', 'src', 'miscon', 'record')
 data = {}
 FIGS = {}
-_fp = os.path.join(HERE, 'm3', 'figs_m31.json')   # 칸 전용 그림 (없으면 카드 그림을 쓴다)
-if os.path.exists(_fp): FIGS = json.load(io.open(_fp, encoding='utf-8'))
+# 칸 전용 그림 (없으면 카드 그림을 쓴다).
+# ⚠️ 키가 "03.|2" 처럼 소단원 번호뿐이라 학년 구분이 없다 → 만든 학년에만 쓴다.
+#    (안 그러면 초5-1 "01. …" 칸에 중3-1 그림이 붙는다)
+_fp = os.path.join(HERE, 'm3', 'figs_m31.json')
+if grade == 'm3-1' and os.path.exists(_fp): FIGS = json.load(io.open(_fp, encoding='utf-8'))
 for f in files:
     for it in json.load(io.open(os.path.join(HERE, f), encoding='utf-8')):
         if it.get('summary'):

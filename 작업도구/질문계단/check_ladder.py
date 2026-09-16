@@ -26,7 +26,7 @@ def main(lp, sp):
             seen.add(key)
         steps = it.get('steps') or []
         nsteps += len(steps)
-        if not 2 <= len(steps) <= 8:
+        if not 2 <= len(steps) <= 14:   # [2026-09-16 마스터] 칸 수를 미리 제한하지 않는다. 내용이 정한다
             bad.append('%s: 칸 수 %d' % (it['small'][:20], len(steps)))
         qs = []
         for i, s in enumerate(steps, 1):
