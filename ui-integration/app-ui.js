@@ -21,6 +21,7 @@
     ['bank','문항과 수업','문제은행','문제 찾기 · 직접 추가 · 학생 배정','▣'],
     ['cards','문항과 수업','개념·질문 편집','개념 설명 · 말하기 질문 · 기본문제','✎'],
     ['baseline','문항과 수업','기준으로 굳히기','수정한 내용을 공통 기준으로 저장','▱'],
+    ['qreview','문항과 수업','질문 고르기','회차 배정 · 빼기 · 문장 고치기 [v82.9]','☰'],
     ['ai','앱 설정','AI 연결','채점에 사용할 AI 키 관리','✧'],
     ['admin','앱 설정','관리자 비밀번호','관리자 화면의 비밀번호 변경','◈']
   ];
@@ -312,18 +313,19 @@
   //   (그 경우엔 새 창이므로 PIN을 묻는 게 맞다).
   function teacherOverview() {
     return '<div class="dd-ui-page-head"><div><p class="dd-ui-caption">선생님 전체 메뉴</p><h1>무엇을 할까요?</h1><p class="dd-ui-caption">메뉴를 고르면 바로 열려요. 위쪽 ‘전체 메뉴’로 언제든 돌아옵니다.</p></div></div><div class="dd-ui-menu-columns">'+
-      ['학생과 학습','문항과 수업','앱 설정'].map((group,i)=>'<section class="dd-ui-menu-group group-'+i+'"><h2>'+group+'</h2>'+menus.filter(m=>m[1]===group&&(!['baseline','admin'].includes(m[0])||isOwner())).map(m=>'<a class="dd-ui-menu-card" href="'+esc(teacherUrl(m[0]))+'" data-dd-ui="teacher-menu" data-menu="'+m[0]+'"><span class="dd-ui-menu-icon">'+m[4]+'</span><div><strong>'+m[2]+'</strong><small>'+m[3]+'</small></div><span aria-hidden="true">›</span></a>').join('')+'</section>').join('')+'</div>';
+      ['학생과 학습','문항과 수업','앱 설정'].map((group,i)=>'<section class="dd-ui-menu-group group-'+i+'"><h2>'+group+'</h2>'+menus.filter(m=>m[1]===group&&(!['baseline','admin','qreview'].includes(m[0])||isOwner())).map(m=>'<a class="dd-ui-menu-card" href="'+esc(teacherUrl(m[0]))+'" data-dd-ui="teacher-menu" data-menu="'+m[0]+'"><span class="dd-ui-menu-icon">'+m[4]+'</span><div><strong>'+m[2]+'</strong><small>'+m[3]+'</small></div><span aria-hidden="true">›</span></a>').join('')+'</section>').join('')+'</div>';
   }
   function showTeacher(menu) {
     if(!session.teacher) { showView('viewTeacherAuth'); return; }
-    if(['baseline','admin'].includes(menu)&&!isOwner()) menu=null;
+    if(['baseline','admin','qreview'].includes(menu)&&!isOwner()) menu=null;
     ui.menu=menus.some(m=>m[0]===menu)?menu:null; $('viewTeacher').dataset.uiMenu=ui.menu||'home';
     $('ddUiTeacherHome').innerHTML=teacherOverview(); const m=menus.find(m=>m[0]===ui.menu);
     $('ddUiTeacherHeading').innerHTML=m?'<div><p class="dd-ui-caption">'+m[1]+'</p><h1>'+m[2]+'</h1></div>':'';
-    for(const id of ['dashTab','manageTab','bankTab','cecardsTab','ddUiTeacherStudents','ddUiTeacherAi','ddUiTeacherAdmin','ddUiTeacherBaseline']) $(id).style.display='none';
+    for(const id of ['dashTab','manageTab','bankTab','cecardsTab','ddUiTeacherStudents','ddUiTeacherAi','ddUiTeacherAdmin','ddUiTeacherBaseline','qreviewTab']) { const el=$(id); if(el) el.style.display='none'; }
     $('ddUiTeacherHome').hidden=!!ui.menu; $('ddUiTeacherHeading').hidden=!ui.menu;
-    const map={dashboard:'dashTab',students:'ddUiTeacherStudents',reports:'ddUiTeacherStudents',bank:'bankTab',cards:'cecardsTab',baseline:'ddUiTeacherBaseline',ai:'ddUiTeacherAi',admin:'ddUiTeacherAdmin'};
-    if(map[ui.menu]) $(map[ui.menu]).style.display='block';
+    const map={dashboard:'dashTab',students:'ddUiTeacherStudents',reports:'ddUiTeacherStudents',bank:'bankTab',cards:'cecardsTab',baseline:'ddUiTeacherBaseline',ai:'ddUiTeacherAi',admin:'ddUiTeacherAdmin',qreview:'qreviewTab'};
+    if(map[ui.menu]&&$(map[ui.menu])) $(map[ui.menu]).style.display='block';
+    if(ui.menu==='qreview'&&typeof window.qrRender==='function') window.qrRender();   // [v82.9] 질문 고르기
     if(ui.menu==='bank') initBankTab();
     if(['cards','baseline'].includes(ui.menu)) ceInit();
     if(ui.menu==='ai') refreshKeyStatus();
