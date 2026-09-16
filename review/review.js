@@ -2,7 +2,7 @@
    [v82.9] 질문 고르기 (qr~) — 마스터 전용 화면
    ------------------------------------------------------------
    무엇: 한 소단원의 모든 말하기 질문(기본·깊이·유형별)을 한 자리에 펼쳐 놓고
-         ① 회차(1/2/3) 배정 ② 빼기(숨김) ③ 문장 고치기 를 하는 화면.
+         ① 회차(1/2/3) 배정 ② 빼기(숨김) ③ 문장 고치기 ④ 순서 바꾸기 를 하는 화면.
    원칙: 기존 코드와 격리한다. dodream.html 은 script 태그 한 줄만 늘어난다.
          이 화면은 학생 화면을 아무것도 바꾸지 않는다 — 고른 결과는 내보내기로 나가고,
          앱에 심는 것은 따로 한다(편집기 수정본이 그 기기에만 남는 문제를 피하려고).
@@ -10,11 +10,12 @@
      qr:plan:v1  { 질문번호: {r:1|2|3, off:true} }   회차·빼기
      qr:edits:v1 { 질문번호: "고친 문장" }            문장 고치기
      qr:seen:v1  { 개념코드: true }                   "다 봤음" 표시
+     qr:order:v1 { 개념코드: [질문번호, …] }           질문 순서 (같은 종류 안에서만 바꾼다)
    ============================================================ */
 (function(){
   'use strict';
 
-  var PLAN_KEY = 'qr:plan:v1', EDIT_KEY = 'qr:edits:v1', SEEN_KEY = 'qr:seen:v1';
+  var PLAN_KEY = 'qr:plan:v1', EDIT_KEY = 'qr:edits:v1', SEEN_KEY = 'qr:seen:v1', ORDER_KEY = 'qr:order:v1';
   var ROUNDS = 3;                       // 학원이 3회 반복 시스템이라 3회차 (마스터 결정 2026-09-16)
   var SIM_THRESHOLD = 0.5;              // 이 이상 겹치면 "비슷한 질문"으로 묶는다
 
@@ -23,7 +24,7 @@
   /* ── 저장소 ───────────────────────────────────────────── */
   function load(k){ try{ return JSON.parse(localStorage.getItem(k) || '{}'); }catch(e){ return {}; } }
   function save(k, o){ try{ localStorage.setItem(k, JSON.stringify(o)); }catch(e){} }
-  var PLAN = load(PLAN_KEY), EDITS = load(EDIT_KEY), SEEN = load(SEEN_KEY);
+  var PLAN = load(PLAN_KEY), EDITS = load(EDIT_KEY), SEEN = load(SEEN_KEY), ORDER = load(ORDER_KEY);
 
   function defRound(kind){ return kind === 'low' ? 1 : kind === 'high' ? 2 : 3; }
   function planOf(qid, kind){
@@ -82,6 +83,25 @@
     (it.high || []).forEach(function(x){ out.push({ id:x.id, q:x.q, kind:'high', ti:x.ti, index:x.index }); });
     (it.qset || []).forEach(function(x){ out.push({ id:x.id, q:x.q, kind:'qset', type:x.type, index:x.index }); });
     return out.filter(function(x){ return x.id && x.q; });
+  }
+  // 저장된 순서를 얹은 목록 (없으면 원래 순서: 기본 → 깊이 → 유형별)
+  function orderedItems(gradeId, bigName, sm, code){
+    var items = itemsOf(gradeId, bigName, sm), ord = ORDER[code];
+    if(!ord || !ord.length) return items;
+    var pos = {}; ord.forEach(function(id, i){ pos[id] = i; });
+    return items.map(function(it, i){ return { it:it, k: (pos[it.id] != null ? pos[it.id] : ord.length + i) }; })
+      .sort(function(a, b){ return a.k - b.k; })
+      .map(function(x){ return x.it; });
+  }
+  // 같은 종류(기본/깊이/유형별) 안에서만 한 칸 올리고 내린다
+  function moveItem(code, items, qid, dir){
+    var ids = items.map(function(x){ return x.id; });
+    var i = ids.indexOf(qid); if(i < 0) return false;
+    var j = i + dir;
+    if(j < 0 || j >= items.length || items[j].kind !== items[i].kind) return false;
+    var t = ids[i]; ids[i] = ids[j]; ids[j] = t;
+    ORDER[code] = ids; save(ORDER_KEY, ORDER);
+    return true;
   }
   function smallsOf(big){
     var out = [];
@@ -153,17 +173,19 @@
     + '#qreviewTab .qr-act button{font-size:12px;padding:5px 9px;border-radius:8px;border:1px solid #DDD6EE;background:#fff;color:#6B5BA8;cursor:pointer;font-family:inherit;}'
     + '#qreviewTab .qr-act button.on{background:#7343E6;border-color:#7343E6;color:#fff;font-weight:800;}'
     + '#qreviewTab .qr-act button.off-on{background:#C0392B;border-color:#C0392B;color:#fff;font-weight:800;}'
+    + '#qreviewTab .qr-act button[disabled]{opacity:.28;cursor:default;}'
     + '#qreviewTab .qr-ed{width:100%;box-sizing:border-box;font-family:inherit;font-size:13.5px;line-height:1.6;padding:8px 10px;border:1px solid #B9A6E8;border-radius:9px;}'
     + '#qreviewTab .qr-edrow{display:flex;gap:6px;margin-top:6px;}'
     + '#qreviewTab .qr-foot{position:sticky;bottom:0;background:#fff;border-top:1px solid #E7E1F5;padding:11px 2px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:12.5px;color:#4A4270;}'
     + '#qreviewTab .qr-foot b{color:#2A2350;}'
     + '#qreviewTab .qr-foot .sp{margin-left:auto;display:flex;gap:7px;}'
-    + '#qreviewTab .qr-empty{padding:26px 6px;color:#8A7BB0;font-size:13px;}';
+    + '#qreviewTab .qr-empty{padding:26px 6px;color:#8A7BB0;font-size:13px;}'
+    + '#qreviewTab .qr-note{margin:-6px 0 11px;font-size:12px;color:#8A7BB0;}';
     var st = document.createElement('style'); st.id = 'qrStyle'; st.textContent = css;
     document.head.appendChild(st);
   }
 
-  function rowHtml(it, groupNo){
+  function rowHtml(it, groupNo, canMove, isFirst, isLast){
     var p = planOf(it.id, it.kind);
     var edited = EDITS[it.id] != null;
     var btns = '';
@@ -178,14 +200,20 @@
       +   show(textOf(it))
       + '</div>'
       + '<div class="qr-act">' + btns
+      +   (canMove
+            ? '<button data-qr="up" title="같은 종류 안에서 위로"' + (isFirst ? ' disabled' : '') + '>↑</button>'
+              + '<button data-qr="down" title="같은 종류 안에서 아래로"' + (isLast ? ' disabled' : '') + '>↓</button>'
+            : '')
       +   '<button data-qr="off"' + (p.off ? ' class="off-on"' : '') + '>' + (p.off ? '뺌' : '빼기') + '</button>'
       +   '<button data-qr="edit">고치기</button>'
       + '</div></div>';
   }
 
   function smallHtml(gradeId, big, row, n){
-    var sm = row.sm, items = itemsOf(gradeId, big.name, sm);
-    var code = conceptCode(gradeId, big.name, sm.name);
+    var sm = row.sm, code = conceptCode(gradeId, big.name, sm.name);
+    var items = orderedItems(gradeId, big.name, sm, code);
+    // 걸러 보거나 찾는 중이면 순서 바꾸기를 막는다 (보이는 게 전부가 아니라 헷갈린다)
+    var canMove = (QR.view === 'all' && !QR.query);
     var seen = !!SEEN[code];
     var groups = groupSimilar(items);
     var live1 = items.filter(function(it){ var p = planOf(it.id, it.kind); return !p.off && p.r === 1; }).length;
@@ -221,7 +249,12 @@
             + (kps.length ? '<ul>' + kps.map(function(k){ return '<li>' + show(k) + '</li>'; }).join('') + '</ul>' : '')
             + '</div>'
           : '')
-      + shown.map(function(it){ return rowHtml(it, groups[items.indexOf(it)]); }).join('')
+      + shown.map(function(it){
+            var i = items.indexOf(it);
+            var first = !(items[i - 1] && items[i - 1].kind === it.kind);
+            var last  = !(items[i + 1] && items[i + 1].kind === it.kind);
+            return rowHtml(it, groups[i], canMove, first, last);
+          }).join('')
       + '</div>';
   }
 
@@ -247,7 +280,9 @@
       +   '<select data-qr="view">' + [['all','전체'],['todo','아직 안 본 소단원만'],['off','뺀 것만'],['r1','1회차만'],['r2','2회차만'],['r3','3회차만']].map(function(x){
             return '<option value="' + x[0] + '"' + (x[0] === QR.view ? ' selected' : '') + '>' + x[1] + '</option>'; }).join('') + '</select>'
       +   '<input data-qr="query" type="text" placeholder="질문 안에서 찾기" value="' + esc(QR.query) + '">'
-      + '</div>';
+      + '</div>'
+      + ((QR.view !== 'all' || QR.query)
+          ? '<p class="qr-note">걸러 보는 중에는 순서(↑↓)를 바꿀 수 없어요. 순서를 바꾸려면 「전체」로 두세요.</p>' : '');
 
     if(!big){ html += '<div class="qr-empty">이 학년에는 단원이 없어요.</div>'; }
     else {
@@ -288,6 +323,20 @@
       var cur = planOf(qid, 'low');
       setPlan(qid, { off: cur.off ? null : true });
       render(); return;
+    }
+    if((act === 'up' || act === 'down') && qid){
+      var sc = closestSmall(btn); if(!sc) return;
+      var code = sc.getAttribute('data-code');
+      var bigName = sc.getAttribute('data-big'), smallName = sc.getAttribute('data-small');
+      var m2; try{ m2 = cpModel(QR.grade); }catch(e){ return; }
+      var bigObj = (m2.bigUnits || []).filter(function(b){ return b.name === bigName; })[0];
+      if(!bigObj) return;
+      var smObj = smallsOf(bigObj).filter(function(r){ return r.sm.name === smallName; })[0];
+      if(!smObj) return;
+      if(moveItem(code, orderedItems(QR.grade, bigName, smObj.sm, code), qid, act === 'up' ? -1 : 1)){
+        var y = window.scrollY; render(); window.scrollTo(0, y);
+      }
+      return;
     }
     if(act === 'edit' && qid){ startEdit(rowEl, qid); return; }
     if(act === 'editSave' && qid){
@@ -357,9 +406,9 @@
       smallsOf(big).forEach(function(row){
         var code = conceptCode(gradeId, big.name, row.sm.name);
         if(SEEN[code]) out.seen.push(code);
-        itemsOf(gradeId, big.name, row.sm).forEach(function(it){
+        orderedItems(gradeId, big.name, row.sm, code).forEach(function(it, i){
           var p = planOf(it.id, it.kind);
-          var rec = { id:it.id, big:big.name, small:row.sm.name, kind:it.kind, round:p.r, off:p.off, q:it.q };
+          var rec = { id:it.id, big:big.name, small:row.sm.name, kind:it.kind, ord:i, round:p.r, off:p.off, q:it.q };
           if(it.type) rec.type = it.type;
           if(EDITS[it.id] != null) rec.newQ = EDITS[it.id];
           out.items.push(rec);
@@ -380,13 +429,14 @@
     var m; try{ m = cpModel(gradeId); }catch(e){ return; }
     m.bigUnits.forEach(function(big){
       smallsOf(big).forEach(function(row){
-        delete SEEN[conceptCode(gradeId, big.name, row.sm.name)];
+        var c0 = conceptCode(gradeId, big.name, row.sm.name);
+        delete SEEN[c0]; delete ORDER[c0];
         itemsOf(gradeId, big.name, row.sm).forEach(function(it){
           delete PLAN[it.id]; delete EDITS[it.id];
         });
       });
     });
-    save(PLAN_KEY, PLAN); save(EDIT_KEY, EDITS); save(SEEN_KEY, SEEN);
+    save(PLAN_KEY, PLAN); save(EDIT_KEY, EDITS); save(SEEN_KEY, SEEN); save(ORDER_KEY, ORDER);
     render();
   }
 
