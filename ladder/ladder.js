@@ -114,14 +114,16 @@
     const recs = lastRecs(ctx.key, ctx.steps.length), states = recs.map(stepState);
     const passed = states.filter(x => x === 'done').length, cooling = states.filter(x => x === 'cooling').length;
     const todo = states.filter(x => x === 'todo').length, done = recs.map(r => r && r.stage);
+    // [v83.7] 남은 칸이 없어도 통과한 칸이 있으면 '다시 풀기'로 들어갈 수 있다 (기존 질문처럼)
+    const replay = !todo && passed > 0;
     const card = document.createElement('section'); card.className = 'dl-entry';
     card.innerHTML = '<div><span class="dl-tag">시범</span><h2>🪜 선생님 질문 계단</h2><p>뚜삐 선생님이 한 칸씩 물어볼게요. 막히면 힌트와 설명이 나와요.</p>'
       + '<p class="dl-meta">질문 ' + ctx.steps.length + '칸'
         + (recs.some(Boolean) ? ' · 통과 ' + passed + '칸' + (cooling ? ' · 오늘은 쉬는 칸 ' + cooling : '') + (todo ? ' · 남은 ' + todo + '칸' : '') : '') + '</p></div>'
-      + '<button type="button" class="dd-ui-primary dl-start"' + (todo ? '' : ' disabled') + '>'
-        + (todo ? (recs.some(Boolean) ? '남은 칸 이어서 →' : '시작하기 →') : (cooling ? '내일 다시 열려요' : '모두 통과했어요 ✓')) + '</button>';
+      + '<button type="button" class="dd-ui-primary dl-start"' + (todo || replay ? '' : ' disabled') + '>'
+        + (todo ? (recs.some(Boolean) ? '남은 칸 이어서 →' : '시작하기 →') : (replay ? (cooling ? '통과한 칸 다시 풀기 →' : '모두 통과 ✓ · 다시 풀기 →') : '내일 다시 열려요')) + '</button>';
     const btn = card.querySelector('.dl-start');
-    if (!btn.disabled) btn.addEventListener('click', () => open(ctx));
+    if (!btn.disabled) btn.addEventListener('click', () => open(ctx, replay));
     const head = host.querySelector('.dd-ui-page-head');
     if (head) head.after(card); else host.prepend(card);
   }
@@ -261,11 +263,11 @@
     const w = $('dlMicWrap'); if (w) w.classList.remove('recording');
   }
 
-  function open(ctx) {
+  function open(ctx, replay) {
     if (typeof isAcademyDevice === 'function' && !isAcademyDevice() && !session.teacher) { alertBox('학원 태블릿에서만 공부할 수 있어요. 선생님께 말씀해 주세요.'); return; }
     try { if (typeof stopRecognitionIfActive === 'function') stopRecognitionIfActive(); if (typeof Timer !== 'undefined') Timer.hide(); } catch {}
     const old = lastRecs(ctx.key, ctx.steps.length), states = old.map(stepState);
-    const plan = states.map((st, i) => st === 'todo' ? i : -1).filter(i => i >= 0);
+    const plan = states.map((st, i) => (replay ? st !== 'cooling' : st === 'todo') ? i : -1).filter(i => i >= 0);
     if (!plan.length) { alertBox(states.some(x => x === 'cooling') ? '오늘 막힌 칸은 내일 다시 열려요. 다른 개념을 해 볼까요?' : '이 계단은 모두 통과했어요!'); return; }
     Object.assign(R, {ctx, k:plan[0], plan, pi:0, old, phase:'ask', answers:[], busy:false, recs:[], last:null});
     const box = el('<div id="dlOverlay" role="dialog" aria-modal="true" aria-label="선생님 질문 계단">'
@@ -286,8 +288,9 @@
     $('dlQuit').addEventListener('click', () => $('dlClose').click());
     const doneN = R.old.filter(r => r && r.stage !== 'stuck').length;
     const coolN = R.old.filter((r, i) => stepState(r) === 'cooling').length;
-    bubble('t', '안녕! 오늘은 <b>' + esc(ctx.small) + '</b>를 ' + R.plan.length + '칸 물어볼게.'
-      + (doneN ? ' 지난번에 통과한 ' + doneN + '칸은 건너뛰었어.' : '')
+    bubble('t', (replay ? (coolN ? '통과한 칸만 다시 해 보자. ' : '다 통과한 계단이야. 다시 한 번 설명해 볼까? ') : '안녕! 오늘은 ')
+      + '<b>' + esc(ctx.small) + '</b>' + (replay ? ' ' : '를 ') + R.plan.length + '칸 물어볼게.'
+      + (doneN && !replay ? ' 지난번에 통과한 ' + doneN + '칸은 건너뛰었어.' : '')
       + (coolN ? ' 어제 모범답안을 본 ' + coolN + '칸은 내일 다시 열려.' : '')
       + ' 생각나는 대로 설명해 줘.');
     ask();
