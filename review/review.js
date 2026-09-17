@@ -15,6 +15,10 @@
      qr:added:v1 { 개념코드: [{id, q}, …] }   새로 추가한 질문 [v83.9]
        번호 = 개념 해시 + ':' + ddqNewId('qa') — 처음부터 붙여서, 앱에 심어도 기록이 안 끊긴다.
        지운 번호는 다시 쓰지 않는다(시각+난수).
+     qr:base:v1  { 분류안키: 넣은시각 }   [v84.0] 코드에 실어 둔 분류안(review/plan_*.js)을 이 기기에 넣었는지
+   [v84.0] 기본 분류안: window.QR_BASE_PLANS 의 분류안을 화면을 열 때 한 번만 넣는다.
+     이 기기에 이미 적어 둔 회차·고친 문장·모범 답·빼기·순서는 덮지 않는다(keepLocal).
+     by:'claude' 인 회차는 줄에 「AI」 표시 — 마스터가 회차를 바꾸면 표시가 사라진다.
    [v83.8] 회차 재구성(2026-09-17 결정) 준비:
      · 기본·깊이·유형별은 처음에 "미분류"(r=0) — 계단만 3회차로 시작
      · [불러오기] — 분류 결과 파일을 한 번에 넣는다. 옛 형식(qr-plan-1)은 회차를 안 가져온다
@@ -35,8 +39,19 @@
   /* ── 저장소 ───────────────────────────────────────────── */
   function load(k){ try{ return JSON.parse(localStorage.getItem(k) || '{}'); }catch(e){ return {}; } }
   function save(k, o){ try{ localStorage.setItem(k, JSON.stringify(o)); }catch(e){} }
-  var ANS_KEY = 'qr:answers:v1', ADD_KEY = 'qr:added:v1';
+  var ANS_KEY = 'qr:answers:v1', ADD_KEY = 'qr:added:v1', BASE_KEY = 'qr:base:v1';
   var PLAN = load(PLAN_KEY), EDITS = load(EDIT_KEY), SEEN = load(SEEN_KEY), ORDER = load(ORDER_KEY), ANS = load(ANS_KEY), ADDED = load(ADD_KEY);
+  var BASEDONE = load(BASE_KEY);
+  // Claude 가 정한 회차 {질문번호: 회차} — 코드에 실린 분류안에서 읽는다(저장 안 함)
+  function aiRounds(){
+    var out = {};
+    (window.QR_BASE_PLANS || []).forEach(function(b){
+      ((b && b.data && b.data.items) || []).forEach(function(x){ if(x && x.by === 'claude' && x.round) out[x.id] = x.round; });
+    });
+    return out;
+  }
+  var AI_R = aiRounds();
+  function isAi(qid, p){ return !!(AI_R[qid] && p && !p.off && p.r === AI_R[qid]); }
   function newAddId(gradeId, bigName, smallName){
     var key; try{ key = ddqConceptKey(gradeId, bigName, smallName); }catch(e){ key = 'qr'; }
     var tail; try{ tail = ddqNewId('qa'); }catch(e){ tail = 'qa' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
@@ -227,6 +242,8 @@
     + '#qreviewTab .qr-kind.k-qset{color:#B26B00;background:#FDF3E2;}'
     + '#qreviewTab .qr-kind.k-ladder{color:#1D6FA5;background:#E6F1F8;}'
     + '#qreviewTab .qr-kind.k-add{color:#A8326E;background:#FCEAF3;}'
+    + '#qreviewTab .qr-ai{font-size:10.5px;font-weight:800;color:#1D6FA5;background:#E6F1F8;border-radius:6px;padding:3px 6px;}'
+    + '#qreviewTab .qr-basenote{margin:0 0 12px;padding:9px 12px;border-radius:10px;background:#E6F1F8;color:#1D4E73;font-size:12.5px;line-height:1.6;}'
     + '#qreviewTab .qr-addbtn{font-size:12px;padding:5px 11px;border-radius:999px;border:1px dashed #C9B8EE;background:#FBF9FF;color:#6B5BA8;cursor:pointer;font-family:inherit;}'
     + '#qreviewTab .qr-newrow{display:block;background:#FBF9FF;border-radius:10px;padding:10px 12px;margin-top:6px;border-top:none;}'
     + '#qreviewTab .qr-kind{flex-basis:78px;}'
@@ -266,7 +283,8 @@
     var p = planOf(it.id, it.kind);
     var edited = EDITS[it.id] != null;
     var an = ansOf(it.id), hasAns = !!(an.a || an.k.length);
-    var btns = (!p.r && !p.off) ? '<span class="qr-unset" title="아직 회차를 안 골랐어요">미분류</span>' : '';
+    var btns = (!p.r && !p.off) ? '<span class="qr-unset" title="아직 회차를 안 골랐어요">미분류</span>'
+      : (isAi(it.id, p) ? '<span class="qr-ai" title="Claude 가 정한 회차예요. 다른 번호를 누르면 마스터 선택으로 바뀌어요">AI</span>' : '');
     for(var r = 1; r <= ROUNDS; r++){
       btns += '<button data-qr="round" data-r="' + r + '"' + (p.r === r && !p.off ? ' class="on" title="한 번 더 누르면 미분류로"' : '') + '>' + r + '</button>';
     }
@@ -309,6 +327,7 @@
       var p = planOf(it.id, it.kind);
       if(QR.view === 'off') return p.off;
       if(QR.view === 'r0') return !p.off && !p.r;
+      if(QR.view === 'ai') return isAi(it.id, p);
       if(QR.view === 'noans'){ var a0 = ansOf(it.id); return !p.off && !(a0.a || a0.k.length); }
       if(QR.view === 'r1') return !p.off && p.r === 1;
       if(QR.view === 'r2') return !p.off && p.r === 2;
@@ -355,6 +374,7 @@
     var host = document.getElementById('qreviewTab');
     if(!host) return;
     styles();
+    applyBase();
     var gs = gradeList();
     if(!QR.grade) QR.grade = (gs[0] || {}).id;
     var m = null; try{ m = cpModel(QR.grade); }catch(e){}
@@ -370,10 +390,11 @@
             return '<option value="' + esc(g.id) + '"' + (g.id === QR.grade ? ' selected' : '') + '>' + esc(g.name) + '</option>'; }).join('') + '</select>'
       +   '<select data-qr="big">' + bigs.map(function(b, i){
             return '<option value="' + i + '"' + (i === QR.big ? ' selected' : '') + '>' + esc(b.name) + '</option>'; }).join('') + '</select>'
-      +   '<select data-qr="view">' + [['all','전체'],['todo','아직 안 본 소단원만'],['r0','미분류만'],['noans','모범 답 없는 것만'],['off','뺀 것만'],['r1','1회차만'],['r2','2회차만'],['r3','3회차만']].map(function(x){
+      +   '<select data-qr="view">' + [['all','전체'],['todo','아직 안 본 소단원만'],['ai','AI가 정한 회차만'],['r0','미분류만'],['noans','모범 답 없는 것만'],['off','뺀 것만'],['r1','1회차만'],['r2','2회차만'],['r3','3회차만']].map(function(x){
             return '<option value="' + x[0] + '"' + (x[0] === QR.view ? ' selected' : '') + '>' + x[1] + '</option>'; }).join('') + '</select>'
       +   '<input data-qr="query" type="text" placeholder="질문 안에서 찾기" value="' + esc(QR.query) + '">'
       + '</div>'
+      + (QR.baseNote ? '<p class="qr-basenote">' + QR.baseNote + '</p>' : '')
       + ((QR.view !== 'all' || QR.query)
           ? '<p class="qr-note">걸러 보는 중에는 순서(↑↓)를 바꿀 수 없어요. 순서를 바꾸려면 「전체」로 두세요.</p>' : '');
 
@@ -678,7 +699,8 @@
     document.body.appendChild(inp); inp.click();
   }
 
-  function importPlan(d){
+  function importPlan(d, opt){
+    var keep = !!(opt && opt.keepLocal);   // 이 기기에 이미 적어 둔 것은 안 덮는다
     var fmt = d && d.format, gradeId = d && d.grade;
     if((fmt !== 'qr-plan-1' && fmt !== 'qr-plan-2') || !gradeId || !Array.isArray(d.items)) return { err:'질문 고르기 파일이 아니에요.' };
     var m; try{ m = cpModel(gradeId); }catch(e){ m = null; }
@@ -703,31 +725,33 @@
         it = { id:rec.id, kind:'add', q:rec.q };
         c.added++;
         c.ops.push(function(){ (ADDED[code] = ADDED[code] || []).push({ id:rec.id, q:rec.q.trim() }); });
-      } else if(it && it.kind === 'add' && typeof rec.q === 'string' && rec.q.trim() && rec.q.trim() !== it.q){
+      } else if(!keep && it && it.kind === 'add' && typeof rec.q === 'string' && rec.q.trim() && rec.q.trim() !== it.q){
         c.edit++; c.overwrite++;
         c.ops.push(function(){ var f = findAdded(it.id); if(f) f.list[f.i].q = rec.q.trim(); });
       }
       if(!it){ c.missing++; return; }
       var p = planOf(it.id, it.kind);
-      if(fmt === 'qr-plan-2' && rec.round >= 1 && rec.round <= ROUNDS && rec.round !== p.r){
+      var lp = PLAN[it.id] || {};
+      if(fmt === 'qr-plan-2' && rec.round >= 1 && rec.round <= ROUNDS && rec.round !== p.r && !(keep && lp.r != null)){
         if(p.r && (PLAN[it.id] || {}).r != null) c.overwrite++;
         c.round++; c.ops.push(function(){ setPlan(it.id, { r: rec.round }); });
       }
-      if(typeof rec.off === 'boolean' && rec.off !== p.off){
+      if(typeof rec.off === 'boolean' && rec.off !== p.off && !(keep && (lp.off != null || !rec.off))){
         c.off++; c.ops.push(function(){ setPlan(it.id, { off: rec.off ? true : null }); });
       }
-      if(typeof rec.newQ === 'string' && rec.newQ.trim() && rec.newQ !== EDITS[it.id]){
+      if(typeof rec.newQ === 'string' && rec.newQ.trim() && rec.newQ !== EDITS[it.id] && !(keep && EDITS[it.id] != null)){
         if(EDITS[it.id] != null) c.overwrite++;
         c.edit++; c.ops.push(function(){ EDITS[it.id] = rec.newQ.trim(); });
       }
       if(fmt === 'qr-plan-2' && (rec.answer || (rec.keys && rec.keys.length))){
         var old = ansOf(it.id), na = String(rec.answer || '').trim(), nk = (rec.keys || []).map(String);
-        if(old.a !== na || old.k.join('\n') !== nk.map(function(s){ return s.trim(); }).filter(Boolean).join('\n')){
+        if(keep && (old.a || old.k.length)){ /* 이 기기에 적어 둔 모범 답은 그대로 */ }
+        else if(old.a !== na || old.k.join('\n') !== nk.map(function(s){ return s.trim(); }).filter(Boolean).join('\n')){
           if(old.a || old.k.length) c.overwrite++;
           c.ans++; c.ops.push(function(){ setAns(it.id, na, nk); });
         }
       }
-      if(code && typeof rec.ord === 'number'){ (ordBy[code] = ordBy[code] || []).push({ id:it.id, ord:rec.ord }); }
+      if(code && typeof rec.ord === 'number' && !(keep && ORDER[code])){ (ordBy[code] = ordBy[code] || []).push({ id:it.id, ord:rec.ord }); }
     });
     Object.keys(ordBy).forEach(function(code){
       var ids = ordBy[code].sort(function(a, b){ return a.ord - b.ord; }).map(function(x){ return x.id; });
@@ -742,6 +766,24 @@
       if(!SEEN[code]){ c.seen++; c.ops.push(function(){ SEEN[code] = true; }); }
     });
     return c;
+  }
+
+  // [v84.0] 코드에 실린 분류안을 이 기기에 한 번만 넣는다
+  function applyBase(){
+    (window.QR_BASE_PLANS || []).forEach(function(b){
+      if(!b || !b.key || !b.data || BASEDONE[b.key]) return;
+      var c = importPlan(b.data, { keepLocal:true });
+      if(c.err) return;                       // 학년 모델이 아직 없으면 다음에 다시
+      c.ops.forEach(function(fn){ fn(); });
+      save(PLAN_KEY, PLAN); save(EDIT_KEY, EDITS); save(SEEN_KEY, SEEN); save(ORDER_KEY, ORDER); save(ANS_KEY, ANS); save(ADD_KEY, ADDED);
+      BASEDONE[b.key] = new Date().toISOString(); save(BASE_KEY, BASEDONE);
+      if(c.ops.length){
+        QR.grade = c.grade;
+        QR.baseNote = '📥 <b>분류안을 넣었어요</b> (' + esc(c.grade) + ') — 회차 ' + c.round + ' · 고친 문장 ' + c.edit
+          + ' · 모범 답 ' + c.ans + ' · 추가 질문 ' + c.added + ' · 빼기 ' + c.off
+          + '. 이미 적어 둔 것은 그대로 두었어요. 보기에서 「AI가 정한 회차만」을 고르면 Claude 가 정한 것만 볼 수 있어요.';
+      }
+    });
   }
 
   function doImport(d){

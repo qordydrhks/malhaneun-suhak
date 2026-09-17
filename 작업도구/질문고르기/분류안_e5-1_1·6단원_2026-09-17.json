@@ -1,0 +1,394 @@
+{
+ "format": "qr-plan-2",
+ "grade": "e5-1",
+ "rounds": 3,
+ "note": "Claude 분류안 — 1단원·6단원 미분류만. 회차만 넣음",
+ "items": [
+  {
+   "id": "5gyhzp:t0H1",
+   "big": "1. 자연수의 혼합 계산",
+   "small": "01. 덧셈과 뺄셈 / 곱셈과 나눗셈이 섞인 식",
+   "kind": "high",
+   "round": 2
+  },
+  {
+   "id": "5gyhzp:t0H2",
+   "big": "1. 자연수의 혼합 계산",
+   "small": "01. 덧셈과 뺄셈 / 곱셈과 나눗셈이 섞인 식",
+   "kind": "high",
+   "round": 2
+  },
+  {
+   "id": "5gyhzp:qrecall",
+   "big": "1. 자연수의 혼합 계산",
+   "small": "01. 덧셈과 뺄셈 / 곱셈과 나눗셈이 섞인 식",
+   "kind": "qset",
+   "round": 1
+  },
+  {
+   "id": "5gyhzp:qreason",
+   "big": "1. 자연수의 혼합 계산",
+   "small": "01. 덧셈과 뺄셈 / 곱셈과 나눗셈이 섞인 식",
+   "kind": "qset",
+   "round": 2
+  },
+  {
+   "id": "5gyhzp:qexample",
+   "big": "1. 자연수의 혼합 계산",
+   "small": "01. 덧셈과 뺄셈 / 곱셈과 나눗셈이 섞인 식",
+   "kind": "qset",
+   "round": 2
+  },
+  {
+   "id": "5gyhzp:qerror",
+   "big": "1. 자연수의 혼합 계산",
+   "small": "01. 덧셈과 뺄셈 / 곱셈과 나눗셈이 섞인 식",
+   "kind": "qset",
+   "round": 2
+  },
+  {
+   "id": "1wpszzi:t0L1",
+   "big": "1. 자연수의 혼합 계산",
+   "small": "02. 덧셈·뺄셈·곱셈(나눗셈)이 섞인 식",
+   "kind": "low",
+   "round": 1
+  },
+  {
+   "id": "1wpszzi:t0L2",
+   "big": "1. 자연수의 혼합 계산",
+   "small": "02. 덧셈·뺄셈·곱셈(나눗셈)이 섞인 식",
+   "kind": "low",
+   "round": 1
+  },
+  {
+   "id": "1wpszzi:t0H1",
+   "big": "1. 자연수의 혼합 계산",
+   "small": "02. 덧셈·뺄셈·곱셈(나눗셈)이 섞인 식",
+   "kind": "high",
+   "round": 1
+  },
+  {
+   "id": "1wpszzi:t0H2",
+   "big": "1. 자연수의 혼합 계산",
+   "small": "02. 덧셈·뺄셈·곱셈(나눗셈)이 섞인 식",
+   "kind": "high",
+   "round": 2
+  },
+  {
+   "id": "1wpszzi:qrecall",
+   "big": "1. 자연수의 혼합 계산",
+   "small": "02. 덧셈·뺄셈·곱셈(나눗셈)이 섞인 식",
+   "kind": "qset",
+   "round": 1
+  },
+  {
+   "id": "1wpszzi:qreason",
+   "big": "1. 자연수의 혼합 계산",
+   "small": "02. 덧셈·뺄셈·곱셈(나눗셈)이 섞인 식",
+   "kind": "qset",
+   "round": 2
+  },
+  {
+   "id": "1wpszzi:qexample",
+   "big": "1. 자연수의 혼합 계산",
+   "small": "02. 덧셈·뺄셈·곱셈(나눗셈)이 섞인 식",
+   "kind": "qset",
+   "round": 2
+  },
+  {
+   "id": "1wpszzi:qerror",
+   "big": "1. 자연수의 혼합 계산",
+   "small": "02. 덧셈·뺄셈·곱셈(나눗셈)이 섞인 식",
+   "kind": "qset",
+   "round": 2
+  },
+  {
+   "id": "1wpszzi:qcondition",
+   "big": "1. 자연수의 혼합 계산",
+   "small": "02. 덧셈·뺄셈·곱셈(나눗셈)이 섞인 식",
+   "kind": "qset",
+   "round": 2
+  },
+  {
+   "id": "jr7bdp:t0L1",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "02. 1 cm²",
+   "kind": "low",
+   "round": 1
+  },
+  {
+   "id": "jr7bdp:t0L2",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "02. 1 cm²",
+   "kind": "low",
+   "round": 1
+  },
+  {
+   "id": "jr7bdp:t0H1",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "02. 1 cm²",
+   "kind": "high",
+   "round": 1
+  },
+  {
+   "id": "jr7bdp:t0H2",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "02. 1 cm²",
+   "kind": "high",
+   "round": 2
+  },
+  {
+   "id": "jr7bdp:qrecall",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "02. 1 cm²",
+   "kind": "qset",
+   "round": 1
+  },
+  {
+   "id": "jr7bdp:qreason",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "02. 1 cm²",
+   "kind": "qset",
+   "round": 2
+  },
+  {
+   "id": "jr7bdp:qexample",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "02. 1 cm²",
+   "kind": "qset",
+   "round": 1
+  },
+  {
+   "id": "jr7bdp:qerror",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "02. 1 cm²",
+   "kind": "qset",
+   "round": 2
+  },
+  {
+   "id": "hzg2ev:t0L1",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "03. 직사각형의 넓이",
+   "kind": "low",
+   "round": 1
+  },
+  {
+   "id": "hzg2ev:t0L2",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "03. 직사각형의 넓이",
+   "kind": "low",
+   "round": 1
+  },
+  {
+   "id": "hzg2ev:t0H1",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "03. 직사각형의 넓이",
+   "kind": "high",
+   "round": 1
+  },
+  {
+   "id": "hzg2ev:t0H2",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "03. 직사각형의 넓이",
+   "kind": "high",
+   "round": 2
+  },
+  {
+   "id": "hzg2ev:qrecall",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "03. 직사각형의 넓이",
+   "kind": "qset",
+   "round": 1
+  },
+  {
+   "id": "hzg2ev:qreason",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "03. 직사각형의 넓이",
+   "kind": "qset",
+   "round": 2
+  },
+  {
+   "id": "hzg2ev:qexample",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "03. 직사각형의 넓이",
+   "kind": "qset",
+   "round": 2
+  },
+  {
+   "id": "hzg2ev:qerror",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "03. 직사각형의 넓이",
+   "kind": "qset",
+   "round": 2
+  },
+  {
+   "id": "r6ywyq:t0L1",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "04. 1 cm²보다 큰 넓이의 단위",
+   "kind": "low",
+   "round": 1
+  },
+  {
+   "id": "r6ywyq:t0L2",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "04. 1 cm²보다 큰 넓이의 단위",
+   "kind": "low",
+   "round": 1
+  },
+  {
+   "id": "r6ywyq:t0H1",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "04. 1 cm²보다 큰 넓이의 단위",
+   "kind": "high",
+   "round": 1
+  },
+  {
+   "id": "r6ywyq:t0H2",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "04. 1 cm²보다 큰 넓이의 단위",
+   "kind": "high",
+   "round": 2
+  },
+  {
+   "id": "r6ywyq:qrecall",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "04. 1 cm²보다 큰 넓이의 단위",
+   "kind": "qset",
+   "round": 1
+  },
+  {
+   "id": "r6ywyq:qreason",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "04. 1 cm²보다 큰 넓이의 단위",
+   "kind": "qset",
+   "round": 2
+  },
+  {
+   "id": "r6ywyq:qexample",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "04. 1 cm²보다 큰 넓이의 단위",
+   "kind": "qset",
+   "round": 2
+  },
+  {
+   "id": "r6ywyq:qerror",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "04. 1 cm²보다 큰 넓이의 단위",
+   "kind": "qset",
+   "round": 2
+  },
+  {
+   "id": "135vnrh:t0L1",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "05. 평행사변형의 넓이",
+   "kind": "low",
+   "round": 1
+  },
+  {
+   "id": "135vnrh:t0L2",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "05. 평행사변형의 넓이",
+   "kind": "low",
+   "round": 1
+  },
+  {
+   "id": "135vnrh:t0H1",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "05. 평행사변형의 넓이",
+   "kind": "high",
+   "round": 1
+  },
+  {
+   "id": "135vnrh:t0H2",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "05. 평행사변형의 넓이",
+   "kind": "high",
+   "round": 2
+  },
+  {
+   "id": "135vnrh:qrecall",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "05. 평행사변형의 넓이",
+   "kind": "qset",
+   "round": 1
+  },
+  {
+   "id": "135vnrh:qreason",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "05. 평행사변형의 넓이",
+   "kind": "qset",
+   "round": 2
+  },
+  {
+   "id": "135vnrh:qexample",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "05. 평행사변형의 넓이",
+   "kind": "qset",
+   "round": 2
+  },
+  {
+   "id": "135vnrh:qerror",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "05. 평행사변형의 넓이",
+   "kind": "qset",
+   "round": 2
+  },
+  {
+   "id": "1p3wdn9:t0L1",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "08. 사다리꼴의 넓이",
+   "kind": "low",
+   "round": 1
+  },
+  {
+   "id": "1p3wdn9:t0L2",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "08. 사다리꼴의 넓이",
+   "kind": "low",
+   "round": 2
+  },
+  {
+   "id": "1p3wdn9:t0H1",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "08. 사다리꼴의 넓이",
+   "kind": "high",
+   "round": 1
+  },
+  {
+   "id": "1p3wdn9:t0H2",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "08. 사다리꼴의 넓이",
+   "kind": "high",
+   "round": 2
+  },
+  {
+   "id": "1p3wdn9:qrecall",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "08. 사다리꼴의 넓이",
+   "kind": "qset",
+   "round": 1
+  },
+  {
+   "id": "1p3wdn9:qreason",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "08. 사다리꼴의 넓이",
+   "kind": "qset",
+   "round": 2
+  },
+  {
+   "id": "1p3wdn9:qexample",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "08. 사다리꼴의 넓이",
+   "kind": "qset",
+   "round": 2
+  },
+  {
+   "id": "1p3wdn9:qerror",
+   "big": "6. 다각형의 둘레와 넓이",
+   "small": "08. 사다리꼴의 넓이",
+   "kind": "qset",
+   "round": 2
+  }
+ ],
+ "seen": []
+}
