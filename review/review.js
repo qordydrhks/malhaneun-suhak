@@ -11,6 +11,12 @@
      qr:edits:v1 { 질문번호: "고친 문장" }            문장 고치기
      qr:seen:v1  { 개념코드: true }                   "다 봤음" 표시
      qr:order:v1 { 개념코드: [질문번호, …] }           질문 순서 (같은 종류 안에서만 바꾼다)
+     qr:answers:v1 { 질문번호: {a:"모범 답", k:["꼭 말할 핵심", …]} }   [v83.8]
+   [v83.8] 회차 재구성(2026-09-17 결정) 준비:
+     · 기본·깊이·유형별은 처음에 "미분류"(r=0) — 계단만 3회차로 시작
+     · [불러오기] — 분류 결과 파일을 한 번에 넣는다. 옛 형식(qr-plan-1)은 회차를 안 가져온다
+       (그 파일의 회차는 전부 옛 기본값이라 가져오면 미분류를 덮어 버린다)
+     · 질문마다 모범 답 + 꼭 말할 핵심(2~3개) 칸
    ============================================================ */
 (function(){
   'use strict';
@@ -26,13 +32,24 @@
   /* ── 저장소 ───────────────────────────────────────────── */
   function load(k){ try{ return JSON.parse(localStorage.getItem(k) || '{}'); }catch(e){ return {}; } }
   function save(k, o){ try{ localStorage.setItem(k, JSON.stringify(o)); }catch(e){} }
-  var PLAN = load(PLAN_KEY), EDITS = load(EDIT_KEY), SEEN = load(SEEN_KEY), ORDER = load(ORDER_KEY);
+  var ANS_KEY = 'qr:answers:v1';
+  var PLAN = load(PLAN_KEY), EDITS = load(EDIT_KEY), SEEN = load(SEEN_KEY), ORDER = load(ORDER_KEY), ANS = load(ANS_KEY);
 
-  // 기본값: 기본→1 · 깊이→2 · 유형별과 계단→마지막 회차(3)
-  function defRound(kind){ return kind === 'low' ? 1 : kind === 'high' ? 2 : ROUNDS; }
+  // 기본값 [v83.8]: 계단→3회차 · 나머지(기본·깊이·유형별)→미분류(0)
+  function defRound(kind){ return kind === 'ladder' ? ROUNDS : 0; }
   function planOf(qid, kind){
     var p = PLAN[qid] || {};
     return { r: p.r || defRound(kind), off: !!p.off, touched: (p.r != null || p.off != null) };
+  }
+  function ansOf(qid){
+    var x = ANS[qid] || {};
+    return { a: x.a || '', k: (x.k || []).filter(function(s){ return String(s).trim(); }) };
+  }
+  function setAns(qid, a, k){
+    a = String(a || '').trim();
+    k = (k || []).map(function(s){ return String(s).trim(); }).filter(Boolean);
+    if(a || k.length){ ANS[qid] = { a:a, k:k }; } else { delete ANS[qid]; }
+    save(ANS_KEY, ANS);
   }
   function setPlan(qid, patch){
     var p = PLAN[qid] || {};
@@ -138,22 +155,24 @@
 
   /* ── 요약 (지금 고른 학년 전체) ───────────────────────── */
   function summary(gradeId){
-    var s = { r1:0, r2:0, r3:0, off:0, total:0, edited:0, smalls:0, seen:0, empty:[] };
+    var s = { r0:0, r1:0, r2:0, r3:0, off:0, total:0, edited:0, answered:0, smalls:0, seen:0, empty:[] };
     var m; try{ m = cpModel(gradeId); }catch(e){ return s; }
     if(!m || !m.bigUnits) return s;
     m.bigUnits.forEach(function(big){
       smallsOf(big).forEach(function(row){
         s.smalls++;
         if(SEEN[conceptCode(gradeId, big.name, row.sm.name)]) s.seen++;
-        var live1 = 0;
+        var live1 = 0, unset = 0;
         itemsOf(gradeId, big.name, row.sm).forEach(function(it){
-          var p = planOf(it.id, it.kind);
+          var p = planOf(it.id, it.kind), an = ansOf(it.id);
           s.total++;
           if(EDITS[it.id] != null) s.edited++;
+          if(an.a || an.k.length) s.answered++;
           if(p.off){ s.off++; return; }
-          if(p.r === 1){ s.r1++; live1++; } else if(p.r === 2) s.r2++; else s.r3++;
+          if(p.r === 1){ s.r1++; live1++; } else if(p.r === 2) s.r2++; else if(p.r === 3) s.r3++; else { s.r0++; unset++; }
         });
-        if(!live1) s.empty.push(big.name + ' · ' + row.sm.name);
+        // 1회차 빈 경고는 그 소단원 분류를 다 끝낸 뒤에만 (미분류가 남아 있으면 아직 모른다)
+        if(!live1 && !unset) s.empty.push(big.name + ' · ' + row.sm.name);
       });
     });
     return s;
@@ -170,7 +189,7 @@
     + '#qreviewTab .qr-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px;}'
     + '#qreviewTab .qr-bar select,#qreviewTab .qr-bar input{padding:7px 10px;border:1px solid #DDD6EE;border-radius:9px;font-size:13px;font-family:inherit;width:auto;max-width:280px;flex:0 0 auto;background:#fff;}'
     + '#qreviewTab .qr-bar input{flex:1 1 150px;min-width:130px;max-width:none;}'
-    + '@media (max-width:640px){#qreviewTab .qr-bar select,#qreviewTab .qr-bar input{max-width:none;flex:1 1 100%;}#qreviewTab .qr-row{flex-wrap:wrap;}#qreviewTab .qr-q{flex:1 1 100%;order:2;}#qreviewTab .qr-act{order:3;margin-left:75px;}}'
+    + '@media (max-width:640px){#qreviewTab .qr-bar select,#qreviewTab .qr-bar input{max-width:none;flex:1 1 100%;}#qreviewTab .qr-row{flex-wrap:wrap;}#qreviewTab .qr-q{flex:1 1 100%;order:2;}#qreviewTab .qr-act{order:3;margin-left:0;flex:1 1 100%;flex-wrap:wrap;}}'
     + '#qreviewTab .qr-small{border:1px solid #E7E1F5;border-radius:14px;padding:13px 15px;margin-bottom:11px;background:#fff;}'
     + '#qreviewTab .qr-small.seen{background:#FAFAFD;border-color:#EFEBF8;}'
     + '#qreviewTab .qr-sh{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:4px;}'
@@ -209,7 +228,14 @@
     + '#qreviewTab .qr-syms button:hover{background:#F4EFFF;}'
     + '#qreviewTab .qr-tip{margin:0 0 6px;font-size:11.5px;color:#8A7BB0;}'
     + '#qreviewTab .qr-tip b{color:#6B5BA8;}'
-    + '#qreviewTab .qr-prev{margin-top:6px;padding:8px 10px;background:#F7F4FE;border-radius:9px;font-size:13.5px;color:#2A2350;line-height:1.65;}';
+    + '#qreviewTab .qr-prev{margin-top:6px;padding:8px 10px;background:#F7F4FE;border-radius:9px;font-size:13.5px;color:#2A2350;line-height:1.65;}'
+    + '#qreviewTab .qr-unset{font-size:11px;font-weight:800;color:#8C8C99;background:#F0F0F4;border-radius:6px;padding:4px 7px;}'
+    + '#qreviewTab .qr-act button.ans-on{background:#E9F5EE;border-color:#BFE3CE;color:#2C8459;font-weight:800;}'
+    + '#qreviewTab .qr-ans{margin-top:6px;padding:7px 10px;background:#F3FAF6;border-left:3px solid #7CC49D;border-radius:0 8px 8px 0;font-size:12.5px;color:#2F4F3E;line-height:1.65;}'
+    + '#qreviewTab .qr-ans ul{margin:3px 0 0 16px;padding:0;}'
+    + '#qreviewTab .qr-ans .lb{font-weight:800;color:#2C8459;margin-right:4px;}'
+    + '#qreviewTab .qr-lbl{display:block;margin:8px 0 3px;font-size:12px;font-weight:800;color:#4A4270;}'
+    + '#qreviewTab .qr-lbl span{font-weight:400;color:#8A7BB0;}';
     var st = document.createElement('style'); st.id = 'qrStyle'; st.textContent = css;
     document.head.appendChild(st);
   }
@@ -217,9 +243,10 @@
   function rowHtml(it, groupNo, canMove, isFirst, isLast){
     var p = planOf(it.id, it.kind);
     var edited = EDITS[it.id] != null;
-    var btns = '';
+    var an = ansOf(it.id), hasAns = !!(an.a || an.k.length);
+    var btns = (!p.r && !p.off) ? '<span class="qr-unset" title="아직 회차를 안 골랐어요">미분류</span>' : '';
     for(var r = 1; r <= ROUNDS; r++){
-      btns += '<button data-qr="round" data-r="' + r + '"' + (p.r === r && !p.off ? ' class="on"' : '') + '>' + r + '</button>';
+      btns += '<button data-qr="round" data-r="' + r + '"' + (p.r === r && !p.off ? ' class="on" title="한 번 더 누르면 미분류로"' : '') + '>' + r + '</button>';
     }
     return '<div class="qr-row' + (p.off ? ' off' : '') + '" data-qid="' + esc(it.id) + '"'
       + ' data-plain="' + esc(textOf(it)) + '">'
@@ -227,6 +254,11 @@
       + '<div class="qr-q' + (edited ? ' edited' : '') + '" data-qr="text">'
       +   (groupNo ? '<span class="qr-sim" title="같은 소단원 안에 비슷한 질문이 있어요">비슷 ' + groupNo + '</span>' : '')
       +   show(textOf(it))
+      +   (hasAns
+            ? '<div class="qr-ans">' + (an.a ? '<span class="lb">모범 답</span>' + show(an.a) : '')
+              + (an.k.length ? '<div><span class="lb">꼭 말할 핵심</span><ul>' + an.k.map(function(k){ return '<li>' + show(k) + '</li>'; }).join('') + '</ul></div>' : '')
+              + '</div>'
+            : '')
       + '</div>'
       + '<div class="qr-act">' + btns
       +   (canMove
@@ -235,6 +267,7 @@
             : '')
       +   '<button data-qr="off"' + (p.off ? ' class="off-on"' : '') + '>' + (p.off ? '뺌' : '빼기') + '</button>'
       +   '<button data-qr="edit">고치기</button>'
+      +   '<button data-qr="ans"' + (hasAns ? ' class="ans-on"' : '') + '>모범 답</button>'
       + '</div></div>';
   }
 
@@ -246,10 +279,13 @@
     var seen = !!SEEN[code];
     var groups = groupSimilar(items);
     var live1 = items.filter(function(it){ var p = planOf(it.id, it.kind); return !p.off && p.r === 1; }).length;
+    var unset = items.filter(function(it){ var p = planOf(it.id, it.kind); return !p.off && !p.r; }).length;
 
     var shown = items.filter(function(it){
       var p = planOf(it.id, it.kind);
       if(QR.view === 'off') return p.off;
+      if(QR.view === 'r0') return !p.off && !p.r;
+      if(QR.view === 'noans'){ var a0 = ansOf(it.id); return !p.off && !(a0.a || a0.k.length); }
       if(QR.view === 'r1') return !p.off && p.r === 1;
       if(QR.view === 'r2') return !p.off && p.r === 2;
       if(QR.view === 'r3') return !p.off && p.r === 3;
@@ -271,7 +307,8 @@
       +   (row.middle ? '<span class="qr-mid">' + esc(row.middle) + '</span>' : '')
       +   (function(){ var n = items.filter(function(x){ return x.kind === 'ladder'; }).length;
              return n ? '<span class="qr-mid">🪜 계단 ' + n + '칸 포함</span>' : ''; })()
-      +   (live1 ? '' : '<span class="qr-warn">1회차가 비었어요</span>')
+      +   (unset ? '<span class="qr-mid">미분류 ' + unset + '</span>'
+            : (live1 ? '' : '<span class="qr-warn">1회차가 비었어요</span>'))
       +   '<button class="qr-seenbtn' + (seen ? ' on' : '') + '" data-qr="seen">' + (seen ? '✓ 다 봤음' : '다 봤음') + '</button>'
       + '</div>'
       + ((concept || kps.length)
@@ -308,7 +345,7 @@
             return '<option value="' + esc(g.id) + '"' + (g.id === QR.grade ? ' selected' : '') + '>' + esc(g.name) + '</option>'; }).join('') + '</select>'
       +   '<select data-qr="big">' + bigs.map(function(b, i){
             return '<option value="' + i + '"' + (i === QR.big ? ' selected' : '') + '>' + esc(b.name) + '</option>'; }).join('') + '</select>'
-      +   '<select data-qr="view">' + [['all','전체'],['todo','아직 안 본 소단원만'],['off','뺀 것만'],['r1','1회차만'],['r2','2회차만'],['r3','3회차만']].map(function(x){
+      +   '<select data-qr="view">' + [['all','전체'],['todo','아직 안 본 소단원만'],['r0','미분류만'],['noans','모범 답 없는 것만'],['off','뺀 것만'],['r1','1회차만'],['r2','2회차만'],['r3','3회차만']].map(function(x){
             return '<option value="' + x[0] + '"' + (x[0] === QR.view ? ' selected' : '') + '>' + x[1] + '</option>'; }).join('') + '</select>'
       +   '<input data-qr="query" type="text" placeholder="질문 안에서 찾기" value="' + esc(QR.query) + '">'
       + '</div>'
@@ -323,10 +360,11 @@
 
     html += '<div class="qr-foot">'
       + '<span>' + esc((gs.find(function(g){ return g.id === QR.grade; }) || {}).name || '') + ' 전체 — '
-      + '1회차 <b>' + s.r1 + '</b> · 2회차 <b>' + s.r2 + '</b> · 3회차 <b>' + s.r3 + '</b> · 뺀 것 <b>' + s.off + '</b>'
-      + ' · 고친 문장 <b>' + s.edited + '</b> · 다 본 소단원 <b>' + s.seen + ' / ' + s.smalls + '</b></span>'
+      + '미분류 <b>' + s.r0 + '</b> · 1회차 <b>' + s.r1 + '</b> · 2회차 <b>' + s.r2 + '</b> · 3회차 <b>' + s.r3 + '</b> · 뺀 것 <b>' + s.off + '</b>'
+      + ' · 고친 문장 <b>' + s.edited + '</b> · 모범 답 <b>' + s.answered + '</b> · 다 본 소단원 <b>' + s.seen + ' / ' + s.smalls + '</b></span>'
       + (s.empty.length ? '<span class="qr-warn">1회차 빈 소단원 ' + s.empty.length + '개</span>' : '')
       + '<span class="sp">'
+      +   '<button class="nbtn" data-qr="import">불러오기</button>'
       +   '<button class="nbtn" data-qr="export">내보내기</button>'
       +   '<button class="nbtn" data-qr="reset">이 학년 되돌리기</button>'
       + '</span></div>';
@@ -347,9 +385,25 @@
     var qid = rowEl ? rowEl.getAttribute('data-qid') : null;
 
     if(act === 'round' && qid){
-      setPlan(qid, { r: parseInt(btn.getAttribute('data-r'), 10), off: null });
-      render(); return;
+      var rr = parseInt(btn.getAttribute('data-r'), 10);
+      var kd = (rowEl.querySelector('.qr-kind.k-ladder') ? 'ladder' : 'low');
+      var p0 = planOf(qid, kd);
+      // 이미 켜진 회차를 한 번 더 누르면 미분류로 (계단은 기본값 3으로)
+      if(p0.r === rr && !p0.off) setPlan(qid, { r: null, off: null });
+      else setPlan(qid, { r: rr, off: null });
+      var y0 = window.scrollY; render(); window.scrollTo(0, y0); return;
     }
+    if(act === 'ans' && qid){ startAns(rowEl, qid); return; }
+    if(act === 'ansSave' && qid){
+      var ea = rowEl.querySelector('.qr-ed[data-f="a"]'), ek = rowEl.querySelector('.qr-ed[data-f="k"]');
+      setAns(qid, ea ? ea.value : '', ek ? ek.value.split('\n') : []);
+      var y1 = window.scrollY; render(); window.scrollTo(0, y1); return;
+    }
+    if(act === 'ansDel' && qid){
+      if(!confirm('이 질문의 모범 답과 핵심을 지울까요?')) return;
+      setAns(qid, '', []); var y2 = window.scrollY; render(); window.scrollTo(0, y2); return;
+    }
+    if(act === 'import'){ pickImport(); return; }
     if(act === 'off' && qid){
       var cur = planOf(qid, 'low');
       setPlan(qid, { off: cur.off ? null : true });
@@ -370,7 +424,7 @@
       return;
     }
     if(act === 'sym' && rowEl){
-      var ta2 = rowEl.querySelector('.qr-ed'); if(!ta2) return;
+      var ta2 = (LAST_ED && rowEl.contains(LAST_ED)) ? LAST_ED : rowEl.querySelector('.qr-ed'); if(!ta2) return;
       var c = btn.getAttribute('data-c');
       var a = ta2.selectionStart, b = ta2.selectionEnd;
       ta2.value = ta2.value.slice(0, a) + c + ta2.value.slice(b);
@@ -421,9 +475,43 @@
     var ta = qEl.querySelector('.qr-ed'); ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length);
   }
 
+  // [v83.8] 모범 답 + 꼭 말할 핵심(한 줄에 하나) 적는 칸
+  var LAST_ED = null;
+  function startAns(rowEl, qid){
+    var qEl = rowEl.querySelector('[data-qr="text"]');
+    if(!qEl || rowEl.querySelector('.qr-ed')) return;
+    var an = ansOf(qid);
+    qEl.innerHTML = '<div style="margin-bottom:6px">' + show(rowEl.getAttribute('data-plain') || '') + '</div>'
+      + '<div class="qr-syms">' + SYMS.map(function(c){
+          return '<button type="button" data-qr="sym" data-c="' + esc(c) + '">' + esc(c) + '</button>'; }).join('')
+        + '</div>'
+      + '<label class="qr-lbl">모범 답 <span>— 한두 문장. 아이가 틀렸을 때 보여 줄 답</span></label>'
+      + '<textarea class="qr-ed" data-f="a" rows="2">' + esc(an.a) + '</textarea>'
+      + '<label class="qr-lbl">꼭 말할 핵심 <span>— 2~3개, 한 줄에 하나. 채점할 때 이것이 들어 있나 본다</span></label>'
+      + '<textarea class="qr-ed" data-f="k" rows="3">' + esc(an.k.join('\n')) + '</textarea>'
+      + '<div class="qr-prev" data-qr="prev"></div>'
+      + '<div class="qr-edrow">'
+      +   '<button class="nbtn primary" data-qr="ansSave">저장</button>'
+      +   '<button class="nbtn" data-qr="editCancel">취소</button>'
+      +   ((an.a || an.k.length) ? '<button class="nbtn" data-qr="ansDel">지우기</button>' : '')
+      + '</div>';
+    updatePreview(rowEl);
+    var ta = qEl.querySelector('.qr-ed'); ta.focus(); LAST_ED = ta;
+  }
+
   function updatePreview(rowEl){
-    var ta = rowEl.querySelector('.qr-ed'), pv = rowEl.querySelector('[data-qr="prev"]');
-    if(ta && pv) pv.innerHTML = show(ta.value) || '<span style="color:#B9AFD4">(비어 있음)</span>';
+    var pv = rowEl.querySelector('[data-qr="prev"]'); if(!pv) return;
+    var ea = rowEl.querySelector('.qr-ed[data-f="a"]'), ek = rowEl.querySelector('.qr-ed[data-f="k"]');
+    if(ea || ek){
+      var ks = (ek ? ek.value.split('\n') : []).map(function(s){ return s.trim(); }).filter(Boolean);
+      pv.innerHTML = (ea && ea.value.trim() ? '<b>모범 답</b> ' + show(ea.value) : '<span style="color:#B9AFD4">(모범 답 비어 있음)</span>')
+        + (ks.length ? '<ul style="margin:4px 0 0 16px;padding:0">' + ks.map(function(k){ return '<li>' + show(k) + '</li>'; }).join('') + '</ul>'
+                     : '<div style="color:#B9AFD4">(핵심 비어 있음)</div>')
+        + (ks.length > 3 ? '<div style="color:#C0392B;font-size:12px">핵심이 ' + ks.length + '개예요 — 2~3개가 좋아요</div>' : '');
+      return;
+    }
+    var ta = rowEl.querySelector('.qr-ed');
+    if(ta) pv.innerHTML = show(ta.value) || '<span style="color:#B9AFD4">(비어 있음)</span>';
   }
   function onChange(e){
     var host = document.getElementById('qreviewTab');
@@ -437,6 +525,7 @@
     var host = document.getElementById('qreviewTab');
     if(!host || !host.contains(e.target)) return;
     if(e.target.classList && e.target.classList.contains('qr-ed')){
+      LAST_ED = e.target;
       var row = e.target.closest('.qr-row'); if(row) updatePreview(row);
       return;
     }
@@ -454,7 +543,8 @@
   function doExport(){
     var gradeId = QR.grade, m; try{ m = cpModel(gradeId); }catch(e){ m = null; }
     if(!m) return;
-    var out = { format:'qr-plan-1', grade:gradeId, rounds:ROUNDS, exportedAt:new Date().toISOString(), items:[], seen:[] };
+    // qr-plan-2 [v83.8]: round 0 = 미분류 · answer(모범 답) · keys(꼭 말할 핵심)
+    var out = { format:'qr-plan-2', grade:gradeId, rounds:ROUNDS, exportedAt:new Date().toISOString(), items:[], seen:[] };
     m.bigUnits.forEach(function(big){
       smallsOf(big).forEach(function(row){
         var code = conceptCode(gradeId, big.name, row.sm.name);
@@ -464,6 +554,9 @@
           var rec = { id:it.id, big:big.name, small:row.sm.name, kind:it.kind, ord:i, round:p.r, off:p.off, q:it.q };
           if(it.type) rec.type = it.type;
           if(EDITS[it.id] != null) rec.newQ = EDITS[it.id];
+          var an = ansOf(it.id);
+          if(an.a) rec.answer = an.a;
+          if(an.k.length) rec.keys = an.k;
           out.items.push(rec);
         });
       });
@@ -485,11 +578,106 @@
         var c0 = conceptCode(gradeId, big.name, row.sm.name);
         delete SEEN[c0]; delete ORDER[c0];
         itemsOf(gradeId, big.name, row.sm).forEach(function(it){
-          delete PLAN[it.id]; delete EDITS[it.id];
+          delete PLAN[it.id]; delete EDITS[it.id]; delete ANS[it.id];
         });
       });
     });
-    save(PLAN_KEY, PLAN); save(EDIT_KEY, EDITS); save(SEEN_KEY, SEEN); save(ORDER_KEY, ORDER);
+    save(PLAN_KEY, PLAN); save(EDIT_KEY, EDITS); save(SEEN_KEY, SEEN); save(ORDER_KEY, ORDER); save(ANS_KEY, ANS);
+    render();
+  }
+
+  /* ── [v83.8] 불러오기 ─────────────────────────────────────
+     파일에 있는 것만 더한다(없는 질문은 그대로).
+     qr-plan-1(옛 내보내기)은 회차를 가져오지 않는다 — 그 회차는 전부 옛 기본값이라
+     가져오면 "미분류"가 덮인다. 고친 문장·빼기·순서·다 봤음만 가져온다.
+     qr-plan-2 는 회차(1~3)·모범 답·핵심까지. round 0/없음은 "건드리지 않음". */
+  function pickImport(){
+    var inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = '.json,application/json'; inp.style.display = 'none';
+    inp.onchange = function(){
+      var f = inp.files && inp.files[0]; inp.remove(); if(!f) return;
+      var rd = new FileReader();
+      rd.onload = function(){
+        var d; try{ d = JSON.parse(rd.result); }catch(e){ alert('JSON 파일을 읽지 못했어요.'); return; }
+        doImport(d);
+      };
+      rd.readAsText(f, 'utf-8');
+    };
+    document.body.appendChild(inp); inp.click();
+  }
+
+  function importPlan(d){
+    var fmt = d && d.format, gradeId = d && d.grade;
+    if((fmt !== 'qr-plan-1' && fmt !== 'qr-plan-2') || !gradeId || !Array.isArray(d.items)) return { err:'질문 고르기 파일이 아니에요.' };
+    var m; try{ m = cpModel(gradeId); }catch(e){ m = null; }
+    if(!m || !m.bigUnits) return { err:'이 앱에 없는 학년이에요: ' + gradeId };
+    // 이 학년에 실제로 있는 질문 번호 · 소단원 코드
+    var known = {}, codeOf = {}, curOrd = {};
+    m.bigUnits.forEach(function(big){
+      smallsOf(big).forEach(function(row){
+        var code = conceptCode(gradeId, big.name, row.sm.name);
+        codeOf[big.name + '|' + row.sm.name] = code;
+        curOrd[code] = orderedItems(gradeId, big.name, row.sm, code).map(function(x){ return x.id; });
+        itemsOf(gradeId, big.name, row.sm).forEach(function(it){ known[it.id] = it; });
+      });
+    });
+    var c = { fmt:fmt, grade:gradeId, total:d.items.length, missing:0, round:0, off:0, edit:0, ans:0, overwrite:0, seen:0, order:0, ops:[] };
+    var ordBy = {};
+    d.items.forEach(function(rec){
+      var it = rec && known[rec.id];
+      if(!it){ c.missing++; return; }
+      var p = planOf(it.id, it.kind);
+      if(fmt === 'qr-plan-2' && rec.round >= 1 && rec.round <= ROUNDS && rec.round !== p.r){
+        if(p.r && (PLAN[it.id] || {}).r != null) c.overwrite++;
+        c.round++; c.ops.push(function(){ setPlan(it.id, { r: rec.round }); });
+      }
+      if(typeof rec.off === 'boolean' && rec.off !== p.off){
+        c.off++; c.ops.push(function(){ setPlan(it.id, { off: rec.off ? true : null }); });
+      }
+      if(typeof rec.newQ === 'string' && rec.newQ.trim() && rec.newQ !== EDITS[it.id]){
+        if(EDITS[it.id] != null) c.overwrite++;
+        c.edit++; c.ops.push(function(){ EDITS[it.id] = rec.newQ.trim(); });
+      }
+      if(fmt === 'qr-plan-2' && (rec.answer || (rec.keys && rec.keys.length))){
+        var old = ansOf(it.id), na = String(rec.answer || '').trim(), nk = (rec.keys || []).map(String);
+        if(old.a !== na || old.k.join('\n') !== nk.map(function(s){ return s.trim(); }).filter(Boolean).join('\n')){
+          if(old.a || old.k.length) c.overwrite++;
+          c.ans++; c.ops.push(function(){ setAns(it.id, na, nk); });
+        }
+      }
+      var code = codeOf[rec.big + '|' + rec.small];
+      if(code && typeof rec.ord === 'number'){ (ordBy[code] = ordBy[code] || []).push({ id:it.id, ord:rec.ord }); }
+    });
+    Object.keys(ordBy).forEach(function(code){
+      var ids = ordBy[code].sort(function(a, b){ return a.ord - b.ord; }).map(function(x){ return x.id; });
+      // 지금 화면 순서와 같으면 건드리지 않는다 (파일에 있는 질문끼리만 비교)
+      var inFile = {}; ids.forEach(function(id){ inFile[id] = 1; });
+      var now = (curOrd[code] || []).filter(function(id){ return inFile[id]; });
+      if(JSON.stringify(ids) !== JSON.stringify(now)){
+        c.order++; c.ops.push(function(){ ORDER[code] = ids; });
+      }
+    });
+    (d.seen || []).forEach(function(code){
+      if(!SEEN[code]){ c.seen++; c.ops.push(function(){ SEEN[code] = true; }); }
+    });
+    return c;
+  }
+
+  function doImport(d){
+    var c = importPlan(d);
+    if(c.err){ alert(c.err); return; }
+    var msg = c.grade + ' 파일 (' + c.total + '개 질문)\n\n'
+      + '넣을 것 — 회차 ' + c.round + ' · 모범 답 ' + c.ans + ' · 고친 문장 ' + c.edit
+      + ' · 빼기 ' + c.off + ' · 다 봤음 ' + c.seen + ' · 순서 바뀐 소단원 ' + c.order + '\n'
+      + (c.overwrite ? '⚠️ 이미 다르게 적어 둔 ' + c.overwrite + '개는 파일 내용으로 바뀝니다.\n' : '')
+      + (c.missing ? '(이 앱에 없는 질문 ' + c.missing + '개는 건너뜁니다)\n' : '')
+      + (c.fmt === 'qr-plan-1' ? '(옛 형식 파일이라 회차는 가져오지 않습니다)\n' : '')
+      + '\n넣을까요?';
+    if(!c.ops.length){ alert(msg.split('\n\n넣을까요?')[0] + '\n\n새로 넣을 것이 없어요.'); return; }
+    if(!confirm(msg)) return;
+    c.ops.forEach(function(fn){ fn(); });
+    save(PLAN_KEY, PLAN); save(EDIT_KEY, EDITS); save(SEEN_KEY, SEEN); save(ORDER_KEY, ORDER); save(ANS_KEY, ANS);
+    QR.grade = c.grade;
     render();
   }
 
@@ -508,9 +696,16 @@
   document.addEventListener('click', onClick, true);
   document.addEventListener('change', onChange);
   document.addEventListener('input', onInput);
+  // 기호 버튼이 어느 칸에 넣을지 — 마지막으로 누르거나 글자를 친 칸
+  ['focusin', 'mousedown', 'click', 'keyup'].forEach(function(ev){
+    document.addEventListener(ev, function(e){
+      if(e.target && e.target.classList && e.target.classList.contains('qr-ed')) LAST_ED = e.target;
+    }, true);
+  });
   document.addEventListener('DOMContentLoaded', mount);
   window.addEventListener('load', mount);
   mount();
 
   window.qrRender = render;   // 콘솔 확인용
+  window.qrImportPlan = importPlan;   // 콘솔 확인용 (넣지 않고 셈만 한다)
 })();
