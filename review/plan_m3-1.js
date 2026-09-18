@@ -1,8 +1,9 @@
 /* [v84.6] 질문 고르기 — 기본으로 실어 두는 분류안 (중3-1)
    마스터 견본(2026-09-18: 38 인수분해란·51 항이 4개인 식 + 1단원 문장 고침) + Claude 2단원 나머지 25소단원
    (연산 질문으로 고침 newQBy:'claude' · 회차 by · 뺌 offBy · 모범 답 answerBy). 화면 열 때 한 번만 넣음.
-   [b] 마스터 검토2(3단원 55·56·59·63·70) 반영 + Claude 3단원 나머지 17소단원(활용 73~77은 대표 문제를 주고 식 세우기로). */
-(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'m3-1_2026-09-18b', data:{
+   [b] 마스터 검토2(3단원 55·56·59·63·70) 반영 + Claude 3단원 나머지 17소단원(활용 73~77은 대표 문제를 주고 식 세우기로).
+   [c] 4단원 이차함수 20소단원 — 방정식 단원 기준(설명·이유·오류는 살리고 예/아니오·되묻기만 뺌). */
+(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'m3-1_2026-09-18c', data:{
 "format": "qr-plan-2",
 "grade": "m3-1",
 "rounds": 3,
@@ -6415,6 +6416,2488 @@
 "keys": [
 "길이는 양수",
 "5cm"
+],
+"answerBy": "claude"
+},
+{
+"id": "1sk5u0k:t0L1",
+"big": "4. 이차함수",
+"small": "78. 이차함수란 무엇일까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "y가 x에 대한 이차식이야. y=ax²+bx+c(a≠0) 꼴이지.",
+"keys": [
+"x에 대한 이차식",
+"y=ax²+bx+c(a≠0)"
+],
+"answerBy": "claude"
+},
+{
+"id": "1sk5u0k:t0L2",
+"big": "4. 이차함수",
+"small": "78. 이차함수란 무엇일까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"newQ": "② y=ax²+bx+c에서 a가 0이 될 수 없는 이유는?",
+"newQBy": "claude",
+"answer": "a=0이면 x² 항이 없어져서 y=bx+c가 돼. 그러면 이차함수가 아니라 일차함수(또는 상수함수)야.",
+"keys": [
+"x² 항이 없어진다",
+"이차함수가 아니게 된다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1sk5u0k:t0L3",
+"big": "4. 이차함수",
+"small": "78. 이차함수란 무엇일까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"newQ": "③ y=2x²-1과 y=x(x+3)-x² 중 이차함수는 어느 것이야?",
+"newQBy": "claude",
+"answer": "y=2x²-1이 이차함수야. y=x(x+3)-x²은 정리하면 y=3x라서 일차함수야.",
+"keys": [
+"y=2x²-1",
+"정리하면 y=3x라 일차함수"
+],
+"answerBy": "claude"
+},
+{
+"id": "1sk5u0k:t0H1",
+"big": "4. 이차함수",
+"small": "78. 이차함수란 무엇일까?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "y가 x에 대한 이차식 y=ax²+bx+c(a, b, c는 상수, a≠0)로 나타내지는 함수를 x에 대한 이차함수라고 해. a는 0이 아니어야 하고 b, c는 0이어도 돼.",
+"keys": [
+"y=ax²+bx+c",
+"a≠0, b와 c는 0이어도 된다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1sk5u0k:t0H2",
+"big": "4. 이차함수",
+"small": "78. 이차함수란 무엇일까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1sk5u0k:t0H3",
+"big": "4. 이차함수",
+"small": "78. 이차함수란 무엇일까?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "식을 전개하고 동류항을 정리해서 y=(x에 대한 식) 꼴로 만든 뒤, x에 대한 이차식인지(x²의 계수가 0이 아닌지) 확인해. 분모에 x가 있으면 이차함수가 아니야.",
+"keys": [
+"정리한 뒤 판단",
+"x²의 계수가 0이 아닌지",
+"분모에 x가 있으면 아니다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1sk5u0k:qrecall",
+"big": "4. 이차함수",
+"small": "78. 이차함수란 무엇일까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "a≠0이어야 해. b와 c는 어떤 수여도 돼.",
+"keys": [
+"a≠0"
+],
+"answerBy": "claude"
+},
+{
+"id": "1sk5u0k:qreason",
+"big": "4. 이차함수",
+"small": "78. 이차함수란 무엇일까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1sk5u0k:qexample",
+"big": "4. 이차함수",
+"small": "78. 이차함수란 무엇일까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "예를 들어 y=3x²이야. b=0, c=0이지만 a=3이 0이 아니라서 이차함수야.",
+"keys": [
+"y=ax² 꼴",
+"a≠0"
+],
+"answerBy": "claude"
+},
+{
+"id": "1sk5u0k:qerror",
+"big": "4. 이차함수",
+"small": "78. 이차함수란 무엇일까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "0×x²=0이라서 식은 y=2x+1이야. x² 항이 없으니까 일차함수야.",
+"keys": [
+"0×x²=0",
+"y=2x+1은 일차함수"
+],
+"answerBy": "claude"
+},
+{
+"id": "1a8fpfv:t0L1",
+"big": "4. 이차함수",
+"small": "79. 이차함수 f(x)=x²-5x에 대하여 f(2)의 값은?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "x에 2를 넣었을 때의 함숫값이라는 뜻이야.",
+"keys": [
+"x에 2를 대입한 값"
+],
+"answerBy": "claude"
+},
+{
+"id": "1a8fpfv:t0L2",
+"big": "4. 이차함수",
+"small": "79. 이차함수 f(x)=x²-5x에 대하여 f(2)의 값은?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"newQ": "② f(x)=-x²+2x-3에서 f(-1)을 구해봐.",
+"newQBy": "claude",
+"answer": "x에 -1을 넣으면 -(-1)²+2×(-1)-3=-1-2-3=-6이야.",
+"keys": [
+"괄호를 씌워 대입",
+"-6"
+],
+"answerBy": "claude"
+},
+{
+"id": "1a8fpfv:t0L3",
+"big": "4. 이차함수",
+"small": "79. 이차함수 f(x)=x²-5x에 대하여 f(2)의 값은?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1a8fpfv:t0H1",
+"big": "4. 이차함수",
+"small": "79. 이차함수 f(x)=x²-5x에 대하여 f(2)의 값은?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1a8fpfv:t0H2",
+"big": "4. 이차함수",
+"small": "79. 이차함수 f(x)=x²-5x에 대하여 f(2)의 값은?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1a8fpfv:t0H3",
+"big": "4. 이차함수",
+"small": "79. 이차함수 f(x)=x²-5x에 대하여 f(2)의 값은?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"answer": "f(x)는 x의 값에 따라 정해지는 y의 값을 나타내. f(x)=x²-5x는 x를 넣으면 x²-5x라는 값이 나온다는 뜻이야.",
+"keys": [
+"x에 따라 정해지는 y의 값",
+"y=f(x)"
+],
+"answerBy": "claude"
+},
+{
+"id": "1a8fpfv:qrecall",
+"big": "4. 이차함수",
+"small": "79. 이차함수 f(x)=x²-5x에 대하여 f(2)의 값은?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1a8fpfv:qreason",
+"big": "4. 이차함수",
+"small": "79. 이차함수 f(x)=x²-5x에 대하여 f(2)의 값은?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "f(2)=4-10=-6, f(3)=9-15=-6이야. 함수는 x 하나에 y가 하나씩 정해지기만 하면 돼서, 서로 다른 x의 함숫값이 같아도 함수야.",
+"keys": [
+"f(2)=f(3)=-6",
+"x 하나에 y가 하나면 함수"
+],
+"answerBy": "claude"
+},
+{
+"id": "1a8fpfv:qexample",
+"big": "4. 이차함수",
+"small": "79. 이차함수 f(x)=x²-5x에 대하여 f(2)의 값은?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "예를 들어 x=4를 넣으면 f(4)=16-20=-4야.",
+"keys": [
+"x에 수를 대입한다",
+"f(4)=-4"
+],
+"answerBy": "claude"
+},
+{
+"id": "1a8fpfv:qerror",
+"big": "4. 이차함수",
+"small": "79. 이차함수 f(x)=x²-5x에 대하여 f(2)의 값은?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "f(2)는 x 자리에 2를 넣는 거야. 2를 곱하는 게 아니라서 f(2)=2²-5×2=-6이야.",
+"keys": [
+"x 자리에 2를 넣는다",
+"-6"
+],
+"answerBy": "claude"
+},
+{
+"id": "ok58px:t0L1",
+"big": "4. 이차함수",
+"small": "80. 이차함수 f(x)=x²-5x에 대하여 f(a)=-6일 때, a의 값은?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "x 자리에 a를 넣으면 a²-5a=-6이라는 이차방정식이 돼.",
+"keys": [
+"a²-5a=-6"
+],
+"answerBy": "claude"
+},
+{
+"id": "ok58px:t0L2",
+"big": "4. 이차함수",
+"small": "80. 이차함수 f(x)=x²-5x에 대하여 f(a)=-6일 때, a의 값은?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ok58px:t0L3",
+"big": "4. 이차함수",
+"small": "80. 이차함수 f(x)=x²-5x에 대하여 f(a)=-6일 때, a의 값은?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ok58px:t0H1",
+"big": "4. 이차함수",
+"small": "80. 이차함수 f(x)=x²-5x에 대하여 f(a)=-6일 때, a의 값은?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"answer": "f(a)=a²-5a=-6으로 놓고 정리하면 a²-5a+6=0이야. (a-2)(a-3)=0이라서 a=2 또는 a=3이야.",
+"keys": [
+"a²-5a+6=0",
+"a=2 또는 a=3"
+],
+"answerBy": "claude"
+},
+{
+"id": "ok58px:t0H2",
+"big": "4. 이차함수",
+"small": "80. 이차함수 f(x)=x²-5x에 대하여 f(a)=-6일 때, a의 값은?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ok58px:t0H3",
+"big": "4. 이차함수",
+"small": "80. 이차함수 f(x)=x²-5x에 대하여 f(a)=-6일 때, a의 값은?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "이차함수는 서로 다른 두 x에서 같은 함숫값이 나올 수 있어. 그래서 f(a)=-6을 만족하는 a가 두 개일 수 있고, 문제에 다른 조건이 없으면 둘 다 답이야.",
+"keys": [
+"다른 x에서 같은 함숫값이 나올 수 있다",
+"조건이 없으면 둘 다 답"
+],
+"answerBy": "claude"
+},
+{
+"id": "ok58px:qrecall",
+"big": "4. 이차함수",
+"small": "80. 이차함수 f(x)=x²-5x에 대하여 f(a)=-6일 때, a의 값은?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ok58px:qreason",
+"big": "4. 이차함수",
+"small": "80. 이차함수 f(x)=x²-5x에 대하여 f(a)=-6일 때, a의 값은?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ok58px:qexample",
+"big": "4. 이차함수",
+"small": "80. 이차함수 f(x)=x²-5x에 대하여 f(a)=-6일 때, a의 값은?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "a²-5a=0, a(a-5)=0이라서 a=0 또는 a=5야.",
+"keys": [
+"a(a-5)=0",
+"a=0 또는 a=5"
+],
+"answerBy": "claude"
+},
+{
+"id": "ok58px:qerror",
+"big": "4. 이차함수",
+"small": "80. 이차함수 f(x)=x²-5x에 대하여 f(a)=-6일 때, a의 값은?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "(a+2)(a+3)을 전개하면 a²+5a+6이라서 부호가 틀렸어. 곱이 6, 합이 -5인 두 수는 -2, -3이라서 (a-2)(a-3)=0, a=2 또는 a=3이야.",
+"keys": [
+"부호가 틀렸다",
+"(a-2)(a-3)=0, a=2 또는 a=3"
+],
+"answerBy": "claude"
+},
+{
+"id": "b7xbw2:t0L1",
+"big": "4. 이차함수",
+"small": "81. 이차함수 y=x²의 그래프는 어떤 모양일까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "b7xbw2:t0L2",
+"big": "4. 이차함수",
+"small": "81. 이차함수 y=x²의 그래프는 어떤 모양일까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "포물선이라고 해.",
+"keys": [
+"포물선"
+],
+"answerBy": "claude"
+},
+{
+"id": "b7xbw2:t0L3",
+"big": "4. 이차함수",
+"small": "81. 이차함수 y=x²의 그래프는 어떤 모양일까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "원점 (0, 0)이야.",
+"keys": [
+"원점 (0, 0)"
+],
+"answerBy": "claude"
+},
+{
+"id": "b7xbw2:t0H1",
+"big": "4. 이차함수",
+"small": "81. 이차함수 y=x²의 그래프는 어떤 모양일까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "b7xbw2:t0H2",
+"big": "4. 이차함수",
+"small": "81. 이차함수 y=x²의 그래프는 어떤 모양일까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "b7xbw2:t0H3",
+"big": "4. 이차함수",
+"small": "81. 이차함수 y=x²의 그래프는 어떤 모양일까?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "x>0일 때는 x가 커질수록 y도 커지고, x<0일 때는 x가 커질수록 y는 작아져. 원점에서 가장 작은 값 0이 돼.",
+"keys": [
+"x>0이면 x가 커질수록 y가 커진다",
+"x<0이면 x가 커질수록 y가 작아진다"
+],
+"answerBy": "claude"
+},
+{
+"id": "b7xbw2:qrecall",
+"big": "4. 이차함수",
+"small": "81. 이차함수 y=x²의 그래프는 어떤 모양일까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "원점을 꼭짓점으로 하고 아래로 볼록한 포물선이야. y축에 대칭이라서 축은 y축(x=0)이야.",
+"keys": [
+"꼭짓점 원점",
+"아래로 볼록",
+"y축에 대칭"
+],
+"answerBy": "claude"
+},
+{
+"id": "b7xbw2:qreason",
+"big": "4. 이차함수",
+"small": "81. 이차함수 y=x²의 그래프는 어떤 모양일까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "x가 0이 아니면 x²은 항상 양수이고, x=0일 때만 0이야. 그래서 원점이 가장 낮은 점이고 양쪽이 위로 올라가서 아래로 볼록해.",
+"keys": [
+"x²은 0 이상",
+"원점이 가장 낮다"
+],
+"answerBy": "claude"
+},
+{
+"id": "b7xbw2:qexample",
+"big": "4. 이차함수",
+"small": "81. 이차함수 y=x²의 그래프는 어떤 모양일까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "예를 들어 (1, 1)과 (-2, 4)야. x를 제곱한 값이 y야.",
+"keys": [
+"y=x²을 만족하는 점",
+"(1, 1), (-2, 4)"
+],
+"answerBy": "claude"
+},
+{
+"id": "b7xbw2:qerror",
+"big": "4. 이차함수",
+"small": "81. 이차함수 y=x²의 그래프는 어떤 모양일까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "y=x²의 그래프는 직선이 아니라 곡선(포물선)이고, x=0일 때 y=0이라서 원점을 지나.",
+"keys": [
+"직선이 아니라 포물선",
+"원점을 지난다"
+],
+"answerBy": "claude"
+},
+{
+"id": "mgix58:t0L1",
+"big": "4. 이차함수",
+"small": "82. 이차함수 y=-x²의 그래프는 어떤 모양일까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "mgix58:t0L2",
+"big": "4. 이차함수",
+"small": "82. 이차함수 y=-x²의 그래프는 어떤 모양일까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "mgix58:t0L3",
+"big": "4. 이차함수",
+"small": "82. 이차함수 y=-x²의 그래프는 어떤 모양일까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "mgix58:t0H1",
+"big": "4. 이차함수",
+"small": "82. 이차함수 y=-x²의 그래프는 어떤 모양일까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "mgix58:t0H2",
+"big": "4. 이차함수",
+"small": "82. 이차함수 y=-x²의 그래프는 어떤 모양일까?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "y=-x²은 x²에 -를 붙인 거라서, x가 0이 아니면 y는 항상 음수야. 원점이 가장 높은 점이 되고 양쪽이 아래로 내려가서 위로 볼록해.",
+"keys": [
+"y는 0 이하",
+"원점이 가장 높다"
+],
+"answerBy": "claude"
+},
+{
+"id": "mgix58:t0H3",
+"big": "4. 이차함수",
+"small": "82. 이차함수 y=-x²의 그래프는 어떤 모양일까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"answer": "y=x²과 y=-x²은 같은 x에서 y의 부호만 반대라서 x축에 대하여 대칭이야.",
+"keys": [
+"x축에 대하여 대칭"
+],
+"answerBy": "claude"
+},
+{
+"id": "mgix58:qrecall",
+"big": "4. 이차함수",
+"small": "82. 이차함수 y=-x²의 그래프는 어떤 모양일까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "위로 볼록하고, 꼭짓점은 원점 (0, 0)이야.",
+"keys": [
+"위로 볼록",
+"꼭짓점 원점"
+],
+"answerBy": "claude"
+},
+{
+"id": "mgix58:qreason",
+"big": "4. 이차함수",
+"small": "82. 이차함수 y=-x²의 그래프는 어떤 모양일까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "같은 x에서 y=x²의 값이 k이면 y=-x²의 값은 -k야. 점 (x, k)와 (x, -k)는 x축을 사이에 두고 마주 보니까 두 그래프는 x축에 대칭이야.",
+"keys": [
+"같은 x에서 y의 부호만 반대",
+"(x, k)와 (x, -k)"
+],
+"answerBy": "claude"
+},
+{
+"id": "mgix58:qexample",
+"big": "4. 이차함수",
+"small": "82. 이차함수 y=-x²의 그래프는 어떤 모양일까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "예를 들어 (2, -4)야. x=2이면 y=-2²=-4야.",
+"keys": [
+"y=-x²을 만족하는 점",
+"(2, -4)"
+],
+"answerBy": "claude"
+},
+{
+"id": "mgix58:qerror",
+"big": "4. 이차함수",
+"small": "82. 이차함수 y=-x²의 그래프는 어떤 모양일까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "y=-x²은 y가 항상 0 이하라서 원점이 가장 높은 점이야. 그래서 위로 볼록해.",
+"keys": [
+"y는 0 이하",
+"위로 볼록"
+],
+"answerBy": "claude"
+},
+{
+"id": "1njqcuh:t0L1",
+"big": "4. 이차함수",
+"small": "83. 이차함수 y=ax²의 그래프는 어떤 모양일까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "원점 (0, 0)이야.",
+"keys": [
+"원점"
+],
+"answerBy": "claude"
+},
+{
+"id": "1njqcuh:t0L2",
+"big": "4. 이차함수",
+"small": "83. 이차함수 y=ax²의 그래프는 어떤 모양일까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "y축, 즉 x=0이야.",
+"keys": [
+"y축(x=0)"
+],
+"answerBy": "claude"
+},
+{
+"id": "1njqcuh:t0L3",
+"big": "4. 이차함수",
+"small": "83. 이차함수 y=ax²의 그래프는 어떤 모양일까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1njqcuh:t0H1",
+"big": "4. 이차함수",
+"small": "83. 이차함수 y=ax²의 그래프는 어떤 모양일까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1njqcuh:t0H2",
+"big": "4. 이차함수",
+"small": "83. 이차함수 y=ax²의 그래프는 어떤 모양일까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"answer": "a>0이면 아래로 볼록, a<0이면 위로 볼록해.",
+"keys": [
+"a>0 아래로 볼록",
+"a<0 위로 볼록"
+],
+"answerBy": "claude"
+},
+{
+"id": "1njqcuh:t0H3",
+"big": "4. 이차함수",
+"small": "83. 이차함수 y=ax²의 그래프는 어떤 모양일까?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "y=a(x-p)²+q 같은 모든 포물선은 y=ax²의 그래프를 평행이동한 거야. 그래서 y=ax²의 모양을 알면 다른 이차함수 그래프도 옮겨서 알 수 있어.",
+"keys": [
+"다른 포물선은 y=ax²을 평행이동한 것",
+"모양은 a가 정한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1njqcuh:qrecall",
+"big": "4. 이차함수",
+"small": "83. 이차함수 y=ax²의 그래프는 어떤 모양일까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1njqcuh:qreason",
+"big": "4. 이차함수",
+"small": "83. 이차함수 y=ax²의 그래프는 어떤 모양일까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "x²은 항상 0 이상이라서 y=ax²의 부호는 a의 부호와 같아. a>0이면 y≥0이라 원점이 가장 낮아서 아래로 볼록, a<0이면 y≤0이라 원점이 가장 높아서 위로 볼록해.",
+"keys": [
+"x²은 0 이상",
+"y의 부호가 a의 부호와 같다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1njqcuh:qexample",
+"big": "4. 이차함수",
+"small": "83. 이차함수 y=ax²의 그래프는 어떤 모양일까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "y=(1/2)x²이고, a=1/2>0이라서 아래로 볼록해.",
+"keys": [
+"y=(1/2)x²",
+"아래로 볼록"
+],
+"answerBy": "claude"
+},
+{
+"id": "1njqcuh:qerror",
+"big": "4. 이차함수",
+"small": "83. 이차함수 y=ax²의 그래프는 어떤 모양일까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "y=ax²의 꼭짓점은 a와 상관없이 항상 원점이야. a가 음수이면 꼭짓점은 그대로이고 위로 볼록해질 뿐이야.",
+"keys": [
+"꼭짓점은 항상 원점",
+"a<0이면 위로 볼록"
+],
+"answerBy": "claude"
+},
+{
+"id": "147hn47:t0L1",
+"big": "4. 이차함수",
+"small": "84. 이차함수 y=ax²의 그래프는 a의 값에 따라 어떻게 달라질까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "a의 절댓값이 클수록 그래프의 폭이 좁아져.",
+"keys": [
+"폭이 좁아진다"
+],
+"answerBy": "claude"
+},
+{
+"id": "147hn47:t0L2",
+"big": "4. 이차함수",
+"small": "84. 이차함수 y=ax²의 그래프는 a의 값에 따라 어떻게 달라질까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "147hn47:t0L3",
+"big": "4. 이차함수",
+"small": "84. 이차함수 y=ax²의 그래프는 a의 값에 따라 어떻게 달라질까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "a의 부호는 볼록한 방향을 결정해. a>0이면 아래로, a<0이면 위로 볼록해.",
+"keys": [
+"볼록한 방향"
+],
+"answerBy": "claude"
+},
+{
+"id": "147hn47:t0H1",
+"big": "4. 이차함수",
+"small": "84. 이차함수 y=ax²의 그래프는 a의 값에 따라 어떻게 달라질까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "147hn47:t0H2",
+"big": "4. 이차함수",
+"small": "84. 이차함수 y=ax²의 그래프는 a의 값에 따라 어떻게 달라질까?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "같은 x에서 |a|가 클수록 y의 절댓값이 더 커져서, 그래프가 y축 쪽으로 더 빨리 올라가거나 내려가. 그래서 폭이 좁아 보여.",
+"keys": [
+"같은 x에서 y가 더 크게 변한다",
+"y축 쪽으로 좁아진다"
+],
+"answerBy": "claude"
+},
+{
+"id": "147hn47:t0H3",
+"big": "4. 이차함수",
+"small": "84. 이차함수 y=ax²의 그래프는 a의 값에 따라 어떻게 달라질까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "147hn47:qrecall",
+"big": "4. 이차함수",
+"small": "84. 이차함수 y=ax²의 그래프는 a의 값에 따라 어떻게 달라질까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "a의 부호는 볼록한 방향을, |a|의 크기는 그래프의 폭을 결정해. |a|가 클수록 폭이 좁아.",
+"keys": [
+"부호는 볼록한 방향",
+"|a|는 폭"
+],
+"answerBy": "claude"
+},
+{
+"id": "147hn47:qreason",
+"big": "4. 이차함수",
+"small": "84. 이차함수 y=ax²의 그래프는 a의 값에 따라 어떻게 달라질까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "147hn47:qexample",
+"big": "4. 이차함수",
+"small": "84. 이차함수 y=ax²의 그래프는 a의 값에 따라 어떻게 달라질까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "y=2x²이 더 좁아. |2|가 |1/3|보다 크기 때문이야.",
+"keys": [
+"|a|가 큰 쪽이 좁다",
+"y=2x²"
+],
+"answerBy": "claude"
+},
+{
+"id": "147hn47:qerror",
+"big": "4. 이차함수",
+"small": "84. 이차함수 y=ax²의 그래프는 a의 값에 따라 어떻게 달라질까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "|a|가 클수록 폭이 좁아져. |5|>|1|이니까 y=5x²이 y=x²보다 폭이 더 좁아.",
+"keys": [
+"|a|가 클수록 좁다",
+"y=5x²이 더 좁다"
+],
+"answerBy": "claude"
+},
+{
+"id": "jasnvu:t0L1",
+"big": "4. 이차함수",
+"small": "85. 이차함수 y=ax²의 그래프를 y축의 방향으로 q만큼 평행이동한 그래프는?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "y=ax²+q가 돼.",
+"keys": [
+"y=ax²+q"
+],
+"answerBy": "claude"
+},
+{
+"id": "jasnvu:t0L2",
+"big": "4. 이차함수",
+"small": "85. 이차함수 y=ax²의 그래프를 y축의 방향으로 q만큼 평행이동한 그래프는?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "jasnvu:t0L3",
+"big": "4. 이차함수",
+"small": "85. 이차함수 y=ax²의 그래프를 y축의 방향으로 q만큼 평행이동한 그래프는?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "꼭짓점은 (0, q)로 옮겨져.",
+"keys": [
+"(0, q)"
+],
+"answerBy": "claude"
+},
+{
+"id": "jasnvu:t0H1",
+"big": "4. 이차함수",
+"small": "85. 이차함수 y=ax²의 그래프를 y축의 방향으로 q만큼 평행이동한 그래프는?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "jasnvu:t0H2",
+"big": "4. 이차함수",
+"small": "85. 이차함수 y=ax²의 그래프를 y축의 방향으로 q만큼 평행이동한 그래프는?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"answer": "q>0이면 위쪽으로, q<0이면 아래쪽으로 |q|만큼 이동해.",
+"keys": [
+"q>0 위로",
+"q<0 아래로"
+],
+"answerBy": "claude"
+},
+{
+"id": "jasnvu:t0H3",
+"big": "4. 이차함수",
+"small": "85. 이차함수 y=ax²의 그래프를 y축의 방향으로 q만큼 평행이동한 그래프는?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "jasnvu:qrecall",
+"big": "4. 이차함수",
+"small": "85. 이차함수 y=ax²의 그래프를 y축의 방향으로 q만큼 평행이동한 그래프는?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "jasnvu:qreason",
+"big": "4. 이차함수",
+"small": "85. 이차함수 y=ax²의 그래프를 y축의 방향으로 q만큼 평행이동한 그래프는?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "그래프 위의 모든 점을 똑같이 위아래로만 옮기는 거라서 모양은 그대로야. 좌우로는 움직이지 않으니까 축도 y축(x=0) 그대로야.",
+"keys": [
+"모든 점을 똑같이 옮긴다",
+"좌우로는 움직이지 않는다"
+],
+"answerBy": "claude"
+},
+{
+"id": "jasnvu:qexample",
+"big": "4. 이차함수",
+"small": "85. 이차함수 y=ax²의 그래프를 y축의 방향으로 q만큼 평행이동한 그래프는?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "y=4x²-2이고, 꼭짓점은 (0, -2)야.",
+"keys": [
+"y=4x²-2",
+"(0, -2)"
+],
+"answerBy": "claude"
+},
+{
+"id": "jasnvu:qerror",
+"big": "4. 이차함수",
+"small": "85. 이차함수 y=ax²의 그래프를 y축의 방향으로 q만큼 평행이동한 그래프는?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "y축의 방향으로 -3만큼 이동하면 아래로 3만큼 내려가. 식은 y=x²-3이야.",
+"keys": [
+"-3은 아래로",
+"y=x²-3"
+],
+"answerBy": "claude"
+},
+{
+"id": "sctewr:t0L1",
+"big": "4. 이차함수",
+"small": "86. 이차함수 y=ax²의 그래프를 x축의 방향으로 p만큼 평행이동한 그래프는?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "y=a(x-p)²이 돼.",
+"keys": [
+"y=a(x-p)²"
+],
+"answerBy": "claude"
+},
+{
+"id": "sctewr:t0L2",
+"big": "4. 이차함수",
+"small": "86. 이차함수 y=ax²의 그래프를 x축의 방향으로 p만큼 평행이동한 그래프는?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "sctewr:t0L3",
+"big": "4. 이차함수",
+"small": "86. 이차함수 y=ax²의 그래프를 x축의 방향으로 p만큼 평행이동한 그래프는?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "꼭짓점은 (p, 0)으로 옮겨져.",
+"keys": [
+"(p, 0)"
+],
+"answerBy": "claude"
+},
+{
+"id": "sctewr:t0H1",
+"big": "4. 이차함수",
+"small": "86. 이차함수 y=ax²의 그래프를 x축의 방향으로 p만큼 평행이동한 그래프는?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "sctewr:t0H2",
+"big": "4. 이차함수",
+"small": "86. 이차함수 y=ax²의 그래프를 x축의 방향으로 p만큼 평행이동한 그래프는?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "오른쪽으로 p만큼 옮긴 그래프에서는 x=p일 때 원래 그래프의 x=0일 때와 같은 값이 나와야 해. 그러려면 x 자리에 x-p를 넣어야 x=p에서 x-p=0이 돼.",
+"keys": [
+"x=p에서 원래 x=0과 같은 값",
+"x-p=0이 되게"
+],
+"answerBy": "claude"
+},
+{
+"id": "sctewr:t0H3",
+"big": "4. 이차함수",
+"small": "86. 이차함수 y=ax²의 그래프를 x축의 방향으로 p만큼 평행이동한 그래프는?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "sctewr:qrecall",
+"big": "4. 이차함수",
+"small": "86. 이차함수 y=ax²의 그래프를 x축의 방향으로 p만큼 평행이동한 그래프는?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "sctewr:qreason",
+"big": "4. 이차함수",
+"small": "86. 이차함수 y=ax²의 그래프를 x축의 방향으로 p만큼 평행이동한 그래프는?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "sctewr:qexample",
+"big": "4. 이차함수",
+"small": "86. 이차함수 y=ax²의 그래프를 x축의 방향으로 p만큼 평행이동한 그래프는?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "y=-2(x-3)²이고, 꼭짓점은 (3, 0)이야.",
+"keys": [
+"y=-2(x-3)²",
+"(3, 0)"
+],
+"answerBy": "claude"
+},
+{
+"id": "sctewr:qerror",
+"big": "4. 이차함수",
+"small": "86. 이차함수 y=ax²의 그래프를 x축의 방향으로 p만큼 평행이동한 그래프는?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "x축의 방향으로 4만큼 이동하면 x 대신 x-4를 넣어야 해. 식은 y=(x-4)²이야. (x+4)²은 왼쪽으로 4만큼 옮긴 거야.",
+"keys": [
+"x 대신 x-4",
+"y=(x-4)²"
+],
+"answerBy": "claude"
+},
+{
+"id": "147ts9n:t0L1",
+"big": "4. 이차함수",
+"small": "87. y=ax²을 x축으로 p, y축으로 q만큼 평행이동한 그래프는?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "y=a(x-p)²+q가 돼.",
+"keys": [
+"y=a(x-p)²+q"
+],
+"answerBy": "claude"
+},
+{
+"id": "147ts9n:t0L2",
+"big": "4. 이차함수",
+"small": "87. y=ax²을 x축으로 p, y축으로 q만큼 평행이동한 그래프는?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "147ts9n:t0L3",
+"big": "4. 이차함수",
+"small": "87. y=ax²을 x축으로 p, y축으로 q만큼 평행이동한 그래프는?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "꼭짓점은 (p, q)야.",
+"keys": [
+"(p, q)"
+],
+"answerBy": "claude"
+},
+{
+"id": "147ts9n:t0H1",
+"big": "4. 이차함수",
+"small": "87. y=ax²을 x축으로 p, y축으로 q만큼 평행이동한 그래프는?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "147ts9n:t0H2",
+"big": "4. 이차함수",
+"small": "87. y=ax²을 x축으로 p, y축으로 q만큼 평행이동한 그래프는?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"answer": "p는 x축의 방향(좌우)으로, q는 y축의 방향(위아래)으로 이동한 만큼이야.",
+"keys": [
+"p는 좌우",
+"q는 위아래"
+],
+"answerBy": "claude"
+},
+{
+"id": "147ts9n:t0H3",
+"big": "4. 이차함수",
+"small": "87. y=ax²을 x축으로 p, y축으로 q만큼 평행이동한 그래프는?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "147ts9n:qrecall",
+"big": "4. 이차함수",
+"small": "87. y=ax²을 x축으로 p, y축으로 q만큼 평행이동한 그래프는?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "꼭짓점의 좌표는 (p, q)이고, 축의 방정식은 x=p야.",
+"keys": [
+"꼭짓점 (p, q)",
+"축 x=p"
+],
+"answerBy": "claude"
+},
+{
+"id": "147ts9n:qreason",
+"big": "4. 이차함수",
+"small": "87. y=ax²을 x축으로 p, y축으로 q만큼 평행이동한 그래프는?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "x-p=0이 되는 x=p에서 꼭짓점이 생기니까, 식에 -p로 보이는 수의 부호를 바꾼 p가 x좌표야. q는 식 전체에 더해진 값이라 그대로 y좌표가 돼.",
+"keys": [
+"x-p=0이 되는 x=p",
+"q는 그대로 더해진다"
+],
+"answerBy": "claude"
+},
+{
+"id": "147ts9n:qexample",
+"big": "4. 이차함수",
+"small": "87. y=ax²을 x축으로 p, y축으로 q만큼 평행이동한 그래프는?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "y=-(x+2)²+5=-(x-(-2))²+5라서 꼭짓점은 (-2, 5)야.",
+"keys": [
+"x+2=x-(-2)",
+"(-2, 5)"
+],
+"answerBy": "claude"
+},
+{
+"id": "147ts9n:qerror",
+"big": "4. 이차함수",
+"small": "87. y=ax²을 x축으로 p, y축으로 q만큼 평행이동한 그래프는?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "x-1=0이 되는 x=1이 꼭짓점의 x좌표야. 꼭짓점은 (1, -3)이야.",
+"keys": [
+"x-1=0에서 x=1",
+"(1, -3)"
+],
+"answerBy": "claude"
+},
+{
+"id": "d2fck3:t0L1",
+"big": "4. 이차함수",
+"small": "88. y=a(x-p)²+q를 x축으로 m, y축으로 n만큼 평행이동한 그래프의 식은?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "x 자리에 x-m을 넣고, 식 전체에 n을 더해. 그러면 y=a(x-m-p)²+q+n이야.",
+"keys": [
+"x 대신 x-m",
+"전체에 n을 더한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "d2fck3:t0L2",
+"big": "4. 이차함수",
+"small": "88. y=a(x-p)²+q를 x축으로 m, y축으로 n만큼 평행이동한 그래프의 식은?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "꼭짓점 (p, q)가 (p+m, q+n)으로 옮겨져.",
+"keys": [
+"(p+m, q+n)"
+],
+"answerBy": "claude"
+},
+{
+"id": "d2fck3:t0L3",
+"big": "4. 이차함수",
+"small": "88. y=a(x-p)²+q를 x축으로 m, y축으로 n만큼 평행이동한 그래프의 식은?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "d2fck3:t0H1",
+"big": "4. 이차함수",
+"small": "88. y=a(x-p)²+q를 x축으로 m, y축으로 n만큼 평행이동한 그래프의 식은?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"newQ": "① y=2(x+1)²-3의 그래프를 x축의 방향으로 2만큼, y축의 방향으로 5만큼 평행이동한 식을 구해봐.",
+"newQBy": "claude",
+"answer": "꼭짓점 (-1, -3)이 (1, 2)로 옮겨지고 a는 그대로라서 y=2(x-1)²+2야.",
+"keys": [
+"꼭짓점 (-1, -3) → (1, 2)",
+"y=2(x-1)²+2"
+],
+"answerBy": "claude"
+},
+{
+"id": "d2fck3:t0H2",
+"big": "4. 이차함수",
+"small": "88. y=a(x-p)²+q를 x축으로 m, y축으로 n만큼 평행이동한 그래프의 식은?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "d2fck3:t0H3",
+"big": "4. 이차함수",
+"small": "88. y=a(x-p)²+q를 x축으로 m, y축으로 n만큼 평행이동한 그래프의 식은?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "d2fck3:qrecall",
+"big": "4. 이차함수",
+"small": "88. y=a(x-p)²+q를 x축으로 m, y축으로 n만큼 평행이동한 그래프의 식은?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "d2fck3:qreason",
+"big": "4. 이차함수",
+"small": "88. y=a(x-p)²+q를 x축으로 m, y축으로 n만큼 평행이동한 그래프의 식은?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "평행이동은 그래프 전체를 모양 그대로 옮기는 거라서 꼭짓점도 똑같이 옮겨져. 그래서 원래 꼭짓점에 오른쪽으로 m, 위로 n을 더하면 새 꼭짓점이야.",
+"keys": [
+"모양 그대로 옮긴다",
+"꼭짓점도 같이 옮겨진다"
+],
+"answerBy": "claude"
+},
+{
+"id": "d2fck3:qexample",
+"big": "4. 이차함수",
+"small": "88. y=a(x-p)²+q를 x축으로 m, y축으로 n만큼 평행이동한 그래프의 식은?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "꼭짓점 (2, 1)이 (2+1, 1+4)=(3, 5)가 돼.",
+"keys": [
+"(2, 1)",
+"(3, 5)"
+],
+"answerBy": "claude"
+},
+{
+"id": "d2fck3:qerror",
+"big": "4. 이차함수",
+"small": "88. y=a(x-p)²+q를 x축으로 m, y축으로 n만큼 평행이동한 그래프의 식은?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "이동한 만큼 그대로 더해야 해. (1+2, 3+(-1))=(3, 2)가 새 꼭짓점이야.",
+"keys": [
+"이동한 만큼 더한다",
+"(3, 2)"
+],
+"answerBy": "claude"
+},
+{
+"id": "jnnvlg:t0L1",
+"big": "4. 이차함수",
+"small": "89. y=a(x-p)²+q를 x축에 대하여 대칭이동한 그래프의 식은?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "y의 부호가 반대가 돼. 식에서 y 대신 -y를 넣어.",
+"keys": [
+"y 대신 -y"
+],
+"answerBy": "claude"
+},
+{
+"id": "jnnvlg:t0L2",
+"big": "4. 이차함수",
+"small": "89. y=a(x-p)²+q를 x축에 대하여 대칭이동한 그래프의 식은?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "jnnvlg:t0L3",
+"big": "4. 이차함수",
+"small": "89. y=a(x-p)²+q를 x축에 대하여 대칭이동한 그래프의 식은?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "jnnvlg:t0H1",
+"big": "4. 이차함수",
+"small": "89. y=a(x-p)²+q를 x축에 대하여 대칭이동한 그래프의 식은?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "jnnvlg:t0H2",
+"big": "4. 이차함수",
+"small": "89. y=a(x-p)²+q를 x축에 대하여 대칭이동한 그래프의 식은?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "x축에 대칭이면 점 (x, y)가 (x, -y)로 옮겨져. x는 그대로이고 y만 부호가 바뀌니까 y 대신 -y를 넣어.",
+"keys": [
+"(x, y) → (x, -y)",
+"x는 그대로"
+],
+"answerBy": "claude"
+},
+{
+"id": "jnnvlg:t0H3",
+"big": "4. 이차함수",
+"small": "89. y=a(x-p)²+q를 x축에 대하여 대칭이동한 그래프의 식은?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"answer": "꼭짓점 (p, q)는 (p, -q)가 되고, 볼록한 방향은 반대가 돼.",
+"keys": [
+"꼭짓점 (p, -q)",
+"볼록 방향이 반대"
+],
+"answerBy": "claude"
+},
+{
+"id": "jnnvlg:qrecall",
+"big": "4. 이차함수",
+"small": "89. y=a(x-p)²+q를 x축에 대하여 대칭이동한 그래프의 식은?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "jnnvlg:qreason",
+"big": "4. 이차함수",
+"small": "89. y=a(x-p)²+q를 x축에 대하여 대칭이동한 그래프의 식은?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "y 대신 -y를 넣으면 -y=a(x-p)²+q, 즉 y=-a(x-p)²-q가 돼. 그래서 a와 q의 부호가 바뀌고, x는 그대로라 p는 안 바뀌어.",
+"keys": [
+"-y=a(x-p)²+q",
+"y=-a(x-p)²-q"
+],
+"answerBy": "claude"
+},
+{
+"id": "jnnvlg:qexample",
+"big": "4. 이차함수",
+"small": "89. y=a(x-p)²+q를 x축에 대하여 대칭이동한 그래프의 식은?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "y=3(x+1)²-2야.",
+"keys": [
+"a와 q의 부호를 바꾼다",
+"y=3(x+1)²-2"
+],
+"answerBy": "claude"
+},
+{
+"id": "jnnvlg:qerror",
+"big": "4. 이차함수",
+"small": "89. y=a(x-p)²+q를 x축에 대하여 대칭이동한 그래프의 식은?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "x축 대칭은 x가 아니라 y의 부호가 바뀌어. 식은 y=-2(x-3)²-1이야. (x+3)으로 바꾼 건 y축에 대칭이동한 경우야.",
+"keys": [
+"y의 부호가 바뀐다",
+"y=-2(x-3)²-1"
+],
+"answerBy": "claude"
+},
+{
+"id": "7wvu6z:t0L1",
+"big": "4. 이차함수",
+"small": "90. 이차함수 y=ax²+bx+c를 y=a(x-p)²+q 꼴로 어떻게 고칠까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "7wvu6z:t0L2",
+"big": "4. 이차함수",
+"small": "90. 이차함수 y=ax²+bx+c를 y=a(x-p)²+q 꼴로 어떻게 고칠까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "7wvu6z:t0L3",
+"big": "4. 이차함수",
+"small": "90. 이차함수 y=ax²+bx+c를 y=a(x-p)²+q 꼴로 어떻게 고칠까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "7wvu6z:t0H1",
+"big": "4. 이차함수",
+"small": "90. 이차함수 y=ax²+bx+c를 y=a(x-p)²+q 꼴로 어떻게 고칠까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "7wvu6z:t0H2",
+"big": "4. 이차함수",
+"small": "90. 이차함수 y=ax²+bx+c를 y=a(x-p)²+q 꼴로 어떻게 고칠까?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"newQ": "② y=2x²-4x+5처럼 x²의 계수가 1이 아닐 때, 표준형으로 고치는 과정을 말해봐.",
+"newQBy": "claude",
+"answer": "x²과 x항을 2로 묶으면 2(x²-2x)+5야. 괄호 안에 1을 더하고 빼면 2(x²-2x+1-1)+5=2(x-1)²-2+5=2(x-1)²+3이야.",
+"keys": [
+"x²의 계수로 묶는다",
+"괄호 안에서 더하고 뺀다",
+"2(x-1)²+3"
+],
+"answerBy": "claude"
+},
+{
+"id": "7wvu6z:t0H3",
+"big": "4. 이차함수",
+"small": "90. 이차함수 y=ax²+bx+c를 y=a(x-p)²+q 꼴로 어떻게 고칠까?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "y=a(x-p)²+q에서 (x-p)²은 x=p일 때 가장 작은 0이 돼서 그 점이 꼭짓점 (p, q)야. 그래서 표준형으로 고치면 꼭짓점을 바로 읽을 수 있어.",
+"keys": [
+"x=p일 때 (x-p)²=0",
+"꼭짓점 (p, q)를 바로 읽는다"
+],
+"answerBy": "claude"
+},
+{
+"id": "7wvu6z:qrecall",
+"big": "4. 이차함수",
+"small": "90. 이차함수 y=ax²+bx+c를 y=a(x-p)²+q 꼴로 어떻게 고칠까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "x의 계수 4의 반인 2를 제곱한 4를 더하고 빼면 y=x²+4x+4-4+5=(x+2)²+1이야.",
+"keys": [
+"(4/2)²=4를 더하고 뺀다",
+"(x+2)²+1"
+],
+"answerBy": "claude"
+},
+{
+"id": "7wvu6z:qreason",
+"big": "4. 이차함수",
+"small": "90. 이차함수 y=ax²+bx+c를 y=a(x-p)²+q 꼴로 어떻게 고칠까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "x²+bx에 (b/2)²을 더하면 (x+b/2)²이라는 완전제곱식이 돼. 하지만 더하기만 하면 식이 달라지니까 같은 수를 빼서 값을 그대로 유지해.",
+"keys": [
+"(b/2)²을 더하면 완전제곱식",
+"값이 안 변하게 다시 뺀다"
+],
+"answerBy": "claude"
+},
+{
+"id": "7wvu6z:qexample",
+"big": "4. 이차함수",
+"small": "90. 이차함수 y=ax²+bx+c를 y=a(x-p)²+q 꼴로 어떻게 고칠까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "(6/2)²=9를 더하고 빼면 y=x²-6x+9-9+7=(x-3)²-2야.",
+"keys": [
+"9를 더하고 뺀다",
+"(x-3)²-2"
+],
+"answerBy": "claude"
+},
+{
+"id": "7wvu6z:qerror",
+"big": "4. 이차함수",
+"small": "90. 이차함수 y=ax²+bx+c를 y=a(x-p)²+q 꼴로 어떻게 고칠까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "괄호 안에 4를 더했으면 괄호 밖에서는 2×4=8을 빼야 해. 2(x+2)²-8+3=2(x+2)²-5야.",
+"keys": [
+"2×4=8을 빼야 한다",
+"2(x+2)²-5"
+],
+"answerBy": "claude"
+},
+{
+"id": "176uqq6:t0L1",
+"big": "4. 이차함수",
+"small": "91. 이차함수 y=ax²+bx+c의 그래프에서 x절편, y절편은 어떻게 구할까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "y=0일 때의 x의 값이야.",
+"keys": [
+"y=0일 때의 x"
+],
+"answerBy": "claude"
+},
+{
+"id": "176uqq6:t0L2",
+"big": "4. 이차함수",
+"small": "91. 이차함수 y=ax²+bx+c의 그래프에서 x절편, y절편은 어떻게 구할까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "x=0일 때의 y의 값이야.",
+"keys": [
+"x=0일 때의 y"
+],
+"answerBy": "claude"
+},
+{
+"id": "176uqq6:t0L3",
+"big": "4. 이차함수",
+"small": "91. 이차함수 y=ax²+bx+c의 그래프에서 x절편, y절편은 어떻게 구할까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "176uqq6:t0H1",
+"big": "4. 이차함수",
+"small": "91. 이차함수 y=ax²+bx+c의 그래프에서 x절편, y절편은 어떻게 구할까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "176uqq6:t0H2",
+"big": "4. 이차함수",
+"small": "91. 이차함수 y=ax²+bx+c의 그래프에서 x절편, y절편은 어떻게 구할까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "176uqq6:t0H3",
+"big": "4. 이차함수",
+"small": "91. 이차함수 y=ax²+bx+c의 그래프에서 x절편, y절편은 어떻게 구할까?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "y절편은 x=0일 때의 y값인데, x=0을 넣으면 ax²과 bx는 0이 되고 c만 남아. 그래서 y절편은 항상 c야.",
+"keys": [
+"x=0을 넣는다",
+"ax², bx가 0이 되고 c만 남는다"
+],
+"answerBy": "claude"
+},
+{
+"id": "176uqq6:qrecall",
+"big": "4. 이차함수",
+"small": "91. 이차함수 y=ax²+bx+c의 그래프에서 x절편, y절편은 어떻게 구할까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "x절편은 y=0을 넣어 x²-x-6=0을 풀어. (x-3)(x+2)=0이라서 3, -2야. y절편은 x=0을 넣어서 -6이야.",
+"keys": [
+"x절편은 y=0으로 풀어서 3, -2",
+"y절편은 x=0을 넣어 -6"
+],
+"answerBy": "claude"
+},
+{
+"id": "176uqq6:qreason",
+"big": "4. 이차함수",
+"small": "91. 이차함수 y=ax²+bx+c의 그래프에서 x절편, y절편은 어떻게 구할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "176uqq6:qexample",
+"big": "4. 이차함수",
+"small": "91. 이차함수 y=ax²+bx+c의 그래프에서 x절편, y절편은 어떻게 구할까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "176uqq6:qcondition",
+"big": "4. 이차함수",
+"small": "91. 이차함수 y=ax²+bx+c의 그래프에서 x절편, y절편은 어떻게 구할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "항상 두 개는 아니야. x축과 만나는 점은 ax²+bx+c=0의 근이라서 판별식이 양수면 2개, 0이면 1개, 음수면 0개야.",
+"keys": [
+"이차방정식의 근의 개수와 같다",
+"2개, 1개, 0개"
+],
+"answerBy": "claude"
+},
+{
+"id": "176uqq6:qerror",
+"big": "4. 이차함수",
+"small": "91. 이차함수 y=ax²+bx+c의 그래프에서 x절편, y절편은 어떻게 구할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "y=0을 넣는 건 x절편을 구할 때야. y절편은 x=0을 넣어서 구하니까 -6이야.",
+"keys": [
+"y절편은 x=0을 넣는다",
+"-6"
+],
+"answerBy": "claude"
+},
+{
+"id": "q8qfuu:t0L1",
+"big": "4. 이차함수",
+"small": "92. 이차함수 y=ax²+bx+c의 그래프는 어떻게 그릴까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "먼저 y=a(x-p)²+q 꼴로 고쳐서 꼭짓점을 구해.",
+"keys": [
+"꼭짓점",
+"표준형으로 고친다"
+],
+"answerBy": "claude"
+},
+{
+"id": "q8qfuu:t0L2",
+"big": "4. 이차함수",
+"small": "92. 이차함수 y=ax²+bx+c의 그래프는 어떻게 그릴까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "q8qfuu:t0L3",
+"big": "4. 이차함수",
+"small": "92. 이차함수 y=ax²+bx+c의 그래프는 어떻게 그릴까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "q8qfuu:t0H1",
+"big": "4. 이차함수",
+"small": "92. 이차함수 y=ax²+bx+c의 그래프는 어떻게 그릴까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "q8qfuu:t0H2",
+"big": "4. 이차함수",
+"small": "92. 이차함수 y=ax²+bx+c의 그래프는 어떻게 그릴까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "q8qfuu:t0H3",
+"big": "4. 이차함수",
+"small": "92. 이차함수 y=ax²+bx+c의 그래프는 어떻게 그릴까?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "포물선은 축에 대하여 대칭이라서, 축의 한쪽에 찍은 점을 반대쪽에 거울처럼 옮기면 돼. 그래서 절반만 구해도 그릴 수 있어.",
+"keys": [
+"축에 대하여 대칭",
+"한쪽 점을 반대쪽으로 옮긴다"
+],
+"answerBy": "claude"
+},
+{
+"id": "q8qfuu:qrecall",
+"big": "4. 이차함수",
+"small": "92. 이차함수 y=ax²+bx+c의 그래프는 어떻게 그릴까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "표준형으로 고쳐서 꼭짓점과 축을 구하고, a의 부호로 볼록한 방향을 정하고, y절편을 구해서 그 점들을 지나게 그려.",
+"keys": [
+"꼭짓점과 축",
+"볼록한 방향",
+"y절편"
+],
+"answerBy": "claude"
+},
+{
+"id": "q8qfuu:qreason",
+"big": "4. 이차함수",
+"small": "92. 이차함수 y=ax²+bx+c의 그래프는 어떻게 그릴까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "q8qfuu:qexample",
+"big": "4. 이차함수",
+"small": "92. 이차함수 y=ax²+bx+c의 그래프는 어떻게 그릴까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "y=(x-2)²-1이라서 꼭짓점은 (2, -1)이야. a=1>0이라 아래로 볼록하고, y절편은 3이야.",
+"keys": [
+"꼭짓점 (2, -1)",
+"아래로 볼록",
+"y절편 3"
+],
+"answerBy": "claude"
+},
+{
+"id": "q8qfuu:qerror",
+"big": "4. 이차함수",
+"small": "92. 이차함수 y=ax²+bx+c의 그래프는 어떻게 그릴까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "점을 많이 찍어도 꼭짓점이나 축을 정확히 모르면 모양을 틀리기 쉬워. y=(x-1)²-4로 고치면 꼭짓점 (1, -4), 축 x=1, y절편 -3만으로 금방 그릴 수 있어.",
+"keys": [
+"꼭짓점과 축을 먼저 구하면 빠르다",
+"y=(x-1)²-4"
+],
+"answerBy": "claude"
+},
+{
+"id": "sq9j74:t0L1",
+"big": "4. 이차함수",
+"small": "93. 이차함수 y=ax²+bx+c의 그래프를 보고 a, b, c의 부호를 알 수 있을까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "그래프가 볼록한 방향으로 알아. 아래로 볼록하면 a>0, 위로 볼록하면 a<0이야.",
+"keys": [
+"볼록한 방향"
+],
+"answerBy": "claude"
+},
+{
+"id": "sq9j74:t0L2",
+"big": "4. 이차함수",
+"small": "93. 이차함수 y=ax²+bx+c의 그래프를 보고 a, b, c의 부호를 알 수 있을까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "y절편으로 알아. y절편이 c라서 x축보다 위면 c>0, 아래면 c<0이야.",
+"keys": [
+"y절편"
+],
+"answerBy": "claude"
+},
+{
+"id": "sq9j74:t0L3",
+"big": "4. 이차함수",
+"small": "93. 이차함수 y=ax²+bx+c의 그래프를 보고 a, b, c의 부호를 알 수 있을까?",
+"kind": "low",
+"round": 2,
+"by": "claude",
+"newQ": "③ 축이 y축의 왼쪽에 있으면 a와 b의 부호는 어떤 관계야?",
+"newQBy": "claude",
+"answer": "축은 x=-b/(2a)야. 왼쪽이면 -b/(2a)<0이라서 b/(2a)>0, 즉 a와 b의 부호가 같아.",
+"keys": [
+"축 x=-b/(2a)",
+"왼쪽이면 a, b 같은 부호"
+],
+"answerBy": "claude"
+},
+{
+"id": "sq9j74:t0H1",
+"big": "4. 이차함수",
+"small": "93. 이차함수 y=ax²+bx+c의 그래프를 보고 a, b, c의 부호를 알 수 있을까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "sq9j74:t0H2",
+"big": "4. 이차함수",
+"small": "93. 이차함수 y=ax²+bx+c의 그래프를 보고 a, b, c의 부호를 알 수 있을까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "sq9j74:t0H3",
+"big": "4. 이차함수",
+"small": "93. 이차함수 y=ax²+bx+c의 그래프를 보고 a, b, c의 부호를 알 수 있을까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "sq9j74:qrecall",
+"big": "4. 이차함수",
+"small": "93. 이차함수 y=ax²+bx+c의 그래프를 보고 a, b, c의 부호를 알 수 있을까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "sq9j74:qreason",
+"big": "4. 이차함수",
+"small": "93. 이차함수 y=ax²+bx+c의 그래프를 보고 a, b, c의 부호를 알 수 있을까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "축이 오른쪽이면 -b/(2a)>0이라서 b/(2a)<0이야. 나눈 값이 음수이려면 a와 b의 부호가 달라야 해.",
+"keys": [
+"-b/(2a)>0",
+"b/(2a)<0이라 부호가 다르다"
+],
+"answerBy": "claude"
+},
+{
+"id": "sq9j74:qexample",
+"big": "4. 이차함수",
+"small": "93. 이차함수 y=ax²+bx+c의 그래프를 보고 a, b, c의 부호를 알 수 있을까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "위로 볼록하니까 a<0, 축이 y축이면 -b/(2a)=0이라 b=0, y절편이 양수니까 c>0이야.",
+"keys": [
+"a<0",
+"b=0",
+"c>0"
+],
+"answerBy": "claude"
+},
+{
+"id": "sq9j74:qerror",
+"big": "4. 이차함수",
+"small": "93. 이차함수 y=ax²+bx+c의 그래프를 보고 a, b, c의 부호를 알 수 있을까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "축이 오른쪽이면 -b/(2a)>0이라서 a와 b는 서로 다른 부호야. 같은 부호일 때는 축이 왼쪽에 있어.",
+"keys": [
+"오른쪽이면 다른 부호",
+"같은 부호면 왼쪽"
+],
+"answerBy": "claude"
+},
+{
+"id": "1yx9agk:t0L1",
+"big": "4. 이차함수",
+"small": "94. 꼭짓점의 좌표가 주어진 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "꼭짓점이 (p, q)이면 y=a(x-p)²+q로 놓아.",
+"keys": [
+"y=a(x-p)²+q"
+],
+"answerBy": "claude"
+},
+{
+"id": "1yx9agk:t0L2",
+"big": "4. 이차함수",
+"small": "94. 꼭짓점의 좌표가 주어진 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1yx9agk:t0L3",
+"big": "4. 이차함수",
+"small": "94. 꼭짓점의 좌표가 주어진 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1yx9agk:t0H1",
+"big": "4. 이차함수",
+"small": "94. 꼭짓점의 좌표가 주어진 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1yx9agk:t0H2",
+"big": "4. 이차함수",
+"small": "94. 꼭짓점의 좌표가 주어진 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1yx9agk:t0H3",
+"big": "4. 이차함수",
+"small": "94. 꼭짓점의 좌표가 주어진 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "꼭짓점이 같아도 a에 따라 폭과 방향이 다른 포물선이 여러 개 있어. a를 정하려면 다른 한 점이 더 필요해.",
+"keys": [
+"꼭짓점이 같아도 a가 다를 수 있다",
+"a를 정할 점이 하나 더 필요"
+],
+"answerBy": "claude"
+},
+{
+"id": "1yx9agk:qrecall",
+"big": "4. 이차함수",
+"small": "94. 꼭짓점의 좌표가 주어진 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "y=a(x-p)²+q로 놓고, 지나는 다른 한 점을 대입해서 a를 구해.",
+"keys": [
+"y=a(x-p)²+q로 놓는다",
+"다른 점으로 a를 구한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1yx9agk:qreason",
+"big": "4. 이차함수",
+"small": "94. 꼭짓점의 좌표가 주어진 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1yx9agk:qexample",
+"big": "4. 이차함수",
+"small": "94. 꼭짓점의 좌표가 주어진 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "y=ax²-1로 놓고 (1, 1)을 넣으면 1=a-1이라 a=2야. 그래서 y=2x²-1이야.",
+"keys": [
+"y=ax²-1",
+"a=2, y=2x²-1"
+],
+"answerBy": "claude"
+},
+{
+"id": "1yx9agk:qerror",
+"big": "4. 이차함수",
+"small": "94. 꼭짓점의 좌표가 주어진 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "a=1이라고 마음대로 정했어. (2, 5)를 넣으면 5=a+2라서 a=3이고, y=3(x-1)²+2야.",
+"keys": [
+"점을 넣어 a를 구해야 한다",
+"y=3(x-1)²+2"
+],
+"answerBy": "claude"
+},
+{
+"id": "zxk0pl:t0L1",
+"big": "4. 이차함수",
+"small": "95. 축의 방정식이 주어진 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "응, 축이 x=p이면 꼭짓점의 x좌표가 p야. 그래서 y=a(x-p)²+q로 놓을 수 있어.",
+"keys": [
+"꼭짓점의 x좌표는 p",
+"y=a(x-p)²+q"
+],
+"answerBy": "claude"
+},
+{
+"id": "zxk0pl:t0L2",
+"big": "4. 이차함수",
+"small": "95. 축의 방정식이 주어진 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "zxk0pl:t0L3",
+"big": "4. 이차함수",
+"small": "95. 축의 방정식이 주어진 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "zxk0pl:t0H1",
+"big": "4. 이차함수",
+"small": "95. 축의 방정식이 주어진 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "zxk0pl:t0H2",
+"big": "4. 이차함수",
+"small": "95. 축의 방정식이 주어진 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "zxk0pl:t0H3",
+"big": "4. 이차함수",
+"small": "95. 축의 방정식이 주어진 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "축을 알면 p는 알지만 a와 q는 모르니까 모르는 값이 2개야. 그래서 지나는 점이 2개 필요해.",
+"keys": [
+"모르는 값 a, q 두 개",
+"점 두 개가 필요"
+],
+"answerBy": "claude"
+},
+{
+"id": "zxk0pl:qrecall",
+"big": "4. 이차함수",
+"small": "95. 축의 방정식이 주어진 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "y=a(x-p)²+q로 놓고, 지나는 두 점을 대입해서 a와 q를 연립방정식으로 구해.",
+"keys": [
+"y=a(x-p)²+q",
+"두 점으로 a, q를 구한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "zxk0pl:qreason",
+"big": "4. 이차함수",
+"small": "95. 축의 방정식이 주어진 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "zxk0pl:qexample",
+"big": "4. 이차함수",
+"small": "95. 축의 방정식이 주어진 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "y=a(x-1)²+q로 놓고 (0, 0)을 넣으면 a+q=0, (3, 9)를 넣으면 4a+q=9야. 빼면 3a=9라서 a=3, q=-3이야. y=3(x-1)²-3이야.",
+"keys": [
+"a+q=0, 4a+q=9",
+"y=3(x-1)²-3"
+],
+"answerBy": "claude"
+},
+{
+"id": "zxk0pl:qerror",
+"big": "4. 이차함수",
+"small": "95. 축의 방정식이 주어진 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "축 x=2는 꼭짓점의 x좌표만 알려 줘. y좌표 q는 알 수 없어서 점을 대입해 구해야 해.",
+"keys": [
+"축은 x좌표만 알려 준다",
+"q는 따로 구한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1iwo7c6:t0L1",
+"big": "4. 이차함수",
+"small": "96. 꼭짓점이 아닌 세 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "y=ax²+bx+c로 놓아.",
+"keys": [
+"y=ax²+bx+c"
+],
+"answerBy": "claude"
+},
+{
+"id": "1iwo7c6:t0L2",
+"big": "4. 이차함수",
+"small": "96. 꼭짓점이 아닌 세 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1iwo7c6:t0L3",
+"big": "4. 이차함수",
+"small": "96. 꼭짓점이 아닌 세 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1iwo7c6:t0H1",
+"big": "4. 이차함수",
+"small": "96. 꼭짓점이 아닌 세 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1iwo7c6:t0H2",
+"big": "4. 이차함수",
+"small": "96. 꼭짓점이 아닌 세 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1iwo7c6:t0H3",
+"big": "4. 이차함수",
+"small": "96. 꼭짓점이 아닌 세 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"newQ": "③ 세 점을 대입해서 a, b, c를 구할 때, 어떤 점을 먼저 넣으면 편해?",
+"newQBy": "claude",
+"answer": "x좌표가 0인 점을 먼저 넣으면 ax²과 bx가 0이 돼서 c가 바로 나와. 그다음 나머지 두 점으로 a, b의 연립방정식을 풀면 돼.",
+"keys": [
+"x=0인 점을 먼저",
+"c가 바로 나온다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1iwo7c6:qrecall",
+"big": "4. 이차함수",
+"small": "96. 꼭짓점이 아닌 세 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "y=ax²+bx+c로 놓고 세 점을 각각 대입해서, a, b, c에 대한 연립방정식을 풀어.",
+"keys": [
+"y=ax²+bx+c",
+"세 점을 대입해 연립방정식"
+],
+"answerBy": "claude"
+},
+{
+"id": "1iwo7c6:qreason",
+"big": "4. 이차함수",
+"small": "96. 꼭짓점이 아닌 세 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "꼭짓점이 아닌 점만 알면 p, q를 바로 알 수 없어. 일반형은 점을 넣으면 a, b, c에 대한 일차식이 바로 나와서 풀기 편해.",
+"keys": [
+"꼭짓점을 모른다",
+"대입하면 일차방정식이 나온다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1iwo7c6:qexample",
+"big": "4. 이차함수",
+"small": "96. 꼭짓점이 아닌 세 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "(0, -1)을 넣으면 c=-1이야. (1, 0)을 넣으면 a+b=1, (-1, 4)를 넣으면 a-b=5야. 풀면 a=3, b=-2라서 y=3x²-2x-1이야.",
+"keys": [
+"c=-1",
+"a+b=1, a-b=5",
+"y=3x²-2x-1"
+],
+"answerBy": "claude"
+},
+{
+"id": "1iwo7c6:qerror",
+"big": "4. 이차함수",
+"small": "96. 꼭짓점이 아닌 세 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "점 (0, 2)는 x=0, y=2야. 순서를 바꿔 넣었어. 바르게 넣으면 2=c야.",
+"keys": [
+"(x, y) 순서",
+"c=2"
+],
+"answerBy": "claude"
+},
+{
+"id": "as33p2:t0L1",
+"big": "4. 이차함수",
+"small": "97. x축과 만나는 두 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "x축과 (α, 0), (β, 0)에서 만나면 y=a(x-α)(x-β)로 놓아.",
+"keys": [
+"y=a(x-α)(x-β)"
+],
+"answerBy": "claude"
+},
+{
+"id": "as33p2:t0L2",
+"big": "4. 이차함수",
+"small": "97. x축과 만나는 두 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "as33p2:t0L3",
+"big": "4. 이차함수",
+"small": "97. x축과 만나는 두 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "as33p2:t0H1",
+"big": "4. 이차함수",
+"small": "97. x축과 만나는 두 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "as33p2:t0H2",
+"big": "4. 이차함수",
+"small": "97. x축과 만나는 두 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "as33p2:t0H3",
+"big": "4. 이차함수",
+"small": "97. x축과 만나는 두 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "as33p2:qrecall",
+"big": "4. 이차함수",
+"small": "97. x축과 만나는 두 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "y=a(x-α)(x-β)로 놓고, 지나는 다른 한 점을 대입해서 a를 구해.",
+"keys": [
+"y=a(x-α)(x-β)",
+"다른 점으로 a를 구한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "as33p2:qreason",
+"big": "4. 이차함수",
+"small": "97. x축과 만나는 두 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "x절편 α, β는 y=0이 되는 x라서 (x-α)(x-β)가 인수로 들어가. 그렇게 놓으면 모르는 값이 a 하나뿐이라서 점 하나만 더 있으면 돼.",
+"keys": [
+"x절편이 인수가 된다",
+"모르는 값이 a 하나"
+],
+"answerBy": "claude"
+},
+{
+"id": "as33p2:qexample",
+"big": "4. 이차함수",
+"small": "97. x축과 만나는 두 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "y=a(x-1)(x-5)로 놓고 (0, 5)를 넣으면 5=5a라서 a=1이야. y=(x-1)(x-5)=x²-6x+5야.",
+"keys": [
+"y=a(x-1)(x-5)",
+"a=1, y=x²-6x+5"
+],
+"answerBy": "claude"
+},
+{
+"id": "as33p2:qerror",
+"big": "4. 이차함수",
+"small": "97. x축과 만나는 두 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "x=2, x=4에서 y=0이 되려면 (x-2)(x-4)가 들어가야 해. y=a(x-2)(x-4)로 놓아야 해.",
+"keys": [
+"부호를 거꾸로 했다",
+"y=a(x-2)(x-4)"
 ],
 "answerBy": "claude"
 }
