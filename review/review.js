@@ -15,6 +15,8 @@
      qr:added:v1 { 개념코드: [{id, q}, …] }   새로 추가한 질문 [v83.9]
        번호 = 개념 해시 + ':' + ddqNewId('qa') — 처음부터 붙여서, 앱에 심어도 기록이 안 끊긴다.
        지운 번호는 다시 쓰지 않는다(시각+난수).
+     qr:ok:v1    { 질문번호: true }   [v84.3] 마스터가 "확인했음" 체크한 질문 — 확인한 줄은 접어서 다시 안 읽게
+     qr:view     "보기" 선택을 기억 (새로 열어도 「확인 안 한 것만」 그대로)
      qr:base:v1  { 분류안키: 넣은시각 }   [v84.0] 코드에 실어 둔 분류안(review/plan_*.js)을 이 기기에 넣었는지
    [v84.0] 기본 분류안: window.QR_BASE_PLANS 의 분류안을 화면을 열 때 한 번만 넣는다.
      이 기기에 이미 적어 둔 회차·고친 문장·모범 답·빼기·순서는 덮지 않는다(keepLocal).
@@ -32,7 +34,7 @@
   var ROUNDS = 3;                       // 학원이 3회 반복 시스템이라 3회차 (마스터 결정 2026-09-16)
   var SIM_THRESHOLD = 0.5;              // 이 이상 겹치면 "비슷한 질문"으로 묶는다
 
-  var QR = { grade:null, big:0, view:'all', query:'' };
+  var QR = { grade:null, big:0, view:(function(){ try{ return localStorage.getItem('qr:view') || 'all'; }catch(e){ return 'all'; } })(), query:'' };
   // 고치기 칸에서 눌러 넣는 기호 (분수 1/2 · 제곱 cm^2 은 그냥 치면 되므로 뺐다)
   var SYMS = ['×','÷','−','±','≤','≥','≠','°','π','√','∠','△','⊥','∥','∽','≡','㎝','①','②','③'];
 
@@ -42,6 +44,8 @@
   var ANS_KEY = 'qr:answers:v1', ADD_KEY = 'qr:added:v1', BASE_KEY = 'qr:base:v1';
   var PLAN = load(PLAN_KEY), EDITS = load(EDIT_KEY), SEEN = load(SEEN_KEY), ORDER = load(ORDER_KEY), ANS = load(ANS_KEY), ADDED = load(ADD_KEY);
   var BASEDONE = load(BASE_KEY);
+  var OK_KEY = 'qr:ok:v1', OK = load(OK_KEY);
+  function setOk(qid, on){ if(on) OK[qid] = true; else delete OK[qid]; save(OK_KEY, OK); }
   // Claude 가 정한 회차 {질문번호: 회차} — 코드에 실린 분류안에서 읽는다(저장 안 함)
   var AI_OFF = {};   // Claude 가 겹쳐서 뺀 질문 {질문번호: true}
   var AI_ANS = {};   // Claude 가 쓴 모범 답 {질문번호: 모범 답} — 마스터가 고치면 표시가 사라진다
@@ -199,7 +203,7 @@
 
   /* ── 요약 (지금 고른 학년 전체) ───────────────────────── */
   function summary(gradeId){
-    var s = { r0:0, r1:0, r2:0, r3:0, off:0, total:0, edited:0, answered:0, smalls:0, seen:0, empty:[] };
+    var s = { r0:0, r1:0, r2:0, r3:0, off:0, total:0, edited:0, answered:0, ok:0, smalls:0, seen:0, empty:[] };
     var m; try{ m = cpModel(gradeId); }catch(e){ return s; }
     if(!m || !m.bigUnits) return s;
     m.bigUnits.forEach(function(big){
@@ -210,6 +214,7 @@
         itemsOf(gradeId, big.name, row.sm).forEach(function(it){
           var p = planOf(it.id, it.kind), an = ansOf(it.id);
           s.total++;
+          if(OK[it.id]) s.ok++;
           if(EDITS[it.id] != null) s.edited++;
           if(an.a || an.k.length) s.answered++;
           if(p.off){ s.off++; return; }
@@ -247,6 +252,14 @@
     + '#qreviewTab .qr-cp ul{margin:5px 0 0 16px;padding:0;}'
     + '#qreviewTab .qr-row{display:flex;gap:9px;align-items:flex-start;padding:8px 0;border-top:1px solid #F1EDF9;}'
     + '#qreviewTab .qr-row.off{opacity:.42;}'
+    + '#qreviewTab .qr-row.ok{background:#F6FBF8;}'
+    + '#qreviewTab .qr-row.ok .qr-q{color:#6E7A74;}'
+    + '#qreviewTab .qr-row.ok .qr-ans{display:none;}'
+    + '#qreviewTab .qr-row.ok.open .qr-ans{display:block;}'
+    + '#qreviewTab .qr-act button.okbtn{min-width:52px;}'
+    + '#qreviewTab .qr-act button.okbtn.on{background:#2C8459;border-color:#2C8459;color:#fff;font-weight:800;}'
+    + '#qreviewTab .qr-okall{font-size:12px;padding:5px 11px;border-radius:999px;border:1px solid #BFE3CE;background:#fff;color:#2C8459;cursor:pointer;font-family:inherit;}'
+    + '#qreviewTab .qr-okcnt{font-size:11.5px;font-weight:800;color:#2C8459;}'
     + '#qreviewTab .qr-kind{flex:0 0 66px;font-size:11px;font-weight:800;color:#7343E6;background:#F4EFFF;border-radius:7px;padding:4px 0;text-align:center;}'
     + '#qreviewTab .qr-kind.k-high{color:#2C8459;background:#E9F5EE;}'
     + '#qreviewTab .qr-kind.k-qset{color:#B26B00;background:#FDF3E2;}'
@@ -299,7 +312,8 @@
     for(var r = 1; r <= ROUNDS; r++){
       btns += '<button data-qr="round" data-r="' + r + '"' + (p.r === r && !p.off ? ' class="on" title="한 번 더 누르면 미분류로"' : '') + '>' + r + '</button>';
     }
-    return '<div class="qr-row' + (p.off ? ' off' : '') + '" data-qid="' + esc(it.id) + '" data-kind="' + esc(it.kind) + '"'
+    var ok = !!OK[it.id];
+    return '<div class="qr-row' + (p.off ? ' off' : '') + (ok ? ' ok' : '') + '" data-qid="' + esc(it.id) + '" data-kind="' + esc(it.kind) + '"'
       + ' data-plain="' + esc(textOf(it)) + '">'
       + '<span class="qr-kind k-' + it.kind + '">' + esc(kindLabel(it)) + '</span>'
       + '<div class="qr-q' + (edited ? ' edited' : '') + '" data-qr="text">'
@@ -313,7 +327,10 @@
               + '</div>'
             : '')
       + '</div>'
-      + '<div class="qr-act">' + btns
+      + '<div class="qr-act">'
+      +   '<button class="okbtn' + (ok ? ' on' : '') + '" data-qr="ok" title="' + (ok ? '확인 표시 지우기' : '보고 괜찮으면 누르세요') + '">' + (ok ? '✓ 확인' : '확인') + '</button>'
+      +   (ok && hasAns ? '<button data-qr="okopen" title="접어 둔 모범 답 보기">답 보기</button>' : '')
+      +   btns
       +   (canMove
             ? '<button data-qr="up" title="같은 종류 안에서 위로"' + (isFirst ? ' disabled' : '') + '>↑</button>'
               + '<button data-qr="down" title="같은 종류 안에서 아래로"' + (isLast ? ' disabled' : '') + '>↓</button>'
@@ -338,6 +355,7 @@
 
     var shown = items.filter(function(it){
       var p = planOf(it.id, it.kind);
+      if(QR.view === 'unok') return !OK[it.id];
       if(QR.view === 'off') return p.off;
       if(QR.view === 'r0') return !p.off && !p.r;
       if(QR.view === 'ai') return isAi(it.id, p);
@@ -365,6 +383,9 @@
              return n ? '<span class="qr-mid">🪜 계단 ' + n + '칸 포함</span>' : ''; })()
       +   (unset ? '<span class="qr-mid">미분류 ' + unset + '</span>'
             : (live1 ? '' : '<span class="qr-warn">1회차가 비었어요</span>'))
+      +   (function(){ var n = items.filter(function(x){ return OK[x.id]; }).length;
+             return '<span class="qr-okcnt">확인 ' + n + '/' + items.length + '</span>'
+               + (n < items.length ? '<button class="qr-okall" data-qr="okall" title="이 소단원 질문을 모두 확인으로">모두 확인</button>' : ''); })()
       +   '<button class="qr-addbtn" data-qr="addNew">+ 질문 추가</button>'
       +   '<button class="qr-seenbtn' + (seen ? ' on' : '') + '" data-qr="seen">' + (seen ? '✓ 다 봤음' : '다 봤음') + '</button>'
       + '</div>'
@@ -403,7 +424,7 @@
             return '<option value="' + esc(g.id) + '"' + (g.id === QR.grade ? ' selected' : '') + '>' + esc(g.name) + '</option>'; }).join('') + '</select>'
       +   '<select data-qr="big">' + bigs.map(function(b, i){
             return '<option value="' + i + '"' + (i === QR.big ? ' selected' : '') + '>' + esc(b.name) + '</option>'; }).join('') + '</select>'
-      +   '<select data-qr="view">' + [['all','전체'],['todo','아직 안 본 소단원만'],['ai','AI가 정한 것만(뺀 것 포함)'],['r0','미분류만'],['noans','모범 답 없는 것만'],['off','뺀 것만'],['r1','1회차만'],['r2','2회차만'],['r3','3회차만']].map(function(x){
+      +   '<select data-qr="view">' + [['all','전체'],['unok','확인 안 한 것만'],['todo','아직 안 본 소단원만'],['ai','AI가 정한 것만(뺀 것 포함)'],['r0','미분류만'],['noans','모범 답 없는 것만'],['off','뺀 것만'],['r1','1회차만'],['r2','2회차만'],['r3','3회차만']].map(function(x){
             return '<option value="' + x[0] + '"' + (x[0] === QR.view ? ' selected' : '') + '>' + x[1] + '</option>'; }).join('') + '</select>'
       +   '<input data-qr="query" type="text" placeholder="질문 안에서 찾기" value="' + esc(QR.query) + '">'
       + '</div>'
@@ -420,6 +441,7 @@
     html += '<div class="qr-foot">'
       + '<span>' + esc((gs.find(function(g){ return g.id === QR.grade; }) || {}).name || '') + ' 전체 — '
       + '미분류 <b>' + s.r0 + '</b> · 1회차 <b>' + s.r1 + '</b> · 2회차 <b>' + s.r2 + '</b> · 3회차 <b>' + s.r3 + '</b> · 뺀 것 <b>' + s.off + '</b>'
+      + ' · 확인 <b>' + s.ok + ' / ' + s.total + '</b>'
       + ' · 고친 문장 <b>' + s.edited + '</b> · 모범 답 <b>' + s.answered + '</b> · 다 본 소단원 <b>' + s.seen + ' / ' + s.smalls + '</b></span>'
       + (s.empty.length ? '<span class="qr-warn">1회차 빈 소단원 ' + s.empty.length + '개</span>' : '')
       + '<span class="sp">'
@@ -532,6 +554,19 @@
       if(box){ box.hidden = !box.hidden; btn.textContent = box.hidden ? '개념 설명 · 핵심 포인트 보기' : '개념 설명 접기'; }
       return;
     }
+    if(act === 'ok' && qid){
+      setOk(qid, !OK[qid]);
+      var y5 = window.scrollY; render(); window.scrollTo(0, y5); return;
+    }
+    if(act === 'okopen' && rowEl){ rowEl.classList.toggle('open'); btn.textContent = rowEl.classList.contains('open') ? '답 접기' : '답 보기'; return; }
+    if(act === 'okall'){
+      var sc5 = closestSmall(btn); if(!sc5) return;
+      [].slice.call(sc5.querySelectorAll('.qr-row[data-qid]')).forEach(function(el){
+        var id5 = el.getAttribute('data-qid'); if(id5 && id5 !== '__new__') OK[id5] = true; });
+      // 보기로 걸러 안 보이는 질문까지 확인하지 않게, 지금 화면에 보이는 줄만
+      save(OK_KEY, OK);
+      var y6 = window.scrollY; render(); window.scrollTo(0, y6); return;
+    }
     if(act === 'seen'){
       var sc = closestSmall(btn); if(!sc) return;
       var code = sc.getAttribute('data-code');
@@ -625,7 +660,7 @@
     var k = e.target.getAttribute('data-qr');
     if(k === 'grade'){ QR.grade = e.target.value; QR.big = 0; render(); }
     else if(k === 'big'){ QR.big = parseInt(e.target.value, 10) || 0; render(); }
-    else if(k === 'view'){ QR.view = e.target.value; render(); }
+    else if(k === 'view'){ QR.view = e.target.value; try{ localStorage.setItem('qr:view', QR.view); }catch(e2){} render(); }
   }
   function onInput(e){
     var host = document.getElementById('qreviewTab');
@@ -658,6 +693,7 @@
         orderedItems(gradeId, big.name, row.sm, code).forEach(function(it, i){
           var p = planOf(it.id, it.kind);
           var rec = { id:it.id, big:big.name, small:row.sm.name, kind:it.kind, ord:i, round:p.r, off:p.off, q:it.q };
+          if(OK[it.id]) rec.ok = true;
           if(it.type) rec.type = it.type;
           if(EDITS[it.id] != null) rec.newQ = EDITS[it.id];
           var an = ansOf(it.id);
@@ -684,11 +720,11 @@
         var c0 = conceptCode(gradeId, big.name, row.sm.name);
         delete SEEN[c0]; delete ORDER[c0]; delete ADDED[c0];
         itemsOf(gradeId, big.name, row.sm).forEach(function(it){
-          delete PLAN[it.id]; delete EDITS[it.id]; delete ANS[it.id];
+          delete PLAN[it.id]; delete EDITS[it.id]; delete ANS[it.id]; delete OK[it.id];
         });
       });
     });
-    save(PLAN_KEY, PLAN); save(EDIT_KEY, EDITS); save(SEEN_KEY, SEEN); save(ORDER_KEY, ORDER); save(ANS_KEY, ANS); save(ADD_KEY, ADDED);
+    save(PLAN_KEY, PLAN); save(EDIT_KEY, EDITS); save(SEEN_KEY, SEEN); save(ORDER_KEY, ORDER); save(ANS_KEY, ANS); save(ADD_KEY, ADDED); save(OK_KEY, OK);
     render();
   }
 
@@ -775,6 +811,9 @@
         c.order++; c.ops.push(function(){ ORDER[code] = ids; });
       }
     });
+    d.items.forEach(function(rec){
+      if(rec && rec.ok === true && !OK[rec.id] && known[rec.id]){ c.ok = (c.ok || 0) + 1; c.ops.push(function(){ OK[rec.id] = true; }); }
+    });
     (d.seen || []).forEach(function(code){
       if(!SEEN[code]){ c.seen++; c.ops.push(function(){ SEEN[code] = true; }); }
     });
@@ -788,7 +827,7 @@
       var c = importPlan(b.data, { keepLocal:true });
       if(c.err) return;                       // 학년 모델이 아직 없으면 다음에 다시
       c.ops.forEach(function(fn){ fn(); });
-      save(PLAN_KEY, PLAN); save(EDIT_KEY, EDITS); save(SEEN_KEY, SEEN); save(ORDER_KEY, ORDER); save(ANS_KEY, ANS); save(ADD_KEY, ADDED);
+      save(PLAN_KEY, PLAN); save(EDIT_KEY, EDITS); save(SEEN_KEY, SEEN); save(ORDER_KEY, ORDER); save(ANS_KEY, ANS); save(ADD_KEY, ADDED); save(OK_KEY, OK);
       BASEDONE[b.key] = new Date().toISOString(); save(BASE_KEY, BASEDONE);
       if(c.ops.length){
         QR.grade = c.grade;
@@ -812,7 +851,7 @@
     if(!c.ops.length){ alert(msg.split('\n\n넣을까요?')[0] + '\n\n새로 넣을 것이 없어요.'); return; }
     if(!confirm(msg)) return;
     c.ops.forEach(function(fn){ fn(); });
-    save(PLAN_KEY, PLAN); save(EDIT_KEY, EDITS); save(SEEN_KEY, SEEN); save(ORDER_KEY, ORDER); save(ANS_KEY, ANS); save(ADD_KEY, ADDED);
+    save(PLAN_KEY, PLAN); save(EDIT_KEY, EDITS); save(SEEN_KEY, SEEN); save(ORDER_KEY, ORDER); save(ANS_KEY, ANS); save(ADD_KEY, ADDED); save(OK_KEY, OK);
     QR.grade = c.grade;
     render();
   }
