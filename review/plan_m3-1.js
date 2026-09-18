@@ -1,7 +1,8 @@
 /* [v84.6] 질문 고르기 — 기본으로 실어 두는 분류안 (중3-1)
    마스터 견본(2026-09-18: 38 인수분해란·51 항이 4개인 식 + 1단원 문장 고침) + Claude 2단원 나머지 25소단원
-   (연산 질문으로 고침 newQBy:'claude' · 회차 by · 뺌 offBy · 모범 답 answerBy). 화면 열 때 한 번만 넣음. */
-(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'m3-1_2026-09-18a', data:{
+   (연산 질문으로 고침 newQBy:'claude' · 회차 by · 뺌 offBy · 모범 답 answerBy). 화면 열 때 한 번만 넣음.
+   [b] 마스터 검토2(3단원 55·56·59·63·70) 반영 + Claude 3단원 나머지 17소단원(활용 73~77은 대표 문제를 주고 식 세우기로). */
+(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'m3-1_2026-09-18b', data:{
 "format": "qr-plan-2",
 "grade": "m3-1",
 "rounds": 3,
@@ -82,265 +83,6 @@
 "small": "08. √((-3)²)+(-√10)²-√25를 계산하면?",
 "kind": "low",
 "newQ": "② 루트 안의 수 또는 식이 어떤 꼴이어야 루트를 없앨 수 있지?"
-},
-{
-"id": "14b60r4:t0L1",
-"big": "2. 다항식의 곱셈과 인수분해",
-"small": "38. 인수분해란?",
-"kind": "low",
-"round": 1,
-"ok": true,
-"answer": "인수분해라고 해.",
-"keys": [
-"인수분해"
-],
-"answerBy": "claude"
-},
-{
-"id": "14b60r4:t0L2",
-"big": "2. 다항식의 곱셈과 인수분해",
-"small": "38. 인수분해란?",
-"kind": "low",
-"round": 1,
-"ok": true,
-"answer": "서로 반대 과정이야. 전개는 곱을 풀어서 하나의 다항식으로 만들고, 인수분해는 하나의 다항식을 곱의 꼴로 나타내.",
-"keys": [
-"서로 반대 과정",
-"전개는 곱을 풀기, 인수분해는 곱으로 나타내기"
-],
-"answerBy": "claude"
-},
-{
-"id": "14b60r4:t0L3",
-"big": "2. 다항식의 곱셈과 인수분해",
-"small": "38. 인수분해란?",
-"kind": "low",
-"round": 1,
-"ok": true,
-"answer": "곱해진 각각의 다항식을 처음 다항식의 인수라고 해.",
-"keys": [
-"인수"
-],
-"answerBy": "claude"
-},
-{
-"id": "14b60r4:t0H1",
-"big": "2. 다항식의 곱셈과 인수분해",
-"small": "38. 인수분해란?",
-"kind": "high",
-"round": 2,
-"ok": true,
-"answer": "인수분해는 하나의 다항식을 두 개 이상의 다항식의 곱으로 나타내는 거야. 예를 들어 x²+5x+6=(x+2)(x+3)이고, 거꾸로 (x+2)(x+3)을 풀어 x²+5x+6으로 만드는 게 전개라서 둘은 반대 과정이야.",
-"keys": [
-"다항식을 곱으로 나타낸다",
-"전개와 반대 과정"
-],
-"answerBy": "claude"
-},
-{
-"id": "14b60r4:t0H2",
-"big": "2. 다항식의 곱셈과 인수분해",
-"small": "38. 인수분해란?",
-"kind": "high",
-"off": true,
-"ok": true
-},
-{
-"id": "14b60r4:t0H3",
-"big": "2. 다항식의 곱셈과 인수분해",
-"small": "38. 인수분해란?",
-"kind": "high",
-"off": true,
-"ok": true
-},
-{
-"id": "14b60r4:qrecall",
-"big": "2. 다항식의 곱셈과 인수분해",
-"small": "38. 인수분해란?",
-"kind": "qset",
-"off": true,
-"ok": true
-},
-{
-"id": "14b60r4:qreason",
-"big": "2. 다항식의 곱셈과 인수분해",
-"small": "38. 인수분해란?",
-"kind": "qset",
-"off": true,
-"ok": true
-},
-{
-"id": "14b60r4:qexample",
-"big": "2. 다항식의 곱셈과 인수분해",
-"small": "38. 인수분해란?",
-"kind": "qset",
-"round": 2,
-"newQ": "인수분해 되어있는 식을 하나 만들어보고, 그 식에 있는 인수를 두 개 말해봐",
-"ok": true,
-"answer": "예를 들어 x²+5x+6=(x+2)(x+3)이고, 인수는 x+2와 x+3이야.",
-"keys": [
-"인수분해된 식을 만든다",
-"곱해진 각각이 인수"
-],
-"answerBy": "claude"
-},
-{
-"id": "14b60r4:qerror",
-"big": "2. 다항식의 곱셈과 인수분해",
-"small": "38. 인수분해란?",
-"kind": "qset",
-"off": true,
-"ok": true
-},
-{
-"id": "1a3d8ww:t0L1",
-"big": "2. 다항식의 곱셈과 인수분해",
-"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
-"kind": "low",
-"round": 1,
-"newQ": "① 항이 4개 있는 식의 풀이 방법 두 가지를 얘기해봐.",
-"answer": "1.두 항씩 공통인수로 묶은 후 다시 공통 인수로 한 번 더 인수분해 한다.\n2.항을 3개 1개로 구분해서 완전제곱식-제곱 꼴이 되게하여 합차 공식으로 인수분해 한다.",
-"ok": true
-},
-{
-"id": "1a3d8ww:t0L2",
-"big": "2. 다항식의 곱셈과 인수분해",
-"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
-"kind": "low",
-"off": true,
-"ok": true
-},
-{
-"id": "1a3d8ww:t0L3",
-"big": "2. 다항식의 곱셈과 인수분해",
-"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
-"kind": "low",
-"off": true,
-"ok": true
-},
-{
-"id": "1a3d8ww:t0H1",
-"big": "2. 다항식의 곱셈과 인수분해",
-"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
-"kind": "high",
-"round": 2,
-"ok": true,
-"answer": "두 항씩 묶어 공통인수를 만든 뒤 한 번 더 묶는 방법(2+2)과, 세 항을 완전제곱식으로 만들고 남은 한 항과 제곱의 차로 만들어 합차 공식을 쓰는 방법(3+1)이 있어.",
-"keys": [
-"2+2로 묶어 공통인수",
-"3+1로 묶어 완전제곱식-제곱"
-],
-"answerBy": "claude"
-},
-{
-"id": "1a3d8ww:t0H2",
-"big": "2. 다항식의 곱셈과 인수분해",
-"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
-"kind": "high",
-"round": 2,
-"ok": true,
-"answer": "두 항씩 묶었을 때 괄호 안이 같아지면 2+2로 묶어. 세 항이 x²+2x+1처럼 완전제곱식이 되고 나머지 한 항이 y² 같은 제곱이면 3+1로 묶어.",
-"keys": [
-"괄호 안이 같아지면 2+2",
-"완전제곱식+제곱이면 3+1"
-],
-"answerBy": "claude"
-},
-{
-"id": "1a3d8ww:t0H3",
-"big": "2. 다항식의 곱셈과 인수분해",
-"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
-"kind": "high",
-"off": true,
-"ok": true
-},
-{
-"id": "1a3d8ww:qrecall",
-"big": "2. 다항식의 곱셈과 인수분해",
-"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
-"kind": "qset",
-"off": true,
-"ok": true
-},
-{
-"id": "1a3d8ww:qreason",
-"big": "2. 다항식의 곱셈과 인수분해",
-"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
-"kind": "qset",
-"off": true,
-"ok": true
-},
-{
-"id": "1a3d8ww:qexample",
-"big": "2. 다항식의 곱셈과 인수분해",
-"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
-"kind": "qset",
-"round": 2,
-"ok": true,
-"answer": "예를 들어 x²+2x+1-y²은 (x+1)²-y²으로 묶어서 (x+1+y)(x+1-y)야.",
-"keys": [
-"세 항이 완전제곱식",
-"합차 공식으로 인수분해"
-],
-"answerBy": "claude"
-},
-{
-"id": "1a3d8ww:qerror",
-"big": "2. 다항식의 곱셈과 인수분해",
-"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
-"kind": "qset",
-"round": 2,
-"ok": true,
-"answer": "x²-6x+9가 완전제곱식이라서 3+1로 묶어야 해. (x²-6x+9)-y²=(x-3)²-y²=(x-3+y)(x-3-y)야.",
-"keys": [
-"x²-6x+9를 한 묶음으로",
-"(x-3+y)(x-3-y)"
-],
-"answerBy": "claude"
-},
-{
-"id": "1a3d8ww:qamu6pqs89n71e",
-"big": "2. 다항식의 곱셈과 인수분해",
-"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
-"kind": "add",
-"round": 1,
-"q": "𝑥²−𝑦²+2𝑥+1 인수분해 하는 과정을 간단히 얘기해봐",
-"ok": true,
-"answer": "x²+2x+1을 한 묶음으로 보면 (x+1)²-y²이 돼. 합차 공식으로 (x+1+y)(x+1-y)야.",
-"keys": [
-"(x+1)²-y²",
-"(x+y+1)(x-y+1)"
-],
-"answerBy": "claude"
-},
-{
-"id": "1a3d8ww:qamu6psfuae3ju",
-"big": "2. 다항식의 곱셈과 인수분해",
-"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
-"kind": "add",
-"round": 1,
-"q": "xy+x+y+1 인수분해 하는 과정을 간단히 얘기해봐",
-"ok": true,
-"answer": "두 항씩 묶으면 x(y+1)+(y+1)이고, (y+1)로 묶으면 (y+1)(x+1)이야.",
-"keys": [
-"두 항씩 묶는다",
-"(y+1)(x+1)"
-],
-"answerBy": "claude"
-},
-{
-"id": "ladder:m3-1|2. 다항식의 곱셈과 인수분해|51. 항이 4개인 식은 어떻게 인수분해할까?:1",
-"big": "2. 다항식의 곱셈과 인수분해",
-"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
-"kind": "ladder",
-"ok": true
-},
-{
-"id": "ladder:m3-1|2. 다항식의 곱셈과 인수분해|51. 항이 4개인 식은 어떻게 인수분해할까?:2",
-"big": "2. 다항식의 곱셈과 인수분해",
-"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
-"kind": "ladder",
-"ok": true
 },
 {
 "id": "1hdyx03:t0L1",
@@ -1619,6 +1361,115 @@
 "-6x를 빠뜨렸다"
 ],
 "answerBy": "claude"
+},
+{
+"id": "14b60r4:t0L1",
+"big": "2. 다항식의 곱셈과 인수분해",
+"small": "38. 인수분해란?",
+"kind": "low",
+"round": 1,
+"answer": "인수분해라고 해.",
+"keys": [
+"인수분해"
+],
+"answerBy": "claude",
+"ok": true
+},
+{
+"id": "14b60r4:t0L2",
+"big": "2. 다항식의 곱셈과 인수분해",
+"small": "38. 인수분해란?",
+"kind": "low",
+"round": 1,
+"answer": "서로 반대 과정이야. 전개는 곱을 풀어서 하나의 다항식으로 만들고, 인수분해는 하나의 다항식을 곱의 꼴로 나타내.",
+"keys": [
+"서로 반대 과정",
+"전개는 곱을 풀기, 인수분해는 곱으로 나타내기"
+],
+"answerBy": "claude",
+"ok": true
+},
+{
+"id": "14b60r4:t0L3",
+"big": "2. 다항식의 곱셈과 인수분해",
+"small": "38. 인수분해란?",
+"kind": "low",
+"round": 1,
+"answer": "곱해진 각각의 다항식을 처음 다항식의 인수라고 해.",
+"keys": [
+"인수"
+],
+"answerBy": "claude",
+"ok": true
+},
+{
+"id": "14b60r4:t0H1",
+"big": "2. 다항식의 곱셈과 인수분해",
+"small": "38. 인수분해란?",
+"kind": "high",
+"round": 2,
+"answer": "인수분해는 하나의 다항식을 두 개 이상의 다항식의 곱으로 나타내는 거야. 예를 들어 x²+5x+6=(x+2)(x+3)이고, 거꾸로 (x+2)(x+3)을 풀어 x²+5x+6으로 만드는 게 전개라서 둘은 반대 과정이야.",
+"keys": [
+"다항식을 곱으로 나타낸다",
+"전개와 반대 과정"
+],
+"answerBy": "claude",
+"ok": true
+},
+{
+"id": "14b60r4:t0H2",
+"big": "2. 다항식의 곱셈과 인수분해",
+"small": "38. 인수분해란?",
+"kind": "high",
+"off": true,
+"ok": true
+},
+{
+"id": "14b60r4:t0H3",
+"big": "2. 다항식의 곱셈과 인수분해",
+"small": "38. 인수분해란?",
+"kind": "high",
+"off": true,
+"ok": true
+},
+{
+"id": "14b60r4:qrecall",
+"big": "2. 다항식의 곱셈과 인수분해",
+"small": "38. 인수분해란?",
+"kind": "qset",
+"off": true,
+"ok": true
+},
+{
+"id": "14b60r4:qreason",
+"big": "2. 다항식의 곱셈과 인수분해",
+"small": "38. 인수분해란?",
+"kind": "qset",
+"off": true,
+"ok": true
+},
+{
+"id": "14b60r4:qexample",
+"big": "2. 다항식의 곱셈과 인수분해",
+"small": "38. 인수분해란?",
+"kind": "qset",
+"round": 2,
+"newQ": "인수분해 되어있는 식을 하나 만들어보고, 그 식에 있는 인수를 두 개 말해봐",
+"answer": "예를 들어 x²+5x+6=(x+2)(x+3)이고, 인수는 x+2와 x+3이야.",
+"keys": [
+"인수분해된 식을 만든다",
+"곱해진 각각이 인수"
+],
+"answerBy": "claude",
+"ok": true
+},
+{
+"id": "14b60r4:qerror",
+"big": "2. 다항식의 곱셈과 인수분해",
+"small": "38. 인수분해란?",
+"kind": "qset",
+"off": true,
+"ok": true
 },
 {
 "id": "k8t835:t0L1",
@@ -3120,6 +2971,156 @@
 "answerBy": "claude"
 },
 {
+"id": "1a3d8ww:t0L1",
+"big": "2. 다항식의 곱셈과 인수분해",
+"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
+"kind": "low",
+"round": 1,
+"newQ": "① 항이 4개 있는 식의 풀이 방법 두 가지를 얘기해봐.",
+"answer": "1.두 항씩 공통인수로 묶은 후 다시 공통 인수로 한 번 더 인수분해 한다.\n2.항을 3개 1개로 구분해서 완전제곱식-제곱 꼴이 되게하여 합차 공식으로 인수분해 한다.",
+"ok": true
+},
+{
+"id": "1a3d8ww:t0L2",
+"big": "2. 다항식의 곱셈과 인수분해",
+"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
+"kind": "low",
+"off": true,
+"ok": true
+},
+{
+"id": "1a3d8ww:t0L3",
+"big": "2. 다항식의 곱셈과 인수분해",
+"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
+"kind": "low",
+"off": true,
+"ok": true
+},
+{
+"id": "1a3d8ww:t0H1",
+"big": "2. 다항식의 곱셈과 인수분해",
+"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
+"kind": "high",
+"round": 2,
+"answer": "두 항씩 묶어 공통인수를 만든 뒤 한 번 더 묶는 방법(2+2)과, 세 항을 완전제곱식으로 만들고 남은 한 항과 제곱의 차로 만들어 합차 공식을 쓰는 방법(3+1)이 있어.",
+"keys": [
+"2+2로 묶어 공통인수",
+"3+1로 묶어 완전제곱식-제곱"
+],
+"answerBy": "claude",
+"ok": true
+},
+{
+"id": "1a3d8ww:t0H2",
+"big": "2. 다항식의 곱셈과 인수분해",
+"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
+"kind": "high",
+"round": 2,
+"answer": "두 항씩 묶었을 때 괄호 안이 같아지면 2+2로 묶어. 세 항이 x²+2x+1처럼 완전제곱식이 되고 나머지 한 항이 y² 같은 제곱이면 3+1로 묶어.",
+"keys": [
+"괄호 안이 같아지면 2+2",
+"완전제곱식+제곱이면 3+1"
+],
+"answerBy": "claude",
+"ok": true
+},
+{
+"id": "1a3d8ww:t0H3",
+"big": "2. 다항식의 곱셈과 인수분해",
+"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
+"kind": "high",
+"off": true,
+"ok": true
+},
+{
+"id": "1a3d8ww:qrecall",
+"big": "2. 다항식의 곱셈과 인수분해",
+"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
+"kind": "qset",
+"off": true,
+"ok": true
+},
+{
+"id": "1a3d8ww:qreason",
+"big": "2. 다항식의 곱셈과 인수분해",
+"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
+"kind": "qset",
+"off": true,
+"ok": true
+},
+{
+"id": "1a3d8ww:qexample",
+"big": "2. 다항식의 곱셈과 인수분해",
+"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
+"kind": "qset",
+"round": 2,
+"answer": "예를 들어 x²+2x+1-y²은 (x+1)²-y²으로 묶어서 (x+1+y)(x+1-y)야.",
+"keys": [
+"세 항이 완전제곱식",
+"합차 공식으로 인수분해"
+],
+"answerBy": "claude",
+"ok": true
+},
+{
+"id": "1a3d8ww:qerror",
+"big": "2. 다항식의 곱셈과 인수분해",
+"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
+"kind": "qset",
+"round": 2,
+"answer": "x²-6x+9가 완전제곱식이라서 3+1로 묶어야 해. (x²-6x+9)-y²=(x-3)²-y²=(x-3+y)(x-3-y)야.",
+"keys": [
+"x²-6x+9를 한 묶음으로",
+"(x-3+y)(x-3-y)"
+],
+"answerBy": "claude",
+"ok": true
+},
+{
+"id": "1a3d8ww:qamu6pqs89n71e",
+"big": "2. 다항식의 곱셈과 인수분해",
+"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
+"kind": "add",
+"round": 1,
+"answer": "x²+2x+1을 한 묶음으로 보면 (x+1)²-y²이 돼. 합차 공식으로 (x+1+y)(x+1-y)야.",
+"keys": [
+"(x+1)²-y²",
+"(x+y+1)(x-y+1)"
+],
+"answerBy": "claude",
+"q": "𝑥²−𝑦²+2𝑥+1 인수분해 하는 과정을 간단히 얘기해봐",
+"ok": true
+},
+{
+"id": "1a3d8ww:qamu6psfuae3ju",
+"big": "2. 다항식의 곱셈과 인수분해",
+"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
+"kind": "add",
+"round": 1,
+"answer": "두 항씩 묶으면 x(y+1)+(y+1)이고, (y+1)로 묶으면 (y+1)(x+1)이야.",
+"keys": [
+"두 항씩 묶는다",
+"(y+1)(x+1)"
+],
+"answerBy": "claude",
+"q": "xy+x+y+1 인수분해 하는 과정을 간단히 얘기해봐",
+"ok": true
+},
+{
+"id": "ladder:m3-1|2. 다항식의 곱셈과 인수분해|51. 항이 4개인 식은 어떻게 인수분해할까?:1",
+"big": "2. 다항식의 곱셈과 인수분해",
+"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:m3-1|2. 다항식의 곱셈과 인수분해|51. 항이 4개인 식은 어떻게 인수분해할까?:2",
+"big": "2. 다항식의 곱셈과 인수분해",
+"small": "51. 항이 4개인 식은 어떻게 인수분해할까?",
+"kind": "ladder",
+"ok": true
+},
+{
 "id": "z3a7vj:t0L1",
 "big": "2. 다항식의 곱셈과 인수분해",
 "small": "52. 항이 5개 이상인 식은 어떻게 인수분해할까?",
@@ -3477,6 +3478,2943 @@
 "keys": [
 "인수분해하면 쉬운 수가 된다",
 "10000"
+],
+"answerBy": "claude"
+},
+{
+"id": "1iiqpnh:t0L1",
+"big": "3. 이차방정식",
+"small": "55. 이차방정식이란?",
+"kind": "low",
+"round": 1,
+"newQ": "① 어떤식을 이차방정식이라고 하는지 말해봐",
+"answer": "모든 항을 좌변으로 이항해서 정리했을 때 (x에 대한 이차식)=0 꼴이 되는 방정식을 x에 대한 이차방정식이라고 해.",
+"keys": [
+"모든 항을 좌변으로 정리",
+"(x에 대한 이차식)=0"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "1iiqpnh:t0L2",
+"big": "3. 이차방정식",
+"small": "55. 이차방정식이란?",
+"kind": "low",
+"off": true,
+"ok": true
+},
+{
+"id": "1iiqpnh:t0L3",
+"big": "3. 이차방정식",
+"small": "55. 이차방정식이란?",
+"kind": "low",
+"round": 1,
+"newQ": "③ 이차항의 계수는 0이 될 수 없는 이유는?",
+"answer": "이차항의 계수가 0이면 x² 항이 없어져서 이차식이 아니게 돼. 그러면 이차방정식이 아니야.",
+"keys": [
+"x² 항이 없어진다",
+"이차방정식이 아니게 된다"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "1iiqpnh:t0H1",
+"big": "3. 이차방정식",
+"small": "55. 이차방정식이란?",
+"kind": "high",
+"round": 2,
+"newQ": "① 이차방정식에 대해 자세히 설명해 봐.",
+"answer": "x에 대한 이차방정식은 모든 항을 좌변으로 옮겨 정리했을 때 ax²+bx+c=0(a, b, c는 상수, a≠0) 꼴이 되는 방정식이야. x²의 계수 a는 0이 아니어야 하고, b와 c는 0이어도 돼.",
+"keys": [
+"ax²+bx+c=0 꼴",
+"a≠0",
+"b, c는 0이어도 된다"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "1iiqpnh:t0H2",
+"big": "3. 이차방정식",
+"small": "55. 이차방정식이란?",
+"kind": "high",
+"round": 2,
+"off": true,
+"newQ": "② 문제에서 주어진 식이 이차방정식인지 확인하는 과정을 설명해줘",
+"ok": true
+},
+{
+"id": "1iiqpnh:t0H3",
+"big": "3. 이차방정식",
+"small": "55. 이차방정식이란?",
+"kind": "high",
+"round": 2,
+"newQ": "③ 어떤 식이 이차방정식인지 판단하는 방법 또는 순서를 설명해 봐.",
+"answer": "먼저 괄호가 있으면 전개하고, 모든 항을 좌변으로 이항해서 동류항끼리 정리해. 그다음 x²의 계수가 0이 아닌지 확인해. 0이 아니면 이차방정식이야.",
+"keys": [
+"전개하고 좌변으로 정리",
+"x²의 계수가 0이 아닌지 확인"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "1iiqpnh:qrecall",
+"big": "3. 이차방정식",
+"small": "55. 이차방정식이란?",
+"kind": "qset",
+"round": 1,
+"newQ": "이차방정식이 어떤 모양의 방정식인지 식의 꼴을 얘기해봐",
+"answer": "ax²+bx+c=0 꼴이야. 단, a, b, c는 상수이고 a≠0이야.",
+"keys": [
+"ax²+bx+c=0",
+"a≠0"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "1iiqpnh:qreason",
+"big": "3. 이차방정식",
+"small": "55. 이차방정식이란?",
+"kind": "qset",
+"round": 2,
+"answer": "a=0이면 x² 항이 없어져서 bx+c=0이라는 일차방정식(또는 등식)이 돼. 그래서 이차방정식이 되려면 a≠0이 꼭 필요해.",
+"keys": [
+"a=0이면 x² 항이 없다",
+"일차방정식이 된다"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "1iiqpnh:qexample",
+"big": "3. 이차방정식",
+"small": "55. 이차방정식이란?",
+"kind": "qset",
+"round": 2,
+"answer": "예를 들어 2x²-3x+1=0은 x²의 계수가 2로 0이 아니니까 x에 대한 이차방정식이야.",
+"keys": [
+"(x에 대한 이차식)=0 꼴",
+"x²의 계수가 0이 아니다"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "1iiqpnh:qerror",
+"big": "3. 이차방정식",
+"small": "55. 이차방정식이란?",
+"kind": "qset",
+"off": true,
+"ok": true
+},
+{
+"id": "1u3lf76:t0L1",
+"big": "3. 이차방정식",
+"small": "56. 이차방정식이 되기 위한 조건은?",
+"kind": "low",
+"round": 1,
+"answer": "이차항의 계수가 0이 아니어야 해.",
+"keys": [
+"0이 아니다"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "1u3lf76:t0L2",
+"big": "3. 이차방정식",
+"small": "56. 이차방정식이 되기 위한 조건은?",
+"kind": "low",
+"round": 1,
+"answer": "a≠0이어야 해.",
+"keys": [
+"a≠0"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "1u3lf76:t0L3",
+"big": "3. 이차방정식",
+"small": "56. 이차방정식이 되기 위한 조건은?",
+"kind": "low",
+"round": 1,
+"answer": "a=0이면 b가 0이 아닐 때 일차 방정식, b=0일 때 c=0 꼴의 등식이 된다.",
+"ok": true
+},
+{
+"id": "1u3lf76:t0H1",
+"big": "3. 이차방정식",
+"small": "56. 이차방정식이 되기 위한 조건은?",
+"kind": "high",
+"round": 2,
+"newQ": "① 이차방정식이 되기 위한 조건을 설명해 봐.",
+"answer": "ax²+bx+c=0 꼴로 정리했을 때 x²의 계수 a가 0이 아니어야 해. b와 c는 0이어도 상관없어.",
+"keys": [
+"a≠0",
+"b, c는 0이어도 된다"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "1u3lf76:t0H2",
+"big": "3. 이차방정식",
+"small": "56. 이차방정식이 되기 위한 조건은?",
+"kind": "high",
+"off": true,
+"ok": true
+},
+{
+"id": "1u3lf76:t0H3",
+"big": "3. 이차방정식",
+"small": "56. 이차방정식이 되기 위한 조건은?",
+"kind": "high",
+"round": 2,
+"newQ": "③ 일반형의 꼴에서 이차항의 계수인 a가  0일 때 일차방정식이 되는 조건을 설명해 봐.",
+"answer": "a=0이면 식이 bx+c=0이 돼. 이때 b≠0이면 일차방정식이야. b=0이면 x가 없어져서 방정식이 아니게 돼.",
+"keys": [
+"a=0이면 bx+c=0",
+"b≠0일 때 일차방정식"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "1u3lf76:qrecall",
+"big": "3. 이차방정식",
+"small": "56. 이차방정식이 되기 위한 조건은?",
+"kind": "qset",
+"round": 1,
+"answer": "먼저 모든 항을 좌변으로 이항해서 정리해. 그러면 (a-5)x²+5x-3=0이 돼. 그다음 x²의 계수 a-5가 0이 아닌지 확인해.",
+"keys": [
+"좌변으로 이항해 정리",
+"(a-5)x²+5x-3=0",
+"x²의 계수가 0이 아닌지"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "1u3lf76:qreason",
+"big": "3. 이차방정식",
+"small": "56. 이차방정식이 되기 위한 조건은?",
+"kind": "qset",
+"round": 2,
+"answer": "양변에 x²이 있으면 이항할 때 서로 없어질 수 있어. 예를 들어 x²+2x=x²-1은 정리하면 2x+1=0이라 일차방정식이야. 그래서 정리한 뒤에 판단해야 해.",
+"keys": [
+"x² 항이 없어질 수 있다",
+"정리한 뒤 판단"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "1u3lf76:qexample",
+"big": "3. 이차방정식",
+"small": "56. 이차방정식이 되기 위한 조건은?",
+"kind": "qset",
+"round": 1,
+"answer": "x²의 계수 a-2가 0이 아니어야 하니까 a≠2야.",
+"keys": [
+"a-2≠0",
+"a≠2"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "1u3lf76:qcondition",
+"big": "3. 이차방정식",
+"small": "56. 이차방정식이 되기 위한 조건은?",
+"kind": "qset",
+"round": 2,
+"answer": "정리하면 (a-5)x²+5x-3=0이니까 a-5≠0, 즉 a≠5야.",
+"keys": [
+"(a-5)x²+5x-3=0",
+"a≠5"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "1u3lf76:qerror",
+"big": "3. 이차방정식",
+"small": "56. 이차방정식이 되기 위한 조건은?",
+"kind": "qset",
+"round": 2,
+"answer": "이차방정식이 되는 조건은 x²의 계수만 0이 아니면 돼. b, c는 0이어도 상관없어. 이 식은 a≠5이기만 하면 이차방정식이야.",
+"keys": [
+"x²의 계수만 0이 아니면 된다",
+"a≠5"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "50her:t0L1",
+"big": "3. 이차방정식",
+"small": "59. 인수분해를 이용하여 이차방정식의 해를 어떻게 구할까?",
+"kind": "low",
+"round": 1,
+"answer": "AB=0이면 A=0 또는 B=0이라는 성질을 이용해.",
+"keys": [
+"AB=0이면 A=0 또는 B=0"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "50her:t0L2",
+"big": "3. 이차방정식",
+"small": "59. 인수분해를 이용하여 이차방정식의 해를 어떻게 구할까?",
+"kind": "low",
+"round": 1,
+"answer": "x=a 또는 x=b야.",
+"keys": [
+"x=a 또는 x=b"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "50her:t0L3",
+"big": "3. 이차방정식",
+"small": "59. 인수분해를 이용하여 이차방정식의 해를 어떻게 구할까?",
+"kind": "low",
+"round": 1,
+"off": true,
+"ok": true
+},
+{
+"id": "50her:t0H1",
+"big": "3. 이차방정식",
+"small": "59. 인수분해를 이용하여 이차방정식의 해를 어떻게 구할까?",
+"kind": "high",
+"round": 2,
+"answer": "먼저 우변을 0으로 만들고 좌변을 인수분해해. 그다음 AB=0이면 A=0 또는 B=0이라는 성질로 각 일차식이 0이 되는 x를 구해. 예) x²-5x+6=0 → (x-2)(x-3)=0 → x=2 또는 x=3",
+"keys": [
+"우변을 0으로",
+"인수분해",
+"AB=0 성질로 해를 구한다"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "50her:t0H2",
+"big": "3. 이차방정식",
+"small": "59. 인수분해를 이용하여 이차방정식의 해를 어떻게 구할까?",
+"kind": "high",
+"off": true,
+"ok": true
+},
+{
+"id": "50her:t0H3",
+"big": "3. 이차방정식",
+"small": "59. 인수분해를 이용하여 이차방정식의 해를 어떻게 구할까?",
+"kind": "high",
+"round": 2,
+"answer": "모든 항을 좌변으로 이항해서 (이차식)=0 꼴로 만들고, 좌변을 인수분해한 다음 각 인수가 0이 되는 x를 구해.",
+"keys": [
+"좌변으로 이항해 우변 0",
+"인수분해",
+"각 인수를 0으로"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "50her:qrecall",
+"big": "3. 이차방정식",
+"small": "59. 인수분해를 이용하여 이차방정식의 해를 어떻게 구할까?",
+"kind": "qset",
+"off": true,
+"ok": true
+},
+{
+"id": "50her:qreason",
+"big": "3. 이차방정식",
+"small": "59. 인수분해를 이용하여 이차방정식의 해를 어떻게 구할까?",
+"kind": "qset",
+"round": 2,
+"answer": "AB=0 성질은 곱이 0일 때만 쓸 수 있어. 우변이 0이 아니면 (x+3)(x-1)=5처럼 곱이 5라서, 각 인수가 무엇인지 알 수 없어.",
+"keys": [
+"곱이 0일 때만 성질을 쓸 수 있다",
+"우변이 0이 아니면 알 수 없다"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "50her:qexample",
+"big": "3. 이차방정식",
+"small": "59. 인수분해를 이용하여 이차방정식의 해를 어떻게 구할까?",
+"kind": "qset",
+"round": 1,
+"answer": "(x+4)(x-3)=0이니까 x=-4 또는 x=3이야.",
+"keys": [
+"(x+4)(x-3)=0",
+"x=-4 또는 x=3"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "50her:qerror",
+"big": "3. 이차방정식",
+"small": "59. 인수분해를 이용하여 이차방정식의 해를 어떻게 구할까?",
+"kind": "qset",
+"round": 2,
+"answer": "x+3=0이면 x=-3, x-2=0이면 x=2야. 부호를 거꾸로 했어. 해는 x=-3 또는 x=2야.",
+"keys": [
+"부호를 거꾸로 했다",
+"x=-3 또는 x=2"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "50her:qamu6srpo18th9",
+"big": "3. 이차방정식",
+"small": "59. 인수분해를 이용하여 이차방정식의 해를 어떻게 구할까?",
+"kind": "add",
+"round": 1,
+"q": "이차 방정식을 풀 때 가정 먼저 생각 해봐야 할 방법이 뭐지?",
+"answer": "먼저 인수분해가 되는지 생각해 봐. 인수분해가 되면 가장 빠르고, 안 되면 완전제곱식이나 근의 공식을 써.",
+"keys": [
+"인수분해가 되는지 먼저",
+"안 되면 완전제곱식·근의 공식"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "n72gx0:t0L1",
+"big": "3. 이차방정식",
+"small": "63. 완전제곱식을 이용하여 이차방정식을 어떻게 풀까?",
+"kind": "low",
+"off": true,
+"ok": true
+},
+{
+"id": "n72gx0:t0L2",
+"big": "3. 이차방정식",
+"small": "63. 완전제곱식을 이용하여 이차방정식을 어떻게 풀까?",
+"kind": "low",
+"round": 1,
+"newQ": "② 이차식을 완전제곱식으로 만드는 순서를 말해봐",
+"answer": "x²의 계수를 1로 만들고, 상수항을 우변으로 옮겨. 그다음 양변에 (x의 계수의 반)²을 더해서 좌변을 완전제곱식으로 만들어.",
+"keys": [
+"x²의 계수를 1로",
+"상수항을 우변으로",
+"양변에 (x의 계수의 반)²을 더한다"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "n72gx0:t0L3",
+"big": "3. 이차방정식",
+"small": "63. 완전제곱식을 이용하여 이차방정식을 어떻게 풀까?",
+"kind": "low",
+"round": 1,
+"newQ": "③ 완전제곱식으로 고친 뒤 (x-p)^2=q의 꼴에서부터는 어떤 방법으로 풀어야 하지?",
+"answer": "제곱근을 이용해서 풀어. x-p=±√q라서 x=p±√q야.",
+"keys": [
+"제곱근을 이용한다",
+"x=p±√q"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "n72gx0:t0H1",
+"big": "3. 이차방정식",
+"small": "63. 완전제곱식을 이용하여 이차방정식을 어떻게 풀까?",
+"kind": "high",
+"round": 2,
+"answer": "인수분해가 안 될 때 쓰는 방법이야. 상수항을 우변으로 옮기고 양변에 (x의 계수의 반)²을 더해 (x-p)²=q 꼴로 만든 다음, 제곱근을 이용해서 x=p±√q로 풀어.",
+"keys": [
+"(x-p)²=q 꼴로 만든다",
+"제곱근을 이용해 푼다"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "n72gx0:t0H2",
+"big": "3. 이차방정식",
+"small": "63. 완전제곱식을 이용하여 이차방정식을 어떻게 풀까?",
+"kind": "high",
+"off": true,
+"ok": true
+},
+{
+"id": "n72gx0:t0H3",
+"big": "3. 이차방정식",
+"small": "63. 완전제곱식을 이용하여 이차방정식을 어떻게 풀까?",
+"kind": "high",
+"off": true,
+"ok": true
+},
+{
+"id": "n72gx0:qrecall",
+"big": "3. 이차방정식",
+"small": "63. 완전제곱식을 이용하여 이차방정식을 어떻게 풀까?",
+"kind": "qset",
+"off": true,
+"ok": true
+},
+{
+"id": "n72gx0:qreason",
+"big": "3. 이차방정식",
+"small": "63. 완전제곱식을 이용하여 이차방정식을 어떻게 풀까?",
+"kind": "qset",
+"off": true,
+"ok": true
+},
+{
+"id": "n72gx0:qexample",
+"big": "3. 이차방정식",
+"small": "63. 완전제곱식을 이용하여 이차방정식을 어떻게 풀까?",
+"kind": "qset",
+"round": 1,
+"answer": "x²-4x=1로 옮기고 양변에 (-4/2)²=4를 더하면 (x-2)²=5야. 그래서 x-2=±√5, x=2±√5야.",
+"keys": [
+"(x-2)²=5",
+"x=2±√5"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "n72gx0:qerror",
+"big": "3. 이차방정식",
+"small": "63. 완전제곱식을 이용하여 이차방정식을 어떻게 풀까?",
+"kind": "qset",
+"round": 2,
+"answer": "등식이 성립하려면 양변에 똑같이 더해야 해. 우변에도 4를 더해서 (x-2)²=5로 만들어야 해.",
+"keys": [
+"양변에 똑같이 더해야 한다",
+"(x-2)²=5"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "1tsm4gk:t0L1",
+"big": "3. 이차방정식",
+"small": "70. 이차방정식의 해를 구하지 않고 근의 개수를 알 수 있다?",
+"kind": "low",
+"round": 1,
+"newQ": "① 판별식(b^2-4ac)이 뭐야?",
+"answer": "이차방정식 ax²+bx+c=0에서 b²-4ac를 판별식이라고 해. 근의 공식의 근호 안에 있는 식이고, 이 값의 부호로 근의 개수를 알 수 있어.",
+"keys": [
+"b²-4ac",
+"근의 개수를 알 수 있다"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "1tsm4gk:t0L2",
+"big": "3. 이차방정식",
+"small": "70. 이차방정식의 해를 구하지 않고 근의 개수를 알 수 있다?",
+"kind": "low",
+"round": 1,
+"newQ": "② 서로 다른 근이 2개이면 판별식이 어때야하지?",
+"answer": "b²-4ac>0이어야 해.",
+"keys": [
+"b²-4ac>0"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "1tsm4gk:t0L3",
+"big": "3. 이차방정식",
+"small": "70. 이차방정식의 해를 구하지 않고 근의 개수를 알 수 있다?",
+"kind": "low",
+"round": 1,
+"answer": "b²-4ac=0이면 중근(1개), b²-4ac<0이면 근이 없어.",
+"keys": [
+"=0이면 중근",
+"<0이면 근이 없다"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "1tsm4gk:t0H1",
+"big": "3. 이차방정식",
+"small": "70. 이차방정식의 해를 구하지 않고 근의 개수를 알 수 있다?",
+"kind": "high",
+"round": 2,
+"answer": "ax²+bx+c=0에서 b²-4ac의 값을 계산해서 부호를 봐. 양수면 서로 다른 두 근, 0이면 중근, 음수면 근이 없어.",
+"keys": [
+"b²-4ac의 부호를 본다",
+"양수 2개, 0이면 중근, 음수 0개"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "1tsm4gk:t0H2",
+"big": "3. 이차방정식",
+"small": "70. 이차방정식의 해를 구하지 않고 근의 개수를 알 수 있다?",
+"kind": "high",
+"round": 2,
+"answer": "b²-4ac>0이면 서로 다른 두 근, b²-4ac=0이면 중근(한 근), b²-4ac<0이면 근이 없어.",
+"keys": [
+">0 서로 다른 두 근",
+"=0 중근",
+"<0 근이 없다"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "1tsm4gk:t0H3",
+"big": "3. 이차방정식",
+"small": "70. 이차방정식의 해를 구하지 않고 근의 개수를 알 수 있다?",
+"kind": "high",
+"off": true,
+"ok": true
+},
+{
+"id": "1tsm4gk:qrecall",
+"big": "3. 이차방정식",
+"small": "70. 이차방정식의 해를 구하지 않고 근의 개수를 알 수 있다?",
+"kind": "qset",
+"off": true,
+"ok": true
+},
+{
+"id": "1tsm4gk:qreason",
+"big": "3. 이차방정식",
+"small": "70. 이차방정식의 해를 구하지 않고 근의 개수를 알 수 있다?",
+"kind": "qset",
+"round": 2,
+"answer": "근의 공식에서 √(b²-4ac)를 구해야 하는데, 근호 안이 음수면 제곱해서 음수가 되는 수가 없어서 값을 구할 수 없어. 그래서 근이 없어.",
+"keys": [
+"근호 안이 음수",
+"제곱해서 음수가 되는 수는 없다"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "1tsm4gk:qexample",
+"big": "3. 이차방정식",
+"small": "70. 이차방정식의 해를 구하지 않고 근의 개수를 알 수 있다?",
+"kind": "qset",
+"off": true,
+"ok": true
+},
+{
+"id": "1tsm4gk:qcondition",
+"big": "3. 이차방정식",
+"small": "70. 이차방정식의 해를 구하지 않고 근의 개수를 알 수 있다?",
+"kind": "qset",
+"round": 2,
+"answer": "a=1, b=3, c=5이니까 b²-4ac=9-20=-11<0이라서 근이 없어.",
+"keys": [
+"9-20=-11",
+"근이 없다"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "1tsm4gk:qerror",
+"big": "3. 이차방정식",
+"small": "70. 이차방정식의 해를 구하지 않고 근의 개수를 알 수 있다?",
+"kind": "qset",
+"off": true,
+"ok": true
+},
+{
+"id": "1tsm4gk:qamu6t9gs71vds",
+"big": "3. 이차방정식",
+"small": "70. 이차방정식의 해를 구하지 않고 근의 개수를 알 수 있다?",
+"kind": "add",
+"round": 2,
+"answer": "주어진 식에 미정계수가 보일 때\n중근이라는 조건이 나올 때\n근의 개수와 관련된 조건이 나올 때",
+"q": "판별식은 언제 생각해야되지?",
+"ok": true
+},
+{
+"id": "1laojbm:t0L1",
+"big": "3. 이차방정식",
+"small": "76. 쏘아 올린 물체에 관한 문제는 어떻게 해결할까?",
+"kind": "low",
+"off": true
+},
+{
+"id": "dd7jjg:t0L1",
+"big": "3. 이차방정식",
+"small": "57. 이차방정식의 해란 무엇일까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "이차방정식을 참이 되게 하는 미지수의 값을 해 또는 근이라고 해.",
+"keys": [
+"해(근)",
+"방정식을 참이 되게 하는 값"
+],
+"answerBy": "claude"
+},
+{
+"id": "dd7jjg:t0L2",
+"big": "3. 이차방정식",
+"small": "57. 이차방정식의 해란 무엇일까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"newQ": "② x=2가 x²-5x+6=0의 해인지 어떻게 확인해?",
+"newQBy": "claude",
+"answer": "x=2를 대입해서 참이 되는지 봐. 4-10+6=0이라서 참이니까 x=2는 해야.",
+"keys": [
+"직접 대입한다",
+"4-10+6=0이라 해"
+],
+"answerBy": "claude"
+},
+{
+"id": "dd7jjg:t0L3",
+"big": "3. 이차방정식",
+"small": "57. 이차방정식의 해란 무엇일까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "이차방정식의 해는 최대 2개까지 있어.",
+"keys": [
+"최대 2개"
+],
+"answerBy": "claude"
+},
+{
+"id": "dd7jjg:t0H1",
+"big": "3. 이차방정식",
+"small": "57. 이차방정식의 해란 무엇일까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "dd7jjg:t0H2",
+"big": "3. 이차방정식",
+"small": "57. 이차방정식의 해란 무엇일까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "dd7jjg:t0H3",
+"big": "3. 이차방정식",
+"small": "57. 이차방정식의 해란 무엇일까?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "이차방정식은 (x-a)(x-b)=0처럼 두 일차식의 곱으로 나타낼 수 있어서, 해는 x=a 또는 x=b로 많아야 2개야. 두 일차식이 같으면 해가 1개(중근)야.",
+"keys": [
+"두 일차식의 곱으로 나타낸다",
+"해는 많아야 2개"
+],
+"answerBy": "claude"
+},
+{
+"id": "dd7jjg:qrecall",
+"big": "3. 이차방정식",
+"small": "57. 이차방정식의 해란 무엇일까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "dd7jjg:qreason",
+"big": "3. 이차방정식",
+"small": "57. 이차방정식의 해란 무엇일까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "해는 방정식을 참이 되게 하는 값이라서, 대입해서 좌변과 우변이 같아지는지 확인해야 정확히 알 수 있어.",
+"keys": [
+"해는 참이 되게 하는 값",
+"대입해서 확인한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "dd7jjg:qexample",
+"big": "3. 이차방정식",
+"small": "57. 이차방정식의 해란 무엇일까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "x=3을 넣으면 9-3-6=0이라 참이니까 x=3은 해야. x=-2도 4+2-6=0이라 해야.",
+"keys": [
+"x=3 또는 x=-2",
+"대입하면 0이 된다"
+],
+"answerBy": "claude"
+},
+{
+"id": "dd7jjg:qerror",
+"big": "3. 이차방정식",
+"small": "57. 이차방정식의 해란 무엇일까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "x=1을 대입하면 1-1-6=-6이라 0이 아니야. 참이 되지 않으니까 해가 아니야.",
+"keys": [
+"대입하면 -6",
+"해가 아니다"
+],
+"answerBy": "claude"
+},
+{
+"id": "3bxxw0:t0L1",
+"big": "3. 이차방정식",
+"small": "58. AB=0이면 A, B는 어떤 값이 되어야 할까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "적어도 하나는 0이야.",
+"keys": [
+"적어도 하나는 0"
+],
+"answerBy": "claude"
+},
+{
+"id": "3bxxw0:t0L2",
+"big": "3. 이차방정식",
+"small": "58. AB=0이면 A, B는 어떤 값이 되어야 할까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "3bxxw0:t0L3",
+"big": "3. 이차방정식",
+"small": "58. AB=0이면 A, B는 어떤 값이 되어야 할까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "3bxxw0:t0H1",
+"big": "3. 이차방정식",
+"small": "58. AB=0이면 A, B는 어떤 값이 되어야 할까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "3bxxw0:t0H2",
+"big": "3. 이차방정식",
+"small": "58. AB=0이면 A, B는 어떤 값이 되어야 할까?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "이차방정식을 (x-a)(x-b)=0처럼 곱이 0인 꼴로 만들면, 이 성질로 x-a=0 또는 x-b=0이라는 일차방정식 두 개로 쪼갤 수 있어. 그래서 쉽게 풀 수 있어.",
+"keys": [
+"곱이 0인 꼴로 만든다",
+"일차방정식 두 개로 쪼갠다"
+],
+"answerBy": "claude"
+},
+{
+"id": "3bxxw0:t0H3",
+"big": "3. 이차방정식",
+"small": "58. AB=0이면 A, B는 어떤 값이 되어야 할까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"newQ": "③ (x-2)(x+5)=0에 이 성질을 적용해서 풀어봐.",
+"newQBy": "claude",
+"answer": "x-2=0 또는 x+5=0이니까 x=2 또는 x=-5야.",
+"keys": [
+"x-2=0 또는 x+5=0",
+"x=2 또는 x=-5"
+],
+"answerBy": "claude"
+},
+{
+"id": "3bxxw0:qrecall",
+"big": "3. 이차방정식",
+"small": "58. AB=0이면 A, B는 어떤 값이 되어야 할까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "3bxxw0:qreason",
+"big": "3. 이차방정식",
+"small": "58. AB=0이면 A, B는 어떤 값이 되어야 할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "0이 아닌 두 수를 곱하면 0이 될 수 없어. 그래서 곱이 0이면 둘 중 적어도 하나는 0이어야 해.",
+"keys": [
+"0이 아닌 수끼리의 곱은 0이 아니다",
+"적어도 하나는 0"
+],
+"answerBy": "claude"
+},
+{
+"id": "3bxxw0:qexample",
+"big": "3. 이차방정식",
+"small": "58. AB=0이면 A, B는 어떤 값이 되어야 할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "예를 들어 A=x-3, B=x+1이면 (x-3)(x+1)=0에서 x=3일 때 A=0, x=-1일 때 B=0이야.",
+"keys": [
+"곱해서 0이 되는 두 식",
+"A=0 또는 B=0"
+],
+"answerBy": "claude"
+},
+{
+"id": "3bxxw0:qerror",
+"big": "3. 이차방정식",
+"small": "58. AB=0이면 A, B는 어떤 값이 되어야 할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "둘 다 0일 필요는 없고 둘 중 하나만 0이면 돼. 그래서 x-2=0 또는 x+5=0, 즉 x=2 또는 x=-5야.",
+"keys": [
+"'또는'이다",
+"x=2 또는 x=-5"
+],
+"answerBy": "claude"
+},
+{
+"id": "1fuv6rq:t0L1",
+"big": "3. 이차방정식",
+"small": "60. 이차방정식의 중근이란?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "두 해가 중복되어 서로 같을 때 그 해를 중근이라고 해.",
+"keys": [
+"중근"
+],
+"answerBy": "claude"
+},
+{
+"id": "1fuv6rq:t0L2",
+"big": "3. 이차방정식",
+"small": "60. 이차방정식의 중근이란?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "(x-a)²=0처럼 (완전제곱식)=0 꼴이 돼.",
+"keys": [
+"(완전제곱식)=0"
+],
+"answerBy": "claude"
+},
+{
+"id": "1fuv6rq:t0L3",
+"big": "3. 이차방정식",
+"small": "60. 이차방정식의 중근이란?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"newQ": "③ x²+8x+16=0의 해를 구해봐.",
+"newQBy": "claude",
+"answer": "(x+4)²=0이니까 x=-4(중근)야.",
+"keys": [
+"(x+4)²=0",
+"x=-4 중근"
+],
+"answerBy": "claude"
+},
+{
+"id": "1fuv6rq:t0H1",
+"big": "3. 이차방정식",
+"small": "60. 이차방정식의 중근이란?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1fuv6rq:t0H2",
+"big": "3. 이차방정식",
+"small": "60. 이차방정식의 중근이란?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1fuv6rq:t0H3",
+"big": "3. 이차방정식",
+"small": "60. 이차방정식의 중근이란?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "(x-a)²=0은 (x-a)(x-a)=0이라서 x=a가 두 번 나와. 두 근이 따로 있는데 값이 겹친 거라서 중근이라고 불러.",
+"keys": [
+"(x-a)(x-a)=0",
+"같은 근이 두 번 나온다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1fuv6rq:qrecall",
+"big": "3. 이차방정식",
+"small": "60. 이차방정식의 중근이란?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1fuv6rq:qreason",
+"big": "3. 이차방정식",
+"small": "60. 이차방정식의 중근이란?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "좌변이 (x-a)²이면 (x-a)(x-a)=0이라서 두 인수가 같아. 그래서 두 근이 모두 x=a로 같아지니까 중근이야.",
+"keys": [
+"두 인수가 같다",
+"두 근이 같다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1fuv6rq:qexample",
+"big": "3. 이차방정식",
+"small": "60. 이차방정식의 중근이란?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "예를 들어 x²-6x+9=0은 (x-3)²=0이라서 중근 x=3을 가져.",
+"keys": [
+"완전제곱식 꼴",
+"중근 x=3"
+],
+"answerBy": "claude"
+},
+{
+"id": "1fuv6rq:qerror",
+"big": "3. 이차방정식",
+"small": "60. 이차방정식의 중근이란?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "x=3이 두 번 나온 건 같은 근이 겹친 거라서 서로 다른 두 근이 아니야. 근은 x=3 하나이고 중근이라고 해.",
+"keys": [
+"같은 근이 겹친 것",
+"중근 x=3"
+],
+"answerBy": "claude"
+},
+{
+"id": "13lxc2q:t0L1",
+"big": "3. 이차방정식",
+"small": "61. 이차방정식은 어떤 경우에 중근을 가질까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "좌변이 완전제곱식 꼴이어야 해.",
+"keys": [
+"완전제곱식"
+],
+"answerBy": "claude"
+},
+{
+"id": "13lxc2q:t0L2",
+"big": "3. 이차방정식",
+"small": "61. 이차방정식은 어떤 경우에 중근을 가질까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "13lxc2q:t0L3",
+"big": "3. 이차방정식",
+"small": "61. 이차방정식은 어떤 경우에 중근을 가질까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "x²의 계수가 1일 때 상수항이 (x의 계수의 반)²이어야 해. x²+ax+b=0이면 b=(a/2)²이야.",
+"keys": [
+"상수항=(x의 계수의 반)²",
+"b=(a/2)²"
+],
+"answerBy": "claude"
+},
+{
+"id": "13lxc2q:t0H1",
+"big": "3. 이차방정식",
+"small": "61. 이차방정식은 어떤 경우에 중근을 가질까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "13lxc2q:t0H2",
+"big": "3. 이차방정식",
+"small": "61. 이차방정식은 어떤 경우에 중근을 가질까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "13lxc2q:t0H3",
+"big": "3. 이차방정식",
+"small": "61. 이차방정식은 어떤 경우에 중근을 가질까?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "ax²+bx+c=0에서 b²-4ac=0이면 근의 공식의 근호 부분이 0이 돼서 근이 하나로 겹쳐. 그래서 판별식이 0이면 중근이야.",
+"keys": [
+"b²-4ac=0",
+"근호가 0이라 근이 하나"
+],
+"answerBy": "claude"
+},
+{
+"id": "13lxc2q:qrecall",
+"big": "3. 이차방정식",
+"small": "61. 이차방정식은 어떤 경우에 중근을 가질까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "13lxc2q:qreason",
+"big": "3. 이차방정식",
+"small": "61. 이차방정식은 어떤 경우에 중근을 가질까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "b=(a/2)²이면 x²+ax+b=(x+a/2)²으로 완전제곱식이 돼. 그러면 (x+a/2)²=0이라서 중근 x=-a/2를 가져.",
+"keys": [
+"완전제곱식이 된다",
+"(x+a/2)²=0"
+],
+"answerBy": "claude"
+},
+{
+"id": "13lxc2q:qexample",
+"big": "3. 이차방정식",
+"small": "61. 이차방정식은 어떤 경우에 중근을 가질까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "예를 들어 a=6, b=9이면 x²+6x+9=(x+3)²=0이라서 중근 x=-3을 가져.",
+"keys": [
+"b=(a/2)²이 되게 정한다",
+"완전제곱식 확인"
+],
+"answerBy": "claude"
+},
+{
+"id": "13lxc2q:qcondition",
+"big": "3. 이차방정식",
+"small": "61. 이차방정식은 어떤 경우에 중근을 가질까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "k=(10/2)²=25야.",
+"keys": [
+"(10/2)²",
+"k=25"
+],
+"answerBy": "claude"
+},
+{
+"id": "13lxc2q:qerror",
+"big": "3. 이차방정식",
+"small": "61. 이차방정식은 어떤 경우에 중근을 가질까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "x의 계수의 반을 제곱해야 해. k=(10/2)²=25야. 5는 제곱하지 않은 값이야.",
+"keys": [
+"반을 제곱해야 한다",
+"k=25"
+],
+"answerBy": "claude"
+},
+{
+"id": "1ri20xy:t0L1",
+"big": "3. 이차방정식",
+"small": "62. 제곱근을 이용하여 이차방정식을 어떻게 풀까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "x는 제곱해서 5가 되는 수니까 x=±√5야.",
+"keys": [
+"제곱근을 이용한다",
+"x=±√5"
+],
+"answerBy": "claude"
+},
+{
+"id": "1ri20xy:t0L2",
+"big": "3. 이차방정식",
+"small": "62. 제곱근을 이용하여 이차방정식을 어떻게 풀까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"newQ": "② (x-2)²=9의 해를 구하는 과정을 말해봐.",
+"newQBy": "claude",
+"answer": "x-2는 9의 제곱근이니까 x-2=±3이야. 그래서 x=5 또는 x=-1이야.",
+"keys": [
+"x-2=±3",
+"x=5 또는 x=-1"
+],
+"answerBy": "claude"
+},
+{
+"id": "1ri20xy:t0L3",
+"big": "3. 이차방정식",
+"small": "62. 제곱근을 이용하여 이차방정식을 어떻게 풀까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1ri20xy:t0H1",
+"big": "3. 이차방정식",
+"small": "62. 제곱근을 이용하여 이차방정식을 어떻게 풀까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1ri20xy:t0H2",
+"big": "3. 이차방정식",
+"small": "62. 제곱근을 이용하여 이차방정식을 어떻게 풀까?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "x²=k는 x가 k의 제곱근이라는 뜻이야. k>0이면 제곱근은 양수와 음수 두 개라서 x=±√k야.",
+"keys": [
+"x는 k의 제곱근",
+"양수의 제곱근은 2개"
+],
+"answerBy": "claude"
+},
+{
+"id": "1ri20xy:t0H3",
+"big": "3. 이차방정식",
+"small": "62. 제곱근을 이용하여 이차방정식을 어떻게 풀까?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"newQ": "③ 2(x+1)²-10=0을 제곱근을 이용해서 풀어봐.",
+"newQBy": "claude",
+"answer": "(x+1)²=5로 정리하면 x+1=±√5라서 x=-1±√5야.",
+"keys": [
+"(x+1)²=5로 정리",
+"x=-1±√5"
+],
+"answerBy": "claude"
+},
+{
+"id": "1ri20xy:qrecall",
+"big": "3. 이차방정식",
+"small": "62. 제곱근을 이용하여 이차방정식을 어떻게 풀까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1ri20xy:qreason",
+"big": "3. 이차방정식",
+"small": "62. 제곱근을 이용하여 이차방정식을 어떻게 풀까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1ri20xy:qexample",
+"big": "3. 이차방정식",
+"small": "62. 제곱근을 이용하여 이차방정식을 어떻게 풀까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1ri20xy:qerror",
+"big": "3. 이차방정식",
+"small": "62. 제곱근을 이용하여 이차방정식을 어떻게 풀까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "x²=3이면 x는 3의 제곱근이라 -√3도 해야. x=±√3이라고 해야 해.",
+"keys": [
+"-√3을 빠뜨렸다",
+"x=±√3"
+],
+"answerBy": "claude"
+},
+{
+"id": "1ki4o2q:t0L1",
+"big": "3. 이차방정식",
+"small": "64. 이차방정식이 근을 가질 조건은 무엇일까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"newQ": "① (x+p)²=k 꼴의 이차방정식이 근을 가지려면 k가 어때야 해?",
+"newQBy": "claude",
+"answer": "k≥0이어야 해. 제곱한 값은 음수가 될 수 없으니까.",
+"keys": [
+"k≥0",
+"제곱은 음수가 아니다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1ki4o2q:t0L2",
+"big": "3. 이차방정식",
+"small": "64. 이차방정식이 근을 가질 조건은 무엇일까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1ki4o2q:t0L3",
+"big": "3. 이차방정식",
+"small": "64. 이차방정식이 근을 가질 조건은 무엇일까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1ki4o2q:t0H1",
+"big": "3. 이차방정식",
+"small": "64. 이차방정식이 근을 가질 조건은 무엇일까?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "ax²+bx+c=0의 근은 근의 공식에서 √(b²-4ac)가 있어야 구해져. 근호 안이 음수면 안 되니까 b²-4ac≥0일 때 근을 가져.",
+"keys": [
+"근호 안은 음수가 될 수 없다",
+"b²-4ac≥0"
+],
+"answerBy": "claude"
+},
+{
+"id": "1ki4o2q:t0H2",
+"big": "3. 이차방정식",
+"small": "64. 이차방정식이 근을 가질 조건은 무엇일까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1ki4o2q:t0H3",
+"big": "3. 이차방정식",
+"small": "64. 이차방정식이 근을 가질 조건은 무엇일까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1ki4o2q:qrecall",
+"big": "3. 이차방정식",
+"small": "64. 이차방정식이 근을 가질 조건은 무엇일까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1ki4o2q:qreason",
+"big": "3. 이차방정식",
+"small": "64. 이차방정식이 근을 가질 조건은 무엇일까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "(x+p)²은 어떤 수를 제곱한 거라서 0 이상이야. 그런데 k<0이면 제곱한 값이 음수가 돼야 하니까 그런 x는 없어.",
+"keys": [
+"제곱은 0 이상",
+"음수와 같아질 수 없다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1ki4o2q:qexample",
+"big": "3. 이차방정식",
+"small": "64. 이차방정식이 근을 가질 조건은 무엇일까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "예를 들어 (x+2)²=-3은 제곱한 값이 음수가 될 수 없으니까 근이 없어.",
+"keys": [
+"k<0인 식",
+"근이 없다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1ki4o2q:qcondition",
+"big": "3. 이차방정식",
+"small": "64. 이차방정식이 근을 가질 조건은 무엇일까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "x²+6x+k=0을 (x+3)²=9-k로 바꾸면 9-k≥0이어야 해. 그래서 k≤9야.",
+"keys": [
+"(x+3)²=9-k",
+"k≤9"
+],
+"answerBy": "claude"
+},
+{
+"id": "1ki4o2q:qerror",
+"big": "3. 이차방정식",
+"small": "64. 이차방정식이 근을 가질 조건은 무엇일까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "(x+3)²=9-k에서 9-k가 음수이면 근이 없어. 예를 들어 k=10이면 (x+3)²=-1이라 근이 없어. k≤9일 때만 근을 가져.",
+"keys": [
+"k에 따라 근이 없을 수 있다",
+"k≤9"
+],
+"answerBy": "claude"
+},
+{
+"id": "7bzpa2:t0L1",
+"big": "3. 이차방정식",
+"small": "65. 이차방정식의 근의 공식이란?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "근의 공식이나 완전제곱식을 이용해서 풀어.",
+"keys": [
+"근의 공식"
+],
+"answerBy": "claude"
+},
+{
+"id": "7bzpa2:t0L2",
+"big": "3. 이차방정식",
+"small": "65. 이차방정식의 근의 공식이란?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"newQ": "② 3x²-5x+1=0에서 근의 공식에 넣을 a, b, c는 각각 얼마야?",
+"newQBy": "claude",
+"answer": "a=3, b=-5, c=1이야. b의 부호까지 그대로 넣어야 해.",
+"keys": [
+"a=3, b=-5, c=1",
+"부호까지 넣는다"
+],
+"answerBy": "claude"
+},
+{
+"id": "7bzpa2:t0L3",
+"big": "3. 이차방정식",
+"small": "65. 이차방정식의 근의 공식이란?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "7bzpa2:t0H1",
+"big": "3. 이차방정식",
+"small": "65. 이차방정식의 근의 공식이란?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "ax²+bx+c=0의 근은 x=(-b±√(b²-4ac))/(2a)야. 인수분해가 잘 안 될 때 쓰고, b²-4ac≥0이면 언제든 근을 구할 수 있어.",
+"keys": [
+"x=(-b±√(b²-4ac))/(2a)",
+"인수분해가 어려울 때"
+],
+"answerBy": "claude"
+},
+{
+"id": "7bzpa2:t0H2",
+"big": "3. 이차방정식",
+"small": "65. 이차방정식의 근의 공식이란?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "ax²+bx+c=0의 양변을 a로 나누고 완전제곱식으로 만들어 제곱근을 이용해 풀면, 그 결과가 바로 근의 공식이야.",
+"keys": [
+"a로 나누고 완전제곱식으로",
+"제곱근으로 풀면 근의 공식"
+],
+"answerBy": "claude"
+},
+{
+"id": "7bzpa2:t0H3",
+"big": "3. 이차방정식",
+"small": "65. 이차방정식의 근의 공식이란?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "7bzpa2:qrecall",
+"big": "3. 이차방정식",
+"small": "65. 이차방정식의 근의 공식이란?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "ax²+bx+c=0의 근은 x=(-b±√(b²-4ac))/(2a)야. (단, b²-4ac≥0)",
+"keys": [
+"x=(-b±√(b²-4ac))/(2a)"
+],
+"answerBy": "claude"
+},
+{
+"id": "7bzpa2:qreason",
+"big": "3. 이차방정식",
+"small": "65. 이차방정식의 근의 공식이란?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "7bzpa2:qexample",
+"big": "3. 이차방정식",
+"small": "65. 이차방정식의 근의 공식이란?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "a=1, b=-4, c=-1이니까 x=(4±√(16+4))/2=(4±2√5)/2=2±√5야.",
+"keys": [
+"a=1, b=-4, c=-1",
+"x=2±√5"
+],
+"answerBy": "claude"
+},
+{
+"id": "7bzpa2:qerror",
+"big": "3. 이차방정식",
+"small": "65. 이차방정식의 근의 공식이란?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "분모 2a를 빠뜨렸어. 근의 공식은 x=(-b±√(b²-4ac))/(2a)야.",
+"keys": [
+"분모 2a를 빠뜨렸다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1xtbzku:t0L1",
+"big": "3. 이차방정식",
+"small": "66. 일차항의 계수가 짝수일 때 쓰는 근의 공식이 따로 있다?",
+"kind": "low",
+"round": 2,
+"by": "claude",
+"newQ": "① 2x²+6x-1=0에서 b'는 얼마이고, 짝수 공식으로 풀면 어떻게 돼?",
+"newQBy": "claude",
+"answer": "b=6=2×3이라서 b'=3이야. x=(-3±√(9+2))/2=(-3±√11)/2야.",
+"keys": [
+"b'=3",
+"x=(-3±√11)/2"
+],
+"answerBy": "claude"
+},
+{
+"id": "1xtbzku:t0L2",
+"big": "3. 이차방정식",
+"small": "66. 일차항의 계수가 짝수일 때 쓰는 근의 공식이 따로 있다?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1xtbzku:t0L3",
+"big": "3. 이차방정식",
+"small": "66. 일차항의 계수가 짝수일 때 쓰는 근의 공식이 따로 있다?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1xtbzku:t0H1",
+"big": "3. 이차방정식",
+"small": "66. 일차항의 계수가 짝수일 때 쓰는 근의 공식이 따로 있다?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1xtbzku:t0H2",
+"big": "3. 이차방정식",
+"small": "66. 일차항의 계수가 짝수일 때 쓰는 근의 공식이 따로 있다?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "b=2b'를 근의 공식에 넣으면 분자와 분모에 공통으로 2가 생겨서 약분돼. 그래서 x=(-b'±√(b'²-ac))/a로 간단해져.",
+"keys": [
+"b=2b'를 넣으면 2가 약분된다",
+"x=(-b'±√(b'²-ac))/a"
+],
+"answerBy": "claude"
+},
+{
+"id": "1xtbzku:t0H3",
+"big": "3. 이차방정식",
+"small": "66. 일차항의 계수가 짝수일 때 쓰는 근의 공식이 따로 있다?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1xtbzku:qrecall",
+"big": "3. 이차방정식",
+"small": "66. 일차항의 계수가 짝수일 때 쓰는 근의 공식이 따로 있다?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "ax²+2b'x+c=0의 근은 x=(-b'±√(b'²-ac))/a야. (단, b'²-ac≥0)",
+"keys": [
+"x=(-b'±√(b'²-ac))/a"
+],
+"answerBy": "claude"
+},
+{
+"id": "1xtbzku:qreason",
+"big": "3. 이차방정식",
+"small": "66. 일차항의 계수가 짝수일 때 쓰는 근의 공식이 따로 있다?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1xtbzku:qexample",
+"big": "3. 이차방정식",
+"small": "66. 일차항의 계수가 짝수일 때 쓰는 근의 공식이 따로 있다?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "b'=-4이니까 x=4±√(16-10)=4±√6이야.",
+"keys": [
+"b'=-4",
+"x=4±√6"
+],
+"answerBy": "claude"
+},
+{
+"id": "1xtbzku:qerror",
+"big": "3. 이차방정식",
+"small": "66. 일차항의 계수가 짝수일 때 쓰는 근의 공식이 따로 있다?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "짝수 공식에는 b의 반인 b'를 넣어야 해. b를 그대로 넣으면 공식이 달라져서 틀린 답이 나와.",
+"keys": [
+"b'=b/2를 넣어야 한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "rs69hv:t0L1",
+"big": "3. 이차방정식",
+"small": "67. 계수가 소수 또는 분수인 이차방정식은 어떻게 풀까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "양변에 10, 100 같은 10의 거듭제곱을 곱해서 계수를 정수로 만들어.",
+"keys": [
+"10, 100을 곱한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "rs69hv:t0L2",
+"big": "3. 이차방정식",
+"small": "67. 계수가 소수 또는 분수인 이차방정식은 어떻게 풀까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "양변에 분모의 최소공배수를 곱해.",
+"keys": [
+"분모의 최소공배수"
+],
+"answerBy": "claude"
+},
+{
+"id": "rs69hv:t0L3",
+"big": "3. 이차방정식",
+"small": "67. 계수가 소수 또는 분수인 이차방정식은 어떻게 풀까?",
+"kind": "low",
+"round": 2,
+"by": "claude",
+"newQ": "③ x²/2+x/3-1/6=0을 정수 계수로 바꿔서 풀어봐.",
+"newQBy": "claude",
+"answer": "분모 2, 3, 6의 최소공배수 6을 곱하면 3x²+2x-1=0이야. (3x-1)(x+1)=0이라서 x=1/3 또는 x=-1이야.",
+"keys": [
+"6을 곱해 3x²+2x-1=0",
+"x=1/3 또는 x=-1"
+],
+"answerBy": "claude"
+},
+{
+"id": "rs69hv:t0H1",
+"big": "3. 이차방정식",
+"small": "67. 계수가 소수 또는 분수인 이차방정식은 어떻게 풀까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "rs69hv:t0H2",
+"big": "3. 이차방정식",
+"small": "67. 계수가 소수 또는 분수인 이차방정식은 어떻게 풀까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "rs69hv:t0H3",
+"big": "3. 이차방정식",
+"small": "67. 계수가 소수 또는 분수인 이차방정식은 어떻게 풀까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "rs69hv:qrecall",
+"big": "3. 이차방정식",
+"small": "67. 계수가 소수 또는 분수인 이차방정식은 어떻게 풀까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "rs69hv:qreason",
+"big": "3. 이차방정식",
+"small": "67. 계수가 소수 또는 분수인 이차방정식은 어떻게 풀까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "등식의 양변에 0이 아닌 같은 수를 곱해도 등식은 그대로 성립해. 그래서 참이 되게 하는 x의 값, 즉 해도 달라지지 않아.",
+"keys": [
+"양변에 같은 수를 곱해도 등식 성립",
+"해가 같다"
+],
+"answerBy": "claude"
+},
+{
+"id": "rs69hv:qexample",
+"big": "3. 이차방정식",
+"small": "67. 계수가 소수 또는 분수인 이차방정식은 어떻게 풀까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "양변에 10을 곱하면 5x²-3x-2=0이야. (5x+2)(x-1)=0이라서 x=1 또는 x=-2/5야.",
+"keys": [
+"10을 곱해 5x²-3x-2=0",
+"x=1 또는 x=-2/5"
+],
+"answerBy": "claude"
+},
+{
+"id": "rs69hv:qerror",
+"big": "3. 이차방정식",
+"small": "67. 계수가 소수 또는 분수인 이차방정식은 어떻게 풀까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "5를 곱하면 2.5x²-1.5x-1=0이라 아직 정수가 아니야. 소수 첫째 자리까지 있으니까 10을 곱해야 해.",
+"keys": [
+"5를 곱하면 정수가 안 된다",
+"10을 곱한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "2mux8w:t0L1",
+"big": "3. 이차방정식",
+"small": "68. 괄호가 있는 이차방정식은 어떻게 풀까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "괄호를 풀어 전개하고, 한쪽으로 옮겨 ax²+bx+c=0 꼴로 정리해.",
+"keys": [
+"전개한다",
+"ax²+bx+c=0으로 정리"
+],
+"answerBy": "claude"
+},
+{
+"id": "2mux8w:t0L2",
+"big": "3. 이차방정식",
+"small": "68. 괄호가 있는 이차방정식은 어떻게 풀까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"newQ": "② x(x-4)=5를 풀어봐.",
+"newQBy": "claude",
+"answer": "전개해서 정리하면 x²-4x-5=0이야. (x-5)(x+1)=0이라서 x=5 또는 x=-1이야.",
+"keys": [
+"x²-4x-5=0",
+"x=5 또는 x=-1"
+],
+"answerBy": "claude"
+},
+{
+"id": "2mux8w:t0L3",
+"big": "3. 이차방정식",
+"small": "68. 괄호가 있는 이차방정식은 어떻게 풀까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "2mux8w:t0H1",
+"big": "3. 이차방정식",
+"small": "68. 괄호가 있는 이차방정식은 어떻게 풀까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "2mux8w:t0H2",
+"big": "3. 이차방정식",
+"small": "68. 괄호가 있는 이차방정식은 어떻게 풀까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "2mux8w:t0H3",
+"big": "3. 이차방정식",
+"small": "68. 괄호가 있는 이차방정식은 어떻게 풀까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "2mux8w:qrecall",
+"big": "3. 이차방정식",
+"small": "68. 괄호가 있는 이차방정식은 어떻게 풀까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "2mux8w:qreason",
+"big": "3. 이차방정식",
+"small": "68. 괄호가 있는 이차방정식은 어떻게 풀까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "AB=0일 때만 A=0 또는 B=0을 쓸 수 있어. (x-2)(x+3)=0은 바로 x=2, x=-3이지만, (x-2)(x+3)=6은 우변이 0이 아니라서 전개해 x²+x-12=0으로 정리한 뒤 (x+4)(x-3)=0으로 풀어야 해. 그러면 x=-4, x=3이야.",
+"keys": [
+"우변이 0일 때만 바로 쓸 수 있다",
+"정리하면 x=-4 또는 x=3"
+],
+"answerBy": "claude"
+},
+{
+"id": "2mux8w:qexample",
+"big": "3. 이차방정식",
+"small": "68. 괄호가 있는 이차방정식은 어떻게 풀까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "전개하면 x²+6x+9=2x+10이고, 정리하면 x²+4x-1=0이야. 근의 공식으로 x=-2±√5야.",
+"keys": [
+"x²+4x-1=0으로 정리",
+"x=-2±√5"
+],
+"answerBy": "claude"
+},
+{
+"id": "2mux8w:qerror",
+"big": "3. 이차방정식",
+"small": "68. 괄호가 있는 이차방정식은 어떻게 풀까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "(x+3)²=2x+10은 곱이 0인 꼴이 아니라서 그렇게 바꿀 수 없어. 전개해서 x²+4x-1=0으로 정리한 다음 풀어야 해.",
+"keys": [
+"곱이 0인 꼴이 아니다",
+"전개해서 정리한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1xc8y87:t0L1",
+"big": "3. 이차방정식",
+"small": "69. 공통부분이 있는 이차방정식은 어떻게 풀까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"newQ": "① (x-1)²-2(x-1)-8=0에서 무엇을 치환하면 편해?",
+"newQBy": "claude",
+"answer": "반복되는 x-1을 A로 놓으면 A²-2A-8=0으로 간단해져.",
+"keys": [
+"x-1=A"
+],
+"answerBy": "claude"
+},
+{
+"id": "1xc8y87:t0L2",
+"big": "3. 이차방정식",
+"small": "69. 공통부분이 있는 이차방정식은 어떻게 풀까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1xc8y87:t0L3",
+"big": "3. 이차방정식",
+"small": "69. 공통부분이 있는 이차방정식은 어떻게 풀까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1xc8y87:t0H1",
+"big": "3. 이차방정식",
+"small": "69. 공통부분이 있는 이차방정식은 어떻게 풀까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1xc8y87:t0H2",
+"big": "3. 이차방정식",
+"small": "69. 공통부분이 있는 이차방정식은 어떻게 풀까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1xc8y87:t0H3",
+"big": "3. 이차방정식",
+"small": "69. 공통부분이 있는 이차방정식은 어떻게 풀까?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "치환해서 구한 것은 A의 값이라서, A=x-1처럼 원래 식에 넣으면 x-1=4 같은 새 방정식이 생겨. 그걸 다시 풀어야 x를 구할 수 있어.",
+"keys": [
+"구한 것은 A의 값",
+"A=(x의 식)을 다시 푼다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1xc8y87:qrecall",
+"big": "3. 이차방정식",
+"small": "69. 공통부분이 있는 이차방정식은 어떻게 풀까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1xc8y87:qreason",
+"big": "3. 이차방정식",
+"small": "69. 공통부분이 있는 이차방정식은 어떻게 풀까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "문제에서 구하라는 것은 x인데, 치환해서 구한 것은 A의 값이야. 되돌리지 않으면 x가 아닌 다른 값을 답으로 쓰게 돼.",
+"keys": [
+"구할 것은 x",
+"A는 잠깐 바꾼 문자"
+],
+"answerBy": "claude"
+},
+{
+"id": "1xc8y87:qexample",
+"big": "3. 이차방정식",
+"small": "69. 공통부분이 있는 이차방정식은 어떻게 풀까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "x-1=A로 놓으면 A²-2A-8=0, (A-4)(A+2)=0이라서 A=4 또는 A=-2야. x-1=4 또는 x-1=-2라서 x=5 또는 x=-1이야.",
+"keys": [
+"A=4 또는 A=-2",
+"x=5 또는 x=-1"
+],
+"answerBy": "claude"
+},
+{
+"id": "1xc8y87:qerror",
+"big": "3. 이차방정식",
+"small": "69. 공통부분이 있는 이차방정식은 어떻게 풀까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "A=4, A=-2는 x-1의 값이야. x-1=4, x-1=-2를 풀어서 x=5 또는 x=-1이라고 해야 해.",
+"keys": [
+"A는 x-1의 값",
+"x=5 또는 x=-1"
+],
+"answerBy": "claude"
+},
+{
+"id": "ojujoz:t0L1",
+"big": "3. 이차방정식",
+"small": "71. 이차방정식의 근과 계수 사이에는 어떤 관계가 있을까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "ax²+bx+c=0의 두 근의 합은 -b/a야.",
+"keys": [
+"-b/a"
+],
+"answerBy": "claude"
+},
+{
+"id": "ojujoz:t0L2",
+"big": "3. 이차방정식",
+"small": "71. 이차방정식의 근과 계수 사이에는 어떤 관계가 있을까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "ax²+bx+c=0의 두 근의 곱은 c/a야.",
+"keys": [
+"c/a"
+],
+"answerBy": "claude"
+},
+{
+"id": "ojujoz:t0L3",
+"big": "3. 이차방정식",
+"small": "71. 이차방정식의 근과 계수 사이에는 어떤 관계가 있을까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ojujoz:t0H1",
+"big": "3. 이차방정식",
+"small": "71. 이차방정식의 근과 계수 사이에는 어떤 관계가 있을까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ojujoz:t0H2",
+"big": "3. 이차방정식",
+"small": "71. 이차방정식의 근과 계수 사이에는 어떤 관계가 있을까?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "근의 공식으로 두 근을 (-b+√D)/(2a), (-b-√D)/(2a)로 쓰고 더하면 √D가 없어져서 -b/a, 곱하면 합차 공식으로 (b²-D)/(4a²)=c/a가 돼. (D=b²-4ac)",
+"keys": [
+"두 근을 더하면 √D가 없어진다",
+"곱하면 c/a"
+],
+"answerBy": "claude"
+},
+{
+"id": "ojujoz:t0H3",
+"big": "3. 이차방정식",
+"small": "71. 이차방정식의 근과 계수 사이에는 어떤 관계가 있을까?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"newQ": "③ x²-6x+4=0의 두 근을 α, β라 할 때, α²+β²의 값을 구해봐.",
+"newQBy": "claude",
+"answer": "α+β=6, αβ=4이고 α²+β²=(α+β)²-2αβ=36-8=28이야.",
+"keys": [
+"α+β=6, αβ=4",
+"(α+β)²-2αβ=28"
+],
+"answerBy": "claude"
+},
+{
+"id": "ojujoz:qrecall",
+"big": "3. 이차방정식",
+"small": "71. 이차방정식의 근과 계수 사이에는 어떤 관계가 있을까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ojujoz:qreason",
+"big": "3. 이차방정식",
+"small": "71. 이차방정식의 근과 계수 사이에는 어떤 관계가 있을까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ojujoz:qexample",
+"big": "3. 이차방정식",
+"small": "71. 이차방정식의 근과 계수 사이에는 어떤 관계가 있을까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "a=1, b=-6, c=4이니까 α+β=6, αβ=4야.",
+"keys": [
+"α+β=6",
+"αβ=4"
+],
+"answerBy": "claude"
+},
+{
+"id": "ojujoz:qerror",
+"big": "3. 이차방정식",
+"small": "71. 이차방정식의 근과 계수 사이에는 어떤 관계가 있을까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "두 근의 합은 -b/a라서 -(-6)/1=6이야. b를 그대로 쓰면 부호가 틀려.",
+"keys": [
+"-b/a",
+"6"
+],
+"answerBy": "claude"
+},
+{
+"id": "pu5ll1:t0L1",
+"big": "3. 이차방정식",
+"small": "72. 두 근이 α, β이고, x²의 계수가 a인 이차방정식은 어떻게 나타낼까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "(x-α)(x-β)로 나타내. 앞에 x²의 계수 a를 곱해서 a(x-α)(x-β)=0으로 써.",
+"keys": [
+"(x-α)(x-β)",
+"a(x-α)(x-β)=0"
+],
+"answerBy": "claude"
+},
+{
+"id": "pu5ll1:t0L2",
+"big": "3. 이차방정식",
+"small": "72. 두 근이 α, β이고, x²의 계수가 a인 이차방정식은 어떻게 나타낼까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "pu5ll1:t0L3",
+"big": "3. 이차방정식",
+"small": "72. 두 근이 α, β이고, x²의 계수가 a인 이차방정식은 어떻게 나타낼까?",
+"kind": "low",
+"round": 2,
+"by": "claude",
+"newQ": "③ a(x-α)(x-β)=0을 전개하면 어떤 꼴이 돼?",
+"newQBy": "claude",
+"answer": "a{x²-(α+β)x+αβ}=0이 돼. 두 근의 합과 곱이 계수에 나타나.",
+"keys": [
+"a{x²-(α+β)x+αβ}=0",
+"합과 곱이 계수에 나온다"
+],
+"answerBy": "claude"
+},
+{
+"id": "pu5ll1:t0H1",
+"big": "3. 이차방정식",
+"small": "72. 두 근이 α, β이고, x²의 계수가 a인 이차방정식은 어떻게 나타낼까?",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"newQ": "① 두 근이 1/2, 3이고 x²의 계수가 2인 이차방정식을 세워봐.",
+"newQBy": "claude",
+"answer": "2(x-1/2)(x-3)=0이고, 정리하면 (2x-1)(x-3)=0, 즉 2x²-7x+3=0이야.",
+"keys": [
+"2(x-1/2)(x-3)=0",
+"2x²-7x+3=0"
+],
+"answerBy": "claude"
+},
+{
+"id": "pu5ll1:t0H2",
+"big": "3. 이차방정식",
+"small": "72. 두 근이 α, β이고, x²의 계수가 a인 이차방정식은 어떻게 나타낼까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "pu5ll1:t0H3",
+"big": "3. 이차방정식",
+"small": "72. 두 근이 α, β이고, x²의 계수가 a인 이차방정식은 어떻게 나타낼까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "pu5ll1:qrecall",
+"big": "3. 이차방정식",
+"small": "72. 두 근이 α, β이고, x²의 계수가 a인 이차방정식은 어떻게 나타낼까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "pu5ll1:qreason",
+"big": "3. 이차방정식",
+"small": "72. 두 근이 α, β이고, x²의 계수가 a인 이차방정식은 어떻게 나타낼까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "(x-α)(x-β)=0은 AB=0 꼴이라서 x-α=0 또는 x-β=0, 즉 x=α 또는 x=β가 해가 돼.",
+"keys": [
+"AB=0 꼴",
+"x=α 또는 x=β"
+],
+"answerBy": "claude"
+},
+{
+"id": "pu5ll1:qexample",
+"big": "3. 이차방정식",
+"small": "72. 두 근이 α, β이고, x²의 계수가 a인 이차방정식은 어떻게 나타낼까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "(x+2)(x-4)=0이고, 전개하면 x²-2x-8=0이야.",
+"keys": [
+"(x+2)(x-4)=0",
+"x²-2x-8=0"
+],
+"answerBy": "claude"
+},
+{
+"id": "pu5ll1:qerror",
+"big": "3. 이차방정식",
+"small": "72. 두 근이 α, β이고, x²의 계수가 a인 이차방정식은 어떻게 나타낼까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "근이 -2이면 x-(-2)=x+2, 근이 4이면 x-4라서 (x+2)(x-4)=0이야. 부호를 거꾸로 썼어.",
+"keys": [
+"부호를 거꾸로 썼다",
+"(x+2)(x-4)=0"
+],
+"answerBy": "claude"
+},
+{
+"id": "ohzvbp:t0L1",
+"big": "3. 이차방정식",
+"small": "73. 이차방정식의 활용 문제에 접근하는 노하우는?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"newQ": "① 어떤 정사각형의 가로를 5cm 늘이고 세로를 2cm 줄였더니 넓이가 18cm²가 되었어. 처음 정사각형의 한 변의 길이를 x cm로 놓으면, 새 직사각형의 가로와 세로는 각각 어떻게 나타내?",
+"newQBy": "claude",
+"answer": "가로는 (x+5) cm, 세로는 (x-2) cm야.",
+"keys": [
+"가로 x+5",
+"세로 x-2"
+],
+"answerBy": "claude"
+},
+{
+"id": "ohzvbp:t0L2",
+"big": "3. 이차방정식",
+"small": "73. 이차방정식의 활용 문제에 접근하는 노하우는?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"newQ": "② 같은 문제에서 '넓이가 18cm²'라는 조건으로 식을 세워봐.",
+"newQBy": "claude",
+"answer": "(가로)×(세로)=18이니까 (x+5)(x-2)=18이야.",
+"keys": [
+"(x+5)(x-2)=18"
+],
+"answerBy": "claude"
+},
+{
+"id": "ohzvbp:t0L3",
+"big": "3. 이차방정식",
+"small": "73. 이차방정식의 활용 문제에 접근하는 노하우는?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ohzvbp:t0H1",
+"big": "3. 이차방정식",
+"small": "73. 이차방정식의 활용 문제에 접근하는 노하우는?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ohzvbp:t0H2",
+"big": "3. 이차방정식",
+"small": "73. 이차방정식의 활용 문제에 접근하는 노하우는?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ohzvbp:t0H3",
+"big": "3. 이차방정식",
+"small": "73. 이차방정식의 활용 문제에 접근하는 노하우는?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ohzvbp:qrecall",
+"big": "3. 이차방정식",
+"small": "73. 이차방정식의 활용 문제에 접근하는 노하우는?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ohzvbp:qreason",
+"big": "3. 이차방정식",
+"small": "73. 이차방정식의 활용 문제에 접근하는 노하우는?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ohzvbp:qexample",
+"big": "3. 이차방정식",
+"small": "73. 이차방정식의 활용 문제에 접근하는 노하우는?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"newQ": "같은 문제에서 (x+5)(x-2)=18을 풀어서 처음 정사각형의 한 변의 길이를 구해봐.",
+"newQBy": "claude",
+"answer": "전개하면 x²+3x-28=0이고 (x+7)(x-4)=0이라서 x=-7 또는 x=4야. 길이는 양수이고 x-2>0이어야 하니까 4cm야.",
+"keys": [
+"x²+3x-28=0",
+"x=4만 답(4cm)"
+],
+"answerBy": "claude"
+},
+{
+"id": "ohzvbp:qerror",
+"big": "3. 이차방정식",
+"small": "73. 이차방정식의 활용 문제에 접근하는 노하우는?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "x는 정사각형의 한 변의 길이라서 음수가 될 수 없어. 또 세로 x-2도 양수여야 해. 그래서 x=4만 답이야.",
+"keys": [
+"길이는 양수",
+"x=4만 답"
+],
+"answerBy": "claude"
+},
+{
+"id": "17gdy7f:t0L1",
+"big": "3. 이차방정식",
+"small": "74. 연속하는 수에 관한 문제는 어떻게 해결할까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"newQ": "① 연속하는 두 자연수의 곱이 132야. 작은 수를 x로 놓으면 큰 수는 어떻게 나타내?",
+"newQBy": "claude",
+"answer": "큰 수는 x+1이야.",
+"keys": [
+"x+1"
+],
+"answerBy": "claude"
+},
+{
+"id": "17gdy7f:t0L2",
+"big": "3. 이차방정식",
+"small": "74. 연속하는 수에 관한 문제는 어떻게 해결할까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"newQ": "② 연속하는 두 짝수의 곱이 80이야. 작은 짝수를 x로 놓고 식을 세워봐.",
+"newQBy": "claude",
+"answer": "연속하는 짝수는 2씩 차이 나니까 큰 짝수는 x+2야. 식은 x(x+2)=80이야.",
+"keys": [
+"큰 짝수는 x+2",
+"x(x+2)=80"
+],
+"answerBy": "claude"
+},
+{
+"id": "17gdy7f:t0L3",
+"big": "3. 이차방정식",
+"small": "74. 연속하는 수에 관한 문제는 어떻게 해결할까?",
+"kind": "low",
+"round": 2,
+"by": "claude",
+"newQ": "③ 연속하는 세 자연수에서 가장 큰 수의 제곱이 나머지 두 수의 제곱의 합과 같아. 가운데 수를 x로 놓고 식을 세워봐.",
+"newQBy": "claude",
+"answer": "세 수는 x-1, x, x+1이야. 식은 (x+1)²=(x-1)²+x²이야. 풀면 x²-4x=0이라 x=0 또는 x=4인데, 자연수여야 하니까 x=4, 세 수는 3, 4, 5야.",
+"keys": [
+"x-1, x, x+1",
+"(x+1)²=(x-1)²+x²",
+"3, 4, 5"
+],
+"answerBy": "claude"
+},
+{
+"id": "17gdy7f:t0H1",
+"big": "3. 이차방정식",
+"small": "74. 연속하는 수에 관한 문제는 어떻게 해결할까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "17gdy7f:t0H2",
+"big": "3. 이차방정식",
+"small": "74. 연속하는 수에 관한 문제는 어떻게 해결할까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "17gdy7f:t0H3",
+"big": "3. 이차방정식",
+"small": "74. 연속하는 수에 관한 문제는 어떻게 해결할까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "17gdy7f:qrecall",
+"big": "3. 이차방정식",
+"small": "74. 연속하는 수에 관한 문제는 어떻게 해결할까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "17gdy7f:qreason",
+"big": "3. 이차방정식",
+"small": "74. 연속하는 수에 관한 문제는 어떻게 해결할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "17gdy7f:qexample",
+"big": "3. 이차방정식",
+"small": "74. 연속하는 수에 관한 문제는 어떻게 해결할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"newQ": "연속하는 두 자연수의 곱이 132일 때, 식을 세워서 두 자연수를 구해봐.",
+"newQBy": "claude",
+"answer": "x(x+1)=132를 정리하면 x²+x-132=0, (x+12)(x-11)=0이야. 자연수여야 하니까 x=11, 두 수는 11과 12야.",
+"keys": [
+"x(x+1)=132",
+"11과 12"
+],
+"answerBy": "claude"
+},
+{
+"id": "17gdy7f:qerror",
+"big": "3. 이차방정식",
+"small": "74. 연속하는 수에 관한 문제는 어떻게 해결할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "구하는 수가 자연수라서 -12는 답이 될 수 없어. x=11만 맞고, 두 수는 11과 12야.",
+"keys": [
+"자연수 조건",
+"11과 12"
+],
+"answerBy": "claude"
+},
+{
+"id": "p06587:t0L1",
+"big": "3. 이차방정식",
+"small": "75. 간단한 공식을 적용하는 문제는 어떻게 해결할까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"newQ": "① n각형의 대각선의 개수는 n(n-3)/2개야. 대각선이 35개인 다각형을 구하려면 어떤 식을 세워?",
+"newQBy": "claude",
+"answer": "n(n-3)/2=35로 세워.",
+"keys": [
+"n(n-3)/2=35"
+],
+"answerBy": "claude"
+},
+{
+"id": "p06587:t0L2",
+"big": "3. 이차방정식",
+"small": "75. 간단한 공식을 적용하는 문제는 어떻게 해결할까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"newQ": "② n명이 서로 한 번씩 악수하면 악수 횟수는 n(n-1)/2번이야. 악수를 모두 45번 했을 때 몇 명인지 구하는 식을 세워봐.",
+"newQBy": "claude",
+"answer": "n(n-1)/2=45야. 정리하면 n²-n-90=0, (n-10)(n+9)=0이라서 10명이야.",
+"keys": [
+"n(n-1)/2=45",
+"10명"
+],
+"answerBy": "claude"
+},
+{
+"id": "p06587:t0L3",
+"big": "3. 이차방정식",
+"small": "75. 간단한 공식을 적용하는 문제는 어떻게 해결할까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "p06587:t0H1",
+"big": "3. 이차방정식",
+"small": "75. 간단한 공식을 적용하는 문제는 어떻게 해결할까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "p06587:t0H2",
+"big": "3. 이차방정식",
+"small": "75. 간단한 공식을 적용하는 문제는 어떻게 해결할까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "p06587:t0H3",
+"big": "3. 이차방정식",
+"small": "75. 간단한 공식을 적용하는 문제는 어떻게 해결할까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "p06587:qrecall",
+"big": "3. 이차방정식",
+"small": "75. 간단한 공식을 적용하는 문제는 어떻게 해결할까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "p06587:qreason",
+"big": "3. 이차방정식",
+"small": "75. 간단한 공식을 적용하는 문제는 어떻게 해결할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "n은 다각형의 변의 개수라서 3 이상의 자연수여야 해. 이차방정식을 풀면 그런 조건과 상관없이 음수 해도 나오니까, 조건에 맞지 않는 해는 버려야 해.",
+"keys": [
+"n은 3 이상의 자연수",
+"조건에 맞지 않는 해를 버린다"
+],
+"answerBy": "claude"
+},
+{
+"id": "p06587:qexample",
+"big": "3. 이차방정식",
+"small": "75. 간단한 공식을 적용하는 문제는 어떻게 해결할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"newQ": "n(n-3)/2=35를 풀어서 대각선이 35개인 다각형이 몇 각형인지 구해봐.",
+"newQBy": "claude",
+"answer": "양변에 2를 곱하면 n²-3n-70=0, (n-10)(n+7)=0이야. n은 자연수니까 n=10, 십각형이야.",
+"keys": [
+"n²-3n-70=0",
+"십각형"
+],
+"answerBy": "claude"
+},
+{
+"id": "p06587:qerror",
+"big": "3. 이차방정식",
+"small": "75. 간단한 공식을 적용하는 문제는 어떻게 해결할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "n은 다각형의 변의 개수라서 음수가 될 수 없어. n=10만 답이라서 십각형이야.",
+"keys": [
+"n은 3 이상의 자연수",
+"십각형"
+],
+"answerBy": "claude"
+},
+{
+"id": "1laojbm:t0L2",
+"big": "3. 이차방정식",
+"small": "76. 쏘아 올린 물체에 관한 문제는 어떻게 해결할까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "땅에 떨어지는 순간 높이는 0m야.",
+"keys": [
+"0m"
+],
+"answerBy": "claude"
+},
+{
+"id": "1laojbm:t0L3",
+"big": "3. 이차방정식",
+"small": "76. 쏘아 올린 물체에 관한 문제는 어떻게 해결할까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"newQ": "③ 초속 30m로 던진 공의 t초 후 높이가 (30t-5t²) m야. 높이가 40m가 되는 순간을 구하려면 어떤 식을 세워?",
+"newQBy": "claude",
+"answer": "30t-5t²=40으로 세워. 정리하면 t²-6t+8=0, (t-2)(t-4)=0이라서 2초 후와 4초 후야.",
+"keys": [
+"30t-5t²=40",
+"2초, 4초"
+],
+"answerBy": "claude"
+},
+{
+"id": "1laojbm:t0H1",
+"big": "3. 이차방정식",
+"small": "76. 쏘아 올린 물체에 관한 문제는 어떻게 해결할까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1laojbm:t0H2",
+"big": "3. 이차방정식",
+"small": "76. 쏘아 올린 물체에 관한 문제는 어떻게 해결할까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1laojbm:t0H3",
+"big": "3. 이차방정식",
+"small": "76. 쏘아 올린 물체에 관한 문제는 어떻게 해결할까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1laojbm:qrecall",
+"big": "3. 이차방정식",
+"small": "76. 쏘아 올린 물체에 관한 문제는 어떻게 해결할까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1laojbm:qreason",
+"big": "3. 이차방정식",
+"small": "76. 쏘아 올린 물체에 관한 문제는 어떻게 해결할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"newQ": "같은 공이 높이 40m를 지나는 시각이 2초와 4초 두 번 나와. 왜 두 번일까?",
+"newQBy": "claude",
+"answer": "공이 올라가면서 한 번(2초), 가장 높이 올라간 뒤 내려오면서 또 한 번(4초) 40m를 지나기 때문이야.",
+"keys": [
+"올라갈 때 한 번",
+"내려올 때 한 번"
+],
+"answerBy": "claude"
+},
+{
+"id": "1laojbm:qexample",
+"big": "3. 이차방정식",
+"small": "76. 쏘아 올린 물체에 관한 문제는 어떻게 해결할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "땅에 떨어질 때 높이는 0이니까 30t-5t²=0이야. 5t(6-t)=0이라서 t=0 또는 t=6인데, t=0은 던지는 순간이니까 6초 후에 떨어져.",
+"keys": [
+"30t-5t²=0",
+"t=0은 던지는 순간, 6초"
+],
+"answerBy": "claude"
+},
+{
+"id": "1laojbm:qerror",
+"big": "3. 이차방정식",
+"small": "76. 쏘아 올린 물체에 관한 문제는 어떻게 해결할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "t=0은 공을 던지는 순간이야. 그때도 높이가 0이라서 해로 나온 거야. 땅에 떨어지는 시각은 t=6, 6초 후야.",
+"keys": [
+"t=0은 던지는 순간",
+"6초 후"
+],
+"answerBy": "claude"
+},
+{
+"id": "1pbz0il:t0L1",
+"big": "3. 이차방정식",
+"small": "77. 도형의 넓이에 관한 문제는 어떻게 해결할까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"newQ": "① 가로가 세로보다 3cm 긴 직사각형의 넓이가 40cm²야. 세로를 x cm로 놓으면 가로는 어떻게 나타내?",
+"newQBy": "claude",
+"answer": "가로는 (x+3) cm야.",
+"keys": [
+"x+3"
+],
+"answerBy": "claude"
+},
+{
+"id": "1pbz0il:t0L2",
+"big": "3. 이차방정식",
+"small": "77. 도형의 넓이에 관한 문제는 어떻게 해결할까?",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"newQ": "② 같은 문제에서 넓이 조건으로 식을 세워봐.",
+"newQBy": "claude",
+"answer": "(가로)×(세로)=40이니까 x(x+3)=40이야.",
+"keys": [
+"x(x+3)=40"
+],
+"answerBy": "claude"
+},
+{
+"id": "1pbz0il:t0L3",
+"big": "3. 이차방정식",
+"small": "77. 도형의 넓이에 관한 문제는 어떻게 해결할까?",
+"kind": "low",
+"round": 2,
+"by": "claude",
+"newQ": "③ 가로 20m, 세로 15m인 땅에 폭이 x m로 일정한 길을 가로, 세로로 하나씩 냈더니 남은 땅의 넓이가 204m²야. 식을 어떻게 세워?",
+"newQBy": "claude",
+"answer": "길을 한쪽으로 모으면 남은 땅은 가로 (20-x) m, 세로 (15-x) m인 직사각형이야. 그래서 (20-x)(15-x)=204이고, 풀면 x=3 또는 x=32인데 x<15여야 하니까 3m야.",
+"keys": [
+"남은 땅을 한쪽으로 모은다",
+"(20-x)(15-x)=204",
+"x=3"
+],
+"answerBy": "claude"
+},
+{
+"id": "1pbz0il:t0H1",
+"big": "3. 이차방정식",
+"small": "77. 도형의 넓이에 관한 문제는 어떻게 해결할까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1pbz0il:t0H2",
+"big": "3. 이차방정식",
+"small": "77. 도형의 넓이에 관한 문제는 어떻게 해결할까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1pbz0il:t0H3",
+"big": "3. 이차방정식",
+"small": "77. 도형의 넓이에 관한 문제는 어떻게 해결할까?",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1pbz0il:qrecall",
+"big": "3. 이차방정식",
+"small": "77. 도형의 넓이에 관한 문제는 어떻게 해결할까?",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1pbz0il:qreason",
+"big": "3. 이차방정식",
+"small": "77. 도형의 넓이에 관한 문제는 어떻게 해결할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "길이는 0보다 커야 해서 음수는 실제 길이가 될 수 없어. 방정식은 그런 조건을 모르니까 음수 해도 나오고, 그건 버려야 해.",
+"keys": [
+"길이는 양수",
+"방정식은 조건을 모른다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1pbz0il:qexample",
+"big": "3. 이차방정식",
+"small": "77. 도형의 넓이에 관한 문제는 어떻게 해결할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"newQ": "같은 문제에서 x(x+3)=40을 풀어서 세로의 길이를 구해봐.",
+"newQBy": "claude",
+"answer": "x²+3x-40=0, (x+8)(x-5)=0이라서 x=-8 또는 x=5야. 길이는 양수니까 세로는 5cm야.",
+"keys": [
+"x²+3x-40=0",
+"5cm"
+],
+"answerBy": "claude"
+},
+{
+"id": "1pbz0il:qerror",
+"big": "3. 이차방정식",
+"small": "77. 도형의 넓이에 관한 문제는 어떻게 해결할까?",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "길이는 음수가 될 수 없어서 -8은 버려야 해. 세로는 5cm야.",
+"keys": [
+"길이는 양수",
+"5cm"
 ],
 "answerBy": "claude"
 }

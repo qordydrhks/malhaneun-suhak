@@ -811,7 +811,7 @@
           if(old.a || old.k.length) c.overwrite++;
           c.ans++; c.ops.push(function(){ setAns(it.id, na, nk); });
           // 모범 답이 새로 바뀌었으니 마스터가 다시 보도록 확인 표시를 푼다
-          if(keep && same && OK[it.id]){ c.ops.push(function(){ delete OK[it.id]; }); }
+          if(keep && (same || rec.reopen) && OK[it.id]){ c.ops.push(function(){ delete OK[it.id]; }); }   // reopen = 확인한 질문에 새로 모범 답을 붙였을 때 다시 보게
         }
       }
       if(code && typeof rec.ord === 'number' && !(keep && ORDER[code])){ (ordBy[code] = ordBy[code] || []).push({ id:it.id, ord:rec.ord }); }
