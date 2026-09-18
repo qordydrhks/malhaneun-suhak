@@ -43,15 +43,25 @@
   var PLAN = load(PLAN_KEY), EDITS = load(EDIT_KEY), SEEN = load(SEEN_KEY), ORDER = load(ORDER_KEY), ANS = load(ANS_KEY), ADDED = load(ADD_KEY);
   var BASEDONE = load(BASE_KEY);
   // Claude 가 정한 회차 {질문번호: 회차} — 코드에 실린 분류안에서 읽는다(저장 안 함)
+  var AI_OFF = {};   // Claude 가 겹쳐서 뺀 질문 {질문번호: true}
+  var AI_ANS = {};   // Claude 가 쓴 모범 답 {질문번호: 모범 답} — 마스터가 고치면 표시가 사라진다
   function aiRounds(){
     var out = {};
     (window.QR_BASE_PLANS || []).forEach(function(b){
-      ((b && b.data && b.data.items) || []).forEach(function(x){ if(x && x.by === 'claude' && x.round) out[x.id] = x.round; });
+      ((b && b.data && b.data.items) || []).forEach(function(x){
+        if(x && x.by === 'claude' && x.round) out[x.id] = x.round;
+        if(x && x.offBy === 'claude' && x.off) AI_OFF[x.id] = true;
+        if(x && x.answerBy === 'claude' && x.answer) AI_ANS[x.id] = x.answer;
+      });
     });
     return out;
   }
   var AI_R = aiRounds();
-  function isAi(qid, p){ return !!(AI_R[qid] && p && !p.off && p.r === AI_R[qid]); }
+  function isAi(qid, p){
+    if(!p) return false;
+    if(p.off) return !!AI_OFF[qid];              // Claude 가 뺀 것 — 마스터가 되살리면 표시가 사라진다
+    return !!(AI_R[qid] && p.r === AI_R[qid]);
+  }
   function newAddId(gradeId, bigName, smallName){
     var key; try{ key = ddqConceptKey(gradeId, bigName, smallName); }catch(e){ key = 'qr'; }
     var tail; try{ tail = ddqNewId('qa'); }catch(e){ tail = 'qa' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
@@ -285,6 +295,7 @@
     var an = ansOf(it.id), hasAns = !!(an.a || an.k.length);
     var btns = (!p.r && !p.off) ? '<span class="qr-unset" title="아직 회차를 안 골랐어요">미분류</span>'
       : (isAi(it.id, p) ? '<span class="qr-ai" title="Claude 가 정한 회차예요. 다른 번호를 누르면 마스터 선택으로 바뀌어요">AI</span>' : '');
+    if(p.off && isAi(it.id, p)) btns = '<span class="qr-ai" title="옆 질문과 겹쳐서 Claude 가 뺐어요. 「뺌」을 누르면 되살아나요">AI 뺌</span>';
     for(var r = 1; r <= ROUNDS; r++){
       btns += '<button data-qr="round" data-r="' + r + '"' + (p.r === r && !p.off ? ' class="on" title="한 번 더 누르면 미분류로"' : '') + '>' + r + '</button>';
     }
@@ -295,7 +306,9 @@
       +   (groupNo ? '<span class="qr-sim" title="같은 소단원 안에 비슷한 질문이 있어요">비슷 ' + groupNo + '</span>' : '')
       +   show(textOf(it))
       +   (hasAns
-            ? '<div class="qr-ans">' + (an.a ? '<span class="lb">모범 답</span>' + show(an.a) : '')
+            ? '<div class="qr-ans">' + (an.a ? '<span class="lb">모범 답</span>'
+                + (AI_ANS[it.id] && AI_ANS[it.id] === an.a ? '<span class="qr-ai" title="Claude 가 쓴 모범 답이에요. 고치면 표시가 사라져요" style="margin-right:5px">AI</span>' : '')
+                + show(an.a) : '')
               + (an.k.length ? '<div><span class="lb">꼭 말할 핵심</span><ul>' + an.k.map(function(k){ return '<li>' + show(k) + '</li>'; }).join('') + '</ul></div>' : '')
               + '</div>'
             : '')
@@ -390,7 +403,7 @@
             return '<option value="' + esc(g.id) + '"' + (g.id === QR.grade ? ' selected' : '') + '>' + esc(g.name) + '</option>'; }).join('') + '</select>'
       +   '<select data-qr="big">' + bigs.map(function(b, i){
             return '<option value="' + i + '"' + (i === QR.big ? ' selected' : '') + '>' + esc(b.name) + '</option>'; }).join('') + '</select>'
-      +   '<select data-qr="view">' + [['all','전체'],['todo','아직 안 본 소단원만'],['ai','AI가 정한 회차만'],['r0','미분류만'],['noans','모범 답 없는 것만'],['off','뺀 것만'],['r1','1회차만'],['r2','2회차만'],['r3','3회차만']].map(function(x){
+      +   '<select data-qr="view">' + [['all','전체'],['todo','아직 안 본 소단원만'],['ai','AI가 정한 것만(뺀 것 포함)'],['r0','미분류만'],['noans','모범 답 없는 것만'],['off','뺀 것만'],['r1','1회차만'],['r2','2회차만'],['r3','3회차만']].map(function(x){
             return '<option value="' + x[0] + '"' + (x[0] === QR.view ? ' selected' : '') + '>' + x[1] + '</option>'; }).join('') + '</select>'
       +   '<input data-qr="query" type="text" placeholder="질문 안에서 찾기" value="' + esc(QR.query) + '">'
       + '</div>'
@@ -781,7 +794,7 @@
         QR.grade = c.grade;
         QR.baseNote = '📥 <b>분류안을 넣었어요</b> (' + esc(c.grade) + ') — 회차 ' + c.round + ' · 고친 문장 ' + c.edit
           + ' · 모범 답 ' + c.ans + ' · 추가 질문 ' + c.added + ' · 빼기 ' + c.off
-          + '. 이미 적어 둔 것은 그대로 두었어요. 보기에서 「AI가 정한 회차만」을 고르면 Claude 가 정한 것만 볼 수 있어요.';
+          + '. 이미 적어 둔 것은 그대로 두었어요. 보기에서 「AI가 정한 것만」을 고르면 Claude 가 정한 것만 볼 수 있어요.';
       }
     });
   }
