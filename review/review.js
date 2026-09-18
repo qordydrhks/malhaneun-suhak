@@ -48,6 +48,7 @@
   function setOk(qid, on){ if(on) OK[qid] = true; else delete OK[qid]; save(OK_KEY, OK); }
   // Claude 가 정한 회차 {질문번호: 회차} — 코드에 실린 분류안에서 읽는다(저장 안 함)
   var AI_OFF = {};   // Claude 가 겹쳐서 뺀 질문 {질문번호: true}
+  var AI_Q = {};     // Claude 가 고친 질문 문장 {질문번호: 문장} — 마스터가 다시 고치면 표시가 사라진다
   var AI_ANS = {};   // Claude 가 쓴 모범 답 {질문번호: 모범 답} — 마스터가 고치면 표시가 사라진다
   function aiRounds(){
     var out = {};
@@ -56,6 +57,7 @@
         if(x && x.by === 'claude' && x.round) out[x.id] = x.round;
         if(x && x.offBy === 'claude' && x.off) AI_OFF[x.id] = true;
         if(x && x.answerBy === 'claude' && x.answer) AI_ANS[x.id] = x.answer;
+        if(x && x.newQBy === 'claude' && x.newQ) AI_Q[x.id] = x.newQ;
       });
     });
     return out;
@@ -318,6 +320,7 @@
       + '<span class="qr-kind k-' + it.kind + '">' + esc(kindLabel(it)) + '</span>'
       + '<div class="qr-q' + (edited ? ' edited' : '') + '" data-qr="text">'
       +   (groupNo ? '<span class="qr-sim" title="같은 소단원 안에 비슷한 질문이 있어요">비슷 ' + groupNo + '</span>' : '')
+      +   (AI_Q[it.id] && EDITS[it.id] === AI_Q[it.id] ? '<span class="qr-ai" title="Claude 가 고친 문장이에요" style="margin-right:5px">AI 고침</span>' : '')
       +   show(textOf(it))
       +   (hasAns
             ? '<div class="qr-ans">' + (an.a ? '<span class="lb">모범 답</span>'
@@ -792,12 +795,23 @@
         if(EDITS[it.id] != null) c.overwrite++;
         c.edit++; c.ops.push(function(){ EDITS[it.id] = rec.newQ.trim(); });
       }
+      // [v84.5] qWas = 바꾸기 전 고친 문장. 이 기기 문장이 그것과 같으면 새 문장으로(또는 newQ 가 없으면 원래 문장으로 되돌림)
+      if(keep && typeof rec.qWas === 'string' && EDITS[it.id] === rec.qWas){
+        var nq = (typeof rec.newQ === 'string' && rec.newQ.trim()) ? rec.newQ.trim() : null;
+        c.edit++; c.ops.push(function(){ if(nq) EDITS[it.id] = nq; else delete EDITS[it.id]; if(OK[it.id]) delete OK[it.id]; });
+      }
       if(fmt === 'qr-plan-2' && (rec.answer || (rec.keys && rec.keys.length))){
         var old = ansOf(it.id), na = String(rec.answer || '').trim(), nk = (rec.keys || []).map(String);
-        if(keep && (old.a || old.k.length)){ /* 이 기기에 적어 둔 모범 답은 그대로 */ }
+        // [v84.4] ansWas = 바꾸기 전 모범 답. 이 기기 답이 그것과 똑같으면(아무도 손 안 댐) 새 답으로 바꿔도 된다
+        //   — 마스터가 질문을 고쳐서 Claude 가 모범 답을 다시 쓴 경우
+        var was = rec.ansWas, same = !!(was && old.a === String(was.a || '').trim()
+          && old.k.join('\n') === (was.k || []).map(function(s){ return String(s).trim(); }).filter(Boolean).join('\n'));
+        if(keep && (old.a || old.k.length) && !same){ /* 이 기기에 적어 둔 모범 답은 그대로 */ }
         else if(old.a !== na || old.k.join('\n') !== nk.map(function(s){ return s.trim(); }).filter(Boolean).join('\n')){
           if(old.a || old.k.length) c.overwrite++;
           c.ans++; c.ops.push(function(){ setAns(it.id, na, nk); });
+          // 모범 답이 새로 바뀌었으니 마스터가 다시 보도록 확인 표시를 푼다
+          if(keep && same && OK[it.id]){ c.ops.push(function(){ delete OK[it.id]; }); }
         }
       }
       if(code && typeof rec.ord === 'number' && !(keep && ORDER[code])){ (ordBy[code] = ordBy[code] || []).push({ id:it.id, ord:rec.ord }); }
@@ -831,7 +845,7 @@
       BASEDONE[b.key] = new Date().toISOString(); save(BASE_KEY, BASEDONE);
       if(c.ops.length){
         QR.grade = c.grade;
-        QR.baseNote = '📥 <b>분류안을 넣었어요</b> (' + esc(c.grade) + ') — 회차 ' + c.round + ' · 고친 문장 ' + c.edit
+        QR.baseNote = (QR.baseNote ? QR.baseNote + '<br>' : '') + '📥 <b>분류안을 넣었어요</b> (' + esc(c.grade) + ') — 회차 ' + c.round + ' · 고친 문장 ' + c.edit
           + ' · 모범 답 ' + c.ans + ' · 추가 질문 ' + c.added + ' · 빼기 ' + c.off
           + '. 이미 적어 둔 것은 그대로 두었어요. 보기에서 「AI가 정한 것만」을 고르면 Claude 가 정한 것만 볼 수 있어요.';
       }

@@ -2,8 +2,10 @@
    마스터 견본(2026-09-17 내보내기) + Claude 분류안(1·6단원 미분류 55개, by:'claude')
    + 겹쳐서 Claude 가 뺀 9개(off:true, offBy:'claude') — 마스터 승인 2026-09-17.
    + Claude 모범 답 74개(answerBy:'claude') — 1·6단원에서 빼지 않았고 모범 답이 없던 질문 전부, 마스터 지시 2026-09-18.
+   [e] 초5-1 2~5단원 146문항 분류·겹침 빼기·모범 답(Claude, 마스터 지시 2026-09-18 "5학년 전 과정을 기준대로") + 6-04 기본① 되돌림(qWas) · 6-03 기본① 넓이 식 채움.
+   [d] 마스터 검토(2026-09-18 내보내기: 확인 57·고친 문장·빼기·회차·추가 1) 반영 + 질문을 고친 곳 모범 답 다시 씀(ansWas = 바꾸기 전 답).
    review.js 가 화면을 열 때 한 번만 넣는다(이 기기에 이미 적어 둔 것은 안 덮는다). key 를 바꾸면 다시 넣는다. */
-(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'e5-1_2026-09-18c', data:{
+(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'e5-1_2026-09-18e', data:{
 "format": "qr-plan-2",
 "grade": "e5-1",
 "rounds": 3,
@@ -52,9 +54,9 @@
 "big": "1. 자연수의 혼합 계산",
 "small": "01. 덧셈과 뺄셈 / 곱셈과 나눗셈이 섞인 식",
 "kind": "high",
-"newQ": "① 덧셈과 뺄셈이 섞인 식을 앞에서부터 차례로 계산하는 이유는 뭐야~?",
 "round": 2,
 "by": "claude",
+"newQ": "① 덧셈과 뺄셈이 섞인 식을 앞에서부터 차례로 계산하는 이유는 뭐야~?",
 "answer": "순서를 바꾸면 답이 달라질 수 있기 때문이야. 10-3+2를 앞에서부터 하면 9인데, 3+2를 먼저 하면 5가 돼서 틀려.",
 "keys": [
 "순서를 바꾸면 답이 달라진다",
@@ -67,9 +69,9 @@
 "big": "1. 자연수의 혼합 계산",
 "small": "01. 덧셈과 뺄셈 / 곱셈과 나눗셈이 섞인 식",
 "kind": "high",
-"newQ": "② 괄호가 있는 식과 없는 식의 계산 결과가 항상 다른가? 다르면 어떻게 달라지지?",
 "round": 2,
 "by": "claude",
+"newQ": "② 괄호가 있는 식과 없는 식의 계산 결과가 항상 다른가? 다르면 어떻게 달라지지?",
 "answer": "항상 다르지는 않아. (10-3)+2처럼 원래 순서대로 계산할 부분을 묶으면 답이 같고, 10-(3+2)처럼 계산 순서가 바뀌게 묶으면 답이 달라져.",
 "keys": [
 "항상 다르지는 않다",
@@ -161,20 +163,20 @@
 "big": "1. 자연수의 혼합 계산",
 "small": "02. 덧셈·뺄셈·곱셈(나눗셈)이 섞인 식",
 "kind": "high",
-"newQ": "① 덧셈·뺄셈·곱셈이 섞인 식이 주어졌을 때 계산 과정을 말해봐",
 "round": 1,
 "by": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"newQ": "① 덧셈·뺄셈·곱셈이 섞인 식이 주어졌을 때 계산 과정을 말해봐"
 },
 {
 "id": "1wpszzi:t0H2",
 "big": "1. 자연수의 혼합 계산",
 "small": "02. 덧셈·뺄셈·곱셈(나눗셈)이 섞인 식",
 "kind": "high",
-"newQ": "② 괄호를 가장 먼저 계산해야 하는 이유를 말해볼래?",
 "round": 2,
 "by": "claude",
+"newQ": "② 괄호를 가장 먼저 계산해야 하는 이유를 말해볼래?",
 "answer": "괄호는 '이 부분을 먼저 한 덩어리로 계산하라'는 약속이야. 그래서 괄호로 묶은 값을 먼저 구해야 식이 뜻하는 대로 계산돼.",
 "keys": [
 "괄호는 먼저 계산하라는 약속",
@@ -229,9 +231,9 @@
 "big": "1. 자연수의 혼합 계산",
 "small": "02. 덧셈·뺄셈·곱셈(나눗셈)이 섞인 식",
 "kind": "qset",
-"newQ": "친구가 4+2×3을 앞에서부터 4+2=6을 먼저 계산해서 6×3=18이라고 했어. 바르게 계산한 값과 차이는 얼마인지 설명해봐",
 "round": 2,
 "by": "claude",
+"newQ": "친구가 4+2×3을 앞에서부터 4+2=6을 먼저 계산해서 6×3=18이라고 했어. 바르게 계산한 값과 차이는 얼마인지 설명해봐",
 "answer": "곱셈을 먼저 해야 하니까 2×3=6, 4+6=10이 맞아. 친구 답 18과는 8만큼 차이 나.",
 "keys": [
 "곱셈을 먼저 하지 않았다",
@@ -361,7 +363,8 @@
 "answer": "다각형의 둘레는 다각형을 만들고 있는 모든 변(선)의 길이의 합이야.",
 "keys": [
 "모든 변의 길이의 합"
-]
+],
+"ok": true
 },
 {
 "id": "iz44bc:t0L2",
@@ -372,7 +375,8 @@
 "answer": "직사각형은 가로 두 개 세로 두 개로 이루어져 있으니까 둘레=(가로+세로)×2",
 "keys": [
 "(가로+세로)×2"
-]
+],
+"ok": true
 },
 {
 "id": "iz44bc:t0H1",
@@ -384,7 +388,8 @@
 "answer": "정다각형은 모든 변의 길이가 같으므로 (한 변의 길이×변의 개수)로 구할 수 있어",
 "keys": [
 "모든 변의 길이가 같다, 한 변의 길이×변의 개수"
-]
+],
+"ok": true
 },
 {
 "id": "iz44bc:t0H2",
@@ -398,7 +403,8 @@
 "가로 2개, 세로 2개",
 "((가로)+(세로))×2"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "iz44bc:qrecall",
@@ -412,7 +418,8 @@
 "변이 7개",
 "답은 28 cm"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "iz44bc:qreason",
@@ -426,7 +433,8 @@
 "모든 변의 길이가 같다",
 "같은 수를 여러 번 더하는 것은 곱셈"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "iz44bc:qexample",
@@ -439,7 +447,8 @@
 "변의 수를 바르게 센다",
 "(한 변의 길이)×(변의 수)로 구한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "iz44bc:qerror",
@@ -453,7 +462,8 @@
 "가로와 세로를 한 번씩만 더했다",
 "바른 답은 20 cm"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "jr7bdp:t0L1",
@@ -466,7 +476,8 @@
 "keys": [
 "한 변이 1 cm인 정사각형"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "jr7bdp:t0L2",
@@ -475,11 +486,18 @@
 "kind": "low",
 "round": 1,
 "by": "claude",
-"answer": "1 cm²짜리 정사각형이 몇 개 들어가는지 세는 거야.",
+"newQ": "② 정사각형이나 직사각형의 넓이를 구한다는 것은 무엇을 세는 것일까?",
+"answer": "정사각형이나 직사각형 안에 1 cm²짜리 정사각형이 몇 개 들어가는지 세는 거야.",
 "keys": [
-"1 cm²가 몇 개인지 센다"
+"1 cm²가 몇 개 들어가는지 센다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ansWas": {
+"a": "1 cm²짜리 정사각형이 몇 개 들어가는지 세는 거야.",
+"k": [
+"1 cm²가 몇 개인지 센다"
+]
+}
 },
 {
 "id": "jr7bdp:t0H1",
@@ -498,12 +516,13 @@
 "kind": "high",
 "round": 2,
 "by": "claude",
-"answer": "어떤 도형이든 1 cm²짜리 정사각형으로 빈틈없이 덮을 수 있어서, 그 개수가 넓이의 크기가 돼.",
+"newQ": "② 정사각형이나 직사각형의 넓이를 1 cm²가 몇 개인지로 나타낼 수 있는 이유를 말해 줘.",
+"answer": "모든 정사각형이나 직사각형은 1 cm²짜리 정사각형으로 빈틈없이 덮을 수 있어서, 그 개수가 넓이의 크기가 돼.",
 "keys": [
 "빈틈없이 덮을 수 있다",
 "개수로 크기를 나타낸다"
 ],
-"answerBy": "claude"
+"ok": true
 },
 {
 "id": "jr7bdp:qrecall",
@@ -517,7 +536,8 @@
 "5개씩 4줄",
 "20개(20 cm²)"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "jr7bdp:qreason",
@@ -526,6 +546,7 @@
 "kind": "qset",
 "round": 2,
 "by": "claude",
+"off": true,
 "answer": "모두 같은 기준으로 재야 누가 재도 같은 값이 나오고, 모양이 다른 도형끼리도 넓이를 비교할 수 있어.",
 "keys": [
 "같은 기준이면 값이 같다",
@@ -555,7 +576,8 @@
 "한 변이 1 cm인 정사각형의 넓이",
 "둘레(길이)와 넓이는 다르다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "hzg2ev:t0L1",
@@ -564,11 +586,19 @@
 "kind": "low",
 "round": 1,
 "by": "claude",
-"answer": "(가로)×(세로)로 구해.",
+"newQ": "① 직사각형과 정사각형의 넓이 구하는 식의 차이점은 뭐야?",
+"answer": "직사각형의 넓이는 (가로)×(세로), 정사각형의 넓이는 (한 변의 길이)×(한 변의 길이)야. 정사각형은 가로 세로의 길이가 같으니까 한변만 알면 넓이를 구할 수 있지만, 직사각형은 가로 세로의 길이가 다를 수 있으니까 가로 세로의 길이를 모두 알아야 구할 수 있어",
 "keys": [
-"(가로)×(세로)"
+"직사각형은 (가로)×(세로), 정사각형은 (한 변의 길이)×(한 변의 길이)",
+"정사각형은 가로와 세로가 같아서 한 변만 알면 된다",
+"직사각형은 가로와 세로를 모두 알아야 한다"
 ],
-"answerBy": "claude"
+"ansWas": {
+"a": "정사각형은 가로 세로의 길이가 같으니까 한변만 알면 넓이를 구할 수 있지만, 직사각형은 가로 세로의 길이가 다를 수 있으니까 가로 세로의 길이를 모두 알아야 구할 수 있어",
+"k": [
+"(가로)×(세로)"
+]
+}
 },
 {
 "id": "hzg2ev:t0L2",
@@ -577,6 +607,7 @@
 "kind": "low",
 "round": 1,
 "by": "claude",
+"off": true,
 "answer": "(한 변의 길이)×(한 변의 길이)로 구해.",
 "keys": [
 "(한 변의 길이)×(한 변의 길이)"
@@ -595,7 +626,8 @@
 "한 줄에 (가로)개",
 "그런 줄이 (세로)줄"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "hzg2ev:t0H2",
@@ -609,7 +641,8 @@
 "가로와 세로가 같은 직사각형",
 "(가로)×(세로)와 같다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "hzg2ev:qrecall",
@@ -623,7 +656,8 @@
 "8×5",
 "답은 40 cm²"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "hzg2ev:qreason",
@@ -647,7 +681,8 @@
 "(가로)×(세로)로 계산한다",
 "단위를 cm²로 쓴다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "hzg2ev:qerror",
@@ -661,7 +696,8 @@
 "더하지 말고 곱해야 한다",
 "바른 답은 24 cm²"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "r6ywyq:t0L1",
@@ -674,7 +710,14 @@
 "keys": [
 "10000 cm²"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ansWas": {
+"a": "1 m²는 10000 cm²야.",
+"k": [
+"10000 cm²"
+]
+},
+"qWas": "① 1 m²가 10000cm²와 같은 이유는?"
 },
 {
 "id": "r6ywyq:t0L2",
@@ -687,21 +730,23 @@
 "keys": [
 "1000000 m²"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "r6ywyq:t0H1",
 "big": "6. 다각형의 둘레와 넓이",
 "small": "04. 1 cm²보다 큰 넓이의 단위",
 "kind": "high",
-"round": 1,
-"by": "claude",
+"round": 2,
+"newQ": "① 1 m²가 10000 cm²인 이유를 설명해 봐.",
 "answer": "1 m는 100 cm라서, 한 변이 1 m인 정사각형은 100 cm×100 cm야. 그래서 10000 cm²가 돼.",
 "keys": [
 "1 m=100 cm",
 "100×100=10000"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "r6ywyq:t0H2",
@@ -710,12 +755,22 @@
 "kind": "high",
 "round": 2,
 "by": "claude",
-"answer": "넓이가 작으면 cm², 방이나 교실처럼 크면 m², 도시나 산처럼 아주 넓으면 km²를 써. 수가 너무 커지거나 작아지지 않게 고르는 거야.",
+"off": true,
+"newQ": "② 다음 세 넓이 단위 cm², m², km² 에 어울리는 넓이를 우리가 일상에서 볼 수 있는 것으로 예를 들어볼래?",
+"answer": "cm²는 공책이나 지우개처럼 작은 것, m²는 방이나 교실처럼 큰 것, km²는 도시나 섬처럼 아주 넓은 곳의 넓이에 어울려.",
 "keys": [
+"cm²는 작은 물건",
+"m²는 방·교실",
+"km²는 도시·섬처럼 아주 넓은 곳"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "넓이가 작으면 cm², 방이나 교실처럼 크면 m², 도시나 산처럼 아주 넓으면 km²를 써. 수가 너무 커지거나 작아지지 않게 고르는 거야.",
+"k": [
 "작으면 cm², 크면 m², 아주 넓으면 km²",
 "수가 알맞은 크기가 되게 고른다"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "r6ywyq:qrecall",
@@ -729,7 +784,8 @@
 "1 m²=10000 cm²",
 "답은 30000 cm²"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "r6ywyq:qreason",
@@ -753,7 +809,8 @@
 "m²처럼 알맞은 단위를 고른다",
 "(가로)×(세로)로 어림한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "r6ywyq:qerror",
@@ -762,12 +819,20 @@
 "kind": "qset",
 "round": 2,
 "by": "claude",
-"answer": "길이처럼 100배만 했어. 넓이는 가로도 100 cm, 세로도 100 cm라서 100×100=10000 cm²야.",
+"newQ": "친구가 1km²는 1000000cm²라고 했어. 뭐가 잘못됐을까?",
+"answer": "1000000은 cm²가 아니라 m²로 나타낸 값이야. 1 km²=1000000 m²이고 1 m²=10000 cm²라서, cm²로 나타내면 훨씬 커져서 10000000000 cm²야.",
 "keys": [
+"1 km²=1000000 m²",
+"m²와 cm²를 헷갈렸다"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "길이처럼 100배만 했어. 넓이는 가로도 100 cm, 세로도 100 cm라서 100×100=10000 cm²야.",
+"k": [
 "가로와 세로 모두 100 cm",
 "1 m²=10000 cm²"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "135vnrh:t0L1",
@@ -776,12 +841,20 @@
 "kind": "low",
 "round": 1,
 "by": "claude",
-"answer": "밑변은 평행한 두 변 중 하나이고, 높이는 두 밑변 사이의 거리야. 밑변에 수직으로 그은 선의 길이지.",
+"newQ": "① 평행사변형에서 밑변과 높이는 어떻게 정하지?",
+"answer": "평행한 두 변 중 하나를 밑변으로 정하고, 그 밑변과 마주 보는 변 사이의 거리를 높이로 정해. 높이는 밑변에 수직으로 그은 선분의 길이야.",
 "keys": [
+"평행한 두 변 중 하나가 밑변",
+"두 밑변 사이의 수직 거리가 높이"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "밑변은 평행한 두 변 중 하나이고, 높이는 두 밑변 사이의 거리야. 밑변에 수직으로 그은 선의 길이지.",
+"k": [
 "밑변은 평행한 두 변 중 하나",
 "높이는 두 밑변 사이의 수직 거리"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "135vnrh:t0L2",
@@ -794,7 +867,8 @@
 "keys": [
 "(밑변의 길이)×(높이)"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "135vnrh:t0H1",
@@ -809,7 +883,8 @@
 "가로=밑변, 세로=높이",
 "넓이는 변하지 않는다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "135vnrh:t0H2",
@@ -823,7 +898,8 @@
 "넓이는 밑변과 높이로 정해진다",
 "모양(기울기)은 넓이와 상관없다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "135vnrh:qrecall",
@@ -837,7 +913,8 @@
 "7×3",
 "답은 21 cm²"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "135vnrh:qreason",
@@ -861,7 +938,8 @@
 "(밑변의 길이)×(높이)로 계산한다",
 "높이는 밑변에 수직인 길이"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "135vnrh:qerror",
@@ -875,6 +953,25 @@
 "높이는 밑변에 수직인 길이",
 "바른 답은 40 cm²"
 ],
+"answerBy": "claude",
+"ok": true
+},
+{
+"id": "135vnrh:qamu6jikbe3b2y",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "05. 평행사변형의 넓이",
+"kind": "add",
+"round": 2,
+"q": "평행사변형의 넓이가 문제에서 주어지면 우리는 뭘 생각해야 할까?",
+"answer": "넓이=(밑변의 길이)×(높이)라는 식을 떠올려서 모르는 밑변이나 높이를 구해. 예를 들어 넓이가 24 cm²이고 밑변이 6 cm이면 높이는 24÷6=4(cm)야.",
+"keys": [
+"넓이 식 (밑변의 길이)×(높이)를 떠올린다",
+"모르는 밑변이나 높이를 나눗셈으로 구한다"
+],
+"ansWas": {
+"a": "",
+"k": []
+},
 "answerBy": "claude"
 },
 {
@@ -884,7 +981,8 @@
 "kind": "low",
 "round": 1,
 "newQ": "① 삼각형의 넓이 구하는 식을 얘기해봐.",
-"answer": "밑변×높이÷2"
+"answer": "밑변×높이÷2",
+"ok": true
 },
 {
 "id": "z646k9:t0L2",
@@ -892,13 +990,14 @@
 "small": "06. 삼각형의 넓이",
 "kind": "low",
 "round": 2,
-"newQ": "② 넓이 식에서 나누기 2 하는 이유가 뭐야?",
+"newQ": "② 넓이 식에서 나누기 2 하는 이유를 말해줄 수 있어?",
 "answer": "똑같은 삼각형 두 개를 붙이면 평행사변형이 되는데, 삼각형은 그 절반이라서 2로 나눠.",
 "keys": [
 "삼각형 두 개로 평행사변형",
 "삼각형은 그 절반"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "z646k9:t0H1",
@@ -911,7 +1010,8 @@
 "두 개 붙이면 평행사변형",
 "평행사변형의 반"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "z646k9:t0H2",
@@ -924,7 +1024,8 @@
 "넓이는 밑변과 높이로 정해진다",
 "모양이 달라도 넓이가 같다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "z646k9:qrecall",
@@ -937,7 +1038,8 @@
 "8×5÷2",
 "답은 20 cm²"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "z646k9:qreason",
@@ -958,7 +1060,8 @@
 "(밑변의 길이)×(높이)÷2로 계산한다",
 "2로 나누는 것을 잊지 않는다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "z646k9:qerror",
@@ -971,7 +1074,8 @@
 "2로 나누지 않았다",
 "바른 답은 12 cm²"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "z646k9:qamu57w6iw8dq9",
@@ -983,7 +1087,8 @@
 "keys": [
 "밑변과 마주보는 점, 밑변 또는 밑변의 연장선에 수직인 선을 긋는다."
 ],
-"q": "삼각형에서 밑변은 어떤 변이든 될 수 있어. 그럼 높이는 어떻게 생각해야 하는지 얘기해봐."
+"q": "삼각형에서 밑변은 어떤 변이든 될 수 있어. 그럼 높이는 어떻게 생각해야 하는지 얘기해봐.",
+"ok": true
 },
 {
 "id": "q1y70m:t0L1",
@@ -996,7 +1101,8 @@
 "keys": [
 "두 대각선의 길이"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "q1y70m:t0L2",
@@ -1010,7 +1116,8 @@
 "(한 대각선의 길이)×(다른 대각선의 길이)÷2",
 "둘러싼 직사각형의 절반"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "q1y70m:t0H1",
@@ -1023,7 +1130,8 @@
 "대각선을 가로·세로로 하는 직사각형",
 "마름모는 그 절반"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "q1y70m:t0H2",
@@ -1037,7 +1145,8 @@
 "넓이 공식을 이용한다",
 "다른 대각선의 길이를 구한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "q1y70m:qrecall",
@@ -1050,7 +1159,8 @@
 "12×5÷2",
 "답은 30 cm²"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "q1y70m:qreason",
@@ -1063,7 +1173,8 @@
 "둘러싼 직사각형",
 "그 넓이의 절반"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "q1y70m:qexample",
@@ -1076,7 +1187,8 @@
 "두 대각선을 곱한다",
 "2로 나눈다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "q1y70m:qerror",
@@ -1090,7 +1202,8 @@
 "한 대각선을 먼저 2로 나눴다",
 "나누는 순서를 바꿔도 답이 같다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "q1y70m:qamu5cv2ypubvl",
@@ -1102,36 +1215,39 @@
 "keys": [
 "네 변의 길이가 같다. 평행, 마주 보는 각이 같다. 대각선이 서로를 수직이등분 한다."
 ],
-"q": "마름모의 뜻과 특징을 얘기해봐."
+"q": "마름모의 뜻과 특징을 얘기해봐.",
+"ok": true
 },
 {
 "id": "1p3wdn9:t0L1",
 "big": "6. 다각형의 둘레와 넓이",
 "small": "08. 사다리꼴의 넓이",
 "kind": "low",
-"newQ": "① 사다리꼴의 넓이를 구하려면 뭘 알아야 구할 수 있어?",
 "round": 1,
 "by": "claude",
+"newQ": "① 사다리꼴의 넓이를 구하려면 뭘 알아야 구할 수 있어?",
 "answer": "윗변의 길이, 아랫변의 길이, 높이를 알아야 해.",
 "keys": [
 "윗변, 아랫변, 높이"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1p3wdn9:t0L2",
 "big": "6. 다각형의 둘레와 넓이",
 "small": "08. 사다리꼴의 넓이",
 "kind": "low",
-"newQ": "② 사다리꼴 구하는 식을 말하고 그렇게 계산하는 이유를 얘기해봐",
 "round": 2,
 "by": "claude",
+"newQ": "② 사다리꼴 구하는 식을 말하고 그렇게 계산하는 이유를 얘기해봐",
 "answer": "((윗변의 길이)+(아랫변의 길이))×(높이)÷2야. 똑같은 사다리꼴 두 개를 붙이면 밑변이 (윗변)+(아랫변)인 평행사변형이 되고, 사다리꼴은 그 절반이라서 2로 나눠.",
 "keys": [
 "((윗변의 길이)+(아랫변의 길이))×(높이)÷2",
 "사다리꼴 두 개로 평행사변형, 그 절반"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1p3wdn9:t0H1",
@@ -1145,7 +1261,8 @@
 "밑변이 (윗변)+(아랫변)인 평행사변형",
 "그 평행사변형의 반"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1p3wdn9:t0H2",
@@ -1169,7 +1286,8 @@
 "(5+9)×6÷2",
 "답은 42 cm²"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1p3wdn9:qreason",
@@ -1193,7 +1311,8 @@
 "윗변과 아랫변을 더한다",
 "높이를 곱하고 2로 나눈다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1p3wdn9:qerror",
@@ -1202,10 +1321,1790 @@
 "kind": "qset",
 "round": 2,
 "by": "claude",
-"answer": "윗변 4 cm를 빼먹었어. 윗변과 아랫변을 더해서 (4+8)×5÷2=30(cm²)이 맞아.",
+"newQ": "윗변 4cm, 아랫변 8cm, 높이 5cm인 사다리꼴의 넓이를 친구가 4×8×5÷2=160cm²라고 했어. 뭐가 잘못됐을까?",
+"answer": "윗변과 아랫변을 더해야 하는데 곱했어. (4+8)×5÷2=30(cm²)이 맞아.",
 "keys": [
+"윗변과 아랫변을 곱했다(더해야 한다)",
+"바른 답은 30 cm²"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "윗변 4 cm를 빼먹었어. 윗변과 아랫변을 더해서 (4+8)×5÷2=30(cm²)이 맞아.",
+"k": [
 "윗변을 더하지 않았다",
 "바른 답은 30 cm²"
+]
+}
+},
+{
+"id": "1cljfv2:t0L1",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "어떤 수를 나누어떨어지게 하는 수를 그 수의 약수라고 해. 예를 들어 6은 1, 2, 3, 6으로 나누면 나누어떨어지니까 1, 2, 3, 6이 6의 약수야.",
+"keys": [
+"그 수를 나누어떨어지게 하는 수"
+],
+"answerBy": "claude"
+},
+{
+"id": "1cljfv2:t0L2",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "어떤 수를 1배, 2배, 3배, … 한 수를 그 수의 배수라고 해.",
+"keys": [
+"1배, 2배, 3배, … 한 수"
+],
+"answerBy": "claude"
+},
+{
+"id": "1cljfv2:t0L3",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "6의 약수는 1, 2, 3, 6이고, 6의 배수는 6, 12, 18, 24, …야.",
+"keys": [
+"6의 약수 1, 2, 3, 6",
+"6의 배수 6, 12, 18, …"
+],
+"answerBy": "claude"
+},
+{
+"id": "1cljfv2:t0H1",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"answer": "6을 1, 2, 3, 6으로 나누면 나누어떨어지니까 이 수들이 6의 약수야.",
+"keys": [
+"6을 나누어떨어지게 하는 수"
+],
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1cljfv2:t0H2",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "어떤 수든 1로 나누면 나누어떨어지니까 1은 모든 수의 약수야. 또 자기 자신보다 큰 수로 나누면 나누어떨어지지 않으니까 가장 큰 약수는 자기 자신이야.",
+"keys": [
+"1로 나누면 항상 나누어떨어진다",
+"자기보다 큰 수로는 나누어떨어지지 않는다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1cljfv2:qrecall",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "1부터 차례로 그 수를 나누어 보고 나누어떨어지는 수를 모두 찾아. 곱해서 그 수가 되는 두 수를 짝지어 찾으면 빠뜨리지 않아. 예) 12=1×12, 2×6, 3×4 → 1, 2, 3, 4, 6, 12",
+"keys": [
+"1부터 차례로 나누어 본다",
+"곱이 그 수가 되는 짝을 찾는다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1cljfv2:qreason",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "약수는 그 수보다 클 수 없어서 개수가 정해져 있어. 하지만 배수는 1배, 2배, 3배, … 계속 곱할 수 있어서 끝이 없어.",
+"keys": [
+"약수는 그 수보다 크지 않다",
+"배수는 계속 곱할 수 있다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1cljfv2:qexample",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "예를 들어 8의 약수는 1, 2, 4, 8이고, 8의 배수는 8, 16, 24, …야.",
+"keys": [
+"약수를 빠짐없이 말한다",
+"배수를 차례로 말한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1cljfv2:qerror",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "12는 6을 나누어떨어지게 하는 수가 아니라 6을 2배 한 수야. 그래서 12는 6의 약수가 아니라 6의 배수야.",
+"keys": [
+"12는 6의 배수",
+"약수는 그 수를 나누어떨어지게 하는 수"
+],
+"answerBy": "claude"
+},
+{
+"id": "7s5g9f:t0L1",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "12는 2와 6의 배수야.",
+"keys": [
+"배수"
+],
+"answerBy": "claude"
+},
+{
+"id": "7s5g9f:t0L2",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "2와 6은 12의 약수야.",
+"keys": [
+"약수"
+],
+"answerBy": "claude"
+},
+{
+"id": "7s5g9f:t0H1",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"answer": "2×6=12에서 2와 6은 12의 약수이고, 12는 2와 6의 배수야.",
+"keys": [
+"곱하는 수는 약수",
+"곱은 배수"
+],
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "7s5g9f:t0H2",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "곱셈식 하나에서 곱하는 두 수는 곱의 약수이고, 곱은 두 수의 배수야. 그래서 '3은 12의 약수'이면 '12는 3의 배수'처럼 늘 짝으로 함께 말할 수 있어.",
+"keys": [
+"■가 ●의 약수이면 ●는 ■의 배수",
+"곱셈식 하나에서 함께 나온다"
+],
+"answerBy": "claude"
+},
+{
+"id": "7s5g9f:qrecall",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "6과 7은 42의 약수이고, 42는 6과 7의 배수야.",
+"keys": [
+"6과 7은 42의 약수",
+"42는 6과 7의 배수"
+],
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "7s5g9f:qreason",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "4×5=20이니까 20÷4=5, 20÷5=4로 나누어떨어져. 나누어떨어지게 하는 수가 약수니까 4와 5는 20의 약수야.",
+"keys": [
+"20÷4, 20÷5가 나누어떨어진다",
+"곱셈식을 나눗셈식으로 바꿀 수 있다"
+],
+"answerBy": "claude"
+},
+{
+"id": "7s5g9f:qexample",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "예를 들어 3×8=24에서 3과 8은 24의 약수이고, 24는 3과 8의 배수야.",
+"keys": [
+"곱하는 두 수는 약수",
+"곱은 배수"
+],
+"answerBy": "claude"
+},
+{
+"id": "7s5g9f:qerror",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "거꾸로 말했어. 3×5=15에서 15는 3의 배수이고, 3이 15의 약수야.",
+"keys": [
+"15는 3의 배수",
+"3이 15의 약수"
+],
+"answerBy": "claude"
+},
+{
+"id": "1puwoi5:t0L1",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "두 수의 공통된 약수를 공약수라고 해.",
+"keys": [
+"공약수"
+],
+"answerBy": "claude"
+},
+{
+"id": "1puwoi5:t0L2",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "공약수 중에서 가장 큰 수를 최대공약수라고 해.",
+"keys": [
+"최대공약수"
+],
+"answerBy": "claude"
+},
+{
+"id": "1puwoi5:t0H1",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"answer": "8의 약수는 1, 2, 4, 8이고 12의 약수는 1, 2, 3, 4, 6, 12야. 둘 다에 있는 1, 2, 4가 공약수이고, 그중 가장 큰 4가 최대공약수야.",
+"keys": [
+"각각의 약수를 구한다",
+"공통인 것이 공약수(1, 2, 4)",
+"가장 큰 것이 최대공약수(4)"
+],
+"answerBy": "claude"
+},
+{
+"id": "1puwoi5:t0H2",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "8=4×2, 12=4×3처럼 두 수는 모두 최대공약수 4를 여러 번 더한 수야. 그래서 4를 나누어떨어지게 하는 1, 2는 8과 12도 나누어떨어지게 해서 공약수가 돼.",
+"keys": [
+"두 수는 최대공약수의 배수",
+"최대공약수의 약수는 두 수도 나누어떨어지게 한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1puwoi5:qrecall",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "10의 약수는 1, 2, 5, 10이고 15의 약수는 1, 3, 5, 15야. 공약수는 1, 5이고 최대공약수는 5야.",
+"keys": [
+"공약수 1, 5",
+"최대공약수 5"
+],
+"answerBy": "claude"
+},
+{
+"id": "1puwoi5:qreason",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "8과 12는 모두 4의 배수라서, 4를 나누어떨어지게 하는 1과 2는 8과 12도 나누어떨어지게 해.",
+"keys": [
+"두 수는 4의 배수",
+"4의 약수는 두 수도 나누어떨어지게 한다"
+],
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1puwoi5:qexample",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "예를 들어 12와 18이면 12의 약수 1, 2, 3, 4, 6, 12와 18의 약수 1, 2, 3, 6, 9, 18에서 공약수는 1, 2, 3, 6이고 최대공약수는 6이야.",
+"keys": [
+"각 수의 약수를 구한다",
+"공통인 것 중 가장 큰 수가 최대공약수"
+],
+"answerBy": "claude"
+},
+{
+"id": "1puwoi5:qerror",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "공약수는 두 수 모두의 약수여야 해. 8은 12의 약수가 아니니까 빼야 해. 8과 12의 공약수는 1, 2, 4야.",
+"keys": [
+"두 수 모두의 약수여야 한다",
+"공약수는 1, 2, 4"
+],
+"answerBy": "claude"
+},
+{
+"id": "dljc18:t0L1",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "두 수를 여러 수의 곱으로 나타내 공통인 부분을 찾는 방법과, 두 수를 1이 아닌 공약수로 계속 나누는 방법이 있어.",
+"keys": [
+"여러 수의 곱으로 나타내기",
+"공약수로 나누기"
+],
+"answerBy": "claude"
+},
+{
+"id": "dljc18:t0L2",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "응, 두 수를 1이 아닌 공약수로 더 나눌 수 없을 때까지 나누고, 나눈 공약수들을 곱하면 최대공약수야.",
+"keys": [
+"공약수로 나눈다",
+"나눈 공약수들을 곱한다"
+],
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "dljc18:t0H1",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"answer": "예를 들어 12=2×2×3, 18=2×3×3으로 나타내면 두 곱셈식에 공통으로 들어 있는 2×3=6이 최대공약수야.",
+"keys": [
+"여러 수의 곱으로 나타낸다",
+"공통인 수들을 곱한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "dljc18:t0H2",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"answer": "두 수를 1이 아닌 공약수로 나누고, 나온 몫들을 또 공약수로 나누는 것을 더 나눌 수 없을 때까지 해. 그때까지 나눈 공약수들을 모두 곱하면 최대공약수야.",
+"keys": [
+"더 나눌 수 없을 때까지 나눈다",
+"나눈 공약수들을 곱한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "dljc18:qrecall",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "2로 나누면 9와 12, 3으로 나누면 3과 4가 돼. 더 나눌 수 없으니까 2×3=6이 최대공약수야.",
+"keys": [
+"2와 3으로 나눈다",
+"최대공약수 6"
+],
+"answerBy": "claude"
+},
+{
+"id": "dljc18:qreason",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "중간에 멈추면 아직 두 수에 공통으로 들어 있는 수가 남아 있어서 더 큰 공약수를 놓쳐. 끝까지 나눠야 공통인 수를 모두 곱할 수 있어.",
+"keys": [
+"멈추면 공통인 수가 남는다",
+"끝까지 나눠야 가장 큰 공약수"
+],
+"answerBy": "claude"
+},
+{
+"id": "dljc18:qexample",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "예를 들어 16과 24를 2로 나누면 8과 12, 또 2로 나누면 4와 6, 또 2로 나누면 2와 3이야. 2×2×2=8이 최대공약수야.",
+"keys": [
+"끝까지 공약수로 나눈다",
+"나눈 수들을 곱한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "dljc18:qerror",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "6과 9는 아직 공약수 3으로 나눌 수 있어서 멈추면 안 돼. 3으로 더 나누면 2와 3이 되고, 최대공약수는 2×3=6이야.",
+"keys": [
+"6과 9가 공약수 3을 가진다",
+"최대공약수는 6"
+],
+"answerBy": "claude"
+},
+{
+"id": "12i1qk9:t0L1",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "두 수의 공통된 배수를 공배수라고 해.",
+"keys": [
+"공배수"
+],
+"answerBy": "claude"
+},
+{
+"id": "12i1qk9:t0L2",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "공배수 중에서 가장 작은 수를 최소공배수라고 해.",
+"keys": [
+"최소공배수"
+],
+"answerBy": "claude"
+},
+{
+"id": "12i1qk9:t0H1",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"answer": "2의 배수는 2, 4, 6, 8, 10, 12, …이고 3의 배수는 3, 6, 9, 12, …야. 둘 다에 있는 6, 12, 18, …이 공배수이고, 가장 작은 6이 최소공배수야.",
+"keys": [
+"각각의 배수를 늘어놓는다",
+"공통인 것이 공배수",
+"가장 작은 것이 최소공배수(6)"
+],
+"answerBy": "claude"
+},
+{
+"id": "12i1qk9:t0H2",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "공배수는 끝없이 계속 커져서 가장 큰 수가 없어. 그래서 최대공배수는 구할 수 없고 최소공배수만 구해.",
+"keys": [
+"공배수는 끝없이 있다",
+"가장 큰 공배수는 없다"
+],
+"answerBy": "claude"
+},
+{
+"id": "12i1qk9:qrecall",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "6의 배수 6, 12, 18, 24, …와 8의 배수 8, 16, 24, …에서 공배수는 24, 48, 72, …이고 최소공배수는 24야.",
+"keys": [
+"공배수 24, 48, 72, …",
+"최소공배수 24"
+],
+"answerBy": "claude"
+},
+{
+"id": "12i1qk9:qreason",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "6과 8로 모두 나누어떨어지는 수 중 가장 작은 것이 24야. 그다음 공배수는 24를 한 번 더 더한 48, 72처럼 24씩 커져서, 공배수는 모두 24의 배수가 돼.",
+"keys": [
+"공배수는 24마다 나온다",
+"공배수는 최소공배수의 배수"
+],
+"answerBy": "claude"
+},
+{
+"id": "12i1qk9:qexample",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "예를 들어 4와 10이면 4의 배수 4, 8, 12, 16, 20, …와 10의 배수 10, 20, …에서 공배수는 20, 40, …이고 최소공배수는 20이야.",
+"keys": [
+"각 수의 배수를 늘어놓는다",
+"공통인 것 중 가장 작은 수가 최소공배수"
+],
+"answerBy": "claude"
+},
+{
+"id": "12i1qk9:qerror",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "두 수를 곱하면 공배수는 되지만 가장 작은 공배수가 아닐 수 있어. 4의 배수 4, 8, 12와 6의 배수 6, 12에서 12가 먼저 나오니까 최소공배수는 12야.",
+"keys": [
+"곱은 공배수지만 가장 작지 않을 수 있다",
+"최소공배수는 12"
+],
+"answerBy": "claude"
+},
+{
+"id": "pdtpr5:t0L1",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "두 수를 여러 수의 곱으로 나타내는 방법과, 공약수로 나눈 뒤 나눈 수와 남은 몫을 모두 곱하는 방법이 있어.",
+"keys": [
+"여러 수의 곱으로 나타내기",
+"공약수로 나눈 수와 몫을 모두 곱하기"
+],
+"answerBy": "claude"
+},
+{
+"id": "pdtpr5:t0L2",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "응, 공약수로 나눈 다음 나눈 공약수들과 마지막 몫을 모두 곱하면 최소공배수야.",
+"keys": [
+"공약수로 나눈다",
+"나눈 수와 몫을 모두 곱한다"
+],
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "pdtpr5:t0H1",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"answer": "예를 들어 12=2×2×3, 18=2×3×3으로 나타내면, 공통인 2×3에 남은 2와 3을 곱해서 2×3×2×3=36이 최소공배수야.",
+"keys": [
+"여러 수의 곱으로 나타낸다",
+"공통인 부분과 남은 수를 모두 곱한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "pdtpr5:t0H2",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"answer": "두 수를 1이 아닌 공약수로 더 나눌 수 없을 때까지 나눠. 그다음 나눈 공약수들과 마지막 몫을 모두 곱하면 최소공배수야.",
+"keys": [
+"끝까지 공약수로 나눈다",
+"나눈 수와 마지막 몫을 모두 곱한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "pdtpr5:qrecall",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "5로 나누면 2와 3이 돼. 5×2×3=30이 최소공배수야.",
+"keys": [
+"5로 나눈다",
+"최소공배수 30"
+],
+"answerBy": "claude"
+},
+{
+"id": "pdtpr5:qreason",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "나눈 공약수들은 두 수에 공통으로 들어 있는 부분이고, 마지막 몫은 각 수에만 있는 부분이야. 두 수 모두의 배수가 되려면 둘 다 들어가야 하니까 모두 곱해. 예) 8=4×2, 12=4×3 → 4×2×3=24",
+"keys": [
+"나눈 수는 공통 부분, 몫은 각자의 부분",
+"모두 들어가야 두 수의 배수가 된다"
+],
+"answerBy": "claude"
+},
+{
+"id": "pdtpr5:qexample",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "예를 들어 6과 9를 3으로 나누면 2와 3이야. 3×2×3=18이 최소공배수야.",
+"keys": [
+"공약수로 나눈다",
+"나눈 수와 몫을 모두 곱한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "pdtpr5:qerror",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "4는 최대공약수야. 최소공배수는 나눈 수 4와 몫 2, 3을 모두 곱한 4×2×3=24야.",
+"keys": [
+"4는 최대공약수",
+"몫까지 곱해야 한다(24)"
+],
+"answerBy": "claude"
+},
+{
+"id": "1nhkkt4:t0L1",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "탁자 수가 늘어나면 의자 수도 일정한 규칙에 따라 함께 늘어나.",
+"keys": [
+"함께 늘어난다",
+"일정한 규칙이 있다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1nhkkt4:t0L2",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "두 양을 표로 나란히 적어 보면, 한쪽이 1씩 늘 때 다른 쪽이 얼마씩 늘어나는지(변하는 부분)와 늘 그대로인 부분(변하지 않는 부분)을 찾을 수 있어.",
+"keys": [
+"표로 나란히 적는다",
+"늘어나는 양과 그대로인 부분을 본다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1nhkkt4:t0H1",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"answer": "탁자 수가 정해지면 의자 수가 하나로 정해져. 이렇게 한 양이 변할 때 다른 양도 따라서 정해지는 관계를 대응 관계라고 해.",
+"keys": [
+"한 양이 정해지면 다른 양이 하나로 정해진다",
+"대응 관계"
+],
+"answerBy": "claude"
+},
+{
+"id": "1nhkkt4:t0H2",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "두 양을 표로 짝지어 적고, 한 양이 1씩 늘 때 다른 양이 얼마씩 변하는지 찾아.",
+"keys": [
+"표로 짝지어 적는다",
+"늘어나는 규칙을 찾는다"
+],
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1nhkkt4:qrecall",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "탁자 1개에 의자가 4개니까 탁자 5개면 5×4=20개야.",
+"keys": [
+"(탁자 수)×4",
+"20개"
+],
+"answerBy": "claude"
+},
+{
+"id": "1nhkkt4:qreason",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "짝지어 적으면 한 양이 1씩 늘 때 다른 양이 얼마씩 늘어나는지 한눈에 보여서, 두 양 사이의 규칙을 쉽게 찾을 수 있어.",
+"keys": [
+"짝이 한눈에 보인다",
+"늘어나는 양이 보인다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1nhkkt4:qexample",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "예를 들어 강아지 수와 다리 수는, 강아지가 1마리, 2마리, 3마리로 늘면 다리는 4개, 8개, 12개로 4개씩 늘어나.",
+"keys": [
+"한 양이 늘면 다른 양이 규칙적으로 변한다",
+"두 양을 짝지어 말한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1nhkkt4:qerror",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "탁자 3개면 의자는 3×4=12개여야 해. 8개는 탁자 2개일 때의 의자 수야.",
+"keys": [
+"(탁자 수)×4",
+"12개"
+],
+"answerBy": "claude"
+},
+{
+"id": "1nz6994:t0L1",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "자동차 1대에 바퀴가 4개니까 (자동차 수)×4=(바퀴 수)로 나타내.",
+"keys": [
+"(자동차 수)×4=(바퀴 수)"
+],
+"answerBy": "claude"
+},
+{
+"id": "1nz6994:t0L2",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "○, △, □ 같은 기호를 써서 두 양을 나타내.",
+"keys": [
+"○, △ 같은 기호"
+],
+"answerBy": "claude"
+},
+{
+"id": "1nz6994:t0H1",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "곱셈과 나눗셈은 서로 거꾸로 된 계산이라서, (자동차 수)×4=(바퀴 수)는 (바퀴 수)÷4=(자동차 수)로도 나타낼 수 있어.",
+"keys": [
+"곱셈과 나눗셈은 거꾸로 된 관계",
+"같은 관계를 두 식으로 나타낸다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1nz6994:t0H2",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "두 양을 긴 말 대신 짧은 기호로 쓸 수 있어서, 식을 간단하고 알아보기 쉽게 나타낼 수 있어.",
+"keys": [
+"간단하게 쓸 수 있다",
+"알아보기 쉽다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1nz6994:qrecall",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "지우개 1개가 300원이니까 ○×300=△야. △÷300=○로 나타내도 돼.",
+"keys": [
+"○×300=△"
+],
+"answerBy": "claude"
+},
+{
+"id": "1nz6994:qreason",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "자동차 1대마다 바퀴가 4개씩 붙어 있어서, 자동차가 2배, 3배로 많아지면 바퀴 4개짜리 묶음도 2배, 3배가 돼.",
+"keys": [
+"자동차 1대마다 바퀴 4개",
+"곱셈 관계라서 함께 몇 배가 된다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1nz6994:qexample",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "예를 들어 오리 수를 ○, 오리 다리 수를 △라고 하면 ○×2=△야.",
+"keys": [
+"두 양을 기호로 정한다",
+"대응 관계를 식으로 쓴다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1nz6994:qerror",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "자동차가 1대 늘 때 바퀴는 4개씩 늘어나니까 더하기가 아니라 곱하기야. △=○×4가 맞아. △=○+4이면 자동차 2대일 때 바퀴가 6개가 돼서 틀려.",
+"keys": [
+"더하기가 아니라 곱하기",
+"△=○×4"
+],
+"answerBy": "claude"
+},
+{
+"id": "1wph6x6:t0L1",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "응, 세발자전거 수와 바퀴 수, 오징어 수와 다리 수처럼 한 양이 정해지면 다른 양이 정해지는 것들이 있어.",
+"keys": [
+"생활 속 두 양의 예",
+"한 양이 정해지면 다른 양이 정해진다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1wph6x6:t0L2",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "응, 두 양을 ○, △로 정하면 ○×3=△처럼 식으로 나타낼 수 있어.",
+"keys": [
+"기호로 정한다",
+"식으로 나타낸다"
+],
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1wph6x6:t0H1",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"answer": "먼저 서로 관계있는 두 양을 찾고, 표로 짝지어 적어 규칙을 찾아. 그다음 두 양을 ○, △로 정해서 ○×3=△처럼 식으로 나타내.",
+"keys": [
+"관계있는 두 양을 찾는다",
+"표로 규칙을 찾는다",
+"기호로 식을 쓴다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1wph6x6:t0H2",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "식을 알면 표에 없는 큰 수를 넣어도 바로 계산할 수 있어서 앞으로 어떻게 될지 알 수 있어. 예) ○×3=△이면 세발자전거가 20대일 때 바퀴는 60개야.",
+"keys": [
+"어떤 수든 넣어 계산할 수 있다",
+"규칙이 계속 이어진다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1wph6x6:qrecall",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "사각형 하나에 성냥개비가 4개씩이니까 ○×4=△야.",
+"keys": [
+"○×4=△"
+],
+"answerBy": "claude"
+},
+{
+"id": "1wph6x6:qreason",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "삼각형이 1개일 때 3개, 2개일 때 6개, 3개일 때 9개야. 변을 함께 쓰지 않으니까 삼각형을 하나 새로 만들 때마다 변 3개가 모두 새로 필요해.",
+"keys": [
+"3개, 6개, 9개",
+"변을 함께 쓰지 않아 3개씩 새로 필요"
+],
+"answerBy": "claude"
+},
+{
+"id": "1wph6x6:qexample",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "예를 들어 필통 수를 ○, 연필 수를 △라고 하고 필통마다 연필이 5자루씩이면 ○×5=△야.",
+"keys": [
+"생활 속 두 양을 정한다",
+"식으로 나타낸다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1wph6x6:qerror",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "세발자전거는 바퀴가 3개라서 △=○×3이어야 해.",
+"keys": [
+"세발자전거 바퀴는 3개",
+"△=○×3"
+],
+"answerBy": "claude"
+},
+{
+"id": "1gmtybn:t0L1",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "셋 다 크기가 같아.",
+"keys": [
+"크기가 같다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1gmtybn:t0L2",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "분모와 분자에 0이 아닌 같은 수를 곱하면 크기가 같은 분수가 돼.",
+"keys": [
+"크기가 같다",
+"0이 아닌 같은 수"
+],
+"answerBy": "claude"
+},
+{
+"id": "1gmtybn:t0L3",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "분모와 분자를 0이 아닌 같은 수로 나누어도 크기가 같은 분수가 돼.",
+"keys": [
+"크기가 같다",
+"같은 수로 나눈다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1gmtybn:t0H1",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "전체를 더 잘게 나누면 조각 수는 늘지만 한 조각이 그만큼 작아져. 예를 들어 1/3의 조각을 하나씩 반으로 나누면 2/6이 되는데, 색칠한 양은 그대로라서 크기가 같아.",
+"keys": [
+"더 잘게 나누면 조각이 작아지고 개수가 늘어난다",
+"색칠한 양은 그대로"
+],
+"answerBy": "claude"
+},
+{
+"id": "1gmtybn:t0H2",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "분모와 분자에 같은 수를 곱하면 한 조각은 그만큼 작아지고 조각 수는 그만큼 많아져서 전체 크기는 그대로야.",
+"keys": [
+"조각이 작아지는 만큼 개수가 늘어난다"
+],
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1gmtybn:qrecall",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "분자 2×3=6, 분모 5×3=15니까 6/15야.",
+"keys": [
+"분모와 분자에 똑같이 3을 곱한다",
+"6/15"
+],
+"answerBy": "claude"
+},
+{
+"id": "1gmtybn:qreason",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "조각을 잘게 나누는 만큼 조각 수도 같이 늘어나서 전체 양은 변하지 않아.",
+"keys": [
+"조각 크기와 개수가 함께 바뀐다"
+],
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1gmtybn:qexample",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "예를 들어 1/4의 분모와 분자에 2를 곱하면 2/8이야.",
+"keys": [
+"분모와 분자에 같은 수를 곱한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1gmtybn:qerror",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "분모와 분자에 같은 수를 곱해야 해. 서로 다른 수를 곱하면 크기가 달라져. 3/6은 1/2과 같아서 1/3과 크기가 달라. 둘 다 2를 곱하면 2/6이야.",
+"keys": [
+"같은 수를 곱해야 한다",
+"3/6은 1/3과 크기가 다르다"
+],
+"answerBy": "claude"
+},
+{
+"id": "g97c6k:t0L1",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "분모와 분자를 그 공약수로 나누어 간단히 하는 것을 약분한다고 해.",
+"keys": [
+"분모와 분자를 공약수로 나눈다",
+"간단히 한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "g97c6k:t0L2",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "분모와 분자의 공약수가 1뿐인 분수를 기약분수라고 해.",
+"keys": [
+"분모와 분자의 공약수가 1뿐"
+],
+"answerBy": "claude"
+},
+{
+"id": "g97c6k:t0H1",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"answer": "예를 들어 6/8의 분모와 분자를 공약수 2로 나누면 3/4이 돼. 크기는 그대로이고 더 간단해져.",
+"keys": [
+"공약수로 나눈다",
+"크기는 그대로"
+],
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "g97c6k:t0H2",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "최대공약수는 분모와 분자에 공통으로 들어 있는 수를 한꺼번에 다 모은 수라서, 그걸로 나누면 남은 분모와 분자의 공약수는 1밖에 없어. 그래서 한 번에 기약분수가 돼.",
+"keys": [
+"공통인 수를 한꺼번에 나눈다",
+"남은 공약수가 1뿐"
+],
+"answerBy": "claude"
+},
+{
+"id": "g97c6k:qrecall",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "10과 15의 최대공약수 5로 나누면 2/3이야.",
+"keys": [
+"5로 나눈다",
+"2/3"
+],
+"answerBy": "claude"
+},
+{
+"id": "g97c6k:qreason",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "최대공약수로 나누면 분모와 분자에 공통인 수가 남지 않아서 더 약분할 수 없어.",
+"keys": [
+"공통인 수가 남지 않는다"
+],
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "g97c6k:qexample",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "예를 들어 12/18을 2로 나누면 6/9, 3으로 나누면 4/6이고, 최대공약수 6으로 나누면 기약분수 2/3이야.",
+"keys": [
+"공약수로 나눈다",
+"최대공약수로 나누면 기약분수"
+],
+"answerBy": "claude"
+},
+{
+"id": "g97c6k:qerror",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "5는 8과 12의 공약수가 아니라서 나누어떨어지지 않아. 공약수 2나 4로 나눠야 하고, 4로 나누면 2/3이야.",
+"keys": [
+"5는 공약수가 아니다",
+"공약수로 나눠야 한다(2/3)"
+],
+"answerBy": "claude"
+},
+{
+"id": "1c6uo93:t0L1",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "분모가 다른 분수들의 크기는 바꾸지 않고 분모를 같게 만드는 것을 통분한다고 해.",
+"keys": [
+"크기는 그대로",
+"분모를 같게 한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1c6uo93:t0L2",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "두 분모의 공배수가 공통분모가 될 수 있어.",
+"keys": [
+"두 분모의 공배수"
+],
+"answerBy": "claude"
+},
+{
+"id": "1c6uo93:t0H1",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"answer": "두 분모를 곱한 수나 두 분모의 최소공배수를 공통분모로 정하고, 각 분수의 분모와 분자에 같은 수를 곱해서 분모를 맞춰. 예) 1/4과 1/6을 분모의 곱 24로 하면 6/24, 4/24이고, 최소공배수 12로 하면 3/12, 2/12야.",
+"keys": [
+"분모의 곱 또는 최소공배수를 공통분모로",
+"분모와 분자에 같은 수를 곱한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1c6uo93:t0H2",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "공통분모가 가장 작아서 수가 작고 계산이 쉬워. 나중에 약분할 일도 줄어.",
+"keys": [
+"수가 작아 계산이 쉽다",
+"약분할 일이 줄어든다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1c6uo93:qrecall",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "공통분모를 12로 하면 2/3=8/12, 3/4=9/12야.",
+"keys": [
+"공통분모 12",
+"8/12, 9/12"
+],
+"answerBy": "claude"
+},
+{
+"id": "1c6uo93:qreason",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "2/3=8/12, 1/4=3/12야. 분모와 분자에 같은 수를 곱해서 크기는 그대로이고, 둘 다 전체를 12조각으로 나눈 것이라 한 조각의 크기가 같아져.",
+"keys": [
+"같은 수를 곱해 크기는 그대로",
+"둘 다 12조각이라 한 조각이 같아진다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1c6uo93:qexample",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "공통분모를 20으로 하면 1/4=5/20, 2/5=8/20이야.",
+"keys": [
+"공통분모 20",
+"5/20, 8/20"
+],
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1c6uo93:qerror",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "분모에 곱한 수를 분자에도 똑같이 곱해야 해. 1/2=3/6, 1/3=2/6이야.",
+"keys": [
+"분자에도 같은 수를 곱해야 한다",
+"3/6, 2/6"
+],
+"answerBy": "claude"
+},
+{
+"id": "m3f8ul:t0L1",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "두 분수를 통분해서 분모를 같게 만든 다음 분자를 비교해.",
+"keys": [
+"통분한다",
+"분자를 비교한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "m3f8ul:t0L2",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "분모가 같아졌으니까 분자를 비교해. 분자가 클수록 큰 분수야.",
+"keys": [
+"분자를 비교한다"
+],
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "m3f8ul:t0H1",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "분모가 다르면 한 조각의 크기가 달라서 조각 수만으로 비교할 수 없어. 통분하면 한 조각의 크기가 같아지니까 조각 수인 분자만 비교하면 돼.",
+"keys": [
+"분모가 다르면 한 조각 크기가 다르다",
+"통분하면 한 조각 크기가 같아진다"
+],
+"answerBy": "claude"
+},
+{
+"id": "m3f8ul:t0H2",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "두 분수씩 차례로 통분해서 비교하거나, 세 분수를 한꺼번에 통분해서 분자를 비교해.",
+"keys": [
+"두 개씩 차례로 비교한다",
+"한꺼번에 통분해 비교한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "m3f8ul:qrecall",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "1/3=4/12, 1/4=3/12이니까 1/3이 더 커.",
+"keys": [
+"4/12와 3/12",
+"1/3이 더 크다"
+],
+"answerBy": "claude"
+},
+{
+"id": "m3f8ul:qreason",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "분모가 같으면 한 조각의 크기가 같으니까 조각 수가 많을수록 커.",
+"keys": [
+"한 조각 크기가 같다"
+],
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "m3f8ul:qexample",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "예를 들어 3/4과 5/6은 9/12와 10/12이니까 5/6이 더 커.",
+"keys": [
+"통분한다",
+"분자를 비교한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "m3f8ul:qerror",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "분모가 달라서 분자만 보면 안 돼. 통분하면 2/3=10/15, 3/5=9/15라서 2/3이 더 커.",
+"keys": [
+"분모가 다르면 분자만 비교할 수 없다",
+"2/3이 더 크다"
+],
+"answerBy": "claude"
+},
+{
+"id": "96x5jg:t0L1",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "분수를 소수로 바꾸거나 소수를 분수로 바꾸어서, 같은 모양으로 만든 다음 비교해.",
+"keys": [
+"분수나 소수 한 가지로 바꾼다",
+"같은 모양으로 비교한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "96x5jg:t0L2",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "응, 분모가 10, 100인 분수는 소수로, 소수는 분모가 10, 100인 분수로 바꿀 수 있어.",
+"keys": [
+"분수 ↔ 소수"
+],
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "96x5jg:t0H1",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"answer": "예를 들어 3/5와 0.7을 비교할 때 3/5=6/10=0.6으로 바꾸면 0.6<0.7이야.",
+"keys": [
+"한 가지 모양으로 바꾼다"
+],
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "96x5jg:t0H2",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "소수 첫째 자리는 1/10(=0.1)이 몇 개인지, 둘째 자리는 1/100(=0.01)이 몇 개인지를 나타내. 그래서 분모가 10, 100인 분수는 분자를 그 자리에 맞춰 쓰기만 하면 돼.",
+"keys": [
+"0.1=1/10, 0.01=1/100",
+"분자를 그 자리에 쓴다"
+],
+"answerBy": "claude"
+},
+{
+"id": "96x5jg:qrecall",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "7/10=0.7이고 0.7<0.85니까 0.85가 더 커.",
+"keys": [
+"7/10=0.7",
+"0.85가 더 크다"
+],
+"answerBy": "claude"
+},
+{
+"id": "96x5jg:qreason",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "0.1이 1/10, 0.01이 1/100이라서 분자를 그 자리에 쓰면 돼.",
+"keys": [
+"0.1=1/10, 0.01=1/100"
+],
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "96x5jg:qexample",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "예를 들어 3/10=0.3이고, 0.25보다 커.",
+"keys": [
+"분모가 10, 100인 분수를 소수로 바꾼다",
+"소수끼리 비교한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "96x5jg:qerror",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "7/100은 0.01이 7개라서 0.07이야. 0.7은 7/10이야.",
+"keys": [
+"7/100=0.07",
+"0.7=7/10"
+],
+"answerBy": "claude"
+},
+{
+"id": "u9z3u:t0L1",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "통분해서 분모를 같게 만들어야 해.",
+"keys": [
+"통분한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "u9z3u:t0L2",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "통분하면 한 조각의 크기가 같아져서 분자끼리만 더하면 돼.",
+"keys": [
+"한 조각 크기가 같아진다",
+"분자끼리 더한다"
+],
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "u9z3u:t0H1",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"answer": "두 분모의 공통분모로 통분한 다음, 분모는 그대로 두고 분자끼리 더해. 결과를 약분할 수 있으면 약분해. 예) 1/2+1/3=3/6+2/6=5/6",
+"keys": [
+"통분한다",
+"분자끼리 더한다",
+"약분할 수 있으면 약분한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "u9z3u:t0H2",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "분모의 곱으로 통분하면 공통분모를 찾기 쉽지만 수가 커져서 약분해야 할 때가 많아. 최소공배수로 통분하면 수가 작아서 계산이 간단해.",
+"keys": [
+"분모의 곱은 찾기 쉽지만 수가 크다",
+"최소공배수는 수가 작아 간단하다"
+],
+"answerBy": "claude"
+},
+{
+"id": "u9z3u:qrecall",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "1/3=2/6이니까 2/6+1/6=3/6=1/2이야.",
+"keys": [
+"2/6+1/6",
+"3/6=1/2"
+],
+"answerBy": "claude"
+},
+{
+"id": "u9z3u:qreason",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "통분하면 한 조각의 크기가 같아져. 분모는 한 조각의 크기를, 분자는 조각 수를 나타내니까 조각 수인 분자만 더하고 분모는 그대로 둬.",
+"keys": [
+"분모는 조각 크기, 분자는 조각 수",
+"조각 크기는 그대로"
+],
+"answerBy": "claude"
+},
+{
+"id": "u9z3u:qexample",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "예를 들어 1/4+2/3=3/12+8/12=11/12야.",
+"keys": [
+"통분한다",
+"분자끼리 더한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "u9z3u:qerror",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "분모끼리 더하면 안 돼. 통분해서 3/6+2/6=5/6이야. 1/2에 무언가를 더했는데 2/5는 1/2보다 작아서 말이 안 돼.",
+"keys": [
+"분모끼리 더하면 안 된다",
+"5/6"
+],
+"answerBy": "claude"
+},
+{
+"id": "1v7q9ja:t0L1",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "먼저 분수 부분을 통분한 뒤, 자연수는 자연수끼리, 분수는 분수끼리 더해.",
+"keys": [
+"분수 부분을 통분한다",
+"자연수끼리, 분수끼리 더한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1v7q9ja:t0L2",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "가분수를 대분수로 바꿔서 1을 자연수 부분에 올려 더해. 예) 2와 5/4 → 3과 1/4",
+"keys": [
+"가분수를 대분수로 바꾼다",
+"자연수에 1을 더한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1v7q9ja:t0H1",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"answer": "분수 부분을 통분하고, 자연수는 자연수끼리, 분수는 분수끼리 더해. 분수 부분이 가분수가 되면 대분수로 바꿔.",
+"keys": [
+"통분한다",
+"자연수끼리, 분수끼리"
+],
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1v7q9ja:t0H2",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "대분수와 가분수는 같은 크기를 다르게 나타낸 것뿐이라서, 어느 모양으로 더해도 크기는 같아.",
+"keys": [
+"같은 크기를 다르게 나타낸 것",
+"답이 같다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1v7q9ja:qrecall",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "분수 부분을 통분하면 4/12와 3/12야. 자연수는 2+1=3, 분수는 4/12+3/12=7/12라서 3과 7/12야.",
+"keys": [
+"4/12와 3/12로 통분",
+"3과 7/12"
+],
+"answerBy": "claude"
+},
+{
+"id": "1v7q9ja:qreason",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "대분수는 자연수와 진분수를 더한 수라서, 더하는 순서를 바꿔 자연수끼리, 분수끼리 모아서 더해도 전체 합은 같아.",
+"keys": [
+"대분수 = 자연수 + 분수",
+"순서를 바꿔 더해도 합은 같다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1v7q9ja:qexample",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "예를 들어 1과 1/2+2와 1/3은 자연수 3, 분수 3/6+2/6=5/6이라서 3과 5/6이야.",
+"keys": [
+"통분한다",
+"자연수끼리, 분수끼리 더한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1v7q9ja:qerror",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "4/3은 가분수라서 1과 1/3로 바꿔 자연수에 1을 올려야 해. 2와 4/3=3과 1/3이야.",
+"keys": [
+"분수 부분이 가분수",
+"3과 1/3"
+],
+"answerBy": "claude"
+},
+{
+"id": "1w8v5s:t0L1",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "통분해서 분모를 같게 만들어야 해.",
+"keys": [
+"통분한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1w8v5s:t0L2",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "분모는 그대로 두고 분자끼리 빼.",
+"keys": [
+"분자끼리 뺀다",
+"분모는 그대로"
+],
+"answerBy": "claude"
+},
+{
+"id": "1w8v5s:t0H1",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"answer": "통분한 다음 분모는 그대로 두고 분자끼리 빼. 예) 1/2-1/3=3/6-2/6=1/6",
+"keys": [
+"통분한다",
+"분자끼리 뺀다"
+],
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1w8v5s:t0H2",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "덧셈처럼 먼저 통분하고, 분모는 그대로 둔 채 분자끼리 계산해. 더하느냐 빼느냐만 달라.",
+"keys": [
+"통분을 먼저 한다",
+"분자끼리 계산, 분모는 그대로"
+],
+"answerBy": "claude"
+},
+{
+"id": "1w8v5s:qrecall",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "1/4=2/8이니까 7/8-2/8=5/8이야.",
+"keys": [
+"1/4=2/8",
+"5/8"
+],
+"answerBy": "claude"
+},
+{
+"id": "1w8v5s:qreason",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "분모가 다르면 한 조각의 크기가 달라서 조각 수끼리 바로 뺄 수 없어. 통분해서 조각 크기를 같게 해야 분자끼리 뺄 수 있어.",
+"keys": [
+"조각 크기가 다르다",
+"통분하면 조각 크기가 같아진다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1w8v5s:qexample",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "예를 들어 5/6-1/4=10/12-3/12=7/12야.",
+"keys": [
+"통분한다",
+"분자끼리 뺀다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1w8v5s:qerror",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "분모끼리 빼면 안 돼. 통분해서 3/4-2/4=1/4이야.",
+"keys": [
+"분모끼리 빼면 안 된다",
+"1/4"
+],
+"answerBy": "claude"
+},
+{
+"id": "1lwbip2:t0L1",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "통분한 뒤, 빼지는 수의 분수 부분이 빼는 수의 분수 부분보다 작지 않은지 확인해.",
+"keys": [
+"분수 부분의 크기를 비교한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1lwbip2:t0L2",
+"kind": "low",
+"round": 1,
+"by": "claude",
+"answer": "자연수에서 1을 받아내려 분수로 바꿔 분수 부분에 더한 다음 빼. 예) 3과 1/5 → 2와 6/5",
+"keys": [
+"자연수에서 1을 받아내린다",
+"1을 분수로 바꿔 더한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1lwbip2:t0H1",
+"kind": "high",
+"round": 1,
+"by": "claude",
+"answer": "자연수에서 1을 받아내려 5/5처럼 분수로 바꿔 분수 부분에 더하고, 자연수끼리, 분수끼리 빼.",
+"keys": [
+"1을 받아내린다",
+"자연수끼리, 분수끼리 뺀다"
+],
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1lwbip2:t0H2",
+"kind": "high",
+"round": 2,
+"by": "claude",
+"answer": "받아내림이 필요할 때 대분수를 가분수로 바꾸면, 받아내림 없이 분자끼리 한 번에 뺄 수 있어서 편리해.",
+"keys": [
+"받아내림이 필요할 때",
+"한 번에 뺄 수 있다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1lwbip2:qrecall",
+"kind": "qset",
+"round": 1,
+"by": "claude",
+"answer": "1/5에서 2/5를 뺄 수 없으니까 3과 1/5를 2와 6/5로 바꿔. 2-1=1, 6/5-2/5=4/5라서 1과 4/5야.",
+"keys": [
+"2와 6/5로 바꾼다",
+"1과 4/5"
+],
+"answerBy": "claude"
+},
+{
+"id": "1lwbip2:qreason",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "분수 부분이 더 작아서 그대로는 뺄 수 없어. 자연수 1은 5/5처럼 분모와 분자가 같은 분수와 같아서, 1을 빌려와 분수 부분을 크게 만들면 뺄 수 있어.",
+"keys": [
+"분수 부분이 작아 뺄 수 없다",
+"1=5/5처럼 바꿔 더한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1lwbip2:qexample",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "예를 들어 4와 1/3-2와 2/3은 3과 4/3-2와 2/3으로 바꿔서 1과 2/3이야.",
+"keys": [
+"분수 부분끼리 뺄 수 없는 식을 만든다",
+"1을 받아내려 계산한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1lwbip2:qerror",
+"kind": "qset",
+"round": 2,
+"by": "claude",
+"answer": "1/4에서 1/2을 뺄 수 없는데 거꾸로 뺐어. 통분하면 2와 1/4-1과 2/4이고, 1을 받아내려 1과 5/4-1과 2/4=3/4이야.",
+"keys": [
+"거꾸로 뺐다",
+"받아내림, 답은 3/4"
 ],
 "answerBy": "claude"
 }
