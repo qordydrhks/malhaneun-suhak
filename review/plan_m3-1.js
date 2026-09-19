@@ -2,8 +2,9 @@
    마스터 견본(2026-09-18: 38 인수분해란·51 항이 4개인 식 + 1단원 문장 고침) + Claude 2단원 나머지 25소단원
    (연산 질문으로 고침 newQBy:'claude' · 회차 by · 뺌 offBy · 모범 답 answerBy). 화면 열 때 한 번만 넣음.
    [b] 마스터 검토2(3단원 55·56·59·63·70) 반영 + Claude 3단원 나머지 17소단원(활용 73~77은 대표 문제를 주고 식 세우기로).
+   [d] 마스터 검토3(다른 PC, 78·79·80·81·93·96·97) 반영 — 회차 바뀐 곳은 rWas, 질문 바뀐 곳 모범 답은 ansWas.
    [c] 4단원 이차함수 20소단원 — 방정식 단원 기준(설명·이유·오류는 살리고 예/아니오·되묻기만 뺌). */
-(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'m3-1_2026-09-18c', data:{
+(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'m3-1_2026-09-19d', data:{
 "format": "qr-plan-2",
 "grade": "m3-1",
 "rounds": 3,
@@ -5824,13 +5825,14 @@
 "kind": "low",
 "round": 1,
 "by": "claude",
-"newQ": "② 같은 문제에서 '넓이가 18cm²'라는 조건으로 식을 세워봐.",
+"newQ": "② 어떤 정사각형의 가로를 5cm 늘이고 세로를 2cm 줄였더니 넓이가 18cm²가 되었어. 처음 정사각형의 한 변의 길이를 x cm로 놓고 식을 세워봐.",
 "newQBy": "claude",
 "answer": "(가로)×(세로)=18이니까 (x+5)(x-2)=18이야.",
 "keys": [
 "(x+5)(x-2)=18"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"qWas": "② 같은 문제에서 '넓이가 18cm²'라는 조건으로 식을 세워봐."
 },
 {
 "id": "ohzvbp:t0L3",
@@ -5899,14 +5901,15 @@
 "kind": "qset",
 "round": 2,
 "by": "claude",
-"newQ": "같은 문제에서 (x+5)(x-2)=18을 풀어서 처음 정사각형의 한 변의 길이를 구해봐.",
+"newQ": "어떤 정사각형의 가로를 5cm 늘이고 세로를 2cm 줄였더니 넓이가 18cm²가 되었어. 처음 한 변의 길이를 x cm라 하면 (x+5)(x-2)=18이야. 이 식을 풀어서 처음 정사각형의 한 변의 길이를 구해봐.",
 "newQBy": "claude",
 "answer": "전개하면 x²+3x-28=0이고 (x+7)(x-4)=0이라서 x=-7 또는 x=4야. 길이는 양수이고 x-2>0이어야 하니까 4cm야.",
 "keys": [
 "x²+3x-28=0",
 "x=4만 답(4cm)"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"qWas": "같은 문제에서 (x+5)(x-2)=18을 풀어서 처음 정사각형의 한 변의 길이를 구해봐."
 },
 {
 "id": "ohzvbp:qerror",
@@ -5920,7 +5923,9 @@
 "길이는 양수",
 "x=4만 답"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "정사각형의 가로를 5cm 늘이고 세로를 2cm 줄였더니 넓이가 18cm²가 되었을 때, 처음 한 변의 길이를 구하는 문제야. 어떤 친구가 식을 풀어 나온 x=-7과 x=4가 둘 다 답이라고 했어. 뭐가 틀렸을까?",
+"newQBy": "claude"
 },
 {
 "id": "17gdy7f:t0L1",
@@ -6251,14 +6256,15 @@
 "kind": "qset",
 "round": 2,
 "by": "claude",
-"newQ": "같은 공이 높이 40m를 지나는 시각이 2초와 4초 두 번 나와. 왜 두 번일까?",
+"newQ": "초속 30m로 던진 공의 t초 후 높이가 (30t-5t²) m야. 이 공이 높이 40m를 지나는 시각이 2초와 4초 두 번 나와. 왜 두 번일까?",
 "newQBy": "claude",
 "answer": "공이 올라가면서 한 번(2초), 가장 높이 올라간 뒤 내려오면서 또 한 번(4초) 40m를 지나기 때문이야.",
 "keys": [
 "올라갈 때 한 번",
 "내려올 때 한 번"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"qWas": "같은 공이 높이 40m를 지나는 시각이 2초와 4초 두 번 나와. 왜 두 번일까?"
 },
 {
 "id": "1laojbm:qexample",
@@ -6286,7 +6292,9 @@
 "t=0은 던지는 순간",
 "6초 후"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "초속 30m로 던진 공의 t초 후 높이가 (30t-5t²) m야. 어떤 친구가 30t-5t²=0을 풀고 t=0이 공이 땅에 떨어지는 시각이라고 답했어. 뭐가 틀렸는지 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "1pbz0il:t0L1",
@@ -6310,13 +6318,14 @@
 "kind": "low",
 "round": 1,
 "by": "claude",
-"newQ": "② 같은 문제에서 넓이 조건으로 식을 세워봐.",
+"newQ": "② 가로가 세로보다 3cm 긴 직사각형의 넓이가 40cm²야. 세로를 x cm로 놓고 식을 세워봐.",
 "newQBy": "claude",
 "answer": "(가로)×(세로)=40이니까 x(x+3)=40이야.",
 "keys": [
 "x(x+3)=40"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"qWas": "② 같은 문제에서 넓이 조건으로 식을 세워봐."
 },
 {
 "id": "1pbz0il:t0L3",
@@ -6396,14 +6405,15 @@
 "kind": "qset",
 "round": 2,
 "by": "claude",
-"newQ": "같은 문제에서 x(x+3)=40을 풀어서 세로의 길이를 구해봐.",
+"newQ": "가로가 세로보다 3cm 긴 직사각형의 넓이가 40cm²야. 세로를 x cm라 하면 x(x+3)=40이야. 이 식을 풀어서 세로의 길이를 구해봐.",
 "newQBy": "claude",
 "answer": "x²+3x-40=0, (x+8)(x-5)=0이라서 x=-8 또는 x=5야. 길이는 양수니까 세로는 5cm야.",
 "keys": [
 "x²+3x-40=0",
 "5cm"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"qWas": "같은 문제에서 x(x+3)=40을 풀어서 세로의 길이를 구해봐."
 },
 {
 "id": "1pbz0il:qerror",
@@ -6417,7 +6427,9 @@
 "길이는 양수",
 "5cm"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "가로가 세로보다 3cm 긴 직사각형의 넓이가 40cm²일 때 세로의 길이를 구하는 문제에서, 어떤 친구가 세로의 길이를 -8cm라고 답했어. 뭐가 틀렸을까?",
+"newQBy": "claude"
 },
 {
 "id": "1sk5u0k:t0L1",
@@ -6431,7 +6443,9 @@
 "x에 대한 이차식",
 "y=ax²+bx+c(a≠0)"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 이차함수란?",
+"ok": true
 },
 {
 "id": "1sk5u0k:t0L2",
@@ -6447,7 +6461,8 @@
 "x² 항이 없어진다",
 "이차함수가 아니게 된다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1sk5u0k:t0L3",
@@ -6463,7 +6478,8 @@
 "y=2x²-1",
 "정리하면 y=3x라 일차함수"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1sk5u0k:t0H1",
@@ -6477,7 +6493,9 @@
 "y=ax²+bx+c",
 "a≠0, b와 c는 0이어도 된다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 이차함수의 뜻을 설명해 봐.",
+"ok": true
 },
 {
 "id": "1sk5u0k:t0H2",
@@ -6487,7 +6505,8 @@
 "round": 1,
 "by": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "1sk5u0k:t0H3",
@@ -6502,7 +6521,9 @@
 "x²의 계수가 0이 아닌지",
 "분모에 x가 있으면 아니다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "③ 주어진 식이 이차함수인지 확인하는 과정을 얘기해봐",
+"ok": true
 },
 {
 "id": "1sk5u0k:qrecall",
@@ -6515,7 +6536,8 @@
 "keys": [
 "a≠0"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true
 },
 {
 "id": "1sk5u0k:qreason",
@@ -6525,7 +6547,8 @@
 "round": 2,
 "by": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "1sk5u0k:qexample",
@@ -6539,7 +6562,9 @@
 "y=ax² 꼴",
 "a≠0"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"ok": true
 },
 {
 "id": "1sk5u0k:qerror",
@@ -6553,7 +6578,8 @@
 "0×x²=0",
 "y=2x+1은 일차함수"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1a8fpfv:t0L1",
@@ -6566,7 +6592,9 @@
 "keys": [
 "x에 2를 대입한 값"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① f(2)의 의미가 뭐야?",
+"ok": true
 },
 {
 "id": "1a8fpfv:t0L2",
@@ -6582,7 +6610,8 @@
 "괄호를 씌워 대입",
 "-6"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1a8fpfv:t0L3",
@@ -6592,7 +6621,8 @@
 "round": 1,
 "by": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "1a8fpfv:t0H1",
@@ -6602,7 +6632,8 @@
 "round": 1,
 "by": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "1a8fpfv:t0H2",
@@ -6612,21 +6643,31 @@
 "round": 1,
 "by": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "1a8fpfv:t0H3",
 "big": "4. 이차함수",
 "small": "79. 이차함수 f(x)=x²-5x에 대하여 f(2)의 값은?",
 "kind": "high",
-"round": 1,
-"by": "claude",
-"answer": "f(x)는 x의 값에 따라 정해지는 y의 값을 나타내. f(x)=x²-5x는 x를 넣으면 x²-5x라는 값이 나온다는 뜻이야.",
+"round": 2,
+"answer": "f(a)는 x=a일 때의 함숫값, 즉 x 자리에 a를 넣은 값이야. f(x)=x²-5x이면 f(a)=a²-5a야.",
 "keys": [
+"x=a일 때의 함숫값",
+"x 자리에 a를 넣는다"
+],
+"answerBy": "claude",
+"rWas": 1,
+"newQ": "③ 함수 기호 f(a)의 의미를 설명해 봐.",
+"ok": true,
+"ansWas": {
+"a": "f(x)는 x의 값에 따라 정해지는 y의 값을 나타내. f(x)=x²-5x는 x를 넣으면 x²-5x라는 값이 나온다는 뜻이야.",
+"k": [
 "x에 따라 정해지는 y의 값",
 "y=f(x)"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "1a8fpfv:qrecall",
@@ -6636,7 +6677,8 @@
 "round": 1,
 "by": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "1a8fpfv:qreason",
@@ -6650,7 +6692,8 @@
 "f(2)=f(3)=-6",
 "x 하나에 y가 하나면 함수"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true
 },
 {
 "id": "1a8fpfv:qexample",
@@ -6664,7 +6707,9 @@
 "x에 수를 대입한다",
 "f(4)=-4"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "f(x)=x²-5x에서 네가 원하는 x값을 하나 정해서 그 수에 대한 함숫값을 구하는 과정을 말해 봐.",
+"ok": true
 },
 {
 "id": "1a8fpfv:qerror",
@@ -6678,7 +6723,8 @@
 "x 자리에 2를 넣는다",
 "-6"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "ok58px:t0L1",
@@ -6807,7 +6853,8 @@
 "round": 1,
 "by": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "b7xbw2:t0L2",
@@ -6820,7 +6867,9 @@
 "keys": [
 "포물선"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "② 이차함수 곡선을 뭐라 부를까?",
+"ok": true
 },
 {
 "id": "b7xbw2:t0L3",
@@ -6833,7 +6882,9 @@
 "keys": [
 "원점 (0, 0)"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "③ y=x^2 그래프의 꼭짓점은 어디일까?",
+"ok": true
 },
 {
 "id": "b7xbw2:t0H1",
@@ -6843,7 +6894,8 @@
 "round": 1,
 "by": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "b7xbw2:t0H2",
@@ -6853,7 +6905,8 @@
 "round": 1,
 "by": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "b7xbw2:t0H3",
@@ -6867,7 +6920,8 @@
 "x>0이면 x가 커질수록 y가 커진다",
 "x<0이면 x가 커질수록 y가 작아진다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "b7xbw2:qrecall",
@@ -6882,7 +6936,8 @@
 "아래로 볼록",
 "y축에 대칭"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "b7xbw2:qreason",
@@ -6896,7 +6951,9 @@
 "x²은 0 이상",
 "원점이 가장 낮다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "y=x²의 그래프가 아래로 볼록한 이유를 설명해 봐.",
+"ok": true
 },
 {
 "id": "b7xbw2:qexample",
@@ -6910,7 +6967,8 @@
 "y=x²을 만족하는 점",
 "(1, 1), (-2, 4)"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "b7xbw2:qerror",
@@ -6924,7 +6982,8 @@
 "직선이 아니라 포물선",
 "원점을 지난다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "mgix58:t0L1",
@@ -8303,7 +8362,8 @@
 "keys": [
 "볼록한 방향"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "sq9j74:t0L2",
@@ -8316,15 +8376,15 @@
 "keys": [
 "y절편"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "sq9j74:t0L3",
 "big": "4. 이차함수",
 "small": "93. 이차함수 y=ax²+bx+c의 그래프를 보고 a, b, c의 부호를 알 수 있을까?",
 "kind": "low",
-"round": 2,
-"by": "claude",
+"round": 1,
 "newQ": "③ 축이 y축의 왼쪽에 있으면 a와 b의 부호는 어떤 관계야?",
 "newQBy": "claude",
 "answer": "축은 x=-b/(2a)야. 왼쪽이면 -b/(2a)<0이라서 b/(2a)>0, 즉 a와 b의 부호가 같아.",
@@ -8332,7 +8392,9 @@
 "축 x=-b/(2a)",
 "왼쪽이면 a, b 같은 부호"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"rWas": 2,
+"ok": true
 },
 {
 "id": "sq9j74:t0H1",
@@ -8342,7 +8404,8 @@
 "round": 1,
 "by": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "sq9j74:t0H2",
@@ -8352,7 +8415,8 @@
 "round": 1,
 "by": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "sq9j74:t0H3",
@@ -8362,7 +8426,8 @@
 "round": 1,
 "by": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "sq9j74:qrecall",
@@ -8372,7 +8437,8 @@
 "round": 1,
 "by": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "sq9j74:qreason",
@@ -8386,7 +8452,8 @@
 "-b/(2a)>0",
 "b/(2a)<0이라 부호가 다르다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "sq9j74:qexample",
@@ -8401,7 +8468,8 @@
 "b=0",
 "c>0"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "sq9j74:qerror",
@@ -8415,7 +8483,8 @@
 "오른쪽이면 다른 부호",
 "같은 부호면 왼쪽"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1yx9agk:t0L1",
@@ -8667,7 +8736,9 @@
 "keys": [
 "y=ax²+bx+c"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 세 점을 알면 어떤 꼴로 식을 세울까?",
+"ok": true
 },
 {
 "id": "1iwo7c6:t0L2",
@@ -8677,7 +8748,8 @@
 "round": 1,
 "by": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "1iwo7c6:t0L3",
@@ -8687,7 +8759,8 @@
 "round": 1,
 "by": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "1iwo7c6:t0H1",
@@ -8697,7 +8770,8 @@
 "round": 1,
 "by": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "1iwo7c6:t0H2",
@@ -8707,7 +8781,8 @@
 "round": 1,
 "by": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "1iwo7c6:t0H3",
@@ -8723,7 +8798,8 @@
 "x=0인 점을 먼저",
 "c가 바로 나온다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1iwo7c6:qrecall",
@@ -8737,7 +8813,8 @@
 "y=ax²+bx+c",
 "세 점을 대입해 연립방정식"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1iwo7c6:qreason",
@@ -8751,7 +8828,8 @@
 "꼭짓점을 모른다",
 "대입하면 일차방정식이 나온다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true
 },
 {
 "id": "1iwo7c6:qexample",
@@ -8766,7 +8844,8 @@
 "a+b=1, a-b=5",
 "y=3x²-2x-1"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1iwo7c6:qerror",
@@ -8780,7 +8859,8 @@
 "(x, y) 순서",
 "c=2"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true
 },
 {
 "id": "as33p2:t0L1",
@@ -8789,11 +8869,20 @@
 "kind": "low",
 "round": 1,
 "by": "claude",
-"answer": "x축과 (α, 0), (β, 0)에서 만나면 y=a(x-α)(x-β)로 놓아.",
+"answer": "x절편은 y=0일 때의 x값이라서, 이차방정식 ax²+bx+c=0의 근(해)이야.",
 "keys": [
-"y=a(x-α)(x-β)"
+"y=0일 때의 x",
+"이차방정식의 근"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 함수에서의 x절편은 방정식에서 뭐라고 할 수 있지?",
+"ok": true,
+"ansWas": {
+"a": "x축과 (α, 0), (β, 0)에서 만나면 y=a(x-α)(x-β)로 놓아.",
+"k": [
+"y=a(x-α)(x-β)"
+]
+}
 },
 {
 "id": "as33p2:t0L2",
@@ -8803,7 +8892,8 @@
 "round": 1,
 "by": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "as33p2:t0L3",
@@ -8813,7 +8903,8 @@
 "round": 1,
 "by": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "as33p2:t0H1",
@@ -8823,7 +8914,8 @@
 "round": 1,
 "by": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "as33p2:t0H2",
@@ -8833,7 +8925,8 @@
 "round": 1,
 "by": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "as33p2:t0H3",
@@ -8843,7 +8936,8 @@
 "round": 1,
 "by": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "as33p2:qrecall",
@@ -8857,7 +8951,8 @@
 "y=a(x-α)(x-β)",
 "다른 점으로 a를 구한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "as33p2:qreason",
@@ -8871,7 +8966,9 @@
 "x절편이 인수가 된다",
 "모르는 값이 a 하나"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"ok": true
 },
 {
 "id": "as33p2:qexample",
@@ -8885,7 +8982,8 @@
 "y=a(x-1)(x-5)",
 "a=1, y=x²-6x+5"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "as33p2:qerror",
@@ -8899,7 +8997,112 @@
 "부호를 거꾸로 했다",
 "y=a(x-2)(x-4)"
 ],
+"answerBy": "claude",
+"ok": true
+},
+{
+"id": "ladder:m3-1|4. 이차함수|78. 이차함수란 무엇일까?:1",
+"big": "4. 이차함수",
+"small": "78. 이차함수란 무엇일까?",
+"kind": "ladder"
+},
+{
+"id": "ladder:m3-1|4. 이차함수|78. 이차함수란 무엇일까?:2",
+"big": "4. 이차함수",
+"small": "78. 이차함수란 무엇일까?",
+"kind": "ladder"
+},
+{
+"id": "ladder:m3-1|4. 이차함수|79. 이차함수 f(x)=x²-5x에 대하여 f(2)의 값은?:1",
+"big": "4. 이차함수",
+"small": "79. 이차함수 f(x)=x²-5x에 대하여 f(2)의 값은?",
+"kind": "ladder"
+},
+{
+"id": "ladder:m3-1|4. 이차함수|79. 이차함수 f(x)=x²-5x에 대하여 f(2)의 값은?:2",
+"big": "4. 이차함수",
+"small": "79. 이차함수 f(x)=x²-5x에 대하여 f(2)의 값은?",
+"kind": "ladder"
+},
+{
+"id": "ladder:m3-1|4. 이차함수|80. 이차함수 f(x)=x²-5x에 대하여 f(a)=-6일 때, a의 값은?:1",
+"big": "4. 이차함수",
+"small": "80. 이차함수 f(x)=x²-5x에 대하여 f(a)=-6일 때, a의 값은?",
+"kind": "ladder"
+},
+{
+"id": "ladder:m3-1|4. 이차함수|80. 이차함수 f(x)=x²-5x에 대하여 f(a)=-6일 때, a의 값은?:2",
+"big": "4. 이차함수",
+"small": "80. 이차함수 f(x)=x²-5x에 대하여 f(a)=-6일 때, a의 값은?",
+"kind": "ladder",
+"off": true
+},
+{
+"id": "ladder:m3-1|4. 이차함수|81. 이차함수 y=x²의 그래프는 어떤 모양일까?:1",
+"big": "4. 이차함수",
+"small": "81. 이차함수 y=x²의 그래프는 어떤 모양일까?",
+"kind": "ladder",
+"newQ": "y=x²의 그래프는 어떤 모양이고, 어떤 특징이 있어?",
+"ok": true
+},
+{
+"id": "ladder:m3-1|4. 이차함수|81. 이차함수 y=x²의 그래프는 어떤 모양일까?:2",
+"big": "4. 이차함수",
+"small": "81. 이차함수 y=x²의 그래프는 어떤 모양일까?",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:m3-1|4. 이차함수|93. 이차함수 y=ax²+bx+c의 그래프를 보고 a, b, c의 부호를 알 수 있을까?:1",
+"big": "4. 이차함수",
+"small": "93. 이차함수 y=ax²+bx+c의 그래프를 보고 a, b, c의 부호를 알 수 있을까?",
+"kind": "ladder",
+"newQ": "이차함수 y=ax²+bx+c의 그래프를 보고 a, b, c의 부호가 어떻게 결정되는지 설명해봐"
+},
+{
+"id": "ladder:m3-1|4. 이차함수|93. 이차함수 y=ax²+bx+c의 그래프를 보고 a, b, c의 부호를 알 수 있을까?:2",
+"big": "4. 이차함수",
+"small": "93. 이차함수 y=ax²+bx+c의 그래프를 보고 a, b, c의 부호를 알 수 있을까?",
+"kind": "ladder"
+},
+{
+"id": "1iwo7c6:qamu731ny7y8ue",
+"big": "4. 이차함수",
+"small": "96. 꼭짓점이 아닌 세 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "add",
+"round": 2,
+"q": "어떤 조건이 주어졌을 때 표준형의 꼴로 식을 세우고, 또 어떤 조건이 주어졌을 때 일반형으로 식을 세워?",
+"answer": "꼭짓점이나 축이 주어지면 표준형 y=a(x-p)²+q로, x축과 만나는 두 점이 주어지면 y=a(x-α)(x-β)로, 꼭짓점이 아닌 세 점이 주어지면 일반형 y=ax²+bx+c로 놓아.",
+"keys": [
+"꼭짓점·축 → 표준형",
+"x절편 두 개 → a(x-α)(x-β)",
+"세 점 → 일반형"
+],
 "answerBy": "claude"
+},
+{
+"id": "ladder:m3-1|4. 이차함수|96. 꼭짓점이 아닌 세 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?:1",
+"big": "4. 이차함수",
+"small": "96. 꼭짓점이 아닌 세 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "ladder"
+},
+{
+"id": "ladder:m3-1|4. 이차함수|96. 꼭짓점이 아닌 세 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?:2",
+"big": "4. 이차함수",
+"small": "96. 꼭짓점이 아닌 세 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "ladder"
+},
+{
+"id": "ladder:m3-1|4. 이차함수|97. x축과 만나는 두 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?:1",
+"big": "4. 이차함수",
+"small": "97. x축과 만나는 두 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "ladder"
+},
+{
+"id": "ladder:m3-1|4. 이차함수|97. x축과 만나는 두 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?:2",
+"big": "4. 이차함수",
+"small": "97. x축과 만나는 두 점의 좌표가 주어지는 경우, 이차함수의 식은 어떻게 구할까?",
+"kind": "ladder"
 }
 ],
 "seen": [

@@ -784,7 +784,8 @@
       if(!it){ c.missing++; return; }
       var p = planOf(it.id, it.kind);
       var lp = PLAN[it.id] || {};
-      if(fmt === 'qr-plan-2' && rec.round >= 1 && rec.round <= ROUNDS && rec.round !== p.r && !(keep && lp.r != null)){
+      // [v84.9] rWas = 바꾸기 전 회차. 이 기기 회차가 그것과 같으면(아무도 손 안 댐) 새 회차로 바꿔도 된다
+      if(fmt === 'qr-plan-2' && rec.round >= 1 && rec.round <= ROUNDS && rec.round !== p.r && !(keep && lp.r != null && lp.r !== rec.rWas)){
         if(p.r && (PLAN[it.id] || {}).r != null) c.overwrite++;
         c.round++; c.ops.push(function(){ setPlan(it.id, { r: rec.round }); });
       }
@@ -826,7 +827,8 @@
       }
     });
     d.items.forEach(function(rec){
-      if(rec && rec.ok === true && !OK[rec.id] && known[rec.id]){ c.ok = (c.ok || 0) + 1; c.ops.push(function(){ OK[rec.id] = true; }); }
+      // 이번에 새로 만드는 추가 질문(known 에 아직 없음)도 확인 표시를 옮긴다 [v84.9]
+      if(rec && rec.ok === true && !OK[rec.id] && (known[rec.id] || (rec.kind === 'add' && rec.q))){ c.ok = (c.ok || 0) + 1; c.ops.push(function(){ OK[rec.id] = true; }); }
     });
     (d.seen || []).forEach(function(code){
       if(!SEEN[code]){ c.seen++; c.ops.push(function(){ SEEN[code] = true; }); }
