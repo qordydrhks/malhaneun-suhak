@@ -20061,7 +20061,7 @@ function renderParentBody(stu, subs, comment){
     ...[...weekTalk].map(n=>({ n, t:'🗣️', d:'대화 완료' }))
   ].sort((a,b)=> (/완료/.test(b.d)?1:0) - (/완료/.test(a.d)?1:0));
   const conceptHtml = axisHtml + (mastered.length
-    ? mastered.slice(0,8).map(c => `<div class="pp-concept"><span class="ci">${c.t}</span><span class="cn">${escapeHtml(c.n)}</span><span class="cd"${/완료/.test(c.d)?'':' style="opacity:.7"'}>${escapeHtml(c.d)}</span></div>`).join('')
+    ? mastered.slice(0,8).map(c => `<div class="pp-concept"><span class="ci">${c.t}</span><span class="cn">${escapeHtml(c.n)}</span><span class="cd"${/완료/.test(c.d)?'':' style="background:rgba(255,255,255,.08);color:#B8B2D6"'}>${escapeHtml(c.d)}</span></div>`).join('')
     : '<div class="pp-empty">이번 주 공부한 개념이 곧 여기 표시돼요.</div>');
 
   // [v86.8] 흐름점검 4번 — 잘한 것만이 아니라 '더 연습이 필요한 것'도 (어른이 이해도를 정확히 판단하도록)
@@ -20083,7 +20083,7 @@ function renderParentBody(stu, subs, comment){
     });
   })();
   const practiceHtml = practice.length
-    ? practice.slice(0,6).map(p => `<div class="pp-concept pp-practice"><span class="ci">🔎</span><span class="cn">${mfmt(p.q)}<small style="display:block;opacity:.7;font-weight:500">${escapeHtml(p.unit)}${p.mis ? ' · ' + escapeHtml(p.mis) : ''}</small></span><span class="cd" style="white-space:normal;text-align:right;max-width:38%">${escapeHtml(p.why)}</span></div>`).join('')
+    ? practice.slice(0,6).map(p => `<div class="pp-concept pp-practice"><span class="ci">🔎</span><span class="cn">${mfmt(p.q)}<small style="display:block;opacity:.7;font-weight:500">${escapeHtml(p.unit)}${p.mis ? ' · ' + escapeHtml(p.mis) : ''}</small></span><span class="cd" style="white-space:normal;text-align:right;max-width:38%;background:rgba(255,176,64,.16);color:#FFC46B">${escapeHtml(p.why)}</span></div>`).join('')
     : '<div class="pp-empty">이번 주에는 특별히 어려워한 질문이 없어요.</div>';
 
   // 잘한 음성 (점수 높은 순 2개, transcript 있는 것)
@@ -22156,7 +22156,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-const APP_VERSION = 'v86.9-초5-2숫자바꿈';
+const APP_VERSION = 'v87.0-리포트색';
   // [v78.7] 이 값이 IIFE 안에 갇혀 있어 바깥 스크립트(app-ui.js)가 못 읽었다.
   //   화면 배지에 버전을 그대로 띄우려면 필요하므로 노출한다.
   window.APP_VERSION = APP_VERSION;
