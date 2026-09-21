@@ -2,6 +2,7 @@
    마스터 견본(2026-09-17 내보내기) + Claude 분류안(1·6단원 미분류 55개, by:'claude')
    + 겹쳐서 Claude 가 뺀 9개(off:true, offBy:'claude') — 마스터 승인 2026-09-17.
    + Claude 모범 답 74개(answerBy:'claude') — 1·6단원에서 빼지 않았고 모범 답이 없던 질문 전부, 마스터 지시 2026-09-18.
+   [j] 마스터 검토(9/21 5단원, 초5-1 마지막) 반영 — 초5-1 전 단원 검수 끝.
    [i] 마스터 검토(9/21 4단원) 반영(3·5단원 차이는 v85.3 미반영 기기라 무시) + 바뀐 질문 모범 답 4 + 4단원 기준으로 5단원 이유 질문 3개에 구체적 예·긴 오류 문장 1개 줄임.
    [h] 마스터 검토(9/21 3단원) 반영 + 3단원 기준으로 5단원 메타 질문 3개 뺌 + 바뀐 질문 모범 답 2개.
    [g] 3·4·5단원 Claude 2차 다듬기(1·2단원 검토 기준): 문장 23 · 뺌 3 · 활용 문장제 10(추가 질문).
@@ -9,7 +10,7 @@
    [e] 초5-1 2~5단원 146문항 분류·겹침 빼기·모범 답(Claude, 마스터 지시 2026-09-18 "5학년 전 과정을 기준대로") + 6-04 기본① 되돌림(qWas) · 6-03 기본① 넓이 식 채움.
    [d] 마스터 검토(2026-09-18 내보내기: 확인 57·고친 문장·빼기·회차·추가 1) 반영 + 질문을 고친 곳 모범 답 다시 씀(ansWas = 바꾸기 전 답).
    review.js 가 화면을 열 때 한 번만 넣는다(이 기기에 이미 적어 둔 것은 안 덮는다). key 를 바꾸면 다시 넣는다. */
-(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'e5-1_2026-09-21i', data:{
+(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'e5-1_2026-09-21j', data:{
 "format": "qr-plan-2",
 "grade": "e5-1",
 "rounds": 3,
@@ -2091,8 +2092,7 @@
 ]
 },
 "qWas": "① 탁자 1개에 의자가 2개씩 놓여 있어. 탁자 수가 늘어나면 의자 수는 어떻게 변해?",
-"reopen": true,
-"ok": true
+"reopen": true
 },
 {
 "id": "1nhkkt4:t0L2",
@@ -2129,8 +2129,7 @@
 "대응 관계"
 ]
 },
-"reopen": true,
-"ok": true
+"reopen": true
 },
 {
 "id": "1nhkkt4:t0H2",
@@ -3061,7 +3060,8 @@
 ],
 "answerBy": "claude",
 "newQ": "① 분모가 다른 분수를 더하려면 먼저 뭘 해야 돼?",
-"newQBy": "claude"
+"newQBy": "claude",
+"ok": true
 },
 {
 "id": "u9z3u:t0L2",
@@ -3075,7 +3075,8 @@
 ],
 "answerBy": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "u9z3u:t0H1",
@@ -3097,7 +3098,8 @@
 "분자끼리 더한다",
 "약분할 수 있으면 약분한다"
 ]
-}
+},
+"ok": true
 },
 {
 "id": "u9z3u:t0H2",
@@ -3109,7 +3111,8 @@
 "분모의 곱은 찾기 쉽지만 수가 크다",
 "최소공배수는 수가 작아 간단하다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "u9z3u:qrecall",
@@ -3121,7 +3124,9 @@
 "2/6+1/6",
 "3/6=1/2"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true,
+"off": true
 },
 {
 "id": "u9z3u:qreason",
@@ -3142,7 +3147,8 @@
 "분모는 조각 크기, 분자는 조각 수",
 "조각 크기는 그대로"
 ]
-}
+},
+"ok": true
 },
 {
 "id": "u9z3u:qexample",
@@ -3154,7 +3160,8 @@
 "통분한다",
 "분자끼리 더한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "u9z3u:qerror",
@@ -3166,7 +3173,8 @@
 "분모끼리 더하면 안 된다",
 "5/6"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1v7q9ja:t0L1",
@@ -3187,7 +3195,8 @@
 "분수 부분을 통분한다",
 "자연수끼리, 분수끼리 더한다"
 ]
-}
+},
+"ok": true
 },
 {
 "id": "1v7q9ja:t0L2",
@@ -3201,7 +3210,8 @@
 ],
 "answerBy": "claude",
 "newQ": "② 분수 부분을 더한 결과가 가분수이면 어떻게 해?",
-"newQBy": "claude"
+"newQBy": "claude",
+"ok": true
 },
 {
 "id": "1v7q9ja:t0H1",
@@ -3215,7 +3225,8 @@
 ],
 "answerBy": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "1v7q9ja:t0H2",
@@ -3229,7 +3240,8 @@
 ],
 "answerBy": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "1v7q9ja:qrecall",
@@ -3241,7 +3253,8 @@
 "4/12와 3/12로 통분",
 "3과 7/12"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1v7q9ja:qreason",
@@ -3262,7 +3275,8 @@
 "대분수 = 자연수 + 분수",
 "순서를 바꿔 더해도 합은 같다"
 ]
-}
+},
+"ok": true
 },
 {
 "id": "1v7q9ja:qexample",
@@ -3274,7 +3288,8 @@
 "통분한다",
 "자연수끼리, 분수끼리 더한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1v7q9ja:qerror",
@@ -3286,7 +3301,8 @@
 "분수 부분이 가분수",
 "3과 1/3"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1w8v5s:t0L1",
@@ -3299,7 +3315,8 @@
 ],
 "answerBy": "claude",
 "newQ": "① 분모가 다른 분수를 빼려면 먼저 뭘 해야 돼?",
-"newQBy": "claude"
+"newQBy": "claude",
+"ok": true
 },
 {
 "id": "1w8v5s:t0L2",
@@ -3313,21 +3330,22 @@
 ],
 "answerBy": "claude",
 "newQ": "② 통분한 뒤에는 무엇끼리 빼?",
-"newQBy": "claude"
+"newQBy": "claude",
+"ok": true
 },
 {
 "id": "1w8v5s:t0H1",
 "kind": "high",
-"round": 1,
-"by": "claude",
+"round": 2,
 "answer": "통분한 다음 분모는 그대로 두고 분자끼리 빼. 예) 1/2-1/3=3/6-2/6=1/6",
 "keys": [
 "통분한다",
 "분자끼리 뺀다"
 ],
 "answerBy": "claude",
-"off": true,
-"offBy": "claude"
+"ok": true,
+"rWas": 1,
+"newQ": "① 분모가 다른 분수를 빼는 과정을 설명해 봐."
 },
 {
 "id": "1w8v5s:t0H2",
@@ -3340,8 +3358,7 @@
 "분자끼리 계산, 분모는 그대로"
 ],
 "answerBy": "claude",
-"off": true,
-"offBy": "claude"
+"ok": true
 },
 {
 "id": "1w8v5s:qrecall",
@@ -3353,7 +3370,8 @@
 "1/4=2/8",
 "5/8"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1w8v5s:qreason",
@@ -3367,7 +3385,8 @@
 ],
 "answerBy": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "1w8v5s:qexample",
@@ -3379,7 +3398,8 @@
 "통분한다",
 "분자끼리 뺀다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1w8v5s:qerror",
@@ -3391,7 +3411,8 @@
 "분모끼리 빼면 안 된다",
 "1/4"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true
 },
 {
 "id": "1lwbip2:t0L1",
@@ -3411,7 +3432,8 @@
 "k": [
 "분수 부분의 크기를 비교한다"
 ]
-}
+},
+"ok": true
 },
 {
 "id": "1lwbip2:t0L2",
@@ -3425,7 +3447,8 @@
 ],
 "answerBy": "claude",
 "newQ": "② 분수 부분끼리 뺄 수 없으면 어떻게 해?",
-"newQBy": "claude"
+"newQBy": "claude",
+"ok": true
 },
 {
 "id": "1lwbip2:t0H1",
@@ -3438,8 +3461,7 @@
 "자연수끼리, 분수끼리 뺀다"
 ],
 "answerBy": "claude",
-"off": true,
-"offBy": "claude"
+"ok": true
 },
 {
 "id": "1lwbip2:t0H2",
@@ -3465,7 +3487,8 @@
 "2와 6/5로 바꾼다",
 "1과 4/5"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1lwbip2:qreason",
@@ -3478,15 +3501,16 @@
 "1을 5/5로 바꿔 분수 부분에 더한다"
 ],
 "answerBy": "claude",
-"newQ": "3과 1/5 - 1과 2/5처럼 분수 부분끼리 뺄 수 없을 때, 왜 자연수에서 1을 받아내려야 하는지 피자로 예를 들어 설명해 봐.",
-"newQBy": "claude",
+"newQ": "3과 1/5 - 1과 2/5처럼 분수 부분끼리 뺄 수 없을 때, 어떻게 해?",
 "ansWas": {
 "a": "분수 부분이 더 작아서 그대로는 뺄 수 없어. 자연수 1은 5/5처럼 분모와 분자가 같은 분수와 같아서, 1을 빌려와 분수 부분을 크게 만들면 뺄 수 있어.",
 "k": [
 "분수 부분이 작아 뺄 수 없다",
 "1=5/5처럼 바꿔 더한다"
 ]
-}
+},
+"ok": true,
+"qWas": "3과 1/5 - 1과 2/5처럼 분수 부분끼리 뺄 수 없을 때, 왜 자연수에서 1을 받아내려야 하는지 피자로 예를 들어 설명해 봐."
 },
 {
 "id": "1lwbip2:qexample",
@@ -3498,7 +3522,8 @@
 "분수 부분끼리 뺄 수 없는 식을 만든다",
 "1을 받아내려 계산한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1lwbip2:qerror",
@@ -3519,7 +3544,8 @@
 "거꾸로 뺐다",
 "받아내림, 답은 3/4"
 ]
-}
+},
+"ok": true
 },
 {
 "id": "ladder:e5-1|1. 자연수의 혼합 계산|01. 덧셈과 뺄셈 / 곱셈과 나눗셈이 섞인 식:1",
@@ -4012,7 +4038,8 @@
 "먹은 양은 더한다(7/12)",
 "남은 양은 1에서 뺀다(5/12)"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1v7q9ja:qac2202c8519315f",
@@ -4027,7 +4054,8 @@
 "두 길이를 더한다",
 "분수 부분이 가분수라 4와 1/12 m"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1w8v5s:qac2202c88dbc71",
@@ -4042,7 +4070,8 @@
 "3/4-1/3",
 "5/12 L"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1w8v5s:qac2202c8b9145f",
@@ -4057,7 +4086,8 @@
 "거꾸로 더해서 어떤 수를 구한다(13/20)",
 "바르게 더한다(1과 1/20)"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1lwbip2:qac2202c8f1468cf",
@@ -4072,7 +4102,8 @@
 "통분한다",
 "받아내림해서 1과 8/15 L"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "ladder:e5-1|3. 규칙과 대응|01. 두 양 사이의 관계:1",
@@ -4262,85 +4293,99 @@
 "id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|01. 분수의 덧셈 (1), (2):1",
 "big": "5. 분수의 덧셈과 뺄셈",
 "small": "01. 분수의 덧셈 (1), (2)",
-"kind": "ladder"
+"kind": "ladder",
+"ok": true
 },
 {
 "id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|01. 분수의 덧셈 (1), (2):2",
 "big": "5. 분수의 덧셈과 뺄셈",
 "small": "01. 분수의 덧셈 (1), (2)",
-"kind": "ladder"
+"kind": "ladder",
+"ok": true
 },
 {
 "id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|01. 분수의 덧셈 (1), (2):3",
 "big": "5. 분수의 덧셈과 뺄셈",
 "small": "01. 분수의 덧셈 (1), (2)",
-"kind": "ladder"
+"kind": "ladder",
+"ok": true
 },
 {
 "id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|01. 분수의 덧셈 (1), (2):4",
 "big": "5. 분수의 덧셈과 뺄셈",
 "small": "01. 분수의 덧셈 (1), (2)",
-"kind": "ladder"
+"kind": "ladder",
+"ok": true
 },
 {
 "id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|02. 분수의 덧셈 (3):1",
 "big": "5. 분수의 덧셈과 뺄셈",
 "small": "02. 분수의 덧셈 (3)",
-"kind": "ladder"
+"kind": "ladder",
+"ok": true
 },
 {
 "id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|02. 분수의 덧셈 (3):2",
 "big": "5. 분수의 덧셈과 뺄셈",
 "small": "02. 분수의 덧셈 (3)",
-"kind": "ladder"
+"kind": "ladder",
+"ok": true
 },
 {
 "id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|02. 분수의 덧셈 (3):3",
 "big": "5. 분수의 덧셈과 뺄셈",
 "small": "02. 분수의 덧셈 (3)",
-"kind": "ladder"
+"kind": "ladder",
+"ok": true
 },
 {
 "id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|02. 분수의 덧셈 (3):4",
 "big": "5. 분수의 덧셈과 뺄셈",
 "small": "02. 분수의 덧셈 (3)",
-"kind": "ladder"
+"kind": "ladder",
+"ok": true
 },
 {
 "id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|03. 분수의 뺄셈 (1):1",
 "big": "5. 분수의 덧셈과 뺄셈",
 "small": "03. 분수의 뺄셈 (1)",
-"kind": "ladder"
+"kind": "ladder",
+"ok": true
 },
 {
 "id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|03. 분수의 뺄셈 (1):2",
 "big": "5. 분수의 덧셈과 뺄셈",
 "small": "03. 분수의 뺄셈 (1)",
-"kind": "ladder"
+"kind": "ladder",
+"ok": true
 },
 {
 "id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|04. 분수의 뺄셈 (2), (3):1",
 "big": "5. 분수의 덧셈과 뺄셈",
 "small": "04. 분수의 뺄셈 (2), (3)",
-"kind": "ladder"
+"kind": "ladder",
+"ok": true
 },
 {
 "id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|04. 분수의 뺄셈 (2), (3):2",
 "big": "5. 분수의 덧셈과 뺄셈",
 "small": "04. 분수의 뺄셈 (2), (3)",
-"kind": "ladder"
+"kind": "ladder",
+"ok": true
 },
 {
 "id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|04. 분수의 뺄셈 (2), (3):3",
 "big": "5. 분수의 덧셈과 뺄셈",
 "small": "04. 분수의 뺄셈 (2), (3)",
-"kind": "ladder"
+"kind": "ladder",
+"ok": true
 },
 {
 "id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|04. 분수의 뺄셈 (2), (3):4",
 "big": "5. 분수의 덧셈과 뺄셈",
 "small": "04. 분수의 뺄셈 (2), (3)",
-"kind": "ladder"
+"kind": "ladder",
+"ok": true
 },
 {
 "id": "ladder:e5-1|6. 다각형의 둘레와 넓이|01. 정다각형과 사각형의 둘레:1",
