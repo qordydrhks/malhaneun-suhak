@@ -1,7 +1,9 @@
 /* [v84.5] 질문 고르기 — 기본으로 실어 두는 분류안 (초5-2)
    Claude 분류(by:'claude') · 겹쳐서 뺀 것(offBy:'claude') · 모범 답(answerBy:'claude') — 초5-1 마스터 견본·검토 기준으로 전 과정.
+   [b] 2026-09-21 초5-1 검수 기준표(작업도구/질문고르기/기준표_초등_질문.md)로 전 과정 2차 다듬기:
+       문장 130 · 뺌 69 · 회차 바꿈 6 · 모범 답 다시 씀 35 · 활용 문장제 등 추가 질문 26.
    review.js 가 화면 열 때 한 번만 넣는다(이 기기에 적어 둔 것은 안 덮음). key 를 바꾸면 다시 넣는다. */
-(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'e5-2_2026-09-18a', data:{
+(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'e5-2_2026-09-21a', data:{
 "format": "qr-plan-2",
 "grade": "e5-2",
 "rounds": 3,
@@ -15,7 +17,9 @@
 "keys": [
 "125와 같거나 큰 수"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 125 이상인 수는 어떤 수야?",
+"newQBy": "claude"
 },
 {
 "id": "10gl135:t0L2",
@@ -26,7 +30,9 @@
 "keys": [
 "160과 같거나 작은 수"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "② 160 이하인 수는 어떤 수야?",
+"newQBy": "claude"
 },
 {
 "id": "10gl135:t0L3",
@@ -37,7 +43,9 @@
 "keys": [
 "기준이 되는 수를 포함한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "10gl135:t0H1",
@@ -55,14 +63,24 @@
 {
 "id": "10gl135:t0H2",
 "kind": "high",
-"round": 2,
+"round": 1,
 "by": "claude",
-"answer": "색칠된 원(●)은 그 수가 범위에 들어간다는 표시야. 이상과 이하는 기준이 되는 수를 포함하니까 색칠된 원으로 나타내.",
+"answer": "125에 색칠한 점(●)을 찍고 오른쪽으로 선을 그어. 125도 들어가니까 색칠한 점이야.",
 "keys": [
+"125에 색칠한 점(●)",
+"오른쪽으로 선을 긋는다"
+],
+"answerBy": "claude",
+"newQ": "② 수직선에 125 이상인 수를 어떻게 나타내?",
+"newQBy": "claude",
+"rWas": 2,
+"ansWas": {
+"a": "색칠된 원(●)은 그 수가 범위에 들어간다는 표시야. 이상과 이하는 기준이 되는 수를 포함하니까 색칠된 원으로 나타내.",
+"k": [
 "●는 그 수를 포함한다는 표시",
 "이상·이하는 기준 수를 포함한다"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "10gl135:qrecall",
@@ -74,7 +92,9 @@
 "40을 포함한다",
 "40"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "40 이상인 자연수 중에서 가장 작은 수는 얼마야?",
+"newQBy": "claude"
 },
 {
 "id": "10gl135:qreason",
@@ -86,7 +106,9 @@
 "이상은 기준 수를 포함한다",
 "크다는 포함하지 않는다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "'5 이상인 수'와 '5보다 큰 수'는 뭐가 달라?",
+"newQBy": "claude"
 },
 {
 "id": "10gl135:qexample",
@@ -98,7 +120,9 @@
 "뽑힐 수 있다",
 "이상은 기준 수를 포함한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "키가 140 cm 이상인 사람만 탈 수 있는 놀이기구가 있어. 키가 140 cm인 친구는 탈 수 있어? 왜 그런지 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "10gl135:qerror",
@@ -110,7 +134,21 @@
 "이하는 기준 수를 포함한다",
 "30도 들어간다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|01. 이상과 이하:1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|01. 이상과 이하:2",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|01. 이상과 이하:3",
+"kind": "ladder"
 },
 {
 "id": "1ggg2gj:t0L1",
@@ -122,7 +160,9 @@
 "125보다 큰 수",
 "125는 포함하지 않는다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 125 초과인 수는 어떤 수야?",
+"newQBy": "claude"
 },
 {
 "id": "1ggg2gj:t0L2",
@@ -134,7 +174,9 @@
 "160보다 작은 수",
 "160은 포함하지 않는다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "② 160 미만인 수는 어떤 수야?",
+"newQBy": "claude"
 },
 {
 "id": "1ggg2gj:t0L3",
@@ -145,7 +187,9 @@
 "keys": [
 "기준이 되는 수를 포함하지 않는다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "1ggg2gj:t0H1",
@@ -165,12 +209,22 @@
 "kind": "high",
 "round": 2,
 "by": "claude",
-"answer": "이상·이하는 기준이 되는 수를 포함하고, 초과·미만은 포함하지 않아. 그래서 수직선에 이상·이하는 ●, 초과·미만은 ○로 나타내.",
+"answer": "125 초과는 125가 들어가지 않으니까 125에 빈 점(○)을 찍고, 125 이상은 125가 들어가니까 색칠한 점(●)을 찍어. 둘 다 오른쪽으로 선을 그어.",
 "keys": [
+"초과는 빈 점(○)",
+"이상은 색칠한 점(●)",
+"125가 들어가는지가 다르다"
+],
+"answerBy": "claude",
+"newQ": "② 수직선에 125 초과인 수를 나타낼 때, '125 이상인 수'와 어떻게 다르게 그려?",
+"newQBy": "claude",
+"ansWas": {
+"a": "이상·이하는 기준이 되는 수를 포함하고, 초과·미만은 포함하지 않아. 그래서 수직선에 이상·이하는 ●, 초과·미만은 ○로 나타내.",
+"k": [
 "이상·이하는 포함, 초과·미만은 포함하지 않는다",
 "●와 ○로 구분한다"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "1ggg2gj:qrecall",
@@ -182,7 +236,9 @@
 "10을 포함하지 않는다",
 "11"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "10 초과인 자연수 중에서 가장 작은 수는 얼마야?",
+"newQBy": "claude"
 },
 {
 "id": "1ggg2gj:qexample",
@@ -194,7 +250,9 @@
 "뽑힐 수 없다",
 "미만은 기준 수를 포함하지 않는다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "몸무게가 30 kg 미만인 사람만 참가할 수 있어. 몸무게가 30 kg인 친구는 참가할 수 있어? 왜 그런지 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "1ggg2gj:qerror",
@@ -206,7 +264,21 @@
 "초과는 기준 수를 포함하지 않는다",
 "20은 들어가지 않는다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|02. 초과와 미만:1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|02. 초과와 미만:2",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|02. 초과와 미만:3",
+"kind": "ladder"
 },
 {
 "id": "19xudqz:t0L1",
@@ -231,19 +303,31 @@
 "10은 포함",
 "20은 포함하지 않는다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "② '10 이상 20 미만'은 어떤 수들이야?",
+"newQBy": "claude"
 },
 {
 "id": "19xudqz:t0H1",
 "kind": "high",
-"round": 1,
+"round": 2,
 "by": "claude",
-"answer": "범위의 시작과 끝에 각각 이상·초과 중 하나, 이하·미만 중 하나를 붙여서 나타내. 끝의 수를 포함하면 이상·이하, 포함하지 않으면 초과·미만을 써.",
+"answer": "10은 들어가고 20은 들어가지 않으니까 '10 이상 20 미만'이야.",
 "keys": [
+"10은 들어간다 → 10 이상",
+"20은 안 들어간다 → 20 미만"
+],
+"answerBy": "claude",
+"newQ": "① 수직선에서 10에는 색칠한 점(●), 20에는 빈 점(○)을 찍고 그 사이를 이었어. 이 범위를 말로 나타내 봐.",
+"newQBy": "claude",
+"rWas": 1,
+"ansWas": {
+"a": "범위의 시작과 끝에 각각 이상·초과 중 하나, 이하·미만 중 하나를 붙여서 나타내. 끝의 수를 포함하면 이상·이하, 포함하지 않으면 초과·미만을 써.",
+"k": [
 "시작과 끝에 하나씩 붙인다",
 "포함하면 이상·이하, 아니면 초과·미만"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "19xudqz:t0H2",
@@ -255,7 +339,9 @@
 "요금·정원 같은 기준",
 "범위에 들어가는지로 정한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "19xudqz:qrecall",
@@ -267,7 +353,9 @@
 "10부터 19까지",
 "10개"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "19xudqz:qreason",
@@ -279,7 +367,9 @@
 "끝의 수를 포함하는지 정확히 정한다",
 "겹치거나 빠지지 않는다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "19xudqz:qexample",
@@ -291,7 +381,9 @@
 "25는 제외, 30은 포함",
 "26, 27, 28, 29, 30"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "'25 초과 30 이하'인 자연수를 모두 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "19xudqz:qerror",
@@ -303,7 +395,9 @@
 "미만은 포함하지 않는다",
 "20은 들어가지 않는다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "19xudqz:qcondition",
@@ -315,7 +409,21 @@
 "다르다",
 "10과 20의 포함 여부"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "'10 이상 20 이하'와 '10 초과 20 미만'은 들어가는 수가 어떻게 달라?",
+"newQBy": "claude"
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|03. 수의 범위 활용하기:1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|03. 수의 범위 활용하기:2",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|03. 수의 범위 활용하기:3",
+"kind": "ladder"
 },
 {
 "id": "4k34j1:t0L1",
@@ -326,7 +434,9 @@
 "keys": [
 "구하려는 자리 아래 수를 올린다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 올림이 뭐야?",
+"newQBy": "claude"
 },
 {
 "id": "4k34j1:t0L2",
@@ -337,7 +447,9 @@
 "keys": [
 "330"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "② 321을 올림하여 십의 자리까지 나타내면 얼마야?",
+"newQBy": "claude"
 },
 {
 "id": "4k34j1:t0H1",
@@ -362,7 +474,9 @@
 "모자라면 안 된다",
 "올림한 값은 원래 수보다 작지 않다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "4k34j1:qrecall",
@@ -373,7 +487,9 @@
 "keys": [
 "800"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "4k34j1:qexample",
@@ -392,24 +508,54 @@
 "kind": "qset",
 "round": 2,
 "by": "claude",
-"answer": "일의 자리가 0이라서 올릴 수가 없어. 그래서 그대로 320이야.",
+"answer": "320이야. 일의 자리가 0이라 올릴 수가 없어서 그대로야.",
 "keys": [
+"320",
+"일의 자리가 0이라 올릴 게 없다"
+],
+"answerBy": "claude",
+"newQ": "320을 올림하여 십의 자리까지 나타내면 얼마야? 왜 그런지도 말해 봐.",
+"newQBy": "claude",
+"ansWas": {
+"a": "일의 자리가 0이라서 올릴 수가 없어. 그래서 그대로 320이야.",
+"k": [
 "아래 자리가 0",
 "올릴 것이 없다"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "4k34j1:qerror",
 "kind": "qset",
 "round": 2,
 "by": "claude",
-"answer": "십의 자리까지 올림하면 일의 자리 4를 올려서 십의 자리 6이 7이 돼. 374가 아니라 370이야.",
+"answer": "십의 자리를 1 크게 하면서 일의 자리 4를 0으로 만들지 않았어. 바른 답은 370이야.",
 "keys": [
-"일의 자리를 0으로 만든다",
+"일의 자리를 0으로 해야 한다",
 "370"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "친구가 364를 올림하여 십의 자리까지 나타내면 374라고 했어. 어떻게 잘못한 건지 찾고, 바른 답도 말해 봐.",
+"newQBy": "claude",
+"ansWas": {
+"a": "십의 자리까지 올림하면 일의 자리 4를 올려서 십의 자리 6이 7이 돼. 374가 아니라 370이야.",
+"k": [
+"일의 자리를 0으로 만든다",
+"370"
+]
+}
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|04. 올림:1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|04. 올림:2",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|04. 올림:3",
+"kind": "ladder"
 },
 {
 "id": "glvzvi:t0L1",
@@ -420,7 +566,9 @@
 "keys": [
 "구하려는 자리 아래 수를 버린다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 버림이 뭐야?",
+"newQBy": "claude"
 },
 {
 "id": "glvzvi:t0L2",
@@ -431,7 +579,9 @@
 "keys": [
 "320"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "② 321을 버림하여 십의 자리까지 나타내면 얼마야?",
+"newQBy": "claude"
 },
 {
 "id": "glvzvi:t0H1",
@@ -456,7 +606,9 @@
 "남는 것은 한 묶음이 안 된다",
 "버린다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "glvzvi:qrecall",
@@ -467,7 +619,9 @@
 "keys": [
 "700"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "glvzvi:qexample",
@@ -491,30 +645,59 @@
 "작거나 같다",
 "아래 수를 버리기만 한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "glvzvi:qerror",
 "kind": "qset",
 "round": 2,
 "by": "claude",
-"answer": "십의 자리까지 버림하면 일의 자리만 버려서 360이야. 300은 백의 자리까지 버림한 값이야.",
+"answer": "십의 자리까지가 아니라 백의 자리까지 버림했어. 십의 자리까지는 일의 자리만 버려서 360이야.",
 "keys": [
-"일의 자리만 버린다",
+"백의 자리까지 버림한 것",
 "360"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "친구가 364를 버림하여 십의 자리까지 나타내면 300이라고 했어. 어떻게 잘못한 건지 찾고, 바른 답도 말해 봐.",
+"newQBy": "claude",
+"ansWas": {
+"a": "십의 자리까지 버림하면 일의 자리만 버려서 360이야. 300은 백의 자리까지 버림한 값이야.",
+"k": [
+"일의 자리만 버린다",
+"360"
+]
+}
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|05. 버림:1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|05. 버림:2",
+"kind": "ladder"
 },
 {
 "id": "1re59:t0L1",
 "kind": "low",
 "round": 1,
 "by": "claude",
-"answer": "버려. 아래 자리 숫자가 0, 1, 2, 3, 4이면 버림해.",
+"answer": "구하려는 자리 바로 아래 숫자가 0, 1, 2, 3, 4이면 버리고, 5, 6, 7, 8, 9이면 올리는 방법이야.",
 "keys": [
-"버린다"
+"바로 아래 자리 숫자를 본다",
+"0~4는 버림",
+"5~9는 올림"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 반올림이 뭐야?",
+"newQBy": "claude",
+"ansWas": {
+"a": "버려. 아래 자리 숫자가 0, 1, 2, 3, 4이면 버림해.",
+"k": [
+"버린다"
+]
+}
 },
 {
 "id": "1re59:t0L2",
@@ -525,7 +708,9 @@
 "keys": [
 "올린다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "1re59:t0H1",
@@ -550,7 +735,9 @@
 "가까운 쪽으로 나타낸다",
 "5가 가운데 기준"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "1re59:qrecall",
@@ -562,7 +749,9 @@
 "십의 자리 숫자 5를 본다",
 "2500"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "2453을 반올림하여 백의 자리까지 나타내면 얼마야?",
+"newQBy": "claude"
 },
 {
 "id": "1re59:qexample",
@@ -586,7 +775,9 @@
 "구하려는 자리 바로 아래 자리를 본다",
 "십의 자리까지면 일의 자리"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "1re59:qerror",
@@ -598,7 +789,21 @@
 "5는 올린다",
 "370"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "친구가 365를 반올림하여 십의 자리까지 나타낼 때, 5는 애매하니까 버려서 360이라고 했어. 뭐가 잘못됐는지 찾고, 바른 답도 말해 봐.",
+"newQBy": "claude"
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|06. 반올림:1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|06. 반올림:2",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|06. 반올림:3",
+"kind": "ladder"
 },
 {
 "id": "yehjwt:t0L1",
@@ -611,7 +816,9 @@
 "남는 것을 못 세면 버림",
 "대략적인 값은 반올림"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 올림·버림·반올림은 각각 어떤 상황에 써?",
+"newQBy": "claude"
 },
 {
 "id": "yehjwt:t0L2",
@@ -623,7 +830,9 @@
 "대략적인 값을 쉽게 안다",
 "정확한 값이 꼭 필요하지 않을 때"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "yehjwt:t0H1",
@@ -641,14 +850,25 @@
 {
 "id": "yehjwt:t0H2",
 "kind": "high",
-"round": 2,
+"round": 1,
 "by": "claude",
-"answer": "예를 들어 347을 십의 자리까지 나타내면 올림은 350, 버림은 340, 반올림은 350이야. 같은 수라도 방법에 따라 달라져.",
+"answer": "올림하면 350, 버림하면 340, 반올림하면 일의 자리가 7이라 350이야.",
 "keys": [
+"올림 350",
+"버림 340",
+"반올림 350"
+],
+"answerBy": "claude",
+"newQ": "② 347을 올림, 버림, 반올림하여 십의 자리까지 나타내면 각각 얼마야?",
+"newQBy": "claude",
+"rWas": 2,
+"ansWas": {
+"a": "예를 들어 347을 십의 자리까지 나타내면 올림은 350, 버림은 340, 반올림은 350이야. 같은 수라도 방법에 따라 달라져.",
+"k": [
 "예로 든 수를 세 방법으로 나타낸다",
 "결과가 다를 수 있다"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "yehjwt:qrecall",
@@ -659,7 +879,9 @@
 "keys": [
 "올림"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "yehjwt:qexample",
@@ -671,19 +893,31 @@
 "남는 사람도 들어가야 한다",
 "올림, 4조"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "25명이 한 조에 8명씩 조를 짜. 모두 조에 들어가려면 최소 몇 조가 필요해? 어떤 어림 방법을 썼는지도 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "yehjwt:qerror",
 "kind": "qset",
 "round": 2,
 "by": "claude",
-"answer": "남는 8장은 10장이 안 돼서 한 다발로 팔 수 없어. 버림을 써서 13다발만 팔 수 있어.",
+"answer": "남는 8장은 10장이 안 돼서 한 묶음으로 팔 수 없어. 버림을 써서 13묶음이야.",
 "keys": [
+"남는 8장은 팔 수 없다",
+"버림",
+"13묶음"
+],
+"answerBy": "claude",
+"newQ": "색종이 138장을 10장씩 묶어서 팔아. 친구가 14묶음을 팔 수 있다고 했어. 뭐가 잘못됐는지 찾고, 바른 답도 말해 봐.",
+"newQBy": "claude",
+"ansWas": {
+"a": "남는 8장은 10장이 안 돼서 한 다발로 팔 수 없어. 버림을 써서 13다발만 팔 수 있어.",
+"k": [
 "모자란 묶음은 팔 수 없다",
 "버림, 13다발"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "yehjwt:qreason",
@@ -695,7 +929,21 @@
 "가장 가까운 값",
 "실제와 가장 비슷하다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|07. 올림·버림·반올림 활용하기:1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|07. 올림·버림·반올림 활용하기:2",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|07. 올림·버림·반올림 활용하기:3",
+"kind": "ladder"
 },
 {
 "id": "11m6g9r:t0L1",
@@ -706,7 +954,9 @@
 "keys": [
 "1/5을 3번 더한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 1/5 × 3을 덧셈식으로 나타내 봐.",
+"newQBy": "claude"
 },
 {
 "id": "11m6g9r:t0L2",
@@ -718,31 +968,53 @@
 "분자에 곱한다",
 "분모는 그대로"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "② (분수)×(자연수)는 분자와 분모 중 어디에 자연수를 곱해?",
+"newQBy": "claude"
 },
 {
 "id": "11m6g9r:t0H1",
 "kind": "high",
 "round": 2,
 "by": "claude",
-"answer": "1/5×3은 1/5을 3번 더한 것이라서, 한 조각 크기(분모)는 그대로이고 조각 수(분자)만 3배가 돼. 그래서 3/5이야.",
+"answer": "1/5 × 3은 피자 1/5조각을 3번 더한 거야. 조각 크기(분모 5)는 그대로고 조각 수(분자)만 3개가 돼서 3/5이야.",
 "keys": [
 "1/5을 3번 더한 것",
-"조각 크기는 그대로, 조각 수만 늘어난다"
+"조각 크기(분모)는 그대로",
+"조각 수(분자)만 3배"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 1/5 × 3에서 왜 분모는 그대로 두고 분자에만 3을 곱해? 피자로 예를 들어 설명해 봐.",
+"newQBy": "claude",
+"ansWas": {
+"a": "1/5×3은 1/5을 3번 더한 것이라서, 한 조각 크기(분모)는 그대로이고 조각 수(분자)만 3배가 돼. 그래서 3/5이야.",
+"k": [
+"1/5을 3번 더한 것",
+"조각 크기는 그대로, 조각 수만 늘어난다"
+]
+}
 },
 {
 "id": "11m6g9r:t0H2",
 "kind": "high",
-"round": 2,
+"round": 1,
 "by": "claude",
-"answer": "먼저 약분하면 곱하는 수가 작아져서 계산이 쉽고, 결과를 다시 약분할 필요가 없어.",
+"answer": "분모 12와 자연수 4를 4로 약분하면 5/3 × 1이 돼. 그래서 5/3, 대분수로 1과 2/3이야.",
 "keys": [
+"분모와 자연수를 약분",
+"5/3 = 1과 2/3"
+],
+"answerBy": "claude",
+"newQ": "② 5/12 × 4를 약분해서 계산하는 과정을 말해 봐.",
+"newQBy": "claude",
+"rWas": 2,
+"ansWas": {
+"a": "먼저 약분하면 곱하는 수가 작아져서 계산이 쉽고, 결과를 다시 약분할 필요가 없어.",
+"k": [
 "수가 작아져 계산이 쉽다",
 "나중에 약분하지 않아도 된다"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "11m6g9r:qrecall",
@@ -754,7 +1026,9 @@
 "2×4=8",
 "8/7=1과 1/7"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "2/7 × 4는 얼마야?",
+"newQBy": "claude"
 },
 {
 "id": "11m6g9r:qerror",
@@ -766,7 +1040,9 @@
 "분모에는 곱하지 않는다",
 "8/7"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "친구가 2/7 × 4를 분모에도 4를 곱해서 8/28이라고 했어. 뭐가 잘못됐는지 찾고, 바른 답도 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "11m6g9r:qexample",
@@ -778,7 +1054,9 @@
 "분자에 자연수를 곱한다",
 "가분수를 대분수로 바꾼다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "계산 결과가 대분수가 되는 (분수)×(자연수) 식을 네가 하나 만들어서 계산해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "11m6g9r:qreason",
@@ -790,19 +1068,42 @@
 "1/5을 3번 더한다",
 "3/5으로 커진다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ladder:e5-2|2. 분수의 곱셈|01. (분수)×(자연수):1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|2. 분수의 곱셈|01. (분수)×(자연수):2",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|2. 분수의 곱셈|01. (분수)×(자연수):3",
+"kind": "ladder"
 },
 {
 "id": "1h3g8qe:t0L1",
 "kind": "low",
 "round": 1,
 "by": "claude",
-"answer": "자연수를 분모가 1인 분수(6=6/1)로 생각하거나, 6의 2/3만큼이라고 생각하면 돼. 6×2/3=12/3=4야.",
+"answer": "6 × 2/3은 6의 2/3만큼이야. 6 × 2 = 12를 분자에 두면 12/3이고, 12/3 = 4야.",
 "keys": [
+"자연수를 분자에 곱한다",
+"12/3 = 4"
+],
+"answerBy": "claude",
+"newQ": "① 6 × 2/3을 계산하는 과정을 말해 봐.",
+"newQBy": "claude",
+"ansWas": {
+"a": "자연수를 분모가 1인 분수(6=6/1)로 생각하거나, 6의 2/3만큼이라고 생각하면 돼. 6×2/3=12/3=4야.",
+"k": [
 "6=6/1로 생각한다",
 "6의 2/3"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "1h3g8qe:t0L2",
@@ -814,7 +1115,9 @@
 "작아진다",
 "진분수는 1보다 작다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "1h3g8qe:t0H1",
@@ -826,19 +1129,30 @@
 "자연수를 (자연수)/1로 바꾼다",
 "분자끼리, 분모끼리 곱한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "1h3g8qe:t0H2",
 "kind": "high",
 "round": 2,
 "by": "claude",
-"answer": "진분수를 곱하는 것은 자연수의 일부만큼을 구하는 거야. 전체보다 적은 부분만 가지니까 값이 작아져.",
+"answer": "6 × 2/3은 6을 3묶음으로 나눈 것 중 2묶음, 즉 6의 일부만큼이야. 전체보다 적으니까 6보다 작은 4가 돼.",
 "keys": [
-"일부만큼을 구한다",
+"6의 2/3만큼(일부)",
 "전체보다 적다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "② 6 × 2/3이 6보다 작은 이유를 말해 봐.",
+"newQBy": "claude",
+"ansWas": {
+"a": "진분수를 곱하는 것은 자연수의 일부만큼을 구하는 거야. 전체보다 적은 부분만 가지니까 값이 작아져.",
+"k": [
+"일부만큼을 구한다",
+"전체보다 적다"
+]
+}
 },
 {
 "id": "1h3g8qe:qrecall",
@@ -850,7 +1164,9 @@
 "8×3=24",
 "6"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "1h3g8qe:qerror",
@@ -862,7 +1178,9 @@
 "자연수는 분자에 곱한다",
 "6"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "친구가 8 × 3/4을 8을 분모에 곱해서 3/32이라고 했어. 뭐가 잘못됐는지 찾고, 바른 답도 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "1h3g8qe:qexample",
@@ -874,7 +1192,9 @@
 "분자에 곱한다",
 "약분해서 기약분수로"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "계산 결과를 약분해야 하는 (자연수)×(분수) 식을 네가 하나 만들어서 계산해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "1h3g8qe:qreason",
@@ -886,7 +1206,17 @@
 "6은 3으로 나누어떨어진다",
 "5는 3으로 나누어떨어지지 않는다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "6 × 2/3은 자연수가 되는데 5 × 2/3은 왜 자연수가 안 돼?",
+"newQBy": "claude"
+},
+{
+"id": "ladder:e5-2|2. 분수의 곱셈|02. (자연수)×(분수):1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|2. 분수의 곱셈|02. (자연수)×(분수):2",
+"kind": "ladder"
 },
 {
 "id": "fjim33:t0L1",
@@ -898,19 +1228,30 @@
 "분자끼리 곱한다",
 "분모끼리 곱한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 진분수끼리는 어떻게 곱해?",
+"newQBy": "claude"
 },
 {
 "id": "fjim33:t0L2",
 "kind": "low",
 "round": 1,
 "by": "claude",
-"answer": "한 분수의 분자와 다른 분수의 분모에 공약수가 있으면, 곱하기 전에 약분하면 편리해.",
+"answer": "3과 9를 3으로, 8과 4를 4로 약분하면 1/2 × 1/3이 돼. 그래서 1/6이야.",
 "keys": [
+"분자와 다른 분수의 분모끼리 약분",
+"1/6"
+],
+"answerBy": "claude",
+"newQ": "② 3/8 × 4/9를 곱하기 전에 약분하는 과정을 말해 봐.",
+"newQBy": "claude",
+"ansWas": {
+"a": "한 분수의 분자와 다른 분수의 분모에 공약수가 있으면, 곱하기 전에 약분하면 편리해.",
+"k": [
 "분자와 분모에 공약수가 있을 때",
 "곱하기 전에 약분"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "fjim33:t0H1",
@@ -922,7 +1263,9 @@
 "분모끼리 곱하면 전체 조각 수",
 "분자끼리 곱하면 가진 조각 수"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 진분수의 곱셈에서 왜 분모끼리 곱하는지 네모를 나누는 그림으로 설명해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "fjim33:t0H2",
@@ -934,7 +1277,9 @@
 "수가 작아진다",
 "나중에 약분하지 않아도 된다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "fjim33:qrecall",
@@ -946,7 +1291,9 @@
 "6/20",
 "3/10"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "3/4 × 2/5는 얼마야?",
+"newQBy": "claude"
 },
 {
 "id": "fjim33:qerror",
@@ -958,7 +1305,9 @@
 "곱셈은 통분하지 않는다",
 "3/10"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "친구가 3/4 × 2/5를 분모를 20으로 통분한 뒤 분자끼리 더했어. 뭐가 잘못됐는지 찾고, 바른 답도 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "fjim33:qexample",
@@ -970,19 +1319,43 @@
 "곱하기 전에 약분한다",
 "1/2"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "fjim33:qreason",
 "kind": "qset",
 "round": 2,
 "by": "claude",
-"answer": "작아져. 1보다 작은 수를 곱하면 그 일부만 가지게 되니까, 두 분수 어느 것보다도 작아.",
+"answer": "작아. 1/2 × 1/3은 피자 반 판을 다시 3조각으로 나눈 것 중 한 조각이라 1/6이야. 반 판의 일부니까 1/2보다 작아.",
 "keys": [
+"작다",
+"1/2의 1/3만큼(일부)",
+"1/6"
+],
+"answerBy": "claude",
+"newQ": "1/2 × 1/3은 1/2보다 커, 작아? 피자로 예를 들어 설명해 봐.",
+"newQBy": "claude",
+"ansWas": {
+"a": "작아져. 1보다 작은 수를 곱하면 그 일부만 가지게 되니까, 두 분수 어느 것보다도 작아.",
+"k": [
 "작아진다",
 "1보다 작은 수를 곱하면 일부만 가진다"
-],
-"answerBy": "claude"
+]
+}
+},
+{
+"id": "ladder:e5-2|2. 분수의 곱셈|03. 진분수의 곱셈:1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|2. 분수의 곱셈|03. 진분수의 곱셈:2",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|2. 분수의 곱셈|03. 진분수의 곱셈:3",
+"kind": "ladder"
 },
 {
 "id": "1rbp9gq:t0L1",
@@ -993,7 +1366,9 @@
 "keys": [
 "가분수로 바꾼다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "1rbp9gq:t0L2",
@@ -1019,7 +1394,9 @@
 "가분수로 바꾼다",
 "분자끼리, 분모끼리 곱한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 1과 1/2 × 2와 1/3을 계산하는 과정을 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "1rbp9gq:t0H2",
@@ -1044,7 +1421,9 @@
 "(자연수)×(분모)+(분자)",
 "7/3"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "1rbp9gq:qerror",
@@ -1056,7 +1435,9 @@
 "빠뜨린 곱이 있다",
 "가분수로 바꿔 계산(3과 1/2)"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "친구가 1과 1/2 × 2와 1/3을 자연수끼리(1×2), 분수끼리(1/2×1/3) 따로 곱해서 더했어. 뭐가 잘못됐는지 찾고, 바른 답도 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "1rbp9gq:qexample",
@@ -1068,7 +1449,9 @@
 "가분수로 바꾼다",
 "분자끼리, 분모끼리 곱한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "네가 대분수 두 개를 정해서 곱하는 식을 만들고 계산해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "1rbp9gq:qreason",
@@ -1080,7 +1463,21 @@
 "항상 크다",
 "더해지는 곱이 더 있다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ladder:e5-2|2. 분수의 곱셈|04. 여러 가지 분수의 곱셈:1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|2. 분수의 곱셈|04. 여러 가지 분수의 곱셈:2",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|2. 분수의 곱셈|04. 여러 가지 분수의 곱셈:3",
+"kind": "ladder"
 },
 {
 "id": "qebay6:t0L1",
@@ -1092,7 +1489,9 @@
 "모양과 크기가 같다",
 "완전히 겹친다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 두 도형이 서로 합동이라는 건 무슨 뜻이야?",
+"newQBy": "claude"
 },
 {
 "id": "qebay6:t0L2",
@@ -1130,7 +1529,9 @@
 "뒤집거나 돌려도 모양과 크기는 그대로",
 "완전히 겹치면 합동"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "② 뒤집거나 돌려서 완전히 겹쳐도 합동이야? 왜 그런지 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "qebay6:qrecall",
@@ -1142,7 +1543,9 @@
 "포개어 본다",
 "완전히 겹치는지 확인한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "두 도형이 합동인지 어떻게 확인해?",
+"newQBy": "claude"
 },
 {
 "id": "qebay6:qerror",
@@ -1154,7 +1557,9 @@
 "크기가 다르다",
 "합동은 크기도 같아야 한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "친구가 큰 정삼각형과 작은 정삼각형은 모양이 같으니까 합동이라고 했어. 뭐가 잘못됐을까?",
+"newQBy": "claude"
 },
 {
 "id": "qebay6:qexample",
@@ -1165,19 +1570,42 @@
 "keys": [
 "모양과 크기가 같은 두 물건"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "우리 주변 물건 중에서 서로 합동인 것 두 개를 예로 들어 봐.",
+"newQBy": "claude"
 },
 {
 "id": "qebay6:qreason",
 "kind": "qset",
 "round": 2,
 "by": "claude",
-"answer": "응, 같아. 합동인 두 도형은 완전히 겹치니까 차지하는 크기인 넓이도 같아.",
+"answer": "아니야. 가로 2 cm, 세로 8 cm인 직사각형과 한 변이 4 cm인 정사각형은 넓이가 16 cm²로 같지만 모양이 달라서 겹치지 않아.",
 "keys": [
+"넓이가 같아도 합동이 아닐 수 있다",
+"모양이 다르면 겹치지 않는다"
+],
+"answerBy": "claude",
+"newQ": "넓이가 같은 두 도형은 항상 합동이야? 예를 들어 설명해 봐.",
+"newQBy": "claude",
+"ansWas": {
+"a": "응, 같아. 합동인 두 도형은 완전히 겹치니까 차지하는 크기인 넓이도 같아.",
+"k": [
 "넓이도 같다",
 "완전히 겹친다"
-],
-"answerBy": "claude"
+]
+}
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|01. 도형의 합동:1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|01. 도형의 합동:2",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|01. 도형의 합동:3",
+"kind": "ladder"
 },
 {
 "id": "192l4g2:t0L1",
@@ -1190,7 +1618,9 @@
 "대응변",
 "대응각"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 합동인 두 도형에서 겹치는 점, 변, 각을 각각 뭐라고 해?",
+"newQBy": "claude"
 },
 {
 "id": "192l4g2:t0L2",
@@ -1202,7 +1632,9 @@
 "대응변의 길이가 같다",
 "대응각의 크기가 같다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "② 합동인 두 도형에서 대응변의 길이와 대응각의 크기는 어때?",
+"newQBy": "claude"
 },
 {
 "id": "192l4g2:t0H1",
@@ -1221,14 +1653,25 @@
 {
 "id": "192l4g2:t0H2",
 "kind": "high",
-"round": 2,
+"round": 1,
 "by": "claude",
-"answer": "합동인 도형에서는 대응변의 길이와 대응각의 크기가 같으니까, 한 도형의 길이나 각을 알면 다른 도형의 대응하는 곳도 똑같이 알 수 있어.",
+"answer": "변 ㄹㅁ은 변 ㄱㄴ의 대응변이라 5 cm, 각 ㄹㅁㅂ은 각 ㄱㄴㄷ의 대응각이라 60°야. 합동이면 대응변의 길이와 대응각의 크기가 같아.",
 "keys": [
+"변 ㄹㅁ = 5 cm",
+"각 ㄹㅁㅂ = 60°",
+"대응변·대응각은 같다"
+],
+"answerBy": "claude",
+"newQ": "② 삼각형 ㄱㄴㄷ과 삼각형 ㄹㅁㅂ이 합동이야. 변 ㄱㄴ이 5 cm, 각 ㄱㄴㄷ이 60°이면 변 ㄹㅁ과 각 ㄹㅁㅂ은 얼마야? 왜 그런지도 말해 봐.",
+"newQBy": "claude",
+"rWas": 2,
+"ansWas": {
+"a": "합동인 도형에서는 대응변의 길이와 대응각의 크기가 같으니까, 한 도형의 길이나 각을 알면 다른 도형의 대응하는 곳도 똑같이 알 수 있어.",
+"k": [
 "대응변·대응각은 같다",
 "한쪽을 알면 다른 쪽도 안다"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "192l4g2:qrecall",
@@ -1239,7 +1682,9 @@
 "keys": [
 "변 ㄹㅁ"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "192l4g2:qerror",
@@ -1251,7 +1696,9 @@
 "대응변의 길이도 같다",
 "완전히 겹쳐야 합동"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "친구가 합동인 두 삼각형은 대응각의 크기는 같지만 대응변의 길이는 다를 수도 있다고 했어. 뭐가 잘못됐을까?",
+"newQBy": "claude"
 },
 {
 "id": "192l4g2:qexample",
@@ -1263,7 +1710,9 @@
 "대응각은 크기가 같다",
 "50°"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "192l4g2:qreason",
@@ -1275,7 +1724,21 @@
 "다를 수 없다",
 "변의 개수가 다르면 겹치지 않는다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|02. 합동인 도형의 성질:1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|02. 합동인 도형의 성질:2",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|02. 합동인 도형의 성질:3",
+"kind": "ladder"
 },
 {
 "id": "13ncog2:t0L1",
@@ -1287,7 +1750,9 @@
 "한 직선을 따라 접으면 완전히 겹친다",
 "그 직선은 대칭축"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 선대칭도형이 뭐야?",
+"newQBy": "claude"
 },
 {
 "id": "13ncog2:t0L2",
@@ -1298,7 +1763,9 @@
 "keys": [
 "대응점, 대응변, 대응각"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "13ncog2:t0H1",
@@ -1323,7 +1790,9 @@
 "대칭축과 수직으로 만난다",
 "대칭축이 선분을 똑같이 둘로 나눈다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "② 선대칭도형에서 대응점끼리 이은 선분과 대칭축은 어떤 관계야?",
+"newQBy": "claude"
 },
 {
 "id": "13ncog2:qrecall",
@@ -1343,12 +1812,21 @@
 "kind": "qset",
 "round": 2,
 "by": "claude",
-"answer": "접으면 A와 B가 겹치니까 AM과 BM도 겹쳐서 길이가 같아. 점 M 양쪽의 두 각도 겹치는데, 두 각을 합하면 180°이니까 각각 90°야.",
+"answer": "접으면 대칭축 양쪽의 두 각이 완전히 겹쳐서 크기가 같아. 두 각을 합하면 180°니까 각각 90°, 그래서 수직이야.",
 "keys": [
+"접으면 양쪽 두 각이 겹쳐 같다",
+"합이 180°라 각각 90°"
+],
+"answerBy": "claude",
+"newQ": "선대칭도형을 대칭축으로 접는 모습을 생각해서, 대응점끼리 이은 선분이 왜 대칭축과 수직으로 만나는지 설명해 봐.",
+"newQBy": "claude",
+"ansWas": {
+"a": "접으면 A와 B가 겹치니까 AM과 BM도 겹쳐서 길이가 같아. 점 M 양쪽의 두 각도 겹치는데, 두 각을 합하면 180°이니까 각각 90°야.",
+"k": [
 "AM과 BM이 겹쳐 길이가 같다",
 "양쪽 각이 겹치고 합이 180°라 각각 90°"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "13ncog2:qerror",
@@ -1360,7 +1838,9 @@
 "꼭 수직이다",
 "양쪽 각이 같아서 90°"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "13ncog2:qexample",
@@ -1372,7 +1852,9 @@
 "선대칭도형의 예",
 "대칭축의 위치"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "네가 아는 선대칭도형을 하나 말하고, 대칭축이 어디인지 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "13ncog2:qcondition",
@@ -1384,7 +1866,25 @@
 "대칭축이 여러 개인 도형이 있다",
 "정사각형은 4개"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "정사각형의 대칭축은 몇 개야? 어디에 있는지도 말해 봐.",
+"newQBy": "claude"
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|03. 선대칭도형과 그 성질:1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|03. 선대칭도형과 그 성질:2",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|03. 선대칭도형과 그 성질:3",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|03. 선대칭도형과 그 성질:4",
+"kind": "ladder"
 },
 {
 "id": "1isaku1:t0L1",
@@ -1396,7 +1896,9 @@
 "한 점을 중심으로 180° 돌린다",
 "완전히 겹친다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 점대칭도형이 뭐야?",
+"newQBy": "claude"
 },
 {
 "id": "1isaku1:t0L2",
@@ -1407,7 +1909,9 @@
 "keys": [
 "180° 돌릴 때 중심이 되는 점"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "② 점대칭도형에서 대칭의 중심이 뭐야?",
+"newQBy": "claude"
 },
 {
 "id": "1isaku1:t0H1",
@@ -1425,14 +1929,24 @@
 {
 "id": "1isaku1:t0H2",
 "kind": "high",
-"round": 2,
+"round": 1,
 "by": "claude",
-"answer": "180° 돌리면 한 점은 대칭의 중심을 지나 정반대쪽으로 가서 대응점과 겹쳐. 그래서 대응점끼리 이은 선분은 항상 대칭의 중심을 지나고, 중심이 그 선분을 똑같이 둘로 나눠.",
+"answer": "대응점끼리 이은 선분은 대칭의 중심을 지나고, 대칭의 중심이 그 선분을 똑같이 둘로 나눠.",
 "keys": [
+"대칭의 중심을 지난다",
+"선분을 똑같이 둘로 나눈다"
+],
+"answerBy": "claude",
+"newQ": "② 점대칭도형에서 대응점끼리 이은 선분과 대칭의 중심은 어떤 관계야?",
+"newQBy": "claude",
+"rWas": 2,
+"ansWas": {
+"a": "180° 돌리면 한 점은 대칭의 중심을 지나 정반대쪽으로 가서 대응점과 겹쳐. 그래서 대응점끼리 이은 선분은 항상 대칭의 중심을 지나고, 중심이 그 선분을 똑같이 둘로 나눠.",
+"k": [
 "180° 돌리면 정반대쪽으로 간다",
 "중심을 지나고 둘로 똑같이 나뉜다"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "1isaku1:qrecall",
@@ -1457,7 +1971,9 @@
 "대각선이 만나는 점이 중심",
 "180° 돌리면 완전히 겹친다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "평행사변형이 점대칭도형인 이유를 말해 봐. 대칭의 중심은 어디야?",
+"newQBy": "claude"
 },
 {
 "id": "1isaku1:qerror",
@@ -1469,7 +1985,9 @@
 "180° 돌려야 한다",
 "120°는 기준이 아니다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "친구가 어떤 도형을 120° 돌렸더니 처음 모양과 겹쳐서 점대칭도형이라고 했어. 뭐가 잘못됐을까?",
+"newQBy": "claude"
 },
 {
 "id": "1isaku1:qcondition",
@@ -1481,7 +1999,9 @@
 "아니다",
 "180° 돌리면 겹치지 않는다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "정삼각형은 점대칭도형이야? 왜 그런지 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "1isaku1:qexample",
@@ -1493,7 +2013,25 @@
 "점대칭도형의 예",
 "대칭의 중심 위치"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|04. 점대칭도형과 그 성질:1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|04. 점대칭도형과 그 성질:2",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|04. 점대칭도형과 그 성질:3",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|04. 점대칭도형과 그 성질:4",
+"kind": "ladder"
 },
 {
 "id": "1my7mv7:t0L1",
@@ -1504,7 +2042,9 @@
 "keys": [
 "0.9를 3번 더한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 0.9 × 3을 덧셈식으로 나타내 봐.",
+"newQBy": "claude"
 },
 {
 "id": "1my7mv7:t0L2",
@@ -1529,7 +2069,9 @@
 "소수를 분수로 바꾼다",
 "분자에 곱하고 다시 소수로"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 0.9 × 3을 분수의 곱셈으로 바꿔 계산하는 과정을 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "1my7mv7:t0H2",
@@ -1541,7 +2083,9 @@
 "0.1이 몇 개인지로 생각한다",
 "개수를 곱하고 소수점을 찍는다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "② 0.9 × 3을 0.1이 몇 개인지로 생각해서 계산해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "1my7mv7:qrecall",
@@ -1553,7 +2097,9 @@
 "7/10×4",
 "2.8"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "1my7mv7:qerror",
@@ -1565,7 +2111,9 @@
 "0.9=9/10",
 "9/100=0.09"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "1my7mv7:qexample",
@@ -1590,18 +2138,42 @@
 "0.7과 7/10은 같은 수",
 "배운 분수의 곱셈으로 계산한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ladder:e5-2|4. 소수의 곱셈|01. (소수)×(자연수) (1):1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|4. 소수의 곱셈|01. (소수)×(자연수) (1):2",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|4. 소수의 곱셈|01. (소수)×(자연수) (1):3",
+"kind": "ladder"
 },
 {
 "id": "43tvot:t0L1",
 "kind": "low",
 "round": 1,
 "by": "claude",
-"answer": "자연수의 곱셈처럼 오른쪽 끝을 맞춰 써.",
+"answer": "자연수처럼 오른쪽 끝을 맞춰 쓰고 139 × 2 = 278을 계산해. 1.39가 소수 두 자리니까 소수점을 찍으면 2.78이야.",
 "keys": [
-"오른쪽 끝을 맞춘다"
+"오른쪽 끝을 맞춰 자연수처럼 곱한다",
+"소수점을 그대로 내려 찍는다",
+"2.78"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 1.39 × 2를 세로셈으로 계산하는 과정을 말해 봐.",
+"newQBy": "claude",
+"ansWas": {
+"a": "자연수의 곱셈처럼 오른쪽 끝을 맞춰 써.",
+"k": [
+"오른쪽 끝을 맞춘다"
+]
+}
 },
 {
 "id": "43tvot:t0L2",
@@ -1613,7 +2185,9 @@
 "곱하는 소수의 소수점 자리대로",
 "2.78"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "43tvot:t0H1",
@@ -1625,7 +2199,9 @@
 "0.01이 몇 개인지로 생각한다",
 "소수점 아래 자리 수가 그대로"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 1.39 × 2를 0.01이 몇 개인지로 생각해서 왜 2.78인지 설명해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "43tvot:t0H2",
@@ -1637,7 +2213,9 @@
 "어림한 값과 비교한다",
 "값의 크기가 비슷한지 본다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "② 1.39 × 2를 어림해서 답이 맞는지 확인하는 방법을 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "43tvot:qerror",
@@ -1649,7 +2227,9 @@
 "곱셈은 오른쪽 끝을 맞춘다",
 "계산한 뒤 소수점을 찍는다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "친구가 1.39 × 2를 세로셈으로 쓸 때 소수점끼리 맞춰 써야 한다고 했어. 뭐가 잘못됐을까?",
+"newQBy": "claude"
 },
 {
 "id": "43tvot:qrecall",
@@ -1661,7 +2241,9 @@
 "214×3=642",
 "6.42"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "43tvot:qexample",
@@ -1673,7 +2255,9 @@
 "자연수처럼 곱한다",
 "소수점 아래 세 자리로 찍는다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "소수 세 자리 수에 자연수를 곱하는 식을 네가 만들고, 소수점을 어디에 찍는지 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "43tvot:qreason",
@@ -1687,6 +2271,14 @@
 "answerBy": "claude",
 "off": true,
 "offBy": "claude"
+},
+{
+"id": "ladder:e5-2|4. 소수의 곱셈|02. (소수)×(자연수) (2):1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|4. 소수의 곱셈|02. (소수)×(자연수) (2):2",
+"kind": "ladder"
 },
 {
 "id": "6o59ch:t0L1",
@@ -1710,7 +2302,9 @@
 "keys": [
 "작아진다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "6o59ch:t0H1",
@@ -1722,7 +2316,9 @@
 "소수를 분수로 바꾼다",
 "분자에 곱하고 다시 소수로"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 3 × 0.9를 분수의 곱셈으로 바꿔 계산하는 과정을 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "6o59ch:t0H2",
@@ -1734,7 +2330,9 @@
 "일부만큼을 구한다",
 "3의 9/10"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "② 3 × 0.9가 3보다 작은 이유를 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "6o59ch:qerror",
@@ -1746,7 +2344,9 @@
 "0.9=9/10",
 "2.7"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "친구가 3 × 0.9는 소수점을 무시하고 3 × 9 = 27이라고 했어. 뭐가 잘못됐는지 찾고, 바른 답도 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "6o59ch:qrecall",
@@ -1758,7 +2358,9 @@
 "5×6/10",
 "3"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "6o59ch:qexample",
@@ -1770,7 +2372,9 @@
 "1보다 작은 소수를 곱한다",
 "원래 수보다 작다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "6o59ch:qreason",
@@ -1781,7 +2385,17 @@
 "keys": [
 "같은 수를 다른 모양으로 쓴 것"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ladder:e5-2|4. 소수의 곱셈|03. (자연수)×(소수) (1):1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|4. 소수의 곱셈|03. (자연수)×(소수) (1):2",
+"kind": "ladder"
 },
 {
 "id": "1cjber7:t0L1",
@@ -1801,12 +2415,21 @@
 "kind": "low",
 "round": 1,
 "by": "claude",
-"answer": "1.39는 139의 1/100이니까 2×139=278의 1/100인 2.78이야.",
+"answer": "1.39는 139의 1/100이니까 2 × 1.39도 278의 1/100이야. 그래서 2.78이야.",
 "keys": [
+"1.39는 139의 1/100",
+"278의 1/100 = 2.78"
+],
+"answerBy": "claude",
+"newQ": "② 2 × 139 = 278을 이용해서 2 × 1.39를 계산하는 과정을 말해 봐.",
+"newQBy": "claude",
+"ansWas": {
+"a": "1.39는 139의 1/100이니까 2×139=278의 1/100인 2.78이야.",
+"k": [
 "139의 1/100",
 "2.78"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "1cjber7:t0H1",
@@ -1818,7 +2441,9 @@
 "자연수로 바꿔 곱한다",
 "1/10, 1/100을 곱해 되돌린다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "1cjber7:t0H2",
@@ -1830,7 +2455,9 @@
 "순서를 바꿔도 같다",
 "2.78"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "② 2 × 1.39와 1.39 × 2의 계산 결과를 비교해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "1cjber7:qerror",
@@ -1842,7 +2469,9 @@
 "1/100을 해야 한다",
 "2.78"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "친구가 2 × 139 = 278을 구한 뒤 2 × 1.39를 27.8이라고 했어. 뭐가 잘못됐는지 찾고, 바른 답도 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "1cjber7:qrecall",
@@ -1854,7 +2483,9 @@
 "3×215=645",
 "6.45"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "1cjber7:qexample",
@@ -1879,7 +2510,17 @@
 "항상은 아니다",
 "1보다 크면 커진다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "자연수에 소수를 곱하면 항상 원래 수보다 작아져? 예를 들어 설명해 봐.",
+"newQBy": "claude"
+},
+{
+"id": "ladder:e5-2|4. 소수의 곱셈|04. (자연수)×(소수) (2):1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|4. 소수의 곱셈|04. (자연수)×(소수) (2):2",
+"kind": "ladder"
 },
 {
 "id": "yc1vsn:t0L1",
@@ -1903,7 +2544,9 @@
 "keys": [
 "소수점 아래 자리 수를 더한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "② 소수끼리 곱하면 답의 소수점 아래 자리 수는 어떻게 정해져?",
+"newQBy": "claude"
 },
 {
 "id": "yc1vsn:t0H1",
@@ -1915,19 +2558,30 @@
 "분수로 바꾼다",
 "분자끼리, 분모끼리 곱한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 0.4 × 0.6을 분수의 곱셈으로 바꿔 계산하는 과정을 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "yc1vsn:t0H2",
 "kind": "high",
 "round": 2,
 "by": "claude",
-"answer": "소수를 분수로 바꾸면 분모가 10, 100이 되고, 분모끼리 곱하면 10×10=100처럼 0의 개수가 더해져. 분모의 0의 개수가 소수점 아래 자리 수라서 두 자리 수를 더한 것이 돼.",
+"answer": "0.4 = 4/10, 0.6 = 6/10이라 곱하면 분모가 10 × 10 = 100이 돼. 24/100이니까 소수 두 자리인 0.24야.",
 "keys": [
+"분모 10 × 10 = 100",
+"24/100 = 0.24"
+],
+"answerBy": "claude",
+"newQ": "② 0.4 × 0.6의 답이 왜 소수 두 자리인지 분수로 생각해서 설명해 봐.",
+"newQBy": "claude",
+"ansWas": {
+"a": "소수를 분수로 바꾸면 분모가 10, 100이 되고, 분모끼리 곱하면 10×10=100처럼 0의 개수가 더해져. 분모의 0의 개수가 소수점 아래 자리 수라서 두 자리 수를 더한 것이 돼.",
+"k": [
 "분모 10, 100으로 바꾼다",
 "분모의 0의 개수가 더해진다"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "yc1vsn:qerror",
@@ -1939,7 +2593,9 @@
 "자리 수를 더해 두 자리",
 "0.24"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "친구가 0.4 × 0.6을 4 × 6 = 24를 구한 뒤 2.4라고 했어. 뭐가 잘못됐는지 찾고, 바른 답도 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "yc1vsn:qreason",
@@ -1951,7 +2607,9 @@
 "작아진다",
 "1보다 작은 수를 곱한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "yc1vsn:qrecall",
@@ -1963,7 +2621,9 @@
 "6/100",
 "0.06"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "yc1vsn:qexample",
@@ -1975,7 +2635,21 @@
 "1보다 작은 소수끼리 곱한다",
 "두 수보다 작다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ladder:e5-2|4. 소수의 곱셈|05. (소수)×(소수) (1):1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|4. 소수의 곱셈|05. (소수)×(소수) (1):2",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|4. 소수의 곱셈|05. (소수)×(소수) (1):3",
+"kind": "ladder"
 },
 {
 "id": "zkxrl3:t0L1",
@@ -1986,7 +2660,9 @@
 "keys": [
 "오른쪽 끝을 맞춘다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "zkxrl3:t0L2",
@@ -2006,24 +2682,43 @@
 "kind": "high",
 "round": 1,
 "by": "claude",
-"answer": "소수점을 생각하지 않고 자연수처럼 곱한 다음, 두 소수의 소수점 아래 자리 수를 더한 만큼 오른쪽에서부터 세어 소수점을 찍어. 예) 1.2×0.34: 12×34=408 → 1+2=3자리 → 0.408",
+"answer": "소수점을 생각하지 않고 12 × 34 = 408을 계산해. 소수점 아래 자리 수가 1+2=3이니까 0.408이야.",
 "keys": [
+"자연수처럼 12 × 34 = 408",
+"소수점 아래 1+2=3자리",
+"0.408"
+],
+"answerBy": "claude",
+"newQ": "① 1.2 × 0.34를 계산하는 과정을 말해 봐.",
+"newQBy": "claude",
+"ansWas": {
+"a": "소수점을 생각하지 않고 자연수처럼 곱한 다음, 두 소수의 소수점 아래 자리 수를 더한 만큼 오른쪽에서부터 세어 소수점을 찍어. 예) 1.2×0.34: 12×34=408 → 1+2=3자리 → 0.408",
+"k": [
 "자연수처럼 곱한다",
 "자리 수를 더한 만큼 소수점을 찍는다"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "zkxrl3:t0H2",
 "kind": "high",
 "round": 2,
 "by": "claude",
-"answer": "곱하는 수를 어림해서 대략 얼마인지 먼저 생각해. 1.2×0.34는 약 1×0.3=0.3이니까 0.408이 맞고, 4.08이나 40.8이면 소수점이 틀린 거야.",
+"answer": "1.2는 약 1, 0.34는 약 0.3이니까 답은 약 0.3이야. 그래서 4.08이 아니라 0.408이야.",
 "keys": [
+"1.2 × 0.34 ≒ 1 × 0.3 = 0.3",
+"0.408"
+],
+"answerBy": "claude",
+"newQ": "② 1.2 × 0.34의 답이 0.408인지 4.08인지 어림으로 어떻게 알아?",
+"newQBy": "claude",
+"ansWas": {
+"a": "곱하는 수를 어림해서 대략 얼마인지 먼저 생각해. 1.2×0.34는 약 1×0.3=0.3이니까 0.408이 맞고, 4.08이나 40.8이면 소수점이 틀린 거야.",
+"k": [
 "어림한 값을 먼저 구한다",
 "크기가 비슷한지 비교한다"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "zkxrl3:qerror",
@@ -2035,7 +2730,9 @@
 "오른쪽 끝을 맞춘다",
 "계산 뒤 소수점을 찍는다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "zkxrl3:qrecall",
@@ -2047,7 +2744,9 @@
 "12×34=408",
 "0.408"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "zkxrl3:qexample",
@@ -2059,7 +2758,9 @@
 "자리 수를 더한다",
 "소수점 아래 세 자리"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "소수점 아래 자리 수가 서로 다른 두 소수를 곱하는 식을 네가 만들고, 답이 소수 몇 자리가 되는지 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "zkxrl3:qreason",
@@ -2071,7 +2772,17 @@
 "1/10×1/100=1/1000",
 "자리 수가 더해진다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ladder:e5-2|4. 소수의 곱셈|06. (소수)×(소수) (2):1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|4. 소수의 곱셈|06. (소수)×(소수) (2):2",
+"kind": "ladder"
 },
 {
 "id": "2onq6p:t0L1",
@@ -2083,7 +2794,9 @@
 "오른쪽으로",
 "0의 개수만큼"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 소수에 10, 100, 1000을 곱하면 소수점이 어떻게 움직여?",
+"newQBy": "claude"
 },
 {
 "id": "2onq6p:t0L2",
@@ -2095,19 +2808,30 @@
 "왼쪽으로",
 "소수점 아래 자리 수만큼"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "② 자연수에 0.1, 0.01, 0.001을 곱하면 소수점이 어떻게 움직여?",
+"newQBy": "claude"
 },
 {
 "id": "2onq6p:t0H1",
 "kind": "high",
 "round": 2,
 "by": "claude",
-"answer": "10을 곱하면 각 숫자가 한 자리씩 커져서 소수점이 오른쪽으로 한 칸 옮겨진 것처럼 돼. 100은 10을 두 번 곱한 것이라 두 칸이야.",
+"answer": "10을 곱하면 각 숫자의 자리값이 10배가 돼. 3은 30, 0.2는 2, 0.05는 0.5가 되니까 32.5야. 소수점이 오른쪽으로 한 칸 옮겨진 것과 같아.",
 "keys": [
+"각 자리값이 10배",
+"소수점이 오른쪽으로 한 칸"
+],
+"answerBy": "claude",
+"newQ": "① 3.25 × 10이 왜 32.5가 되는지 자리값으로 설명해 봐.",
+"newQBy": "claude",
+"ansWas": {
+"a": "10을 곱하면 각 숫자가 한 자리씩 커져서 소수점이 오른쪽으로 한 칸 옮겨진 것처럼 돼. 100은 10을 두 번 곱한 것이라 두 칸이야.",
+"k": [
 "10을 곱하면 자리가 하나씩 커진다",
 "0의 개수만큼 옮겨진다"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "2onq6p:t0H2",
@@ -2119,7 +2843,9 @@
 "0.1=1/10",
 "자리가 하나씩 작아진다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "2onq6p:qerror",
@@ -2131,7 +2857,9 @@
 "세 칸 옮긴다",
 "470"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "친구가 0.47 × 1000을 소수점을 오른쪽으로 세 칸 옮겨서 47이라고 했어. 뭐가 잘못됐는지 찾고, 바른 답도 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "2onq6p:qrecall",
@@ -2143,7 +2871,9 @@
 "왼쪽으로 두 칸",
 "0.062"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "6.2 × 0.01은 얼마야? 소수점이 어느 쪽으로 몇 칸 움직이는지도 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "2onq6p:qexample",
@@ -2155,7 +2885,9 @@
 "10은 한 칸",
 "100은 두 칸"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "2onq6p:qreason",
@@ -2171,6 +2903,18 @@
 "offBy": "claude"
 },
 {
+"id": "ladder:e5-2|4. 소수의 곱셈|07. 곱의 소수점의 위치:1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|4. 소수의 곱셈|07. 곱의 소수점의 위치:2",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|4. 소수의 곱셈|07. 곱의 소수점의 위치:3",
+"kind": "ladder"
+},
+{
 "id": "qptom0:t0L1",
 "kind": "low",
 "round": 1,
@@ -2179,7 +2923,9 @@
 "keys": [
 "직사각형 6개로 둘러싸인 도형"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 직육면체가 뭐야?",
+"newQBy": "claude"
 },
 {
 "id": "qptom0:t0L2",
@@ -2190,7 +2936,9 @@
 "keys": [
 "정사각형 6개로 둘러싸인 도형"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "② 정육면체가 뭐야?",
+"newQBy": "claude"
 },
 {
 "id": "qptom0:t0L3",
@@ -2203,7 +2951,9 @@
 "모서리",
 "꼭짓점"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "③ 직육면체에서 면, 모서리, 꼭짓점은 각각 뭐야?",
+"newQBy": "claude"
 },
 {
 "id": "qptom0:t0H1",
@@ -2228,7 +2978,9 @@
 "정사각형은 직사각형",
 "직사각형이 모두 정사각형은 아니다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "② 정육면체는 직육면체라고 할 수 있어. 그런데 직육면체는 왜 정육면체라고 할 수 없어?",
+"newQBy": "claude"
 },
 {
 "id": "qptom0:qrecall",
@@ -2241,7 +2993,9 @@
 "모서리 12",
 "꼭짓점 8"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "직육면체의 면, 모서리, 꼭짓점은 각각 몇 개야?",
+"newQBy": "claude"
 },
 {
 "id": "qptom0:qerror",
@@ -2253,7 +3007,9 @@
 "모서리 12개",
 "꼭짓점 8개"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "qptom0:qexample",
@@ -2265,7 +3021,9 @@
 "직육면체 모양 물건",
 "면이 모두 정사각형인지 본다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "우리 주변에서 직육면체 모양인 물건을 하나 찾아 말하고, 정육면체인지 아닌지도 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "qptom0:qreason",
@@ -2281,16 +3039,37 @@
 "offBy": "claude"
 },
 {
+"id": "ladder:e5-2|5. 직육면체|01. 직(정)사각형 6개로 둘러싸인 도형:1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|5. 직육면체|01. 직(정)사각형 6개로 둘러싸인 도형:2",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|5. 직육면체|01. 직(정)사각형 6개로 둘러싸인 도형:3",
+"kind": "ladder"
+},
+{
 "id": "1dsdr7k:t0L1",
 "kind": "low",
 "round": 1,
 "by": "claude",
-"answer": "서로 마주 보는 면은 평행해. 이렇게 평행한 두 면을 직육면체의 밑면이라고 해.",
+"answer": "직육면체에서 서로 마주 보는 두 면은 평행해. 이렇게 평행한 두 면을 밑면이라고 해.",
 "keys": [
+"마주 보는 두 면은 평행",
+"평행한 두 면이 밑면"
+],
+"answerBy": "claude",
+"newQ": "① 직육면체에서 밑면이 뭐야?",
+"newQBy": "claude",
+"ansWas": {
+"a": "서로 마주 보는 면은 평행해. 이렇게 평행한 두 면을 직육면체의 밑면이라고 해.",
+"k": [
 "마주 보는 면은 평행",
 "밑면"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "1dsdr7k:t0L2",
@@ -2301,7 +3080,9 @@
 "keys": [
 "수직으로 만난다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "② 직육면체에서 밑면과 옆면은 어떻게 만나?",
+"newQBy": "claude"
 },
 {
 "id": "1dsdr7k:t0H1",
@@ -2313,7 +3094,9 @@
 "마주 보는 면끼리 짝",
 "평행한 면 3쌍"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 직육면체에서 서로 평행한 면은 몇 쌍이야? 어떻게 짝지어지는지 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "1dsdr7k:t0H2",
@@ -2325,7 +3108,9 @@
 "6개에서 밑면 2개를 뺀다",
 "남은 4개가 옆면"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "② 직육면체에서 한 면을 밑면으로 정하면 옆면은 왜 4개야?",
+"newQBy": "claude"
 },
 {
 "id": "1dsdr7k:qrecall",
@@ -2336,7 +3121,9 @@
 "keys": [
 "4개"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "1dsdr7k:qreason",
@@ -2361,7 +3148,9 @@
 "만나는 면은 수직",
 "마주 보는 면이 평행"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "친구가 직육면체에서 서로 만나는 두 면도 평행하다고 했어. 뭐가 잘못됐을까?",
+"newQBy": "claude"
 },
 {
 "id": "1dsdr7k:qexample",
@@ -2372,7 +3161,21 @@
 "keys": [
 "마주 보는 두 면"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ladder:e5-2|5. 직육면체|02. 직육면체의 성질:1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|5. 직육면체|02. 직육면체의 성질:2",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|5. 직육면체|02. 직육면체의 성질:3",
+"kind": "ladder"
 },
 {
 "id": "1u6qpfn:t0L1",
@@ -2384,7 +3187,9 @@
 "보이는 모서리는 실선",
 "보이지 않는 모서리는 점선"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 겨냥도에서 보이는 모서리와 보이지 않는 모서리는 각각 어떻게 그려?",
+"newQBy": "claude"
 },
 {
 "id": "1u6qpfn:t0L2",
@@ -2395,7 +3200,9 @@
 "keys": [
 "모양을 잘 알 수 있게 나타낸다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "1u6qpfn:t0H1",
@@ -2420,7 +3227,9 @@
 "보이는 면 3, 보이지 않는 면 3",
 "나눠 센 것이라 합이 6"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "1u6qpfn:qerror",
@@ -2432,18 +3241,30 @@
 "보이는 모서리는 실선",
 "보이지 않는 모서리는 점선"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "1u6qpfn:qrecall",
 "kind": "qset",
 "round": 1,
 "by": "claude",
-"answer": "보이는 모서리는 9개야. 보이지 않는 모서리는 3개야.",
+"answer": "보이는 모서리는 9개, 보이지 않는 모서리는 3개, 보이지 않는 꼭짓점은 1개야.",
 "keys": [
-"9개"
+"보이는 모서리 9개",
+"보이지 않는 모서리 3개",
+"보이지 않는 꼭짓점 1개"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "직육면체의 겨냥도에서 보이는 모서리, 보이지 않는 모서리, 보이지 않는 꼭짓점은 각각 몇 개야?",
+"newQBy": "claude",
+"ansWas": {
+"a": "보이는 모서리는 9개야. 보이지 않는 모서리는 3개야.",
+"k": [
+"9개"
+]
+}
 },
 {
 "id": "1u6qpfn:qreason",
@@ -2455,7 +3276,9 @@
 "겨냥도는 입체 모양 그대로",
 "전개도는 잘라서 펼친 그림"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "겨냥도와 전개도는 어떻게 달라?",
+"newQBy": "claude"
 },
 {
 "id": "1u6qpfn:qexample",
@@ -2467,7 +3290,17 @@
 "뒤쪽에 숨은 모서리",
 "점선 3개"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "직육면체 모양 상자를 앞에서 비스듬히 보고 그릴 때, 점선으로 그려야 할 모서리는 어디야?",
+"newQBy": "claude"
+},
+{
+"id": "ladder:e5-2|5. 직육면체|03. 직육면체의 겨냥도:1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|5. 직육면체|03. 직육면체의 겨냥도:2",
+"kind": "ladder"
 },
 {
 "id": "kxb2zb:t0L1",
@@ -2478,7 +3311,9 @@
 "keys": [
 "모서리를 잘라서 펼친 그림"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 전개도가 뭐야?",
+"newQBy": "claude"
 },
 {
 "id": "kxb2zb:t0L2",
@@ -2490,7 +3325,9 @@
 "잘린 모서리는 실선",
 "잘리지 않은 모서리는 점선"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "② 전개도에서 잘린 모서리와 잘리지 않은 모서리는 각각 어떻게 그려?",
+"newQBy": "claude"
 },
 {
 "id": "kxb2zb:t0H1",
@@ -2511,12 +3348,21 @@
 "kind": "high",
 "round": 2,
 "by": "claude",
-"answer": "접었을 때 만나는 선분끼리는 길이가 같아. 서로 마주 보게 되는 면끼리는 평행하고, 이웃한 면끼리는 수직이 돼.",
+"answer": "한 줄로 이어진 면에서 하나 건너뛴 면이 접으면 마주 보니까 평행한 면이야. 모서리를 함께 쓰는 이웃한 면은 접으면 만나니까 수직인 면이야.",
 "keys": [
+"한 줄에서 하나 건너뛴 면 → 평행",
+"이웃한 면 → 수직"
+],
+"answerBy": "claude",
+"newQ": "② 정육면체의 전개도를 접었을 때 서로 평행한 면과 수직인 면은 어떻게 찾아?",
+"newQBy": "claude",
+"ansWas": {
+"a": "접었을 때 만나는 선분끼리는 길이가 같아. 서로 마주 보게 되는 면끼리는 평행하고, 이웃한 면끼리는 수직이 돼.",
+"k": [
 "만나는 선분은 길이가 같다",
 "마주 보는 면은 평행, 이웃한 면은 수직"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "kxb2zb:qerror",
@@ -2528,7 +3374,9 @@
 "잘린 모서리는 실선",
 "접히는 모서리는 점선"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "kxb2zb:qcondition",
@@ -2540,18 +3388,29 @@
 "아니다",
 "겹치거나 빈 곳이 생기면 안 된다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "정사각형 6개를 이어 붙이면 모두 정육면체의 전개도가 돼? 안 되는 예도 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "kxb2zb:qrecall",
 "kind": "qset",
 "round": 1,
 "by": "claude",
-"answer": "마주 보는 면 3쌍이 합동이야.",
+"answer": "마주 보는 면끼리 합동이라 3쌍이야.",
 "keys": [
+"마주 보는 면끼리 합동",
 "3쌍"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "직육면체의 전개도에서 서로 합동인 면은 몇 쌍이야?",
+"newQBy": "claude",
+"ansWas": {
+"a": "마주 보는 면 3쌍이 합동이야.",
+"k": [
+"3쌍"
+]
+}
 },
 {
 "id": "kxb2zb:qreason",
@@ -2575,19 +3434,41 @@
 "정사각형 6개",
 "접었을 때 겹치지 않게"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ladder:e5-2|5. 직육면체|04. 정(직)육면체의 전개도:1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|5. 직육면체|04. 정(직)육면체의 전개도:2",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|5. 직육면체|04. 정(직)육면체의 전개도:3",
+"kind": "ladder"
 },
 {
 "id": "v61qpj:t0L1",
 "kind": "low",
 "round": 1,
 "by": "claude",
-"answer": "자료의 값을 모두 더한 다음 자료의 수로 나눠.",
+"answer": "자료의 값을 모두 더해 자료의 수로 나눈 값이야. 자료를 고르게 했을 때의 값이야.",
 "keys": [
+"모두 더해 자료의 수로 나눈 값"
+],
+"answerBy": "claude",
+"newQ": "① 평균이 뭐야?",
+"newQBy": "claude",
+"ansWas": {
+"a": "자료의 값을 모두 더한 다음 자료의 수로 나눠.",
+"k": [
 "모두 더한다",
 "자료의 수로 나눈다"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "v61qpj:t0L2",
@@ -2625,7 +3506,9 @@
 "자료를 고르게 한 값",
 "전체를 하나의 수로 나타낸다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "v61qpj:qerror",
@@ -2637,7 +3520,9 @@
 "모두 더해 나눈다",
 "5"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "v61qpj:qrecall",
@@ -2649,7 +3534,9 @@
 "합 20",
 "평균 5"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "2, 4, 6, 8의 평균을 구하는 과정을 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "v61qpj:qexample",
@@ -2661,19 +3548,38 @@
 "평균을 구한다",
 "자료에 없는 값이 나온다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "평균이 자료 중 어느 값과도 같지 않은 예를 네가 들어 봐.",
+"newQBy": "claude"
 },
 {
 "id": "v61qpj:qreason",
 "kind": "qset",
 "round": 2,
 "by": "claude",
-"answer": "많은 것에서 적은 것으로 옮겨서 모두 똑같이 만들면 그 값이 평균이야. 모두 더해 똑같이 나누는 것과 같으니까 고르게 나눈 값이라고 해.",
+"answer": "7에서 2를 3으로 옮기면 5, 5, 5가 돼. 이 값 5가 (3+5+7)÷3=5와 같아서, 고르게 만든 값이 평균이야.",
 "keys": [
+"똑같이 만들면 5",
+"고르게 만든 값 = 평균"
+],
+"answerBy": "claude",
+"newQ": "3, 5, 7에서 많은 쪽을 적은 쪽으로 옮겨서 셋을 똑같이 만들면 얼마가 돼? 그 값이 평균과 어떤 관계인지 말해 봐.",
+"newQBy": "claude",
+"ansWas": {
+"a": "많은 것에서 적은 것으로 옮겨서 모두 똑같이 만들면 그 값이 평균이야. 모두 더해 똑같이 나누는 것과 같으니까 고르게 나눈 값이라고 해.",
+"k": [
 "많은 곳에서 적은 곳으로 옮긴다",
 "똑같이 나누는 것과 같다"
-],
-"answerBy": "claude"
+]
+}
+},
+{
+"id": "ladder:e5-2|6. 평균과 가능성|01. 평균 알아보기:1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|6. 평균과 가능성|01. 평균 알아보기:2",
+"kind": "ladder"
 },
 {
 "id": "1kwi8f7:t0L1",
@@ -2685,7 +3591,9 @@
 "사람 수가 달라도 비교할 수 있다",
 "한 사람당 기록"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "1kwi8f7:t0L2",
@@ -2710,19 +3618,30 @@
 "합은 사람 수에 따라 커진다",
 "평균은 한 사람당 값"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "1kwi8f7:t0H2",
 "kind": "high",
 "round": 2,
 "by": "claude",
-"answer": "(평균)×(자료의 수)=(합)이라서, 목표 평균을 알면 필요한 합을 구하고 지금까지의 합을 빼서 남은 값을 구할 수 있어. 예) 4번 평균 80점이 목표이고 3번 합이 230점이면 마지막에 320-230=90점이 필요해.",
+"answer": "네 번 평균이 85점이면 합이 85×4=340점이야. 세 번의 합은 240점이니까 340-240=100점을 받아야 해.",
 "keys": [
+"필요한 합 = 85×4 = 340",
+"340-240 = 100점"
+],
+"answerBy": "claude",
+"newQ": "② 수학 시험 세 번의 점수가 80점, 70점, 90점이야. 네 번의 평균이 85점이 되려면 네 번째에 몇 점을 받아야 해? 어떻게 구했는지 말해 봐.",
+"newQBy": "claude",
+"ansWas": {
+"a": "(평균)×(자료의 수)=(합)이라서, 목표 평균을 알면 필요한 합을 구하고 지금까지의 합을 빼서 남은 값을 구할 수 있어. 예) 4번 평균 80점이 목표이고 3번 합이 230점이면 마지막에 320-230=90점이 필요해.",
+"k": [
 "(평균)×(자료의 수)=(합)",
 "필요한 합에서 지금까지의 합을 뺀다"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "1kwi8f7:qrecall",
@@ -2734,7 +3653,9 @@
 "400÷5",
 "80점"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "어느 모둠 5명의 점수 합이 400점이야. 이 모둠의 평균은 몇 점이야?",
+"newQBy": "claude"
 },
 {
 "id": "1kwi8f7:qerror",
@@ -2746,7 +3667,9 @@
 "합이 아니라 평균으로 비교",
 "A모둠 80점, B모둠 75점"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "A 모둠은 4명이 합 320점, B 모둠은 5명이 합 375점이야. 친구가 합이 큰 B 모둠이 더 잘했다고 했어. 뭐가 잘못됐는지 찾고, 어느 모둠이 더 잘했는지 말해 봐.",
+"newQBy": "claude"
 },
 {
 "id": "1kwi8f7:qexample",
@@ -2772,18 +3695,38 @@
 "다를 수 있다",
 "평균은 고르게 한 값"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "평균이 같은 두 모둠은 점수도 모두 같아? 예를 들어 설명해 봐.",
+"newQBy": "claude"
+},
+{
+"id": "ladder:e5-2|6. 평균과 가능성|02. 평균 이용하기:1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|6. 평균과 가능성|02. 평균 이용하기:2",
+"kind": "ladder"
 },
 {
 "id": "1sv592k:t0L1",
 "kind": "low",
 "round": 1,
 "by": "claude",
-"answer": "0으로 표현해.",
+"answer": "불가능하다는 0, 반반이다는 1/2, 확실하다는 1이야.",
 "keys": [
-"0"
+"불가능하다 0",
+"반반이다 1/2",
+"확실하다 1"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 일이 일어날 가능성을 수로 나타내면 '불가능하다', '반반이다', '확실하다'는 각각 얼마야?",
+"newQBy": "claude",
+"ansWas": {
+"a": "0으로 표현해.",
+"k": [
+"0"
+]
+}
 },
 {
 "id": "1sv592k:t0L2",
@@ -2795,7 +3738,9 @@
 "반반 1/2",
 "확실 1"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "1sv592k:t0H1",
@@ -2820,19 +3765,30 @@
 "가능성을 수나 말로 나타낸다",
 "1에 가까울수록 일어나기 쉽다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "1sv592k:qerror",
 "kind": "qset",
 "round": 2,
 "by": "claude",
-"answer": "주사위에서 3 이하의 눈은 1, 2, 3으로 6개 중 3개야. 그래서 가능성은 반반이고 수로 1/2이야.",
+"answer": "3 이하의 눈은 1, 2, 3으로 6개 중 3개야. 반반이고 수로 1/2이야.",
 "keys": [
+"6개 중 3개",
+"반반이다, 1/2"
+],
+"answerBy": "claude",
+"newQ": "주사위를 굴릴 때 3 이하의 눈이 나올 가능성을 말과 수로 나타내 봐.",
+"newQBy": "claude",
+"ansWas": {
+"a": "주사위에서 3 이하의 눈은 1, 2, 3으로 6개 중 3개야. 그래서 가능성은 반반이고 수로 1/2이야.",
+"k": [
 "1, 2, 3으로 6개 중 3개",
 "반반, 1/2"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "1sv592k:qrecall",
@@ -2844,18 +3800,29 @@
 "반반",
 "1/2"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "동전을 던졌을 때 그림면이 나올 가능성을 수로 나타내면 얼마야?",
+"newQBy": "claude"
 },
 {
 "id": "1sv592k:qexample",
 "kind": "qset",
 "round": 2,
 "by": "claude",
-"answer": "예를 들어 흰 공만 들어 있는 상자에서 공을 꺼내면 흰 공이 나올 가능성은 1이야.",
+"answer": "흰 공만 든 상자에서 공을 꺼낼 때 흰 공이 나올 가능성은 1이야. 그 상자에서 검은 공이 나올 가능성은 0이야.",
 "keys": [
-"반드시 일어나는 상황"
+"가능성 1: 반드시 일어나는 일",
+"가능성 0: 절대 일어나지 않는 일"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "가능성이 1인 일과 0인 일을 하나씩 예로 들어 봐.",
+"newQBy": "claude",
+"ansWas": {
+"a": "예를 들어 흰 공만 들어 있는 상자에서 공을 꺼내면 흰 공이 나올 가능성은 1이야.",
+"k": [
+"반드시 일어나는 상황"
+]
+}
 },
 {
 "id": "1sv592k:qreason",
@@ -2867,8 +3834,411 @@
 "불가능이 가장 작다(0)",
 "확실이 가장 크다(1)"
 ],
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ladder:e5-2|6. 평균과 가능성|03. 일이 일어날 가능성을 비교하고 수로 표현하기:1",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|6. 평균과 가능성|03. 일이 일어날 가능성을 비교하고 수로 표현하기:2",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-2|6. 평균과 가능성|03. 일이 일어날 가능성을 비교하고 수로 표현하기:3",
+"kind": "ladder"
+},
+{
+"id": "ladder:qamu9e52ghnu3fd",
+"big": "1. 수의 범위와 어림하기",
+"small": "03. 수의 범위 활용하기",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "편지 요금이 25 g 이하는 350원, 25 g 초과 50 g 이하는 400원이야. 무게가 25 g인 편지를 보내려면 얼마를 내야 해? 왜 그런지 말해 봐.",
+"answer": "25 g은 '25 g 이하'에 들어가니까 350원이야. '25 g 초과'에는 25 g이 들어가지 않아.",
+"keys": [
+"25 g은 25 g 이하에 들어간다",
+"350원"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:qamu9e524ml4ez2",
+"big": "1. 수의 범위와 어림하기",
+"small": "03. 수의 범위 활용하기",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "15 이상 ㉠ 미만인 자연수가 5개야. ㉠은 얼마야? 어떻게 구했는지 말해 봐.",
+"answer": "15 이상이니까 15, 16, 17, 18, 19가 5개야. 미만은 그 수가 안 들어가니까 ㉠은 20이야.",
+"keys": [
+"15부터 5개: 15~19",
+"미만이라 ㉠은 20"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:qamu9e52n9qjvaw",
+"big": "1. 수의 범위와 어림하기",
+"small": "04. 올림",
+"kind": "add",
+"round": 1,
+"by": "claude",
+"q": "3.214를 올림하여 소수 첫째 자리까지 나타내면 얼마야?",
+"answer": "소수 첫째 자리 아래 0.014를 올려서 3.3이야.",
+"keys": [
+"3.3"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:qamu9e5277rm8y0",
+"big": "1. 수의 범위와 어림하기",
+"small": "06. 반올림",
+"kind": "add",
+"round": 1,
+"by": "claude",
+"q": "4.36을 반올림하여 소수 첫째 자리까지 나타내면 얼마야?",
+"answer": "소수 둘째 자리 숫자가 6이라서 올려. 4.4야.",
+"keys": [
+"소수 둘째 자리 숫자 6을 본다",
+"4.4"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:qamu9e52eeawo6e",
+"big": "1. 수의 범위와 어림하기",
+"small": "06. 반올림",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "반올림하여 십의 자리까지 나타내면 50이 되는 자연수는 어떤 수들이야? 이상과 미만으로 말해 봐.",
+"answer": "45부터 54까지야. 45 이상 55 미만인 자연수야.",
+"keys": [
+"45부터 54까지",
+"45 이상 55 미만"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:qamu9e526v8skki",
+"big": "1. 수의 범위와 어림하기",
+"small": "07. 올림·버림·반올림 활용하기",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "3760원짜리 물건을 1000원짜리 지폐로만 사려면 최소 몇 장을 내야 해? 어떤 어림 방법을 썼는지도 말해 봐.",
+"answer": "3000원으로는 모자라니까 올림해서 4000원, 1000원짜리 4장을 내야 해.",
+"keys": [
+"모자라면 안 되니까 올림",
+"4장"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:qamu9e5260ciewu",
+"big": "2. 분수의 곱셈",
+"small": "01. (분수)×(자연수)",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "한 명이 피자를 3/8판씩 먹었어. 4명이 먹은 피자는 모두 몇 판이야? 식과 답을 말해 봐.",
+"answer": "3/8 × 4 = 12/8 = 3/2 = 1과 1/2이야. 모두 1과 1/2판이야.",
+"keys": [
+"3/8 × 4",
+"1과 1/2판"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:qamu9e529pwwkhy",
+"big": "2. 분수의 곱셈",
+"small": "02. (자연수)×(분수)",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "색 테이프 12 m 중에서 3/4을 사용했어. 사용한 색 테이프는 몇 m야? 식과 답을 말해 봐.",
+"answer": "12의 3/4만큼이니까 12 × 3/4 = 36/4 = 9야. 9 m를 사용했어.",
+"keys": [
+"12 × 3/4",
+"9 m"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:qamu9e52hi33bog",
+"big": "2. 분수의 곱셈",
+"small": "03. 진분수의 곱셈",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "우리 반 학생의 3/5이 여학생이고, 여학생의 1/2이 안경을 썼어. 안경을 쓴 여학생은 우리 반 전체의 얼마야? 식과 답을 말해 봐.",
+"answer": "3/5의 1/2만큼이니까 3/5 × 1/2 = 3/10이야.",
+"keys": [
+"3/5 × 1/2",
+"3/10"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:qamu9e52tj7i4vf",
+"big": "2. 분수의 곱셈",
+"small": "04. 여러 가지 분수의 곱셈",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "1/2 × 2/3 × 3/4을 계산하는 과정을 말해 봐.",
+"answer": "분자끼리, 분모끼리 곱하면 6/24인데, 먼저 약분하면 더 쉬워. 2와 2, 3과 3을 약분하면 1/1 × 1/1 × 1/4이라 1/4이야.",
+"keys": [
+"세 분수의 분자끼리, 분모끼리 곱한다",
+"1/4"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:qamu9e52cvs8aiw",
+"big": "2. 분수의 곱셈",
+"small": "04. 여러 가지 분수의 곱셈",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "한 변이 2와 1/2 m인 정사각형 모양 밭의 넓이는 몇 m²야? 식과 답을 말해 봐.",
+"answer": "2와 1/2 × 2와 1/2 = 5/2 × 5/2 = 25/4 = 6과 1/4이야. 넓이는 6과 1/4 m²야.",
+"keys": [
+"5/2 × 5/2",
+"6과 1/4 m²"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:qamu9e52x3wjd1m",
+"big": "3. 합동과 대칭",
+"small": "02. 합동인 도형의 성질",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "합동인 두 삼각형이 있어. 한 삼각형의 세 변이 5 cm, 6 cm, 7 cm이면 다른 삼각형의 둘레는 몇 cm야? 왜 그런지 말해 봐.",
+"answer": "합동이면 대응변의 길이가 같아서 다른 삼각형의 세 변도 5 cm, 6 cm, 7 cm야. 둘레는 5+6+7=18(cm)야.",
+"keys": [
+"대응변의 길이가 같다",
+"18 cm"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:qamu9e52i0xwv9z",
+"big": "3. 합동과 대칭",
+"small": "03. 선대칭도형과 그 성질",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "선대칭도형에서 대응점끼리 이은 선분의 길이가 10 cm야. 한 점에서 대칭축까지의 거리는 몇 cm야? 왜 그런지 말해 봐.",
+"answer": "대칭축이 대응점끼리 이은 선분을 똑같이 둘로 나누니까 10÷2=5(cm)야.",
+"keys": [
+"대칭축이 선분을 똑같이 둘로 나눈다",
+"5 cm"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:qamu9e52c33maxt",
+"big": "3. 합동과 대칭",
+"small": "04. 점대칭도형과 그 성질",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "점대칭도형에서 대응점 ㄱ과 ㄷ을 이은 선분의 길이가 12 cm야. 대칭의 중심에서 점 ㄱ까지는 몇 cm야? 왜 그런지 말해 봐.",
+"answer": "대칭의 중심이 대응점끼리 이은 선분을 똑같이 둘로 나누니까 12÷2=6(cm)야.",
+"keys": [
+"중심이 선분을 똑같이 둘로 나눈다",
+"6 cm"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:qamu9e523ci3lxp",
+"big": "3. 합동과 대칭",
+"small": "04. 점대칭도형과 그 성질",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "선대칭도형이면서 점대칭도형인 도형을 하나 말하고, 왜 그런지 말해 봐.",
+"answer": "직사각형이야. 가로·세로 가운데를 지나는 직선으로 접으면 겹치고, 두 대각선이 만나는 점을 중심으로 180° 돌려도 겹쳐.",
+"keys": [
+"예: 직사각형(정사각형, 원)",
+"접어도 겹치고 180° 돌려도 겹친다"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:qamu9e52ai9gjog",
+"big": "4. 소수의 곱셈",
+"small": "01. (소수)×(자연수) (1)",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "우유를 하루에 0.3 L씩 마셔. 일주일 동안 마신 우유는 몇 L야? 식과 답을 말해 봐.",
+"answer": "일주일은 7일이니까 0.3 × 7 = 2.1이야. 2.1 L를 마셨어.",
+"keys": [
+"0.3 × 7",
+"2.1 L"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:qamu9e52p7gxsoi",
+"big": "4. 소수의 곱셈",
+"small": "02. (소수)×(자연수) (2)",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "한 봉지에 1.25 kg인 밀가루 4봉지는 모두 몇 kg이야? 식과 답을 말해 봐.",
+"answer": "1.25 × 4 = 5.00이니까 5 kg이야. 소수점 아래 끝자리 0은 지워도 돼.",
+"keys": [
+"1.25 × 4",
+"5 kg"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:qamu9e52tsrk0hl",
+"big": "4. 소수의 곱셈",
+"small": "03. (자연수)×(소수) (1)",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "1 m에 800원인 끈을 0.6 m 샀어. 얼마를 내야 해? 식과 답을 말해 봐.",
+"answer": "800 × 0.6 = 480이야. 480원을 내야 해.",
+"keys": [
+"800 × 0.6",
+"480원"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:qamu9e523z23q11",
+"big": "4. 소수의 곱셈",
+"small": "04. (자연수)×(소수) (2)",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "집에서 학교까지는 800 m이고, 집에서 도서관까지는 그 1.2배야. 집에서 도서관까지는 몇 m야? 식과 답을 말해 봐.",
+"answer": "800 × 1.2 = 960이야. 960 m야.",
+"keys": [
+"800 × 1.2",
+"960 m"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:qamu9e52nwby3dc",
+"big": "4. 소수의 곱셈",
+"small": "05. (소수)×(소수) (1)",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "가로 0.8 m, 세로 0.5 m인 직사각형 액자의 넓이는 몇 m²야? 식과 답을 말해 봐.",
+"answer": "0.8 × 0.5 = 0.40이니까 0.4 m²야.",
+"keys": [
+"0.8 × 0.5",
+"0.4 m²"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:qamu9e52dex2epi",
+"big": "4. 소수의 곱셈",
+"small": "06. (소수)×(소수) (2)",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "1 m의 무게가 2.4 kg인 철근이 있어. 이 철근 1.5 m의 무게는 몇 kg이야? 식과 답을 말해 봐.",
+"answer": "2.4 × 1.5 = 3.60이니까 3.6 kg이야.",
+"keys": [
+"2.4 × 1.5",
+"3.6 kg"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:qamu9e52kvmvy0s",
+"big": "4. 소수의 곱셈",
+"small": "07. 곱의 소수점의 위치",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "32 × 14 = 448이야. 이것을 이용해서 3.2 × 1.4는 얼마인지 구하고, 소수점을 어떻게 찍었는지 말해 봐.",
+"answer": "3.2와 1.4는 각각 소수 한 자리니까 답은 소수 두 자리야. 448에 소수점을 찍으면 4.48이야.",
+"keys": [
+"소수점 아래 1+1=2자리",
+"4.48"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:qamu9e52dng4rsq",
+"big": "5. 직육면체",
+"small": "01. 직(정)사각형 6개로 둘러싸인 도형",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "가로 5 cm, 세로 3 cm, 높이 4 cm인 직육면체의 모든 모서리 길이의 합은 몇 cm야? 어떻게 구했는지 말해 봐.",
+"answer": "길이가 같은 모서리가 4개씩 있어. (5+3+4) × 4 = 48(cm)야.",
+"keys": [
+"같은 길이 모서리가 4개씩",
+"(5+3+4) × 4 = 48 cm"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:qamu9e528mittd9",
+"big": "5. 직육면체",
+"small": "02. 직육면체의 성질",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "주사위에서 서로 평행한 두 면의 눈의 수를 더하면 7이야. 1의 눈과 평행한 면의 눈은 몇이야? 1의 눈과 수직인 면의 눈도 모두 말해 봐.",
+"answer": "1과 평행한 면은 7-1=6의 눈이야. 수직인 면은 평행한 면을 뺀 나머지 2, 3, 4, 5의 눈이야.",
+"keys": [
+"평행한 면: 6",
+"수직인 면: 2, 3, 4, 5"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:qamu9e52o5iw20i",
+"big": "6. 평균과 가능성",
+"small": "02. 평균 이용하기",
+"kind": "add",
+"round": 1,
+"by": "claude",
+"q": "평균이 80점인 모둠 4명의 점수를 모두 더하면 몇 점이야?",
+"answer": "(평균)×(자료의 수)=(합)이니까 80×4=320점이야.",
+"keys": [
+"평균 × 사람 수 = 합",
+"320점"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:qamu9e52pjheu8r",
+"big": "6. 평균과 가능성",
+"small": "03. 일이 일어날 가능성을 비교하고 수로 표현하기",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "빨간 공 2개, 파란 공 2개가 든 상자에서 공 하나를 꺼낼 때 빨간 공이 나올 가능성을 수로 말해 봐. 빨간 공만 4개 들어 있으면 어떻게 돼?",
+"answer": "빨간 공이 4개 중 2개라 반반, 1/2이야. 빨간 공만 4개면 반드시 빨간 공이 나오니까 1이야.",
+"keys": [
+"2개 중 반반 → 1/2",
+"빨간 공만 있으면 1"
+],
 "answerBy": "claude"
 }
 ],
 "seen": []
-} });
+}});
