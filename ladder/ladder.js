@@ -306,6 +306,8 @@
     const box = $('dlOverlay'); if (box) box.remove();
     document.body.classList.remove('dl-open');
     R.ctx = null;
+    // [v86.6] 질문 목록을 다시 그려 진도·'종합 문제 풀기' 버튼도 새로 (다시 그리면 입구 카드는 알아서 다시 붙는다)
+    if (window.DD_UI && DD_UI.render && DD_UI.page === 'questions') { DD_UI.render(); return; }
     const host = $('ddUiStudentMain'); if (host) { const c = host.querySelector('.dl-entry'); if (c) c.remove(); } inject();
   }
   function alertBox(t) { if (typeof window.DD_UI !== 'undefined' && $('ddUiNotice')) { $('ddUiNotice').textContent = t; $('ddUiNotice').hidden = false; setTimeout(() => $('ddUiNotice').hidden = true, 4200); } else alert(t); }

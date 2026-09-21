@@ -105,6 +105,12 @@
   }
   // [v86.0 ⑧] 회차 흐름(rounds/rounds.js)이 켜진 학년이면 지금 회차 질문만. which='past' 는 지난 회차(다시 보기).
   const roundsOn = () => !!(window.DDR && CP.grade && DDR.on(CP.grade));
+  // [v86.6 ⑧] 3회차는 질문 계단 칸까지 통과해야 종합 문제가 열린다 (마스터 지적 2026-09-21). 남은 칸 수(숨긴 칸 제외, 오늘 막힌 칸 포함)
+  function ladderLeft() {
+    if(!roundsOn()||DDR.round(CP.grade)<3||!window.DL_LADDER||!DL_LADDER.tally) return 0;
+    const big=cpCurrentBig(), sm=cpCurrentSmall(); if(!big||!sm) return 0;
+    const t=DL_LADDER.tally(CP.grade+'|'+big.name+'|'+sm.name); return Math.max(0,t.total-t.pass);
+  }
   function roundItems(which) { const big=cpCurrentBig(), sm=cpCurrentSmall(); return big&&sm ? DDR.items(CP.grade,big.name,sm.name,which||'now') : []; }
   function questionItems() {
     const big=cpCurrentBig(), sm=cpCurrentSmall(), list=[];
@@ -225,6 +231,7 @@
     if(ui.rview==='past'&&!past.length) ui.rview='now';
     const showPast=ui.rview==='past', list=showPast?past:now; ui.questions=list;
     const left=now.filter(q=>status(q)!=='pass').length;
+    const lad=r>=3&&window.DL_LADDER&&DL_LADDER.tally?DL_LADDER.tally(CP.grade+'|'+cpCurrentBig().name+'|'+sm.name):{pass:0,total:0}, ladLeft=Math.max(0,lad.total-lad.pass);
     const tabs=r>1?'<div class="dd-ui-tabs">'+button(r+'회차 질문 <span>'+now.length+'</span>','rview',showPast?'':'active','data-rview="now" aria-pressed="'+(!showPast)+'"')+button('다시 보기 <span>'+past.length+'</span>','rview',showPast?'active':'','data-rview="past" aria-pressed="'+showPast+'"')+'</div>':'';
     const row=(q,i)=>{
       const st=showPast?'none':status(q);
@@ -233,8 +240,12 @@
     const empty=(showPast||r>=3)?'':'<div class="dd-ui-empty">이번 회차 질문이 없어요.</div>';
     const foot=showPast
       ?'<p class="dd-ui-caption">지난 회차 질문을 다시 설명해 봐요. 예전에 한 답과 점수는 여기서 보이지 않아요.</p>'
-      :(now.length?'<div class="dd-ui-picker-foot"><div><strong>'+(now.length-left)+' / '+now.length+' 질문 통과</strong><p>'+(left?'남은 '+left+'개 질문까지 설명하면 문제 풀기로 이어져요.':'이번 회차 질문을 모두 통과했어요. 문제로 확인해요.')+'</p></div>'+button(left?'이어서 설명하기 →':'문제 풀기 →',left?'continue':'quiz','dd-ui-primary')+'</div>'
-        :(r>=3?'<div class="dd-ui-picker-foot"><div><strong>3회차 종합</strong><p>질문 계단으로 설명해 보고, 종합 문제로 확인해요.</p></div>'+button('종합 문제 풀기 →','quiz','dd-ui-primary')+'</div>':''));
+      :((now.length||lad.total)?'<div class="dd-ui-picker-foot"><div><strong>'+(now.length-left+lad.pass)+' / '+(now.length+lad.total)+(lad.total?' 질문·계단 칸 통과':' 질문 통과')+'</strong><p>'
+          +(left?'남은 '+left+'개 질문까지 설명하면 문제 풀기로 이어져요.'
+            :ladLeft?'질문 계단 '+ladLeft+'칸을 더 통과하면 종합 문제를 풀 수 있어요.'
+            :'이번 회차를 모두 통과했어요. 문제로 확인해요.')+'</p></div>'
+          +(left?button('이어서 설명하기 →','continue','dd-ui-primary'):ladLeft?'':button(r>=3?'종합 문제 풀기 →':'문제 풀기 →','quiz','dd-ui-primary'))+'</div>'
+        :'');
     return '<div class="dd-ui-page-head"><div><p class="dd-ui-caption">'+esc(cpCurrentBig().name)+' · <b>'+r+'회차</b></p><h1>'+esc(smallTitle(sm))+'</h1></div>'+button('개념 목록','catalog','dd-ui-text')+'</div>'+
       '<div class="dd-ui-section-head"><h2>'+(showPast?'지난 회차 질문 다시 보기':'질문을 골라 설명해요.')+'</h2></div>'+tabs+
       '<div class="dd-ui-choice-list">'+(list.map(row).join('')||empty)+'</div>'+foot;
@@ -471,12 +482,13 @@
     if(state._roundSaw && state._roundItem && window.DL_LADDER && DL_LADDER.markCool) DL_LADDER.markCool(state._roundItem.q, state._roundItem.id);
     lock(true); try { return await original.saveSubmission(...args); } finally { setTimeout(()=>{lock(false);syncQuestionChrome();},0); } };
   onSpeakTimeout=async function() { lock(true); try { return await original.onSpeakTimeout(); } catch(e) { lock(false); throw e; } };
-  cpUnitRemaining=function() { if(roundsOn()) return remaining().length;   /* [v86.3 ⑧] 회차 흐름은 지금 회차 질문 기준 */ const list=cpUnitQuestionItems(); return list?list.filter(x=>cpStatusForQuestion(state.gradeId,x.q,x.id)!=='pass').length:0; };
+  cpUnitRemaining=function() { if(roundsOn()) return remaining().length+ladderLeft();   /* [v86.3 ⑧] 회차 흐름은 지금 회차 질문 기준 */ const list=cpUnitQuestionItems(); return list?list.filter(x=>cpStatusForQuestion(state.gradeId,x.q,x.id)!=='pass').length:0; };
   startQuiz=async function() {
     if(ui.busy||!isStudent()||!cpCurrentSmall()) return;
     cpSyncLegacy(); if(!state.unitId) return;
     const pending=ui.level==='blank'?[]:remaining();
     if(!state._quizRedo&&!getUnitQuizDone()&&pending.length) { await startItem(pending[0]); return; }
+    if(!state._quizRedo&&!getUnitQuizDone()&&ladderLeft()) { notice('질문 계단을 모두 통과해야 종합 문제를 풀 수 있어요.'); if(ui.page!=='questions') { $('backBtn').click(); stage('questions'); } return; }   // [v86.6 ⑧]
     lock(true); try { return await original.startQuiz(); } finally { lock(false); }
   };
   goToNextQuestion=function() { if(ui.busy)return; if(state.questions.length===1&&ui.level!=='blank'){startQuiz();return;} return original.goToNextQuestion(); };
