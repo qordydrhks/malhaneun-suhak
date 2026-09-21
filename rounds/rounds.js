@@ -38,7 +38,7 @@
       const loc = String(x.id).split(':').pop();                    // t0L1 · t1H2 · qrecall · qa…
       const m = /^t(\d+)([LH])/.exec(loc);
       return {
-        q:x.q, id:x.id, r:x.r, ans:x.ans || '', keys:x.keys || [], type:x.kind === 'typed' ? x.type : null,
+        q:x.q, id:x.id, r:x.r, ans:x.ans || '', keys:x.keys || [], type:(x.kind === 'qset' || x.kind === 'typed') ? (x.type || null) : null,
         ti:m ? Number(m[1]) : 0, lv:m ? (m[2] === 'L' ? 'low' : 'high') : (x.r === 1 ? 'low' : 'high'),
         index:i, kind:'round', past:which === 'past', ck:key
       };
@@ -83,6 +83,39 @@
     try { const it = state._roundItem; if (!it) return 'normal'; return it.r === 1 ? 'none' : 'guided'; } catch (e) { return 'normal'; }
   }
 
-  window.DDR = {version:'86.2', on, round, load, items, entry, ladder, answerText, levelName, noPass, hintMode, MAX,
+  // [v86.3] 문제 풀기도 회차마다: 개수(데이터의 quiz — 2·3·4) · 수준(1 기본 / 2 응용 / 3 종합) · '이미 풀었음'도 회차별
+  const QLEVEL = {1:'basic', 2:'adv', 3:'mix'};
+  const QNAME = {1:'기본', 2:'응용', 3:'종합'};
+  function curEntry() {
+    try { const big = cpCurrentBig(), sm = cpCurrentSmall(); return big && sm ? {e:entry(state.gradeId, big.name, sm.name), big:big.name, sm:sm.name} : null; } catch (e) { return null; }
+  }
+  function quizPlan(g) {
+    const c = curEntry(); if (!c || !c.e || !on(g)) return null;
+    const r = round(g), qc = c.e.quiz || {};
+    const qs = items(g, c.big, c.sm, r >= 3 ? 'past' : 'now').map(x => x.q).concat(r >= 3 ? items(g, c.big, c.sm, 'now').map(x => x.q) : []);
+    return {round:r, count:Number(qc[r]) || (r >= 3 ? 3 : 2), level:QLEVEL[r], roundQs:qs};
+  }
+  if (typeof window.quizDoneKey === 'function') {
+    const origKey = window.quizDoneKey;
+    window.quizDoneKey = function() {
+      const k = origKey.apply(this, arguments);
+      try { return on(state.gradeId) ? k + ':r' + round(state.gradeId) : k; } catch (e) { return k; }
+    };
+  }
+  if (typeof window.getOrGenerateQuiz === 'function') {
+    const origGen = window.getOrGenerateQuiz;
+    window.getOrGenerateQuiz = function(grade, unit, opts) {
+      opts = opts || {};
+      // 선생님 미리 만들기·편집기 미리보기·'응용 도전'(따로 누르는 도전)은 예전 그대로
+      const plan = (!opts.pregen && !opts.noSave && opts.level !== 'adv' && grade) ? quizPlan(grade.id) : null;
+      if (plan) {
+        opts = Object.assign({}, opts, {round:plan.round, count:plan.count, level:plan.level, roundQs:plan.roundQs});
+        try { const m = document.getElementById('quizMeta'); if (m && !/회차 문제/.test(m.textContent)) m.textContent += ' · ' + plan.round + '회차 문제(' + QNAME[plan.round] + ' ' + plan.count + '개)'; } catch (e) {}
+      }
+      return origGen.call(this, grade, unit, opts);
+    };
+  }
+
+  window.DDR = {version:'86.3', on, round, load, items, entry, ladder, answerText, levelName, noPass, hintMode, quizPlan, MAX,
     _setForTest(g, r) { const s = student(); if (s) { cache.sid = s.id; cache.map[g] = r; } }};
 })();

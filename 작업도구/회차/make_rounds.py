@@ -62,6 +62,23 @@ for x in plan['items']:
     if x.get('keys'): o['keys'] = x['keys']
     small_of(key)['items'].append(o)
 
+# [v86.3] 회차마다 문제 풀기 개수 (마스터 결정 2026-09-21)
+#   그 회차 질문이 적으면(3개 이하) 2문제 · 4개 이상이면 3문제 · 활용 문장제가 3개 이상이면 4문제 · 3회차(종합)는 3문제
+#   활용 문장제 = 추가 질문 중 숫자가 든 문제 상황 ("네가 ~" 로 스스로 만드는 질문은 빼고)
+def is_apply(o):
+    return o['kind'] == 'add' and re.search(r'\d', o['q']) and not o['q'].startswith('네가')
+quiz4 = []
+for k in order:
+    v = out[k]; qc = {}
+    for r in (1, 2):
+        its = [o for o in v['items'] if o['r'] == r]
+        n = 2 if len(its) <= 3 else 3
+        if sum(1 for o in its if is_apply(o)) >= 3: n = 4; quiz4.append('%d회차 %s' % (r, k.split('|')[2]))
+        qc[str(r)] = n
+    qc['3'] = 3
+    v['quiz'] = qc
+print('4문제:', quiz4)
+
 data = {k: out[k] for k in order}
 n = sum(len(v['items']) for v in data.values())
 by = {1: 0, 2: 0, 3: 0}

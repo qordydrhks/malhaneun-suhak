@@ -18844,9 +18844,11 @@ async function getOrGenerateQuiz(grade, unit, opts){
   //   (1) 거의 같은 문제가 반복되고 (2) 출제 범위가 질문 하나로 좁아 너무 쉬워지고
   //   (3) AI 호출이 질문 수만큼 배로 나갔다. 이제 열쇠에서 질문·난이도를 빼 소단원으로만 만든다.
   // [v80.0] 수준·세트별 열쇠. force(선생님 미리 만들기)면 저장분을 무시하고 새로 만든다.
-  const level = opts.level === 'adv' ? 'adv' : 'basic';
+  // [v86.3 ⑧] 회차 문제: opts.round(1·2·3) · opts.count(문제 수) · level 'mix'(3회차 종합) · opts.roundQs(이번 회차 질문). 저장 열쇠도 회차별.
+  const level = opts.level === 'adv' ? 'adv' : (opts.level === 'mix' ? 'mix' : 'basic');
+  const _N = (opts.count >= 2 && opts.count <= 5) ? opts.count : QUIZ_COUNT;
   const set = opts.set === 1 ? 1 : 0;
-  const cacheKey = quizCacheKey(grade, unit, level, set);
+  const cacheKey = opts.round ? quizCacheKey(grade, unit, level, set) + ':r' + opts.round + 'n' + _N + (level === 'mix' ? 'mix' : '') : quizCacheKey(grade, unit, level, set);
   if(!opts.force){
     try{
       const cached = await storageGet(cacheKey);
@@ -18860,7 +18862,8 @@ async function getOrGenerateQuiz(grade, unit, opts){
   const band = String(grade.id)[0];   // e 초등 · m 중등 · h 고등
   const ELEM_ADV_NOTE = "초등학생 대상이야. 단, '디딤돌 기본+응용' 교재의 응용·심화 수준으로 출제해. 숫자 계산 자체는 복잡하지 않게 하되, 개념을 정확히 이해하고 한 단계 더 생각해야(적용·비교·판단·거꾸로 생각하기) 풀 수 있는 문제로 만들어. 개념만 대충 알면 틀리고, 확실히 알아야 맞게. 단순 사실 확인·정의 되묻기는 금지.";
   const levelNote = (band === 'e')
-    ? (level === 'adv' ? ELEM_ADV_NOTE
+    ? (level === 'mix' ? "초등학생 대상이야. 이번은 '종합' 문제야. 이 소단원의 기본 개념과 응용을 함께 써야 풀리는 문제로 만들어. 한 문제 안에서 뜻·성질을 정확히 알고, 그것을 한 번 더 적용해야 답이 나오게. 숫자 계산은 복잡하지 않게."
+       : level === 'adv' ? ELEM_ADV_NOTE
        : "초등학생 대상이야. 이번 문제는 '기본 확인' 수준이야. 이 소단원 개념을 제대로 이해한 학생이면 풀 수 있게 만들고, 꼬아 놓은 함정이나 여러 단계를 거치는 응용은 넣지 마. 숫자 계산은 간단하게.")
     : (band === 'h'
        ? '고등학생 대상이야(고1 공통수학·대수·미적분). 교과 수준에 맞게, 개념을 정확히 알아야만 풀 수 있게 만들어. 중학교 수준으로 쉽게 만들지 마.'
@@ -18875,10 +18878,11 @@ async function getOrGenerateQuiz(grade, unit, opts){
   ].filter(Boolean).join('\n');
 
   // [v80.0] 초등 '기본'은 문제 순서·깊이 지시를 낮춘다. 나머지는 예전 지시 그대로.
-  const basicElem = (band === 'e' && level !== 'adv');
+  const basicElem = (band === 'e' && level === 'basic');   // [v86.3] 'mix'(3회차 종합)는 기본이 아님
   const PRIN_ORDER = basicElem
     ? '- 1번: 개념을 그대로 적용하는 문제. 2번: 조건을 조금 바꿔 적용하는 문제. 3번: 학생들이 자주 하는 실수를 가려내는 문제.'
     : "- 1번: 개념을 실제 상황에 적용하는 문제. 2번: 조건을 바꾸거나 결과에서 거꾸로 찾는 문제.\n  3번: 함정·비슷하지만 다른 경우와의 비교로, 개념을 확실히 아는 학생만 맞히는 문제.";
+  const PRIN_COUNT = (_N === 3) ? '' : (_N === 2 ? '- 문제가 2개야: 위 순서에서 1번과 3번 성격으로 만들어.' : '- 문제가 ' + _N + '개야: 위 순서를 따르고, 남는 문제는 이 소단원의 활용(문장제) 문제로 만들어.');
   const PRIN_DEPTH = basicElem
     ? '- 기본 확인 문제야. 개념을 제대로 이해했으면 한 번에 풀리게 만들어. 억지로 꼬지 마.'
     : "- 초등이라도 '한 번 더 생각해야' 풀리게 만들어. 예: 조건을 살짝 비틀기, 왜 그런지 판단하기, 결과로부터 거꾸로 찾기, 비슷하지만 다른 경우와 비교하기.";
@@ -18887,7 +18891,7 @@ async function getOrGenerateQuiz(grade, unit, opts){
   const figOn = (band !== 'e');
   const FIG_NOTE = `[그림 — 도형·그래프 문제에는 그림 설계도를 반드시 함께 내]
 - 각 문항의 "figure" 에 그림 설계도(JSON 객체)를 넣어. 그림이 정말 필요 없는 문항만 "" (빈 문자열).
-- ⭐ [소단원]이 그래프·도형·도형의 이동·함수의 그래프에 대한 것이면, ${QUIZ_COUNT}문제 중 적어도 1개는 그림이 있는 문제로 만들어.
+- ⭐ [소단원]이 그래프·도형·도형의 이동·함수의 그래프에 대한 것이면, ${_N}문제 중 적어도 1개는 그림이 있는 문제로 만들어.
   그림을 그리기 까다롭다고 그림 없는 문제로 도망가지 마. 그래프 단원인데 그림이 하나도 없으면 잘못 만든 거야.
 - 그림은 학생이 상황을 한눈에 알아보게 돕는 것이야. 문제 글에 주어진 조건(주어진 곡선·직선·점·각·길이·원)은 그리는 게 맞아. 그려도 되나 망설이지 마.
 - 🚫 금지는 딱 하나, "구해야 하는 것"이야. 구하는 점·선·원·값과 풀이 중간에 나오는 결과(보조선으로 얻는 교점, 옮긴 뒤의 도형, 구한 길이·각도)는 그리지도 라벨로 적지도 마.
@@ -18931,13 +18935,14 @@ async function getOrGenerateQuiz(grade, unit, opts){
    · 한쪽으로 끝없이 가면 from 또는 to 를 빼. ○(포함 안 함)은 fromOpen/toOpen true.`;
 
   const systemPrompt = `너는 '말하는 수학'의 수학 선생님 '뚜삐'야. 학생이 방금 아래 [소단원]의 개념을 말로 설명하는 학습을 마쳤어.
-이제 그 소단원의 핵심을 "실제로 적용"해야 풀 수 있는 4지선다 문제를 정확히 ${QUIZ_COUNT}개 만들어.
+이제 그 소단원의 핵심을 "실제로 적용"해야 풀 수 있는 4지선다 문제를 정확히 ${_N}개 만들어.
 ${levelNote}
 
 [출제 원칙 — 매우 중요]
-- ${QUIZ_COUNT}문제로 이 소단원의 [핵심 포인트]를 고루 덮어. 한 포인트에 몰리지 말고 서로 다른 포인트를 겨냥해.
+- ${_N}문제로 이 소단원의 [핵심 포인트]를 고루 덮어. 한 포인트에 몰리지 말고 서로 다른 포인트를 겨냥해.
 - 문제끼리 겹치면 안 돼. 숫자만 바꾼 같은 문제, 묻는 방식만 살짝 바꾼 문제는 금지.
 ${PRIN_ORDER}
+${PRIN_COUNT}
 - 이 소단원 밖의 내용(다음 학년·다른 단원)으로는 새지 마.
 ${PRIN_DEPTH}
 - 단순 용어 암기·정의 되묻기 금지. 계산량으로 어렵게 만드는 것도 금지. 어려움의 원천은 '개념의 정확한 이해'.
@@ -18945,7 +18950,7 @@ ${PRIN_DEPTH}
 
 [오답 보기 설계]
 - 오답 3개는 반드시 '학생들이 실제로 자주 하는 실수'의 결과여야 해 (공식 혼동, 2로 안 나눔, 조건 무시, 부호 빠뜨림, 정리와 역 혼동 등).
-- 엉뚱한 보기 금지 (소거법으로 찍히면 안 됨). 정답 위치는 ${QUIZ_COUNT}문제에서 서로 다르게.
+- 엉뚱한 보기 금지 (소거법으로 찍히면 안 됨). 정답 위치는 ${_N}문제에서 서로 다르게.
 
 ${MF_NOTATION}
 ${figOn ? FIG_NOTE : '- 그림이 있어야만 풀리는 문제 금지. 글만 읽고 풀 수 있게 조건을 문장으로 다 써.'}
@@ -18964,11 +18969,12 @@ ${figOn ? FIG_NOTE : '- 그림이 있어야만 풀리는 문제 금지. 글만 �
 
   // [v80.2] 선생님 출제 지시 — opts.style 이 있으면 그것(편집기에서 시험 중인 지시), 없으면 저장된 지시
   const style = (typeof opts.style === 'string') ? opts.style.trim() : await quizStyleGet(grade.id, unit.id);
+  const roundNote = (opts.roundQs && opts.roundQs.length) ? '[이번 회차에 학생이 말로 설명한 질문 — 이 내용을 실제로 적용하는 문제로 만들 것]\n' + opts.roundQs.map(q=>'- '+q).join('\n') + '\n' : '';
   const userMsg = `[학년/교재] ${grade.name}
 [소단원] ${unit.label}
-${basis.concept ? '[개념 설명]\n' + basis.concept + '\n' : ''}${basis.points.length ? '[핵심 포인트 — 이것들을 고루 덮을 것]\n' + basis.points.map((p,i)=>(i+1)+'. '+p).join('\n') + '\n' : ''}${weakNote ? '\n[학생이 약했던 부분]\n' + weakNote : ''}${style ? '\n\n[선생님 출제 지시 — 반드시 따를 것. 문제 수·4지선다·JSON 형식은 그대로 지키고, 나머지는 이 지시를 출제 원칙보다 우선해]\n' + style : ''}`;
+${roundNote}${basis.concept ? '[개념 설명]\n' + basis.concept + '\n' : ''}${basis.points.length ? '[핵심 포인트 — 이것들을 고루 덮을 것]\n' + basis.points.map((p,i)=>(i+1)+'. '+p).join('\n') + '\n' : ''}${weakNote ? '\n[학생이 약했던 부분]\n' + weakNote : ''}${style ? '\n\n[선생님 출제 지시 — 반드시 따를 것. 문제 수·4지선다·JSON 형식은 그대로 지키고, 나머지는 이 지시를 출제 원칙보다 우선해]\n' + style : ''}`;
 
-  // [v80.6] 바깥 판(round): 검산에서 문항이 버려져 QUIZ_COUNT 개를 못 채우면 세트를 통째로 한 번 더 만든다 (마스터 결정 2026-09-12).
+  // [v80.6] 바깥 판(round): 검산에서 문항이 버려져 _N 개를 못 채우면 세트를 통째로 한 번 더 만든다 (마스터 결정 2026-09-12).
   let quiz = null, best = null, lastRaw = '', usedModel = '';
   for(let round = 0; round < 2 && !quiz; round++){
     let made = null;
@@ -18983,7 +18989,7 @@ ${basis.concept ? '[개념 설명]\n' + basis.concept + '\n' : ''}${basis.points
     // 생성된 문항을 독립적으로 다시 풀어 정답을 확정 (정답 번호 오류 방지)
     if(made && made.length && opts.verify !== false){ try{ made = await verifyQuiz(made, grade, unit); }catch(e){} }
     if(!(made && made.length)) continue;
-    if(made.length >= QUIZ_COUNT) quiz = made;                     // 온전한 세트 → 끝
+    if(made.length >= _N) quiz = made;                     // 온전한 세트 → 끝
     else if(!best || made.length > best.length) best = made;       // 모자람 → 한 판 더, 그래도 안 되면 이걸 쓴다
   }
   if(!quiz) quiz = best;   // 두 판 다 모자라면 그중 문항이 많은 쪽
@@ -22034,7 +22040,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-const APP_VERSION = 'v86.2-회차힌트';
+const APP_VERSION = 'v86.3-회차문제';
   // [v78.7] 이 값이 IIFE 안에 갇혀 있어 바깥 스크립트(app-ui.js)가 못 읽었다.
   //   화면 배지에 버전을 그대로 띄우려면 필요하므로 노출한다.
   window.APP_VERSION = APP_VERSION;
@@ -22059,9 +22065,9 @@ const APP_VERSION = 'v86.2-회차힌트';
 </script>
 
 <!-- [v86.0 ⑧] 회차 흐름 (회차 데이터가 있는 학년만) -->
-<script src="rounds/data-e5-1.js?v=86.0"></script>
-<script src="rounds/rounds.js?v=86.2"></script>
-<script src="ui-integration/app-ui.js?v=86.2"></script>
+<script src="rounds/data-e5-1.js?v=86.3"></script>
+<script src="rounds/rounds.js?v=86.3"></script>
+<script src="ui-integration/app-ui.js?v=86.3"></script>
 <!-- [v82.1] 선생님 질문 계단 (시범, 격리 모듈) — 중3-1 전 대단원 · 칸 그림 (v82.3) -->
 <script src="ladder/data-m3-1.js?v=82.5"></script>
 <script src="ladder/data-e5-1.js?v=85.0"></script>

@@ -232,7 +232,8 @@
     const empty=(showPast||r>=3)?'':'<div class="dd-ui-empty">이번 회차 질문이 없어요.</div>';
     const foot=showPast
       ?'<p class="dd-ui-caption">지난 회차 질문을 다시 설명해 봐요. 예전에 한 답과 점수는 여기서 보이지 않아요.</p>'
-      :(now.length?'<div class="dd-ui-picker-foot"><div><strong>'+(now.length-left)+' / '+now.length+' 질문 통과</strong><p>'+(left?'남은 '+left+'개 질문까지 설명하면 문제 풀기로 이어져요.':'이번 회차 질문을 모두 통과했어요. 문제로 확인해요.')+'</p></div>'+button(left?'이어서 설명하기 →':'문제 풀기 →',left?'continue':'quiz','dd-ui-primary')+'</div>':'');
+      :(now.length?'<div class="dd-ui-picker-foot"><div><strong>'+(now.length-left)+' / '+now.length+' 질문 통과</strong><p>'+(left?'남은 '+left+'개 질문까지 설명하면 문제 풀기로 이어져요.':'이번 회차 질문을 모두 통과했어요. 문제로 확인해요.')+'</p></div>'+button(left?'이어서 설명하기 →':'문제 풀기 →',left?'continue':'quiz','dd-ui-primary')+'</div>'
+        :(r>=3?'<div class="dd-ui-picker-foot"><div><strong>3회차 종합</strong><p>질문 계단으로 설명해 보고, 종합 문제로 확인해요.</p></div>'+button('종합 문제 풀기 →','quiz','dd-ui-primary')+'</div>':''));
     return '<div class="dd-ui-page-head"><div><p class="dd-ui-caption">'+esc(cpCurrentBig().name)+' · <b>'+r+'회차</b></p><h1>'+esc(smallTitle(sm))+'</h1></div>'+button('개념 목록','catalog','dd-ui-text')+'</div>'+
       '<div class="dd-ui-section-head"><h2>'+(showPast?'지난 회차 질문 다시 보기':'질문을 골라 설명해요.')+'</h2></div>'+tabs+
       '<div class="dd-ui-choice-list">'+(list.map(row).join('')||empty)+'</div>'+foot;
@@ -467,7 +468,7 @@
     if(state._roundSaw && state._roundItem && window.DL_LADDER && DL_LADDER.markCool) DL_LADDER.markCool(state._roundItem.q, state._roundItem.id);
     lock(true); try { return await original.saveSubmission(...args); } finally { setTimeout(()=>{lock(false);syncQuestionChrome();},0); } };
   onSpeakTimeout=async function() { lock(true); try { return await original.onSpeakTimeout(); } catch(e) { lock(false); throw e; } };
-  cpUnitRemaining=function() { const list=cpUnitQuestionItems(); return list?list.filter(x=>cpStatusForQuestion(state.gradeId,x.q,x.id)!=='pass').length:0; };
+  cpUnitRemaining=function() { if(roundsOn()) return remaining().length;   /* [v86.3 ⑧] 회차 흐름은 지금 회차 질문 기준 */ const list=cpUnitQuestionItems(); return list?list.filter(x=>cpStatusForQuestion(state.gradeId,x.q,x.id)!=='pass').length:0; };
   startQuiz=async function() {
     if(ui.busy||!isStudent()||!cpCurrentSmall()) return;
     cpSyncLegacy(); if(!state.unitId) return;
