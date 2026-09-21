@@ -71,6 +71,12 @@
     };
   }
 
-  window.DDR = {version:'86.0', on, round, load, items, entry, ladder, answerText, MAX,
+  // 기록의 level 글자 → 선생님 화면 이름 ('r2' → '2회차', 'r1re' → '1회차 다시 보기'). 회차 기록이 아니면 null
+  function levelName(l) {
+    const m = /^r(\d)(re)?$/.exec(String(l || ''));
+    return m ? m[1] + '회차' + (m[2] ? ' 다시 보기' : '') : null;
+  }
+
+  window.DDR = {version:'86.1', on, round, load, items, entry, ladder, answerText, levelName, MAX,
     _setForTest(g, r) { const s = student(); if (s) { cache.sid = s.id; cache.map[g] = r; } }};
 })();

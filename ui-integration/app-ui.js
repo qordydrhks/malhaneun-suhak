@@ -509,6 +509,15 @@
       }
     }
   });
+  // [v86.1 ⑧] 7일 복습 카드: 회차 학년이면 옛 질문(빠진 질문일 수 있음) 대신 그 소단원 질문 목록 — 2회차부터는 '다시 보기'로
+  document.addEventListener('click',e=>{
+    const c=e.target.closest('#reviewHost .review-card'); if(!c||!window.DDR||!DDR.on(c.dataset.course)) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    if(ui.busy) return;
+    state.gradeId=c.dataset.course; state.unitId=Number(c.dataset.unit); syncSelectionFromUnit();
+    if(CP.small==null) { stage('catalog'); return; }
+    restoreLevel(); ui.rview=DDR.round(CP.grade)>1?'past':'now'; stage('questions');
+  },true);
   document.addEventListener('change',e=>{if(e.target.id==='ddUiLevel'){ui.level=e.target.value;restoreLevel();cpSyncLegacy();renderStudent();}});
   $('levelSeg').addEventListener('click',e=>{const el=e.target.closest('[data-level]');if(el){ui.level=el.dataset.level;restoreLevel();renderStudent();}});
   document.addEventListener('click',e=>{
