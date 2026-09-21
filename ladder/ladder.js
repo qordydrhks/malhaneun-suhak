@@ -121,7 +121,7 @@
     // [v83.7] 남은 칸이 없어도 통과한 칸이 있으면 '다시 풀기'로 들어갈 수 있다 (기존 질문처럼)
     const replay = !todo && passed > 0;
     const card = document.createElement('section'); card.className = 'dl-entry';
-    card.innerHTML = '<div><span class="dl-tag">시범</span><h2>🪜 선생님 질문 계단</h2><p>뚜삐 선생님이 한 칸씩 물어볼게요. 막히면 힌트와 설명이 나와요.</p>'
+    card.innerHTML = '<div><h2>🪜 선생님 질문 계단</h2><p>뚜삐 선생님이 한 칸씩 물어볼게요. 막히면 힌트와 설명이 나와요.</p>'
       + '<p class="dl-meta">질문 ' + (ctx.steps.length - hid.size) + '칸'
         + (recs.some(Boolean) ? ' · 통과 ' + passed + '칸' + (cooling ? ' · 오늘은 쉬는 칸 ' + cooling : '') + (todo ? ' · 남은 ' + todo + '칸' : '') : '') + '</p></div>'
       + '<button type="button" class="dd-ui-primary dl-start"' + (todo || replay ? '' : ' disabled') + '>'

@@ -18,11 +18,11 @@
     ['dashboard','학생과 학습','학습 현황','오늘의 학습 · 통과 · 도움 필요','▥'],
     ['students','학생과 학습','학생 관리','학생 등록 · 정보 수정 · 학습 이력','◎'],
     ['reports','학생과 학습','학부모 리포트','학생별 리포트 · 코멘트 · 인쇄','▤'],
-    ['rounds','학생과 학습','회차 열기','학생별·학기별 1·2·3회차 정하기 [v86.4]','③'],
+    ['rounds','학생과 학습','회차 열기','학생별·학기별 1·2·3회차 정하기','③'],
     ['bank','문항과 수업','문제은행','문제 찾기 · 직접 추가 · 학생 배정','▣'],
     ['cards','문항과 수업','개념·질문 편집','개념 설명 · 말하기 질문 · 기본문제','✎'],
     ['baseline','문항과 수업','기준으로 굳히기','수정한 내용을 공통 기준으로 저장','▱'],
-    ['qreview','문항과 수업','질문 고르기','회차 배정 · 빼기 · 문장 고치기 [v82.9]','☰'],
+    ['qreview','문항과 수업','질문 고르기','회차 배정 · 빼기 · 문장 고치기','☰'],
     ['ai','앱 설정','AI 연결','채점에 사용할 AI 키 관리','✧'],
     ['admin','앱 설정','관리자 비밀번호','관리자 화면의 비밀번호 변경','◈']
   ];
@@ -47,6 +47,7 @@
   function stage(page) {
     const focus = ['lesson','quiz','talk'].includes(page);
     if(!focus) { stopRecognitionIfActive(); Timer.hide(); restoreLevel(); }
+    if(['home','catalog','grades'].includes(page)) ui.review=null;   // [v87.1] 복습 표시는 복습 카드로 들어온 소단원에서만
     if(page !== 'talk') stopTalkMic();
     document.body.classList.toggle('step-focus',focus);
     ui.page=page; renderStudent(); window.scrollTo(0,0);
@@ -139,6 +140,35 @@
     const open=all.map((x,i)=>({x,i})).filter(o=>status(o.x)!=='pass'&&!cooling(o.x));
     return open.length ? (open.find(o=>o.i>idx)||open[0]).x : null;
   }
+  function quizDoneHere() { try { cpSyncLegacy(); return !!getUnitQuizDone(); } catch { return false; } }
+  // [v87.1] 흐름점검 8 — 소단원을 끝내면 다음 소단원으로. 예전엔 '다른 개념 도전하기'가 같은 소단원 목록으로 돌아와 맴돌았다
+  function smallFinished() {
+    if(!cpCurrentSmall()||ui.level==='blank') return false;
+    return !remaining().length && !ladderLeft() && quizDoneHere();
+  }
+  function nextSmallPos() {
+    const m=model(); if(!m||CP.big==null) return null;
+    const all=[]; m.bigUnits.forEach((b,bi)=>cpBigMiddles(b).forEach((mid,mi)=>(mid.smalls||[]).forEach((sm,si)=>all.push({big:bi,middle:mi,small:si,sm}))));
+    const i=all.findIndex(x=>x.big===CP.big&&x.middle===CP.middle&&x.small===CP.small);
+    return i>=0&&i+1<all.length ? all[i+1] : null;
+  }
+  function goNextSmall() {
+    const nx=nextSmallPos();
+    if(!nx) { notice('이 학기의 마지막 개념까지 왔어요. 개념 목록에서 더 공부할 개념을 골라요.'); CP.small=null; stage('catalog'); return; }
+    CP.big=nx.big; CP.middle=nx.middle; CP.small=nx.small; CP.type=0; cpSyncLegacy(); remember(); restoreLevel(); ui.rview='now'; ui.review=null;
+    notice('다음 개념: '+smallTitle(nx.sm)); stage('questions');
+  }
+  // [v87.1] 흐름점검 9 — 7일 복습으로 들어온 소단원인가 (기록 level 에 rv → 선생님 화면 '복습')
+  function reviewHere() { const sm=cpCurrentSmall(); return !!(ui.review&&sm&&ui.review.grade===CP.grade&&ui.review.small===sm.name); }
+  // [v87.1] 흐름점검 9 — 홈에 복습할 개념 수를 보여 준다 (예전엔 '할 일 보기'를 눌러야만 알았다)
+  async function refreshTodo() {
+    try {
+      if(!isStudent()) return;
+      await loadReviewCards();
+      const n=$('reviewHost').querySelectorAll('.review-card').length, t=$('ddUiTodoN');
+      if(t) { t.textContent='복습 '+n+'개'; t.hidden=!n; }
+    } catch {}
+  }
   const COOL_MSG='오늘 다시 설명할 수 없는 질문만 남았어요. 설명을 한 번 더 읽고 내일 이어서 해요.';
   function remember() {
     if(!session.student) return;
@@ -179,10 +209,10 @@
     state._roundItem=null; state._roundLevel=null; state._roundSaw=false;
     if(item.kind==='round') {   // [v86.0 ⑧] 회차 질문: 모범 답으로 채점, 기록에 회차 표시
       if(!item.type) state.level=item.lv||'high';
-      state._roundItem=item; state._roundLevel='r'+item.r+(item.past?'re':'');
+      state._roundItem=item; state._roundLevel='r'+item.r+(item.past?'re':reviewHere()?'rv':'');   // [v87.1] rv = 7일 복습
     }
     state._pickerQIndex=item.index; state._directSelectedQuestion=item.blank?'':item.q; remember(); lock(true);
-    try { const ok=await startSelectedQuestion(); if(ok) stage('lesson'); return ok; } finally { lock(false); }
+    try { const ok=await startSelectedQuestion(); if(ok) { stage('lesson'); setTimeout(()=>window.scrollTo(0,0),0); } return ok; } finally { lock(false); }   // [v87.1] 흐름점검 15
   }
   function axes() {
     if(!CP.grade) return '';
@@ -196,20 +226,21 @@
       '<div class="dd-ui-home-grid"><section class="dd-ui-study"><div class="dd-ui-study-top"><div><span class="dd-ui-tag">'+(sm?'이어서 공부하기':'오늘의 개념')+'</span><p class="dd-ui-caption">'+esc(grade()?.name||'공부할 학년부터 선택해요')+'</p><h2>'+esc(smallTitle(sm))+'</h2></div>'+mascot()+'</div>'+
       (sm&&ui.level!=='blank'?'<div class="dd-ui-progress-label"><span>설명한 질문</span><strong>'+passed+' / '+qs.length+'</strong></div>'+cvxBar(passed,qs.length):'')+
       button((sm?'이어서 공부하기':'학년·개념 고르기')+' →','continue','dd-ui-primary dd-ui-full')+button('개념·질문 고르기','catalog','dd-ui-secondary dd-ui-full')+'</section>'+
-      '<div class="dd-ui-side"><section class="dd-ui-talk"><span class="dd-ui-tag">가볍게 연습</span><h2>뚜삐와 개념 대화</h2><p>대화하며 개념을 꺼내 보아요.</p>'+button('개념 대화 시작하기 →','talk')+'</section><section class="dd-ui-quiet"><h2>복습과 배정 문제</h2><p>선생님이 낸 문제와 복습할 개념</p>'+button('할 일 보기 →','inbox')+'</section></div></div>'+
+      '<div class="dd-ui-side"><section class="dd-ui-talk"><span class="dd-ui-tag">가볍게 연습</span><h2>뚜삐와 개념 대화</h2><p>대화하며 개념을 꺼내 보아요.</p>'+button('개념 대화 시작하기 →','talk')+'</section><section class="dd-ui-quiet"><h2>복습과 배정 문제 <b id="ddUiTodoN" class="dd-ui-tag" hidden></b></h2><p>선생님이 낸 문제와 복습할 개념</p>'+button('할 일 보기 →','inbox')+'</section></div></div>'+
       '<div class="dd-ui-section-head"><h2>차곡차곡 쌓이는 나의 공부</h2>'+button('기록 보기','records','dd-ui-text')+'</div>'+axes();
   }
   function gradePicker() {
     return '<div class="dd-ui-page-head"><h1>공부할 학년을 골라요.</h1>'+button('학생 홈','home','dd-ui-text')+'</div>'+
       '<div class="dd-ui-tabs">'+CP_BANDS.map(x=>button(x.label,'band',ui.band===x.key?'active':'','data-band="'+x.key+'" aria-pressed="'+(ui.band===x.key)+'"')).join('')+'</div>'+
-      '<div class="dd-ui-grade-grid">'+GRADES.filter(g=>g.id.startsWith(ui.band)).map(g=>button(esc(g.name),'grade','dd-ui-grade '+(CP.grade===g.id?'selected':''),'data-grade="'+g.id+'"')).join('')+'</div>';
+      '<div class="dd-ui-grade-grid">'+GRADES.filter(g=>g.id.startsWith(ui.band)).map(g=>{ const mine=!!(session.student&&session.student.grade&&g.name.startsWith(session.student.grade+'-'));   // [v87.1] 흐름점검 25
+        return button(esc(g.name)+(mine?'<small style="display:block;font-size:12px;opacity:.75">내 학년</small>':''),'grade','dd-ui-grade '+(CP.grade===g.id?'selected':''),'data-grade="'+g.id+'"'); }).join('')+'</div>';
   }
   // [v81.4] 진도 표시 — 소단원 완료 = 설명하기 질문(깊이 질문 + 유형별 질문)을 모두 통과 (기본문제 열리는 조건과 같음)
   function smallProgress(big, sm) {
     if(roundsOn()) {   // [v86.0 ⑧] 지금 회차 질문(3회차는 계단 칸도) 기준
       const list=DDR.items(CP.grade,big.name,sm.name,'now'), lad=DDR.roundAt(CP.grade,big.name,sm.name)>=3&&window.DL_LADDER&&DL_LADDER.tally?DL_LADDER.tally(CP.grade+'|'+big.name+'|'+sm.name):{pass:0,total:0};
       const pass=list.filter(x=>cpStatusForQuestion(CP.grade,x.q,x.id)==='pass').length+lad.pass, total=list.length+lad.total;
-      return {pass,total,done:total>0&&pass===total};
+      return {pass,total,done:total>0&&pass===total,r:DDR.roundAt(CP.grade,big.name,sm.name)};
     }
     const it=ddqItemsFor(CP.grade,big.name,sm), list=[].concat(it.high,it.qset);
     const pass=list.filter(x=>cpStatusForQuestion(CP.grade,x.q,x.id)==='pass').length;
@@ -232,7 +263,8 @@
     return '<div class="dd-ui-page-head"><div><p class="dd-ui-caption">'+esc(m.name)+'</p><h1>'+esc(big.name)+'</h1></div>'+button('대단원 목록','bigs','dd-ui-text')+'</div><div class="dd-ui-choice-list">'+
       cpBigMiddles(big).map((mid,mi)=>(mid.smalls||[]).map((sm,si)=>{
         const p=smallProgress(big,sm);
-        const prog='<span class="dd-ui-prog'+(p.done?' done':'')+'"><span>'+(p.done?'✓ 완료':p.pass?'질문 '+p.pass+' / '+p.total:'시작 전')+'</span></span>';
+        const lbl=p.r?(p.done?'✓ '+p.r+'회차 완료':(p.r>1?(p.r-1)+'회차 완료 · ':'')+(p.pass?p.r+'회차 질문 '+p.pass+' / '+p.total:p.r+'회차 시작 전')):(p.done?'✓ 완료':p.pass?'질문 '+p.pass+' / '+p.total:'시작 전');   // [v87.1]
+        const prog='<span class="dd-ui-prog'+(p.done?' done':'')+'"><span>'+lbl+'</span></span>';
         return button('<span class="dd-ui-number">'+(++number)+'</span><div><strong>'+esc(smallTitle(sm))+'</strong>'+(mid.name?'<small>'+esc(mid.name)+'</small>':'')+'</div>'+prog+'<span>›</span>','small','dd-ui-choice','data-middle="'+mi+'" data-small="'+si+'"');
       }).join('')).join('')+'</div>';
   }
@@ -243,21 +275,27 @@
     const showPast=ui.rview==='past', list=showPast?past:now; ui.questions=list;
     const left=now.filter(q=>status(q)!=='pass').length;
     const lad=r>=3&&window.DL_LADDER&&DL_LADDER.tally?DL_LADDER.tally(CP.grade+'|'+cpCurrentBig().name+'|'+sm.name):{pass:0,total:0}, ladLeft=Math.max(0,lad.total-lad.pass);
-    const tabs=r>1?'<div class="dd-ui-tabs">'+button(r+'회차 질문 <span>'+now.length+'</span>','rview',showPast?'':'active','data-rview="now" aria-pressed="'+(!showPast)+'"')+button('다시 보기 <span>'+past.length+'</span>','rview',showPast?'active':'','data-rview="past" aria-pressed="'+showPast+'"')+'</div>':'';
+    // [v87.1] 3회차에 따로 분류된 질문이 없으면 '3회차 질문 0' 빈 탭 대신 '다시 보기'만 (흐름점검 20)
+    const tabs=r>1?'<div class="dd-ui-tabs">'+((now.length||showPast)?button(r+'회차 질문 <span>'+now.length+'</span>','rview',showPast?'':'active','data-rview="now" aria-pressed="'+(!showPast)+'"'):'')+button('다시 보기 <span>'+past.length+'</span>','rview',showPast?'active':'','data-rview="past" aria-pressed="'+showPast+'"')+'</div>':'';
     const row=(q,i)=>{
-      const st=showPast?'none':status(q);
-      return button('<span class="dd-ui-number">'+(st==='pass'?'✓':i+1)+'</span><div><small>'+(showPast?q.r+'회차 질문 · 다시 답하기':esc(q.type?QTYPE_LABEL[q.type]||q.type:r+'회차 질문')+(st==='pass'?' · 통과':st==='redo'?' · 다시 설명하기':''))+'</small><div>'+mfmt(q.q)+'</div></div><span>›</span>','question','dd-ui-question','data-index="'+i+'"');
+      const st=showPast?'none':status(q), cool=st!=='pass'&&cooling(q);
+      // [v87.1] 아이에게 '회상·이유' 같은 유형 이름 대신 회차 (흐름점검 19) · 오늘 막힌 질문은 표시 (흐름점검 14)
+      return button('<span class="dd-ui-number">'+(st==='pass'?'✓':i+1)+'</span><div><small>'+(showPast?q.r+'회차 질문 · 다시 답하기':r+'회차 질문'+(st==='pass'?' · 통과':cool?' · 오늘은 쉬어요 (내일 다시)':st==='redo'?' · 다시 설명하기':''))+'</small><div>'+mfmt(q.q)+'</div></div><span>›</span>','question','dd-ui-question','data-index="'+i+'"');
     };
     const empty=(showPast||r>=3)?'':'<div class="dd-ui-empty">이번 회차 질문이 없어요.</div>';
+    const coolN=now.filter(q=>status(q)!=='pass'&&cooling(q)).length, quizDone=!left&&!ladLeft&&quizDoneHere();
+    const rv=reviewHere();
     const foot=showPast
       ?'<p class="dd-ui-caption">지난 회차 질문을 다시 설명해 봐요. 예전에 한 답과 점수는 여기서 보이지 않아요.</p>'
       :((now.length||lad.total)?'<div class="dd-ui-picker-foot"><div><strong>'+(now.length-left+lad.pass)+' / '+(now.length+lad.total)+(lad.total?' 질문·계단 칸 통과':' 질문 통과')+'</strong><p>'
-          +(left?'남은 '+left+'개 질문까지 설명하면 문제 풀기로 이어져요.'
+          +(left?'남은 '+left+'개 질문까지 설명하면 문제 풀기로 이어져요.'+(coolN?' (그중 '+coolN+'개는 내일 다시 할 수 있어요)':'')
             :ladLeft?'질문 계단 '+ladLeft+'칸을 더 통과하면 종합 문제를 풀 수 있어요.'
+            :quizDone?'이 개념의 '+r+'회차를 마쳤어요. 다음 개념으로 가요.'
             :'이번 회차를 모두 통과했어요. 문제로 확인해요.')+'</p></div>'
-          +(left?button('이어서 설명하기 →','continue','dd-ui-primary'):ladLeft?'':button(r>=3?'종합 문제 풀기 →':'문제 풀기 →','quiz','dd-ui-primary'))+'</div>'
+          +(left?button('이어서 설명하기 →','continue','dd-ui-primary'):ladLeft?'':quizDone?button('다음 개념으로 →','nextsmall','dd-ui-primary'):button(r>=3?'종합 문제 풀기 →':'문제 풀기 →','quiz','dd-ui-primary'))+'</div>'
         :'');
     return '<div class="dd-ui-page-head"><div><p class="dd-ui-caption">'+esc(cpCurrentBig().name)+' · <b>'+r+'회차</b></p><h1>'+esc(smallTitle(sm))+'</h1></div>'+button('개념 목록','catalog','dd-ui-text')+'</div>'+
+      (rv&&!showPast?'<div class="dd-ui-device-note" role="note">🔁 <b>복습</b> — 7일 전에 통과한 개념이에요. 통과한 질문(✓) 하나를 골라 다시 설명해 봐요. 설명을 마치면 복습 끝!</div>':'')+
       (r<opened&&!showPast?'<p class="dd-ui-caption">'+opened+'회차가 열렸어요. 이 개념은 '+r+'회차 질문을 다 설명하면 '+(r+1)+'회차로 넘어가요.</p>':'')+
       '<div class="dd-ui-section-head"><h2>'+(showPast?'지난 회차 질문 다시 보기':'질문을 골라 설명해요.')+'</h2></div>'+tabs+
       '<div class="dd-ui-choice-list">'+(list.map(row).join('')||empty)+'</div>'+foot;
@@ -276,7 +314,7 @@
   function syncQuestionChrome() {
     const items=questionItems(), q=state.questions?.[state.qIndex], idx=items.findIndex(x=>x.q===q), p=$('ddUiLessonProgress');
     if(!$('ddUiLessonMeta')) return;
-    $('ddUiLessonMeta').textContent=ui.page==='quiz'?'기본문제로 확인':ui.page==='talk'?'개념 대화':idx>=0?'질문 '+(idx+1)+' / '+items.length:'말로 설명하기';
+    $('ddUiLessonMeta').textContent=ui.page==='quiz'?(roundsOn()?curRound()+'회차 문제로 확인':'기본문제로 확인'):ui.page==='talk'?'개념 대화':idx>=0?'질문 '+(idx+1)+' / '+items.length:'말로 설명하기';
     p.max=items.length||1; p.value=items.filter(x=>status(x)==='pass').length; p.hidden=['talk','quiz'].includes(ui.page);
     // [v78.8] 되돌아가기 글자를 화면에 맞춘다. 대화형은 자기 '단원 선택으로 돌아가기'가 이미 있어서
     //   여기에 '질문 선택'까지 두면 되돌아가는 버튼이 네 개가 되고 뜻도 맞지 않았다.
@@ -333,7 +371,7 @@
       const pending=remaining().filter(q=>q.q!==state.questions[state.qIndex]), badge=wrap.querySelector('.pass-badge');
       if(badge) badge.textContent=pending.length?'이 질문을 통과했어요. 남은 질문 '+pending.length+'개':'이 개념의 설명을 모두 통과했어요.';
       const note=wrap.querySelector('.review-note'); if(note) note.hidden=true;
-      if($('nextUnitBtn')) $('nextUnitBtn').textContent=pending.length?'다음 질문으로 →':'기본문제로 확인 →';
+      if($('nextUnitBtn')) $('nextUnitBtn').textContent=pending.length?'다음 질문으로 →':(roundsOn()?curRound()+'회차 문제 풀기 →':'기본문제로 확인 →');
     }
     if($('skipQBtn')) $('skipQBtn').textContent='다른 질문 고르기';
   }
@@ -474,11 +512,12 @@
     tsClear();
     session.teacher=false; session.role=null; ui.level='high'; ui.kind='concept'; lock(false); cpRecords=[];
     original.enterStudentView(); restoreSelection(); restoreLevel(); ui.rview='now'; stage('home');
-    if(window.DDR) DDR.load().then(()=>{ if(isStudent()) renderStudent(); }).catch(()=>{});   // [v86.0 ⑧] 학생별 회차
+    if(window.DDR) DDR.load().then(()=>{ if(isStudent()) renderStudent(); refreshTodo(); }).catch(()=>{});   // [v86.0 ⑧] 학생별 회차
   };
   setLearnStep=function(n) {
     original.setLearnStep(n);
-    if(n===1) { restoreLevel(); ui.page=cpCurrentSmall()?'questions':CP.grade?'catalog':'home'; }
+    if(n===1) { restoreLevel(); ui.page=cpCurrentSmall()?'questions':CP.grade?'catalog':'home';
+      if(ui.page==='questions'&&isStudent()&&smallFinished()) { goNextSmall(); return; } }   // [v87.1] 흐름점검 8
     else ui.page=n===3?'quiz':'lesson';
     renderStudent();
   };
@@ -519,7 +558,7 @@
     if(el.tagName==='A' && !(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||e.button===1)) e.preventDefault();
     if(ui.busy&&$('viewStudent').classList.contains('active')) { notice('평가와 기록 저장을 마친 뒤 이동할 수 있어요.'); return; }
     switch(el.dataset.ddUi) {
-      case 'home': if($('convoCard').style.display!=='none')$('cvBack').click(); stage('home'); cpLoadRecords(); break;
+      case 'home': if($('convoCard').style.display!=='none')$('cvBack').click(); stage('home'); cpLoadRecords(); refreshTodo(); break;
       case 'grades': stage('grades'); break;
       case 'band': ui.band=el.dataset.band; renderStudent(); break;
       case 'grade': restoreLevel(); cpChooseGrade(el.dataset.grade); CP.middle=null; ui.band=cpBandOf(CP.grade); remember(); stage('catalog'); break;
@@ -530,8 +569,9 @@
       case 'kind': ui.kind=el.dataset.kind; renderStudent(); break;
       case 'rview': ui.rview=el.dataset.rview==='past'?'past':'now'; renderStudent(); break;   // [v86.0 ⑧]
       case 'question': await startItem(ui.questions[Number(el.dataset.index)]); break;
-      case 'continue': if(!cpCurrentSmall())stage(CP.grade?'catalog':'grades'); else {const left=remaining(); if(left.length){const nx=nextPending(); if(nx) await startItem(nx); else notice(COOL_MSG);} else if(academyOk()) await startQuiz();} break;
+      case 'continue': if(!cpCurrentSmall())stage(CP.grade?'catalog':'grades'); else if(ui.page==='home'&&smallFinished()) goNextSmall(); else {const left=remaining(); if(left.length){const nx=nextPending(); if(nx) await startItem(nx); else notice(COOL_MSG);} else if(academyOk()) await startQuiz();} break;
       case 'quiz': if(academyOk()) await startQuiz(); break;
+      case 'nextsmall': goNextSmall(); break;
       case 'lesson-back': if(ui.page==='talk')$('cvBack').click(); else $('backBtn').click(); stage(cpCurrentSmall()?'questions':'catalog'); break;
       case 'help':
         if(!ddHasCard(ddCurrentCard())) { notice('이 개념의 학습 자료를 준비 중이에요.'); break; }
@@ -558,7 +598,7 @@
     if(ui.busy) return;
     state.gradeId=c.dataset.course; state.unitId=Number(c.dataset.unit); syncSelectionFromUnit();
     if(CP.small==null) { stage('catalog'); return; }
-    restoreLevel(); ui.rview=curRound()>1?'past':'now'; stage('questions');
+    restoreLevel(); ui.review={grade:CP.grade, small:cpCurrentSmall().name}; ui.rview='now'; stage('questions');   // [v87.1] 복습 = 통과한 질문을 다시 설명 (다시 보기 탭 아님)
   },true);
   document.addEventListener('change',e=>{if(e.target.id==='ddUiLevel'){ui.level=e.target.value;restoreLevel();cpSyncLegacy();renderStudent();}});
   $('levelSeg').addEventListener('click',e=>{const el=e.target.closest('[data-level]');if(el){ui.level=el.dataset.level;restoreLevel();renderStudent();}});

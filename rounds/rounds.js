@@ -104,11 +104,11 @@
 
   // 기록의 level 글자 → 선생님 화면 이름 ('r2' → '2회차', 'r1re' → '1회차 다시 보기', 끝의 c = 개념 보고 답함). 회차 기록이 아니면 null
   function levelName(l) {
-    const m = /^r(\d)(re)?(c)?$/.exec(String(l || ''));
-    return m ? m[1] + '회차' + (m[2] ? ' 다시 보기' : '') + (m[3] ? ' · 📖 개념 보고 답함' : '') : null;
+    const m = /^r(\d)(re|rv)?(c)?$/.exec(String(l || ''));   // [v87.1] rv = 7일 복습
+    return m ? m[1] + '회차' + (m[2] === 're' ? ' 다시 보기' : m[2] === 'rv' ? ' · 🔁 복습' : '') + (m[3] ? ' · 📖 개념 보고 답함' : '') : null;
   }
   // [v86.2] 개념 다시 보기를 열고 한 답 → 점수가 높아도 그날은 통과로 치지 않는다 (다음 날 혼자 설명해야 통과)
-  function noPass(l) { return /^r\d(re)?c$/.test(String(l || '')); }
+  function noPass(l) { return /^r\d(re|rv)?c$/.test(String(l || '')); }
   // [v86.2] 힌트: 1회차(뜻·성질·간단한 계산)는 없음 · 2·3회차는 비유 빼고 '스스로 떠올려봐'부터, 모범 답의 핵심 말은 금지
   function hintMode() {
     try { const it = state._roundItem; if (!it) return 'normal'; return it.r === 1 ? 'none' : 'guided'; } catch (e) { return 'normal'; }
