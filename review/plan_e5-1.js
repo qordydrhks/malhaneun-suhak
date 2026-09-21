@@ -2,10 +2,11 @@
    마스터 견본(2026-09-17 내보내기) + Claude 분류안(1·6단원 미분류 55개, by:'claude')
    + 겹쳐서 Claude 가 뺀 9개(off:true, offBy:'claude') — 마스터 승인 2026-09-17.
    + Claude 모범 답 74개(answerBy:'claude') — 1·6단원에서 빼지 않았고 모범 답이 없던 질문 전부, 마스터 지시 2026-09-18.
+   [f] 마스터 검토(2026-09-21, 1·2단원) 반영 + 바뀐 질문 모범 답 + 최대공약수·최소공배수 활용 질문 9개(Claude, 추가 질문).
    [e] 초5-1 2~5단원 146문항 분류·겹침 빼기·모범 답(Claude, 마스터 지시 2026-09-18 "5학년 전 과정을 기준대로") + 6-04 기본① 되돌림(qWas) · 6-03 기본① 넓이 식 채움.
    [d] 마스터 검토(2026-09-18 내보내기: 확인 57·고친 문장·빼기·회차·추가 1) 반영 + 질문을 고친 곳 모범 답 다시 씀(ansWas = 바꾸기 전 답).
    review.js 가 화면을 열 때 한 번만 넣는다(이 기기에 이미 적어 둔 것은 안 덮는다). key 를 바꾸면 다시 넣는다. */
-(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'e5-1_2026-09-18e', data:{
+(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'e5-1_2026-09-21f', data:{
 "format": "qr-plan-2",
 "grade": "e5-1",
 "rounds": 3,
@@ -20,7 +21,8 @@
 "answer": "덧셈과 뺄셈이 혼합된 계산에서는 덧셈, 뺄셈 관계없이 앞에서부터 차례대로 계산하면 돼~",
 "keys": [
 "앞에서부터 차례대로"
-]
+],
+"ok": true
 },
 {
 "id": "5gyhzp:t0L2",
@@ -33,7 +35,8 @@
 "keys": [
 "앞에서부터 차례대로"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "5gyhzp:t0L3",
@@ -47,7 +50,8 @@
 "괄호 안을 가장 먼저 계산한다",
 "한 덩어리로 묶는다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "5gyhzp:t0H1",
@@ -62,7 +66,8 @@
 "순서를 바꾸면 답이 달라진다",
 "앞에서부터 계산하기로 약속했다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "5gyhzp:t0H2",
@@ -77,7 +82,8 @@
 "항상 다르지는 않다",
 "괄호가 계산 순서를 바꿀 때만 달라진다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "5gyhzp:qrecall",
@@ -91,7 +97,8 @@
 "18-6을 먼저 계산한다",
 "답은 14"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "5gyhzp:qreason",
@@ -101,7 +108,8 @@
 "round": 2,
 "by": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "5gyhzp:qexample",
@@ -115,7 +123,8 @@
 "덧셈과 뺄셈이 섞인 식을 만든다",
 "앞에서부터 차례대로 계산한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "5gyhzp:qerror",
@@ -129,7 +138,8 @@
 "앞에서부터 계산하지 않았다",
 "바른 답은 10"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1wpszzi:t0L1",
@@ -142,7 +152,8 @@
 "keys": [
 "곱셈을 먼저 계산한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1wpszzi:t0L2",
@@ -156,7 +167,8 @@
 "괄호 안을 가장 먼저",
 "그다음 곱셈, 덧셈·뺄셈 순서"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1wpszzi:t0H1",
@@ -167,7 +179,8 @@
 "by": "claude",
 "off": true,
 "offBy": "claude",
-"newQ": "① 덧셈·뺄셈·곱셈이 섞인 식이 주어졌을 때 계산 과정을 말해봐"
+"newQ": "① 덧셈·뺄셈·곱셈이 섞인 식이 주어졌을 때 계산 과정을 말해봐",
+"ok": true
 },
 {
 "id": "1wpszzi:t0H2",
@@ -182,7 +195,9 @@
 "괄호는 먼저 계산하라는 약속",
 "묶은 부분이 한 덩어리 값이다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"ok": true
 },
 {
 "id": "1wpszzi:qrecall",
@@ -196,7 +211,8 @@
 "2×4를 먼저 계산한다",
 "답은 11"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1wpszzi:qreason",
@@ -210,7 +226,8 @@
 "2×3은 2가 3번 있는 한 덩어리",
 "그 값을 먼저 구하고 더한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1wpszzi:qexample",
@@ -224,7 +241,8 @@
 "덧셈과 곱셈이 섞인 식을 만든다",
 "곱셈을 먼저 계산한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1wpszzi:qerror",
@@ -240,7 +258,8 @@
 "바른 답은 10",
 "차이는 8"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1wpszzi:qcondition",
@@ -254,7 +273,8 @@
 "답이 다르다(18과 10)",
 "괄호가 계산 순서를 바꾼다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1fe8f8x:t0L1",
@@ -267,7 +287,8 @@
 "괄호 → 곱셈·나눗셈 → 덧셈·뺄셈",
 "같은 단계는 앞에서부터"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1fe8f8x:t0L2",
@@ -279,7 +300,8 @@
 "keys": [
 "괄호"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1fe8f8x:t0H1",
@@ -293,13 +315,15 @@
 "big": "1. 자연수의 혼합 계산",
 "small": "03. 덧셈·뺄셈·곱셈·나눗셈이 섞인 식",
 "kind": "high",
-"round": 2,
+"round": 3,
 "answer": "예를 들어 10-2×3은 곱셈 먼저 해서 10-6=4가 맞아. 그런데 앞에서부터 10-2=8, 8×3=24로 하면 답이 달라져.",
 "keys": [
 "예로 든 식을 바른 순서로 계산한다",
 "순서를 어기면 다른 답이 나온다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"rWas": 2,
+"ok": true
 },
 {
 "id": "1fe8f8x:qrecall",
@@ -312,7 +336,8 @@
 "괄호 → 곱셈·나눗셈 → 뺄셈 순서",
 "답은 12"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1fe8f8x:qreason",
@@ -325,7 +350,8 @@
 "(3+2)×4",
 "괄호는 한 봉지의 구슬 수를 묶는다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1fe8f8x:qexample",
@@ -338,7 +364,8 @@
 "괄호, 곱셈, 뺄셈이 들어간 식을 만든다",
 "괄호 → 곱셈 → 뺄셈 순서로 계산한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1fe8f8x:qerror",
@@ -351,7 +378,8 @@
 "괄호를 무시했다",
 "바른 답은 17"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "iz44bc:t0L1",
@@ -1345,7 +1373,9 @@
 "keys": [
 "그 수를 나누어떨어지게 하는 수"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 약수가 뭐야?",
+"ok": true
 },
 {
 "id": "1cljfv2:t0L2",
@@ -1356,7 +1386,9 @@
 "keys": [
 "1배, 2배, 3배, … 한 수"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "② 배수는 뭔데~?",
+"ok": true
 },
 {
 "id": "1cljfv2:t0L3",
@@ -1368,7 +1400,8 @@
 "6의 약수 1, 2, 3, 6",
 "6의 배수 6, 12, 18, …"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1cljfv2:t0H1",
@@ -1381,7 +1414,8 @@
 ],
 "answerBy": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "1cljfv2:t0H2",
@@ -1393,7 +1427,9 @@
 "1로 나누면 항상 나누어떨어진다",
 "자기보다 큰 수로는 나누어떨어지지 않는다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "② 1은 모든 수의 약수인 이유와, 어떤 수의 가장 큰 약수는 자기 자신인 이유를 말해 줘.",
+"ok": true
 },
 {
 "id": "1cljfv2:qrecall",
@@ -1405,7 +1441,8 @@
 "1부터 차례로 나누어 본다",
 "곱이 그 수가 되는 짝을 찾는다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1cljfv2:qreason",
@@ -1417,19 +1454,30 @@
 "약수는 그 수보다 크지 않다",
 "배수는 계속 곱할 수 있다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"ok": true
 },
 {
 "id": "1cljfv2:qexample",
 "kind": "qset",
 "round": 2,
 "by": "claude",
-"answer": "예를 들어 8의 약수는 1, 2, 4, 8이고, 8의 배수는 8, 16, 24, …야.",
+"answer": "예를 들어 8의 약수는 1, 2, 4이고, 8의 배수는 8, 16, 24야.",
 "keys": [
+"약수 3개를 말한다",
+"배수 3개를 말한다"
+],
+"answerBy": "claude",
+"newQ": "네가 정한 수 하나를 골라서 그 수의 약수와 배수를 각각 3개씩 말해 봐.",
+"ansWas": {
+"a": "예를 들어 8의 약수는 1, 2, 4, 8이고, 8의 배수는 8, 16, 24, …야.",
+"k": [
 "약수를 빠짐없이 말한다",
 "배수를 차례로 말한다"
-],
-"answerBy": "claude"
+]
+},
+"reopen": true
 },
 {
 "id": "1cljfv2:qerror",
@@ -1441,7 +1489,8 @@
 "12는 6의 배수",
 "약수는 그 수를 나누어떨어지게 하는 수"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "7s5g9f:t0L1",
@@ -1452,7 +1501,8 @@
 "keys": [
 "배수"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "7s5g9f:t0L2",
@@ -1463,7 +1513,8 @@
 "keys": [
 "약수"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "7s5g9f:t0H1",
@@ -1477,7 +1528,8 @@
 ],
 "answerBy": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "7s5g9f:t0H2",
@@ -1489,7 +1541,9 @@
 "■가 ●의 약수이면 ●는 ■의 배수",
 "곱셈식 하나에서 함께 나온다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"ok": true
 },
 {
 "id": "7s5g9f:qrecall",
@@ -1503,7 +1557,8 @@
 ],
 "answerBy": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "7s5g9f:qreason",
@@ -1515,7 +1570,8 @@
 "20÷4, 20÷5가 나누어떨어진다",
 "곱셈식을 나눗셈식으로 바꿀 수 있다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "7s5g9f:qexample",
@@ -1527,7 +1583,8 @@
 "곱하는 두 수는 약수",
 "곱은 배수"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "7s5g9f:qerror",
@@ -1539,7 +1596,8 @@
 "15는 3의 배수",
 "3이 15의 약수"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1puwoi5:t0L1",
@@ -1550,7 +1608,9 @@
 "keys": [
 "공약수"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 두 수의 약수를 각각 구했는데, 똑같은 수가 보였어. 그게 뭐지?",
+"ok": true
 },
 {
 "id": "1puwoi5:t0L2",
@@ -1561,7 +1621,9 @@
 "keys": [
 "최대공약수"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "② 최대공약수가 뭐야?",
+"ok": true
 },
 {
 "id": "1puwoi5:t0H1",
@@ -1574,19 +1636,29 @@
 "공통인 것이 공약수(1, 2, 4)",
 "가장 큰 것이 최대공약수(4)"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1puwoi5:t0H2",
 "kind": "high",
 "round": 2,
 "by": "claude",
-"answer": "8=4×2, 12=4×3처럼 두 수는 모두 최대공약수 4를 여러 번 더한 수야. 그래서 4를 나누어떨어지게 하는 1, 2는 8과 12도 나누어떨어지게 해서 공약수가 돼.",
+"answer": "두 수의 공약수는 모두 최대공약수의 약수야. 예를 들어 8과 12의 최대공약수는 4이고, 4의 약수 1, 2, 4가 바로 8과 12의 공약수야.",
 "keys": [
+"공약수는 최대공약수의 약수",
+"예) 8과 12 → 4의 약수 1, 2, 4"
+],
+"answerBy": "claude",
+"newQ": "② 두 수의 최대공약수와 두 수의 공약수와의 관계를 얘기해줘.",
+"ansWas": {
+"a": "8=4×2, 12=4×3처럼 두 수는 모두 최대공약수 4를 여러 번 더한 수야. 그래서 4를 나누어떨어지게 하는 1, 2는 8과 12도 나누어떨어지게 해서 공약수가 돼.",
+"k": [
 "두 수는 최대공약수의 배수",
 "최대공약수의 약수는 두 수도 나누어떨어지게 한다"
-],
-"answerBy": "claude"
+]
+},
+"reopen": true
 },
 {
 "id": "1puwoi5:qrecall",
@@ -1598,7 +1670,8 @@
 "공약수 1, 5",
 "최대공약수 5"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1puwoi5:qreason",
@@ -1612,7 +1685,8 @@
 ],
 "answerBy": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "1puwoi5:qexample",
@@ -1624,7 +1698,8 @@
 "각 수의 약수를 구한다",
 "공통인 것 중 가장 큰 수가 최대공약수"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1puwoi5:qerror",
@@ -1636,7 +1711,8 @@
 "두 수 모두의 약수여야 한다",
 "공약수는 1, 2, 4"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "dljc18:t0L1",
@@ -1648,33 +1724,41 @@
 "여러 수의 곱으로 나타내기",
 "공약수로 나누기"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "dljc18:t0L2",
 "kind": "low",
 "round": 1,
 "by": "claude",
-"answer": "응, 두 수를 1이 아닌 공약수로 더 나눌 수 없을 때까지 나누고, 나눈 공약수들을 곱하면 최대공약수야.",
+"answer": "12=2×2×3, 18=2×3×3으로 나타내면 두 곱셈식에 공통으로 들어 있는 수는 2와 3이야. 그래서 최대공약수는 2×3=6이야.",
 "keys": [
-"공약수로 나눈다",
-"나눈 공약수들을 곱한다"
+"12=2×2×3, 18=2×3×3",
+"공통인 2×3=6"
 ],
 "answerBy": "claude",
-"off": true,
-"offBy": "claude"
+"newQ": "② 12와 18을 여러수의 곱으로 나타내어, 최대공약수 구하는 방법을 풀어보고 설명해봐.",
+"ansWas": {
+"a": "응, 두 수를 1이 아닌 공약수로 더 나눌 수 없을 때까지 나누고, 나눈 공약수들을 곱하면 최대공약수야.",
+"k": [
+"공약수로 나눈다",
+"나눈 공약수들을 곱한다"
+]
+},
+"reopen": true
 },
 {
 "id": "dljc18:t0H1",
 "kind": "high",
-"round": 1,
-"by": "claude",
+"round": 2,
 "answer": "예를 들어 12=2×2×3, 18=2×3×3으로 나타내면 두 곱셈식에 공통으로 들어 있는 2×3=6이 최대공약수야.",
 "keys": [
 "여러 수의 곱으로 나타낸다",
 "공통인 수들을 곱한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"rWas": 1
 },
 {
 "id": "dljc18:t0H2",
@@ -1686,7 +1770,9 @@
 "더 나눌 수 없을 때까지 나눈다",
 "나눈 공약수들을 곱한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"ok": true
 },
 {
 "id": "dljc18:qrecall",
@@ -1698,7 +1784,8 @@
 "2와 3으로 나눈다",
 "최대공약수 6"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "dljc18:qreason",
@@ -1710,7 +1797,9 @@
 "멈추면 공통인 수가 남는다",
 "끝까지 나눠야 가장 큰 공약수"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"ok": true
 },
 {
 "id": "dljc18:qexample",
@@ -1722,7 +1811,8 @@
 "끝까지 공약수로 나눈다",
 "나눈 수들을 곱한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "dljc18:qerror",
@@ -1734,7 +1824,9 @@
 "6과 9가 공약수 3을 가진다",
 "최대공약수는 6"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"ok": true
 },
 {
 "id": "12i1qk9:t0L1",
@@ -1745,7 +1837,9 @@
 "keys": [
 "공배수"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 공배수 설명해봐.",
+"ok": true
 },
 {
 "id": "12i1qk9:t0L2",
@@ -1756,20 +1850,31 @@
 "keys": [
 "최소공배수"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "② 최소공배수는 뭐지?",
+"ok": true
 },
 {
 "id": "12i1qk9:t0H1",
 "kind": "high",
 "round": 1,
 "by": "claude",
-"answer": "2의 배수는 2, 4, 6, 8, 10, 12, …이고 3의 배수는 3, 6, 9, 12, …야. 둘 다에 있는 6, 12, 18, …이 공배수이고, 가장 작은 6이 최소공배수야.",
+"answer": "2와 3의 공배수는 6, 12, 18, …이고, 그중 가장 작은 6이 최소공배수야.",
 "keys": [
+"공배수 6, 12, 18",
+"최소공배수 6"
+],
+"answerBy": "claude",
+"newQ": "① 2와 3의 공배수 3개까지 말하고 최소공배수가 뭔지 말해봐.",
+"ansWas": {
+"a": "2의 배수는 2, 4, 6, 8, 10, 12, …이고 3의 배수는 3, 6, 9, 12, …야. 둘 다에 있는 6, 12, 18, …이 공배수이고, 가장 작은 6이 최소공배수야.",
+"k": [
 "각각의 배수를 늘어놓는다",
 "공통인 것이 공배수",
 "가장 작은 것이 최소공배수(6)"
-],
-"answerBy": "claude"
+]
+},
+"reopen": true
 },
 {
 "id": "12i1qk9:t0H2",
@@ -1781,19 +1886,30 @@
 "공배수는 끝없이 있다",
 "가장 큰 공배수는 없다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"ok": true
 },
 {
 "id": "12i1qk9:qrecall",
 "kind": "qset",
-"round": 1,
-"by": "claude",
-"answer": "6의 배수 6, 12, 18, 24, …와 8의 배수 8, 16, 24, …에서 공배수는 24, 48, 72, …이고 최소공배수는 24야.",
+"round": 2,
+"answer": "6의 배수와 8의 배수에 공통으로 있는 24, 48, 72, …가 공배수이고, 그중 가장 작은 24가 최소공배수야.",
 "keys": [
+"공통된 배수가 공배수",
+"가장 작은 24가 최소공배수"
+],
+"answerBy": "claude",
+"rWas": 1,
+"newQ": "6과 8을 가지고 공배수와 최소공배수가 뭔지 설명해줘",
+"ansWas": {
+"a": "6의 배수 6, 12, 18, 24, …와 8의 배수 8, 16, 24, …에서 공배수는 24, 48, 72, …이고 최소공배수는 24야.",
+"k": [
 "공배수 24, 48, 72, …",
 "최소공배수 24"
-],
-"answerBy": "claude"
+]
+},
+"reopen": true
 },
 {
 "id": "12i1qk9:qreason",
@@ -1805,7 +1921,8 @@
 "공배수는 24마다 나온다",
 "공배수는 최소공배수의 배수"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "12i1qk9:qexample",
@@ -1817,7 +1934,8 @@
 "각 수의 배수를 늘어놓는다",
 "공통인 것 중 가장 작은 수가 최소공배수"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "12i1qk9:qerror",
@@ -1829,7 +1947,8 @@
 "곱은 공배수지만 가장 작지 않을 수 있다",
 "최소공배수는 12"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "pdtpr5:t0L1",
@@ -1841,7 +1960,8 @@
 "여러 수의 곱으로 나타내기",
 "공약수로 나눈 수와 몫을 모두 곱하기"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "pdtpr5:t0L2",
@@ -1867,19 +1987,30 @@
 "여러 수의 곱으로 나타낸다",
 "공통인 부분과 남은 수를 모두 곱한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 12와 18을 각각 곱셈식으로 나타내어 최소공배수를 구하는 방법을 설명해 봐.",
+"ok": true
 },
 {
 "id": "pdtpr5:t0H2",
 "kind": "high",
 "round": 1,
 "by": "claude",
-"answer": "두 수를 1이 아닌 공약수로 더 나눌 수 없을 때까지 나눠. 그다음 나눈 공약수들과 마지막 몫을 모두 곱하면 최소공배수야.",
+"answer": "12와 18을 2로 나누면 6과 9, 다시 3으로 나누면 2와 3이 돼. 나눈 수 2, 3과 남은 몫 2, 3을 모두 곱하면 2×3×2×3=36이 최소공배수야.",
 "keys": [
+"2, 3으로 나눈다",
+"나눈 수와 몫을 모두 곱해 36"
+],
+"answerBy": "claude",
+"newQ": "12와 18을 공약수로 나눈 뒤 나눈 수들과 남은 몫을 모두 곱하면 최소공배수가 되는 과정을 말해 줘.",
+"ansWas": {
+"a": "두 수를 1이 아닌 공약수로 더 나눌 수 없을 때까지 나눠. 그다음 나눈 공약수들과 마지막 몫을 모두 곱하면 최소공배수야.",
+"k": [
 "끝까지 공약수로 나눈다",
 "나눈 수와 마지막 몫을 모두 곱한다"
-],
-"answerBy": "claude"
+]
+},
+"reopen": true
 },
 {
 "id": "pdtpr5:qrecall",
@@ -1891,7 +2022,9 @@
 "5로 나눈다",
 "최소공배수 30"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"ok": true
 },
 {
 "id": "pdtpr5:qreason",
@@ -1903,7 +2036,8 @@
 "나눈 수는 공통 부분, 몫은 각자의 부분",
 "모두 들어가야 두 수의 배수가 된다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true
 },
 {
 "id": "pdtpr5:qexample",
@@ -1915,7 +2049,8 @@
 "공약수로 나눈다",
 "나눈 수와 몫을 모두 곱한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "pdtpr5:qerror",
@@ -1927,7 +2062,8 @@
 "4는 최대공약수",
 "몫까지 곱해야 한다(24)"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true
 },
 {
 "id": "1nhkkt4:t0L1",
@@ -3105,6 +3241,393 @@
 "keys": [
 "거꾸로 뺐다",
 "받아내림, 답은 3/4"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:e5-1|1. 자연수의 혼합 계산|01. 덧셈과 뺄셈 / 곱셈과 나눗셈이 섞인 식:1",
+"big": "1. 자연수의 혼합 계산",
+"small": "01. 덧셈과 뺄셈 / 곱셈과 나눗셈이 섞인 식",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|1. 자연수의 혼합 계산|01. 덧셈과 뺄셈 / 곱셈과 나눗셈이 섞인 식:2",
+"big": "1. 자연수의 혼합 계산",
+"small": "01. 덧셈과 뺄셈 / 곱셈과 나눗셈이 섞인 식",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|1. 자연수의 혼합 계산|01. 덧셈과 뺄셈 / 곱셈과 나눗셈이 섞인 식:3",
+"big": "1. 자연수의 혼합 계산",
+"small": "01. 덧셈과 뺄셈 / 곱셈과 나눗셈이 섞인 식",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|1. 자연수의 혼합 계산|02. 덧셈·뺄셈·곱셈(나눗셈)이 섞인 식:1",
+"big": "1. 자연수의 혼합 계산",
+"small": "02. 덧셈·뺄셈·곱셈(나눗셈)이 섞인 식",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|1. 자연수의 혼합 계산|02. 덧셈·뺄셈·곱셈(나눗셈)이 섞인 식:2",
+"big": "1. 자연수의 혼합 계산",
+"small": "02. 덧셈·뺄셈·곱셈(나눗셈)이 섞인 식",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|1. 자연수의 혼합 계산|02. 덧셈·뺄셈·곱셈(나눗셈)이 섞인 식:3",
+"big": "1. 자연수의 혼합 계산",
+"small": "02. 덧셈·뺄셈·곱셈(나눗셈)이 섞인 식",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|1. 자연수의 혼합 계산|03. 덧셈·뺄셈·곱셈·나눗셈이 섞인 식:1",
+"big": "1. 자연수의 혼합 계산",
+"small": "03. 덧셈·뺄셈·곱셈·나눗셈이 섞인 식",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|1. 자연수의 혼합 계산|03. 덧셈·뺄셈·곱셈·나눗셈이 섞인 식:2",
+"big": "1. 자연수의 혼합 계산",
+"small": "03. 덧셈·뺄셈·곱셈·나눗셈이 섞인 식",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|1. 자연수의 혼합 계산|03. 덧셈·뺄셈·곱셈·나눗셈이 섞인 식:3",
+"big": "1. 자연수의 혼합 계산",
+"small": "03. 덧셈·뺄셈·곱셈·나눗셈이 섞인 식",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|2. 약수와 배수|01. 약수와 배수:1",
+"big": "2. 약수와 배수",
+"small": "01. 약수와 배수",
+"kind": "ladder",
+"newQ": "어떤 수의 약수가 뭔지 말하고, 6의 약수를 어떻게 찾는지도 얘기해 봐.",
+"ok": true
+},
+{
+"id": "ladder:e5-1|2. 약수와 배수|01. 약수와 배수:2",
+"big": "2. 약수와 배수",
+"small": "01. 약수와 배수",
+"kind": "ladder",
+"newQ": "어떤 수의 배수가 뭔지 말하고, 6의 배수는 어떻게 구해?",
+"ok": true
+},
+{
+"id": "ladder:e5-1|2. 약수와 배수|01. 약수와 배수:3",
+"big": "2. 약수와 배수",
+"small": "01. 약수와 배수",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|2. 약수와 배수|01. 약수와 배수:4",
+"big": "2. 약수와 배수",
+"small": "01. 약수와 배수",
+"kind": "ladder",
+"off": true,
+"ok": true
+},
+{
+"id": "ladder:e5-1|2. 약수와 배수|02. 곱을 이용한 약수와 배수의 관계:1",
+"big": "2. 약수와 배수",
+"small": "02. 곱을 이용한 약수와 배수의 관계",
+"kind": "ladder",
+"off": true,
+"ok": true
+},
+{
+"id": "ladder:e5-1|2. 약수와 배수|02. 곱을 이용한 약수와 배수의 관계:2",
+"big": "2. 약수와 배수",
+"small": "02. 곱을 이용한 약수와 배수의 관계",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|2. 약수와 배수|02. 곱을 이용한 약수와 배수의 관계:3",
+"big": "2. 약수와 배수",
+"small": "02. 곱을 이용한 약수와 배수의 관계",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|2. 약수와 배수|02. 곱을 이용한 약수와 배수의 관계:4",
+"big": "2. 약수와 배수",
+"small": "02. 곱을 이용한 약수와 배수의 관계",
+"kind": "ladder",
+"newQ": "18과 3이 약수와 배수의 관계인지 아닌지 어떻게 확인해?",
+"ok": true
+},
+{
+"id": "ladder:e5-1|2. 약수와 배수|03. 공약수와 최대공약수:1",
+"big": "2. 약수와 배수",
+"small": "03. 공약수와 최대공약수",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|2. 약수와 배수|03. 공약수와 최대공약수:2",
+"big": "2. 약수와 배수",
+"small": "03. 공약수와 최대공약수",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|2. 약수와 배수|03. 공약수와 최대공약수:3",
+"big": "2. 약수와 배수",
+"small": "03. 공약수와 최대공약수",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|2. 약수와 배수|04. 최대공약수 구하는 방법:1",
+"big": "2. 약수와 배수",
+"small": "04. 최대공약수 구하는 방법",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|2. 약수와 배수|04. 최대공약수 구하는 방법:2",
+"big": "2. 약수와 배수",
+"small": "04. 최대공약수 구하는 방법",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|2. 약수와 배수|04. 최대공약수 구하는 방법:3",
+"big": "2. 약수와 배수",
+"small": "04. 최대공약수 구하는 방법",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|2. 약수와 배수|04. 최대공약수 구하는 방법:4",
+"big": "2. 약수와 배수",
+"small": "04. 최대공약수 구하는 방법",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "12i1qk9:qamuapcglrsmg9",
+"big": "2. 약수와 배수",
+"small": "05. 공배수와 최소공배수",
+"kind": "add",
+"round": 1,
+"q": "두 수의 공배수는 최소공배수와 어떤 관계가 있을까?",
+"answer": "두 수의 공배수는 모두 최소공배수의 배수야. 예를 들어 6과 8의 공배수 24, 48, 72는 모두 최소공배수 24의 배수야.",
+"keys": [
+"공배수는 최소공배수의 배수",
+"예) 24, 48, 72는 24의 배수"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "ladder:e5-1|2. 약수와 배수|05. 공배수와 최소공배수:1",
+"big": "2. 약수와 배수",
+"small": "05. 공배수와 최소공배수",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|2. 약수와 배수|05. 공배수와 최소공배수:2",
+"big": "2. 약수와 배수",
+"small": "05. 공배수와 최소공배수",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|2. 약수와 배수|05. 공배수와 최소공배수:3",
+"big": "2. 약수와 배수",
+"small": "05. 공배수와 최소공배수",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "pdtpr5:qamuapmxk6q5ib",
+"big": "2. 약수와 배수",
+"small": "06. 최소공배수 구하는 방법",
+"kind": "add",
+"round": 2,
+"q": "네가 두 수를 정해서 여러수의 곱으로 나타내어 최소공배수 구하는 방법을 얘기해봐.",
+"answer": "예를 들어 8=2×2×2, 12=2×2×3이야. 공통인 2×2에 남은 2와 3을 곱하면 2×2×2×3=24가 최소공배수야.",
+"keys": [
+"두 수를 여러 수의 곱으로 나타낸다",
+"공통인 부분과 남은 수를 모두 곱한다"
+],
+"answerBy": "claude",
+"reopen": true
+},
+{
+"id": "ladder:e5-1|2. 약수와 배수|06. 최소공배수 구하는 방법:1",
+"big": "2. 약수와 배수",
+"small": "06. 최소공배수 구하는 방법",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|2. 약수와 배수|06. 최소공배수 구하는 방법:2",
+"big": "2. 약수와 배수",
+"small": "06. 최소공배수 구하는 방법",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|2. 약수와 배수|06. 최소공배수 구하는 방법:3",
+"big": "2. 약수와 배수",
+"small": "06. 최소공배수 구하는 방법",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|2. 약수와 배수|06. 최소공배수 구하는 방법:4",
+"big": "2. 약수와 배수",
+"small": "06. 최소공배수 구하는 방법",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "dljc18:qac21b660b16d312",
+"big": "2. 약수와 배수",
+"small": "04. 최대공약수 구하는 방법",
+"kind": "add",
+"q": "사탕 24개와 초콜릿 36개를 남김없이 최대한 많은 친구에게 똑같이 나누어 주려고 해. 최대공약수와 최소공배수 중 무엇을 구해야 하고, 몇 명에게 나누어 줄 수 있어?",
+"round": 1,
+"by": "claude",
+"answer": "두 수를 모두 똑같이 남김없이 나누는 가장 큰 수를 찾는 거라서 최대공약수를 구해. 24와 36의 최대공약수는 12라서 12명에게 나누어 줄 수 있어.",
+"keys": [
+"남김없이 똑같이 나누는 가장 큰 수 = 최대공약수",
+"12명"
+],
+"answerBy": "claude"
+},
+{
+"id": "dljc18:qac21b660d109c72",
+"big": "2. 약수와 배수",
+"small": "04. 최대공약수 구하는 방법",
+"kind": "add",
+"q": "연필 30자루와 공책 42권을 남김없이 최대한 많은 학생에게 똑같이 나누어 주려고 해. 한 학생이 받는 연필과 공책은 각각 몇 개인지 어떻게 구해?",
+"round": 2,
+"by": "claude",
+"answer": "먼저 30과 42의 최대공약수 6을 구하면 6명에게 나누어 줄 수 있어. 그다음 30÷6=5, 42÷6=7이라서 한 학생이 연필 5자루, 공책 7권을 받아.",
+"keys": [
+"최대공약수로 학생 수를 구한다(6명)",
+"각 수를 학생 수로 나눈다(연필 5, 공책 7)"
+],
+"answerBy": "claude"
+},
+{
+"id": "dljc18:qac21b66105ecf0",
+"big": "2. 약수와 배수",
+"small": "04. 최대공약수 구하는 방법",
+"kind": "add",
+"q": "가로 48 cm, 세로 36 cm인 직사각형 종이를 남는 부분 없이 똑같은 크기의 정사각형으로 자르려고 해. 가장 큰 정사각형의 한 변의 길이를 어떻게 구해?",
+"round": 2,
+"by": "claude",
+"answer": "정사각형의 한 변은 48도 36도 나누어떨어지게 하는 길이여야 하니까 48과 36의 공약수야. 그중 가장 큰 것이니까 최대공약수 12 cm야.",
+"keys": [
+"한 변은 두 길이의 공약수",
+"가장 큰 정사각형이라 최대공약수(12 cm)"
+],
+"answerBy": "claude"
+},
+{
+"id": "dljc18:qac21b6612166c74",
+"big": "2. 약수와 배수",
+"small": "04. 최대공약수 구하는 방법",
+"kind": "add",
+"q": "어떤 수로 26을 나누어도 2가 남고, 38을 나누어도 2가 남아. 이런 수 중에서 가장 큰 수를 구하려면 무엇을 먼저 해야 해?",
+"round": 2,
+"by": "claude",
+"answer": "먼저 나머지 2를 빼서 24와 38-2=36을 만들어. 어떤 수는 24와 36을 모두 나누어떨어지게 하니까 공약수이고, 가장 큰 수라서 최대공약수 12야.",
+"keys": [
+"나머지를 빼면 나누어떨어진다(24, 36)",
+"24와 36의 최대공약수 12"
+],
+"answerBy": "claude"
+},
+{
+"id": "pdtpr5:qac21b66155a6e6",
+"big": "2. 약수와 배수",
+"small": "06. 최소공배수 구하는 방법",
+"kind": "add",
+"q": "A 버스는 8분마다, B 버스는 12분마다 출발해. 오전 9시에 두 버스가 동시에 출발했다면, 다음에 다시 동시에 출발하는 시각은 어떻게 구해?",
+"round": 1,
+"by": "claude",
+"answer": "두 버스가 동시에 출발하는 때는 8의 배수이면서 12의 배수인 때야. 가장 먼저 오는 때니까 최소공배수 24를 구하면 오전 9시 24분이야.",
+"keys": [
+"동시에 출발하는 때 = 공배수",
+"가장 먼저라서 최소공배수 24, 9시 24분"
+],
+"answerBy": "claude"
+},
+{
+"id": "pdtpr5:qac21b661767c3d",
+"big": "2. 약수와 배수",
+"small": "06. 최소공배수 구하는 방법",
+"kind": "add",
+"q": "가로 6 cm, 세로 4 cm인 직사각형 카드를 같은 방향으로 빈틈없이 늘어놓아서 가장 작은 정사각형을 만들려고 해. 정사각형의 한 변의 길이를 어떻게 구해?",
+"round": 2,
+"by": "claude",
+"answer": "정사각형의 한 변은 6의 배수이면서 4의 배수여야 해서 6과 4의 공배수야. 가장 작은 정사각형이니까 최소공배수 12 cm야.",
+"keys": [
+"한 변은 두 길이의 공배수",
+"가장 작은 정사각형이라 최소공배수(12 cm)"
+],
+"answerBy": "claude"
+},
+{
+"id": "pdtpr5:qac21b661aef603",
+"big": "2. 약수와 배수",
+"small": "06. 최소공배수 구하는 방법",
+"kind": "add",
+"q": "톱니가 12개인 톱니바퀴 가와 18개인 톱니바퀴 나가 맞물려 돌고 있어. 처음에 맞물렸던 톱니끼리 다시 맞물리려면 가는 몇 바퀴 돌아야 하는지 어떻게 구해?",
+"round": 2,
+"by": "claude",
+"answer": "다시 맞물리려면 두 바퀴가 지나간 톱니 수가 같아야 해서 12와 18의 공배수만큼 돌아야 해. 가장 처음이니까 최소공배수 36개이고, 가는 36÷12=3바퀴 돌아.",
+"keys": [
+"지나간 톱니 수는 두 수의 공배수",
+"최소공배수 36, 가는 3바퀴"
+],
+"answerBy": "claude"
+},
+{
+"id": "pdtpr5:qac21b661c3fe62",
+"big": "2. 약수와 배수",
+"small": "06. 최소공배수 구하는 방법",
+"kind": "add",
+"q": "어떤 수를 4로 나누어도 1이 남고, 6으로 나누어도 1이 남아. 이런 수 중에서 가장 작은 두 자리 수를 구하려면 어떻게 해?",
+"round": 2,
+"by": "claude",
+"answer": "어떤 수에서 1을 빼면 4와 6으로 모두 나누어떨어지니까 4와 6의 공배수야. 공배수 12, 24, …에 1을 더한 13, 25, … 중 가장 작은 두 자리 수는 13이야.",
+"keys": [
+"1을 빼면 4와 6의 공배수",
+"최소공배수 12에 1을 더해 13"
+],
+"answerBy": "claude"
+},
+{
+"id": "pdtpr5:qac21b661e9e5e",
+"big": "2. 약수와 배수",
+"small": "06. 최소공배수 구하는 방법",
+"kind": "add",
+"q": "활용 문제를 읽고 최대공약수를 구해야 할지 최소공배수를 구해야 할지 어떻게 구별해?",
+"round": 2,
+"by": "claude",
+"answer": "남김없이 똑같이 나누거나 잘라서 '가장 큰' 것을 찾으면 최대공약수야. 여러 개를 이어 붙이거나 동시에 다시 만나는 '가장 작은' 때를 찾으면 최소공배수야.",
+"keys": [
+"나누기·자르기, 가장 큰 → 최대공약수",
+"이어 붙이기·다시 만나기, 가장 작은 → 최소공배수"
 ],
 "answerBy": "claude"
 }
