@@ -376,9 +376,11 @@
   function tsSave(){ try{ if(session.teacher) sessionStorage.setItem(TS_KEY, JSON.stringify({role:session.role||'owner'})); }catch(e){} }
   function tsClear(){ try{ sessionStorage.removeItem(TS_KEY); sessionStorage.removeItem(TM_KEY); }catch(e){} }
   function tsLoad(){ try{ return JSON.parse(sessionStorage.getItem(TS_KEY)||'null'); }catch(e){ return null; } }
+  function bootDone(){ try{ document.documentElement.classList.remove('dd-boot'); }catch(e){} }   // [v85.6] 첫 화면 감추기 풀기
   showView=function(name) {
     if(name==='viewTeacher'&&!session.teacher) name='viewTeacherAuth';
     if(name==='viewTeacher') tsSave();
+    bootDone();
     original.showView(name); document.body.classList.toggle('dd-ui-parent',name==='viewParent');
     if(name==='viewTeacher') showTeacher(ui.menu||teacherRoute);
   };
@@ -393,7 +395,8 @@
       try{ refreshKeyStatus(); loadBoard(); startDashAutoRefresh(); }catch(e){}
       return;
     }
-    if(teacherRoute) { showView('viewTeacherAuth'); return; } return original.tryAutoLogin();
+    if(teacherRoute) { showView('viewTeacherAuth'); return; }
+    try { return await original.tryAutoLogin(); } finally { bootDone(); }   // 자동 입장 실패(학생 없음·오프라인)면 첫 화면을 다시 보여 준다
   };
   enterStudentView=function() {
     tsClear();
@@ -476,6 +479,6 @@
   $('studentLogoutBtn').addEventListener('click',()=>{stopRecognitionIfActive();stopTalkMic();Timer.hide();lock(false);document.body.classList.remove('step-focus');});
   window.addEventListener('pagehide',()=>{stopRecognitionIfActive();stopTalkMic();stopDashAutoRefresh();Timer.hide();});
   setupLanding(); setupStudent(); setupTeacher(); document.body.classList.add('dd-ui'); renderStudent();
-  if(teacherRoute)showView('viewTeacherAuth');
+  if(teacherRoute && !tsLoad())showView('viewTeacherAuth');   // [v85.6] 이 탭에 선생님 로그인이 있으면 PIN 화면을 잠깐 띄우지 않는다
   window.DD_UI={version:'78.6-ui.1',menus:menus.map(m=>({id:m[0],name:m[2]})),get page(){return ui.page},get teacherMenu(){return ui.menu},questionItems,remaining,startItem,showTeacher};
 })();

@@ -10,6 +10,24 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="말하는 수학">
+<!-- [v85.6] 새로고침·다시 열 때 첫 화면이 잠깐 보였다 사라지는 것 막기 (마스터 요청 2026-09-21)
+     저장된 로그인(학생 자동 로그인·이 탭의 선생님 로그인)이나 학부모/선생님 주소로 열면, 자동 입장이 끝날 때까지
+     첫 화면(viewLanding)을 감추고 "불러오는 중"만 보여 준다. 자동 입장이 실패해도 app-ui.js 가 풀고, 6초 뒤에는 무조건 푼다. -->
+<script>
+(function(){
+  var go=false;
+  try{ if(localStorage.getItem('dd:autoLogin')) go=true; }catch(e){}
+  try{ if(sessionStorage.getItem('dd:teacherSession')) go=true; }catch(e){}
+  try{ var q=new URLSearchParams(location.search); if(q.has('parent')||q.has('teacherMenu')) go=true; }catch(e){}
+  if(!go) return;
+  document.documentElement.classList.add('dd-boot');
+  setTimeout(function(){ document.documentElement.classList.remove('dd-boot'); }, 6000);
+})();
+</script>
+<style>
+html.dd-boot #viewLanding{visibility:hidden}
+html.dd-boot body::after{content:'불러오는 중…';position:fixed;left:0;right:0;top:45%;text-align:center;font-size:15px;color:#8A7BB0;font-family:inherit;z-index:99999;pointer-events:none}
+</style>
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" type="image/png" href="icon-192.png">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
@@ -22002,7 +22020,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-const APP_VERSION = 'v85.5-초5-1약분통분';
+const APP_VERSION = 'v85.6-첫화면깜빡임';
   // [v78.7] 이 값이 IIFE 안에 갇혀 있어 바깥 스크립트(app-ui.js)가 못 읽었다.
   //   화면 배지에 버전을 그대로 띄우려면 필요하므로 노출한다.
   window.APP_VERSION = APP_VERSION;
@@ -22026,7 +22044,7 @@ const APP_VERSION = 'v85.5-초5-1약분통분';
 })();
 </script>
 
-<script src="ui-integration/app-ui.js?v=85.4"></script>
+<script src="ui-integration/app-ui.js?v=85.6"></script>
 <!-- [v82.1] 선생님 질문 계단 (시범, 격리 모듈) — 중3-1 전 대단원 · 칸 그림 (v82.3) -->
 <script src="ladder/data-m3-1.js?v=82.5"></script>
 <script src="ladder/data-e5-1.js?v=85.0"></script>
