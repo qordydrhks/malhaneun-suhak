@@ -6,7 +6,7 @@
   'use strict';
   const $ = id => document.getElementById(id);
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const ui = {page:'home', level:'high', kind:'concept', band:'e', input:'voice', busy:false, menu:null, questions:[]};
+  const ui = {page:'home', level:'high', kind:'concept', band:'e', input:'voice', busy:false, menu:null, questions:[], rview:'now'};
   // [v81.7] 브라우저·폰 뒤로가기 → 앱 안의 직전 화면 (앱의 첫 화면에서만 앱을 나간다)
   //   stage()/showTeacher() 가 화면을 바꿀 때마다 — 즉 사람이 누른 순간에 — history 에 한 칸씩 쌓고 그 칸에 화면 정보를 담는다.
   //   뒤로가기·앞으로가기(popstate)는 그 칸의 화면으로 되돌리기만 한다.
@@ -97,14 +97,18 @@
     try { navRestore(target); } catch(err) { console.warn('[dd-ui] 뒤로가기 복원 실패', err); }
     finally { nav.restoring=false; }
   });
-  function restoreLevel() { state.level=ui.level; state._qType=null; state._baseLevel=ui.level; state._directSelectedQuestion=''; state._pickerQIndex=null; }
+  function restoreLevel() { state.level=ui.level; state._qType=null; state._baseLevel=ui.level; state._directSelectedQuestion=''; state._pickerQIndex=null; state._roundItem=null; state._roundLevel=null; }
   function lock(busy) {
     ui.busy=busy; $('viewStudent').classList.toggle('dd-ui-busy',busy);
     for(const id of ['backBtn','nextUnitBtn','nextQBtn','retryBtn','skipQBtn','ddUiLessonBack']) if($(id)) $(id).disabled=busy;
   }
+  // [v86.0 ⑧] 회차 흐름(rounds/rounds.js)이 켜진 학년이면 지금 회차 질문만. which='past' 는 지난 회차(다시 보기).
+  const roundsOn = () => !!(window.DDR && CP.grade && DDR.on(CP.grade));
+  function roundItems(which) { const big=cpCurrentBig(), sm=cpCurrentSmall(); return big&&sm ? DDR.items(CP.grade,big.name,sm.name,which||'now') : []; }
   function questionItems() {
     const big=cpCurrentBig(), sm=cpCurrentSmall(), list=[];
     if(!big || !sm) return list;
+    if(roundsOn()) return roundItems('now');
     (sm.types||[]).forEach((type,ti) => {
       const t=ceApply(CP.grade,big.name,sm.name,type,null,ti).type;
       const key=ddqConceptKey(CP.grade,big.name,sm.name), ids=ui.level==='high'?t.highIds||[]:t.lowIds||[];   // [v80.9] 질문 번호
@@ -154,6 +158,11 @@
     CP.type=item.ti; CP.qIndex=item.index; cpSyncLegacy();
     if(!currentUnits().some(u=>u.id===state.unitId)) { notice('질문과 단원 연결을 확인하지 못했어요. 다른 개념을 골라 주세요.'); return false; }
     state._baseLevel=ui.level; state._qType=item.type||null; state.level=item.type?(QTYPE_LEVEL[item.type]||'high'):ui.level;
+    state._roundItem=null; state._roundLevel=null;
+    if(item.kind==='round') {   // [v86.0 ⑧] 회차 질문: 모범 답으로 채점, 기록에 회차 표시
+      if(!item.type) state.level=item.lv||'high';
+      state._roundItem=item; state._roundLevel='r'+item.r+(item.past?'re':'');
+    }
     state._pickerQIndex=item.index; state._directSelectedQuestion=item.blank?'':item.q; remember(); lock(true);
     try { const ok=await startSelectedQuestion(); if(ok) stage('lesson'); return ok; } finally { lock(false); }
   }
@@ -179,6 +188,11 @@
   }
   // [v81.4] 진도 표시 — 소단원 완료 = 설명하기 질문(깊이 질문 + 유형별 질문)을 모두 통과 (기본문제 열리는 조건과 같음)
   function smallProgress(big, sm) {
+    if(roundsOn()) {   // [v86.0 ⑧] 지금 회차 질문(3회차는 계단 칸도) 기준
+      const list=DDR.items(CP.grade,big.name,sm.name,'now'), lad=DDR.round(CP.grade)>=3&&window.DL_LADDER&&DL_LADDER.tally?DL_LADDER.tally(CP.grade+'|'+big.name+'|'+sm.name):{pass:0,total:0};
+      const pass=list.filter(x=>cpStatusForQuestion(CP.grade,x.q,x.id)==='pass').length+lad.pass, total=list.length+lad.total;
+      return {pass,total,done:total>0&&pass===total};
+    }
     const it=ddqItemsFor(CP.grade,big.name,sm), list=[].concat(it.high,it.qset);
     const pass=list.filter(x=>cpStatusForQuestion(CP.grade,x.q,x.id)==='pass').length;
     return {pass,total:list.length,done:list.length>0&&pass===list.length};
@@ -204,8 +218,28 @@
         return button('<span class="dd-ui-number">'+(++number)+'</span><div><strong>'+esc(smallTitle(sm))+'</strong>'+(mid.name?'<small>'+esc(mid.name)+'</small>':'')+'</div>'+prog+'<span>›</span>','small','dd-ui-choice','data-middle="'+mi+'" data-small="'+si+'"');
       }).join('')).join('')+'</div>';
   }
+  // [v86.0 ⑧] 회차 흐름의 질문 목록. '다시 보기'는 지난 회차 질문을 다시 답하기만 — 지난 답·점수·모범 답은 안 보여 준다.
+  function roundPicker(sm) {
+    const r=DDR.round(CP.grade), now=roundItems('now'), past=r>1?roundItems('past'):[];
+    if(ui.rview==='past'&&!past.length) ui.rview='now';
+    const showPast=ui.rview==='past', list=showPast?past:now; ui.questions=list;
+    const left=now.filter(q=>status(q)!=='pass').length;
+    const tabs=r>1?'<div class="dd-ui-tabs">'+button(r+'회차 질문 <span>'+now.length+'</span>','rview',showPast?'':'active','data-rview="now" aria-pressed="'+(!showPast)+'"')+button('다시 보기 <span>'+past.length+'</span>','rview',showPast?'active':'','data-rview="past" aria-pressed="'+showPast+'"')+'</div>':'';
+    const row=(q,i)=>{
+      const st=showPast?'none':status(q);
+      return button('<span class="dd-ui-number">'+(st==='pass'?'✓':i+1)+'</span><div><small>'+(showPast?q.r+'회차 질문 · 다시 답하기':esc(q.type?QTYPE_LABEL[q.type]||q.type:r+'회차 질문')+(st==='pass'?' · 통과':st==='redo'?' · 다시 설명하기':''))+'</small><div>'+mfmt(q.q)+'</div></div><span>›</span>','question','dd-ui-question','data-index="'+i+'"');
+    };
+    const empty=(showPast||r>=3)?'':'<div class="dd-ui-empty">이번 회차 질문이 없어요.</div>';
+    const foot=showPast
+      ?'<p class="dd-ui-caption">지난 회차 질문을 다시 설명해 봐요. 예전에 한 답과 점수는 여기서 보이지 않아요.</p>'
+      :(now.length?'<div class="dd-ui-picker-foot"><div><strong>'+(now.length-left)+' / '+now.length+' 질문 통과</strong><p>'+(left?'남은 '+left+'개 질문까지 설명하면 문제 풀기로 이어져요.':'이번 회차 질문을 모두 통과했어요. 문제로 확인해요.')+'</p></div>'+button(left?'이어서 설명하기 →':'문제 풀기 →',left?'continue':'quiz','dd-ui-primary')+'</div>':'');
+    return '<div class="dd-ui-page-head"><div><p class="dd-ui-caption">'+esc(cpCurrentBig().name)+' · <b>'+r+'회차</b></p><h1>'+esc(smallTitle(sm))+'</h1></div>'+button('개념 목록','catalog','dd-ui-text')+'</div>'+
+      '<div class="dd-ui-section-head"><h2>'+(showPast?'지난 회차 질문 다시 보기':'질문을 골라 설명해요.')+'</h2></div>'+tabs+
+      '<div class="dd-ui-choice-list">'+(list.map(row).join('')||empty)+'</div>'+foot;
+  }
   function questionPicker() {
     const sm=cpCurrentSmall(); if(!sm) return catalog();
+    if(roundsOn()) return roundPicker(sm);
     const items=questionItems(); ui.questions=items;
     const list=items.map((q,i)=>({...q,i})).filter(q=>q.kind===ui.kind), left=remaining().length;
     return '<div class="dd-ui-page-head"><div><p class="dd-ui-caption">'+esc(cpCurrentBig().name)+'</p><h1>'+esc(smallTitle(sm))+'</h1></div>'+button('개념 목록','catalog','dd-ui-text')+'</div>'+
@@ -260,7 +294,12 @@
     const wrap=$('fbArea').querySelector('.fb-wrap'); if(!wrap) return;
     const detail=node('ddUiFeedbackDetails','details','dd-ui-details'); detail.innerHTML='<summary>자세한 피드백과 채점 질문</summary>';
     [...wrap.querySelectorAll(':scope > .fb-block.hint,:scope > .fb-block.misc,:scope > .fb-appeal')].forEach(el=>detail.appendChild(el)); wrap.appendChild(detail);
-    if(advance&&ui.level!=='blank') {
+    if(state._roundItem&&state._roundItem.past) {   // [v86.0 ⑧] 다시 보기: 지금 회차 진도와 섞지 않는다
+      const badge=wrap.querySelector('.pass-badge'); if(badge) badge.textContent='다시 답했어요.';
+      const note=wrap.querySelector('.review-note'); if(note) note.hidden=true;
+      if($('nextUnitBtn')) $('nextUnitBtn').textContent='다시 보기 목록으로 →';
+    }
+    else if(advance&&ui.level!=='blank') {
       const pending=remaining().filter(q=>q.q!==state.questions[state.qIndex]), badge=wrap.querySelector('.pass-badge');
       if(badge) badge.textContent=pending.length?'이 질문을 통과했어요. 남은 질문 '+pending.length+'개':'이 개념의 설명을 모두 통과했어요.';
       const note=wrap.querySelector('.review-note'); if(note) note.hidden=true;
@@ -297,6 +336,7 @@
     $('manualText').addEventListener('focus',()=>{if(ui.page==='lesson'&&!ui.busy&&state.manualMode)startSpeakTimer();});
     root.addEventListener('click',e=>{
       if(e.target.closest('#skipQBtn')) { e.stopImmediatePropagation(); if(!ui.busy) { $('backBtn').click(); stage('questions'); } }
+      else if(e.target.closest('#nextUnitBtn') && state._roundItem && state._roundItem.past) { e.stopImmediatePropagation(); if(!ui.busy) { $('backBtn').click(); ui.rview='past'; stage('questions'); } }
     },true);
     $('submitBtn').addEventListener('click',()=>{
       const text=state.manualMode?$('manualText').value:state.transcript; if((text||'').trim().length>=3) {stopRecognitionIfActive();lock(true);}
@@ -401,7 +441,8 @@
   enterStudentView=function() {
     tsClear();
     session.teacher=false; session.role=null; ui.level='high'; ui.kind='concept'; lock(false); cpRecords=[];
-    original.enterStudentView(); restoreSelection(); restoreLevel(); stage('home');
+    original.enterStudentView(); restoreSelection(); restoreLevel(); ui.rview='now'; stage('home');
+    if(window.DDR) DDR.load().then(()=>{ if(isStudent()) renderStudent(); }).catch(()=>{});   // [v86.0 ⑧] 학생별 회차
   };
   setLearnStep=function(n) {
     original.setLearnStep(n);
@@ -447,8 +488,9 @@
       case 'catalog': stage(CP.grade?'catalog':'grades'); break;
       case 'bigs': CP.big=null; CP.small=null; CP.type=null; stage('catalog'); break;
       case 'big': CP.big=Number(el.dataset.big); CP.middle=0; CP.small=null; CP.type=null; stage('catalog'); break;
-      case 'small': CP.middle=Number(el.dataset.middle); CP.small=Number(el.dataset.small); CP.type=0; CP.qIndex=null; restoreLevel(); cpSyncLegacy(); ui.kind='concept'; remember(); stage('questions'); break;
+      case 'small': CP.middle=Number(el.dataset.middle); CP.small=Number(el.dataset.small); CP.type=0; CP.qIndex=null; restoreLevel(); cpSyncLegacy(); ui.kind='concept'; ui.rview='now'; remember(); stage('questions'); break;
       case 'kind': ui.kind=el.dataset.kind; renderStudent(); break;
+      case 'rview': ui.rview=el.dataset.rview==='past'?'past':'now'; renderStudent(); break;   // [v86.0 ⑧]
       case 'question': await startItem(ui.questions[Number(el.dataset.index)]); break;
       case 'continue': if(!cpCurrentSmall())stage(CP.grade?'catalog':'grades'); else {const left=remaining(); if(left.length)await startItem(left[0]);else if(academyOk()) await startQuiz();} break;
       case 'quiz': if(academyOk()) await startQuiz(); break;
@@ -480,5 +522,5 @@
   window.addEventListener('pagehide',()=>{stopRecognitionIfActive();stopTalkMic();stopDashAutoRefresh();Timer.hide();});
   setupLanding(); setupStudent(); setupTeacher(); document.body.classList.add('dd-ui'); renderStudent();
   if(teacherRoute && !tsLoad())showView('viewTeacherAuth');   // [v85.6] 이 탭에 선생님 로그인이 있으면 PIN 화면을 잠깐 띄우지 않는다
-  window.DD_UI={version:'78.6-ui.1',menus:menus.map(m=>({id:m[0],name:m[2]})),get page(){return ui.page},get teacherMenu(){return ui.menu},questionItems,remaining,startItem,showTeacher};
+  window.DD_UI={version:'78.6-ui.1',menus:menus.map(m=>({id:m[0],name:m[2]})),get page(){return ui.page},get teacherMenu(){return ui.menu},questionItems,remaining,startItem,showTeacher,render:renderStudent,get shown(){return ui.questions}};
 })();

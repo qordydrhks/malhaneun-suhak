@@ -100,10 +100,13 @@
   function currentCtx() {
     try {
       const big = cpCurrentBig(), sm = cpCurrentSmall(); if (!big || !sm || !CP.grade) return null;
-      const key = CP.grade + '|' + big.name + '|' + sm.name, steps = (window.DL_LADDERS || {})[key];
-      if (!steps || !steps.length) return null;
+      const key = CP.grade + '|' + big.name + '|' + sm.name, raw = (window.DL_LADDERS || {})[key];
+      if (!raw || !raw.length) return null;
+      // [v86.0 ⑧] 회차 흐름 학년: 3회차에만 열린다. 숨긴 칸은 건너뛰고(칸 번호는 그대로), 고친 문장을 쓴다.
+      const rv = window.DDR ? DDR.ladder(key, raw) : {open:true, steps:raw, hide:[]};
+      if (!rv.open) return null;
       const type = typeof cpCurrentType === 'function' ? cpCurrentType() : null;
-      return {key, steps, grade:CP.grade, big:big.name, small:sm.name, unitId:type && type.unitId};
+      return {key, steps:rv.steps, hide:rv.hide || [], grade:CP.grade, big:big.name, small:sm.name, unitId:type && type.unitId};
     } catch { return null; }
   }
   function inject() {
@@ -111,14 +114,15 @@
     if (!host || !view || view.dataset.uiPage !== 'questions' || host.querySelector('.dl-entry')) return;
     if (!session.student || session.teacher) return;
     const ctx = currentCtx(); if (!ctx) return;
-    const recs = lastRecs(ctx.key, ctx.steps.length), states = recs.map(stepState);
+    const hid = new Set(ctx.hide || []);
+    const recs = lastRecs(ctx.key, ctx.steps.length).map((r, i) => hid.has(i) ? null : r), states = recs.map((r, i) => hid.has(i) ? 'hidden' : stepState(r));
     const passed = states.filter(x => x === 'done').length, cooling = states.filter(x => x === 'cooling').length;
     const todo = states.filter(x => x === 'todo').length, done = recs.map(r => r && r.stage);
     // [v83.7] 남은 칸이 없어도 통과한 칸이 있으면 '다시 풀기'로 들어갈 수 있다 (기존 질문처럼)
     const replay = !todo && passed > 0;
     const card = document.createElement('section'); card.className = 'dl-entry';
     card.innerHTML = '<div><span class="dl-tag">시범</span><h2>🪜 선생님 질문 계단</h2><p>뚜삐 선생님이 한 칸씩 물어볼게요. 막히면 힌트와 설명이 나와요.</p>'
-      + '<p class="dl-meta">질문 ' + ctx.steps.length + '칸'
+      + '<p class="dl-meta">질문 ' + (ctx.steps.length - hid.size) + '칸'
         + (recs.some(Boolean) ? ' · 통과 ' + passed + '칸' + (cooling ? ' · 오늘은 쉬는 칸 ' + cooling : '') + (todo ? ' · 남은 ' + todo + '칸' : '') : '') + '</p></div>'
       + '<button type="button" class="dd-ui-primary dl-start"' + (todo || replay ? '' : ' disabled') + '>'
         + (todo ? (recs.some(Boolean) ? '남은 칸 이어서 →' : '시작하기 →') : (replay ? (cooling ? '통과한 칸 다시 풀기 →' : '모두 통과 ✓ · 다시 풀기 →') : '내일 다시 열려요')) + '</button>';
@@ -139,6 +143,7 @@
   function progress() {
     const p = $('dlProgress'); if (!p) return;
     p.innerHTML = R.ctx.steps.map((_, i) => {
+      if ((R.ctx.hide || []).includes(i)) return '';
       const cls = R.recs[i] ? 'st-' + R.recs[i].stage : (R.old[i] ? 'st-' + R.old[i].stage : (i === R.k ? 'now' : ''));
       return '<span class="dl-dot ' + cls + '" title="' + (i + 1) + '칸"></span>';
     }).join('');
@@ -267,7 +272,8 @@
     if (typeof isAcademyDevice === 'function' && !isAcademyDevice() && !session.teacher) { alertBox('학원 태블릿에서만 공부할 수 있어요. 선생님께 말씀해 주세요.'); return; }
     try { if (typeof stopRecognitionIfActive === 'function') stopRecognitionIfActive(); if (typeof Timer !== 'undefined') Timer.hide(); } catch {}
     const old = lastRecs(ctx.key, ctx.steps.length), states = old.map(stepState);
-    const plan = states.map((st, i) => (replay ? st !== 'cooling' : st === 'todo') ? i : -1).filter(i => i >= 0);
+    const hid = new Set(ctx.hide || []);
+    const plan = states.map((st, i) => !hid.has(i) && (replay ? st !== 'cooling' : st === 'todo') ? i : -1).filter(i => i >= 0);
     if (!plan.length) { alertBox(states.some(x => x === 'cooling') ? '오늘 막힌 칸은 내일 다시 열려요. 다른 개념을 해 볼까요?' : '이 계단은 모두 통과했어요!'); return; }
     Object.assign(R, {ctx, k:plan[0], plan, pi:0, old, phase:'ask', answers:[], busy:false, recs:[], last:null});
     const box = el('<div id="dlOverlay" role="dialog" aria-modal="true" aria-label="선생님 질문 계단">'
@@ -337,7 +343,7 @@
     if (!session.student || session.teacher || !window.DD_UI) return;
     let item = null;
     try {
-      if (el.dataset.ddUi === 'question') item = DD_UI.questionItems()[Number(el.dataset.index)];
+      if (el.dataset.ddUi === 'question') item = (DD_UI.shown || DD_UI.questionItems())[Number(el.dataset.index)];
       else { const left = DD_UI.remaining(); item = left && left[0]; }
     } catch { return; }
     if (item && qcooling(item)) {
@@ -433,5 +439,14 @@ body.dl-open{overflow:hidden}
   const host = $('ddUiStudentMain');
   if (host) new MutationObserver(() => inject()).observe(host, {childList:true});
   inject();
-  window.DL_LADDER = {version:'82.1', open:ctx => open(ctx), currentCtx, grade, get state(){ return R; }};
+  // [v86.0 ⑧] 한 소단원 계단의 통과 칸 / 전체 칸 (숨긴 칸 제외) — 3회차 소단원 진도에 쓴다
+  function tally(key) {
+    const raw = (window.DL_LADDERS || {})[key]; if (!raw || !raw.length) return {pass:0, total:0};
+    const hid = new Set(window.DDR ? DDR.ladder(key, raw).hide : []);
+    const recs = lastRecs(key, raw.length);
+    let pass = 0, total = 0;
+    recs.forEach((r, i) => { if (hid.has(i)) return; total++; if (stepState(r) === 'done') pass++; });
+    return {pass, total};
+  }
+  window.DL_LADDER = {version:'86.0', open:ctx => open(ctx), currentCtx, grade, tally, get state(){ return R; }};
 })();

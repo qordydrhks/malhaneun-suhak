@@ -17873,6 +17873,8 @@ async function evaluateWithClaude(unitLabel, question, transcript){
       }
     }
   }catch(e){}
+  // [v86.0 ⑧] 회차 질문이면 질문 고르기에서 정한 모범 답·꼭 말할 핵심이 채점 기준 (rounds/rounds.js)
+  try{ var _ri=state._roundItem; if(_ri && _ri.q===question && window.DDR){ var _ra=DDR.answerText(_ri); if(_ra) _ans=_ra; } }catch(e){}
   // [v81.0] 모범 답이 있으면 "이 질문이 묻는 걸 답했나"로 채점한다. 개념 공통 기준은 참고만.
   const ansGuide = _ans ? `
 [이 질문의 모범 답 — 채점의 기준]
@@ -19266,7 +19268,7 @@ async function saveSubmission(grade, unit, transcript, result, attempt, needTeac
     student_grade: s ? s.grade : '',
     course_id: grade.id, course_name: grade.name,
     unit_id: unit.id, unit_label: unit.label,
-    level: state.level,
+    level: state._roundLevel || state.level,   // [v86.0 ⑧] 회차 질문이면 'r1'·'r2'·'r3', 다시 보기는 'r1re'
     question: (state.questions && state.questions[state.qIndex]) || '',
     question_id: ddqCurrentId((state.questions && state.questions[state.qIndex]) || ''),   // [v80.9]
     transcript,
@@ -22023,7 +22025,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-const APP_VERSION = 'v85.8-초5-1검수끝';
+const APP_VERSION = 'v86.0-회차흐름';
   // [v78.7] 이 값이 IIFE 안에 갇혀 있어 바깥 스크립트(app-ui.js)가 못 읽었다.
   //   화면 배지에 버전을 그대로 띄우려면 필요하므로 노출한다.
   window.APP_VERSION = APP_VERSION;
@@ -22047,12 +22049,15 @@ const APP_VERSION = 'v85.8-초5-1검수끝';
 })();
 </script>
 
-<script src="ui-integration/app-ui.js?v=85.6"></script>
+<!-- [v86.0 ⑧] 회차 흐름 (회차 데이터가 있는 학년만) -->
+<script src="rounds/data-e5-1.js?v=86.0"></script>
+<script src="rounds/rounds.js?v=86.0"></script>
+<script src="ui-integration/app-ui.js?v=86.0"></script>
 <!-- [v82.1] 선생님 질문 계단 (시범, 격리 모듈) — 중3-1 전 대단원 · 칸 그림 (v82.3) -->
 <script src="ladder/data-m3-1.js?v=82.5"></script>
 <script src="ladder/data-e5-1.js?v=85.0"></script>
 <script src="ladder/data-e5-2.js?v=83.3"></script>
-<script src="ladder/ladder.js?v=83.7"></script>
+<script src="ladder/ladder.js?v=86.0"></script>
 <!-- [v82.9] 질문 고르기 (마스터 전용) — 없어도 앱은 그대로 돈다 -->
 <script src="review/plan_e5-1.js?v=85.8"></script>
 <script src="review/plan_e5-2.js?v=84.5"></script>
