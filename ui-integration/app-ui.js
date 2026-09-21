@@ -107,10 +107,12 @@
   const roundsOn = () => !!(window.DDR && CP.grade && DDR.on(CP.grade));
   // [v86.6 ⑧] 3회차는 질문 계단 칸까지 통과해야 종합 문제가 열린다 (마스터 지적 2026-09-21). 남은 칸 수(숨긴 칸 제외, 오늘 막힌 칸 포함)
   function ladderLeft() {
-    if(!roundsOn()||DDR.round(CP.grade)<3||!window.DL_LADDER||!DL_LADDER.tally) return 0;
-    const big=cpCurrentBig(), sm=cpCurrentSmall(); if(!big||!sm) return 0;
+    if(!roundsOn()||!window.DL_LADDER||!DL_LADDER.tally) return 0;
+    const big=cpCurrentBig(), sm=cpCurrentSmall(); if(!big||!sm||curRound()<3) return 0;
     const t=DL_LADDER.tally(CP.grade+'|'+big.name+'|'+sm.name); return Math.max(0,t.total-t.pass);
   }
+  // [v86.8] 이 소단원의 회차 — 선생님이 연 회차라도 앞 회차 질문을 다 통과해야 올라간다 (rounds.js roundAt)
+  function curRound() { const big=cpCurrentBig(), sm=cpCurrentSmall(); return big&&sm ? DDR.roundAt(CP.grade,big.name,sm.name) : DDR.round(CP.grade); }
   function roundItems(which) { const big=cpCurrentBig(), sm=cpCurrentSmall(); return big&&sm ? DDR.items(CP.grade,big.name,sm.name,which||'now') : []; }
   function questionItems() {
     const big=cpCurrentBig(), sm=cpCurrentSmall(), list=[];
@@ -129,6 +131,15 @@
   }
   const status = item => item.blank ? 'none' : cpStatusForQuestion(CP.grade,item.q,item.id);
   const remaining = () => questionItems().filter(q => status(q)!=='pass');
+  // [v86.8] 흐름점검 6·7번 — 다음에 설명할 질문: 지금 질문 다음 번호부터, 오늘 막힌 질문(ladder.js DL_QCOOL)은 건너뛴다.
+  //   예전엔 늘 '첫 남은 질문'이라 3번 다음에 2번이 열렸고, 막힌 질문도 '다음 질문으로'로는 열려 그날 통과됐다.
+  const cooling = q => !!(window.DL_QCOOL && DL_QCOOL(q));
+  function nextPending() {
+    const all=questionItems(), cur=state.questions?.[state.qIndex], idx=all.findIndex(x=>x.q===cur);
+    const open=all.map((x,i)=>({x,i})).filter(o=>status(o.x)!=='pass'&&!cooling(o.x));
+    return open.length ? (open.find(o=>o.i>idx)||open[0]).x : null;
+  }
+  const COOL_MSG='오늘 다시 설명할 수 없는 질문만 남았어요. 설명을 한 번 더 읽고 내일 이어서 해요.';
   function remember() {
     if(!session.student) return;
     try {
@@ -196,7 +207,7 @@
   // [v81.4] 진도 표시 — 소단원 완료 = 설명하기 질문(깊이 질문 + 유형별 질문)을 모두 통과 (기본문제 열리는 조건과 같음)
   function smallProgress(big, sm) {
     if(roundsOn()) {   // [v86.0 ⑧] 지금 회차 질문(3회차는 계단 칸도) 기준
-      const list=DDR.items(CP.grade,big.name,sm.name,'now'), lad=DDR.round(CP.grade)>=3&&window.DL_LADDER&&DL_LADDER.tally?DL_LADDER.tally(CP.grade+'|'+big.name+'|'+sm.name):{pass:0,total:0};
+      const list=DDR.items(CP.grade,big.name,sm.name,'now'), lad=DDR.roundAt(CP.grade,big.name,sm.name)>=3&&window.DL_LADDER&&DL_LADDER.tally?DL_LADDER.tally(CP.grade+'|'+big.name+'|'+sm.name):{pass:0,total:0};
       const pass=list.filter(x=>cpStatusForQuestion(CP.grade,x.q,x.id)==='pass').length+lad.pass, total=list.length+lad.total;
       return {pass,total,done:total>0&&pass===total};
     }
@@ -227,7 +238,7 @@
   }
   // [v86.0 ⑧] 회차 흐름의 질문 목록. '다시 보기'는 지난 회차 질문을 다시 답하기만 — 지난 답·점수·모범 답은 안 보여 준다.
   function roundPicker(sm) {
-    const r=DDR.round(CP.grade), now=roundItems('now'), past=r>1?roundItems('past'):[];
+    const r=curRound(), opened=DDR.round(CP.grade), now=roundItems('now'), past=r>1?roundItems('past'):[];
     if(ui.rview==='past'&&!past.length) ui.rview='now';
     const showPast=ui.rview==='past', list=showPast?past:now; ui.questions=list;
     const left=now.filter(q=>status(q)!=='pass').length;
@@ -247,6 +258,7 @@
           +(left?button('이어서 설명하기 →','continue','dd-ui-primary'):ladLeft?'':button(r>=3?'종합 문제 풀기 →':'문제 풀기 →','quiz','dd-ui-primary'))+'</div>'
         :'');
     return '<div class="dd-ui-page-head"><div><p class="dd-ui-caption">'+esc(cpCurrentBig().name)+' · <b>'+r+'회차</b></p><h1>'+esc(smallTitle(sm))+'</h1></div>'+button('개념 목록','catalog','dd-ui-text')+'</div>'+
+      (r<opened&&!showPast?'<p class="dd-ui-caption">'+opened+'회차가 열렸어요. 이 개념은 '+r+'회차 질문을 다 설명하면 '+(r+1)+'회차로 넘어가요.</p>':'')+
       '<div class="dd-ui-section-head"><h2>'+(showPast?'지난 회차 질문 다시 보기':'질문을 골라 설명해요.')+'</h2></div>'+tabs+
       '<div class="dd-ui-choice-list">'+(list.map(row).join('')||empty)+'</div>'+foot;
   }
@@ -487,7 +499,7 @@
     if(ui.busy||!isStudent()||!cpCurrentSmall()) return;
     cpSyncLegacy(); if(!state.unitId) return;
     const pending=ui.level==='blank'?[]:remaining();
-    if(!state._quizRedo&&!getUnitQuizDone()&&pending.length) { await startItem(pending[0]); return; }
+    if(!state._quizRedo&&!getUnitQuizDone()&&pending.length) { const nx=nextPending(); if(nx) await startItem(nx); else { notice(COOL_MSG); if(ui.page!=='questions') { $('backBtn').click(); stage('questions'); } } return; }
     if(!state._quizRedo&&!getUnitQuizDone()&&ladderLeft()) { notice('질문 계단을 모두 통과해야 종합 문제를 풀 수 있어요.'); if(ui.page!=='questions') { $('backBtn').click(); stage('questions'); } return; }   // [v86.6 ⑧]
     lock(true); try { return await original.startQuiz(); } finally { lock(false); }
   };
@@ -518,7 +530,7 @@
       case 'kind': ui.kind=el.dataset.kind; renderStudent(); break;
       case 'rview': ui.rview=el.dataset.rview==='past'?'past':'now'; renderStudent(); break;   // [v86.0 ⑧]
       case 'question': await startItem(ui.questions[Number(el.dataset.index)]); break;
-      case 'continue': if(!cpCurrentSmall())stage(CP.grade?'catalog':'grades'); else {const left=remaining(); if(left.length)await startItem(left[0]);else if(academyOk()) await startQuiz();} break;
+      case 'continue': if(!cpCurrentSmall())stage(CP.grade?'catalog':'grades'); else {const left=remaining(); if(left.length){const nx=nextPending(); if(nx) await startItem(nx); else notice(COOL_MSG);} else if(academyOk()) await startQuiz();} break;
       case 'quiz': if(academyOk()) await startQuiz(); break;
       case 'lesson-back': if(ui.page==='talk')$('cvBack').click(); else $('backBtn').click(); stage(cpCurrentSmall()?'questions':'catalog'); break;
       case 'help':
@@ -546,7 +558,7 @@
     if(ui.busy) return;
     state.gradeId=c.dataset.course; state.unitId=Number(c.dataset.unit); syncSelectionFromUnit();
     if(CP.small==null) { stage('catalog'); return; }
-    restoreLevel(); ui.rview=DDR.round(CP.grade)>1?'past':'now'; stage('questions');
+    restoreLevel(); ui.rview=curRound()>1?'past':'now'; stage('questions');
   },true);
   document.addEventListener('change',e=>{if(e.target.id==='ddUiLevel'){ui.level=e.target.value;restoreLevel();cpSyncLegacy();renderStudent();}});
   $('levelSeg').addEventListener('click',e=>{const el=e.target.closest('[data-level]');if(el){ui.level=el.dataset.level;restoreLevel();renderStudent();}});

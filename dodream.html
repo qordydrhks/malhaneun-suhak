@@ -1385,9 +1385,9 @@ window.DDOOPI = {
           <span class="dash-summary" id="dashSummary">불러오는 중…</span>
         </div>
         <div class="board-legend">
-          <span><span class="lg-dot" style="background:var(--sage)"></span>85점 이상 통과</span>
-          <span><span class="lg-dot" style="background:var(--amber)"></span>70~84점 통과</span>
-          <span><span class="lg-dot" style="background:var(--red)"></span>70점 미만 · 재학습</span>
+          <span><span class="lg-dot" style="background:var(--sage)"></span>소단원 완료 (질문 모두 통과)</span>
+          <span><span class="lg-dot" style="background:var(--amber)"></span>진행 중 (일부 통과)</span>
+          <span><span class="lg-dot" style="background:var(--red)"></span>아직 통과 없음 · 재학습</span>
           <span><span class="lg-dot" style="background:#E4DFD4"></span>미응시</span>
         </div>
         <div id="boardArea"></div>
@@ -17040,13 +17040,46 @@ function cvxMap(){
 }
 // 이 소단원을 '본 흐름'에서 하나라도 통과했나
 // [v80.9] passQ = 번호 없는 옛 기록의 질문 글자, passIds = 번호 있는 기록의 질문 번호
+// [v86.8] '하나라도'가 아니라 소단원 완료 기준(ddSmallStage)으로 — 흐름점검 3번
 function cvxSmallMainPassed(gradeId, big, small, passQ, passIds){
   if((!passQ || !passQ.size) && (!passIds || !passIds.size)) return false;
-  const it = ddqItemsFor(gradeId, big.name, small);
-  for(const x of [].concat(it.low, it.high, it.qset)){
-    if((passIds && passIds.has(x.id)) || (passQ && passQ.has(x.q))) return true;
+  return ddSmallStage(gradeId, big, small, passQ, passIds).done;
+}
+/* [v86.8] 소단원 '완료' 기준 하나로 (흐름점검 3번). 예전엔 질문 하나만 통과해도 학생 홈·선생님 격자·학부모 리포트에 '완료'였다.
+   · 회차 학년(rounds/data-*.js 있음): 1회차 질문을 다 통과 = '1회차 완료', 2회차까지 다 통과 = '2회차 완료'
+   · 그 밖의 학년: 설명하기 질문(깊이 질문 + 유형별 질문)을 다 통과 = '완료' (학생 진도·기본문제 열리는 조건과 같음)
+   passQ = 통과한 질문 글자(번호 없는 옛 기록), passIds = 통과한 질문 번호.
+   돌려줌 {done, label, pass, total, stage} — label: '2회차 완료'|'1회차 완료'|'완료'|'질문 p/t'|'' */
+function ddSmallStage(gradeId, big, small, passQ, passIds){
+  const isP = x => !!((passIds && x.id && passIds.has(x.id)) || (passQ && x.q && passQ.has(x.q)));
+  const e = (window.DDR && DDR.entry) ? DDR.entry(gradeId, big.name, small.name) : null;
+  if(e){
+    const r1 = e.items.filter(x=>x.r===1), r2 = e.items.filter(x=>x.r===2);
+    const d1 = r1.length>0 && r1.every(isP), d2 = d1 && r2.every(isP);
+    const cur = d1 ? r2 : r1, pass = cur.filter(isP).length;
+    const stage = d2 ? 2 : (d1 ? 1 : 0);
+    return { done:d1, stage, pass, total:cur.length,
+             label: d2 ? '2회차 완료' : d1 ? '1회차 완료' : (pass ? '1회차 질문 ' + pass + '/' + cur.length : '') };
   }
-  return false;
+  const it = ddqItemsFor(gradeId, big.name, small), list = [].concat(it.high, it.qset);
+  const pass = list.filter(isP).length, done = list.length>0 && pass===list.length;
+  return { done, stage:done?1:0, pass, total:list.length, label: done ? '완료' : (pass ? '질문 ' + pass + '/' + list.length : '') };
+}
+// 과정의 유형 단원 번호(unitId) → {big, small} (선생님 격자·학부모 리포트가 기록을 소단원으로 모을 때)
+function ddUnitSmallMap(gradeId){
+  const out = {}, m = gradeId ? cpModel(gradeId) : null;
+  if(!m) return out;
+  (m.bigUnits||[]).forEach(b=> cpBigMiddles(b).forEach(mg=> (mg.smalls||[]).forEach(sm=>{
+    (sm.types||[]).forEach(t=>{ if(t && t.unitId!=null) out[String(t.unitId)] = { big:b, small:sm }; });
+  })));
+  return out;
+}
+// 기록 목록 → 통과한 질문 번호·글자
+function ddPassSets(subs, gradeId){
+  const passQ = new Set(), passIds = new Set();
+  (subs||[]).forEach(r=>{ if(!r || !r.pass || r.level==='talk' || (gradeId && r.courseId!==gradeId)) return;
+    if(r.questionId) passIds.add(r.questionId); else if(r.question) passQ.add(r.question); });
+  return { passQ, passIds };
 }
 // 한 학년의 두 축 진도 {total, main, talk, hasTalk}
 function cvxAxis(gradeId){
@@ -17754,7 +17787,8 @@ $('submitBtn').addEventListener('click', async ()=>{
           courseId: grade.id, unitId: unit.id, unitLabel: unit.label,
           question: (state.questions && state.questions[state.qIndex]) || '',
           questionId: (typeof ddqCurrentId==='function') ? ddqCurrentId((state.questions && state.questions[state.qIndex]) || '') : null,   // [v80.9]
-          pass: passed && !(window.DDR && DDR.noPass(state._roundLevel))   // [v86.2 ⑧]
+          pass: passed && !(window.DDR && DDR.noPass(state._roundLevel)),   // [v86.2 ⑧]
+          level: state._roundLevel || state.level, time: new Date().toISOString()   // [v86.8] 오늘 막힌 질문 판단(흐름점검 6번)
         });
       }
     }catch(e){}
@@ -19124,6 +19158,7 @@ function quizFigHtml(it){
 }
 function renderQuiz(){
   const marks = ['①','②','③','④'];
+  state._quizFirst = null;   // [v86.8] 처음 푼 결과 (다시 풀기로 덮지 않는다 — 흐름점검 2번)
   const html = state.quiz.map((it, qi)=>`
     <div class="quiz-q" id="quizQ-${qi}">
       <span class="quiz-num">문제 ${qi+1}</span>
@@ -19167,43 +19202,54 @@ function gradeQuiz(timedOut){
   Timer.hide();
   const isTimeout = (timedOut === true);      // 클릭 이벤트 객체와 구분
   const marks = ['①','②','③','④'];
+  // [v86.8] 처음 채점에서 틀린 문항은 정답·해설을 숨긴다 → '다시 풀기'가 정답 보고 고르기가 되지 않게 (흐름점검 2번)
+  const firstTry = !state._quizFirst;
   let correct = 0;
   state.quiz.forEach((it, qi)=>{
     const picked = state.quizAnswers[qi];
     const noAnswer = (picked === undefined);
     const isRight = (!noAnswer && picked === it.answer);
     if(isRight) correct++;
+    const hide = firstTry && !isRight;
     const qEl = $('quizQ-'+qi);
     qEl.querySelectorAll('.quiz-choice').forEach(b=>{
       const ci = Number(b.dataset.ci);
       b.disabled = true;
       b.classList.remove('sel');
-      if(ci === it.answer) b.classList.add('correct');
+      if(!hide && ci === it.answer) b.classList.add('correct');
       else if(ci === picked) b.classList.add('wrong');
     });
     const ex = $('quizEx-'+qi);
     ex.style.display = 'block';
     const head = isRight ? '✅ 정답!'
       : (noAnswer ? '⏱ 시간 초과 — 오답 처리<span class="timeout-tag">미응답</span>' : '❌ 다시 볼 점');
-    ex.innerHTML = `<div class="ex-eyebrow">${head}</div>${mfmt(it.explain || '')}`;
+    ex.innerHTML = hide
+      ? `<div class="ex-eyebrow">${noAnswer ? '⏱ 시간 초과' : '❌ 틀렸어요'}</div>개념을 떠올리며 한 번 더 풀어 봐요. 정답과 해설은 다시 푼 뒤에 보여 줘요.`
+      : `<div class="ex-eyebrow">${head}</div>${mfmt(it.explain || '')}`;
   });
 
   const total = state.quiz.length;
+  if(firstTry) state._quizFirst = { correct, total };
+  const first = state._quizFirst;
   // [v80.0] 응용 도전(초등, 선택)은 완료 표시에 영향 없음. 기본을 마친 초등 학생에게만 도전 버튼을 준다.
   const isAdv = state.quizLevel === 'adv';
   const advBtn = (!isAdv && String(state.gradeId || '').startsWith('e'))
     ? `<button class="ghost-btn" id="quizAdvBtn">💪 응용 문제 도전하기 (선택)</button>` : '';
   const allRight = correct === total;
   const resultCls = allRight ? 'good' : 'mid';
-  const resultMsg = allRight
+  const resultMsg = (!firstTry)
+    ? (allRight ? `다시 풀어서 모두 맞혔어요. 처음에는 ${total}문제 중 ${first.correct}문제를 맞혔어요.`
+                : `처음 ${total}문제 중 ${first.correct}문제 정답 · 다시 풀어도 ${total - correct}문제가 어려웠어요. 해설을 보고 선생님께 물어봐요.`)
+    : allRight
     ? `🎉 ${total}문제 모두 정답! 개념을 정확히 알고 있네요.`
     : (isTimeout
         ? `⏱ 시간이 다 됐어요. ${total}문제 중 ${correct}문제 정답 (못 고른 문항은 오답).`
-        : `${total}문제 중 ${correct}문제 정답. 해설을 보고 틀린 문제를 다시 풀어볼까요?`);
+        : `${total}문제 중 ${correct}문제 정답. 틀린 문제를 한 번 더 생각해서 풀어볼까요?`);
 
-  const btns = allRight
+  const btns = (allRight || !firstTry)
     ? `<button class="primary-btn" id="quizDoneBtn">다른 개념 도전하기</button>`
     : `<button class="primary-btn accent" id="quizRetryBtn">🔁 틀린 문제 다시 풀기</button>
+       <button class="ghost-btn" id="quizRevealBtn">정답과 해설 보기</button>
        <button class="ghost-btn" id="quizDoneBtn">다른 개념 도전하기</button>`;
 
   $('quizArea').insertAdjacentHTML('beforeend',
@@ -19212,8 +19258,10 @@ function gradeQuiz(timedOut){
   $('quizLaterBtn').style.display = 'none';
 
   // 결과 저장 (선생님 대시보드 이력)
-  saveQuizResult(correct, total, isAdv).catch(()=>{});
-  if(!isAdv) markUnitQuizDone(correct, total);   // 응용 도전은 완료 표시를 건드리지 않는다   // [v77.3] 이 소단원 문제는 풀었다고 표시
+  if(firstTry){   // [v86.8] 기록은 처음 푼 결과 한 번만 — 다시 풀기로 점수가 바뀌지 않게
+    saveQuizResult(correct, total, isAdv).catch(()=>{});
+    if(!isAdv) markUnitQuizDone(correct, total);
+  }   // 응용 도전은 완료 표시를 건드리지 않는다   // [v77.3] 이 소단원 문제는 풀었다고 표시
 
   const rBtn = $('quizRetryBtn');
   if(rBtn) rBtn.addEventListener('click', ()=>{
@@ -19236,6 +19284,15 @@ function gradeQuiz(timedOut){
     const remain = state.quiz.length - Object.keys(state.quizAnswers).length;
     startQuizTimer(remain);                  // 다시 풀 문항 수만큼 시간 재부여
     window.scrollTo({top:0, behavior:'smooth'});
+  });
+  const vBtn = $('quizRevealBtn');
+  if(vBtn) vBtn.addEventListener('click', ()=>{   // 다시 안 풀고 정답·해설만 본다 (기록은 처음 결과 그대로)
+    state.quiz.forEach((it, qi)=>{
+      $('quizQ-'+qi).querySelectorAll('.quiz-choice').forEach(b=>{ if(Number(b.dataset.ci) === it.answer) b.classList.add('correct'); });
+      const ok = state.quizAnswers[qi] === it.answer;
+      $('quizEx-'+qi).innerHTML = `<div class="ex-eyebrow">${ok ? '✅ 정답!' : '❌ 다시 볼 점'}</div>${mfmt(it.explain || '')}`;
+    });
+    const rb = $('quizRetryBtn'); if(rb) rb.remove(); vBtn.remove();
   });
   const dBtn = $('quizDoneBtn');
   if(dBtn) dBtn.addEventListener('click', finishQuiz);
@@ -19483,7 +19540,7 @@ function renderTodayPanel(subs){
   const esc = s => String(s||'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
   const listHtml = n === 0
-    ? '<div class="today-empty">아직 오늘 완료한 학생이 없어요.</div>'
+    ? '<div class="today-empty">아직 오늘 공부한 학생이 없어요.</div>'
     : rows.map(x => {
         const warn = (x.needTeacher || (!x.pass)) ? '<span class="tr-warn">⚠️</span>' : '';
         return `<div class="today-row">
@@ -19499,7 +19556,7 @@ function renderTodayPanel(subs){
   host.innerHTML = `
     <div class="today-panel${collapsed?' collapsed':''}" id="todayPanelInner">
       <div class="today-head" id="todayHead">
-        <span class="today-title">오늘 완료</span>
+        <span class="today-title">오늘 학습 (최근 설명)</span>
         <span class="today-badge${n===0?' zero':''}">${n}</span>
         <span class="today-caret">▾</span>
       </div>
@@ -19608,11 +19665,14 @@ async function loadBoard(silent){
       courseIds.forEach(cid=>{
         const course = GRADES.find(g=>g.id===cid);
         if(!course) return;
+        // [v86.8] 칸 색 = 소단원 완료 기준(ddSmallStage). 예전엔 질문 하나만 100점이어도 초록이었다 (흐름점검 3번)
+        const umap = ddUnitSmallMap(cid), ps = ddPassSets(mySubs, cid);
         const cells = course.units.map((u,idx)=>{
           const sc = best[cid] ? best[cid][u.id] : undefined;
+          const loc = umap[String(u.id)], stg = loc ? ddSmallStage(cid, loc.big, loc.small, ps.passQ, ps.passIds) : null;
           let cls = '';
-          if(sc!==undefined){ cls = sc>=85?'pass':(sc>=PASS_SCORE?'mid':'fail'); }
-          const tip = u.label + (sc!==undefined ? ' · 최고 '+sc+'점' : ' · 미응시');
+          if(sc!==undefined){ cls = (stg ? stg.done : sc>=85) ? 'pass' : ((stg ? stg.pass>0 : sc>=PASS_SCORE) ? 'mid' : 'fail'); }
+          const tip = u.label + (stg && stg.label ? ' · ' + stg.label : '') + (sc!==undefined ? ' · 최고 '+sc+'점' : ' · 미응시');
           return `<div class="unit-cell ${cls}" title="${escapeHtml(tip)}">${idx+1}</div>`;
         }).join('');
         gridsHtml += `<div class="grid-label">${course.name}</div><div class="unit-grid">${cells}</div>`;
@@ -19942,8 +20002,24 @@ function renderParentBody(stu, subs, comment){
   const cvIsTalk = x => x && x.level === 'talk';
   const cvLabel  = x => String((x && (x.unitLabel || x.unitId)) || '').replace(/^\s*🗣️\s*/, '');
   const weekTalk = new Set(weekSubs.filter(x=>x.pass && cvIsTalk(x)).map(cvLabel));
-  const weekMain = new Set(weekSubs.filter(x=>x.pass && !cvIsTalk(x)).map(cvLabel));
-  const weekConcepts = new Set([...weekMain, ...weekTalk]);
+  // [v86.8] 흐름점검 3번 — '통과가 하나라도 있으면 완료'가 아니라 소단원 완료 기준(ddSmallStage)으로.
+  //   이번 주에 공부한 소단원마다 지금까지의 기록 전체로 단계를 매긴다 (1회차 완료 · 2회차 완료 · 진행 중)
+  const smallRows = [];   // {name, stage}
+  (()=>{
+    const seenK = new Set(), maps = {}, sets = {};
+    weekSubs.filter(x=>!cvIsTalk(x)).forEach(x=>{
+      const cid = x.courseId; if(!cid) return;
+      maps[cid] = maps[cid] || ddUnitSmallMap(cid);
+      const loc = maps[cid][String(x.unitId)];
+      const k = cid + '|' + (loc ? loc.big.name + '|' + loc.small.name : cvLabel(x));
+      if(seenK.has(k)) return; seenK.add(k);
+      if(!loc){ smallRows.push({ name:cvLabel(x), stage:null }); return; }
+      sets[cid] = sets[cid] || ddPassSets(subs, cid);
+      smallRows.push({ name: (loc.small.types && loc.small.types[0] && loc.small.types[0].name) || loc.small.name, stage: ddSmallStage(cid, loc.big, loc.small, sets[cid].passQ, sets[cid].passIds) });
+    });
+  })();
+  const weekMain = new Set(smallRows.filter(r=>r.stage && r.stage.done).map(r=>r.name));
+  const weekConcepts = new Set([...smallRows.map(r=>r.name), ...weekTalk]);
   // 연속 학습일 (오늘부터 거슬러)
   let streak = 0;
   const daySet = new Set(subs.map(x => new Date(x.time).toDateString()));
@@ -19981,12 +20057,34 @@ function renderParentBody(stu, subs, comment){
       <div class="pp-axnote">대화형은 뚜삐와 개념을 이야기해 보는 가벼운 연습이에요. 문제 풀이와 복습은 아래쪽(질문·문제)에서 진행돼요.</div>
     </div>`;
   const mastered = [
-    ...[...weekMain].map(n=>({ n, t:'✏️' })),
-    ...[...weekTalk].filter(n=>!weekMain.has(n)).map(n=>({ n, t:'🗣️' }))
-  ];
+    ...smallRows.map(r=>({ n:r.name, t:'✏️', d: r.stage ? (r.stage.label || '시작') : '' })),
+    ...[...weekTalk].map(n=>({ n, t:'🗣️', d:'대화 완료' }))
+  ].sort((a,b)=> (/완료/.test(b.d)?1:0) - (/완료/.test(a.d)?1:0));
   const conceptHtml = axisHtml + (mastered.length
-    ? mastered.slice(0,6).map(c => `<div class="pp-concept"><span class="ci">${c.t}</span><span class="cn">${escapeHtml(c.n)}</span><span class="cd">완료</span></div>`).join('')
-    : '<div class="pp-empty">이번 주 통과한 개념이 곧 여기 표시돼요.</div>');
+    ? mastered.slice(0,8).map(c => `<div class="pp-concept"><span class="ci">${c.t}</span><span class="cn">${escapeHtml(c.n)}</span><span class="cd"${/완료/.test(c.d)?'':' style="opacity:.7"'}>${escapeHtml(c.d)}</span></div>`).join('')
+    : '<div class="pp-empty">이번 주 공부한 개념이 곧 여기 표시돼요.</div>');
+
+  // [v86.8] 흐름점검 4번 — 잘한 것만이 아니라 '더 연습이 필요한 것'도 (어른이 이해도를 정확히 판단하도록)
+  //   ① 두 번 설명해도 어려워 선생님께 알림이 간 개념 ② 개념을 보고 설명한 질문(혼자 다시 설명 예정) ③ 아직 통과 못 한 질문
+  const practice = [];
+  (()=>{
+    const passedLater = (x)=> subs.some(y=>y.pass && y.courseId===x.courseId && new Date(y.time) > new Date(x.time)
+      && ((x.questionId && y.questionId===x.questionId) || (!x.questionId && y.question===x.question)));
+    const seenQ = new Set();
+    weekSubs.filter(x=>!cvIsTalk(x)).sort((a,b)=>new Date(b.time)-new Date(a.time)).forEach(x=>{
+      const qk = x.courseId + '|' + (x.questionId || x.question || x.unitId);
+      if(seenQ.has(qk)) return;
+      const seenC = window.DDR && DDR.noPass(x.level);
+      const fail = (x.score||0) < PASS_SCORE;
+      if(!(x.needTeacher || seenC || fail) || passedLater(x)) return;
+      seenQ.add(qk);
+      const why = x.needTeacher ? '선생님과 함께 다시 봐요' : seenC ? '개념을 보고 설명했어요 · 혼자 다시 설명할 예정' : '아직 설명이 어려워요';
+      practice.push({ q: x.question || cvLabel(x), unit: cvLabel(x), why, mis: x.needTeacher ? (x.misconception||'') : '' });
+    });
+  })();
+  const practiceHtml = practice.length
+    ? practice.slice(0,6).map(p => `<div class="pp-concept pp-practice"><span class="ci">🔎</span><span class="cn">${mfmt(p.q)}<small style="display:block;opacity:.7;font-weight:500">${escapeHtml(p.unit)}${p.mis ? ' · ' + escapeHtml(p.mis) : ''}</small></span><span class="cd" style="white-space:normal;text-align:right;max-width:38%">${escapeHtml(p.why)}</span></div>`).join('')
+    : '<div class="pp-empty">이번 주에는 특별히 어려워한 질문이 없어요.</div>';
 
   // 잘한 음성 (점수 높은 순 2개, transcript 있는 것)
   const goodVoice = subs.filter(x => x.pass && x.transcript && x.transcript.length > 5)
@@ -20018,13 +20116,18 @@ function renderParentBody(stu, subs, comment){
     </div>
 
     <div class="pp-card">
-      <div class="pp-card-t">📈 점수가 오르고 있어요</div>
+      <div class="pp-card-t">📈 주별 평균 점수</div>
       <div class="pp-growth">${growthHtml}</div>
     </div>
 
     <div class="pp-card">
-      <div class="pp-card-t">✅ 이번 주 마스터한 개념</div>
+      <div class="pp-card-t">✅ 이번 주 공부한 개념</div>
       ${conceptHtml}
+    </div>
+
+    <div class="pp-card">
+      <div class="pp-card-t">🔎 더 연습이 필요한 것</div>
+      ${practiceHtml}
     </div>
 
     <div class="pp-sec praise">🌟 선생님의 칭찬 <span class="ln"></span></div>
@@ -20216,15 +20319,21 @@ async function collectReportData(){
   const strong = units.filter(u=>u.best>=85).sort((a,b)=>b.best-a.best).slice(0,4);
   const weak   = units.filter(u=>u.best<PASS_SCORE).sort((a,b)=>a.best-b.best).slice(0,4);
 
+  // [v86.8] 흐름점검 5번 — 같은 날 다시 설명해서 오른 점수(15→100)를 '성장'으로 보지 않는다.
+  //   서로 다른 날이 3일 이상일 때만, 날마다 질문별 '첫 설명' 점수로 앞쪽 날들과 뒤쪽 날들을 비교한다.
   const chrono = subs.slice().sort((a,b)=>new Date(a.time)-new Date(b.time));
+  const byDay = {};
+  chrono.forEach(x=>{ const dk = new Date(x.time).toDateString(), qk = x.questionId || x.question || x.unitId;
+    byDay[dk] = byDay[dk] || {}; if(!(qk in byDay[dk])) byDay[dk][qk] = x.score||0; });
+  const dayKeys = Object.keys(byDay);
   let trend = null;
-  if(chrono.length >= 4){
-    const half = Math.floor(chrono.length/2);
-    const f = chrono.slice(0,half), l = chrono.slice(half);
-    const fa = Math.round(f.reduce((a,b)=>a+b.score,0)/f.length);
-    const la = Math.round(l.reduce((a,b)=>a+b.score,0)/l.length);
-    trend = { first:fa, last:la, diff:la-fa };
+  if(dayKeys.length >= 3){
+    const half = Math.floor(dayKeys.length/2);
+    const avgOf = ks => { const v = ks.flatMap(k=>Object.values(byDay[k])); return Math.round(v.reduce((a,b)=>a+b,0)/v.length); };
+    const fa = avgOf(dayKeys.slice(0,half)), la = avgOf(dayKeys.slice(half));
+    trend = { first:fa, last:la, diff:la-fa, days:dayKeys.length };
   }
+  const seenCnt = subs.filter(x=> window.DDR && DDR.noPass(x.level)).length;   // 개념을 보고 설명한 횟수 (이해의 증거 아님)
 
   const avgScore = subs.length ? Math.round(subs.reduce((a,b)=>a+b.score,0)/subs.length) : 0;
   const passCnt = subs.filter(x=>x.pass).length;
@@ -20234,7 +20343,7 @@ async function collectReportData(){
   const qRate = qTotal ? Math.round(qCorrect/qTotal*100) : null;
 
   return { student:s, since, subs, flags, quizzes, units, strong, weak, trend,
-           avgScore, passCnt, unitCnt, qTotal, qCorrect, qRate };
+           avgScore, passCnt, unitCnt, qTotal, qCorrect, qRate, seenCnt, days:dayKeys.length };
 }
 
 async function generateReport(){
@@ -20265,35 +20374,41 @@ async function writeReportWithAI(d){
     ? d.flags.slice(0,6).map(f=>`- ${f.unitLabel} (${f.score}점)${f.misconception?` · 오개념: ${f.misconception}`:''}`).join('\n')
     : '(없음)';
   const trendTxt = d.trend
-    ? `기간 전반 평균 ${d.trend.first}점 → 후반 평균 ${d.trend.last}점 (${d.trend.diff>=0?'+':''}${d.trend.diff}점)`
-    : '(추이를 볼 만큼 기록이 많지 않음)';
+    ? `서로 다른 ${d.trend.days}일의 기록 — 앞쪽 날들 첫 설명 평균 ${d.trend.first}점 → 뒤쪽 날들 ${d.trend.last}점 (${d.trend.diff>=0?'+':''}${d.trend.diff}점)`
+    : `(공부한 날이 ${d.days}일뿐이라 점수 추이를 말할 수 없음. 같은 날 다시 설명해서 오른 점수는 성장이 아님)`;
 
-  const systemPrompt = `너는 '두드림 수학 전문학원'의 원장 선생님이야. 학부모님께 보내는 학습 보고서를 쓴다.
+  // [v86.8] 흐름점검 5번 — 과장 금지 규칙을 구체적으로, 원장 코멘트는 AI가 쓰지 않는다(원장님이 직접 씀)
+  const systemPrompt = `너는 '두드림 수학 전문학원' 선생님을 도와 학부모님께 보낼 학습 보고서 초안을 쓴다. 선생님이 읽고 고친 뒤 보낸다.
 이 학원은 학생이 배운 개념을 '말로 설명'하게 해서 이해도를 확인하는 방식(인출 학습)으로 지도해.
 
 [작성 원칙]
 - 학부모님께 드리는 글이니 정중하고 따뜻하게. 존댓말.
-- 아이의 강점·성장을 먼저 구체적으로. 개선점은 부드럽게, "이렇게 도와주면 좋겠다"는 제안형으로.
-- 점수를 나열만 하지 말고, 그 숫자가 무엇을 뜻하는지 해석해 줘.
-- 과장 금지. 기록에 없는 내용은 절대 지어내지 마.
+- 학부모님이 아이의 이해도를 '정확히' 알 수 있어야 한다. 잘한 점과 더 연습할 점을 똑같이 사실대로.
+- 기록에 있는 숫자와 사실만 쓴다. 기록에 없는 내용은 절대 지어내지 마.
+- 과장 금지 — 특히 아래는 쓰지 마:
+  · 같은 날 다시 설명해서 오른 점수를 '성장·향상·상승'이라고 하기 ([점수 추이]가 '말할 수 없음'이면 성장 이야기를 아예 하지 마)
+  · '완벽히', '확실히', '완전히 이해' 같은 단정
+  · 개념을 보고 설명한 것을 이해의 증거로 쓰기
+  · 기본 문제를 '응용 문제'라고 부르기 (그냥 '문제'라고 해)
+  · 아이가 '스스로 약점을 찾아냈다'처럼 기록으로 알 수 없는 마음·과정 추측
 - A4 한 장에 들어가야 하니 각 항목은 짧고 밀도 있게.
 
 [각 항목 길이 — 반드시 지켜]
 - summary: 3~4문장 (이번 기간 총평)
 - strength: 2~3문장 (잘한 점, 구체적 단원명 언급)
-- improve: 2~3문장 (보완할 점, 부드럽게)
+- improve: 2~3문장 (더 연습할 점 — 선생님이 도와준 개념·아직 통과 못 한 개념을 구체적으로, 부드럽게)
 - plan: 2~3문장 (다음 기간 학습 방향 제안)
-- comment: 3~4문장 (원장 선생님이 학부모님께 직접 건네는 따뜻한 코멘트. 아이 이름을 자연스럽게 넣어)
 
 반드시 아래 JSON "만" 출력. 앞뒤 인사말·마크다운 금지. 첫 글자 { 마지막 글자 }.
-{"summary":"...","strength":"...","improve":"...","plan":"...","comment":"..."}`;
+{"summary":"...","strength":"...","improve":"...","plan":"..."}`;
 
   const userMsg = `[학생] ${s.name} (${s.grade||''})
 [기간] 최근 ${RP.days}일
 [학습량] 개념 ${d.unitCnt}개 · 구두 설명 ${d.subs.length}회 · 통과 ${d.passCnt}회
 [평균 이해도] ${d.avgScore}점 (70점 이상 통과)
 [점수 추이] ${trendTxt}
-[적용 문제 정답률] ${d.qRate !== null ? d.qRate + '% (' + d.qCorrect + '/' + d.qTotal + ')' : '(응시 없음)'}
+[문제 정답률(처음 푼 결과)] ${d.qRate !== null ? d.qRate + '% (' + d.qCorrect + '/' + d.qTotal + ')' : '(응시 없음)'}
+[개념을 보고 설명한 횟수] ${d.seenCnt}회 (이해의 증거가 아니라 연습)
 
 [단원별 기록]
 ${unitLines}
@@ -20305,6 +20420,7 @@ ${flagLines}`;
   const raw = (data.content||[]).map(b=>b.text||'').join('\n').trim();
   const o = parseReport(raw);
   if(!o) throw new Error('보고서 내용을 해석하지 못했어요.');
+  o.comment = '';   // [v86.8] 원장 코멘트는 AI가 쓰지 않는다 — 원장님이 직접 (흐름점검 5번)
   return o;
 }
 
@@ -20349,7 +20465,7 @@ function renderReportSheet(){
       <section><h3>잘하고 있는 점</h3><p id="rpS2">${escapeHtml(ai.strength||'')}</p></section>
       <section><h3>보완하면 좋을 점</h3><p id="rpS3">${escapeHtml(ai.improve||'')}</p></section>
       <section><h3>다음 학습 방향</h3><p id="rpS4">${escapeHtml(ai.plan||'')}</p></section>
-      <section><h3>원장 선생님 코멘트</h3><p class="a4-cmt" id="rpS5">${escapeHtml(ai.comment||'')}</p></section>
+      <section id="rpS5Sec"${ai.comment ? '' : ' style="display:none"'}><h3>원장 선생님 코멘트</h3><p class="a4-cmt" id="rpS5">${escapeHtml(ai.comment||'')}</p></section>
 
       <div class="a4-foot">
         <span>두드림 수학 전문학원</span>
@@ -20357,8 +20473,9 @@ function renderReportSheet(){
       </div>
     </div>
 
-    <p style="font-size:.82rem;font-weight:700;margin:14px 0 5px;">✏️ 원장님 코멘트 (수정하면 위 보고서에 바로 반영돼요)</p>
-    <textarea class="rp-cmt" id="rpCmtEdit">${escapeHtml(ai.comment||'')}</textarea>
+    <p style="font-size:.82rem;font-weight:700;margin:14px 0 5px;">✏️ 원장님 코멘트 — 원장님이 직접 써 주세요 (비워 두면 보고서에 안 나와요)</p>
+    <textarea class="rp-cmt" id="rpCmtEdit" placeholder="아이에게 직접 본 모습, 학부모님께 드리고 싶은 말">${escapeHtml(ai.comment||'')}</textarea>
+    <p style="font-size:.75rem;color:var(--ink-soft);margin:4px 0 0;">위 총평·잘한 점·보완할 점·학습 방향은 AI 초안이에요. 보내기 전에 읽고 사실과 다른 곳은 고쳐 주세요.</p>
 
     <div class="rp-actions">
       <button class="primary-btn" id="rpPdfBtn">📄 PDF로 저장</button>
@@ -20372,6 +20489,7 @@ function renderReportSheet(){
   $('rpCmtEdit').addEventListener('input', (e)=>{
     RP.ai.comment = e.target.value;
     $('rpS5').textContent = e.target.value;
+    $('rpS5Sec').style.display = e.target.value.trim() ? '' : 'none';
   });
   $('rpPdfBtn').addEventListener('click', ()=> window.print());
   $('rpShareBtn').addEventListener('click', shareReport);
@@ -20401,10 +20519,7 @@ ${ai.improve||''}
 ■ 다음 학습 방향
 ${ai.plan||''}
 
-■ 원장 선생님 코멘트
-${ai.comment||''}
-
-- 두드림 수학 전문학원 드림`;
+${(ai.comment||'').trim() ? '■ 원장 선생님 코멘트\n' + ai.comment.trim() + '\n\n' : ''}- 두드림 수학 전문학원 드림`;
 }
 
 async function shareReport(){
@@ -22041,7 +22156,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-const APP_VERSION = 'v86.7-초5-2질문다듬기';
+const APP_VERSION = 'v86.8-흐름점검6개수정';
   // [v78.7] 이 값이 IIFE 안에 갇혀 있어 바깥 스크립트(app-ui.js)가 못 읽었다.
   //   화면 배지에 버전을 그대로 띄우려면 필요하므로 노출한다.
   window.APP_VERSION = APP_VERSION;
@@ -22067,13 +22182,13 @@ const APP_VERSION = 'v86.7-초5-2질문다듬기';
 
 <!-- [v86.0 ⑧] 회차 흐름 (회차 데이터가 있는 학년만) -->
 <script src="rounds/data-e5-1.js?v=86.5"></script>
-<script src="rounds/rounds.js?v=86.5"></script>
-<script src="ui-integration/app-ui.js?v=86.6"></script>
+<script src="rounds/rounds.js?v=86.8"></script>
+<script src="ui-integration/app-ui.js?v=86.8"></script>
 <!-- [v82.1] 선생님 질문 계단 (시범, 격리 모듈) — 중3-1 전 대단원 · 칸 그림 (v82.3) -->
 <script src="ladder/data-m3-1.js?v=82.5"></script>
 <script src="ladder/data-e5-1.js?v=85.0"></script>
 <script src="ladder/data-e5-2.js?v=83.3"></script>
-<script src="ladder/ladder.js?v=86.6"></script>
+<script src="ladder/ladder.js?v=86.8"></script>
 <!-- [v82.9] 질문 고르기 (마스터 전용) — 없어도 앱은 그대로 돈다 -->
 <script src="review/plan_e5-1.js?v=85.8"></script>
 <script src="review/plan_e5-2.js?v=86.7"></script>

@@ -321,8 +321,22 @@
   };
   function qcooling(item) {
     const k = qcoolKey(item); if (!k) return false;
-    try { const v = localStorage.getItem(k); return !!v && v === dayKey(Date.now()); } catch { return false; }
+    try { const v = localStorage.getItem(k); if (!!v && v === dayKey(Date.now())) return true; } catch {}
+    return qcoolingRec(item);
   }
+  // [v86.8] 흐름점검 6번 — 기기에만 적어 두면 다른 태블릿에선 바로 다시 할 수 있었다 → 서버 기록(cpRecords)으로도 본다.
+  //   오늘 이 질문에 통과 못 한 기록(70점 미만 · 개념 보고 답함)이 있고 아직 통과한 적 없으면 오늘은 닫는다.
+  function qcoolingRec(item) {
+    try {
+      if (!item || item.blank || typeof cpRecords === 'undefined' || !Array.isArray(cpRecords)) return false;
+      const today = dayKey(Date.now());
+      const same = r => (item.id && r.questionId) ? r.questionId === item.id : (!!r.question && r.question === item.q);
+      const recs = cpRecords.filter(r => r && r.courseId === CP.grade && r.level !== 'ladder' && same(r));
+      if (recs.some(r => r.pass)) return false;
+      return recs.some(r => !r.pass && r.time && dayKey(r.time) === today);
+    } catch { return false; }
+  }
+  window.DL_QCOOL = qcooling;
   function markQuestionFail(question, qid) {
     const sid = session.student && session.student.id; if (!sid) return;
     const k = 'dl:qcool:' + sid + ':' + (qid || (CP.grade + '|' + question));
@@ -341,13 +355,10 @@
     };
   }
   document.addEventListener('click', e => {
-    const el = e.target.closest('[data-dd-ui="question"], [data-dd-ui="continue"]'); if (!el) return;
+    const el = e.target.closest('[data-dd-ui="question"]'); if (!el) return;   // [v86.8] '이어서 설명하기'는 app-ui 가 막힌 질문을 건너뛴다
     if (!session.student || session.teacher || !window.DD_UI) return;
     let item = null;
-    try {
-      if (el.dataset.ddUi === 'question') item = (DD_UI.shown || DD_UI.questionItems())[Number(el.dataset.index)];
-      else { const left = DD_UI.remaining(); item = left && left[0]; }
-    } catch { return; }
+    try { item = (DD_UI.shown || DD_UI.questionItems())[Number(el.dataset.index)]; } catch { return; }
     if (item && qcooling(item)) {
       e.preventDefault(); e.stopImmediatePropagation();
       alertBox('오늘은 이 질문을 다시 볼 수 없어요. 설명을 한 번 더 읽고 내일 말해 봐요.');

@@ -30,10 +30,40 @@
   }
   function entry(g, bigName, smallName) { const d = data(g); return d ? d[g + '|' + bigName + '|' + smallName] || null : null; }
 
+  // [v86.8] 소단원마다 회차를 차례로 — 선생님이 2회차를 열어도 이 소단원의 1회차를 다 통과해야 2회차가 나온다 (흐름점검 1번)
+  //   (예전엔 학기 전체에 한 번에 걸려서, 1회차를 안 한 소단원도 곧바로 2회차였다)
+  const passedQ = (g, x) => { try { return typeof cpStatusForQuestion === 'function' && cpStatusForQuestion(g, x.q, x.id) === 'pass'; } catch (e) { return false; } };
+  //   질문을 다 통과해도 그 회차 문제 풀기를 안 했으면 아직 그 회차 (안 그러면 1회차 문제를 건너뛰고 2회차로 넘어간다)
+  function quizDoneAt(g, bigName, smallName, k) {
+    try {
+      const s = student(); if (!s) return true;
+      const m = cpModel(g), big = m && m.bigUnits.find(b => b.name === bigName);
+      const sm = big && cpBigMiddles(big).flatMap(x => x.smalls || []).find(x => x.name === smallName);
+      if (!sm) return true;
+      return (sm.types || []).some(t => localStorage.getItem('dd:quizdone:' + s.id + ':' + g + ':' + t.unitId + ':r' + k));
+    } catch (e) { return true; }
+  }
+  function roundAt(g, bigName, smallName) {
+    let r = round(g);
+    const e = entry(g, bigName, smallName); if (!e) return r;
+    for (let k = 1; k < r; k++) {
+      const prev = e.items.filter(x => x.r === k);
+      if (prev.length && (!prev.every(x => passedQ(g, x)) || !quizDoneAt(g, bigName, smallName, k))) return k;
+    }
+    return r;
+  }
+  // 이 소단원에서 회차별로 다 통과했나 {1:true, 2:false} — 선생님 화면·리포트용
+  function stageOf(g, bigName, smallName, isPass) {
+    const e = entry(g, bigName, smallName); if (!e) return null;
+    const out = {};
+    [1, 2].forEach(k => { const its = e.items.filter(x => x.r === k); out[k] = its.length ? its.every(x => isPass(x)) : null; });
+    return out;
+  }
+
   // 한 소단원의 질문 목록. which: 'now'(지금 회차) | 'past'(지난 회차 — 다시 보기)
   function items(g, bigName, smallName, which) {
     const e = entry(g, bigName, smallName); if (!e) return [];
-    const r = round(g), key = typeof ddqConceptKey === 'function' ? ddqConceptKey(g, bigName, smallName) : '';
+    const r = roundAt(g, bigName, smallName), key = typeof ddqConceptKey === 'function' ? ddqConceptKey(g, bigName, smallName) : '';
     return e.items.filter(x => which === 'past' ? x.r < r : x.r === r).map((x, i) => {
       const loc = String(x.id).split(':').pop();                    // t0L1 · t1H2 · qrecall · qa…
       const m = /^t(\d+)([LH])/.exec(loc);
@@ -50,8 +80,9 @@
     if (!on(g)) return {open:true, steps, hide:[]};
     const e = data(g)[key] || {};
     const text = e.ladderText || {};
+    const kp = String(key).split('|');
     return {
-      open:round(g) >= 3,
+      open:roundAt(g, kp[1], kp[2]) >= 3,
       steps:steps.map((s, i) => text[i] != null ? Object.assign({}, s, {q:text[i]}) : s),
       hide:(e.ladderHide || []).slice()
     };
@@ -91,7 +122,7 @@
   }
   function quizPlan(g) {
     const c = curEntry(); if (!c || !c.e || !on(g)) return null;
-    const r = round(g), qc = c.e.quiz || {};
+    const r = roundAt(g, c.big, c.sm), qc = c.e.quiz || {};
     if (r >= 3) {
       // [v86.5] 3회차: 계단 칸 수만큼(숨긴 칸 제외) + 3회차로 분류한 질문 — 칸(질문)마다 문제 하나 (마스터 결정 2026-09-21)
       //   개수를 정해 두지 않고 개념 내용(계단)을 따라간다 → 중·고등처럼 계단이 긴 곳도 문제가 모자라지 않게
@@ -108,7 +139,7 @@
     const origKey = window.quizDoneKey;
     window.quizDoneKey = function() {
       const k = origKey.apply(this, arguments);
-      try { return on(state.gradeId) ? k + ':r' + round(state.gradeId) : k; } catch (e) { return k; }
+      try { if (!on(state.gradeId)) return k; const c = curEntry(); return k + ':r' + (c ? roundAt(state.gradeId, c.big, c.sm) : round(state.gradeId)); } catch (e) { return k; }
     };
   }
   if (typeof window.getOrGenerateQuiz === 'function') {
@@ -166,23 +197,37 @@
     const students = await allStudents();
     T.maps = await loadAll(students);
     T.students = students;
+    // [v86.8] 학생별 진도 — 소단원마다 1회차·2회차 질문을 다 통과했나 (흐름점검 1번: 진도를 보고 회차를 올리게)
+    T.pass = {};
+    try {
+      const subs = typeof getAllSubmissions === 'function' ? await getAllSubmissions() : [];
+      (subs || []).forEach(x => { if (x && x.pass && x.questionId) (T.pass[x.studentId] = T.pass[x.studentId] || new Set()).add(x.questionId); });
+    } catch (e) {}
     draw(host);
   }
   function draw(host) {
     const grades = Object.keys(window.DD_ROUNDS || {}), g = T.grade, students = T.students || [];
     const cur = s => Math.min(MAX, Math.max(1, Number((T.maps[s.id] || {})[g]) || 1));
+    const keys = Object.keys(data(g) || {});
+    const prog = s => {
+      const ok = T.pass && T.pass[s.id]; let d1 = 0, d2 = 0;
+      keys.forEach(k => { const e = data(g)[k], st = {1:true, 2:true};
+        [1, 2].forEach(r => { const its = e.items.filter(x => x.r === r); st[r] = its.length > 0 && !!ok && its.every(x => ok.has(x.id)); });
+        if (st[1]) d1++; if (st[1] && st[2]) d2++; });
+      return '1회차 끝 ' + d1 + '/' + keys.length + ' · 2회차 끝 ' + d2 + '/' + keys.length;
+    };
     const count = [1, 2, 3].map(r => students.filter(s => cur(s) === r).length);
     const rbtn = (r, act, extra) => '<button type="button" class="' + (act ? 'dd-ui-primary' : 'dd-ui-secondary') + '" ' + extra + '>' + r + '회차</button>';
     host.innerHTML =
       '<div class="ddr-t">'
-      + '<p class="dd-ui-caption">학생마다 지금 공부할 회차를 정해요. 회차를 올리면 아이 화면에 그 회차 질문이 나오고, 지난 회차 질문은 \'다시 보기\'로 남아요. (1회차 뜻·성질 / 2회차 응용·이유 / 3회차 질문 계단·종합)</p>'
+      + '<p class="dd-ui-caption">학생마다 공부할 회차를 정해요. 회차를 올려도 소단원마다 앞 회차 질문을 다 통과해야 다음 회차가 나와요(안 끝낸 소단원은 앞 회차부터). 회차를 올리면 지난 회차 질문은 \'다시 보기\'로 남아요. (1회차 뜻·성질 / 2회차 응용·이유 / 3회차 질문 계단·종합)</p>'
       + '<div class="ddr-bar"><label>학기 <select id="ddrGrade">' + grades.map(x => '<option value="' + x + '"' + (x === g ? ' selected' : '') + '>' + escT(gradeName(x)) + '</option>').join('') + '</select></label>'
       + '<span class="ddr-sum">1회차 ' + count[0] + '명 · 2회차 ' + count[1] + '명 · 3회차 ' + count[2] + '명</span></div>'
       + '<div class="ddr-bar"><button type="button" class="dd-ui-text" data-ddr="all">모두 선택</button><button type="button" class="dd-ui-text" data-ddr="none">선택 해제</button>'
       + '<span>선택한 <b id="ddrSelN">' + T.sel.size + '</b>명을</span>' + [1, 2, 3].map(r => rbtn(r, false, 'data-ddr="bulk" data-r="' + r + '"')).join('') + '<span>로</span></div>'
       + '<div class="ddr-list">' + (students.map(s => {
           const r = cur(s);
-          return '<div class="ddr-row"><label><input type="checkbox" data-ddr="pick" data-sid="' + escT(s.id) + '"' + (T.sel.has(s.id) ? ' checked' : '') + '> <b>' + escT(s.name) + '</b> <small>' + escT(s.grade || '') + '</small></label>'
+          return '<div class="ddr-row"><label><input type="checkbox" data-ddr="pick" data-sid="' + escT(s.id) + '"' + (T.sel.has(s.id) ? ' checked' : '') + '> <b>' + escT(s.name) + '</b> <small>' + escT(s.grade || '') + '</small> <small class="ddr-prog">' + prog(s) + '</small></label>'
             + '<span class="ddr-btns">' + [1, 2, 3].map(x => rbtn(x, x === r, 'data-ddr="one" data-sid="' + escT(s.id) + '" data-r="' + x + '"')).join('') + '</span></div>';
         }).join('') || '<p class="dd-ui-caption">등록된 학생이 없어요.</p>') + '</div></div>';
   }
@@ -211,9 +256,9 @@
   const css = document.createElement('style');
   css.textContent = '.ddr-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}.ddr-sum{color:#6b6a64;font-size:14px}'
     + '.ddr-list{border-top:1px solid #e4e2da}.ddr-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eeede7}'
-    + '.ddr-row label{display:flex;gap:6px;align-items:center;min-width:0}.ddr-row small{color:#8a887f}.ddr-btns{display:flex;gap:6px}.ddr-btns button,.ddr-bar button{padding:6px 12px;min-height:36px}';
+    + '.ddr-row label{display:flex;gap:6px;align-items:center;min-width:0}.ddr-row small{color:#8a887f}.ddr-prog{font-size:12px}.ddr-btns{display:flex;gap:6px}.ddr-btns button,.ddr-bar button{padding:6px 12px;min-height:36px}';
   document.head.appendChild(css);
 
-  window.DDR = {version:'86.4', on, round, load, items, entry, ladder, answerText, levelName, noPass, hintMode, quizPlan, teacherRender, MAX,
+  window.DDR = {version:'86.8', on, round, roundAt, stageOf, load, items, entry, ladder, answerText, levelName, noPass, hintMode, quizPlan, teacherRender, MAX,
     _setForTest(g, r) { const s = student(); if (s) { cache.sid = s.id; cache.map[g] = r; } }};
 })();
