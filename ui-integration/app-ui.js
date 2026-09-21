@@ -319,6 +319,7 @@
     if(!session.teacher) { showView('viewTeacherAuth'); return; }
     if(['baseline','admin','qreview'].includes(menu)&&!isOwner()) menu=null;
     ui.menu=menus.some(m=>m[0]===menu)?menu:null; $('viewTeacher').dataset.uiMenu=ui.menu||'home';
+    try{ sessionStorage.setItem(TM_KEY, ui.menu||''); }catch(e){}   // [v85.4] 새로고침 뒤 같은 메뉴로
     $('ddUiTeacherHome').innerHTML=teacherOverview(); const m=menus.find(m=>m[0]===ui.menu);
     $('ddUiTeacherHeading').innerHTML=m?'<div><p class="dd-ui-caption">'+m[1]+'</p><h1>'+m[2]+'</h1></div>':'';
     for(const id of ['dashTab','manageTab','bankTab','cecardsTab','ddUiTeacherStudents','ddUiTeacherAi','ddUiTeacherAdmin','ddUiTeacherBaseline','qreviewTab']) { const el=$(id); if(el) el.style.display='none'; }
@@ -369,13 +370,33 @@
     const note=node('ddUiNotice','div','dd-ui-notice'); note.hidden=true; note.setAttribute('role','status'); note.setAttribute('aria-live','polite'); document.body.appendChild(note);
   }
   // Original inline engine remains byte-identical; only its UI boundaries adapt.
+  // [v85.4] 새로고침해도 선생님 로그인·보던 메뉴 유지 (마스터 요청 2026-09-21).
+  //   sessionStorage 라서 이 탭 안에서만 살고, 탭·브라우저를 닫으면 사라진다(학원 공용 PC 안전). 나가기·학생 입장 때 지운다.
+  const TS_KEY='dd:teacherSession', TM_KEY='dd:teacherMenu';
+  function tsSave(){ try{ if(session.teacher) sessionStorage.setItem(TS_KEY, JSON.stringify({role:session.role||'owner'})); }catch(e){} }
+  function tsClear(){ try{ sessionStorage.removeItem(TS_KEY); sessionStorage.removeItem(TM_KEY); }catch(e){} }
+  function tsLoad(){ try{ return JSON.parse(sessionStorage.getItem(TS_KEY)||'null'); }catch(e){ return null; } }
   showView=function(name) {
     if(name==='viewTeacher'&&!session.teacher) name='viewTeacherAuth';
+    if(name==='viewTeacher') tsSave();
     original.showView(name); document.body.classList.toggle('dd-ui-parent',name==='viewParent');
     if(name==='viewTeacher') showTeacher(ui.menu||teacherRoute);
   };
-  tryAutoLogin=async function() { if(teacherRoute) { showView('viewTeacherAuth'); return; } return original.tryAutoLogin(); };
+  tryAutoLogin=async function() {
+    const ts=tsLoad();
+    if(ts) {   // [v85.4] 이 탭에서 이미 선생님으로 들어와 있었다 → PIN 없이 보던 메뉴로
+      session.teacher=true; session.role=ts.role||'owner';
+      const chip=$('sessionChip'); if(chip) chip.style.display='flex'; const nm=$('sessionName'); if(nm) nm.textContent='선생님 모드';
+      let menu=null; try{ menu=sessionStorage.getItem(TM_KEY)||null; }catch(e){}
+      ui.menu=teacherRoute||menu||null;
+      showView('viewTeacher');
+      try{ refreshKeyStatus(); loadBoard(); startDashAutoRefresh(); }catch(e){}
+      return;
+    }
+    if(teacherRoute) { showView('viewTeacherAuth'); return; } return original.tryAutoLogin();
+  };
   enterStudentView=function() {
+    tsClear();
     session.teacher=false; session.role=null; ui.level='high'; ui.kind='concept'; lock(false); cpRecords=[];
     original.enterStudentView(); restoreSelection(); restoreLevel(); stage('home');
   };
@@ -403,7 +424,7 @@
   goToNextQuestion=function() { if(ui.busy)return; if(state.questions.length===1&&ui.level!=='blank'){startQuiz();return;} return original.goToNextQuestion(); };
   renderRail=function(students,subs) { const out=original.renderRail(students,subs); const h=$('teacherRail').querySelector('h3'); if(h)h.textContent=ui.menu==='reports'?'리포트를 볼 학생 선택':'학생 목록'; return out; };
   openStudentHistory=function(student,subs) { const out=original.openStudentHistory(student,subs); if(ui.menu==='reports')openParentManage(); return out; };
-  doLogout=function() { stopRecognitionIfActive(); stopTalkMic(); Timer.hide(); stopDashAutoRefresh(); session.teacher=false; session.role=null; lock(false); return original.doLogout(); };
+  doLogout=function() { tsClear(); stopRecognitionIfActive(); stopTalkMic(); Timer.hide(); stopDashAutoRefresh(); session.teacher=false; session.role=null; lock(false); return original.doLogout(); };
   // The talk save hook expects window.session; always reflect the real lexical session.
   if(!Object.getOwnPropertyDescriptor(window,'session')) Object.defineProperty(window,'session',{configurable:true,get:()=>session});
   const openTalk=window.cvOpenType;
@@ -451,7 +472,7 @@
     }
   },true);
   $('cvAnswer').addEventListener('keydown',e=>{if(ui.busy&&e.key==='Enter'){e.preventDefault();e.stopImmediatePropagation();}},true);
-  $('logoutBtn').addEventListener('click',()=>{lock(false);stopTalkMic();stopDashAutoRefresh();Timer.hide();});
+  $('logoutBtn').addEventListener('click',()=>{tsClear();lock(false);stopTalkMic();stopDashAutoRefresh();Timer.hide();});
   $('studentLogoutBtn').addEventListener('click',()=>{stopRecognitionIfActive();stopTalkMic();Timer.hide();lock(false);document.body.classList.remove('step-focus');});
   window.addEventListener('pagehide',()=>{stopRecognitionIfActive();stopTalkMic();stopDashAutoRefresh();Timer.hide();});
   setupLanding(); setupStudent(); setupTeacher(); document.body.classList.add('dd-ui'); renderStudent();

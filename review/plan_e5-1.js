@@ -2,12 +2,14 @@
    마스터 견본(2026-09-17 내보내기) + Claude 분류안(1·6단원 미분류 55개, by:'claude')
    + 겹쳐서 Claude 가 뺀 9개(off:true, offBy:'claude') — 마스터 승인 2026-09-17.
    + Claude 모범 답 74개(answerBy:'claude') — 1·6단원에서 빼지 않았고 모범 답이 없던 질문 전부, 마스터 지시 2026-09-18.
+   [i] 마스터 검토(9/21 4단원) 반영(3·5단원 차이는 v85.3 미반영 기기라 무시) + 바뀐 질문 모범 답 4 + 4단원 기준으로 5단원 이유 질문 3개에 구체적 예·긴 오류 문장 1개 줄임.
+   [h] 마스터 검토(9/21 3단원) 반영 + 3단원 기준으로 5단원 메타 질문 3개 뺌 + 바뀐 질문 모범 답 2개.
    [g] 3·4·5단원 Claude 2차 다듬기(1·2단원 검토 기준): 문장 23 · 뺌 3 · 활용 문장제 10(추가 질문).
    [f] 마스터 검토(2026-09-21, 1·2단원) 반영 + 바뀐 질문 모범 답 + 최대공약수·최소공배수 활용 질문 9개(Claude, 추가 질문).
    [e] 초5-1 2~5단원 146문항 분류·겹침 빼기·모범 답(Claude, 마스터 지시 2026-09-18 "5학년 전 과정을 기준대로") + 6-04 기본① 되돌림(qWas) · 6-03 기본① 넓이 식 채움.
    [d] 마스터 검토(2026-09-18 내보내기: 확인 57·고친 문장·빼기·회차·추가 1) 반영 + 질문을 고친 곳 모범 답 다시 씀(ansWas = 바꾸기 전 답).
    review.js 가 화면을 열 때 한 번만 넣는다(이 기기에 이미 적어 둔 것은 안 덮는다). key 를 바꾸면 다시 넣는다. */
-(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'e5-1_2026-09-21g', data:{
+(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'e5-1_2026-09-21i', data:{
 "format": "qr-plan-2",
 "grade": "e5-1",
 "rounds": 3,
@@ -1976,7 +1978,8 @@
 ],
 "answerBy": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "pdtpr5:t0H1",
@@ -2011,7 +2014,8 @@
 "나눈 수와 마지막 몫을 모두 곱한다"
 ]
 },
-"reopen": true
+"reopen": true,
+"ok": true
 },
 {
 "id": "pdtpr5:qrecall",
@@ -2038,7 +2042,8 @@
 "모두 들어가야 두 수의 배수가 된다"
 ],
 "answerBy": "claude",
-"off": true
+"off": true,
+"ok": true
 },
 {
 "id": "pdtpr5:qexample",
@@ -2071,21 +2076,23 @@
 "kind": "low",
 "round": 1,
 "by": "claude",
-"answer": "탁자가 1개 늘어날 때마다 의자는 2개씩 늘어나.",
+"answer": "탁자가 1개 늘어날 때마다 의자는 4개씩 늘어나.",
 "keys": [
 "함께 늘어난다",
-"탁자 1개에 의자 2개씩"
+"탁자 1개에 의자 4개씩"
 ],
 "answerBy": "claude",
-"newQ": "① 탁자 1개에 의자가 2개씩 놓여 있어. 탁자 수가 늘어나면 의자 수는 어떻게 변해?",
-"newQBy": "claude",
+"newQ": "① 탁자 한 개에 의자가 4개씩 있어. 탁자 수가 한개씩 늘어나면 의자 수는 어떻게 변할까?",
 "ansWas": {
-"a": "탁자 수가 늘어나면 의자 수도 일정한 규칙에 따라 함께 늘어나.",
+"a": "탁자가 1개 늘어날 때마다 의자는 2개씩 늘어나.",
 "k": [
 "함께 늘어난다",
-"일정한 규칙이 있다"
+"탁자 1개에 의자 2개씩"
 ]
-}
+},
+"qWas": "① 탁자 1개에 의자가 2개씩 놓여 있어. 탁자 수가 늘어나면 의자 수는 어떻게 변해?",
+"reopen": true,
+"ok": true
 },
 {
 "id": "1nhkkt4:t0L2",
@@ -2099,19 +2106,31 @@
 ],
 "answerBy": "claude",
 "newQ": "② 두 양 사이에서 변하는 부분과 변하지 않는 부분은 어떻게 찾아?",
-"newQBy": "claude"
+"newQBy": "claude",
+"off": true,
+"ok": true
 },
 {
 "id": "1nhkkt4:t0H1",
 "kind": "high",
 "round": 1,
 "by": "claude",
-"answer": "탁자 수가 정해지면 의자 수가 하나로 정해져. 이렇게 한 양이 변할 때 다른 양도 따라서 정해지는 관계를 대응 관계라고 해.",
+"answer": "한 양이 변할 때 다른 양도 그에 따라 일정하게 변하는 관계를 대응 관계라고 해. 탁자 수가 정해지면 의자 수가 정해지는 것처럼 두 양이 짝을 이뤄.",
 "keys": [
+"한 양이 변하면 다른 양도 따라 변한다",
+"두 양이 짝을 이룬다"
+],
+"answerBy": "claude",
+"newQ": "① 대응이라는 단어 뜻이 뭐야?",
+"ansWas": {
+"a": "탁자 수가 정해지면 의자 수가 하나로 정해져. 이렇게 한 양이 변할 때 다른 양도 따라서 정해지는 관계를 대응 관계라고 해.",
+"k": [
 "한 양이 정해지면 다른 양이 하나로 정해진다",
 "대응 관계"
-],
-"answerBy": "claude"
+]
+},
+"reopen": true,
+"ok": true
 },
 {
 "id": "1nhkkt4:t0H2",
@@ -2125,7 +2144,8 @@
 ],
 "answerBy": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "1nhkkt4:qrecall",
@@ -2137,7 +2157,8 @@
 "(탁자 수)×4",
 "20개"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1nhkkt4:qreason",
@@ -2149,7 +2170,9 @@
 "짝이 한눈에 보인다",
 "늘어나는 양이 보인다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"ok": true
 },
 {
 "id": "1nhkkt4:qexample",
@@ -2161,7 +2184,9 @@
 "한 양이 늘면 다른 양이 규칙적으로 변한다",
 "두 양을 짝지어 말한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "네가 두 양을 정해서, 한 양이 변하면 다른 양도 어떻게 변하는지 그 대응관계를 말해봐.",
+"ok": true
 },
 {
 "id": "1nhkkt4:qerror",
@@ -2173,7 +2198,8 @@
 "(탁자 수)×4",
 "12개"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1nz6994:t0L1",
@@ -2186,7 +2212,8 @@
 ],
 "answerBy": "claude",
 "newQ": "① 자동차 1대에 바퀴가 4개야. 자동차 수와 바퀴 수의 관계를 곱셈식으로 나타내 봐.",
-"newQBy": "claude"
+"newQBy": "claude",
+"ok": true
 },
 {
 "id": "1nz6994:t0L2",
@@ -2199,7 +2226,9 @@
 ],
 "answerBy": "claude",
 "newQ": "② 두 양의 관계를 간단히 나타낼 때 어떤 기호를 써?",
-"newQBy": "claude"
+"newQBy": "claude",
+"off": true,
+"ok": true
 },
 {
 "id": "1nz6994:t0H1",
@@ -2211,7 +2240,9 @@
 "곱셈과 나눗셈은 거꾸로 된 관계",
 "같은 관계를 두 식으로 나타낸다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "① 자동차 수와 바퀴의 전체 개수와의 관계를 두 가지 식으로 나타낼 수 있는 이유를 설명해 봐.",
+"ok": true
 },
 {
 "id": "1nz6994:t0H2",
@@ -2225,7 +2256,8 @@
 ],
 "answerBy": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "1nz6994:qrecall",
@@ -2236,7 +2268,9 @@
 "keys": [
 "○×300=△"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "지우개 1개가 300원일 때, 지우개 수를 ○, 값을 △라고 하면 두 양의 관계를 식으로 어떻게 나타내는지 말해 봐.",
+"ok": true
 },
 {
 "id": "1nz6994:qreason",
@@ -2248,7 +2282,9 @@
 "자동차 1대마다 바퀴 4개",
 "곱셈 관계라서 함께 몇 배가 된다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"ok": true
 },
 {
 "id": "1nz6994:qexample",
@@ -2260,7 +2296,8 @@
 "두 양을 기호로 정한다",
 "대응 관계를 식으로 쓴다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1nz6994:qerror",
@@ -2272,7 +2309,8 @@
 "더하기가 아니라 곱하기",
 "△=○×4"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1wph6x6:t0L1",
@@ -2293,7 +2331,8 @@
 "생활 속 두 양의 예",
 "한 양이 정해지면 다른 양이 정해진다"
 ]
-}
+},
+"ok": true
 },
 {
 "id": "1wph6x6:t0L2",
@@ -2307,7 +2346,8 @@
 ],
 "answerBy": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "1wph6x6:t0H1",
@@ -2320,7 +2360,9 @@
 "표로 규칙을 찾는다",
 "기호로 식을 쓴다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"ok": true
 },
 {
 "id": "1wph6x6:t0H2",
@@ -2334,7 +2376,8 @@
 ],
 "answerBy": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "1wph6x6:qrecall",
@@ -2345,7 +2388,8 @@
 "keys": [
 "○×4=△"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1wph6x6:qreason",
@@ -2357,7 +2401,9 @@
 "3개, 6개, 9개",
 "변을 함께 쓰지 않아 3개씩 새로 필요"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"ok": true
 },
 {
 "id": "1wph6x6:qexample",
@@ -2369,7 +2415,8 @@
 "생활 속 두 양을 정한다",
 "식으로 나타낸다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1wph6x6:qerror",
@@ -2381,7 +2428,8 @@
 "세발자전거 바퀴는 3개",
 "△=○×3"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true
 },
 {
 "id": "1gmtybn:t0L1",
@@ -2394,21 +2442,30 @@
 ],
 "answerBy": "claude",
 "newQ": "① 1/3, 2/6, 4/12는 크기가 어때?",
-"newQBy": "claude"
+"newQBy": "claude",
+"ok": true
 },
 {
 "id": "1gmtybn:t0L2",
 "kind": "low",
 "round": 1,
 "by": "claude",
-"answer": "분모와 분자에 0이 아닌 같은 수를 곱하면 크기가 같은 분수가 돼.",
+"answer": "분모와 분자는 달라도 나타내는 크기가 같은 분수야. 예를 들어 1/2, 2/4, 3/6은 색칠한 양이 같아서 크기가 같은 분수야.",
 "keys": [
-"크기가 같다",
-"0이 아닌 같은 수"
+"분모·분자는 달라도 크기가 같다",
+"예) 1/2, 2/4, 3/6"
 ],
 "answerBy": "claude",
-"newQ": "② 분모와 분자에 0이 아닌 같은 수를 곱하면 분수의 크기는 어떻게 돼?",
-"newQBy": "claude"
+"newQ": "② 어떤 분수를 크기가 같은 분수라고 하지?",
+"qWas": "② 분모와 분자에 0이 아닌 같은 수를 곱하면 분수의 크기는 어떻게 돼?",
+"ansWas": {
+"a": "분모와 분자에 0이 아닌 같은 수를 곱하면 크기가 같은 분수가 돼.",
+"k": [
+"크기가 같다",
+"0이 아닌 같은 수"
+]
+},
+"reopen": true
 },
 {
 "id": "1gmtybn:t0L3",
@@ -2422,19 +2479,30 @@
 ],
 "answerBy": "claude",
 "newQ": "③ 분모와 분자를 0이 아닌 같은 수로 나누면 분수의 크기는 어떻게 돼?",
-"newQBy": "claude"
+"newQBy": "claude",
+"ok": true,
+"off": true
 },
 {
 "id": "1gmtybn:t0H1",
 "kind": "high",
 "round": 2,
 "by": "claude",
-"answer": "전체를 더 잘게 나누면 조각 수는 늘지만 한 조각이 그만큼 작아져. 예를 들어 1/3의 조각을 하나씩 반으로 나누면 2/6이 되는데, 색칠한 양은 그대로라서 크기가 같아.",
+"answer": "피자 한 판을 3조각으로 나눈 것 중 1조각(1/3)과 6조각으로 나눈 것 중 2조각(2/6)은 먹는 양이 같아. 더 잘게 나누면 조각 수는 늘지만 한 조각이 그만큼 작아져서 전체 양은 그대로야.",
 "keys": [
+"피자로 1/3과 2/6을 비교",
+"조각 수가 늘면 한 조각이 작아진다"
+],
+"answerBy": "claude",
+"newQ": "① 분모가 달라도 분수의 크기가 같을 수 있는 이유를 피자로 예를 들어 설명해 봐.",
+"ansWas": {
+"a": "전체를 더 잘게 나누면 조각 수는 늘지만 한 조각이 그만큼 작아져. 예를 들어 1/3의 조각을 하나씩 반으로 나누면 2/6이 되는데, 색칠한 양은 그대로라서 크기가 같아.",
+"k": [
 "더 잘게 나누면 조각이 작아지고 개수가 늘어난다",
 "색칠한 양은 그대로"
-],
-"answerBy": "claude"
+]
+},
+"reopen": true
 },
 {
 "id": "1gmtybn:t0H2",
@@ -2447,19 +2515,29 @@
 ],
 "answerBy": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "1gmtybn:qrecall",
 "kind": "qset",
 "round": 1,
 "by": "claude",
-"answer": "분자 2×3=6, 분모 5×3=15니까 6/15야.",
+"answer": "분모와 분자에 0이 아닌 같은 수를 곱하면 돼. 2를 곱하면 4/10, 3을 곱하면 6/15야.",
 "keys": [
+"분모와 분자에 같은 수를 곱한다",
+"예) 4/10, 6/15"
+],
+"answerBy": "claude",
+"newQ": "2/5와 크기가 같은 분수를 만들어 봐.",
+"ansWas": {
+"a": "분자 2×3=6, 분모 5×3=15니까 6/15야.",
+"k": [
 "분모와 분자에 똑같이 3을 곱한다",
 "6/15"
-],
-"answerBy": "claude"
+]
+},
+"reopen": true
 },
 {
 "id": "1gmtybn:qreason",
@@ -2472,7 +2550,8 @@
 ],
 "answerBy": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "1gmtybn:qexample",
@@ -2483,7 +2562,8 @@
 "keys": [
 "분모와 분자에 같은 수를 곱한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1gmtybn:qerror",
@@ -2495,7 +2575,8 @@
 "같은 수를 곱해야 한다",
 "3/6은 1/3과 크기가 다르다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "g97c6k:t0L1",
@@ -2509,7 +2590,8 @@
 ],
 "answerBy": "claude",
 "newQ": "① 약분이 뭐야?",
-"newQBy": "claude"
+"newQBy": "claude",
+"ok": true
 },
 {
 "id": "g97c6k:t0L2",
@@ -2522,7 +2604,8 @@
 ],
 "answerBy": "claude",
 "newQ": "② 기약분수가 뭐야?",
-"newQBy": "claude"
+"newQBy": "claude",
+"ok": true
 },
 {
 "id": "g97c6k:t0H1",
@@ -2536,7 +2619,8 @@
 ],
 "answerBy": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "g97c6k:t0H2",
@@ -2548,7 +2632,8 @@
 "공통인 수를 한꺼번에 나눈다",
 "남은 공약수가 1뿐"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "g97c6k:qrecall",
@@ -2560,7 +2645,8 @@
 "5로 나눈다",
 "2/3"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "g97c6k:qreason",
@@ -2573,19 +2659,29 @@
 ],
 "answerBy": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "g97c6k:qexample",
 "kind": "qset",
 "round": 2,
 "by": "claude",
-"answer": "예를 들어 12/18을 2로 나누면 6/9, 3으로 나누면 4/6이고, 최대공약수 6으로 나누면 기약분수 2/3이야.",
+"answer": "예를 들어 12/18을 공약수 2로 나누면 6/9, 다시 3으로 나누면 2/3이야. 최대공약수 6으로 한 번에 나눠도 2/3이고, 더 약분할 수 없으니까 기약분수야.",
 "keys": [
+"공약수로 차례로 나누는 과정",
+"최대공약수로 한 번에 나누면 기약분수"
+],
+"answerBy": "claude",
+"newQ": "네가 분수를 하나 만들어서 약분하는 과정과 기약분수를 말해 봐.",
+"ansWas": {
+"a": "예를 들어 12/18을 2로 나누면 6/9, 3으로 나누면 4/6이고, 최대공약수 6으로 나누면 기약분수 2/3이야.",
+"k": [
 "공약수로 나눈다",
 "최대공약수로 나누면 기약분수"
-],
-"answerBy": "claude"
+]
+},
+"reopen": true
 },
 {
 "id": "g97c6k:qerror",
@@ -2597,7 +2693,8 @@
 "5는 공약수가 아니다",
 "공약수로 나눠야 한다(2/3)"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1c6uo93:t0L1",
@@ -2611,7 +2708,8 @@
 ],
 "answerBy": "claude",
 "newQ": "① 통분이 뭐야?",
-"newQBy": "claude"
+"newQBy": "claude",
+"ok": true
 },
 {
 "id": "1c6uo93:t0L2",
@@ -2624,7 +2722,8 @@
 ],
 "answerBy": "claude",
 "newQ": "② 공통분모가 될 수 있는 수는 뭐야?",
-"newQBy": "claude"
+"newQBy": "claude",
+"ok": true
 },
 {
 "id": "1c6uo93:t0H1",
@@ -2646,7 +2745,8 @@
 "분모의 곱 또는 최소공배수를 공통분모로",
 "분모와 분자에 같은 수를 곱한다"
 ]
-}
+},
+"ok": true
 },
 {
 "id": "1c6uo93:t0H2",
@@ -2658,7 +2758,8 @@
 "수가 작아 계산이 쉽다",
 "약분할 일이 줄어든다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1c6uo93:qrecall",
@@ -2670,7 +2771,8 @@
 "공통분모 12",
 "8/12, 9/12"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1c6uo93:qreason",
@@ -2682,7 +2784,9 @@
 "같은 수를 곱해 크기는 그대로",
 "둘 다 12조각이라 한 조각이 같아진다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true,
+"off": true
 },
 {
 "id": "1c6uo93:qexample",
@@ -2696,7 +2800,8 @@
 ],
 "answerBy": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "1c6uo93:qerror",
@@ -2708,7 +2813,8 @@
 "분자에도 같은 수를 곱해야 한다",
 "3/6, 2/6"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "m3f8ul:t0L1",
@@ -2729,7 +2835,8 @@
 "통분한다",
 "분자를 비교한다"
 ]
-}
+},
+"ok": true
 },
 {
 "id": "m3f8ul:t0L2",
@@ -2742,7 +2849,8 @@
 ],
 "answerBy": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "m3f8ul:t0H1",
@@ -2754,7 +2862,8 @@
 "분모가 다르면 한 조각 크기가 다르다",
 "통분하면 한 조각 크기가 같아진다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "m3f8ul:t0H2",
@@ -2766,7 +2875,8 @@
 "두 개씩 차례로 비교한다",
 "한꺼번에 통분해 비교한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "m3f8ul:qrecall",
@@ -2778,7 +2888,8 @@
 "4/12와 3/12",
 "1/3이 더 크다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "m3f8ul:qreason",
@@ -2791,7 +2902,8 @@
 ],
 "answerBy": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "m3f8ul:qexample",
@@ -2803,7 +2915,8 @@
 "통분한다",
 "분자를 비교한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "m3f8ul:qerror",
@@ -2815,7 +2928,9 @@
 "분모가 다르면 분자만 비교할 수 없다",
 "2/3이 더 크다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true,
+"off": true
 },
 {
 "id": "96x5jg:t0L1",
@@ -2836,7 +2951,8 @@
 "분수나 소수 한 가지로 바꾼다",
 "같은 모양으로 비교한다"
 ]
-}
+},
+"ok": true
 },
 {
 "id": "96x5jg:t0L2",
@@ -2849,7 +2965,8 @@
 ],
 "answerBy": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "96x5jg:t0H1",
@@ -2862,7 +2979,8 @@
 ],
 "answerBy": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "96x5jg:t0H2",
@@ -2874,7 +2992,9 @@
 "0.1=1/10, 0.01=1/100",
 "분자를 그 자리에 쓴다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true,
+"off": true
 },
 {
 "id": "96x5jg:qrecall",
@@ -2886,7 +3006,8 @@
 "7/10=0.7",
 "0.85가 더 크다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "96x5jg:qreason",
@@ -2899,7 +3020,8 @@
 ],
 "answerBy": "claude",
 "off": true,
-"offBy": "claude"
+"offBy": "claude",
+"ok": true
 },
 {
 "id": "96x5jg:qexample",
@@ -2911,7 +3033,8 @@
 "분모가 10, 100인 분수를 소수로 바꾼다",
 "소수끼리 비교한다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "96x5jg:qerror",
@@ -2923,7 +3046,9 @@
 "7/100=0.07",
 "0.7=7/10"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true,
+"newQ": "친구가 7/100을 소수로 바꾸는데 0.7이라고 했어. 뭐가 잘못됐을까?"
 },
 {
 "id": "u9z3u:t0L1",
@@ -3003,12 +3128,21 @@
 "kind": "qset",
 "round": 2,
 "by": "claude",
-"answer": "통분하면 한 조각의 크기가 같아져. 분모는 한 조각의 크기를, 분자는 조각 수를 나타내니까 조각 수인 분자만 더하고 분모는 그대로 둬.",
+"answer": "통분하면 3/12+2/12처럼 한 조각의 크기가 1/12로 같아져. 분모는 조각의 크기라서 그대로 두고, 분자는 조각 수라서 3조각+2조각=5조각으로 더해. 그래서 5/12야.",
 "keys": [
+"분모는 조각의 크기라 그대로",
+"분자는 조각 수라 더한다"
+],
+"answerBy": "claude",
+"newQ": "1/4+1/6을 피자 조각으로 생각해 봐. 통분한 뒤에는 왜 분자끼리만 더하고 분모는 더하지 않는지 설명해 봐.",
+"newQBy": "claude",
+"ansWas": {
+"a": "통분하면 한 조각의 크기가 같아져. 분모는 한 조각의 크기를, 분자는 조각 수를 나타내니까 조각 수인 분자만 더하고 분모는 그대로 둬.",
+"k": [
 "분모는 조각 크기, 분자는 조각 수",
 "조각 크기는 그대로"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "u9z3u:qexample",
@@ -3093,7 +3227,9 @@
 "같은 크기를 다르게 나타낸 것",
 "답이 같다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "1v7q9ja:qrecall",
@@ -3112,12 +3248,21 @@
 "kind": "qset",
 "round": 2,
 "by": "claude",
-"answer": "대분수는 자연수와 진분수를 더한 수라서, 더하는 순서를 바꿔 자연수끼리, 분수끼리 모아서 더해도 전체 합은 같아.",
+"answer": "2와 1/3은 2+1/3, 1과 1/4은 1+1/4이라서 모두 더하면 2+1/3+1+1/4이야. 더하는 순서를 바꿔도 합은 같으니까 자연수끼리 2+1, 분수끼리 1/3+1/4을 더해도 돼.",
 "keys": [
-"대분수 = 자연수 + 분수",
+"대분수는 자연수+분수",
 "순서를 바꿔 더해도 합은 같다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"newQ": "2와 1/3 + 1과 1/4을 예로 들어, 대분수를 더할 때 왜 자연수는 자연수끼리 분수는 분수끼리 따로 더해도 되는지 설명해 봐.",
+"newQBy": "claude",
+"ansWas": {
+"a": "대분수는 자연수와 진분수를 더한 수라서, 더하는 순서를 바꿔 자연수끼리, 분수끼리 모아서 더해도 전체 합은 같아.",
+"k": [
+"대분수 = 자연수 + 분수",
+"순서를 바꿔 더해도 합은 같다"
+]
+}
 },
 {
 "id": "1v7q9ja:qexample",
@@ -3194,7 +3339,9 @@
 "통분을 먼저 한다",
 "분자끼리 계산, 분모는 그대로"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "1w8v5s:qrecall",
@@ -3304,7 +3451,9 @@
 "받아내림이 필요할 때",
 "한 번에 뺄 수 있다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"off": true,
+"offBy": "claude"
 },
 {
 "id": "1lwbip2:qrecall",
@@ -3323,12 +3472,21 @@
 "kind": "qset",
 "round": 2,
 "by": "claude",
-"answer": "분수 부분이 더 작아서 그대로는 뺄 수 없어. 자연수 1은 5/5처럼 분모와 분자가 같은 분수와 같아서, 1을 빌려와 분수 부분을 크게 만들면 뺄 수 있어.",
+"answer": "피자 조각이 1/5만 있으면 2/5를 뺄 수 없어. 그래서 피자 한 판(1)을 5조각으로 잘라 5/5로 바꿔 더하면 6/5가 돼서 뺄 수 있어. 3과 1/5=2와 6/5야.",
 "keys": [
+"분수 부분이 모자라 뺄 수 없다",
+"1을 5/5로 바꿔 분수 부분에 더한다"
+],
+"answerBy": "claude",
+"newQ": "3과 1/5 - 1과 2/5처럼 분수 부분끼리 뺄 수 없을 때, 왜 자연수에서 1을 받아내려야 하는지 피자로 예를 들어 설명해 봐.",
+"newQBy": "claude",
+"ansWas": {
+"a": "분수 부분이 더 작아서 그대로는 뺄 수 없어. 자연수 1은 5/5처럼 분모와 분자가 같은 분수와 같아서, 1을 빌려와 분수 부분을 크게 만들면 뺄 수 있어.",
+"k": [
 "분수 부분이 작아 뺄 수 없다",
 "1=5/5처럼 바꿔 더한다"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "1lwbip2:qexample",
@@ -3347,12 +3505,21 @@
 "kind": "qset",
 "round": 2,
 "by": "claude",
-"answer": "1/4에서 1/2을 뺄 수 없는데 거꾸로 뺐어. 통분하면 2와 1/4-1과 2/4이고, 1을 받아내려 1과 5/4-1과 2/4=3/4이야.",
+"answer": "1/4에서 1/2을 뺄 수 없는데 거꾸로 1/2-1/4을 했어. 통분하면 2와 1/4-1과 2/4이고, 1을 받아내려 1과 5/4-1과 2/4=3/4이야.",
 "keys": [
+"분수 부분을 거꾸로 뺐다",
+"받아내림, 바른 답 3/4"
+],
+"answerBy": "claude",
+"newQ": "친구가 2와 1/4 - 1과 1/2을 1과 1/4이라고 했어. 어떻게 잘못 계산한 건지 찾고, 바른 답도 말해 봐.",
+"newQBy": "claude",
+"ansWas": {
+"a": "1/4에서 1/2을 뺄 수 없는데 거꾸로 뺐어. 통분하면 2와 1/4-1과 2/4이고, 1을 받아내려 1과 5/4-1과 2/4=3/4이야.",
+"k": [
 "거꾸로 뺐다",
 "받아내림, 답은 3/4"
-],
-"answerBy": "claude"
+]
+}
 },
 {
 "id": "ladder:e5-1|1. 자연수의 혼합 계산|01. 덧셈과 뺄셈 / 곱셈과 나눗셈이 섞인 식:1",
@@ -3540,7 +3707,8 @@
 "예) 24, 48, 72는 24의 배수"
 ],
 "answerBy": "claude",
-"reopen": true
+"reopen": true,
+"ok": true
 },
 {
 "id": "ladder:e5-1|2. 약수와 배수|05. 공배수와 최소공배수:1",
@@ -3576,7 +3744,8 @@
 "공통인 부분과 남은 수를 모두 곱한다"
 ],
 "answerBy": "claude",
-"reopen": true
+"reopen": true,
+"ok": true
 },
 {
 "id": "ladder:e5-1|2. 약수와 배수|06. 최소공배수 구하는 방법:1",
@@ -3619,7 +3788,8 @@
 "남김없이 똑같이 나누는 가장 큰 수 = 최대공약수",
 "12명"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "dljc18:qac21b660d109c72",
@@ -3634,7 +3804,8 @@
 "최대공약수로 학생 수를 구한다(6명)",
 "각 수를 학생 수로 나눈다(연필 5, 공책 7)"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "dljc18:qac21b66105ecf0",
@@ -3649,7 +3820,8 @@
 "한 변은 두 길이의 공약수",
 "가장 큰 정사각형이라 최대공약수(12 cm)"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "dljc18:qac21b6612166c74",
@@ -3664,7 +3836,8 @@
 "나머지를 빼면 나누어떨어진다(24, 36)",
 "24와 36의 최대공약수 12"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "pdtpr5:qac21b66155a6e6",
@@ -3679,7 +3852,8 @@
 "동시에 출발하는 때 = 공배수",
 "가장 먼저라서 최소공배수 24, 9시 24분"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "pdtpr5:qac21b661767c3d",
@@ -3694,7 +3868,8 @@
 "한 변은 두 길이의 공배수",
 "가장 작은 정사각형이라 최소공배수(12 cm)"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "pdtpr5:qac21b661aef603",
@@ -3709,7 +3884,8 @@
 "지나간 톱니 수는 두 수의 공배수",
 "최소공배수 36, 가는 3바퀴"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "pdtpr5:qac21b661c3fe62",
@@ -3724,7 +3900,8 @@
 "1을 빼면 4와 6의 공배수",
 "최소공배수 12에 1을 더해 13"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "pdtpr5:qac21b661e9e5e",
@@ -3739,7 +3916,8 @@
 "나누기·자르기, 가장 큰 → 최대공약수",
 "이어 붙이기·다시 만나기, 가장 작은 → 최소공배수"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1nz6994:qac2202c71aece5",
@@ -3754,7 +3932,8 @@
 "△=○+4",
 "○=△-4로도 나타낼 수 있다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "1wph6x6:qac2202c755acca",
@@ -3769,7 +3948,8 @@
 "정사각형이 1개 늘 때 3개씩 늘어난다",
 "△=○×3+1"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "g97c6k:qac2202c7846371",
@@ -3784,7 +3964,8 @@
 "2/3의 분모와 분자에 같은 수를 곱한 분수",
 "2+3=5, 20÷5=4 → 8/12"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "m3f8ul:qac2202c7b197759",
@@ -3799,7 +3980,8 @@
 "통분해서 비교한다",
 "민수가 더 많이 마셨다"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "m3f8ul:qac2202c7e170b9f",
@@ -3814,7 +3996,8 @@
 "분모 12로 통분한다(4/12, 6/12)",
 "그 사이의 분수 5/12"
 ],
-"answerBy": "claude"
+"answerBy": "claude",
+"ok": true
 },
 {
 "id": "u9z3u:qac2202c82eeeaf",
@@ -3890,6 +4073,436 @@
 "받아내림해서 1과 8/15 L"
 ],
 "answerBy": "claude"
+},
+{
+"id": "ladder:e5-1|3. 규칙과 대응|01. 두 양 사이의 관계:1",
+"big": "3. 규칙과 대응",
+"small": "01. 두 양 사이의 관계",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|3. 규칙과 대응|01. 두 양 사이의 관계:2",
+"big": "3. 규칙과 대응",
+"small": "01. 두 양 사이의 관계",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|3. 규칙과 대응|01. 두 양 사이의 관계:3",
+"big": "3. 규칙과 대응",
+"small": "01. 두 양 사이의 관계",
+"kind": "ladder",
+"off": true,
+"ok": true
+},
+{
+"id": "ladder:e5-1|3. 규칙과 대응|02. 대응 관계를 식으로 나타내기:1",
+"big": "3. 규칙과 대응",
+"small": "02. 대응 관계를 식으로 나타내기",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|3. 규칙과 대응|02. 대응 관계를 식으로 나타내기:2",
+"big": "3. 규칙과 대응",
+"small": "02. 대응 관계를 식으로 나타내기",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|3. 규칙과 대응|02. 대응 관계를 식으로 나타내기:3",
+"big": "3. 규칙과 대응",
+"small": "02. 대응 관계를 식으로 나타내기",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|3. 규칙과 대응|03. 생활 속에서 대응 관계 찾기:1",
+"big": "3. 규칙과 대응",
+"small": "03. 생활 속에서 대응 관계 찾기",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|3. 규칙과 대응|03. 생활 속에서 대응 관계 찾기:2",
+"big": "3. 규칙과 대응",
+"small": "03. 생활 속에서 대응 관계 찾기",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|3. 규칙과 대응|03. 생활 속에서 대응 관계 찾기:3",
+"big": "3. 규칙과 대응",
+"small": "03. 생활 속에서 대응 관계 찾기",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|4. 약분과 통분|01. 크기가 같은 분수:1",
+"big": "4. 약분과 통분",
+"small": "01. 크기가 같은 분수",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|4. 약분과 통분|01. 크기가 같은 분수:2",
+"big": "4. 약분과 통분",
+"small": "01. 크기가 같은 분수",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|4. 약분과 통분|01. 크기가 같은 분수:3",
+"big": "4. 약분과 통분",
+"small": "01. 크기가 같은 분수",
+"kind": "ladder",
+"ok": true,
+"off": true
+},
+{
+"id": "ladder:e5-1|4. 약분과 통분|02. 약분:1",
+"big": "4. 약분과 통분",
+"small": "02. 약분",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|4. 약분과 통분|02. 약분:2",
+"big": "4. 약분과 통분",
+"small": "02. 약분",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|4. 약분과 통분|02. 약분:3",
+"big": "4. 약분과 통분",
+"small": "02. 약분",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|4. 약분과 통분|02. 약분:4",
+"big": "4. 약분과 통분",
+"small": "02. 약분",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|4. 약분과 통분|03. 통분:1",
+"big": "4. 약분과 통분",
+"small": "03. 통분",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|4. 약분과 통분|03. 통분:2",
+"big": "4. 약분과 통분",
+"small": "03. 통분",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|4. 약분과 통분|03. 통분:3",
+"big": "4. 약분과 통분",
+"small": "03. 통분",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|4. 약분과 통분|03. 통분:4",
+"big": "4. 약분과 통분",
+"small": "03. 통분",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|4. 약분과 통분|04. 분수의 크기 비교:1",
+"big": "4. 약분과 통분",
+"small": "04. 분수의 크기 비교",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|4. 약분과 통분|04. 분수의 크기 비교:2",
+"big": "4. 약분과 통분",
+"small": "04. 분수의 크기 비교",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|4. 약분과 통분|04. 분수의 크기 비교:3",
+"big": "4. 약분과 통분",
+"small": "04. 분수의 크기 비교",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|4. 약분과 통분|05. 분수와 소수의 크기 비교:1",
+"big": "4. 약분과 통분",
+"small": "05. 분수와 소수의 크기 비교",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|4. 약분과 통분|05. 분수와 소수의 크기 비교:2",
+"big": "4. 약분과 통분",
+"small": "05. 분수와 소수의 크기 비교",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|4. 약분과 통분|05. 분수와 소수의 크기 비교:3",
+"big": "4. 약분과 통분",
+"small": "05. 분수와 소수의 크기 비교",
+"kind": "ladder",
+"ok": true
+},
+{
+"id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|01. 분수의 덧셈 (1), (2):1",
+"big": "5. 분수의 덧셈과 뺄셈",
+"small": "01. 분수의 덧셈 (1), (2)",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|01. 분수의 덧셈 (1), (2):2",
+"big": "5. 분수의 덧셈과 뺄셈",
+"small": "01. 분수의 덧셈 (1), (2)",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|01. 분수의 덧셈 (1), (2):3",
+"big": "5. 분수의 덧셈과 뺄셈",
+"small": "01. 분수의 덧셈 (1), (2)",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|01. 분수의 덧셈 (1), (2):4",
+"big": "5. 분수의 덧셈과 뺄셈",
+"small": "01. 분수의 덧셈 (1), (2)",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|02. 분수의 덧셈 (3):1",
+"big": "5. 분수의 덧셈과 뺄셈",
+"small": "02. 분수의 덧셈 (3)",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|02. 분수의 덧셈 (3):2",
+"big": "5. 분수의 덧셈과 뺄셈",
+"small": "02. 분수의 덧셈 (3)",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|02. 분수의 덧셈 (3):3",
+"big": "5. 분수의 덧셈과 뺄셈",
+"small": "02. 분수의 덧셈 (3)",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|02. 분수의 덧셈 (3):4",
+"big": "5. 분수의 덧셈과 뺄셈",
+"small": "02. 분수의 덧셈 (3)",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|03. 분수의 뺄셈 (1):1",
+"big": "5. 분수의 덧셈과 뺄셈",
+"small": "03. 분수의 뺄셈 (1)",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|03. 분수의 뺄셈 (1):2",
+"big": "5. 분수의 덧셈과 뺄셈",
+"small": "03. 분수의 뺄셈 (1)",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|04. 분수의 뺄셈 (2), (3):1",
+"big": "5. 분수의 덧셈과 뺄셈",
+"small": "04. 분수의 뺄셈 (2), (3)",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|04. 분수의 뺄셈 (2), (3):2",
+"big": "5. 분수의 덧셈과 뺄셈",
+"small": "04. 분수의 뺄셈 (2), (3)",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|04. 분수의 뺄셈 (2), (3):3",
+"big": "5. 분수의 덧셈과 뺄셈",
+"small": "04. 분수의 뺄셈 (2), (3)",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|5. 분수의 덧셈과 뺄셈|04. 분수의 뺄셈 (2), (3):4",
+"big": "5. 분수의 덧셈과 뺄셈",
+"small": "04. 분수의 뺄셈 (2), (3)",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|6. 다각형의 둘레와 넓이|01. 정다각형과 사각형의 둘레:1",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "01. 정다각형과 사각형의 둘레",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|6. 다각형의 둘레와 넓이|01. 정다각형과 사각형의 둘레:2",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "01. 정다각형과 사각형의 둘레",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|6. 다각형의 둘레와 넓이|01. 정다각형과 사각형의 둘레:3",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "01. 정다각형과 사각형의 둘레",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|6. 다각형의 둘레와 넓이|01. 정다각형과 사각형의 둘레:4",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "01. 정다각형과 사각형의 둘레",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|6. 다각형의 둘레와 넓이|02. 1 cm²:1",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "02. 1 cm²",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|6. 다각형의 둘레와 넓이|02. 1 cm²:2",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "02. 1 cm²",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|6. 다각형의 둘레와 넓이|02. 1 cm²:3",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "02. 1 cm²",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|6. 다각형의 둘레와 넓이|03. 직사각형의 넓이:1",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "03. 직사각형의 넓이",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|6. 다각형의 둘레와 넓이|03. 직사각형의 넓이:2",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "03. 직사각형의 넓이",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|6. 다각형의 둘레와 넓이|03. 직사각형의 넓이:3",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "03. 직사각형의 넓이",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|6. 다각형의 둘레와 넓이|04. 1 cm²보다 큰 넓이의 단위:1",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "04. 1 cm²보다 큰 넓이의 단위",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|6. 다각형의 둘레와 넓이|04. 1 cm²보다 큰 넓이의 단위:2",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "04. 1 cm²보다 큰 넓이의 단위",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|6. 다각형의 둘레와 넓이|04. 1 cm²보다 큰 넓이의 단위:3",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "04. 1 cm²보다 큰 넓이의 단위",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|6. 다각형의 둘레와 넓이|05. 평행사변형의 넓이:1",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "05. 평행사변형의 넓이",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|6. 다각형의 둘레와 넓이|05. 평행사변형의 넓이:2",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "05. 평행사변형의 넓이",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|6. 다각형의 둘레와 넓이|05. 평행사변형의 넓이:3",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "05. 평행사변형의 넓이",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|6. 다각형의 둘레와 넓이|06. 삼각형의 넓이:1",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "06. 삼각형의 넓이",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|6. 다각형의 둘레와 넓이|06. 삼각형의 넓이:2",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "06. 삼각형의 넓이",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|6. 다각형의 둘레와 넓이|06. 삼각형의 넓이:3",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "06. 삼각형의 넓이",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|6. 다각형의 둘레와 넓이|06. 삼각형의 넓이:4",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "06. 삼각형의 넓이",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|6. 다각형의 둘레와 넓이|07. 마름모의 넓이:1",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "07. 마름모의 넓이",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|6. 다각형의 둘레와 넓이|07. 마름모의 넓이:2",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "07. 마름모의 넓이",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|6. 다각형의 둘레와 넓이|07. 마름모의 넓이:3",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "07. 마름모의 넓이",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|6. 다각형의 둘레와 넓이|07. 마름모의 넓이:4",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "07. 마름모의 넓이",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|6. 다각형의 둘레와 넓이|08. 사다리꼴의 넓이:1",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "08. 사다리꼴의 넓이",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|6. 다각형의 둘레와 넓이|08. 사다리꼴의 넓이:2",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "08. 사다리꼴의 넓이",
+"kind": "ladder"
+},
+{
+"id": "ladder:e5-1|6. 다각형의 둘레와 넓이|08. 사다리꼴의 넓이:3",
+"big": "6. 다각형의 둘레와 넓이",
+"small": "08. 사다리꼴의 넓이",
+"kind": "ladder"
 }
 ],
 "seen": [

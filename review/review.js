@@ -34,7 +34,10 @@
   var ROUNDS = 3;                       // 학원이 3회 반복 시스템이라 3회차 (마스터 결정 2026-09-16)
   var SIM_THRESHOLD = 0.5;              // 이 이상 겹치면 "비슷한 질문"으로 묶는다
 
-  var QR = { grade:null, big:0, view:(function(){ try{ return localStorage.getItem('qr:view') || 'all'; }catch(e){ return 'all'; } })(), query:'' };
+  function ssGet(k){ try{ return sessionStorage.getItem(k); }catch(e){ return null; } }
+  function ssSet(k, v){ try{ sessionStorage.setItem(k, v); }catch(e){} }
+  // [v85.4] 새로고침해도 보던 학년·대단원 그대로 (이 탭 안에서만)
+  var QR = { grade:ssGet('qr:grade') || null, big:parseInt(ssGet('qr:big') || '0', 10) || 0, view:(function(){ try{ return localStorage.getItem('qr:view') || 'all'; }catch(e){ return 'all'; } })(), query:'' };
   // 고치기 칸에서 눌러 넣는 기호 (분수 1/2 · 제곱 cm^2 은 그냥 치면 되므로 뺐다)
   var SYMS = ['×','÷','−','±','≤','≥','≠','°','π','√','∠','△','⊥','∥','∽','≡','㎝','①','②','③'];
 
@@ -661,8 +664,8 @@
     var host = document.getElementById('qreviewTab');
     if(!host || !host.contains(e.target)) return;
     var k = e.target.getAttribute('data-qr');
-    if(k === 'grade'){ QR.grade = e.target.value; QR.big = 0; render(); }
-    else if(k === 'big'){ QR.big = parseInt(e.target.value, 10) || 0; render(); }
+    if(k === 'grade'){ QR.grade = e.target.value; QR.big = 0; ssSet('qr:grade', QR.grade); ssSet('qr:big', '0'); render(); }
+    else if(k === 'big'){ QR.big = parseInt(e.target.value, 10) || 0; ssSet('qr:big', String(QR.big)); render(); }
     else if(k === 'view'){ QR.view = e.target.value; try{ localStorage.setItem('qr:view', QR.view); }catch(e2){} render(); }
   }
   function onInput(e){
