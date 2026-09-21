@@ -448,5 +448,5 @@ body.dl-open{overflow:hidden}
     recs.forEach((r, i) => { if (hid.has(i)) return; total++; if (stepState(r) === 'done') pass++; });
     return {pass, total};
   }
-  window.DL_LADDER = {version:'86.0', open:ctx => open(ctx), currentCtx, grade, tally, get state(){ return R; }};
+  window.DL_LADDER = {version:'86.2', open:ctx => open(ctx), currentCtx, grade, tally, markCool:markQuestionFail, get state(){ return R; }};
 })();

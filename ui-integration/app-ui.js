@@ -97,7 +97,7 @@
     try { navRestore(target); } catch(err) { console.warn('[dd-ui] 뒤로가기 복원 실패', err); }
     finally { nav.restoring=false; }
   });
-  function restoreLevel() { state.level=ui.level; state._qType=null; state._baseLevel=ui.level; state._directSelectedQuestion=''; state._pickerQIndex=null; state._roundItem=null; state._roundLevel=null; }
+  function restoreLevel() { state.level=ui.level; state._qType=null; state._baseLevel=ui.level; state._directSelectedQuestion=''; state._pickerQIndex=null; state._roundItem=null; state._roundLevel=null; state._roundSaw=false; }
   function lock(busy) {
     ui.busy=busy; $('viewStudent').classList.toggle('dd-ui-busy',busy);
     for(const id of ['backBtn','nextUnitBtn','nextQBtn','retryBtn','skipQBtn','ddUiLessonBack']) if($(id)) $(id).disabled=busy;
@@ -158,7 +158,7 @@
     CP.type=item.ti; CP.qIndex=item.index; cpSyncLegacy();
     if(!currentUnits().some(u=>u.id===state.unitId)) { notice('질문과 단원 연결을 확인하지 못했어요. 다른 개념을 골라 주세요.'); return false; }
     state._baseLevel=ui.level; state._qType=item.type||null; state.level=item.type?(QTYPE_LEVEL[item.type]||'high'):ui.level;
-    state._roundItem=null; state._roundLevel=null;
+    state._roundItem=null; state._roundLevel=null; state._roundSaw=false;
     if(item.kind==='round') {   // [v86.0 ⑧] 회차 질문: 모범 답으로 채점, 기록에 회차 표시
       if(!item.type) state.level=item.lv||'high';
       state._roundItem=item; state._roundLevel='r'+item.r+(item.past?'re':'');
@@ -294,7 +294,12 @@
     const wrap=$('fbArea').querySelector('.fb-wrap'); if(!wrap) return;
     const detail=node('ddUiFeedbackDetails','details','dd-ui-details'); detail.innerHTML='<summary>자세한 피드백과 채점 질문</summary>';
     [...wrap.querySelectorAll(':scope > .fb-block.hint,:scope > .fb-block.misc,:scope > .fb-appeal')].forEach(el=>detail.appendChild(el)); wrap.appendChild(detail);
-    if(state._roundItem&&state._roundItem.past) {   // [v86.0 ⑧] 다시 보기: 지금 회차 진도와 섞지 않는다
+    if(state._roundSaw&&state._roundItem) {   // [v86.2 ⑧] 개념 보고 한 답: 오늘은 연습
+      const badge=wrap.querySelector('.pass-badge'); if(badge) badge.textContent='개념을 보고 설명했어요. 내일 혼자 한 번 더 설명하면 통과예요.';
+      const note=wrap.querySelector('.review-note'); if(note) note.hidden=true;
+      if($('nextUnitBtn')) $('nextUnitBtn').textContent=state._roundItem.past?'다시 보기 목록으로 →':'다음 질문으로 →';
+    }
+    else if(state._roundItem&&state._roundItem.past) {   // [v86.0 ⑧] 다시 보기: 지금 회차 진도와 섞지 않는다
       const badge=wrap.querySelector('.pass-badge'); if(badge) badge.textContent='다시 답했어요.';
       const note=wrap.querySelector('.review-note'); if(note) note.hidden=true;
       if($('nextUnitBtn')) $('nextUnitBtn').textContent='다시 보기 목록으로 →';
@@ -452,10 +457,15 @@
   };
   cpRender=function() { renderStudent(); };
   cpSyncLegacy=function() { state.gradeId=CP.grade||null; return original.cpSyncLegacy(); };
-  renderCurrentQuestion=function() { if(!state._qType&&['low','high','blank'].includes(state.level))ui.level=state.level;   /* [v82.8] 기본 개념을 그대로 둔다 (v81.3 에서 설명하기로 바꾸던 것 해제) */ syncSelectionFromUnit(); const out=original.renderCurrentQuestion(); syncQuestionChrome(); return out; };
+  renderCurrentQuestion=function() { if(!state._qType&&['low','high','blank'].includes(state.level))ui.level=state.level;   /* [v82.8] 기본 개념을 그대로 둔다 (v81.3 에서 설명하기로 바꾸던 것 해제) */ syncSelectionFromUnit(); const out=original.renderCurrentQuestion(); syncQuestionChrome();
+    if(window.DDR&&DDR.hintMode()==='none') $('qList').querySelectorAll('.hint-btn,.hint-box').forEach(el=>el.remove());   // [v86.2 ⑧] 1회차는 힌트 없음
+    return out; };
   resetRecordingUI=function() { const out=original.resetRecordingUI(); applyInputMode(); return out; };
   renderFeedback=function(result,advance,needTeacher) { const out=original.renderFeedback(result,advance,needTeacher); decorateFeedback(advance); return out; };
-  saveSubmission=async function(...args) { lock(true); try { return await original.saveSubmission(...args); } finally { setTimeout(()=>{lock(false);syncQuestionChrome();},0); } };
+  saveSubmission=async function(...args) {
+    if(state._roundSaw && state._roundLevel && !/c$/.test(state._roundLevel)) state._roundLevel+='c';   // [v86.2 ⑧]
+    if(state._roundSaw && state._roundItem && window.DL_LADDER && DL_LADDER.markCool) DL_LADDER.markCool(state._roundItem.q, state._roundItem.id);
+    lock(true); try { return await original.saveSubmission(...args); } finally { setTimeout(()=>{lock(false);syncQuestionChrome();},0); } };
   onSpeakTimeout=async function() { lock(true); try { return await original.onSpeakTimeout(); } catch(e) { lock(false); throw e; } };
   cpUnitRemaining=function() { const list=cpUnitQuestionItems(); return list?list.filter(x=>cpStatusForQuestion(state.gradeId,x.q,x.id)!=='pass').length:0; };
   startQuiz=async function() {
@@ -495,7 +505,11 @@
       case 'continue': if(!cpCurrentSmall())stage(CP.grade?'catalog':'grades'); else {const left=remaining(); if(left.length)await startItem(left[0]);else if(academyOk()) await startQuiz();} break;
       case 'quiz': if(academyOk()) await startQuiz(); break;
       case 'lesson-back': if(ui.page==='talk')$('cvBack').click(); else $('backBtn').click(); stage(cpCurrentSmall()?'questions':'catalog'); break;
-      case 'help': if(ddHasCard(ddCurrentCard()))ddOpenLearn(ddCurrentCard());else notice('이 개념의 학습 자료를 준비 중이에요.'); break;
+      case 'help':
+        if(!ddHasCard(ddCurrentCard())) { notice('이 개념의 학습 자료를 준비 중이에요.'); break; }
+        // [v86.2 ⑧] 회차 질문을 푸는 중에 개념을 보면: 이번 답은 '개념 보고 답함'으로 남고, 통과는 다음 날 혼자 설명할 때
+        if(ui.page==='lesson' && state._roundItem && !state._roundSaw) { state._roundSaw=true; notice('개념을 보고 답하면 오늘은 연습이에요. 내일 혼자 한 번 더 설명하면 통과예요.'); }
+        ddOpenLearn(ddCurrentCard()); break;
       case 'voice': stopRecognitionIfActive(); ui.input='voice'; applyInputMode(); break;
       case 'text': stopRecognitionIfActive(); ui.input='text'; $('showManualBtn').click(); applyInputMode(); $('manualText').focus(); break;
       case 'talk': if(!academyOk()) break; stopRecognitionIfActive(); Timer.hide(); $('cvEntryBtn').click(); stage('talk'); break;
