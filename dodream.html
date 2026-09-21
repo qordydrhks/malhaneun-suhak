@@ -18846,7 +18846,7 @@ async function getOrGenerateQuiz(grade, unit, opts){
   // [v80.0] 수준·세트별 열쇠. force(선생님 미리 만들기)면 저장분을 무시하고 새로 만든다.
   // [v86.3 ⑧] 회차 문제: opts.round(1·2·3) · opts.count(문제 수) · level 'mix'(3회차 종합) · opts.roundQs(이번 회차 질문). 저장 열쇠도 회차별.
   const level = opts.level === 'adv' ? 'adv' : (opts.level === 'mix' ? 'mix' : 'basic');
-  const _N = (opts.count >= 2 && opts.count <= 5) ? opts.count : QUIZ_COUNT;
+  const _N = (opts.count >= 1 && opts.count <= 10) ? opts.count : QUIZ_COUNT;   // [v86.5] 3회차는 계단 칸 수만큼이라 넉넉히
   const set = opts.set === 1 ? 1 : 0;
   const cacheKey = opts.round ? quizCacheKey(grade, unit, level, set) + ':r' + opts.round + 'n' + _N + (level === 'mix' ? 'mix' : '') : quizCacheKey(grade, unit, level, set);
   if(!opts.force){
@@ -18882,7 +18882,8 @@ async function getOrGenerateQuiz(grade, unit, opts){
   const PRIN_ORDER = basicElem
     ? '- 1번: 개념을 그대로 적용하는 문제. 2번: 조건을 조금 바꿔 적용하는 문제. 3번: 학생들이 자주 하는 실수를 가려내는 문제.'
     : "- 1번: 개념을 실제 상황에 적용하는 문제. 2번: 조건을 바꾸거나 결과에서 거꾸로 찾는 문제.\n  3번: 함정·비슷하지만 다른 경우와의 비교로, 개념을 확실히 아는 학생만 맞히는 문제.";
-  const PRIN_COUNT = (_N === 3) ? '' : (_N === 2 ? '- 문제가 2개야: 위 순서에서 1번과 3번 성격으로 만들어.' : '- 문제가 ' + _N + '개야: 위 순서를 따르고, 남는 문제는 이 소단원의 활용(문장제) 문제로 만들어.');
+  const PRIN_COUNT = opts.perItem ? '- 문제 수는 아래 [질문 계단 칸] 수와 같아. 칸 하나에 문제 하나씩, 칸 순서대로 만들어. 각 문제는 그 칸이 묻는 내용을 실제로 적용해야 풀리게. (위 1번·2번·3번 순서 지시는 무시해.)'
+    : (_N === 3) ? '' : (_N === 2 ? '- 문제가 2개야: 위 순서에서 1번과 3번 성격으로 만들어.' : '- 문제가 ' + _N + '개야: 위 순서를 따르고, 남는 문제는 이 소단원의 활용(문장제) 문제로 만들어.');
   const PRIN_DEPTH = basicElem
     ? '- 기본 확인 문제야. 개념을 제대로 이해했으면 한 번에 풀리게 만들어. 억지로 꼬지 마.'
     : "- 초등이라도 '한 번 더 생각해야' 풀리게 만들어. 예: 조건을 살짝 비틀기, 왜 그런지 판단하기, 결과로부터 거꾸로 찾기, 비슷하지만 다른 경우와 비교하기.";
@@ -18969,7 +18970,7 @@ ${figOn ? FIG_NOTE : '- 그림이 있어야만 풀리는 문제 금지. 글만 �
 
   // [v80.2] 선생님 출제 지시 — opts.style 이 있으면 그것(편집기에서 시험 중인 지시), 없으면 저장된 지시
   const style = (typeof opts.style === 'string') ? opts.style.trim() : await quizStyleGet(grade.id, unit.id);
-  const roundNote = (opts.roundQs && opts.roundQs.length) ? '[이번 회차에 학생이 말로 설명한 질문 — 이 내용을 실제로 적용하는 문제로 만들 것]\n' + opts.roundQs.map(q=>'- '+q).join('\n') + '\n' : '';
+  const roundNote = (opts.roundQs && opts.roundQs.length) ? (opts.perItem ? '[질문 계단 칸 — 칸마다 문제 하나씩, 이 순서대로]\n' : '[이번 회차에 학생이 말로 설명한 질문 — 이 내용을 실제로 적용하는 문제로 만들 것]\n') + opts.roundQs.map(q=>'- '+q).join('\n') + '\n' : '';
   const userMsg = `[학년/교재] ${grade.name}
 [소단원] ${unit.label}
 ${roundNote}${basis.concept ? '[개념 설명]\n' + basis.concept + '\n' : ''}${basis.points.length ? '[핵심 포인트 — 이것들을 고루 덮을 것]\n' + basis.points.map((p,i)=>(i+1)+'. '+p).join('\n') + '\n' : ''}${weakNote ? '\n[학생이 약했던 부분]\n' + weakNote : ''}${style ? '\n\n[선생님 출제 지시 — 반드시 따를 것. 문제 수·4지선다·JSON 형식은 그대로 지키고, 나머지는 이 지시를 출제 원칙보다 우선해]\n' + style : ''}`;
@@ -22040,7 +22041,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-const APP_VERSION = 'v86.3-회차문제';
+const APP_VERSION = 'v86.5-3회차계단문제';
   // [v78.7] 이 값이 IIFE 안에 갇혀 있어 바깥 스크립트(app-ui.js)가 못 읽었다.
   //   화면 배지에 버전을 그대로 띄우려면 필요하므로 노출한다.
   window.APP_VERSION = APP_VERSION;
@@ -22065,9 +22066,9 @@ const APP_VERSION = 'v86.3-회차문제';
 </script>
 
 <!-- [v86.0 ⑧] 회차 흐름 (회차 데이터가 있는 학년만) -->
-<script src="rounds/data-e5-1.js?v=86.3"></script>
-<script src="rounds/rounds.js?v=86.3"></script>
-<script src="ui-integration/app-ui.js?v=86.3"></script>
+<script src="rounds/data-e5-1.js?v=86.5"></script>
+<script src="rounds/rounds.js?v=86.5"></script>
+<script src="ui-integration/app-ui.js?v=86.4"></script>
 <!-- [v82.1] 선생님 질문 계단 (시범, 격리 모듈) — 중3-1 전 대단원 · 칸 그림 (v82.3) -->
 <script src="ladder/data-m3-1.js?v=82.5"></script>
 <script src="ladder/data-e5-1.js?v=85.0"></script>

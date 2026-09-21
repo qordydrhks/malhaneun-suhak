@@ -92,8 +92,17 @@
   function quizPlan(g) {
     const c = curEntry(); if (!c || !c.e || !on(g)) return null;
     const r = round(g), qc = c.e.quiz || {};
-    const qs = items(g, c.big, c.sm, r >= 3 ? 'past' : 'now').map(x => x.q).concat(r >= 3 ? items(g, c.big, c.sm, 'now').map(x => x.q) : []);
-    return {round:r, count:Number(qc[r]) || (r >= 3 ? 3 : 2), level:QLEVEL[r], roundQs:qs};
+    if (r >= 3) {
+      // [v86.5] 3회차: 계단 칸 수만큼(숨긴 칸 제외) + 3회차로 분류한 질문 — 칸(질문)마다 문제 하나 (마스터 결정 2026-09-21)
+      //   개수를 정해 두지 않고 개념 내용(계단)을 따라간다 → 중·고등처럼 계단이 긴 곳도 문제가 모자라지 않게
+      const key = g + '|' + c.big + '|' + c.sm, raw = (window.DL_LADDERS || {})[key] || [];
+      const lv = ladder(key, raw), hid = new Set(lv.hide);
+      const qs = lv.steps.filter((s, i) => !hid.has(i)).map(s => s.q).concat(items(g, c.big, c.sm, 'now').map(x => x.q));
+      if (qs.length) return {round:r, count:Math.min(10, qs.length), level:QLEVEL[3], roundQs:qs.slice(0, 10), perItem:true};
+      return {round:r, count:3, level:QLEVEL[3], roundQs:items(g, c.big, c.sm, 'past').map(x => x.q)};   // 계단이 없는 소단원
+    }
+    const qs = items(g, c.big, c.sm, 'now').map(x => x.q);
+    return {round:r, count:Number(qc[r]) || 2, level:QLEVEL[r], roundQs:qs};
   }
   if (typeof window.quizDoneKey === 'function') {
     const origKey = window.quizDoneKey;
@@ -109,13 +118,102 @@
       // 선생님 미리 만들기·편집기 미리보기·'응용 도전'(따로 누르는 도전)은 예전 그대로
       const plan = (!opts.pregen && !opts.noSave && opts.level !== 'adv' && grade) ? quizPlan(grade.id) : null;
       if (plan) {
-        opts = Object.assign({}, opts, {round:plan.round, count:plan.count, level:plan.level, roundQs:plan.roundQs});
+        opts = Object.assign({}, opts, {round:plan.round, count:plan.count, level:plan.level, roundQs:plan.roundQs, perItem:!!plan.perItem});
         try { const m = document.getElementById('quizMeta'); if (m && !/회차 문제/.test(m.textContent)) m.textContent += ' · ' + plan.round + '회차 문제(' + QNAME[plan.round] + ' ' + plan.count + '개)'; } catch (e) {}
       }
       return origGen.call(this, grade, unit, opts);
     };
   }
 
-  window.DDR = {version:'86.3', on, round, load, items, entry, ladder, answerText, levelName, noPass, hintMode, quizPlan, MAX,
+  // ── [v86.4] 선생님: 학생별·학기별 회차 열기 ('회차 열기' 메뉴) ─────────────────────────
+  const T = {grade:null, maps:{}, sel:new Set(), busy:false};
+  const escT = t => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const gradeName = g => { try { return (GRADES.find(x => x.id === g) || {}).name || g; } catch (e) { return g; } };
+  async function allStudents() {
+    let list = [];
+    try { list = (typeof RAIL_CACHE !== 'undefined' && RAIL_CACHE.students && RAIL_CACHE.students.length) ? RAIL_CACHE.students : await getAllStudents(); } catch (e) {}
+    return (list || []).slice().sort((a, b) => String(a.name).localeCompare(String(b.name), 'ko'));
+  }
+  // 모든 학생의 회차를 한 번에 (서버) → 안 되면 한 명씩
+  async function loadAll(students) {
+    const maps = {};
+    let done = false;
+    try {
+      if (typeof checkSupabase === 'function' && await checkSupabase()) {
+        const rows = await sbSelect('ai_cache', 'key=like.round%3A*&select=key,value');
+        (rows || []).forEach(r => { const id = String(r.key).slice(6); if (r.value && typeof r.value === 'object') maps[id] = r.value; });
+        done = true;
+      }
+    } catch (e) {}
+    if (!done) await Promise.all(students.map(async s => { try { const m = await storageGet('round:' + s.id); if (m) maps[s.id] = m; } catch (e) {} }));
+    return maps;
+  }
+  async function setRound(sid, g, r) {
+    let m = null;
+    try { m = await storageGet('round:' + sid); } catch (e) {}
+    m = (m && typeof m === 'object') ? Object.assign({}, m) : {};
+    m[g] = r;
+    const ok = await storageSet('round:' + sid, m);
+    if (ok) T.maps[sid] = m;
+    return ok;
+  }
+  async function teacherRender(host) {
+    if (!host) return;
+    const grades = Object.keys(window.DD_ROUNDS || {});
+    if (!grades.length) { host.innerHTML = '<p class="dd-ui-caption">회차가 준비된 학기가 아직 없어요.</p>'; return; }
+    if (!T.grade || !grades.includes(T.grade)) T.grade = grades[0];
+    host.innerHTML = '<p class="dd-ui-caption">불러오는 중…</p>';
+    const students = await allStudents();
+    T.maps = await loadAll(students);
+    T.students = students;
+    draw(host);
+  }
+  function draw(host) {
+    const grades = Object.keys(window.DD_ROUNDS || {}), g = T.grade, students = T.students || [];
+    const cur = s => Math.min(MAX, Math.max(1, Number((T.maps[s.id] || {})[g]) || 1));
+    const count = [1, 2, 3].map(r => students.filter(s => cur(s) === r).length);
+    const rbtn = (r, act, extra) => '<button type="button" class="' + (act ? 'dd-ui-primary' : 'dd-ui-secondary') + '" ' + extra + '>' + r + '회차</button>';
+    host.innerHTML =
+      '<div class="ddr-t">'
+      + '<p class="dd-ui-caption">학생마다 지금 공부할 회차를 정해요. 회차를 올리면 아이 화면에 그 회차 질문이 나오고, 지난 회차 질문은 \'다시 보기\'로 남아요. (1회차 뜻·성질 / 2회차 응용·이유 / 3회차 질문 계단·종합)</p>'
+      + '<div class="ddr-bar"><label>학기 <select id="ddrGrade">' + grades.map(x => '<option value="' + x + '"' + (x === g ? ' selected' : '') + '>' + escT(gradeName(x)) + '</option>').join('') + '</select></label>'
+      + '<span class="ddr-sum">1회차 ' + count[0] + '명 · 2회차 ' + count[1] + '명 · 3회차 ' + count[2] + '명</span></div>'
+      + '<div class="ddr-bar"><button type="button" class="dd-ui-text" data-ddr="all">모두 선택</button><button type="button" class="dd-ui-text" data-ddr="none">선택 해제</button>'
+      + '<span>선택한 <b id="ddrSelN">' + T.sel.size + '</b>명을</span>' + [1, 2, 3].map(r => rbtn(r, false, 'data-ddr="bulk" data-r="' + r + '"')).join('') + '<span>로</span></div>'
+      + '<div class="ddr-list">' + (students.map(s => {
+          const r = cur(s);
+          return '<div class="ddr-row"><label><input type="checkbox" data-ddr="pick" data-sid="' + escT(s.id) + '"' + (T.sel.has(s.id) ? ' checked' : '') + '> <b>' + escT(s.name) + '</b> <small>' + escT(s.grade || '') + '</small></label>'
+            + '<span class="ddr-btns">' + [1, 2, 3].map(x => rbtn(x, x === r, 'data-ddr="one" data-sid="' + escT(s.id) + '" data-r="' + x + '"')).join('') + '</span></div>';
+        }).join('') || '<p class="dd-ui-caption">등록된 학생이 없어요.</p>') + '</div></div>';
+  }
+  async function onClick(e) {
+    const el = e.target.closest('[data-ddr]'); if (!el) return;
+    const host = document.getElementById('ddUiTeacherRounds'); if (!host || !host.contains(el)) return;
+    const k = el.dataset.ddr;
+    if (k === 'pick') { el.checked ? T.sel.add(el.dataset.sid) : T.sel.delete(el.dataset.sid); const n = document.getElementById('ddrSelN'); if (n) n.textContent = T.sel.size; return; }
+    if (k === 'all') { (T.students || []).forEach(s => T.sel.add(s.id)); draw(host); return; }
+    if (k === 'none') { T.sel.clear(); draw(host); return; }
+    if (T.busy) return;
+    const r = Number(el.dataset.r), ids = k === 'one' ? [el.dataset.sid] : Array.from(T.sel);
+    if (!ids.length) { alert('먼저 학생을 골라 주세요.'); return; }
+    if (k === 'bulk' && !confirm(ids.length + '명을 ' + gradeName(T.grade) + ' ' + r + '회차로 바꿀까요?')) return;
+    T.busy = true; el.disabled = true;
+    let fail = 0;
+    for (const sid of ids) { if (!(await setRound(sid, T.grade, r))) fail++; }
+    T.busy = false;
+    draw(host);
+    if (fail) alert(fail + '명은 저장하지 못했어요. 인터넷 연결을 확인하고 다시 눌러 주세요.');
+  }
+  document.addEventListener('click', e => { onClick(e).catch(err => { T.busy = false; console.warn('[회차 열기]', err); }); });
+  document.addEventListener('change', e => {
+    if (e.target && e.target.id === 'ddrGrade') { T.grade = e.target.value; T.sel.clear(); draw(document.getElementById('ddUiTeacherRounds')); }
+  });
+  const css = document.createElement('style');
+  css.textContent = '.ddr-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}.ddr-sum{color:#6b6a64;font-size:14px}'
+    + '.ddr-list{border-top:1px solid #e4e2da}.ddr-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eeede7}'
+    + '.ddr-row label{display:flex;gap:6px;align-items:center;min-width:0}.ddr-row small{color:#8a887f}.ddr-btns{display:flex;gap:6px}.ddr-btns button,.ddr-bar button{padding:6px 12px;min-height:36px}';
+  document.head.appendChild(css);
+
+  window.DDR = {version:'86.4', on, round, load, items, entry, ladder, answerText, levelName, noPass, hintMode, quizPlan, teacherRender, MAX,
     _setForTest(g, r) { const s = student(); if (s) { cache.sid = s.id; cache.map[g] = r; } }};
 })();
