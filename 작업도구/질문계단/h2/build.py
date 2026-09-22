@@ -12,6 +12,10 @@ for s in QA:
     SEC.append((s['sec'], n + 1, n + len(s['qs']))); n += len(s['qs'])
 TY = {k[0]: v for k, v in json.load(open(os.path.join(HERE, 'types_zai.json'), encoding='utf-8')).items() if not k.startswith('_')}
 TNAME = {k: v for k, v in json.load(open(os.path.join(HERE, 'types_zai.json'), encoding='utf-8')).items() if not k.startswith('_')}
+SVG = {}
+if os.path.exists(os.path.join(HERE, 'figs_svg.json')): SVG = json.load(open(os.path.join(HERE, 'figs_svg.json'), encoding='utf-8'))
+def fig(qn, key):
+    v = SVG.get('%d|%s' % (qn, key)); return '<div class="fig">%s</div>' % v if v else ''
 mods = sys.argv[1:] or sorted(os.path.basename(f)[:-3] for f in glob.glob(os.path.join(HERE, 'spec_*.py')))
 S = {}
 for m in mods: S.update(importlib.import_module(m).S)
@@ -40,6 +44,7 @@ for u, lst in M.items():
         tid = '%s%02d' % (u, i + 1)
         qs = [x for x in mm if x != 'X']
         if qs and all(x in done for x in qs) and tid not in cov: need.append(tid)
+print('그림', sum(1 for k in SVG), '·', end=' ')
 print('개념Q', len(S), '· 1회차', sum(1 for v in S.values() for x in v['q'] if x[0] == 1),
       '· 2회차', sum(1 for v in S.values() for x in v['q'] if x[0] == 2), '· 계단', sum(len(v.get('L', [])) for v in S.values()))
 print('형식 문제', err[:20], '· 빠진 유형', need)
@@ -54,10 +59,10 @@ for name, a, b in SEC:
     for qn in have:
         v = S[qn]; qq = Q[qn - 1]
         parts.append('<section><h3>%d. %s <span class="pg">p.%d</span></h3>' % (qn, e(qq[0]), qq[1]))
-        for r, q, ans, k, ty in v['q']:
-            parts.append('<div class="it r%d"><b>%d회차</b> %s%s<div class="a">모범 답: %s</div><div class="k">꼭 말할 핵심: %s</div></div>' % (r, r, e(q), tag(ty), e(ans), ' · '.join(e(x) for x in k)))
-        for q, ids, ty in v.get('L', []):
-            parts.append('<div class="it L"><b>계단</b> %s%s<div class="k">통과 아이디어: %s</div></div>' % (e(q), tag(ty), ' · '.join(e(x) for x in ids)))
+        for i, (r, q, ans, k, ty) in enumerate(v['q']):
+            parts.append('<div class="it r%d"><b>%d회차</b> %s%s%s<div class="a">모범 답: %s</div><div class="k">꼭 말할 핵심: %s</div></div>' % (r, r, e(q), tag(ty), fig(qn, 'q%d' % i), e(ans), ' · '.join(e(x) for x in k)))
+        for i, (q, ids, ty) in enumerate(v.get('L', [])):
+            parts.append('<div class="it L"><b>계단</b> %s%s%s<div class="k">통과 아이디어: %s</div></div>' % (e(q), tag(ty), fig(qn, 'L%d' % i), ' · '.join(e(x) for x in ids)))
         parts.append('</section>')
 units = sorted({t[0] for t in cov} | {x[0] for x in need})
 cov_html = ''
@@ -77,6 +82,7 @@ body{background:var(--bg);color:var(--fg);font-family:system-ui,"Malgun Gothic",
 main{max-width:880px;margin:auto}h1{font-size:1.4em}h3{margin:18px 0 6px}.pg{color:var(--mut);font-size:.8em;font-weight:400}
 .it{border:1px solid var(--bd);border-radius:10px;padding:8px 12px;margin:6px 0}.r1{background:var(--l1)}.r2{background:var(--l2)}.L{background:var(--lL)}
 .a,.k{font-size:.92em;color:var(--mut);margin-top:3px}.t{font-size:.75em;border:1px solid var(--mut);border-radius:6px;padding:0 5px;margin-left:4px;color:var(--mut)}
+  .fig{background:#fff;border-radius:8px;margin:6px 0;max-width:360px}.fig svg{width:100%;height:auto;display:block}
 table{border-collapse:collapse;width:100%;font-size:.92em}td,th{border:1px solid var(--bd);padding:4px 8px;text-align:left}</style></head><body><main>
 <h1>고2 대수 질문</h1><p>개념Q ''' + str(len(S)) + ''' · 1회차 ''' + str(cnt1) + ''' · 2회차 ''' + str(cnt2) + ''' · 계단 ''' + str(cntL) + '''칸 · 빠진 유형 ''' + str(len(need)) + '''개</p>
 <p>색: 파랑 1회차 · 주황 2회차 · 초록 3회차 계단 · 작은 글자 = 짚는 자이스토리 유형</p>''' + ''.join(parts) + '<h2>대표유형 빠짐없이</h2>' + cov_html + '</main></body></html>'
