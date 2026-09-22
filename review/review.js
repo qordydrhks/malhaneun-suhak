@@ -792,7 +792,9 @@
         if(p.r && (PLAN[it.id] || {}).r != null) c.overwrite++;
         c.round++; c.ops.push(function(){ setPlan(it.id, { r: rec.round }); });
       }
-      if(typeof rec.off === 'boolean' && rec.off !== p.off && !(keep && (lp.off != null || !rec.off))){
+      // [v87.3] offWas = 바꾸기 전 빼기 상태. 이 기기 상태가 그것과 같으면(아무도 손 안 댐) 되살리기도 넣는다
+      var offSame = typeof rec.offWas === 'boolean' && !!lp.off === rec.offWas;
+      if(typeof rec.off === 'boolean' && rec.off !== p.off && !(keep && !offSame && (lp.off != null || !rec.off))){
         c.off++; c.ops.push(function(){ setPlan(it.id, { off: rec.off ? true : null }); });
       }
       if(typeof rec.newQ === 'string' && rec.newQ.trim() && rec.newQ !== EDITS[it.id] && !(keep && EDITS[it.id] != null)){

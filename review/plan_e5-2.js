@@ -4386,3 +4386,849 @@
 ],
 "seen": []
 }});
+
+/* [d] 2026-09-22 1단원 마스터 검토 반영(질문고르기_e5-2_2026-09-22_마스터검토_1단원.json) + 같은 기준을 2~6단원에:
+       "왜 필요해·언제 써" 질문 되살림(겨냥도·평균 비교) · 생활 속 예 질문 3회차(평균). offWas = 되살리기 */
+(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'e5-2_2026-09-22a', data:{
+"format": "qr-plan-2",
+"grade": "e5-2",
+"rounds": 3,
+"items": [
+{
+"id": "10gl135:t0L1",
+"big": "1. 수의 범위와 어림하기",
+"small": "01. 이상과 이하",
+"kind": "low",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "10gl135:t0L2",
+"big": "1. 수의 범위와 어림하기",
+"small": "01. 이상과 이하",
+"kind": "low",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "10gl135:t0L3",
+"big": "1. 수의 범위와 어림하기",
+"small": "01. 이상과 이하",
+"kind": "low",
+"round": 1,
+"off": true,
+"ok": true
+},
+{
+"id": "10gl135:t0H1",
+"big": "1. 수의 범위와 어림하기",
+"small": "01. 이상과 이하",
+"kind": "high",
+"round": 1,
+"off": true,
+"ok": true
+},
+{
+"id": "10gl135:t0H2",
+"big": "1. 수의 범위와 어림하기",
+"small": "01. 이상과 이하",
+"kind": "high",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "10gl135:qrecall",
+"big": "1. 수의 범위와 어림하기",
+"small": "01. 이상과 이하",
+"kind": "qset",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "10gl135:qreason",
+"big": "1. 수의 범위와 어림하기",
+"small": "01. 이상과 이하",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "10gl135:qexample",
+"big": "1. 수의 범위와 어림하기",
+"small": "01. 이상과 이하",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "10gl135:qerror",
+"big": "1. 수의 범위와 어림하기",
+"small": "01. 이상과 이하",
+"kind": "qset",
+"round": 2,
+"off": true,
+"ok": true
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|01. 이상과 이하:1",
+"big": "1. 수의 범위와 어림하기",
+"small": "01. 이상과 이하",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|01. 이상과 이하:2",
+"big": "1. 수의 범위와 어림하기",
+"small": "01. 이상과 이하",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|01. 이상과 이하:3",
+"big": "1. 수의 범위와 어림하기",
+"small": "01. 이상과 이하",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "1ggg2gj:t0L1",
+"big": "1. 수의 범위와 어림하기",
+"small": "02. 초과와 미만",
+"kind": "low",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "1ggg2gj:t0L2",
+"big": "1. 수의 범위와 어림하기",
+"small": "02. 초과와 미만",
+"kind": "low",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "1ggg2gj:t0L3",
+"big": "1. 수의 범위와 어림하기",
+"small": "02. 초과와 미만",
+"kind": "low",
+"round": 1,
+"off": true,
+"ok": true
+},
+{
+"id": "1ggg2gj:t0H1",
+"big": "1. 수의 범위와 어림하기",
+"small": "02. 초과와 미만",
+"kind": "high",
+"round": 1,
+"off": true,
+"ok": true
+},
+{
+"id": "1ggg2gj:t0H2",
+"big": "1. 수의 범위와 어림하기",
+"small": "02. 초과와 미만",
+"kind": "high",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "1ggg2gj:qrecall",
+"big": "1. 수의 범위와 어림하기",
+"small": "02. 초과와 미만",
+"kind": "qset",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "1ggg2gj:qexample",
+"big": "1. 수의 범위와 어림하기",
+"small": "02. 초과와 미만",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "1ggg2gj:qerror",
+"big": "1. 수의 범위와 어림하기",
+"small": "02. 초과와 미만",
+"kind": "qset",
+"round": 2,
+"off": true,
+"ok": true
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|02. 초과와 미만:1",
+"big": "1. 수의 범위와 어림하기",
+"small": "02. 초과와 미만",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|02. 초과와 미만:2",
+"big": "1. 수의 범위와 어림하기",
+"small": "02. 초과와 미만",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|02. 초과와 미만:3",
+"big": "1. 수의 범위와 어림하기",
+"small": "02. 초과와 미만",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "19xudqz:t0L1",
+"big": "1. 수의 범위와 어림하기",
+"small": "03. 수의 범위 활용하기",
+"kind": "low",
+"round": 1,
+"off": true,
+"ok": true
+},
+{
+"id": "19xudqz:t0L2",
+"big": "1. 수의 범위와 어림하기",
+"small": "03. 수의 범위 활용하기",
+"kind": "low",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "19xudqz:t0H1",
+"big": "1. 수의 범위와 어림하기",
+"small": "03. 수의 범위 활용하기",
+"kind": "high",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "19xudqz:t0H2",
+"big": "1. 수의 범위와 어림하기",
+"small": "03. 수의 범위 활용하기",
+"kind": "high",
+"round": 2,
+"off": true,
+"ok": true
+},
+{
+"id": "19xudqz:qrecall",
+"big": "1. 수의 범위와 어림하기",
+"small": "03. 수의 범위 활용하기",
+"kind": "qset",
+"round": 1,
+"off": true,
+"ok": true
+},
+{
+"id": "19xudqz:qreason",
+"big": "1. 수의 범위와 어림하기",
+"small": "03. 수의 범위 활용하기",
+"kind": "qset",
+"round": 2,
+"off": true,
+"ok": true
+},
+{
+"id": "19xudqz:qexample",
+"big": "1. 수의 범위와 어림하기",
+"small": "03. 수의 범위 활용하기",
+"kind": "qset",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "19xudqz:qerror",
+"big": "1. 수의 범위와 어림하기",
+"small": "03. 수의 범위 활용하기",
+"kind": "qset",
+"round": 2,
+"off": true,
+"ok": true
+},
+{
+"id": "19xudqz:qcondition",
+"big": "1. 수의 범위와 어림하기",
+"small": "03. 수의 범위 활용하기",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:qamu9e52ghnu3fd",
+"big": "1. 수의 범위와 어림하기",
+"small": "03. 수의 범위 활용하기",
+"kind": "add",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:qamu9e524ml4ez2",
+"big": "1. 수의 범위와 어림하기",
+"small": "03. 수의 범위 활용하기",
+"kind": "add",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|03. 수의 범위 활용하기:1",
+"big": "1. 수의 범위와 어림하기",
+"small": "03. 수의 범위 활용하기",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|03. 수의 범위 활용하기:2",
+"big": "1. 수의 범위와 어림하기",
+"small": "03. 수의 범위 활용하기",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|03. 수의 범위 활용하기:3",
+"big": "1. 수의 범위와 어림하기",
+"small": "03. 수의 범위 활용하기",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "4k34j1:t0L1",
+"big": "1. 수의 범위와 어림하기",
+"small": "04. 올림",
+"kind": "low",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "4k34j1:t0L2",
+"big": "1. 수의 범위와 어림하기",
+"small": "04. 올림",
+"kind": "low",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "4k34j1:t0H1",
+"big": "1. 수의 범위와 어림하기",
+"small": "04. 올림",
+"kind": "high",
+"round": 1,
+"off": true,
+"ok": true
+},
+{
+"id": "4k34j1:t0H2",
+"big": "1. 수의 범위와 어림하기",
+"small": "04. 올림",
+"kind": "high",
+"round": 2,
+"off": true,
+"ok": true
+},
+{
+"id": "4k34j1:qrecall",
+"big": "1. 수의 범위와 어림하기",
+"small": "04. 올림",
+"kind": "qset",
+"round": 1,
+"off": true,
+"ok": true
+},
+{
+"id": "4k34j1:qexample",
+"big": "1. 수의 범위와 어림하기",
+"small": "04. 올림",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "4k34j1:qreason",
+"big": "1. 수의 범위와 어림하기",
+"small": "04. 올림",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "4k34j1:qerror",
+"big": "1. 수의 범위와 어림하기",
+"small": "04. 올림",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:qamu9e52n9qjvaw",
+"big": "1. 수의 범위와 어림하기",
+"small": "04. 올림",
+"kind": "add",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "4k34j1:qamubz76rrygr3",
+"big": "1. 수의 범위와 어림하기",
+"small": "04. 올림",
+"kind": "add",
+"round": 3,
+"off": false,
+"ok": true,
+"q": "우리가 어떤 상황에서 올림을 생각하는지 생활 속 예를 들어봐.",
+"by": "master",
+"answer": "물건이 모자라면 안 될 때 올림을 생각해. 예를 들어 사과 23개를 10개씩 상자에 모두 담으려면 남는 3개도 담아야 하니까 상자가 3개 필요해.",
+"keys": [
+"모자라면 안 되는 상황",
+"남는 것도 담아야 할 때(상자·버스 등)"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|04. 올림:1",
+"big": "1. 수의 범위와 어림하기",
+"small": "04. 올림",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|04. 올림:2",
+"big": "1. 수의 범위와 어림하기",
+"small": "04. 올림",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|04. 올림:3",
+"big": "1. 수의 범위와 어림하기",
+"small": "04. 올림",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "glvzvi:t0L1",
+"big": "1. 수의 범위와 어림하기",
+"small": "05. 버림",
+"kind": "low",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "glvzvi:t0L2",
+"big": "1. 수의 범위와 어림하기",
+"small": "05. 버림",
+"kind": "low",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "glvzvi:t0H1",
+"big": "1. 수의 범위와 어림하기",
+"small": "05. 버림",
+"kind": "high",
+"round": 1,
+"off": true,
+"ok": true
+},
+{
+"id": "glvzvi:t0H2",
+"big": "1. 수의 범위와 어림하기",
+"small": "05. 버림",
+"kind": "high",
+"round": 2,
+"off": true,
+"ok": true
+},
+{
+"id": "glvzvi:qrecall",
+"big": "1. 수의 범위와 어림하기",
+"small": "05. 버림",
+"kind": "qset",
+"round": 1,
+"off": true,
+"ok": true
+},
+{
+"id": "glvzvi:qexample",
+"big": "1. 수의 범위와 어림하기",
+"small": "05. 버림",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "glvzvi:qreason",
+"big": "1. 수의 범위와 어림하기",
+"small": "05. 버림",
+"kind": "qset",
+"round": 2,
+"off": true,
+"ok": true
+},
+{
+"id": "glvzvi:qerror",
+"big": "1. 수의 범위와 어림하기",
+"small": "05. 버림",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "glvzvi:qamubzcaoqbm6v",
+"big": "1. 수의 범위와 어림하기",
+"small": "05. 버림",
+"kind": "add",
+"round": 3,
+"off": false,
+"ok": true,
+"q": "우리가 어떤 상황에서 버림을 생각하는지 생활 속 예를 들어봐.",
+"by": "master",
+"answer": "모자란 묶음은 셀 수 없을 때 버림을 생각해. 예를 들어 사탕 47개를 10개씩 묶어 팔면 남는 7개는 한 묶음이 안 돼서 4묶음만 팔 수 있어.",
+"keys": [
+"모자란 묶음은 셀 수 없는 상황",
+"묶어서 팔기·지폐로 바꾸기 같은 때"
+],
+"answerBy": "claude"
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|05. 버림:1",
+"big": "1. 수의 범위와 어림하기",
+"small": "05. 버림",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|05. 버림:2",
+"big": "1. 수의 범위와 어림하기",
+"small": "05. 버림",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "1re59:t0L1",
+"big": "1. 수의 범위와 어림하기",
+"small": "06. 반올림",
+"kind": "low",
+"round": 1,
+"off": false,
+"ok": true,
+"newQ": "① 반올림하는 방법을 말해볼래?",
+"qWas": "① 반올림이 뭐야?"
+},
+{
+"id": "1re59:t0L2",
+"big": "1. 수의 범위와 어림하기",
+"small": "06. 반올림",
+"kind": "low",
+"round": 1,
+"off": true,
+"ok": true
+},
+{
+"id": "1re59:t0H1",
+"big": "1. 수의 범위와 어림하기",
+"small": "06. 반올림",
+"kind": "high",
+"round": 1,
+"off": true,
+"ok": true
+},
+{
+"id": "1re59:t0H2",
+"big": "1. 수의 범위와 어림하기",
+"small": "06. 반올림",
+"kind": "high",
+"round": 2,
+"off": true,
+"ok": true
+},
+{
+"id": "1re59:qrecall",
+"big": "1. 수의 범위와 어림하기",
+"small": "06. 반올림",
+"kind": "qset",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "1re59:qexample",
+"big": "1. 수의 범위와 어림하기",
+"small": "06. 반올림",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "1re59:qreason",
+"big": "1. 수의 범위와 어림하기",
+"small": "06. 반올림",
+"kind": "qset",
+"round": 2,
+"off": true,
+"ok": true
+},
+{
+"id": "1re59:qerror",
+"big": "1. 수의 범위와 어림하기",
+"small": "06. 반올림",
+"kind": "qset",
+"round": 2,
+"off": true,
+"ok": true,
+"offWas": false
+},
+{
+"id": "ladder:qamu9e5277rm8y0",
+"big": "1. 수의 범위와 어림하기",
+"small": "06. 반올림",
+"kind": "add",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:qamu9e52eeawo6e",
+"big": "1. 수의 범위와 어림하기",
+"small": "06. 반올림",
+"kind": "add",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|06. 반올림:1",
+"big": "1. 수의 범위와 어림하기",
+"small": "06. 반올림",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|06. 반올림:2",
+"big": "1. 수의 범위와 어림하기",
+"small": "06. 반올림",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|06. 반올림:3",
+"big": "1. 수의 범위와 어림하기",
+"small": "06. 반올림",
+"kind": "ladder",
+"round": 3,
+"off": true,
+"ok": true,
+"offWas": false
+},
+{
+"id": "yehjwt:t0L1",
+"big": "1. 수의 범위와 어림하기",
+"small": "07. 올림·버림·반올림 활용하기",
+"kind": "low",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "yehjwt:t0L2",
+"big": "1. 수의 범위와 어림하기",
+"small": "07. 올림·버림·반올림 활용하기",
+"kind": "low",
+"round": 1,
+"off": false,
+"ok": true,
+"rWas": 2,
+"offWas": true
+},
+{
+"id": "yehjwt:t0H1",
+"big": "1. 수의 범위와 어림하기",
+"small": "07. 올림·버림·반올림 활용하기",
+"kind": "high",
+"round": 1,
+"off": true,
+"ok": true
+},
+{
+"id": "yehjwt:t0H2",
+"big": "1. 수의 범위와 어림하기",
+"small": "07. 올림·버림·반올림 활용하기",
+"kind": "high",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "yehjwt:qrecall",
+"big": "1. 수의 범위와 어림하기",
+"small": "07. 올림·버림·반올림 활용하기",
+"kind": "qset",
+"round": 1,
+"off": false,
+"ok": true,
+"offWas": true
+},
+{
+"id": "yehjwt:qexample",
+"big": "1. 수의 범위와 어림하기",
+"small": "07. 올림·버림·반올림 활용하기",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "yehjwt:qerror",
+"big": "1. 수의 범위와 어림하기",
+"small": "07. 올림·버림·반올림 활용하기",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "yehjwt:qreason",
+"big": "1. 수의 범위와 어림하기",
+"small": "07. 올림·버림·반올림 활용하기",
+"kind": "qset",
+"round": 2,
+"off": true,
+"ok": true
+},
+{
+"id": "ladder:qamu9e526v8skki",
+"big": "1. 수의 범위와 어림하기",
+"small": "07. 올림·버림·반올림 활용하기",
+"kind": "add",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|07. 올림·버림·반올림 활용하기:1",
+"big": "1. 수의 범위와 어림하기",
+"small": "07. 올림·버림·반올림 활용하기",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|07. 올림·버림·반올림 활용하기:2",
+"big": "1. 수의 범위와 어림하기",
+"small": "07. 올림·버림·반올림 활용하기",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|1. 수의 범위와 어림하기|07. 올림·버림·반올림 활용하기:3",
+"big": "1. 수의 범위와 어림하기",
+"small": "07. 올림·버림·반올림 활용하기",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "1u6qpfn:t0L2",
+"big": "5. 직육면체",
+"small": "03. 직육면체의 겨냥도",
+"kind": "low",
+"round": 1,
+"off": false,
+"offWas": true,
+"newQ": "② 겨냥도는 왜 그려?",
+"by": "claude"
+},
+{
+"id": "1kwi8f7:t0L1",
+"big": "6. 평균과 가능성",
+"small": "02. 평균 이용하기",
+"kind": "low",
+"round": 1,
+"off": false,
+"offWas": true,
+"newQ": "① 두 모둠의 기록을 비교할 때 평균을 이용하면 뭐가 좋아?",
+"by": "claude"
+},
+{
+"id": "v61qpj:qamu22a01avg",
+"big": "6. 평균과 가능성",
+"small": "01. 평균 알아보기",
+"kind": "add",
+"round": 3,
+"off": false,
+"by": "claude",
+"q": "우리가 생활에서 어떤 때 평균을 쓰는지 예를 들어 봐.",
+"answer": "여러 번 잰 기록이 대체로 어느 정도인지 알고 싶을 때 평균을 써. 예를 들어 일주일 동안 읽은 쪽수의 평균을 구하면 하루에 보통 몇 쪽 읽는지 알 수 있어.",
+"keys": [
+"자료가 대체로 어느 정도인지 알고 싶을 때",
+"기록·점수·쪽수 같은 예"
+],
+"answerBy": "claude"
+}
+],
+"seen": []
+}});
