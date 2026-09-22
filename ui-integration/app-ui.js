@@ -290,9 +290,10 @@
       :((now.length||lad.total)?'<div class="dd-ui-picker-foot"><div><strong>'+(now.length-left+lad.pass)+' / '+(now.length+lad.total)+(lad.total?' 질문·계단 칸 통과':' 질문 통과')+'</strong><p>'
           +(left?'남은 '+left+'개 질문까지 설명하면 문제 풀기로 이어져요.'+(coolN?' (그중 '+coolN+'개는 내일 다시 할 수 있어요)':'')
             :ladLeft?'질문 계단 '+ladLeft+'칸을 더 통과하면 종합 문제를 풀 수 있어요.'
+            :quizDone&&rv?'통과한 질문(✓) 하나를 골라 다시 설명하면 복습이 끝나요.'   // [v87.2] 복습 안내와 '다음 개념으로'가 섞이지 않게
             :quizDone?'이 개념의 '+r+'회차를 마쳤어요. 다음 개념으로 가요.'
             :'이번 회차를 모두 통과했어요. 문제로 확인해요.')+'</p></div>'
-          +(left?button('이어서 설명하기 →','continue','dd-ui-primary'):ladLeft?'':quizDone?button('다음 개념으로 →','nextsmall','dd-ui-primary'):button(r>=3?'종합 문제 풀기 →':'문제 풀기 →','quiz','dd-ui-primary'))+'</div>'
+          +(left?button('이어서 설명하기 →','continue','dd-ui-primary'):ladLeft?'':quizDone&&rv?'':quizDone?button('다음 개념으로 →','nextsmall','dd-ui-primary'):button(r>=3?'종합 문제 풀기 →':'문제 풀기 →','quiz','dd-ui-primary'))+'</div>'
         :'');
     return '<div class="dd-ui-page-head"><div><p class="dd-ui-caption">'+esc(cpCurrentBig().name)+' · <b>'+r+'회차</b></p><h1>'+esc(smallTitle(sm))+'</h1></div>'+button('개념 목록','catalog','dd-ui-text')+'</div>'+
       (rv&&!showPast?'<div class="dd-ui-device-note" role="note">🔁 <b>복습</b> — 7일 전에 통과한 개념이에요. 통과한 질문(✓) 하나를 골라 다시 설명해 봐요. 설명을 마치면 복습 끝!</div>':'')+
@@ -484,6 +485,16 @@
   //   sessionStorage 라서 이 탭 안에서만 살고, 탭·브라우저를 닫으면 사라진다(학원 공용 PC 안전). 나가기·학생 입장 때 지운다.
   const TS_KEY='dd:teacherSession', TM_KEY='dd:teacherMenu';
   function tsSave(){ try{ if(session.teacher) sessionStorage.setItem(TS_KEY, JSON.stringify({role:session.role||'owner'})); }catch(e){} }
+  // [v87.2] 흐름점검 26 — 선생님이 나가면 화면 코드에 남은 학생 기록·이름·비밀번호 칸을 비운다(같은 태블릿을 아이가 쓰므로)
+  function wipeTeacherDom(){
+    try {
+      ['dashSummary','boardArea','todayPanel','bankResult','railList','shBody','shName','shSub','rpBody','rpTitle','rpSub','pgUsageOut','pgLog','ddUiTeacherRounds','ceList','ceInfo','ceFreezeOut','regMsg','keyMsg','pwChangeMsg'].forEach(id=>{ const el=$(id); if(el) el.innerHTML=''; });
+      ['statToday','statPass','statHelp','statTotal','railCount'].forEach(id=>{ const el=$(id); if(el) el.textContent=''; });
+      ['apiKeyInput','pgToken','curPw','newPw1','newPw2','regName','regPhone','regPw','railSearch','ceSearch'].forEach(id=>{ const el=$(id); if(el) el.value=''; });
+      ['shOverlay','rpOverlay'].forEach(id=>{ const el=$(id); if(el) el.classList.remove('open'); });
+      cpRecords=[];
+    } catch(e) {}
+  }
   function tsClear(){ try{ sessionStorage.removeItem(TS_KEY); sessionStorage.removeItem(TM_KEY); }catch(e){} }
   function tsLoad(){ try{ return JSON.parse(sessionStorage.getItem(TS_KEY)||'null'); }catch(e){ return null; } }
   function bootDone(){ try{ document.documentElement.classList.remove('dd-boot'); }catch(e){} }   // [v85.6] 첫 화면 감추기 풀기
@@ -517,7 +528,9 @@
   setLearnStep=function(n) {
     original.setLearnStep(n);
     if(n===1) { restoreLevel(); ui.page=cpCurrentSmall()?'questions':CP.grade?'catalog':'home';
-      if(ui.page==='questions'&&isStudent()&&smallFinished()) { goNextSmall(); return; } }   // [v87.1] 흐름점검 8
+      if(ui.page==='questions'&&isStudent()&&smallFinished()) {
+        if(reviewHere()) { if(ui.review.done) { goNextSmall(); notice('🔁 복습 끝! '+$('ddUiNotice').textContent); return; } }   // [v87.2] 복습은 통과했을 때만 다음 개념으로
+        else { goNextSmall(); return; } } }   // [v87.1] 흐름점검 8
     else ui.page=n===3?'quiz':'lesson';
     renderStudent();
   };
@@ -526,11 +539,15 @@
   renderCurrentQuestion=function() { if(!state._qType&&['low','high','blank'].includes(state.level))ui.level=state.level;   /* [v82.8] 기본 개념을 그대로 둔다 (v81.3 에서 설명하기로 바꾸던 것 해제) */ syncSelectionFromUnit(); const out=original.renderCurrentQuestion(); syncQuestionChrome();
     if(window.DDR&&DDR.hintMode()==='none') $('qList').querySelectorAll('.hint-btn,.hint-box').forEach(el=>el.remove());   // [v86.2 ⑧] 1회차는 힌트 없음
     return out; };
-  resetRecordingUI=function() { const out=original.resetRecordingUI(); applyInputMode(); return out; };
+  resetRecordingUI=function() { const out=original.resetRecordingUI(); applyInputMode();
+    // [v87.2] 흐름점검 16 — 타이머 막대를 처음부터 보여 둔다(멈춘 채 꽉 찬 상태). 말하기·글쓰기를 시작할 때 막대가 새로 생기며 칸이 밀리던 것
+    try { const w=$('speakTimer'); if(w&&timerSettings().on&&!Timer.id) { w.style.display='block'; $('speakTimerNum').textContent=fmtSec(limitFor('speak')); $('speakTimerBar').style.width='100%'; $('speakTimerBar').className='timer-fill'; } } catch(e) {}
+    return out; };
   renderFeedback=function(result,advance,needTeacher) { const out=original.renderFeedback(result,advance,needTeacher); decorateFeedback(advance); return out; };
   saveSubmission=async function(...args) {
     if(state._roundSaw && state._roundLevel && !/c$/.test(state._roundLevel)) state._roundLevel+='c';   // [v86.2 ⑧]
     if(state._roundSaw && state._roundItem && window.DL_LADDER && DL_LADDER.markCool) DL_LADDER.markCool(state._roundItem.q, state._roundItem.id);
+    if(reviewHere() && /rv$/.test(state._roundLevel||'') && args[3] && args[3].score>=PASS_SCORE) ui.review.done=true;   // [v87.2] 복습 통과
     lock(true); try { return await original.saveSubmission(...args); } finally { setTimeout(()=>{lock(false);syncQuestionChrome();},0); } };
   onSpeakTimeout=async function() { lock(true); try { return await original.onSpeakTimeout(); } catch(e) { lock(false); throw e; } };
   cpUnitRemaining=function() { if(roundsOn()) return remaining().length+ladderLeft();   /* [v86.3 ⑧] 회차 흐름은 지금 회차 질문 기준 */ const list=cpUnitQuestionItems(); return list?list.filter(x=>cpStatusForQuestion(state.gradeId,x.q,x.id)!=='pass').length:0; };
@@ -545,7 +562,7 @@
   goToNextQuestion=function() { if(ui.busy)return; if(state.questions.length===1&&ui.level!=='blank'){startQuiz();return;} return original.goToNextQuestion(); };
   renderRail=function(students,subs) { const out=original.renderRail(students,subs); const h=$('teacherRail').querySelector('h3'); if(h)h.textContent=ui.menu==='reports'?'리포트를 볼 학생 선택':'학생 목록'; return out; };
   openStudentHistory=function(student,subs) { const out=original.openStudentHistory(student,subs); if(ui.menu==='reports')openParentManage(); return out; };
-  doLogout=function() { tsClear(); stopRecognitionIfActive(); stopTalkMic(); Timer.hide(); stopDashAutoRefresh(); session.teacher=false; session.role=null; lock(false); return original.doLogout(); };
+  doLogout=function() { if(session.teacher) wipeTeacherDom(); tsClear(); stopRecognitionIfActive(); stopTalkMic(); Timer.hide(); stopDashAutoRefresh(); session.teacher=false; session.role=null; lock(false); return original.doLogout(); };
   // The talk save hook expects window.session; always reflect the real lexical session.
   if(!Object.getOwnPropertyDescriptor(window,'session')) Object.defineProperty(window,'session',{configurable:true,get:()=>session});
   const openTalk=window.cvOpenType;
@@ -608,7 +625,7 @@
     }
   },true);
   $('cvAnswer').addEventListener('keydown',e=>{if(ui.busy&&e.key==='Enter'){e.preventDefault();e.stopImmediatePropagation();}},true);
-  $('logoutBtn').addEventListener('click',()=>{tsClear();lock(false);stopTalkMic();stopDashAutoRefresh();Timer.hide();});
+  $('logoutBtn').addEventListener('click',()=>{wipeTeacherDom();tsClear();lock(false);stopTalkMic();stopDashAutoRefresh();Timer.hide();});
   $('studentLogoutBtn').addEventListener('click',()=>{stopRecognitionIfActive();stopTalkMic();Timer.hide();lock(false);document.body.classList.remove('step-focus');});
   window.addEventListener('pagehide',()=>{stopRecognitionIfActive();stopTalkMic();stopDashAutoRefresh();Timer.hide();});
   setupLanding(); setupStudent(); setupTeacher(); document.body.classList.add('dd-ui'); renderStudent();

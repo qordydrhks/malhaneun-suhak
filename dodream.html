@@ -5258,6 +5258,15 @@ async function loadReviewCards(){
   const dueFiltered = due.filter(x=>{
     const later = subs.find(y=>y.studentId===s.id && y.courseId===x.courseId && y.unitId===x.unitId && y.pass && new Date(y.time)>new Date(x.reviewDue));
     return !later;
+  }).filter(x=>{
+    // [v87.2] 회차 학년은 그 소단원 1회차 질문을 모두 통과했을 때만 복습 (통과 질문 1개만 있어도 뜨던 것)
+    try{
+      if(!(window.DDR && DDR.entry)) return true;
+      const pos = ddUnitSmallMap(x.courseId)[String(x.unitId)];
+      if(!pos || !DDR.entry(x.courseId, pos.big.name, pos.small.name)) return true;
+      const ps = ddPassSets(subs.filter(y=>y.studentId===s.id), x.courseId);
+      return ddSmallStage(x.courseId, pos.big, pos.small, ps.passQ, ps.passIds).done;
+    }catch(e){ return true; }
   });
   if(dueFiltered.length===0) return;
   const cards = dueFiltered.slice(0,8).map(x=>{
@@ -20393,6 +20402,8 @@ async function writeReportWithAI(d){
   · 개념을 보고 설명한 것을 이해의 증거로 쓰기
   · 기본 문제를 '응용 문제'라고 부르기 (그냥 '문제'라고 해)
   · 아이가 '스스로 약점을 찾아냈다'처럼 기록으로 알 수 없는 마음·과정 추측
+  · '집중력이 높다', '성실하다', '적극적이다', '끈기 있다', '자신감이 붙었다', '흥미를 보인다'처럼 성격·태도·마음을 평가하는 말 (기록에는 점수·횟수·설명 문장만 있다)
+  · 대신 무엇을 몇 번 했는지로 쓴다 — 예: "개념 5개를 설명했고 그중 4개를 통과했습니다"
 - A4 한 장에 들어가야 하니 각 항목은 짧고 밀도 있게.
 
 [각 항목 길이 — 반드시 지켜]
@@ -22158,7 +22169,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-const APP_VERSION = 'v87.1-흐름점검나머지';
+const APP_VERSION = 'v87.2-작은것정리';
   // [v78.7] 이 값이 IIFE 안에 갇혀 있어 바깥 스크립트(app-ui.js)가 못 읽었다.
   //   화면 배지에 버전을 그대로 띄우려면 필요하므로 노출한다.
   window.APP_VERSION = APP_VERSION;
@@ -22185,7 +22196,7 @@ const APP_VERSION = 'v87.1-흐름점검나머지';
 <!-- [v86.0 ⑧] 회차 흐름 (회차 데이터가 있는 학년만) -->
 <script src="rounds/data-e5-1.js?v=86.5"></script>
 <script src="rounds/rounds.js?v=87.1"></script>
-<script src="ui-integration/app-ui.js?v=87.1"></script>
+<script src="ui-integration/app-ui.js?v=87.2"></script>
 <!-- [v82.1] 선생님 질문 계단 (시범, 격리 모듈) — 중3-1 전 대단원 · 칸 그림 (v82.3) -->
 <script src="ladder/data-m3-1.js?v=82.5"></script>
 <script src="ladder/data-e5-1.js?v=85.0"></script>
