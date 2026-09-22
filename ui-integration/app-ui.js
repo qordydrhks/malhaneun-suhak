@@ -258,7 +258,8 @@
     if(roundsOn()) {   // [v86.0 ⑧] 지금 회차 질문(3회차는 계단 칸도) 기준
       const list=DDR.items(CP.grade,big.name,sm.name,'now'), lad=DDR.roundAt(CP.grade,big.name,sm.name)>=3&&window.DL_LADDER&&DL_LADDER.tally?DL_LADDER.tally(CP.grade+'|'+big.name+'|'+sm.name):{pass:0,total:0};
       const pass=list.filter(x=>cpStatusForQuestion(CP.grade,x.q,x.id)==='pass').length+lad.pass, total=list.length+lad.total;
-      return {pass,total,done:total>0&&pass===total,r:DDR.roundAt(CP.grade,big.name,sm.name)};
+      const r=DDR.roundAt(CP.grade,big.name,sm.name), qd=DDR.quizDoneAt?DDR.quizDoneAt(CP.grade,big.name,sm.name,r):true;
+      return {pass,total,done:total>0&&pass===total,r,qd};
     }
     const it=ddqItemsFor(CP.grade,big.name,sm), list=[].concat(it.high,it.qset);
     const pass=list.filter(x=>cpStatusForQuestion(CP.grade,x.q,x.id)==='pass').length;
@@ -281,7 +282,7 @@
     return '<div class="dd-ui-page-head"><div><p class="dd-ui-caption">'+esc(m.name)+'</p><h1>'+esc(big.name)+'</h1></div>'+button('대단원 목록','bigs','dd-ui-text')+'</div><div class="dd-ui-choice-list">'+
       cpBigMiddles(big).map((mid,mi)=>(mid.smalls||[]).map((sm,si)=>{
         const p=smallProgress(big,sm);
-        const lbl=p.r?(p.done?'✓ '+p.r+'회차 완료':(p.r>1?(p.r-1)+'회차 완료 · ':'')+(p.pass?p.r+'회차 질문 '+p.pass+' / '+p.total:p.r+'회차 시작 전')):(p.done?'✓ 완료':p.pass?'질문 '+p.pass+' / '+p.total:'시작 전');   // [v87.1]
+        const lbl=p.r?(p.done?(p.qd?'✓ '+p.r+'회차 완료':p.r+'회차 질문 완료 · 문제 풀기 남음'):(p.r>1?(p.r-1)+'회차 완료 · ':'')+(p.pass?p.r+'회차 질문 '+p.pass+' / '+p.total:p.r+'회차 시작 전')):(p.done?'✓ 완료':p.pass?'질문 '+p.pass+' / '+p.total:'시작 전');   // [v87.1]
         const prog='<span class="dd-ui-prog'+(p.done?' done':'')+'"><span>'+lbl+'</span></span>';
         return button('<span class="dd-ui-number">'+(++number)+'</span><div><strong>'+esc(smallTitle(sm))+'</strong>'+(mid.name?'<small>'+esc(mid.name)+'</small>':'')+'</div>'+prog+'<span>›</span>','small','dd-ui-choice','data-middle="'+mi+'" data-small="'+si+'"');
       }).join('')).join('')+'</div>';
@@ -616,7 +617,7 @@
       case 'catalog': stage(CP.grade?'catalog':'grades'); break;
       case 'bigs': CP.big=null; CP.small=null; CP.type=null; stage('catalog'); break;
       case 'big': CP.big=Number(el.dataset.big); CP.middle=0; CP.small=null; CP.type=null; stage('catalog'); break;
-      case 'small': CP.middle=Number(el.dataset.middle); CP.small=Number(el.dataset.small); CP.type=0; CP.qIndex=null; restoreLevel(); cpSyncLegacy(); ui.kind='concept'; ui.rview='now'; remember(); stage('questions'); break;
+      case 'small': CP.middle=Number(el.dataset.middle); CP.small=Number(el.dataset.small); CP.type=0; CP.qIndex=null; restoreLevel(); cpSyncLegacy(); ui.kind='concept'; ui.rview='now'; remember(); stage('questions'); if(window.DDR&&DDR.load) DDR.load().then(()=>{ if(ui.page==='questions') renderStudent(); }).catch(()=>{}); break;   // [v87.8] 선생님이 바꾼 회차를 바로
       case 'kind': ui.kind=el.dataset.kind; renderStudent(); break;
       case 'rview': ui.rview=el.dataset.rview==='past'?'past':'now'; renderStudent(); break;   // [v86.0 ⑧]
       case 'question': await startItem(ui.questions[Number(el.dataset.index)]); break;

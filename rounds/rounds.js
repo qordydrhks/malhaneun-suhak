@@ -9,7 +9,7 @@
 (() => {
   'use strict';
   const MAX = 3;
-  const cache = {sid:null, map:{}};
+  const cache = {sid:null, map:{}, qdone:new Set()};   // qdone: 서버 quiz_logs 에서 읽은 '과정|유형번호|r회차' [v87.8]
   const data = g => (window.DD_ROUNDS || {})[g] || null;
   const student = () => (typeof session !== 'undefined' && session.student && !session.teacher) ? session.student : null;
 
@@ -27,6 +27,20 @@
     let m = null;
     try { if (typeof storageGet === 'function') m = await storageGet('round:' + s.id); } catch (e) {}
     cache.sid = s.id; cache.map = (m && typeof m === 'object') ? m : {};
+    // [v87.8] 문제 풀기 끝 표시가 그 기기(localStorage)에만 있어서 다른 기기에선 회차가 안 넘어가던 것 → 서버 기록도 본다
+    //   level 'r2' 처럼 회차가 적힌 기록은 그 회차, 예전 기록(회차 없음)은 1회차로 친다. '응용 도전'은 빼고.
+    try {
+      if (typeof checkSupabase === 'function' && await checkSupabase()) {
+        const rows = await sbSelect('quiz_logs', 'student_id=eq.' + encodeURIComponent(s.id) + '&select=course_id,unit_id,level,unit_label');
+        const set = new Set();
+        (rows || []).forEach(r => {
+          if (/응용 도전/.test(String(r.unit_label || ''))) return;
+          const mm = /^r(\d)$/.exec(String(r.level || ''));
+          set.add(r.course_id + '|' + r.unit_id + '|r' + (mm ? mm[1] : 1));
+        });
+        cache.qdone = set;
+      }
+    } catch (e) {}
   }
   function entry(g, bigName, smallName) { const d = data(g); return d ? d[g + '|' + bigName + '|' + smallName] || null : null; }
 
@@ -40,7 +54,8 @@
       const m = cpModel(g), big = m && m.bigUnits.find(b => b.name === bigName);
       const sm = big && cpBigMiddles(big).flatMap(x => x.smalls || []).find(x => x.name === smallName);
       if (!sm) return true;
-      return (sm.types || []).some(t => localStorage.getItem('dd:quizdone:' + s.id + ':' + g + ':' + t.unitId + ':r' + k));
+      return (sm.types || []).some(t => localStorage.getItem('dd:quizdone:' + s.id + ':' + g + ':' + t.unitId + ':r' + k)
+                                       || cache.qdone.has(g + '|' + t.unitId + '|r' + k));
     } catch (e) { return true; }
   }
   function roundAt(g, bigName, smallName) {
@@ -140,6 +155,24 @@
     window.quizDoneKey = function() {
       const k = origKey.apply(this, arguments);
       try { if (!on(state.gradeId)) return k; const c = curEntry(); return k + ':r' + (c ? roundAt(state.gradeId, c.big, c.sm) : round(state.gradeId)); } catch (e) { return k; }
+    };
+  }
+  // [v87.8] 문제 풀기 결과 기록(quiz_logs)의 level 에 회차를 적는다 → 다른 기기에서도 '그 회차 문제 끝'을 알 수 있게
+  if (typeof window.saveQuizResult === 'function') {
+    const origSave = window.saveQuizResult;
+    window.saveQuizResult = function(correct, total, isAdv) {
+      let lv0 = null;
+      try {
+        const c = curEntry();
+        if (!isAdv && c && on(state.gradeId)) {
+          const k = roundAt(state.gradeId, c.big, c.sm);
+          lv0 = state.level; state.level = 'r' + k;
+          cache.qdone.add(state.gradeId + '|' + state.unitId + '|r' + k);
+        }
+      } catch (e) {}
+      const p = origSave.apply(this, arguments);   // 기록 줄은 여기서 바로 만들어진다
+      if (lv0 !== null) state.level = lv0;
+      return p;
     };
   }
   if (typeof window.getOrGenerateQuiz === 'function') {
@@ -259,6 +292,6 @@
     + '.ddr-row label{display:flex;gap:6px;align-items:center;min-width:0}.ddr-row small{color:#8a887f}.ddr-prog{font-size:12px}.ddr-btns{display:flex;gap:6px}.ddr-btns button,.ddr-bar button{padding:6px 12px;min-height:36px}';
   document.head.appendChild(css);
 
-  window.DDR = {version:'86.8', on, round, roundAt, stageOf, load, items, entry, ladder, answerText, levelName, noPass, hintMode, quizPlan, teacherRender, MAX,
+  window.DDR = {version:'87.8', on, round, roundAt, quizDoneAt, stageOf, load, items, entry, ladder, answerText, levelName, noPass, hintMode, quizPlan, teacherRender, MAX,
     _setForTest(g, r) { const s = student(); if (s) { cache.sid = s.id; cache.map[g] = r; } }};
 })();
