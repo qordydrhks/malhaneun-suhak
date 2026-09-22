@@ -227,7 +227,10 @@
       state._roundItem=item; state._roundLevel='r'+item.r+(item.past?'re':reviewHere()?'rv':'');   // [v87.1] rv = 7일 복습
     }
     state._pickerQIndex=item.index; state._directSelectedQuestion=item.blank?'':item.q; remember(); lock(true);
-    try { const ok=await startSelectedQuestion(); if(ok) { stage('lesson'); setTimeout(()=>window.scrollTo(0,0),0); } return ok; } finally { lock(false); }   // [v87.1] 흐름점검 15
+    try { const ok=await startSelectedQuestion(); if(ok) { stage('lesson'); setTimeout(()=>window.scrollTo(0,0),0);
+        // [v87.7] 이 질문이 그 회차의 마지막이면 설명하는 동안 문제를 미리 만든다 ('다음 질문으로'로 넘어와 목록을 안 거치는 길도 여기를 지난다)
+        if(!item.past) { const rest=remaining().filter(q=>!((item.id&&q.id===item.id)||q.q===item.q)); if(!rest.length&&!ladderLeft()) setTimeout(prefetchQuiz,0); } }
+      return ok; } finally { lock(false); }   // [v87.1] 흐름점검 15
   }
   function axes() {
     if(!CP.grade) return '';
