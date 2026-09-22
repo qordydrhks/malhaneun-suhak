@@ -6,7 +6,7 @@ import io, json, re, sys
 sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
 KINDS = {'뜻', '성질', '이유', '방법', '함정', '적용', '연결', '전략'}
-DEP = re.compile(r'(방금|위에서|앞에서 말한|그럼 셋|아까|이전 질문)')
+DEP = re.compile(r'(방금|위에서(?! 본)|앞에서 말한|그럼 셋|아까|이전 질문)')
 
 def main(lp, sp):
     L = json.load(io.open(lp, encoding='utf-8'))

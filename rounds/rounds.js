@@ -58,8 +58,11 @@
                                        || cache.qdone.has(g + '|' + t.unitId + '|r' + k));
     } catch (e) { return true; }
   }
+  // [v87.9] 이름에 '테스트'가 들어간 학생은 차례 규칙 없이 열어 준 회차가 바로 보인다 (마스터 확인용, 마스터 결정 9/22)
+  const isTester = () => { const s = student(); return !!(s && /테스트/.test(String(s.name || ''))); };
   function roundAt(g, bigName, smallName) {
     let r = round(g);
+    if (isTester()) return r;
     const e = entry(g, bigName, smallName); if (!e) return r;
     for (let k = 1; k < r; k++) {
       const prev = e.items.filter(x => x.r === k);
