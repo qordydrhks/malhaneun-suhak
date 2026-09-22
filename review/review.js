@@ -798,7 +798,9 @@
       if(typeof rec.off === 'boolean' && rec.off !== p.off && !(keep && !offSame && (lp.off != null || !rec.off))){
         c.off++; c.ops.push(function(){ setPlan(it.id, { off: rec.off ? true : null }); });
       }
-      if(typeof rec.newQ === 'string' && rec.newQ.trim() && rec.newQ !== EDITS[it.id] && !(keep && EDITS[it.id] != null)){
+      // [v88.2] 이 기기에 적힌 문장이 원래 문장과 똑같으면 손 안 댄 것으로 본다(Claude 가 고친 문장이 안 들어가던 것)
+      var editSame = EDITS[it.id] != null && String(EDITS[it.id]).trim() === String(it.q || '').trim();
+      if(typeof rec.newQ === 'string' && rec.newQ.trim() && rec.newQ !== EDITS[it.id] && !(keep && EDITS[it.id] != null && !editSame)){
         if(EDITS[it.id] != null) c.overwrite++;
         c.edit++; c.ops.push(function(){ EDITS[it.id] = rec.newQ.trim(); });
       }

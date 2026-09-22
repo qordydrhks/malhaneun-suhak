@@ -1,6 +1,6 @@
 /* 질문 고르기 — 기본으로 실어 두는 분류안 (초6-2)
    Claude 분류(2026-09-22): 기준표_초등_질문.md 1~11절 · 초5 마스터 검토 기준 그대로. 원천 작업도구/질문계단/e6/spec_e62.py */
-(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'e6-2_2026-09-22a', data:{
+(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'e6-2_2026-09-22b', data:{
 "format": "qr-plan-2",
 "grade": "e6-2",
 "rounds": 3,
