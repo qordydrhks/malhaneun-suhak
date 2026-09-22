@@ -140,6 +140,21 @@
     const open=all.map((x,i)=>({x,i})).filter(o=>status(o.x)!=='pass'&&!cooling(o.x));
     return open.length ? (open.find(o=>o.i>idx)||open[0]).x : null;
   }
+  // [v87.6] 문제 미리 만들기 (마스터 결정 9/22: 질문에 답하는 동안 뒤에서) — 그 회차에 남은 질문(계단)이 하나 이하가 되면
+  //   아이가 마지막 설명을 하는 동안 문제를 만들어 저장해 둔다. '문제 풀기'를 누르면 저장분이 바로 뜬다.
+  //   처음부터 만들지 않는 건 중간에 그만두는 아이 몫까지 AI 비용이 나가지 않게 하려고.
+  const PREFETCHED={};
+  function prefetchQuiz() {
+    try {
+      if(!isStudent()||ui.level==='blank'||(typeof aiBlockedHere==='function'&&aiBlockedHere())||quizDoneHere()) return;
+      cpSyncLegacy();
+      const grade=GRADES.find(g=>g.id===state.gradeId), unit=currentUnits().find(u=>u.id===state.unitId);
+      if(!grade||!unit) return;
+      const r=roundsOn()?curRound():0, key=grade.id+'|'+unit.id+'|'+r;
+      if(PREFETCHED[key]) return; PREFETCHED[key]=1;
+      Promise.resolve(getOrGenerateQuiz(grade, unit, {level:'basic', set:pickQuizSet(grade, unit, 'basic', false)})).catch(()=>{ delete PREFETCHED[key]; });
+    } catch(e) {}
+  }
   function quizDoneHere() { try { cpSyncLegacy(); return !!getUnitQuizDone(); } catch { return false; } }
   // [v87.1] 흐름점검 8 — 소단원을 끝내면 다음 소단원으로. 예전엔 '다른 개념 도전하기'가 같은 소단원 목록으로 돌아와 맴돌았다
   function smallFinished() {
@@ -284,6 +299,7 @@
     };
     const empty=(showPast||r>=3)?'':'<div class="dd-ui-empty">이번 회차 질문이 없어요.</div>';
     const coolN=now.filter(q=>status(q)!=='pass'&&cooling(q)).length, quizDone=!left&&!ladLeft&&quizDoneHere();
+    if(!showPast&&left+(ladLeft?1:0)<=1&&(now.length||lad.total)) setTimeout(prefetchQuiz,0);   // [v87.6] 마지막 질문(계단)을 하는 동안 문제를 미리
     const rv=reviewHere();
     const foot=showPast
       ?'<p class="dd-ui-caption">지난 회차 질문을 다시 설명해 봐요. 예전에 한 답과 점수는 여기서 보이지 않아요.</p>'
@@ -306,6 +322,7 @@
     if(roundsOn()) return roundPicker(sm);
     const items=questionItems(); ui.questions=items;
     const list=items.map((q,i)=>({...q,i})).filter(q=>q.kind===ui.kind), left=remaining().length;
+    if(left<=1&&items.length) setTimeout(prefetchQuiz,0);   // [v87.6]
     return '<div class="dd-ui-page-head"><div><p class="dd-ui-caption">'+esc(cpCurrentBig().name)+'</p><h1>'+esc(smallTitle(sm))+'</h1></div>'+button('개념 목록','catalog','dd-ui-text')+'</div>'+
       '<div class="dd-ui-section-head"><h2>질문을 골라 설명해요.</h2><label>설명 수준 <select id="ddUiLevel">'+[['low','기본 개념'],['high','설명하기'],['blank','채워보기']].map(([v,t])=>'<option value="'+v+'" '+(v===ui.level?'selected':'')+'>'+t+'</option>').join('')+'</select></label></div>'+
       '<div class="dd-ui-tabs">'+[['concept','개념 질문'],['typed','유형별 질문']].map(([v,t])=>button(t+' <span>'+items.filter(q=>q.kind===v).length+'</span>','kind',ui.kind===v?'active':'','data-kind="'+v+'" aria-pressed="'+(ui.kind===v)+'"')).join('')+'</div>'+
@@ -551,6 +568,20 @@
     lock(true); try { return await original.saveSubmission(...args); } finally { setTimeout(()=>{lock(false);syncQuestionChrome();},0); } };
   onSpeakTimeout=async function() { lock(true); try { return await original.onSpeakTimeout(); } catch(e) { lock(false); throw e; } };
   cpUnitRemaining=function() { if(roundsOn()) return remaining().length+ladderLeft();   /* [v86.3 ⑧] 회차 흐름은 지금 회차 질문 기준 */ const list=cpUnitQuestionItems(); return list?list.filter(x=>cpStatusForQuestion(state.gradeId,x.q,x.id)!=='pass').length:0; };
+  // [v87.6] 미리 만들기가 아직 도는 중에 '문제 풀기'를 누르면 새로 만들지 않고 그 결과를 같이 기다린다
+  (function(){
+    const g0=window.getOrGenerateQuiz, INFLIGHT={};
+    if(typeof g0!=='function') return;
+    window.getOrGenerateQuiz=function(grade, unit, opts) {
+      opts=opts||{};
+      if(opts.pregen||opts.noSave||opts.force||!grade||!unit) return g0.apply(this, arguments);
+      let plan=''; try { plan=JSON.stringify(window.DDR&&DDR.quizPlan?DDR.quizPlan(grade.id):null); } catch(e) {}
+      const k=[grade.id, unit.id, opts.level||'basic', opts.set===1?1:0, plan].join('|');
+      if(INFLIGHT[k]) return INFLIGHT[k];
+      const p=Promise.resolve(g0.call(this, grade, unit, opts)).finally(()=>{ delete INFLIGHT[k]; });
+      INFLIGHT[k]=p; return p;
+    };
+  })();
   startQuiz=async function() {
     if(ui.busy||!isStudent()||!cpCurrentSmall()) return;
     cpSyncLegacy(); if(!state.unitId) return;
