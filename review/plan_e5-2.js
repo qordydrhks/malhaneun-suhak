@@ -5232,3 +5232,1191 @@
 ],
 "seen": []
 }});
+
+/* [e] 2026-09-22 2단원 마스터 검토 반영(질문고르기_e5-2_2026-09-22_마스터검토2_2단원.json) + 같은 기준을 3~6단원에:
+       곱이 커지나 작아지나 이유 질문 되살림(4-05) · 마지막 계산 소단원 활용 문장제를 여러 단계로(4-06 철근) */
+(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'e5-2_2026-09-22b', data:{
+"format": "qr-plan-2",
+"grade": "e5-2",
+"rounds": 3,
+"items": [
+{
+"id": "11m6g9r:t0L1",
+"big": "2. 분수의 곱셈",
+"small": "01. (분수)×(자연수)",
+"kind": "low",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "11m6g9r:t0L2",
+"big": "2. 분수의 곱셈",
+"small": "01. (분수)×(자연수)",
+"kind": "low",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "11m6g9r:t0H1",
+"big": "2. 분수의 곱셈",
+"small": "01. (분수)×(자연수)",
+"kind": "high",
+"round": 2,
+"off": true,
+"ok": true,
+"offWas": false
+},
+{
+"id": "11m6g9r:t0H2",
+"big": "2. 분수의 곱셈",
+"small": "01. (분수)×(자연수)",
+"kind": "high",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "11m6g9r:qrecall",
+"big": "2. 분수의 곱셈",
+"small": "01. (분수)×(자연수)",
+"kind": "qset",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "11m6g9r:qerror",
+"big": "2. 분수의 곱셈",
+"small": "01. (분수)×(자연수)",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "11m6g9r:qexample",
+"big": "2. 분수의 곱셈",
+"small": "01. (분수)×(자연수)",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "11m6g9r:qreason",
+"big": "2. 분수의 곱셈",
+"small": "01. (분수)×(자연수)",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true,
+"offWas": true
+},
+{
+"id": "ladder:qamu9e5260ciewu",
+"big": "2. 분수의 곱셈",
+"small": "01. (분수)×(자연수)",
+"kind": "add",
+"round": 2,
+"off": true,
+"ok": true
+},
+{
+"id": "11m6g9r:qamu9e52b0cibs5",
+"big": "2. 분수의 곱셈",
+"small": "01. (분수)×(자연수)",
+"kind": "add",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|2. 분수의 곱셈|01. (분수)×(자연수):1",
+"big": "2. 분수의 곱셈",
+"small": "01. (분수)×(자연수)",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|2. 분수의 곱셈|01. (분수)×(자연수):2",
+"big": "2. 분수의 곱셈",
+"small": "01. (분수)×(자연수)",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|2. 분수의 곱셈|01. (분수)×(자연수):3",
+"big": "2. 분수의 곱셈",
+"small": "01. (분수)×(자연수)",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "1h3g8qe:t0L1",
+"big": "2. 분수의 곱셈",
+"small": "02. (자연수)×(분수)",
+"kind": "low",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "1h3g8qe:t0L2",
+"big": "2. 분수의 곱셈",
+"small": "02. (자연수)×(분수)",
+"kind": "low",
+"round": 1,
+"off": true,
+"ok": true
+},
+{
+"id": "1h3g8qe:t0H1",
+"big": "2. 분수의 곱셈",
+"small": "02. (자연수)×(분수)",
+"kind": "high",
+"round": 1,
+"off": true,
+"ok": true
+},
+{
+"id": "1h3g8qe:t0H2",
+"big": "2. 분수의 곱셈",
+"small": "02. (자연수)×(분수)",
+"kind": "high",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "1h3g8qe:qrecall",
+"big": "2. 분수의 곱셈",
+"small": "02. (자연수)×(분수)",
+"kind": "qset",
+"round": 1,
+"off": true,
+"ok": true
+},
+{
+"id": "1h3g8qe:qerror",
+"big": "2. 분수의 곱셈",
+"small": "02. (자연수)×(분수)",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "1h3g8qe:qexample",
+"big": "2. 분수의 곱셈",
+"small": "02. (자연수)×(분수)",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "1h3g8qe:qreason",
+"big": "2. 분수의 곱셈",
+"small": "02. (자연수)×(분수)",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:qamu9e529pwwkhy",
+"big": "2. 분수의 곱셈",
+"small": "02. (자연수)×(분수)",
+"kind": "add",
+"round": 2,
+"off": true,
+"ok": true
+},
+{
+"id": "1h3g8qe:qamu9e52bzx7vdq",
+"big": "2. 분수의 곱셈",
+"small": "02. (자연수)×(분수)",
+"kind": "add",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|2. 분수의 곱셈|02. (자연수)×(분수):1",
+"big": "2. 분수의 곱셈",
+"small": "02. (자연수)×(분수)",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|2. 분수의 곱셈|02. (자연수)×(분수):2",
+"big": "2. 분수의 곱셈",
+"small": "02. (자연수)×(분수)",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "fjim33:t0L1",
+"big": "2. 분수의 곱셈",
+"small": "03. 진분수의 곱셈",
+"kind": "low",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "fjim33:t0L2",
+"big": "2. 분수의 곱셈",
+"small": "03. 진분수의 곱셈",
+"kind": "low",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "fjim33:t0H1",
+"big": "2. 분수의 곱셈",
+"small": "03. 진분수의 곱셈",
+"kind": "high",
+"round": 2,
+"off": true,
+"ok": true,
+"offWas": false
+},
+{
+"id": "fjim33:t0H2",
+"big": "2. 분수의 곱셈",
+"small": "03. 진분수의 곱셈",
+"kind": "high",
+"round": 2,
+"off": true,
+"ok": true
+},
+{
+"id": "fjim33:qrecall",
+"big": "2. 분수의 곱셈",
+"small": "03. 진분수의 곱셈",
+"kind": "qset",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "fjim33:qerror",
+"big": "2. 분수의 곱셈",
+"small": "03. 진분수의 곱셈",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "fjim33:qexample",
+"big": "2. 분수의 곱셈",
+"small": "03. 진분수의 곱셈",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true,
+"offWas": true
+},
+{
+"id": "fjim33:qreason",
+"big": "2. 분수의 곱셈",
+"small": "03. 진분수의 곱셈",
+"kind": "qset",
+"round": 2,
+"off": true,
+"ok": true,
+"offWas": false
+},
+{
+"id": "ladder:qamu9e52hi33bog",
+"big": "2. 분수의 곱셈",
+"small": "03. 진분수의 곱셈",
+"kind": "add",
+"round": 2,
+"off": true,
+"ok": true
+},
+{
+"id": "fjim33:qamu9e52bzutkzk",
+"big": "2. 분수의 곱셈",
+"small": "03. 진분수의 곱셈",
+"kind": "add",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|2. 분수의 곱셈|03. 진분수의 곱셈:1",
+"big": "2. 분수의 곱셈",
+"small": "03. 진분수의 곱셈",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|2. 분수의 곱셈|03. 진분수의 곱셈:2",
+"big": "2. 분수의 곱셈",
+"small": "03. 진분수의 곱셈",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|2. 분수의 곱셈|03. 진분수의 곱셈:3",
+"big": "2. 분수의 곱셈",
+"small": "03. 진분수의 곱셈",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "1rbp9gq:t0L1",
+"big": "2. 분수의 곱셈",
+"small": "04. 여러 가지 분수의 곱셈",
+"kind": "low",
+"round": 1,
+"off": true,
+"ok": true
+},
+{
+"id": "1rbp9gq:t0L2",
+"big": "2. 분수의 곱셈",
+"small": "04. 여러 가지 분수의 곱셈",
+"kind": "low",
+"round": 1,
+"off": true,
+"ok": true
+},
+{
+"id": "1rbp9gq:t0H1",
+"big": "2. 분수의 곱셈",
+"small": "04. 여러 가지 분수의 곱셈",
+"kind": "high",
+"round": 1,
+"off": false,
+"ok": true,
+"newQ": "① 1과 1/2 × 2와 1/3을 계산하는 과정을 두 가지 방법으로 말해 봐.",
+"qWas": "① 1과 1/2 × 2와 1/3을 계산하는 과정을 말해 봐.",
+"answer": "방법 1은 대분수를 가분수로 바꿔서 곱하는 거야. 3/2 × 7/3 = 21/6 = 3과 1/2이야. 방법 2는 1과 1/2을 자연수 1과 분수 1/2로 나눠서 1 × 2와 1/3 = 2와 1/3, 1/2 × 2와 1/3 = 7/6 을 구해 더하는 거야. 2와 1/3 + 1과 1/6 = 3과 1/2로 답이 같아.",
+"keys": [
+"가분수로 바꿔서 곱한다",
+"대분수를 자연수와 분수로 나눠 각각 곱해서 더한다"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "대분수를 가분수로 바꾼 다음 분자끼리, 분모끼리 곱하고, 결과를 약분하거나 대분수로 나타내. 예) 1과 1/2×2와 1/3=3/2×7/3=21/6=7/2=3과 1/2",
+"k": [
+"가분수로 바꾼다",
+"분자끼리, 분모끼리 곱한다"
+]
+}
+},
+{
+"id": "1rbp9gq:t0H2",
+"big": "2. 분수의 곱셈",
+"small": "04. 여러 가지 분수의 곱셈",
+"kind": "high",
+"round": 2,
+"off": true,
+"ok": true
+},
+{
+"id": "1rbp9gq:qrecall",
+"big": "2. 분수의 곱셈",
+"small": "04. 여러 가지 분수의 곱셈",
+"kind": "qset",
+"round": 1,
+"off": false,
+"ok": true,
+"offWas": true
+},
+{
+"id": "1rbp9gq:qerror",
+"big": "2. 분수의 곱셈",
+"small": "04. 여러 가지 분수의 곱셈",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "1rbp9gq:qexample",
+"big": "2. 분수의 곱셈",
+"small": "04. 여러 가지 분수의 곱셈",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "1rbp9gq:qreason",
+"big": "2. 분수의 곱셈",
+"small": "04. 여러 가지 분수의 곱셈",
+"kind": "qset",
+"round": 2,
+"off": true
+},
+{
+"id": "ladder:qamu9e52tj7i4vf",
+"big": "2. 분수의 곱셈",
+"small": "04. 여러 가지 분수의 곱셈",
+"kind": "add",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:qamu9e52cvs8aiw",
+"big": "2. 분수의 곱셈",
+"small": "04. 여러 가지 분수의 곱셈",
+"kind": "add",
+"round": 2,
+"off": true
+},
+{
+"id": "1rbp9gq:qamu9e52be2mvvk",
+"big": "2. 분수의 곱셈",
+"small": "04. 여러 가지 분수의 곱셈",
+"kind": "add",
+"round": 2,
+"off": false,
+"ok": true,
+"q": "한 변이 1과 2/5 m인 정사각형 모양의 밭에 1/4만큼에는 오이를 심고, 남은 밭의 2/3에는 호박을 심었어 남은 땅은 몇 m²야? 식과 답을 말해 봐.",
+"qWas": "한 변이 1과 2/5 m인 정사각형 모양 밭의 넓이는 몇 m²야? 식과 답을 말해 봐.",
+"answer": "밭의 넓이는 1과 2/5 × 1과 2/5 = 7/5 × 7/5 = 49/25 m²야. 오이를 심고 남은 밭은 1 − 1/4 = 3/4이고, 그중 2/3에 호박을 심었으니 남은 땅은 49/25 × 3/4 × 1/3 = 49/100 m²야.",
+"keys": [
+"밭의 넓이 7/5 × 7/5 = 49/25",
+"남은 비율 3/4 × 1/3",
+"49/100 m²"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "1과 2/5 × 1과 2/5 = 7/5 × 7/5 = 49/25 = 1과 24/25야. 넓이는 1과 24/25 m²야.",
+"k": [
+"7/5 × 7/5",
+"1과 24/25 m²"
+]
+}
+},
+{
+"id": "ladder:e5-2|2. 분수의 곱셈|04. 여러 가지 분수의 곱셈:1",
+"big": "2. 분수의 곱셈",
+"small": "04. 여러 가지 분수의 곱셈",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|2. 분수의 곱셈|04. 여러 가지 분수의 곱셈:2",
+"big": "2. 분수의 곱셈",
+"small": "04. 여러 가지 분수의 곱셈",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|2. 분수의 곱셈|04. 여러 가지 분수의 곱셈:3",
+"big": "2. 분수의 곱셈",
+"small": "04. 여러 가지 분수의 곱셈",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "yc1vsn:qreason",
+"big": "4. 소수의 곱셈",
+"small": "05. (소수)×(소수) (1)",
+"kind": "qset",
+"round": 2,
+"off": false,
+"offWas": true,
+"newQ": "0.4 × 0.6 의 값은 0.4보다 커, 작아? 왜 그런지 말해 봐.",
+"by": "claude"
+},
+{
+"id": "ladder:qamu9e52dex2epi",
+"big": "4. 소수의 곱셈",
+"small": "06. (소수)×(소수) (2)",
+"kind": "add",
+"round": 2,
+"off": false,
+"q": "1 m의 무게가 2.4 kg인 철근 1.5 m 중에서 0.7 m를 잘라 썼어. 남은 철근의 무게는 몇 kg이야? 식과 답을 말해 봐.",
+"qWas": "1 m의 무게가 2.4 kg인 철근이 있어. 이 철근 1.5 m의 무게는 몇 kg이야? 식과 답을 말해 봐.",
+"by": "claude",
+"answer": "남은 길이는 1.5 − 0.7 = 0.8 m야. 2.4 × 0.8 = 1.92니까 남은 철근은 1.92 kg이야.",
+"keys": [
+"1.5 − 0.7 = 0.8",
+"2.4 × 0.8 = 1.92 kg"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "2.4 × 1.5 = 3.60이니까 3.6 kg이야.",
+"k": [
+"2.4 × 1.5",
+"3.6 kg"
+]
+}
+}
+],
+"seen": []
+}});
+
+/* [f] 2026-09-22 3단원 마스터 검토 반영(질문고르기_e5-2_2026-09-22_마스터검토3_3단원.json) + 같은 기준을 4~6단원에:
+       도형 그리는 방법(2회차: 전개도) · "문제에서 ○○을 보면 먼저 떠올릴 것"(3회차: 전개도·평균) */
+(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'e5-2_2026-09-22c', data:{
+"format": "qr-plan-2",
+"grade": "e5-2",
+"rounds": 3,
+"items": [
+{
+"id": "qebay6:t0L1",
+"big": "3. 합동과 대칭",
+"small": "01. 도형의 합동",
+"kind": "low",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "qebay6:t0L2",
+"big": "3. 합동과 대칭",
+"small": "01. 도형의 합동",
+"kind": "low",
+"round": 1,
+"off": true,
+"ok": true
+},
+{
+"id": "qebay6:t0H1",
+"big": "3. 합동과 대칭",
+"small": "01. 도형의 합동",
+"kind": "high",
+"round": 1,
+"off": true,
+"ok": true
+},
+{
+"id": "qebay6:t0H2",
+"big": "3. 합동과 대칭",
+"small": "01. 도형의 합동",
+"kind": "high",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "qebay6:qrecall",
+"big": "3. 합동과 대칭",
+"small": "01. 도형의 합동",
+"kind": "qset",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "qebay6:qerror",
+"big": "3. 합동과 대칭",
+"small": "01. 도형의 합동",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "qebay6:qexample",
+"big": "3. 합동과 대칭",
+"small": "01. 도형의 합동",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "qebay6:qreason",
+"big": "3. 합동과 대칭",
+"small": "01. 도형의 합동",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true,
+"newQ": "넓이가 같은 두 직사각형은 항상 합동이야? 예를 들어 설명해 봐.",
+"qWas": "넓이가 같은 두 도형은 항상 합동이야? 예를 들어 설명해 봐."
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|01. 도형의 합동:1",
+"big": "3. 합동과 대칭",
+"small": "01. 도형의 합동",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|01. 도형의 합동:2",
+"big": "3. 합동과 대칭",
+"small": "01. 도형의 합동",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|01. 도형의 합동:3",
+"big": "3. 합동과 대칭",
+"small": "01. 도형의 합동",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "192l4g2:t0L1",
+"big": "3. 합동과 대칭",
+"small": "02. 합동인 도형의 성질",
+"kind": "low",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "192l4g2:t0L2",
+"big": "3. 합동과 대칭",
+"small": "02. 합동인 도형의 성질",
+"kind": "low",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "192l4g2:t0H1",
+"big": "3. 합동과 대칭",
+"small": "02. 합동인 도형의 성질",
+"kind": "high",
+"round": 1,
+"off": true,
+"ok": true
+},
+{
+"id": "192l4g2:t0H2",
+"big": "3. 합동과 대칭",
+"small": "02. 합동인 도형의 성질",
+"kind": "high",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "192l4g2:qrecall",
+"big": "3. 합동과 대칭",
+"small": "02. 합동인 도형의 성질",
+"kind": "qset",
+"round": 1,
+"off": true,
+"ok": true
+},
+{
+"id": "192l4g2:qerror",
+"big": "3. 합동과 대칭",
+"small": "02. 합동인 도형의 성질",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "192l4g2:qexample",
+"big": "3. 합동과 대칭",
+"small": "02. 합동인 도형의 성질",
+"kind": "qset",
+"round": 1,
+"off": true,
+"ok": true
+},
+{
+"id": "192l4g2:qreason",
+"big": "3. 합동과 대칭",
+"small": "02. 합동인 도형의 성질",
+"kind": "qset",
+"round": 2,
+"off": true,
+"ok": true
+},
+{
+"id": "ladder:qamu9e52x3wjd1m",
+"big": "3. 합동과 대칭",
+"small": "02. 합동인 도형의 성질",
+"kind": "add",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "192l4g2:qamuc1uabzfq0w",
+"big": "3. 합동과 대칭",
+"small": "02. 합동인 도형의 성질",
+"kind": "add",
+"round": 3,
+"off": false,
+"ok": true,
+"q": "문제에서 합동인 두 삼각형 또는 두 다각형을 본다면 가장 먼저 생각해야 하는 두가지는 뭘까?",
+"by": "master",
+"answer": "합동인 두 도형이 나오면 먼저 모양과 크기가 똑같다는 걸 떠올려. 그래서 대응변의 길이가 서로 같고 대응각의 크기가 서로 같으니까, 이걸로 모르는 변의 길이나 각의 크기를 구해.",
+"keys": [
+"모양과 크기가 똑같다.",
+"모든 변의 길이와 모든 각의 크기가 같다"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "",
+"k": [
+"모양과 크기가 똑같다.",
+"모든 변의 길이와 모든 각의 크기가 같다"
+]
+}
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|02. 합동인 도형의 성질:1",
+"big": "3. 합동과 대칭",
+"small": "02. 합동인 도형의 성질",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|02. 합동인 도형의 성질:2",
+"big": "3. 합동과 대칭",
+"small": "02. 합동인 도형의 성질",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|02. 합동인 도형의 성질:3",
+"big": "3. 합동과 대칭",
+"small": "02. 합동인 도형의 성질",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "13ncog2:t0L1",
+"big": "3. 합동과 대칭",
+"small": "03. 선대칭도형과 그 성질",
+"kind": "low",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "13ncog2:t0L2",
+"big": "3. 합동과 대칭",
+"small": "03. 선대칭도형과 그 성질",
+"kind": "low",
+"round": 1,
+"off": true,
+"ok": true
+},
+{
+"id": "13ncog2:t0H1",
+"big": "3. 합동과 대칭",
+"small": "03. 선대칭도형과 그 성질",
+"kind": "high",
+"round": 1,
+"off": true,
+"ok": true
+},
+{
+"id": "13ncog2:t0H2",
+"big": "3. 합동과 대칭",
+"small": "03. 선대칭도형과 그 성질",
+"kind": "high",
+"round": 1,
+"off": false,
+"ok": true,
+"newQ": "② 선대칭도형에서 대응점끼리 이은 선분과 대칭축은 어떻게 만나지?",
+"qWas": "② 선대칭도형에서 대응점끼리 이은 선분과 대칭축은 어떤 관계야?"
+},
+{
+"id": "13ncog2:qrecall",
+"big": "3. 합동과 대칭",
+"small": "03. 선대칭도형과 그 성질",
+"kind": "qset",
+"round": 1,
+"off": false,
+"ok": true,
+"offWas": true
+},
+{
+"id": "13ncog2:qreason",
+"big": "3. 합동과 대칭",
+"small": "03. 선대칭도형과 그 성질",
+"kind": "qset",
+"round": 3,
+"off": false,
+"ok": true,
+"newQ": "다각형을 어떤 선에 대해서 선대칭 도형이 되도록 그리는 방법에 대해 얘기해봐",
+"qWas": "선대칭도형을 대칭축으로 접는 모습을 생각해서, 대응점끼리 이은 선분이 왜 대칭축과 수직으로 만나는지 설명해 봐.",
+"rWas": 2,
+"answer": "대칭축을 긋고, 각 꼭짓점에서 대칭축에 수직인 선을 그어. 대칭축까지의 거리와 같은 거리만큼 반대쪽으로 가서 대응점을 찍고, 대응점들을 차례로 이으면 선대칭도형이 돼.",
+"keys": [
+"대칭축에 수직인 선을 긋는다.",
+"대응점을 찍고 점들을 잇는다."
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "접으면 대칭축 양쪽의 두 각이 완전히 겹쳐서 크기가 같아. 두 각을 합하면 180°니까 각각 90°, 그래서 수직이야.",
+"k": [
+"접으면 양쪽 두 각이 겹쳐 같다",
+"합이 180°라 각각 90°"
+]
+}
+},
+{
+"id": "13ncog2:qreason",
+"big": "3. 합동과 대칭",
+"small": "03. 선대칭도형과 그 성질",
+"kind": "qset",
+"round": 3,
+"off": false,
+"ok": true,
+"newQ": "다각형을 어떤 선에 대해서 선대칭 도형이 되도록 그리는 방법에 대해 얘기해봐",
+"qWas": "선대칭도형을 대칭축으로 접는 모습을 생각해서, 대응점끼리 이은 선분이 왜 대칭축과 수직으로 만나는지 설명해 봐.",
+"rWas": 2,
+"answer": "대칭축을 긋고, 각 꼭짓점에서 대칭축에 수직인 선을 그어. 대칭축까지의 거리와 같은 거리만큼 반대쪽으로 가서 대응점을 찍고, 대응점들을 차례로 이으면 선대칭도형이 돼.",
+"keys": [
+"대칭축에 수직인 선을 긋는다.",
+"대응점을 찍고 점들을 잇는다."
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "",
+"k": [
+"대칭축에 수직인 선을 긋는다.",
+"대응점을 찍고 점들을 잇는다."
+]
+}
+},
+{
+"id": "13ncog2:qerror",
+"big": "3. 합동과 대칭",
+"small": "03. 선대칭도형과 그 성질",
+"kind": "qset",
+"round": 2,
+"off": true,
+"ok": true
+},
+{
+"id": "13ncog2:qexample",
+"big": "3. 합동과 대칭",
+"small": "03. 선대칭도형과 그 성질",
+"kind": "qset",
+"round": 2,
+"off": true,
+"offWas": false
+},
+{
+"id": "13ncog2:qcondition",
+"big": "3. 합동과 대칭",
+"small": "03. 선대칭도형과 그 성질",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:qamu9e52i0xwv9z",
+"big": "3. 합동과 대칭",
+"small": "03. 선대칭도형과 그 성질",
+"kind": "add",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "13ncog2:qamuc1wbr9f6di",
+"big": "3. 합동과 대칭",
+"small": "03. 선대칭도형과 그 성질",
+"kind": "add",
+"round": 2,
+"off": false,
+"ok": true,
+"q": "선대칭 도형 그리는 방법 얘기해줘",
+"by": "master",
+"answer": "대칭축을 긋고, 각 꼭짓점에서 대칭축에 수직인 선을 그어. 대칭축까지의 거리와 같은 거리만큼 반대쪽으로 가서 대응점을 찍고, 대응점들을 차례로 이으면 선대칭도형이 돼.",
+"keys": [
+"각 꼭짓점에서 대칭축에 수직인 선을 긋는다",
+"대칭축까지와 같은 거리만큼 반대쪽에 대응점을 찍고 잇는다"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "",
+"k": []
+}
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|03. 선대칭도형과 그 성질:1",
+"big": "3. 합동과 대칭",
+"small": "03. 선대칭도형과 그 성질",
+"kind": "ladder",
+"round": 3,
+"off": true,
+"ok": true,
+"offWas": false
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|03. 선대칭도형과 그 성질:2",
+"big": "3. 합동과 대칭",
+"small": "03. 선대칭도형과 그 성질",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|03. 선대칭도형과 그 성질:3",
+"big": "3. 합동과 대칭",
+"small": "03. 선대칭도형과 그 성질",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|03. 선대칭도형과 그 성질:4",
+"big": "3. 합동과 대칭",
+"small": "03. 선대칭도형과 그 성질",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "1isaku1:t0L1",
+"big": "3. 합동과 대칭",
+"small": "04. 점대칭도형과 그 성질",
+"kind": "low",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "1isaku1:t0L2",
+"big": "3. 합동과 대칭",
+"small": "04. 점대칭도형과 그 성질",
+"kind": "low",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "1isaku1:t0H1",
+"big": "3. 합동과 대칭",
+"small": "04. 점대칭도형과 그 성질",
+"kind": "high",
+"round": 1,
+"off": true
+},
+{
+"id": "1isaku1:t0H2",
+"big": "3. 합동과 대칭",
+"small": "04. 점대칭도형과 그 성질",
+"kind": "high",
+"round": 1,
+"off": false,
+"ok": true
+},
+{
+"id": "1isaku1:qrecall",
+"big": "3. 합동과 대칭",
+"small": "04. 점대칭도형과 그 성질",
+"kind": "qset",
+"round": 1,
+"off": true
+},
+{
+"id": "1isaku1:qreason",
+"big": "3. 합동과 대칭",
+"small": "04. 점대칭도형과 그 성질",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "1isaku1:qerror",
+"big": "3. 합동과 대칭",
+"small": "04. 점대칭도형과 그 성질",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "1isaku1:qcondition",
+"big": "3. 합동과 대칭",
+"small": "04. 점대칭도형과 그 성질",
+"kind": "qset",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "1isaku1:qexample",
+"big": "3. 합동과 대칭",
+"small": "04. 점대칭도형과 그 성질",
+"kind": "qset",
+"round": 2,
+"off": true,
+"ok": true
+},
+{
+"id": "ladder:qamu9e52c33maxt",
+"big": "3. 합동과 대칭",
+"small": "04. 점대칭도형과 그 성질",
+"kind": "add",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:qamu9e523ci3lxp",
+"big": "3. 합동과 대칭",
+"small": "04. 점대칭도형과 그 성질",
+"kind": "add",
+"round": 2,
+"off": false,
+"ok": true
+},
+{
+"id": "1isaku1:qamuc2aejvneff",
+"big": "3. 합동과 대칭",
+"small": "04. 점대칭도형과 그 성질",
+"kind": "add",
+"round": 2,
+"off": false,
+"ok": true,
+"q": "우리가 점대칭 도형을 그린다면 어떻게 그려야 할지 설명해봐",
+"by": "master",
+"answer": "각 꼭짓점에서 대칭의 중심을 지나는 선을 긋고, 중심까지의 길이와 같은 길이만큼 더 가서 대응점을 찍어. 대응점들을 차례로 이으면 점대칭도형이 돼.",
+"keys": [
+"각 꼭짓점에서 대칭의 중심까지 선을 긋고 같은 방향으로 같은 길이만큼 더 가서 대응점을 찍은 후 그 점들을 이어주면 된다."
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "",
+"k": [
+"각 꼭짓점에서 대칭의 중심까지 선을 긋고 같은 방향으로 같은 길이만큼 더 가서 대응점을 찍은 후 그 점들을 이어주면 된다."
+]
+}
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|04. 점대칭도형과 그 성질:1",
+"big": "3. 합동과 대칭",
+"small": "04. 점대칭도형과 그 성질",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|04. 점대칭도형과 그 성질:2",
+"big": "3. 합동과 대칭",
+"small": "04. 점대칭도형과 그 성질",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|04. 점대칭도형과 그 성질:3",
+"big": "3. 합동과 대칭",
+"small": "04. 점대칭도형과 그 성질",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "ladder:e5-2|3. 합동과 대칭|04. 점대칭도형과 그 성질:4",
+"big": "3. 합동과 대칭",
+"small": "04. 점대칭도형과 그 성질",
+"kind": "ladder",
+"round": 3,
+"off": false,
+"ok": true
+},
+{
+"id": "kxb2zb:qamu22c01net",
+"big": "5. 직육면체",
+"small": "04. 정(직)육면체의 전개도",
+"kind": "add",
+"round": 2,
+"off": false,
+"by": "claude",
+"q": "직육면체의 전개도를 그리는 방법을 얘기해 줘.",
+"answer": "면 6개를 이어 그리는데, 접었을 때 마주 보는 면은 서로 합동이 되게, 맞닿는 모서리는 길이가 같게 그려. 잘린 모서리는 실선, 잘리지 않은 모서리는 점선으로 그려.",
+"keys": [
+"마주 보는 면은 합동, 맞닿는 모서리는 같은 길이",
+"잘린 모서리는 실선, 잘리지 않은 모서리는 점선"
+],
+"answerBy": "claude"
+},
+{
+"id": "kxb2zb:qamu22c02net",
+"big": "5. 직육면체",
+"small": "04. 정(직)육면체의 전개도",
+"kind": "add",
+"round": 3,
+"off": false,
+"by": "claude",
+"q": "문제에서 직육면체의 전개도를 본다면 가장 먼저 생각해야 하는 두 가지는 뭐야?",
+"answer": "접었을 때 서로 마주 보는 면은 3쌍이고, 마주 보는 두 면은 합동이야. 그리고 접었을 때 맞닿는 모서리는 길이가 같아. 이걸로 모르는 모서리 길이나 마주 보는 면을 찾아.",
+"keys": [
+"마주 보는 면 3쌍은 서로 합동",
+"맞닿는 모서리의 길이는 같다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1kwi8f7:qamu22c03avg",
+"big": "6. 평균과 가능성",
+"small": "02. 평균 이용하기",
+"kind": "add",
+"round": 3,
+"off": false,
+"by": "claude",
+"q": "문제에서 평균이 주어진다면 가장 먼저 생각해야 하는 것은 뭐야?",
+"answer": "평균에 자료의 수를 곱하면 자료 값을 모두 더한 합이 된다는 거야. 그래서 합을 구한 다음 아는 값을 빼면 모르는 자료 값을 구할 수 있어.",
+"keys": [
+"평균 × 자료의 수 = 자료 값의 합",
+"합에서 아는 값을 빼면 모르는 값"
+],
+"answerBy": "claude"
+}
+],
+"seen": []
+}});

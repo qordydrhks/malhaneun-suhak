@@ -21,8 +21,9 @@ async function gradeChunks(paths, outName, onProgress){
       done++; if(onProgress) onProgress(done, total);
     }
   }
+  window._lastReview = { ladders, results };   // 저장(POST)이 실패해도 결과를 다시 보낼 수 있게
   const body = 'window.REVIEW = ' + JSON.stringify({ made:new Date().toISOString(), ladders, results }) + ';\n';
-  await fetch('http://127.0.0.1:8977/'+outName, {method:'POST', body});
+  try{ await fetch('http://127.0.0.1:8977/'+outName, {method:'POST', body}); }catch(e){ console.warn('결과 저장 실패 — window._lastReview 에 있음', e); }
   const all = Object.values(results).flat();
   const cnt = (f)=>all.filter(f).length;
   return { steps: all.length,

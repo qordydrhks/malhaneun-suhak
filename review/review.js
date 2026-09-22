@@ -780,7 +780,8 @@
         it = { id:rec.id, kind:'add', q:rec.q };
         c.added++;
         c.ops.push(function(){ (ADDED[code] = ADDED[code] || []).push({ id:rec.id, q:rec.q.trim() }); });
-      } else if(!keep && it && it.kind === 'add' && typeof rec.q === 'string' && rec.q.trim() && rec.q.trim() !== it.q){
+      } else if(it && it.kind === 'add' && typeof rec.q === 'string' && rec.q.trim() && rec.q.trim() !== it.q
+                && (!keep || (typeof rec.qWas === 'string' && rec.qWas.trim() === it.q))){   // [v87.4] keep 이어도 qWas 가 이 기기 문장과 같으면(아무도 손 안 댐) 바꾼다
         c.edit++; c.overwrite++;
         c.ops.push(function(){ var f = findAdded(it.id); if(f) f.list[f.i].q = rec.q.trim(); });
       }
