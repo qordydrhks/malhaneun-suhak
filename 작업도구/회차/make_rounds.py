@@ -12,11 +12,18 @@ sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
 grade, exp = sys.argv[1], sys.argv[2]
+# [v87.5] --noplan : 빈 기기에서 [내보내기] 한 파일(분류안이 모두 합쳐진 상태)을 그대로 쓴다.
+#   plan 파일에 분류안이 여러 개(push 여러 번) 있으면 아래 plan 읽기가 안 되므로 이 방법을 쓴다.
+NOPLAN = '--noplan' in sys.argv
 
 E = json.load(io.open(exp, encoding='utf-8'))
 assert E['grade'] == grade, E['grade']
-s = io.open(os.path.join(ROOT, 'review', 'plan_%s.js' % grade), encoding='utf-8').read()
-plan = json.loads(s[s.index('data:') + 5:s.rindex('});')])
+if NOPLAN:
+    plan = {'items': []}
+else:
+    s = io.open(os.path.join(ROOT, 'review', 'plan_%s.js' % grade), encoding='utf-8').read()
+    assert s.count('QR_BASE_PLANS') == 1, 'plan 파일에 분류안이 여러 개 — 빈 기기 내보내기 + --noplan 으로'
+    plan = json.loads(s[s.index('data:') + 5:s.rindex('});')])
 P = {x['id']: x for x in plan['items']}
 
 out, order = {}, []
