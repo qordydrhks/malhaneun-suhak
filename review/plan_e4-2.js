@@ -4129,3 +4129,617 @@
 ],
 "seen": []
 }});
+
+/* [22c] 2026-09-22 초4-2 1단원 마스터 검토 기준 적용: 쉬운 한 단계 문장제는 1회차 · 옆 질문이 덮는 오류 찾기 뺌 · 분수 뒤 조사는 분자 소리로. 원천 작업도구/질문계단/make_plan_22c.py */
+(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'e4-2_2026-09-22c', data:{
+"format": "qr-plan-2",
+"grade": "e4-2",
+"rounds": 3,
+"items": [
+{
+"id": "1vv921z:t0L2",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "01. 분수의 덧셈 (1)",
+"kind": "low",
+"newQ": "3/6 + 2/6를 계산하는 과정을 말해 봐.",
+"newQBy": "claude",
+"qWas": "3/6 + 2/6을 계산하는 과정을 말해 봐.",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1vv921z:qerror",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "01. 분수의 덧셈 (1)",
+"kind": "qset",
+"newQ": "친구가 3/6 + 2/6를 분모끼리도 더해서 5/12라고 했어. 뭐가 잘못됐는지 찾고, 바른 답도 말해 봐.",
+"newQBy": "claude",
+"qWas": "친구가 3/6 + 2/6을 분모끼리도 더해서 5/12라고 했어. 뭐가 잘못됐는지 찾고, 바른 답도 말해 봐.",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1o4hyjt:qreason",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "02. 분수의 덧셈 (2)",
+"kind": "qset",
+"answer": "7/5은 5/5와 2/5를 더한 거고 5/5는 1이야. 그래서 1이 생기고, 답은 4와 2/5야.",
+"keys": [
+"5/5 = 1",
+"답 4와 2/5"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "7/5은 5/5와 2/5을 더한 거고 5/5는 1이야. 그래서 1이 생기고, 답은 4와 2/5야.",
+"k": [
+"5/5 = 1",
+"답 4와 2/5"
+]
+},
+"ok": true,
+"by": "claude"
+},
+{
+"id": "on02hi:qexample",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "03. 분수의 뺄셈 (1)",
+"kind": "qset",
+"newQ": "분모가 9인 두 분수를 빼서 3/9이 되는 뺄셈식을 네가 만들어 봐.",
+"newQBy": "claude",
+"qWas": "분모가 9인 두 분수를 빼서 3/9가 되는 뺄셈식을 네가 만들어 봐.",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1h45dum:qa22e4211",
+"big": "2. 삼각형",
+"small": "01. 변의 길이에 따라 삼각형 분류하기",
+"kind": "add",
+"round": 1,
+"rWas": 2,
+"by": "claude"
+},
+{
+"id": "12ej6cd:qerror",
+"big": "3. 소수의 덧셈과 뺄셈",
+"small": "04. 소수 사이의 관계",
+"kind": "qset",
+"off": true,
+"offBy": "claude",
+"offWas": false,
+"by": "claude"
+},
+{
+"id": "hcf9fu:qerror",
+"big": "3. 소수의 덧셈과 뺄셈",
+"small": "07. 소수 한 자리 수의 뺄셈",
+"kind": "qset",
+"off": true,
+"offBy": "claude",
+"offWas": false,
+"by": "claude"
+},
+{
+"id": "nj2tv1:qerror",
+"big": "3. 소수의 덧셈과 뺄셈",
+"small": "08. 소수 두 자리 수의 뺄셈",
+"kind": "qset",
+"off": true,
+"offBy": "claude",
+"offWas": false,
+"by": "claude"
+},
+{
+"id": "2hbzf:qa22e4251",
+"big": "4. 사각형",
+"small": "05. 평행사변형",
+"kind": "add",
+"round": 1,
+"rWas": 2,
+"by": "claude"
+},
+{
+"id": "1vv921z:t0L1",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "01. 분수의 덧셈 (1)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1vv921z:t0L3",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "01. 분수의 덧셈 (1)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1vv921z:t0H1",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "01. 분수의 덧셈 (1)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1vv921z:t0H2",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "01. 분수의 덧셈 (1)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1vv921z:qrecall",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "01. 분수의 덧셈 (1)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1vv921z:qreason",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "01. 분수의 덧셈 (1)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1vv921z:qexample",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "01. 분수의 덧셈 (1)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1vv921z:qcondition",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "01. 분수의 덧셈 (1)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1vv921z:qa22e4211",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "01. 분수의 덧셈 (1)",
+"kind": "add",
+"round": 1,
+"rWas": 2,
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e4-2|1. 분수의 덧셈과 뺄셈|01. 분수의 덧셈 (1):1",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "01. 분수의 덧셈 (1)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e4-2|1. 분수의 덧셈과 뺄셈|01. 분수의 덧셈 (1):2",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "01. 분수의 덧셈 (1)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e4-2|1. 분수의 덧셈과 뺄셈|01. 분수의 덧셈 (1):3",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "01. 분수의 덧셈 (1)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1o4hyjt:t0L1",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "02. 분수의 덧셈 (2)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1o4hyjt:t0L2",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "02. 분수의 덧셈 (2)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1o4hyjt:t0H1",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "02. 분수의 덧셈 (2)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1o4hyjt:t0H2",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "02. 분수의 덧셈 (2)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1o4hyjt:qrecall",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "02. 분수의 덧셈 (2)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1o4hyjt:qexample",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "02. 분수의 덧셈 (2)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1o4hyjt:qcondition",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "02. 분수의 덧셈 (2)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1o4hyjt:qerror",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "02. 분수의 덧셈 (2)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1o4hyjt:qa22e4221",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "02. 분수의 덧셈 (2)",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e4-2|1. 분수의 덧셈과 뺄셈|02. 분수의 덧셈 (2):1",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "02. 분수의 덧셈 (2)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e4-2|1. 분수의 덧셈과 뺄셈|02. 분수의 덧셈 (2):2",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "02. 분수의 덧셈 (2)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e4-2|1. 분수의 덧셈과 뺄셈|02. 분수의 덧셈 (2):3",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "02. 분수의 덧셈 (2)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "on02hi:t0L1",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "03. 분수의 뺄셈 (1)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "on02hi:t0L2",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "03. 분수의 뺄셈 (1)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "on02hi:t0H1",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "03. 분수의 뺄셈 (1)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "on02hi:t0H2",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "03. 분수의 뺄셈 (1)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "on02hi:qrecall",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "03. 분수의 뺄셈 (1)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "on02hi:qreason",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "03. 분수의 뺄셈 (1)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "on02hi:qerror",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "03. 분수의 뺄셈 (1)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "on02hi:qa22e4231",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "03. 분수의 뺄셈 (1)",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "on02hi:qa22e4232",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "03. 분수의 뺄셈 (1)",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e4-2|1. 분수의 덧셈과 뺄셈|03. 분수의 뺄셈 (1):1",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "03. 분수의 뺄셈 (1)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e4-2|1. 분수의 덧셈과 뺄셈|03. 분수의 뺄셈 (1):2",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "03. 분수의 뺄셈 (1)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e4-2|1. 분수의 덧셈과 뺄셈|03. 분수의 뺄셈 (1):3",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "03. 분수의 뺄셈 (1)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1kamf0o:t0L1",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "04. 분수의 뺄셈 (2)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1kamf0o:t0L2",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "04. 분수의 뺄셈 (2)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1kamf0o:t0H1",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "04. 분수의 뺄셈 (2)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1kamf0o:t0H2",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "04. 분수의 뺄셈 (2)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1kamf0o:qrecall",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "04. 분수의 뺄셈 (2)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1kamf0o:qreason",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "04. 분수의 뺄셈 (2)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1kamf0o:qexample",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "04. 분수의 뺄셈 (2)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1kamf0o:qcondition",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "04. 분수의 뺄셈 (2)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1kamf0o:qerror",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "04. 분수의 뺄셈 (2)",
+"kind": "qset",
+"off": true,
+"offWas": false,
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1kamf0o:qa22e4241",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "04. 분수의 뺄셈 (2)",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e4-2|1. 분수의 덧셈과 뺄셈|04. 분수의 뺄셈 (2):1",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "04. 분수의 뺄셈 (2)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e4-2|1. 분수의 덧셈과 뺄셈|04. 분수의 뺄셈 (2):2",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "04. 분수의 뺄셈 (2)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e4-2|1. 분수의 덧셈과 뺄셈|04. 분수의 뺄셈 (2):3",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "04. 분수의 뺄셈 (2)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "dqd0ou:t0L1",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "05. 분수의 뺄셈 (3)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "dqd0ou:t0L2",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "05. 분수의 뺄셈 (3)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "dqd0ou:t0H1",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "05. 분수의 뺄셈 (3)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "dqd0ou:t0H2",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "05. 분수의 뺄셈 (3)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "dqd0ou:qrecall",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "05. 분수의 뺄셈 (3)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "dqd0ou:qreason",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "05. 분수의 뺄셈 (3)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "dqd0ou:qexample",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "05. 분수의 뺄셈 (3)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "dqd0ou:qerror",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "05. 분수의 뺄셈 (3)",
+"kind": "qset",
+"off": true,
+"offWas": false,
+"ok": true,
+"by": "claude"
+},
+{
+"id": "dqd0ou:qa22e4251",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "05. 분수의 뺄셈 (3)",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "dqd0ou:qa22e4252",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "05. 분수의 뺄셈 (3)",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e4-2|1. 분수의 덧셈과 뺄셈|05. 분수의 뺄셈 (3):1",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "05. 분수의 뺄셈 (3)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e4-2|1. 분수의 덧셈과 뺄셈|05. 분수의 뺄셈 (3):2",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "05. 분수의 뺄셈 (3)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e4-2|1. 분수의 덧셈과 뺄셈|05. 분수의 뺄셈 (3):3",
+"big": "1. 분수의 덧셈과 뺄셈",
+"small": "05. 분수의 뺄셈 (3)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+}
+],
+"seen": []
+}});
