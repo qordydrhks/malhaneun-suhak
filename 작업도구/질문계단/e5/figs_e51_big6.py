@@ -36,7 +36,7 @@ FIGS['p601_rect'] = D.svg(M(rect(0, 0, 7 * u, 4 * u),
 _hept = D.regular(7, 56)
 FIGS['p601_hept'] = D.svg(M(D.poly(_hept, 'green'),
     *[D.ticks(_hept[i], _hept[(i + 1) % 7]) for i in range(7)]),
-    note='정칠각형 · 한 변이 4 cm 예요.')
+)
 
 FIGS['p601_err'] = D.svg(M(rect(0, 0, 6 * u, 4 * u),
     D.dim_h(0, 6 * u, 4 * u + 12, '6 cm'), D.dim_v(0, 4 * u, -12, '4 cm')))
@@ -48,7 +48,7 @@ FIGS['p602_unit'] = D.svg(M(D.unit_grid(1, 1, color='amber'),
 
 FIGS['p602_grid54'] = D.svg(M(D.unit_grid(5, 4),
     D.dim_h(0, 5 * D.S, 4 * D.S + 12, '5 cm'), D.dim_v(0, 4 * D.S, -12, '4 cm')),
-    note='칸 하나가 1 cm² 예요.')
+)
 
 # ── 03. 직사각형의 넓이 ──────────────────────────────────────────────
 FIGS['p603_two'] = D.svg(D.row([
@@ -60,7 +60,7 @@ FIGS['p603_two'] = D.svg(D.row([
 
 FIGS['p603_grid'] = D.svg(M(D.unit_grid(5, 3),
     D.dim_h(0, 5 * D.S, 3 * D.S + 12, '가로 5 cm'), D.dim_v(0, 3 * D.S, -12, '세로 3 cm')),
-    note='한 줄에 5개씩 3줄이라 1 cm² 가 5 × 3 = 15개예요.')
+)
 
 FIGS['p603_85'] = D.svg(M(rect(0, 0, 8 * u, 5 * u),
     D.dim_h(0, 8 * u, 5 * u + 12, '8 cm'), D.dim_v(0, 5 * u, -12, '5 cm')))
@@ -71,7 +71,7 @@ FIGS['p603_err'] = D.svg(M(rect(0, 0, 6 * u, 4 * u, 'rose'),
 # ── 04. 1 cm² 보다 큰 단위 ──────────────────────────────────────────
 FIGS['p604_m2'] = D.svg(M(rect(0, 0, 5 * u, 5 * u, 'amber'),
     D.dim_h(0, 5 * u, 5 * u + 12, '1 m = 100 cm'), D.dim_v(0, 5 * u, -12, '1 m')),
-    note='가로로 100개, 세로로 100줄이라 1 m² 는 1 cm² 가 100 × 100 = 10000개예요.')
+)
 
 # ── 05. 평행사변형의 넓이 ────────────────────────────────────────────
 def para(b, h, slant, x=0, y=0, color='blue'):
@@ -95,9 +95,8 @@ _a = para(6 * u, 4 * u, 2 * u)
 FIGS['p605_cut'] = D.svg(D.row([
     M(D.poly(_a, 'blue'), D.seg((_a[0][0], _a[0][1]), (_a[0][0], _a[3][1]), 'dashed'),
       D.tag(3 * u, -12, '평행사변형', D.SOFT, 12.5)),
-    M(rect(0, 0, 6 * u, 4 * u, 'green'), D.tag(3 * u, -12, '직사각형', D.SOFT, 12.5),
-      D.dim_h(0, 6 * u, 4 * u + 12, '밑변'), D.dim_v(0, 4 * u, -12, '높이')),
-], gap=64), note='잘라 옮겨 붙이면 밑변과 높이가 그대로인 직사각형이 돼요.')
+    M(rect(0, 0, 6 * u, 4 * u, 'green'), D.tag(3 * u, -12, '직사각형', D.SOFT, 12.5)),
+], gap=64))
 
 FIGS['p605_same'] = D.svg(D.row([
     D.poly(para(6 * u, 4 * u, 1 * u), 'blue'),
@@ -116,7 +115,7 @@ FIGS['p605_err'] = D.svg(M(D.poly(_p4, 'rose'),
     D.dim_h(_p4[3][0], _p4[2][0], 5 * u + 12, '밑변 8 cm'),
     D.dim_v(0, 5 * u, -14, '높이 5 cm'),
     D.tag(_p4[1][0] + 26, 2.6 * u, '6 cm', '#B55B45', 12.5, 700, 'start')),
-    note='비스듬한 변이 6 cm, 수직으로 잰 높이가 5 cm 예요.')
+)
 
 # ── 06. 삼각형의 넓이 ────────────────────────────────────────────────
 def tri(b, h, apex, x=0, y=0):
@@ -129,9 +128,8 @@ FIGS['p606_two'] = D.svg(D.row([
       D.tag(4 * u, 4 * u + 26, '똑같은 삼각형 두 개', D.SOFT, 12.5)),
     M(D.poly(para(6 * u, 4 * u, 2 * u), 'green'),
       D.seg((2 * u, 0), (6 * u, 4 * u), 'dashed'),
-      D.tag(3 * u, -12, '평행사변형', D.SOFT, 12.5),
-      D.dim_h(0, 6 * u, 4 * u + 12, '밑변'), D.dim_v(0, 4 * u, -12, '높이')),
-], gap=64), note='똑같은 삼각형 두 개를 붙이면 평행사변형이 돼요.')
+      D.tag(3 * u, -12, '평행사변형', D.SOFT, 12.5)),
+], gap=64))
 
 FIGS['p606_same'] = D.svg(D.row([
     D.poly(tri(6 * u, 4 * u, 0), 'blue'),
@@ -171,7 +169,7 @@ _r2 = rhom(7 * u, 5 * u)
 FIGS['p607_rect'] = D.svg(M(rect(0, 0, 7 * u, 5 * u, 'green'), D.poly(_r2, 'blue'),
     D.seg(_r2[0], _r2[2], 'dashed'), D.seg(_r2[1], _r2[3], 'dashed'),
     D.dim_h(0, 7 * u, 5 * u + 12, '한 대각선'), D.dim_v(0, 5 * u, -12, '다른 대각선')),
-    note='마름모를 꼭 맞게 둘러싼 직사각형의 넓이는 마름모의 2배예요.')
+)
 
 _r3 = rhom(7.2 * u, 3 * u)
 FIGS['p607_125'] = D.svg(M(D.poly(_r3, 'blue'),
@@ -196,13 +194,16 @@ FIGS['p608_trap'] = D.svg(M(D.poly(_z, 'blue'),
     D.dim_v(0, 4 * u, -14, '높이')),
     note='평행한 두 변이 윗변과 아랫변이에요.')
 
+# 사다리꼴 두 개(하나는 180° 돌린 것) → 밑변이 (윗변 + 아랫변)인 평행사변형
+_za = trap(4 * u, 7 * u, 4 * u)                                   # 그대로
+_zb = [(11 * u, 4 * u), (4 * u, 4 * u), (5.5 * u, 0), (9.5 * u, 0)]  # 180° 돌린 것
 FIGS['p608_two'] = D.svg(D.row([
-    M(D.poly(trap(4 * u, 7 * u, 4 * u), 'blue'), D.tag(3.5 * u, 4 * u + 26, '사다리꼴 두 개', D.SOFT, 12.5)),
-    M(D.poly([(0, 4 * u), (11 * u, 4 * u), (11 * u - 1.5 * u, 0), (1.5 * u, 0)], 'green'),
-      D.seg((1.5 * u, 0), (7 * u, 4 * u), 'dashed'),
-      D.tag(5.5 * u, -12, '평행사변형', D.SOFT, 12.5),
-      D.dim_h(0, 11 * u, 4 * u + 12, '윗변 + 아랫변')),
-], gap=56), note='똑같은 사다리꼴 두 개를 돌려 붙이면 밑변이 (윗변 + 아랫변)인 평행사변형이 돼요.')
+    M(D.poly(_za, 'blue'), D.poly(_zb, 'blue'),
+      D.tag(5.5 * u, 4 * u + 26, '똑같은 사다리꼴 두 개', D.SOFT, 12.5)),
+    M(D.poly([(0, 4 * u), (11 * u, 4 * u), (12.5 * u, 0), (1.5 * u, 0)], 'green'),
+      D.seg((5.5 * u, 0), (7 * u, 4 * u), 'dashed'),
+      D.tag(6.2 * u, -12, '평행사변형', D.SOFT, 12.5)),
+], gap=56))
 
 _z2 = trap(5 * u, 9 * u, 6 * u)
 FIGS['p608_596'] = D.svg(M(D.poly(_z2, 'blue'),
@@ -225,20 +226,18 @@ if __name__ == '__main__':
 # ── 어느 질문에 어느 그림을 붙이나 (대단원, 소단원, 질문꼬리, 그림이름) ────────
 #   질문 문장은 그대로 두고 그림만 더한다. 그림의 수는 질문의 수와 반드시 같다.
 MAP = [
- ('6','01','qapre0601','p601_hex'),  ('6','01','t0L1','p601_peri'), ('6','01','t0L2','p601_rect'),
  ('6','01','qrecall','p601_hept'),   ('6','01','qerror','p601_err'),
- ('6','02','t0L1','p602_unit'),      ('6','02','qrecall','p602_grid54'),
- ('6','03','t0L1','p603_two'),       ('6','03','t0H1','p603_grid'),
+ ('6','02','qrecall','p602_grid54'),
+ ('6','03','t0H1','p603_grid'),
  ('6','03','qrecall','p603_85'),     ('6','03','qerror','p603_err'),
  ('6','04','t0H1','p604_m2'),
- ('6','05','qapre0605','p605_para'), ('6','05','t0L1','p605_bh'),   ('6','05','t0H1','p605_cut'),
+ ('6','05','t0H1','p605_cut'),
  ('6','05','t0H2','p605_same'),      ('6','05','qrecall','p605_73'), ('6','05','qerror','p605_err'),
  ('6','06','t0H1','p606_two'),       ('6','06','t0H2','p606_same'),
  ('6','06','qrecall','p606_85'),     ('6','06','qerror','p606_err'),
- ('6','06','qamu57w6iw8dq9','p606_base'),
- ('6','07','qapre0607','p607_rhom'), ('6','07','t0H1','p607_rect'),
+ ('6','07','t0H1','p607_rect'),
  ('6','07','qrecall','p607_125'),    ('6','07','qerror','p607_err'),
- ('6','08','qapre0608','p608_trap'), ('6','08','t0H1','p608_two'),
+ ('6','08','t0H1','p608_two'),
  ('6','08','qrecall','p608_596'),    ('6','08','qerror','p608_err'),
 ]
 
@@ -273,7 +272,7 @@ FIGS['l607_square'] = D.svg(M(D.poly(_sq, 'blue'),
     D.right_angle((3 * u, 3 * u), _sq[0], _sq[1]),
     *[D.ticks(_sq[i], _sq[(i + 1) % 4]) for i in range(4)],
     D.dim_h(0, 6 * u, 6 * u + 12, '6 cm'), D.dim_v(0, 6 * u, -12, '6 cm')),
-    note='두 대각선의 길이가 같은 마름모가 정사각형이에요.')
+)
 
 _lz = trap(4 * u, 8 * u, 5 * u)
 FIGS['l608_trap'] = D.svg(M(D.poly(_lz, 'green'),
@@ -282,9 +281,5 @@ FIGS['l608_trap'] = D.svg(M(D.poly(_lz, 'green'),
     D.dim_h(0, 8 * u, 5 * u + 12, '아랫변'), D.dim_v(0, 5 * u, -14, '높이')))
 
 MAP += [
- ('6','05','L1','l605_bh'),
- ('6','06','L1','l606_bh'),
- ('6','06','L3','l606_wrong'),
  ('6','07','L4','l607_square'),
- ('6','08','L1','l608_trap'),
 ]

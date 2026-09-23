@@ -34,6 +34,10 @@ FLAT = {   # 평면 격자용 (채움, 테두리)
 W, H, Z = 27, 15.5, 31      # 정육면체 한 칸의 가로 반폭 · 세로 반높이 · 높이
 
 
+def _textw(t, size):
+    """글자 폭 어림 — 한글은 글자 크기만큼, 나머지는 그 절반쯤"""
+    return sum(size if ord(c) > 0x1100 else size * 0.54 for c in str(t))
+
 def _poly(pts, fill, stroke, sw=1.1):
     d = ' '.join('%.1f,%.1f' % p for p in pts)
     return ('<polygon points="%s" fill="%s" stroke="%s" stroke-width="%s" '
@@ -204,7 +208,9 @@ def dim_h(x1, x2, y, text, below=True, color=SOFT):
         f.add('<line x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f" stroke="%s" stroke-width="1"/>'
               % (x, y - 4, x, y + 4, color), [(x, y - 4), (x, y + 4)])
     yy = y + (16 if below else -8)
-    f.add(_txt((x1 + x2) / 2, yy, text, 12.5, color, 700), [((x1 + x2) / 2, yy + t)])
+    w = _textw(text, 12.5)
+    f.add(_txt((x1 + x2) / 2, yy, text, 12.5, color, 700),
+          [((x1 + x2) / 2 - w / 2, yy + t), ((x1 + x2) / 2 + w / 2, yy + t)])
     return f
 
 def dim_v(y1, y2, x, text, left=True, color=SOFT):
@@ -216,8 +222,9 @@ def dim_v(y1, y2, x, text, left=True, color=SOFT):
         f.add('<line x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f" stroke="%s" stroke-width="1"/>'
               % (x - 4, y, x + 4, y, color), [(x - 4, y), (x + 4, y)])
     xx = x + (-9 if left else 9)
-    f.add(_txt(xx, (y1 + y2) / 2 + 4, text, 12.5, color, 700,
-               'end' if left else 'start'), [(xx - (46 if left else 0), (y1 + y2) / 2)])
+    w = _textw(text, 12.5)
+    f.add(_txt(xx, (y1 + y2) / 2 + 4, text, 12.5, color, 700, 'end' if left else 'start'),
+          [(xx - (w if left else 0), (y1 + y2) / 2), (xx + (0 if left else w), (y1 + y2) / 2)])
     return f
 
 def right_angle(corner, p1, p2, size=10, color='#6E6A86'):
@@ -270,7 +277,11 @@ def unit_grid(cols, rows, origin=(0, 0), color='blue', mark=None):
     return f
 
 def tag(x, y, text, color=INK, size=12.5, weight=700, anchor='middle'):
-    f = Fig(); f.add(_txt(x, y, text, size, color, weight, anchor), [(x, y - size), (x, y + 4)])
+    """글자. 글자가 차지하는 폭까지 화면 크기에 넣는다(안 넣으면 잘린다)"""
+    w = _textw(text, size)
+    x0 = x - w / 2 if anchor == 'middle' else (x if anchor == 'start' else x - w)
+    f = Fig(); f.add(_txt(x, y, text, size, color, weight, anchor),
+                     [(x0, y - size), (x0 + w, y + 4)])
     return f
 
 def to_arrow(x, y, text='자르면'):
