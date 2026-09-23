@@ -4148,3 +4148,1177 @@
 ],
 "seen": []
 }});
+
+/* [0923] 2026-09-23 초6-2 1단원 마스터 검토 반영 + 같은 기준을 2~6단원에 적용.
+   기준표_초등_질문.md 13절: 오류 찾기가 답을 미리 말하면 뺌 · 옆 질문이 정면으로 묻는 오류 찾기는 뺌 ·
+   소단원 살아 있는 질문 5~6개 유지(모자라면 "직접 만들어 봐"를 2회차로 되살림) · 문장은 짧고 바로.
+   원천 작업도구/질문계단/make_plan_0923.py */
+(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'e6-2_2026-09-23a', data:{
+"format": "qr-plan-2",
+"grade": "e6-2",
+"rounds": 3,
+"items": [
+{
+"id": "4tqc50:t0L1",
+"big": "1. 분수의 나눗셈",
+"small": "01. 분모가 같은 (분수)÷(분수)(1)·나누어떨어지는 경우",
+"kind": "low",
+"newQ": "4/5 안에 1/5이 몇 번 들어가?",
+"qWas": "4/5 ÷ 1/5은 무엇을 세어서 구해?",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "4tqc50:t0L2",
+"big": "1. 분수의 나눗셈",
+"small": "01. 분모가 같은 (분수)÷(분수)(1)·나누어떨어지는 경우",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "4tqc50:t0H1",
+"big": "1. 분수의 나눗셈",
+"small": "01. 분모가 같은 (분수)÷(분수)(1)·나누어떨어지는 경우",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "4tqc50:t0H2",
+"big": "1. 분수의 나눗셈",
+"small": "01. 분모가 같은 (분수)÷(분수)(1)·나누어떨어지는 경우",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "4tqc50:qrecall",
+"big": "1. 분수의 나눗셈",
+"small": "01. 분모가 같은 (분수)÷(분수)(1)·나누어떨어지는 경우",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "4tqc50:qreason",
+"big": "1. 분수의 나눗셈",
+"small": "01. 분모가 같은 (분수)÷(분수)(1)·나누어떨어지는 경우",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "4tqc50:qexample",
+"big": "1. 분수의 나눗셈",
+"small": "01. 분모가 같은 (분수)÷(분수)(1)·나누어떨어지는 경우",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "4tqc50:qerror",
+"big": "1. 분수의 나눗셈",
+"small": "01. 분모가 같은 (분수)÷(분수)(1)·나누어떨어지는 경우",
+"kind": "qset",
+"newQ": "친구가 6/7 ÷ 2/7를 3/1이라고 했어. 뭐가 잘못됐는지 찾고, 바른 답도 말해 봐.",
+"qWas": "친구가 6/7 ÷ 2/7를 분모끼리도 나눠서 3/1이라고 했어. 뭐가 잘못됐는지 찾고, 바른 답도 말해 봐.",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "4tqc50:qa22e6211",
+"big": "1. 분수의 나눗셈",
+"small": "01. 분모가 같은 (분수)÷(분수)(1)·나누어떨어지는 경우",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|01. 분모가 같은 (분수)÷(분수)(1)·나누어떨어지는 경우:1",
+"big": "1. 분수의 나눗셈",
+"small": "01. 분모가 같은 (분수)÷(분수)(1)·나누어떨어지는 경우",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|01. 분모가 같은 (분수)÷(분수)(1)·나누어떨어지는 경우:2",
+"big": "1. 분수의 나눗셈",
+"small": "01. 분모가 같은 (분수)÷(분수)(1)·나누어떨어지는 경우",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1wjql2g:t0L1",
+"big": "1. 분수의 나눗셈",
+"small": "02. 분모가 같은 (분수)÷(분수)(2)·나누어떨어지지 않는 경우",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1wjql2g:t0L2",
+"big": "1. 분수의 나눗셈",
+"small": "02. 분모가 같은 (분수)÷(분수)(2)·나누어떨어지지 않는 경우",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1wjql2g:t0H1",
+"big": "1. 분수의 나눗셈",
+"small": "02. 분모가 같은 (분수)÷(분수)(2)·나누어떨어지지 않는 경우",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1wjql2g:t0H2",
+"big": "1. 분수의 나눗셈",
+"small": "02. 분모가 같은 (분수)÷(분수)(2)·나누어떨어지지 않는 경우",
+"kind": "high",
+"newQ": "5/8 ÷ 2/8의 몫이 2와 1/2이 되는 이유를 말해 봐.",
+"qWas": "5/8 안에 2/8가 2번 들어가고 반이 남아. 이게 5/8 ÷ 2/8 = 2와 1/2과 어떻게 이어지는지 말해 봐.",
+"round": 1,
+"rWas": 2,
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1wjql2g:qrecall",
+"big": "1. 분수의 나눗셈",
+"small": "02. 분모가 같은 (분수)÷(분수)(2)·나누어떨어지지 않는 경우",
+"kind": "qset",
+"round": 2,
+"rWas": 0,
+"off": false,
+"offWas": true,
+"ok": true,
+"answer": "분자끼리 9 ÷ 2를 하면 4와 1/2이야.",
+"keys": [
+"분자끼리 나눈다",
+"4와 1/2"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "",
+"k": []
+},
+"reopen": true,
+"by": "claude"
+},
+{
+"id": "1wjql2g:qreason",
+"big": "1. 분수의 나눗셈",
+"small": "02. 분모가 같은 (분수)÷(분수)(2)·나누어떨어지지 않는 경우",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1wjql2g:qexample",
+"big": "1. 분수의 나눗셈",
+"small": "02. 분모가 같은 (분수)÷(분수)(2)·나누어떨어지지 않는 경우",
+"kind": "qset",
+"round": 2,
+"rWas": 0,
+"off": false,
+"offWas": true,
+"ok": true,
+"answer": "예를 들어 7/8 ÷ 2/8을 만들면 분자끼리 7 ÷ 2 = 3과 1/2이야.",
+"keys": [
+"분모가 같은 식을 직접 만든다",
+"분자끼리 나눠 대분수로 나타낸다"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "",
+"k": []
+},
+"reopen": true,
+"by": "claude"
+},
+{
+"id": "1wjql2g:qerror",
+"big": "1. 분수의 나눗셈",
+"small": "02. 분모가 같은 (분수)÷(분수)(2)·나누어떨어지지 않는 경우",
+"kind": "qset",
+"off": true,
+"offWas": false,
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1wjql2g:qa22e6221",
+"big": "1. 분수의 나눗셈",
+"small": "02. 분모가 같은 (분수)÷(분수)(2)·나누어떨어지지 않는 경우",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|02. 분모가 같은 (분수)÷(분수)(2)·나누어떨어지지 않는 경우:1",
+"big": "1. 분수의 나눗셈",
+"small": "02. 분모가 같은 (분수)÷(분수)(2)·나누어떨어지지 않는 경우",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|02. 분모가 같은 (분수)÷(분수)(2)·나누어떨어지지 않는 경우:2",
+"big": "1. 분수의 나눗셈",
+"small": "02. 분모가 같은 (분수)÷(분수)(2)·나누어떨어지지 않는 경우",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rl95sd:t0L1",
+"big": "1. 분수의 나눗셈",
+"small": "03. 분모가 다른 (분수)÷(분수)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rl95sd:t0L2",
+"big": "1. 분수의 나눗셈",
+"small": "03. 분모가 다른 (분수)÷(분수)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rl95sd:t0H1",
+"big": "1. 분수의 나눗셈",
+"small": "03. 분모가 다른 (분수)÷(분수)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rl95sd:t0H2",
+"big": "1. 분수의 나눗셈",
+"small": "03. 분모가 다른 (분수)÷(분수)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rl95sd:qrecall",
+"big": "1. 분수의 나눗셈",
+"small": "03. 분모가 다른 (분수)÷(분수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rl95sd:qreason",
+"big": "1. 분수의 나눗셈",
+"small": "03. 분모가 다른 (분수)÷(분수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rl95sd:qexample",
+"big": "1. 분수의 나눗셈",
+"small": "03. 분모가 다른 (분수)÷(분수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rl95sd:qerror",
+"big": "1. 분수의 나눗셈",
+"small": "03. 분모가 다른 (분수)÷(분수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rl95sd:qa22e6231",
+"big": "1. 분수의 나눗셈",
+"small": "03. 분모가 다른 (분수)÷(분수)",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|03. 분모가 다른 (분수)÷(분수):1",
+"big": "1. 분수의 나눗셈",
+"small": "03. 분모가 다른 (분수)÷(분수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|03. 분모가 다른 (분수)÷(분수):2",
+"big": "1. 분수의 나눗셈",
+"small": "03. 분모가 다른 (분수)÷(분수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rymc4w:t0L1",
+"big": "1. 분수의 나눗셈",
+"small": "04. (자연수)÷(분수)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rymc4w:t0L2",
+"big": "1. 분수의 나눗셈",
+"small": "04. (자연수)÷(분수)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rymc4w:t0H1",
+"big": "1. 분수의 나눗셈",
+"small": "04. (자연수)÷(분수)",
+"kind": "high",
+"round": 2,
+"rWas": 1,
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rymc4w:t0H2",
+"big": "1. 분수의 나눗셈",
+"small": "04. (자연수)÷(분수)",
+"kind": "high",
+"newQ": "넓이가 3/8 m²이고 높이가 5/7 m인 삼각형의 밑변을 어떻게 구할까?",
+"qWas": "넓이가 3/8 m²이고 높이가 5/7 m인 삼각형의 밑변을 구하는 식을 말해 봐.",
+"round": 1,
+"rWas": 2,
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rymc4w:qrecall",
+"big": "1. 분수의 나눗셈",
+"small": "04. (자연수)÷(분수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rymc4w:qreason",
+"big": "1. 분수의 나눗셈",
+"small": "04. (자연수)÷(분수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rymc4w:qexample",
+"big": "1. 분수의 나눗셈",
+"small": "04. (자연수)÷(분수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rymc4w:qerror",
+"big": "1. 분수의 나눗셈",
+"small": "04. (자연수)÷(분수)",
+"kind": "qset",
+"off": true,
+"offWas": false,
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rymc4w:qa22e6241",
+"big": "1. 분수의 나눗셈",
+"small": "04. (자연수)÷(분수)",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|04. (자연수)÷(분수):1",
+"big": "1. 분수의 나눗셈",
+"small": "04. (자연수)÷(분수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|04. (자연수)÷(분수):2",
+"big": "1. 분수의 나눗셈",
+"small": "04. (자연수)÷(분수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|04. (자연수)÷(분수):3",
+"big": "1. 분수의 나눗셈",
+"small": "04. (자연수)÷(분수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1jx91nq:t0L1",
+"big": "1. 분수의 나눗셈",
+"small": "05. (분수)÷(분수)를 분수의 곱셈으로 나타내기",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1jx91nq:t0L2",
+"big": "1. 분수의 나눗셈",
+"small": "05. (분수)÷(분수)를 분수의 곱셈으로 나타내기",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1jx91nq:t0H1",
+"big": "1. 분수의 나눗셈",
+"small": "05. (분수)÷(분수)를 분수의 곱셈으로 나타내기",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1jx91nq:t0H2",
+"big": "1. 분수의 나눗셈",
+"small": "05. (분수)÷(분수)를 분수의 곱셈으로 나타내기",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1jx91nq:qrecall",
+"big": "1. 분수의 나눗셈",
+"small": "05. (분수)÷(분수)를 분수의 곱셈으로 나타내기",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1jx91nq:qreason",
+"big": "1. 분수의 나눗셈",
+"small": "05. (분수)÷(분수)를 분수의 곱셈으로 나타내기",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1jx91nq:qexample",
+"big": "1. 분수의 나눗셈",
+"small": "05. (분수)÷(분수)를 분수의 곱셈으로 나타내기",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1jx91nq:qerror",
+"big": "1. 분수의 나눗셈",
+"small": "05. (분수)÷(분수)를 분수의 곱셈으로 나타내기",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1jx91nq:qa22e6251",
+"big": "1. 분수의 나눗셈",
+"small": "05. (분수)÷(분수)를 분수의 곱셈으로 나타내기",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|05. (분수)÷(분수)를 분수의 곱셈으로 나타내기:1",
+"big": "1. 분수의 나눗셈",
+"small": "05. (분수)÷(분수)를 분수의 곱셈으로 나타내기",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|05. (분수)÷(분수)를 분수의 곱셈으로 나타내기:2",
+"big": "1. 분수의 나눗셈",
+"small": "05. (분수)÷(분수)를 분수의 곱셈으로 나타내기",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1hebvay:t0L1",
+"big": "1. 분수의 나눗셈",
+"small": "06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1hebvay:t0L2",
+"big": "1. 분수의 나눗셈",
+"small": "06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1hebvay:t0H1",
+"big": "1. 분수의 나눗셈",
+"small": "06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1hebvay:t0H2",
+"big": "1. 분수의 나눗셈",
+"small": "06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1hebvay:qrecall",
+"big": "1. 분수의 나눗셈",
+"small": "06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1hebvay:qreason",
+"big": "1. 분수의 나눗셈",
+"small": "06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수)",
+"kind": "qset",
+"newQ": "주스 1과 1/2 L를 한 컵에 1/2 L씩 담으면 몇 컵이야?",
+"qWas": "주스 1과 1/2 L를 한 컵에 1/2 L씩 담으면 몇 컵이야? 1과 1/2을 3/2로 바꾸는 게 무슨 뜻인지도 말해 봐.",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1hebvay:qexample",
+"big": "1. 분수의 나눗셈",
+"small": "06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1hebvay:qerror",
+"big": "1. 분수의 나눗셈",
+"small": "06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1hebvay:qa22e6261",
+"big": "1. 분수의 나눗셈",
+"small": "06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수)",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수):1",
+"big": "1. 분수의 나눗셈",
+"small": "06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수):2",
+"big": "1. 분수의 나눗셈",
+"small": "06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수):3",
+"big": "1. 분수의 나눗셈",
+"small": "06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ou2559:qerror",
+"big": "2. 소수의 나눗셈",
+"small": "02. (소수 두 자리 수)÷(소수 두 자리 수)",
+"kind": "qset",
+"newQ": "친구가 1.28 ÷ 0.16을 12.8 ÷ 1.6으로 바꿨어. 뭐가 잘못됐는지, 어떻게 바꿔야 하는지 말해 봐.",
+"newQBy": "claude",
+"qWas": "친구가 1.28 ÷ 0.16을 두 수를 10배 해서 12.8 ÷ 1.6으로 바꿨어. 뭐가 잘못됐는지, 어떻게 바꿔야 하는지 말해 봐.",
+"by": "claude"
+},
+{
+"id": "8i73lk:qerror",
+"big": "2. 소수의 나눗셈",
+"small": "05. 몫을 반올림하여 나타내 볼까요",
+"kind": "qset",
+"newQ": "친구가 10 ÷ 7 = 1.428…을 소수 첫째 자리까지 반올림해서 1.5라고 했어. 뭐가 잘못됐는지 찾고, 바른 답도 말해 봐.",
+"newQBy": "claude",
+"qWas": "친구가 10 ÷ 7 = 1.428…을 소수 첫째 자리까지 반올림하면서 첫째 자리 숫자 4를 보고 1.5라고 했어. 뭐가 잘못됐는지 찾고, 바른 답도 말해 봐.",
+"by": "claude"
+},
+{
+"id": "1tom1oz:t0H2",
+"big": "2. 소수의 나눗셈",
+"small": "06. 나누어 주고 남는 양을 알아볼까요",
+"kind": "high",
+"newQ": "나누어 주고 남는 양을 구한 뒤, 답이 맞는지 어떻게 확인해?",
+"newQBy": "claude",
+"qWas": "나누는 수 × 몫 + 남는 양이 처음 양이 되는지로 답을 확인할 수 있는 이유를 말해 봐.",
+"answer": "나누는 수 × 몫에 남는 양을 더해서 처음 양이 나오는지 봐. 2 × 3 + 1.4 = 7.4니까 맞아.",
+"keys": [
+"나누는 수 × 몫 + 남는 양",
+"처음 양이 나오면 맞다"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "나누어 준 양은 나누는 수 × 몫이고, 거기에 남는 양을 더하면 처음 양 전체가 돼야 해. 2 × 3 + 1.4 = 7.4야.",
+"k": [
+"나누어 준 양 + 남는 양 = 처음 양",
+"2 × 3 + 1.4 = 7.4"
+]
+},
+"by": "claude"
+},
+{
+"id": "1svq0id:t0L1",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "low",
+"newQ": "쌓은 모양에 숨겨진 쌓기나무가 있는지 어떻게 알아?",
+"newQBy": "claude",
+"qWas": "보이는 위의 면과 위에서 본 모양이 같으면 숨겨진 쌓기나무가 있어?",
+"answer": "보이는 위의 면과 위에서 본 모양을 비교해 봐. 두 모양이 같으면 숨겨진 쌓기나무가 없어.",
+"keys": [
+"두 모양을 비교한다",
+"같으면 숨겨진 쌓기나무가 없다"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "위에서 본 모양의 모든 자리가 보이니까 숨겨진 쌓기나무가 없어.",
+"k": [
+"숨겨진 쌓기나무가 없다"
+]
+},
+"by": "claude"
+},
+{
+"id": "13f0an5:t0L2",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "low",
+"newQ": "앞에서 본 모양을 그릴 때 각 줄에서 몇 층까지 그려?",
+"newQBy": "claude",
+"qWas": "앞에서 본 모양은 각 줄에서 어떤 높이로 보여?",
+"answer": "각 줄에서 가장 높이 쌓인 층까지 그려.",
+"keys": [
+"가장 높이 쌓인 층까지"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "각 줄에서 가장 높이 쌓인 층까지 보여.",
+"k": [
+"가장 높은 층까지 보인다"
+]
+},
+"by": "claude"
+},
+{
+"id": "ogp9kt:t0L1",
+"big": "3. 공간과 입체",
+"small": "06. 여러 가지 모양을 만들어 볼까요",
+"kind": "low",
+"newQ": "쌓기나무 3개로 만든 모양에 1개를 붙여서 서로 다른 4개짜리 모양을 어떻게 찾아?",
+"newQBy": "claude",
+"qWas": "쌓기나무 4개로 서로 다른 모양은 어떻게 만들어?",
+"answer": "3개짜리 모양에 1개를 여러 자리에 붙여 보고, 돌리거나 뒤집어서 겹치는 것은 빼.",
+"keys": [
+"1개를 여러 자리에 붙여 본다",
+"겹치는 것은 한 가지로 센다"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "쌓기나무 3개로 만든 모양에 1개를 여러 자리에 붙여 봐.",
+"k": [
+"3개 모양에 1개를 붙인다"
+]
+},
+"by": "claude"
+},
+{
+"id": "1rppnci:qerror",
+"big": "4. 비례식과 비례배분",
+"small": "01. 비의 성질을 알아볼까요",
+"kind": "qset",
+"newQ": "친구가 3 : 5와 6 : 5가 비율이 같은 비라고 했어. 뭐가 잘못됐는지 찾고, 바른 비도 말해 봐.",
+"newQBy": "claude",
+"qWas": "친구가 3 : 5의 전항에만 2를 곱해서 6 : 5가 비율이 같은 비라고 했어. 뭐가 잘못됐는지 찾고, 바른 비도 말해 봐.",
+"by": "claude"
+},
+{
+"id": "rnej04:t0H2",
+"big": "4. 비례식과 비례배분",
+"small": "02. 간단한 자연수의 비로 나타내 볼까요",
+"kind": "high",
+"newQ": "1/4 : 0.5처럼 분수와 소수가 섞인 비는 어떻게 간단한 자연수의 비로 나타내?",
+"newQBy": "claude",
+"qWas": "1/4 : 0.13처럼 분수와 소수가 섞인 비는 어떻게 간단한 자연수의 비로 나타내?",
+"answer": "먼저 1/4을 0.25로 바꿔서 둘 다 소수로 맞춰. 0.25 : 0.5에 100을 곱하면 25 : 50이고, 25로 나누면 1 : 2야.",
+"keys": [
+"분수나 소수 하나로 맞춘다",
+"1 : 2"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "먼저 1/4을 0.25로 바꿔서 둘 다 소수로 맞춰. 0.25 : 0.13에 100을 곱하면 25 : 13이야.",
+"k": [
+"분수나 소수 하나로 맞춘다",
+"25 : 13"
+]
+},
+"by": "claude"
+},
+{
+"id": "wbcjzk:qerror",
+"big": "5. 원의 둘레와 넓이",
+"small": "04. 원의 넓이를 구하는 방법을 알아볼까요",
+"kind": "qset",
+"newQ": "친구가 반지름이 5 cm인 원의 넓이를 10 × 10 × 3.14 = 314 cm²라고 했어. 뭐가 잘못됐는지 찾고, 바른 답도 말해 봐.",
+"newQBy": "claude",
+"qWas": "친구가 반지름이 5 cm인 원의 넓이를 지름으로 10 × 10 × 3.14 = 314 cm²라고 했어. 뭐가 잘못됐는지 찾고, 바른 답도 말해 봐.",
+"by": "claude"
+},
+{
+"id": "ctfuf0:t0L1",
+"big": "5. 원의 둘레와 넓이",
+"small": "05. 원의 둘레와 넓이를 활용해 볼까요",
+"kind": "low",
+"newQ": "색칠한 부분의 넓이는 어떻게 구해?",
+"newQBy": "claude",
+"qWas": "색칠한 부분의 넓이를 전체 넓이에서 빼서 구하는 방법을 말해 봐.",
+"by": "claude"
+},
+{
+"id": "10ptnmf:t0L2",
+"big": "5. 원의 둘레와 넓이",
+"small": "03. 원의 넓이를 어림해 볼까요",
+"kind": "low",
+"newQ": "모눈을 이용하면 원의 넓이는 어떤 두 넓이 사이에 있어?",
+"newQBy": "claude",
+"qWas": "② 모눈을 이용하면 원의 넓이는 어떤 두 넓이 사이에 있을까? (안쪽·바깥쪽 모눈 넓이)",
+"answer": "원 안에 완전히 들어가는 모눈의 넓이보다는 크고, 원에 조금이라도 걸치는 모눈까지 다 센 넓이보다는 작아.",
+"keys": [
+"안에 완전히 들어가는 모눈 넓이보다 크다",
+"걸치는 모눈까지 센 넓이보다 작다"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "",
+"k": []
+},
+"off": false,
+"offWas": true,
+"round": 2,
+"rWas": 0,
+"by": "claude"
+},
+{
+"id": "ou2559:qa22e6221",
+"big": "2. 소수의 나눗셈",
+"small": "02. (소수 두 자리 수)÷(소수 두 자리 수)",
+"kind": "add",
+"off": true,
+"offBy": "claude",
+"offWas": false,
+"by": "claude"
+},
+{
+"id": "8i73lk:qa22e6251",
+"big": "2. 소수의 나눗셈",
+"small": "05. 몫을 반올림하여 나타내 볼까요",
+"kind": "add",
+"off": true,
+"offBy": "claude",
+"offWas": false,
+"by": "claude"
+},
+{
+"id": "1niet2v:qerror",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "qset",
+"off": true,
+"offBy": "claude",
+"offWas": false,
+"by": "claude"
+},
+{
+"id": "1svq0id:qerror",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "qset",
+"off": true,
+"offBy": "claude",
+"offWas": false,
+"by": "claude"
+},
+{
+"id": "rnej04:t0H1",
+"big": "4. 비례식과 비례배분",
+"small": "02. 간단한 자연수의 비로 나타내 볼까요",
+"kind": "high",
+"off": true,
+"offBy": "claude",
+"offWas": false,
+"by": "claude"
+},
+{
+"id": "301yqk:qa22e6241",
+"big": "4. 비례식과 비례배분",
+"small": "04. 비례식의 성질을 알아볼까요",
+"kind": "add",
+"off": true,
+"offBy": "claude",
+"offWas": false,
+"by": "claude"
+},
+{
+"id": "1muug30:qerror",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "qset",
+"off": true,
+"offBy": "claude",
+"offWas": false,
+"by": "claude"
+},
+{
+"id": "10ptnmf:qerror",
+"big": "5. 원의 둘레와 넓이",
+"small": "03. 원의 넓이를 어림해 볼까요",
+"kind": "qset",
+"off": true,
+"offBy": "claude",
+"offWas": false,
+"by": "claude"
+},
+{
+"id": "ctfuf0:qerror",
+"big": "5. 원의 둘레와 넓이",
+"small": "05. 원의 둘레와 넓이를 활용해 볼까요",
+"kind": "qset",
+"off": true,
+"offBy": "claude",
+"offWas": false,
+"by": "claude"
+},
+{
+"id": "nc4ahp:qreason",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "02. 원기둥의 전개도를 알아볼까요",
+"kind": "qset",
+"off": true,
+"offBy": "claude",
+"offWas": false,
+"by": "claude"
+},
+{
+"id": "1f2rp7u:qexample",
+"big": "2. 소수의 나눗셈",
+"small": "01. (소수 한 자리 수)÷(소수 한 자리 수)",
+"kind": "qset",
+"off": false,
+"offWas": true,
+"round": 2,
+"rWas": 0,
+"answer": "예를 들어 8.4 ÷ 0.6을 만들면, 두 수를 똑같이 10배 해서 84 ÷ 6 = 14로 계산해.",
+"keys": [
+"식을 직접 만든다",
+"두 수를 똑같이 10배 해서 자연수로 계산"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "",
+"k": []
+},
+"by": "claude"
+},
+{
+"id": "1dkf48z:qexample",
+"big": "2. 소수의 나눗셈",
+"small": "03. 자릿수가 다른 (소수)÷(소수)",
+"kind": "qset",
+"off": false,
+"offWas": true,
+"round": 2,
+"rWas": 0,
+"answer": "예를 들어 3.45 ÷ 1.5를 만들면, 소수점 자리가 많은 쪽에 맞춰 둘 다 100배 해서 345 ÷ 150 = 2.3으로 계산해.",
+"keys": [
+"자리가 많은 쪽에 맞춰 똑같이 옮긴다",
+"자연수의 나눗셈으로 계산"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "",
+"k": []
+},
+"by": "claude"
+},
+{
+"id": "1niet2v:qrecall",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "qset",
+"off": false,
+"offWas": true,
+"round": 2,
+"rWas": 0,
+"answer": "앞에 있는 물체는 온전히 보이고, 뒤에 있는 물체는 가려져서 일부만 보이거나 아예 안 보여.",
+"keys": [
+"앞은 온전히 보인다",
+"뒤는 가려져 일부만 보인다"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "",
+"k": []
+},
+"by": "claude"
+},
+{
+"id": "1niet2v:qexample",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "qset",
+"off": false,
+"offWas": true,
+"round": 2,
+"rWas": 0,
+"answer": "컵 앞에 인형을 두면 앞에서는 인형이 컵을 가려. 뒤에서 보면 컵이 앞에 오고 인형이 가려져.",
+"keys": [
+"가리는 물체가 바뀐다",
+"앞뒤 순서가 반대로 보인다"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "",
+"k": []
+},
+"by": "claude"
+},
+{
+"id": "1svq0id:qexample",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "qset",
+"off": false,
+"offWas": true,
+"round": 2,
+"rWas": 0,
+"answer": "한 층으로만 쌓으면 두 모양이 같아. 뒤쪽에 낮게 쌓인 자리가 가려져 있으면 보이는 위의 면에는 안 나와서 달라져.",
+"keys": [
+"같은 경우: 숨겨진 쌓기나무가 없을 때",
+"다른 경우: 가려진 자리가 있을 때"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "",
+"k": []
+},
+"by": "claude"
+},
+{
+"id": "13f0an5:qexample",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "qset",
+"off": false,
+"offWas": true,
+"round": 2,
+"rWas": 0,
+"answer": "1층에 2칸을 나란히 놓고 한쪽에만 1개를 더 쌓으면, 위에서는 2칸, 앞에서는 한쪽이 2층, 옆에서는 1층으로 보여.",
+"keys": [
+"세 방향이 서로 다른 예를 든다",
+"각 방향에서 어떻게 보이는지 말한다"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "",
+"k": []
+},
+"by": "claude"
+},
+{
+"id": "doo3rd:qexample",
+"big": "3. 공간과 입체",
+"small": "04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기",
+"kind": "qset",
+"off": false,
+"offWas": true,
+"round": 2,
+"rWas": 0,
+"answer": "네 자리에 2, 1, 3, 1을 쓰면 그 자리마다 그 수만큼 쌓은 모양이고, 다 더하면 7개야.",
+"keys": [
+"자리마다 쌓은 층수를 쓴다",
+"수를 다 더하면 전체 개수"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "",
+"k": []
+},
+"by": "claude"
+},
+{
+"id": "ogp9kt:qexample",
+"big": "3. 공간과 입체",
+"small": "06. 여러 가지 모양을 만들어 볼까요",
+"kind": "qset",
+"off": false,
+"offWas": true,
+"round": 2,
+"rWas": 0,
+"answer": "3개를 한 줄로 놓고 끝에 1개를 붙이면 4개짜리 한 줄 모양이 돼. 가운데 위에 붙이면 다른 모양이야.",
+"keys": [
+"3개 모양에 1개를 붙인 자리를 말한다",
+"붙이는 자리가 다르면 다른 모양"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "",
+"k": []
+},
+"by": "claude"
+},
+{
+"id": "301yqk:qexample",
+"big": "4. 비례식과 비례배분",
+"small": "04. 비례식의 성질을 알아볼까요",
+"kind": "qset",
+"off": false,
+"offWas": true,
+"round": 2,
+"rWas": 0,
+"answer": "2 : 5 = 4 : 10을 만들면 외항의 곱은 2 × 10 = 20, 내항의 곱은 5 × 4 = 20으로 같아.",
+"keys": [
+"비례식을 직접 만든다",
+"외항의 곱과 내항의 곱이 같음을 확인"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "",
+"k": []
+},
+"by": "claude"
+},
+{
+"id": "1ukj7lx:qexample",
+"big": "4. 비례식과 비례배분",
+"small": "05. 비례식을 활용해 볼까요",
+"kind": "qset",
+"off": false,
+"offWas": true,
+"round": 2,
+"rWas": 0,
+"answer": "사과 3개가 2000원일 때 9개는 얼마인지 구하는 문제야. 3 : 2000 = 9 : □로 세워.",
+"keys": [
+"두 양의 비가 일정한 상황을 만든다",
+"비례식으로 세운다"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "",
+"k": []
+},
+"by": "claude"
+},
+{
+"id": "1muug30:qexample",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "qset",
+"off": false,
+"offWas": true,
+"round": 2,
+"rWas": 0,
+"answer": "지름 5 cm인 원의 원주는 15.7 cm라 15.7 ÷ 5 = 3.14이고, 지름 10 cm인 원은 31.4 ÷ 10 = 3.14로 같아.",
+"keys": [
+"크기가 다른 두 원으로 원주 ÷ 지름을 구한다",
+"둘 다 3.14로 같다"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "",
+"k": []
+},
+"by": "claude"
+},
+{
+"id": "10ptnmf:qreason",
+"big": "5. 원의 둘레와 넓이",
+"small": "03. 원의 넓이를 어림해 볼까요",
+"kind": "qset",
+"off": false,
+"offWas": true,
+"round": 2,
+"rWas": 0,
+"answer": "안쪽 정사각형은 원 안에 쏙 들어가 있고, 원은 바깥쪽 정사각형 안에 쏙 들어가 있기 때문이야.",
+"keys": [
+"안쪽 정사각형은 원 안에 들어간다",
+"원은 바깥쪽 정사각형 안에 들어간다"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "",
+"k": []
+},
+"by": "claude"
+},
+{
+"id": "ctfuf0:qexample",
+"big": "5. 원의 둘레와 넓이",
+"small": "05. 원의 둘레와 넓이를 활용해 볼까요",
+"kind": "qset",
+"off": false,
+"offWas": true,
+"round": 2,
+"rWas": 0,
+"answer": "한 변이 10 cm인 정사각형 안에 지름 10 cm인 원이 있으면, 100 − 78.5 = 21.5 cm²야.",
+"keys": [
+"전체 도형과 빼낼 부분을 정한다",
+"전체 넓이 − 빼낼 넓이"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "",
+"k": []
+},
+"by": "claude"
+},
+{
+"id": "nc4ahp:t0H1",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "02. 원기둥의 전개도를 알아볼까요",
+"kind": "high",
+"round": 2,
+"rWas": 1,
+"by": "claude"
+}
+],
+"seen": []
+}});
