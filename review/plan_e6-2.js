@@ -5322,3 +5322,589 @@
 ],
 "seen": []
 }});
+
+/* [0923b] 2026-09-23 초6-2 2단원 마스터 검토 반영 + 같은 기준을 3~6단원에.
+   기준표_초등_질문.md 14절: 1회차 대표 질문은 실제로 계산해 답하게(옆 과정 질문은 중복이라 뺌) ·
+   소단원 제목이 곧 답인 질문 뺌 · 그 소단원의 방법을 "왜 쓰나" 묻는 뻔한 이유 뺌.
+   원천 작업도구/질문계단/make_plan_0923b.py */
+(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'e6-2_2026-09-23b', data:{
+"format": "qr-plan-2",
+"grade": "e6-2",
+"rounds": 3,
+"items": [
+{
+"id": "1f2rp7u:t0L1",
+"big": "2. 소수의 나눗셈",
+"small": "01. (소수 한 자리 수)÷(소수 한 자리 수)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1f2rp7u:t0L2",
+"big": "2. 소수의 나눗셈",
+"small": "01. (소수 한 자리 수)÷(소수 한 자리 수)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1f2rp7u:t0H1",
+"big": "2. 소수의 나눗셈",
+"small": "01. (소수 한 자리 수)÷(소수 한 자리 수)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1f2rp7u:t0H2",
+"big": "2. 소수의 나눗셈",
+"small": "01. (소수 한 자리 수)÷(소수 한 자리 수)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1f2rp7u:qrecall",
+"big": "2. 소수의 나눗셈",
+"small": "01. (소수 한 자리 수)÷(소수 한 자리 수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1f2rp7u:qreason",
+"big": "2. 소수의 나눗셈",
+"small": "01. (소수 한 자리 수)÷(소수 한 자리 수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1f2rp7u:qexample",
+"big": "2. 소수의 나눗셈",
+"small": "01. (소수 한 자리 수)÷(소수 한 자리 수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1f2rp7u:qerror",
+"big": "2. 소수의 나눗셈",
+"small": "01. (소수 한 자리 수)÷(소수 한 자리 수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1f2rp7u:qa22e6211",
+"big": "2. 소수의 나눗셈",
+"small": "01. (소수 한 자리 수)÷(소수 한 자리 수)",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|2. 소수의 나눗셈|01. (소수 한 자리 수)÷(소수 한 자리 수):1",
+"big": "2. 소수의 나눗셈",
+"small": "01. (소수 한 자리 수)÷(소수 한 자리 수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|2. 소수의 나눗셈|01. (소수 한 자리 수)÷(소수 한 자리 수):2",
+"big": "2. 소수의 나눗셈",
+"small": "01. (소수 한 자리 수)÷(소수 한 자리 수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ou2559:t0L1",
+"big": "2. 소수의 나눗셈",
+"small": "02. (소수 두 자리 수)÷(소수 두 자리 수)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ou2559:t0L2",
+"big": "2. 소수의 나눗셈",
+"small": "02. (소수 두 자리 수)÷(소수 두 자리 수)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ou2559:t0H1",
+"big": "2. 소수의 나눗셈",
+"small": "02. (소수 두 자리 수)÷(소수 두 자리 수)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ou2559:t0H2",
+"big": "2. 소수의 나눗셈",
+"small": "02. (소수 두 자리 수)÷(소수 두 자리 수)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ou2559:qrecall",
+"big": "2. 소수의 나눗셈",
+"small": "02. (소수 두 자리 수)÷(소수 두 자리 수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ou2559:qreason",
+"big": "2. 소수의 나눗셈",
+"small": "02. (소수 두 자리 수)÷(소수 두 자리 수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ou2559:qexample",
+"big": "2. 소수의 나눗셈",
+"small": "02. (소수 두 자리 수)÷(소수 두 자리 수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ou2559:qerror",
+"big": "2. 소수의 나눗셈",
+"small": "02. (소수 두 자리 수)÷(소수 두 자리 수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ou2559:qa22e6221",
+"big": "2. 소수의 나눗셈",
+"small": "02. (소수 두 자리 수)÷(소수 두 자리 수)",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ou2559:qa22e6222",
+"big": "2. 소수의 나눗셈",
+"small": "02. (소수 두 자리 수)÷(소수 두 자리 수)",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|2. 소수의 나눗셈|02. (소수 두 자리 수)÷(소수 두 자리 수):1",
+"big": "2. 소수의 나눗셈",
+"small": "02. (소수 두 자리 수)÷(소수 두 자리 수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|2. 소수의 나눗셈|02. (소수 두 자리 수)÷(소수 두 자리 수):2",
+"big": "2. 소수의 나눗셈",
+"small": "02. (소수 두 자리 수)÷(소수 두 자리 수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1dkf48z:t0L1",
+"big": "2. 소수의 나눗셈",
+"small": "03. 자릿수가 다른 (소수)÷(소수)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1dkf48z:t0L2",
+"big": "2. 소수의 나눗셈",
+"small": "03. 자릿수가 다른 (소수)÷(소수)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1dkf48z:t0H1",
+"big": "2. 소수의 나눗셈",
+"small": "03. 자릿수가 다른 (소수)÷(소수)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1dkf48z:t0H2",
+"big": "2. 소수의 나눗셈",
+"small": "03. 자릿수가 다른 (소수)÷(소수)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1dkf48z:qrecall",
+"big": "2. 소수의 나눗셈",
+"small": "03. 자릿수가 다른 (소수)÷(소수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1dkf48z:qexample",
+"big": "2. 소수의 나눗셈",
+"small": "03. 자릿수가 다른 (소수)÷(소수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1dkf48z:qa22e6231",
+"big": "2. 소수의 나눗셈",
+"small": "03. 자릿수가 다른 (소수)÷(소수)",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|2. 소수의 나눗셈|03. 자릿수가 다른 (소수)÷(소수):1",
+"big": "2. 소수의 나눗셈",
+"small": "03. 자릿수가 다른 (소수)÷(소수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|2. 소수의 나눗셈|03. 자릿수가 다른 (소수)÷(소수):2",
+"big": "2. 소수의 나눗셈",
+"small": "03. 자릿수가 다른 (소수)÷(소수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|2. 소수의 나눗셈|03. 자릿수가 다른 (소수)÷(소수):3",
+"big": "2. 소수의 나눗셈",
+"small": "03. 자릿수가 다른 (소수)÷(소수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1d7jkp3:t0L2",
+"big": "2. 소수의 나눗셈",
+"small": "04. (자연수)÷(소수)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1d7jkp3:t0H1",
+"big": "2. 소수의 나눗셈",
+"small": "04. (자연수)÷(소수)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1d7jkp3:t0H2",
+"big": "2. 소수의 나눗셈",
+"small": "04. (자연수)÷(소수)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1d7jkp3:qrecall",
+"big": "2. 소수의 나눗셈",
+"small": "04. (자연수)÷(소수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1d7jkp3:qreason",
+"big": "2. 소수의 나눗셈",
+"small": "04. (자연수)÷(소수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1d7jkp3:qexample",
+"big": "2. 소수의 나눗셈",
+"small": "04. (자연수)÷(소수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1d7jkp3:qerror",
+"big": "2. 소수의 나눗셈",
+"small": "04. (자연수)÷(소수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1d7jkp3:qa22e6241",
+"big": "2. 소수의 나눗셈",
+"small": "04. (자연수)÷(소수)",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|2. 소수의 나눗셈|04. (자연수)÷(소수):1",
+"big": "2. 소수의 나눗셈",
+"small": "04. (자연수)÷(소수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|2. 소수의 나눗셈|04. (자연수)÷(소수):2",
+"big": "2. 소수의 나눗셈",
+"small": "04. (자연수)÷(소수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "8i73lk:t0L1",
+"big": "2. 소수의 나눗셈",
+"small": "05. 몫을 반올림하여 나타내 볼까요",
+"kind": "low",
+"off": true,
+"offWas": false,
+"ok": true,
+"by": "claude"
+},
+{
+"id": "8i73lk:t0L2",
+"big": "2. 소수의 나눗셈",
+"small": "05. 몫을 반올림하여 나타내 볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "8i73lk:t0H1",
+"big": "2. 소수의 나눗셈",
+"small": "05. 몫을 반올림하여 나타내 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "8i73lk:t0H2",
+"big": "2. 소수의 나눗셈",
+"small": "05. 몫을 반올림하여 나타내 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "8i73lk:qrecall",
+"big": "2. 소수의 나눗셈",
+"small": "05. 몫을 반올림하여 나타내 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "8i73lk:qreason",
+"big": "2. 소수의 나눗셈",
+"small": "05. 몫을 반올림하여 나타내 볼까요",
+"kind": "qset",
+"off": true,
+"offWas": false,
+"ok": true,
+"by": "claude"
+},
+{
+"id": "8i73lk:qexample",
+"big": "2. 소수의 나눗셈",
+"small": "05. 몫을 반올림하여 나타내 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "8i73lk:qerror",
+"big": "2. 소수의 나눗셈",
+"small": "05. 몫을 반올림하여 나타내 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "8i73lk:qa22e6251",
+"big": "2. 소수의 나눗셈",
+"small": "05. 몫을 반올림하여 나타내 볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "8i73lk:qa22e6252",
+"big": "2. 소수의 나눗셈",
+"small": "05. 몫을 반올림하여 나타내 볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|2. 소수의 나눗셈|05. 몫을 반올림하여 나타내 볼까요:1",
+"big": "2. 소수의 나눗셈",
+"small": "05. 몫을 반올림하여 나타내 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|2. 소수의 나눗셈|05. 몫을 반올림하여 나타내 볼까요:2",
+"big": "2. 소수의 나눗셈",
+"small": "05. 몫을 반올림하여 나타내 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1tom1oz:t0L1",
+"big": "2. 소수의 나눗셈",
+"small": "06. 나누어 주고 남는 양을 알아볼까요",
+"kind": "low",
+"newQ": "7.4 L를 한 사람당 2 L씩 나누어 줄 때 몇 사람에게 나누어줄 수 있고, 얼마나 남지?",
+"qWas": "7.4 L를 2 L씩 나누어 줄 때 사람 수는 어디까지 구해?",
+"ok": true,
+"answer": "7.4 ÷ 2를 하면 몫이 3, 남는 양이 1.4야. 3명에게 나누어 주고 1.4 L가 남아.",
+"keys": [
+"3명에게 나누어 준다",
+"1.4 L가 남는다"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "사람 수는 소수로 나눌 수 없으니 몫을 자연수까지만 구해.",
+"k": [
+"몫을 자연수까지만"
+]
+},
+"reopen": true,
+"by": "claude"
+},
+{
+"id": "1tom1oz:t0L2",
+"big": "2. 소수의 나눗셈",
+"small": "06. 나누어 주고 남는 양을 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1tom1oz:t0H1",
+"big": "2. 소수의 나눗셈",
+"small": "06. 나누어 주고 남는 양을 알아볼까요",
+"kind": "high",
+"off": true,
+"offWas": false,
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1tom1oz:t0H2",
+"big": "2. 소수의 나눗셈",
+"small": "06. 나누어 주고 남는 양을 알아볼까요",
+"kind": "high",
+"newQ": "나눗셈 계산을 한 뒤, 답이 맞는지 어떻게 확인해?",
+"qWas": "나누어 주고 남는 양을 구한 뒤, 답이 맞는지 어떻게 확인해?",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1tom1oz:qerror",
+"big": "2. 소수의 나눗셈",
+"small": "06. 나누어 주고 남는 양을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1tom1oz:qa22e6261",
+"big": "2. 소수의 나눗셈",
+"small": "06. 나누어 주고 남는 양을 알아볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1tom1oz:qamudnm8aq8bux",
+"big": "2. 소수의 나눗셈",
+"small": "06. 나누어 주고 남는 양을 알아볼까요",
+"kind": "add",
+"q": "나눗셈 계산하고 확인하는 식이 어떻게 되지?",
+"round": 1,
+"ok": true,
+"answer": "나누는 수 × 몫 + 남는 양 = 처음 양이야. 7.4 ÷ 2면 2 × 3 + 1.4 = 7.4로 확인해.",
+"keys": [
+"나누는 수 × 몫 + 남는 양 = 처음 양",
+"2 × 3 + 1.4 = 7.4"
+],
+"answerBy": "claude",
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|2. 소수의 나눗셈|06. 나누어 주고 남는 양을 알아볼까요:1",
+"big": "2. 소수의 나눗셈",
+"small": "06. 나누어 주고 남는 양을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|2. 소수의 나눗셈|06. 나누어 주고 남는 양을 알아볼까요:2",
+"big": "2. 소수의 나눗셈",
+"small": "06. 나누어 주고 남는 양을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1niet2v:t0L1",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "low",
+"off": true,
+"offBy": "claude",
+"offWas": false,
+"by": "claude"
+},
+{
+"id": "wgfdv4:qreason",
+"big": "3. 공간과 입체",
+"small": "05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양",
+"kind": "qset",
+"off": true,
+"offBy": "claude",
+"offWas": false,
+"by": "claude"
+},
+{
+"id": "10ptnmf:t0L1",
+"big": "5. 원의 둘레와 넓이",
+"small": "03. 원의 넓이를 어림해 볼까요",
+"kind": "low",
+"off": true,
+"offBy": "claude",
+"offWas": false,
+"by": "claude"
+}
+],
+"seen": []
+}});
