@@ -19740,6 +19740,18 @@ async function loadBoard(silent){
    데이터는 그대로 두고 '보는 방식'만 학생별·단원별로 정리한다.
    ============================================================ */
 let SH_CURRENT_STUDENT = null;
+/* [v88.7] 🌱 선수 개념 질문 — 앞 학년·앞 단원에서 배운 것을 확인하는 질문 (마스터 요청 2026-09-23)
+   데이터는 review/pre_<학년>.js 의 window.QR_PRE 에 있다: { 질문번호: {from:'초5-2', what:'분수의 곱셈'} }
+   왜 따로 표시하나: 아이가 "올해 내용"이 아니라 "작년 내용"에서 막힌 것을 어른이 바로 알아보게 하려고(대전제 ②).
+   원본 데이터는 안 건드린다 — 표를 따로 두고 조회만 한다. */
+function ddPreOf(qid){ try{ return (window.QR_PRE || {})[qid] || null; }catch(e){ return null; } }
+function ddPreTag(qid){
+  const p = ddPreOf(qid);
+  if(!p) return '';
+  return '<span style="display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;font-size:11px;font-weight:800;'
+    + 'background:rgba(124,196,157,.18);color:#2C8459">🌱 선수 개념 · ' + escapeHtml(p.from) + ' ' + escapeHtml(p.what) + '</span>';
+}
+
 function openStudentHistory(student, mySubs){
   const body = $('shBody');
   SH_CURRENT_STUDENT = student;   // 정보 수정용
@@ -19775,7 +19787,7 @@ function openStudentHistory(student, mySubs){
         <span class="si-score" style="color:${scoreColor(x.score||0)}">${x.score||0}점</span>
         <span class="si-time">${fmt(x.time)}</span>
       </div>
-      <div class="si-lvl">${lvlName(x.level)}${x.hintsUsed?` · 💡힌트 ${x.hintsUsed}회`:''}</div>
+      <div class="si-lvl">${lvlName(x.level)}${x.hintsUsed?` · 💡힌트 ${x.hintsUsed}회`:''}${ddPreTag(x.questionId)}</div>
       ${x.question ? `<div class="si-ans" style="font-weight:600">질문: ${mfmt(x.question)}</div>` : ''}<div class="si-ans">답변: ${ans(x.transcript)}</div>
     </div>`;
   }).join('') : '<div class="sh-empty">최근 2주간 학습 기록이 없어요.</div>';
@@ -20090,11 +20102,12 @@ function renderParentBody(stu, subs, comment){
       if(!(x.needTeacher || seenC || fail) || passedLater(x)) return;
       seenQ.add(qk);
       const why = x.needTeacher ? '선생님과 함께 다시 봐요' : seenC ? '개념을 보고 설명했어요 · 혼자 다시 설명할 예정' : '아직 설명이 어려워요';
-      practice.push({ q: x.question || cvLabel(x), unit: cvLabel(x), why, mis: x.needTeacher ? (x.misconception||'') : '' });
+      practice.push({ q: x.question || cvLabel(x), unit: cvLabel(x), why, mis: x.needTeacher ? (x.misconception||'') : '',
+                      pre: ddPreOf(x.questionId) });   // [v88.7] 🌱 앞 학년에서 배운 것이면 표시
     });
   })();
   const practiceHtml = practice.length
-    ? practice.slice(0,6).map(p => `<div class="pp-concept pp-practice"><span class="ci">🔎</span><span class="cn">${mfmt(p.q)}<small style="display:block;opacity:.7;font-weight:500">${escapeHtml(p.unit)}${p.mis ? ' · ' + escapeHtml(p.mis) : ''}</small></span><span class="cd" style="white-space:normal;text-align:right;max-width:38%;background:rgba(255,176,64,.16);color:#FFC46B">${escapeHtml(p.why)}</span></div>`).join('')
+    ? practice.slice(0,6).map(p => `<div class="pp-concept pp-practice"><span class="ci">${p.pre ? '🌱' : '🔎'}</span><span class="cn">${mfmt(p.q)}<small style="display:block;opacity:.7;font-weight:500">${p.pre ? `🌱 ${escapeHtml(p.pre.from)}에서 배운 <b>${escapeHtml(p.pre.what)}</b> · ` : ''}${escapeHtml(p.unit)}${p.mis ? ' · ' + escapeHtml(p.mis) : ''}</small></span><span class="cd" style="white-space:normal;text-align:right;max-width:38%;background:rgba(255,176,64,.16);color:#FFC46B">${escapeHtml(p.why)}</span></div>`).join('')
     : '<div class="pp-empty">이번 주에는 특별히 어려워한 질문이 없어요.</div>';
 
   // 잘한 음성 (점수 높은 순 2개, transcript 있는 것)
@@ -20139,6 +20152,9 @@ function renderParentBody(stu, subs, comment){
     <div class="pp-card">
       <div class="pp-card-t">🔎 더 연습이 필요한 것</div>
       ${practiceHtml}
+      ${practice.some(p=>p.pre) ? `<div style="margin-top:9px;padding:9px 11px;border-radius:10px;background:rgba(124,196,157,.14);font-size:13px;line-height:1.65;color:#2F4F3E">
+        🌱 표시는 <b>${escapeHtml([...new Set(practice.filter(p=>p.pre).map(p=>p.pre.from))].join(' · '))}</b>에서 배운 내용이에요.
+        여기가 막히면 지금 배우는 것도 어려워요. <b>그 부분부터 다시 보면</b> 지금 단원이 훨씬 쉬워집니다.</div>` : ''}
     </div>
 
     <div class="pp-sec praise">🌟 선생님의 칭찬 <span class="ln"></span></div>
@@ -22169,7 +22185,7 @@ window.addEventListener('load', ()=>{ try{
 
 /* 화면 우하단 버전 배지 — 폰에서 현재 버전을 바로 확인 */
 (function(){
-const APP_VERSION = 'v88.6-초6-2_2단원반영';
+const APP_VERSION = 'v88.7-선수개념질문';
   // [v78.7] 이 값이 IIFE 안에 갇혀 있어 바깥 스크립트(app-ui.js)가 못 읽었다.
   //   화면 배지에 버전을 그대로 띄우려면 필요하므로 노출한다.
   window.APP_VERSION = APP_VERSION;
@@ -22194,10 +22210,10 @@ const APP_VERSION = 'v88.6-초6-2_2단원반영';
 </script>
 
 <!-- [v86.0 ⑧] 회차 흐름 (회차 데이터가 있는 학년만) -->
-<script src="rounds/data-e5-1.js?v=86.5"></script>
-<script src="rounds/data-e5-2.js?v=87.5"></script>
-<script src="rounds/data-e4-2.js?v=88.3"></script>
-<script src="rounds/data-e6-2.js?v=88.6"></script>
+<script src="rounds/data-e5-1.js?v=88.7"></script>
+<script src="rounds/data-e5-2.js?v=88.7"></script>
+<script src="rounds/data-e4-2.js?v=88.7"></script>
+<script src="rounds/data-e6-2.js?v=88.7"></script>
 <script src="rounds/rounds.js?v=87.9"></script>
 <script src="ui-integration/app-ui.js?v=87.8"></script>
 <!-- [v82.1] 선생님 질문 계단 (시범, 격리 모듈) — 중3-1 전 대단원 · 칸 그림 (v82.3) -->
@@ -22208,12 +22224,16 @@ const APP_VERSION = 'v88.6-초6-2_2단원반영';
 <script src="ladder/data-e6-2.js?v=88.0"></script>
 <script src="ladder/ladder.js?v=87.1"></script>
 <!-- [v82.9] 질문 고르기 (마스터 전용) — 없어도 앱은 그대로 돈다 -->
-<script src="review/plan_e5-1.js?v=85.8"></script>
-<script src="review/plan_e5-2.js?v=87.4"></script>
-<script src="review/plan_e4-2.js?v=88.3"></script>
-<script src="review/plan_e6-2.js?v=88.6"></script>
+<script src="review/plan_e5-1.js?v=88.7"></script>
+<script src="review/plan_e5-2.js?v=88.7"></script>
+<script src="review/plan_e4-2.js?v=88.7"></script>
+<script src="review/plan_e6-2.js?v=88.7"></script>
 <script src="review/plan_m3-1.js?v=84.9"></script>
-<script src="review/ask_e6-2.js?v=88.6"></script>
-<script src="review/review.js?v=88.4"></script>
+<script src="review/pre_e4-2.js?v=88.7"></script>
+<script src="review/pre_e5-1.js?v=88.7"></script>
+<script src="review/pre_e5-2.js?v=88.7"></script>
+<script src="review/pre_e6-2.js?v=88.7"></script>
+<script src="review/ask_e6-2.js?v=88.7"></script>
+<script src="review/review.js?v=88.7"></script>
 </body>
 </html>
