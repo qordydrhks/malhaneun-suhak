@@ -55,6 +55,9 @@
   function askOf(qid){ try{ return (window.QR_ASK || {})[qid] || ''; }catch(e){ return ''; } }
   // [v88.7] 🌱 선수 개념 질문 (앞 학년·앞 단원에서 배운 것) — review/pre_<학년>.js 의 window.QR_PRE
   function preOf(qid){ try{ return (window.QR_PRE || {})[qid] || null; }catch(e){ return null; } }
+  // [v88.9] 질문에 붙은 그림 (review/fig_<학년>.js 의 window.QR_FIG) — 학생 화면과 같은 표.
+  //   마스터가 "질문 + 그림"을 함께 보고 판단해야 해서 고르기 화면에도 그린다.
+  function figOf(qid){ try{ var f = (window.QR_FIG || {})[qid]; return (f && f.svg) ? f.svg : null; }catch(e){ return null; } }
   // Claude 가 정한 회차 {질문번호: 회차} — 코드에 실린 분류안에서 읽는다(저장 안 함)
   var AI_OFF = {};   // Claude 가 겹쳐서 뺀 질문 {질문번호: true}
   var AI_Q = {};     // Claude 가 고친 질문 문장 {질문번호: 문장} — 마스터가 다시 고치면 표시가 사라진다
@@ -268,6 +271,11 @@
     + '#qreviewTab .qr-row.ok .qr-q{color:#6E7A74;}'
     + '#qreviewTab .qr-row.ok .qr-ans{display:none;}'
     + '#qreviewTab .qr-row.ok.open .qr-ans{display:block;}'
+    + '#qreviewTab .qr-fig{margin:8px 0 2px;padding:8px 10px;background:#fff;border:1px solid #E7E3F3;border-radius:11px;display:block;max-width:340px;}'
+    + '#qreviewTab .qr-fig svg{width:100%;height:auto;display:block;}'
+    + '#qreviewTab .qr-row.ok .qr-fig{display:none;}'
+    + '#qreviewTab .qr-row.ok.open .qr-fig{display:inline-block;}'
+    + '#qreviewTab .qr-figcnt{font-size:11.5px;font-weight:800;color:#1D6FA5;background:#E6F1F8;padding:2px 8px;border-radius:999px;}'
     + '#qreviewTab .qr-act button.okbtn{min-width:52px;}'
     + '#qreviewTab .qr-act button.okbtn.on{background:#2C8459;border-color:#2C8459;color:#fff;font-weight:800;}'
     + '#qreviewTab .qr-okall{font-size:12px;padding:5px 11px;border-radius:999px;border:1px solid #BFE3CE;background:#fff;color:#2C8459;cursor:pointer;font-family:inherit;}'
@@ -344,6 +352,7 @@
       +   (groupNo ? '<span class="qr-sim" title="같은 소단원 안에 비슷한 질문이 있어요">비슷 ' + groupNo + '</span>' : '')
       +   (AI_Q[it.id] && EDITS[it.id] === AI_Q[it.id] ? '<span class="qr-ai" title="Claude 가 고친 문장이에요" style="margin-right:5px">AI 고침</span>' : '')
       +   show(textOf(it))
+      +   (function(){ var g = figOf(it.id); return g ? '<div class="qr-fig">' + g + '</div>' : ''; })()
       +   (hasAns
             ? '<div class="qr-ans">' + (an.a ? '<span class="lb">모범 답</span>'
                 + (AI_ANS[it.id] && AI_ANS[it.id] === an.a ? '<span class="qr-ai" title="Claude 가 쓴 모범 답이에요. 고치면 표시가 사라져요" style="margin-right:5px">AI</span>' : '')
@@ -383,6 +392,7 @@
       if(QR.view === 'unok') return !OK[it.id];
       if(QR.view === 'ask') return !!askOf(it.id);
       if(QR.view === 'pre') return !!preOf(it.id);
+      if(QR.view === 'fig') return !!figOf(it.id);
       if(QR.view === 'off') return p.off;
       if(QR.view === 'r0') return !p.off && !p.r;
       if(QR.view === 'ai') return isAi(it.id, p);
@@ -410,6 +420,8 @@
              return n ? '<span class="qr-mid">🪜 계단 ' + n + '칸 포함</span>' : ''; })()
       +   (unset ? '<span class="qr-mid">미분류 ' + unset + '</span>'
             : (live1 ? '' : '<span class="qr-warn">1회차가 비었어요</span>'))
+      +   (function(){ var n = items.filter(function(x){ return figOf(x.id); }).length;
+             return n ? '<span class="qr-figcnt">🖼 그림 ' + n + '</span>' : ''; })()
       +   (function(){ var n = items.filter(function(x){ return preOf(x.id); }).length;
              return n ? '<span class="qr-precnt">🌱 선수 개념 ' + n + '</span>' : ''; })()
       +   (function(){ var n = items.filter(function(x){ return askOf(x.id); }).length;
@@ -457,7 +469,7 @@
             return '<option value="' + esc(g.id) + '"' + (g.id === QR.grade ? ' selected' : '') + '>' + esc(g.name) + '</option>'; }).join('') + '</select>'
       +   '<select data-qr="big">' + bigs.map(function(b, i){
             return '<option value="' + i + '"' + (i === QR.big ? ' selected' : '') + '>' + esc(b.name) + '</option>'; }).join('') + '</select>'
-      +   '<select data-qr="view">' + [['all','전체'],['ask','🤔 AI가 자신 없는 것만'],['pre','🌱 선수 개념만'],['unok','확인 안 한 것만'],['todo','아직 안 본 소단원만'],['ai','AI가 정한 것만(뺀 것 포함)'],['r0','미분류만'],['noans','모범 답 없는 것만'],['off','뺀 것만'],['r1','1회차만'],['r2','2회차만'],['r3','3회차만']].map(function(x){
+      +   '<select data-qr="view">' + [['all','전체'],['ask','🤔 AI가 자신 없는 것만'],['pre','🌱 선수 개념만'],['fig','🖼 그림 있는 것만'],['unok','확인 안 한 것만'],['todo','아직 안 본 소단원만'],['ai','AI가 정한 것만(뺀 것 포함)'],['r0','미분류만'],['noans','모범 답 없는 것만'],['off','뺀 것만'],['r1','1회차만'],['r2','2회차만'],['r3','3회차만']].map(function(x){
             return '<option value="' + x[0] + '"' + (x[0] === QR.view ? ' selected' : '') + '>' + x[1] + '</option>'; }).join('') + '</select>'
       +   '<input data-qr="query" type="text" placeholder="질문 안에서 찾기" value="' + esc(QR.query) + '">'
       + '</div>'
