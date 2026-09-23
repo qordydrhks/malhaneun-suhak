@@ -167,3 +167,126 @@ def topview(spec_or_cells, color='blue', origin=(0, 0), title=None, nums=None):
     입체에서도 r 이 커질수록 앞쪽(화면 아래)이고 격자도 r 이 커질수록 아래라서 방향이 이미 맞는다."""
     cells = list(spec_or_cells.keys()) if isinstance(spec_or_cells, dict) else list(spec_or_cells)
     return grid(list(cells), nums=(dict(nums) if nums else None), color=color, origin=origin, title=title)
+
+
+# ══════════════════════════════════════════════════════════════════
+#  평면도형 (넓이·둘레 단원) — 입체 그림과 같은 색·선 굵기로 맞춘다
+# ══════════════════════════════════════════════════════════════════
+S = 26          # 1 cm = 26 px
+
+def poly(pts, color='blue', fill=True, style='solid', title=None):
+    """임의 다각형. pts = [(x, y), …] (px 좌표)"""
+    f = Fig()
+    bg, edge = FLAT[color]
+    dash = ' stroke-dasharray="5 4"' if style == 'dashed' else ''
+    d = ' '.join('%.1f,%.1f' % p for p in pts)
+    f.add('<polygon points="%s" fill="%s" stroke="%s" stroke-width="1.6" stroke-linejoin="round"%s/>'
+          % (d, bg if fill else 'none', edge, dash), pts)
+    if title:
+        x0, y0, w, _h = f.bbox(0)
+        f.add(_txt(x0 + w / 2, y0 - 12, title, 13, SOFT), [(x0, y0 - 24), (x0 + w, y0 - 24)])
+    return f
+
+def seg(p1, p2, style='solid', color='#6E6A86', width=1.4):
+    f = Fig()
+    dash = ' stroke-dasharray="5 4"' if style == 'dashed' else ''
+    f.add('<line x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f" stroke="%s" stroke-width="%s"%s/>'
+          % (p1[0], p1[1], p2[0], p2[1], color, width, dash), [p1, p2])
+    return f
+
+def dim_h(x1, x2, y, text, below=True, color=SOFT):
+    """가로 치수선 (— 길이 —)"""
+    f = Fig()
+    t = 5 if below else -5
+    f.add('<line x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f" stroke="%s" stroke-width="1"/>'
+          % (x1, y, x2, y, color), [(x1, y), (x2, y)])
+    for x in (x1, x2):
+        f.add('<line x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f" stroke="%s" stroke-width="1"/>'
+              % (x, y - 4, x, y + 4, color), [(x, y - 4), (x, y + 4)])
+    yy = y + (16 if below else -8)
+    f.add(_txt((x1 + x2) / 2, yy, text, 12.5, color, 700), [((x1 + x2) / 2, yy + t)])
+    return f
+
+def dim_v(y1, y2, x, text, left=True, color=SOFT):
+    """세로 치수선"""
+    f = Fig()
+    f.add('<line x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f" stroke="%s" stroke-width="1"/>'
+          % (x, y1, x, y2, color), [(x, y1), (x, y2)])
+    for y in (y1, y2):
+        f.add('<line x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f" stroke="%s" stroke-width="1"/>'
+              % (x - 4, y, x + 4, y, color), [(x - 4, y), (x + 4, y)])
+    xx = x + (-9 if left else 9)
+    f.add(_txt(xx, (y1 + y2) / 2 + 4, text, 12.5, color, 700,
+               'end' if left else 'start'), [(xx - (46 if left else 0), (y1 + y2) / 2)])
+    return f
+
+def right_angle(corner, p1, p2, size=10, color='#6E6A86'):
+    """직각 표시 — corner 에서 p1·p2 쪽으로"""
+    import math
+    def unit(a, b):
+        dx, dy = b[0] - a[0], b[1] - a[1]
+        L = math.hypot(dx, dy) or 1
+        return dx / L, dy / L
+    u1, u2 = unit(corner, p1), unit(corner, p2)
+    a = (corner[0] + u1[0] * size, corner[1] + u1[1] * size)
+    b = (corner[0] + (u1[0] + u2[0]) * size, corner[1] + (u1[1] + u2[1]) * size)
+    c = (corner[0] + u2[0] * size, corner[1] + u2[1] * size)
+    f = Fig()
+    f.add('<polyline points="%.1f,%.1f %.1f,%.1f %.1f,%.1f" fill="none" stroke="%s" stroke-width="1.3"/>'
+          % (a[0], a[1], b[0], b[1], c[0], c[1], color), [a, b, c])
+    return f
+
+def ticks(p1, p2, n=1, color='#6E6A86'):
+    """같은 길이 표시 — 변 가운데에 빗금 n 개"""
+    import math
+    mx, my = (p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2
+    dx, dy = p2[0] - p1[0], p2[1] - p1[1]
+    L = math.hypot(dx, dy) or 1
+    ux, uy = dx / L, dy / L          # 변 방향
+    nx, ny = -uy, ux                 # 수직 방향
+    f = Fig()
+    for i in range(n):
+        off = (i - (n - 1) / 2.0) * 5
+        cx, cy = mx + ux * off, my + uy * off
+        f.add('<line x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f" stroke="%s" stroke-width="1.4"/>'
+              % (cx - nx * 5, cy - ny * 5, cx + nx * 5, cy + ny * 5, color),
+              [(cx - nx * 5, cy - ny * 5), (cx + nx * 5, cy + ny * 5)])
+    return f
+
+def unit_grid(cols, rows, origin=(0, 0), color='blue', mark=None):
+    """1 cm² 격자로 채운 직사각형. mark: 표시할 칸 [(c,r), …]"""
+    f = Fig()
+    ox, oy = origin
+    bg, edge = FLAT[color]
+    for r in range(rows):
+        for c in range(cols):
+            x, y = ox + c * S, oy + r * S
+            hot = mark and (c, r) in mark
+            f.add('<rect x="%.1f" y="%.1f" width="%d" height="%d" fill="%s" stroke="%s" stroke-width="%s"/>'
+                  % (x, y, S, S, '#FFF3D4' if hot else bg, edge, 1.5 if hot else 0.7),
+                  [(x, y), (x + S, y + S)])
+    f.add('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="none" stroke="%s" stroke-width="1.8"/>'
+          % (ox, oy, cols * S, rows * S, edge), [(ox, oy), (ox + cols * S, oy + rows * S)])
+    return f
+
+def tag(x, y, text, color=INK, size=12.5, weight=700, anchor='middle'):
+    f = Fig(); f.add(_txt(x, y, text, size, color, weight, anchor), [(x, y - size), (x, y + 4)])
+    return f
+
+def to_arrow(x, y, text='자르면'):
+    """유도 그림 사이의 → 표시"""
+    f = Fig()
+    f.add('<defs><marker id="ar2" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">'
+          '<path d="M0,0 L7,3 L0,6 z" fill="%s"/></marker></defs>' % SOFT, [])
+    f.add('<line x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f" stroke="%s" stroke-width="1.6" marker-end="url(#ar2)"/>'
+          % (x, y, x + 30, y, SOFT), [(x, y), (x + 30, y)])
+    f.add(_txt(x + 15, y - 9, text, 11.5, SOFT, 600), [(x - 8, y - 20), (x + 38, y - 20)])
+    return f
+
+def regular(n, r, center=(0, 0), color='blue', start=-90):
+    """정n각형"""
+    import math
+    cx, cy = center
+    pts = [(cx + r * math.cos(math.radians(start + 360.0 * i / n)),
+            cy + r * math.sin(math.radians(start + 360.0 * i / n))) for i in range(n)]
+    return pts
