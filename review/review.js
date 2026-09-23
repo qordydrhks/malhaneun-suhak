@@ -49,6 +49,10 @@
   var BASEDONE = load(BASE_KEY);
   var OK_KEY = 'qr:ok:v1', OK = load(OK_KEY);
   function setOk(qid, on){ if(on) OK[qid] = true; else delete OK[qid]; save(OK_KEY, OK); }
+  // [v88.4] 🤔 Claude 가 자신 없는 질문 { 질문번호: '왜 자신 없는지 한 줄' }
+  //   review/ask_<학년>.js 에 실려 온다. 이 기기에 저장하지 않는다(코드가 정본).
+  //   마스터는 보기 「🤔 AI가 자신 없는 것만」으로 이것만 보고, 나머지는 [🤔 빼고 전부 확인] 한 번이면 된다.
+  function askOf(qid){ try{ return (window.QR_ASK || {})[qid] || ''; }catch(e){ return ''; } }
   // Claude 가 정한 회차 {질문번호: 회차} — 코드에 실린 분류안에서 읽는다(저장 안 함)
   var AI_OFF = {};   // Claude 가 겹쳐서 뺀 질문 {질문번호: true}
   var AI_Q = {};     // Claude 가 고친 질문 문장 {질문번호: 문장} — 마스터가 다시 고치면 표시가 사라진다
@@ -208,7 +212,7 @@
 
   /* ── 요약 (지금 고른 학년 전체) ───────────────────────── */
   function summary(gradeId){
-    var s = { r0:0, r1:0, r2:0, r3:0, off:0, total:0, edited:0, answered:0, ok:0, smalls:0, seen:0, empty:[] };
+    var s = { r0:0, r1:0, r2:0, r3:0, off:0, total:0, edited:0, answered:0, ok:0, smalls:0, seen:0, empty:[], ask:0, askleft:0 };
     var m; try{ m = cpModel(gradeId); }catch(e){ return s; }
     if(!m || !m.bigUnits) return s;
     m.bigUnits.forEach(function(big){
@@ -220,6 +224,7 @@
           var p = planOf(it.id, it.kind), an = ansOf(it.id);
           s.total++;
           if(OK[it.id]) s.ok++;
+          if(askOf(it.id)){ s.ask++; if(!OK[it.id]) s.askleft++; }
           if(EDITS[it.id] != null) s.edited++;
           if(an.a || an.k.length) s.answered++;
           if(p.off){ s.off++; return; }
@@ -302,7 +307,13 @@
     + '#qreviewTab .qr-ans ul{margin:3px 0 0 16px;padding:0;}'
     + '#qreviewTab .qr-ans .lb{font-weight:800;color:#2C8459;margin-right:4px;}'
     + '#qreviewTab .qr-lbl{display:block;margin:8px 0 3px;font-size:12px;font-weight:800;color:#4A4270;}'
-    + '#qreviewTab .qr-lbl span{font-weight:400;color:#8A7BB0;}';
+    + '#qreviewTab .qr-lbl span{font-weight:400;color:#8A7BB0;}'
+    + '#qreviewTab .qr-row.askon{background:#FFFCF2;box-shadow:inset 3px 0 0 #E8B84B;}'
+    + '#qreviewTab .qr-row.askon.ok{background:#F5FAF7;box-shadow:inset 3px 0 0 #CFE3C8;}'
+    + '#qreviewTab .qr-askn{margin:0 0 5px;padding:6px 9px;background:#FFF6DE;border-radius:8px;font-size:12px;color:#7A5A12;line-height:1.55;}'
+    + '#qreviewTab .qr-askn b{color:#9A6B00;}'
+    + '#qreviewTab .qr-askcnt{font-size:11.5px;font-weight:800;color:#9A6B00;background:#FFF3D4;padding:2px 8px;border-radius:999px;}'
+    + '#qreviewTab .qr-okrest{font-size:12px;padding:5px 11px;border-radius:999px;border:1px solid #E8D9A8;background:#fff;color:#9A6B00;cursor:pointer;font-family:inherit;font-weight:800;}';
     var st = document.createElement('style'); st.id = 'qrStyle'; st.textContent = css;
     document.head.appendChild(st);
   }
@@ -318,10 +329,12 @@
       btns += '<button data-qr="round" data-r="' + r + '"' + (p.r === r && !p.off ? ' class="on" title="한 번 더 누르면 미분류로"' : '') + '>' + r + '</button>';
     }
     var ok = !!OK[it.id];
-    return '<div class="qr-row' + (p.off ? ' off' : '') + (ok ? ' ok' : '') + '" data-qid="' + esc(it.id) + '" data-kind="' + esc(it.kind) + '"'
+    var ask = askOf(it.id);
+    return '<div class="qr-row' + (p.off ? ' off' : '') + (ok ? ' ok' : '') + (ask ? ' askon' : '') + '" data-qid="' + esc(it.id) + '" data-kind="' + esc(it.kind) + '"'
       + ' data-plain="' + esc(textOf(it)) + '">'
       + '<span class="qr-kind k-' + it.kind + '">' + esc(kindLabel(it)) + '</span>'
       + '<div class="qr-q' + (edited ? ' edited' : '') + '" data-qr="text">'
+      +   (ask ? '<div class="qr-askn">🤔 <b>봐 주세요</b> — ' + esc(ask) + '</div>' : '')
       +   (groupNo ? '<span class="qr-sim" title="같은 소단원 안에 비슷한 질문이 있어요">비슷 ' + groupNo + '</span>' : '')
       +   (AI_Q[it.id] && EDITS[it.id] === AI_Q[it.id] ? '<span class="qr-ai" title="Claude 가 고친 문장이에요" style="margin-right:5px">AI 고침</span>' : '')
       +   show(textOf(it))
@@ -362,6 +375,7 @@
     var shown = items.filter(function(it){
       var p = planOf(it.id, it.kind);
       if(QR.view === 'unok') return !OK[it.id];
+      if(QR.view === 'ask') return !!askOf(it.id);
       if(QR.view === 'off') return p.off;
       if(QR.view === 'r0') return !p.off && !p.r;
       if(QR.view === 'ai') return isAi(it.id, p);
@@ -389,8 +403,12 @@
              return n ? '<span class="qr-mid">🪜 계단 ' + n + '칸 포함</span>' : ''; })()
       +   (unset ? '<span class="qr-mid">미분류 ' + unset + '</span>'
             : (live1 ? '' : '<span class="qr-warn">1회차가 비었어요</span>'))
+      +   (function(){ var n = items.filter(function(x){ return askOf(x.id); }).length;
+             return n ? '<span class="qr-askcnt">🤔 봐 주세요 ' + n + '</span>' : ''; })()
       +   (function(){ var n = items.filter(function(x){ return OK[x.id]; }).length;
+             var rest = items.filter(function(x){ return !OK[x.id] && !askOf(x.id); }).length;
              return '<span class="qr-okcnt">확인 ' + n + '/' + items.length + '</span>'
+               + (rest ? '<button class="qr-okrest" data-qr="okrest" title="🤔 표시가 없는 질문만 확인으로 (표시된 것은 그대로 남아요)">나머지 ' + rest + '개 다 좋아요</button>' : '')
                + (n < items.length ? '<button class="qr-okall" data-qr="okall" title="이 소단원 질문을 모두 확인으로">모두 확인</button>' : ''); })()
       +   '<button class="qr-addbtn" data-qr="addNew">+ 질문 추가</button>'
       +   '<button class="qr-seenbtn' + (seen ? ' on' : '') + '" data-qr="seen">' + (seen ? '✓ 다 봤음' : '다 봤음') + '</button>'
@@ -430,7 +448,7 @@
             return '<option value="' + esc(g.id) + '"' + (g.id === QR.grade ? ' selected' : '') + '>' + esc(g.name) + '</option>'; }).join('') + '</select>'
       +   '<select data-qr="big">' + bigs.map(function(b, i){
             return '<option value="' + i + '"' + (i === QR.big ? ' selected' : '') + '>' + esc(b.name) + '</option>'; }).join('') + '</select>'
-      +   '<select data-qr="view">' + [['all','전체'],['unok','확인 안 한 것만'],['todo','아직 안 본 소단원만'],['ai','AI가 정한 것만(뺀 것 포함)'],['r0','미분류만'],['noans','모범 답 없는 것만'],['off','뺀 것만'],['r1','1회차만'],['r2','2회차만'],['r3','3회차만']].map(function(x){
+      +   '<select data-qr="view">' + [['all','전체'],['ask','🤔 AI가 자신 없는 것만'],['unok','확인 안 한 것만'],['todo','아직 안 본 소단원만'],['ai','AI가 정한 것만(뺀 것 포함)'],['r0','미분류만'],['noans','모범 답 없는 것만'],['off','뺀 것만'],['r1','1회차만'],['r2','2회차만'],['r3','3회차만']].map(function(x){
             return '<option value="' + x[0] + '"' + (x[0] === QR.view ? ' selected' : '') + '>' + x[1] + '</option>'; }).join('') + '</select>'
       +   '<input data-qr="query" type="text" placeholder="질문 안에서 찾기" value="' + esc(QR.query) + '">'
       + '</div>'
@@ -448,9 +466,11 @@
       + '<span>' + esc((gs.find(function(g){ return g.id === QR.grade; }) || {}).name || '') + ' 전체 — '
       + '미분류 <b>' + s.r0 + '</b> · 1회차 <b>' + s.r1 + '</b> · 2회차 <b>' + s.r2 + '</b> · 3회차 <b>' + s.r3 + '</b> · 뺀 것 <b>' + s.off + '</b>'
       + ' · 확인 <b>' + s.ok + ' / ' + s.total + '</b>'
+      + (s.ask ? ' · 🤔 봐 주세요 <b>' + s.askleft + ' / ' + s.ask + '</b>' : '')
       + ' · 고친 문장 <b>' + s.edited + '</b> · 모범 답 <b>' + s.answered + '</b> · 다 본 소단원 <b>' + s.seen + ' / ' + s.smalls + '</b></span>'
       + (s.empty.length ? '<span class="qr-warn">1회차 빈 소단원 ' + s.empty.length + '개</span>' : '')
       + '<span class="sp">'
+      +   (s.ask ? '<button class="nbtn" data-qr="okrestall" title="지금 보고 있는 대단원에서 🤔 표시가 없는 질문을 모두 확인으로 바꿔요">🤔 빼고 전부 확인</button>' : '')
       +   '<button class="nbtn" data-qr="import">불러오기</button>'
       +   '<button class="nbtn" data-qr="export">내보내기</button>'
       +   '<button class="nbtn" data-qr="reset">이 학년 되돌리기</button>'
@@ -461,6 +481,13 @@
 
   /* ── 클릭·입력 ────────────────────────────────────────── */
   function closestSmall(el){ return el.closest ? el.closest('.qr-small') : null; }
+  // 대단원·소단원 이름으로 그 줄(row)을 되찾는다 — 보기로 걸러 안 보이는 질문까지 다루려고
+  function findRow(bigName, smallName){
+    var m = null; try{ m = cpModel(QR.grade); }catch(e){}
+    var big = ((m && m.bigUnits) || []).filter(function(b){ return b.name === bigName; })[0];
+    if(!big) return null;
+    return smallsOf(big).filter(function(r){ return r.sm.name === smallName; })[0] || null;
+  }
 
   function onClick(e){
     var host = document.getElementById('qreviewTab');
@@ -572,6 +599,32 @@
       // 보기로 걸러 안 보이는 질문까지 확인하지 않게, 지금 화면에 보이는 줄만
       save(OK_KEY, OK);
       var y6 = window.scrollY; render(); window.scrollTo(0, y6); return;
+    }
+    if(act === 'okrest'){
+      var sc7 = closestSmall(btn); if(!sc7) return;
+      var bg7 = sc7.getAttribute('data-big'), sn7 = sc7.getAttribute('data-small');
+      var row7 = findRow(bg7, sn7); if(!row7) return;
+      itemsOf(QR.grade, bg7, row7.sm).forEach(function(it){
+        if(askOf(it.id)) return;                      // 🤔 표시된 것은 마스터가 볼 때까지 남긴다
+        OK[it.id] = true;
+      });
+      save(OK_KEY, OK);
+      var y7 = window.scrollY; render(); window.scrollTo(0, y7); return;
+    }
+    if(act === 'okrestall'){
+      var m8 = null; try{ m8 = cpModel(QR.grade); }catch(e){}
+      var big8 = ((m8 && m8.bigUnits) || [])[QR.big]; if(!big8) return;
+      var todo = [];
+      smallsOf(big8).forEach(function(row){
+        itemsOf(QR.grade, big8.name, row.sm).forEach(function(it){
+          if(!askOf(it.id) && !OK[it.id]) todo.push(it.id);
+        });
+      });
+      if(!todo.length){ alert('이 대단원에는 확인할 것이 남아 있지 않아요.'); return; }
+      if(!confirm(big8.name + '\n\n🤔 표시가 없는 질문 ' + todo.length + '개를 모두 「확인」으로 바꿀까요?\n(🤔 표시된 질문은 그대로 남습니다)')) return;
+      todo.forEach(function(id){ OK[id] = true; });
+      save(OK_KEY, OK);
+      var y8 = window.scrollY; render(); window.scrollTo(0, y8); return;
     }
     if(act === 'seen'){
       var sc = closestSmall(btn); if(!sc) return;
@@ -700,6 +753,7 @@
           var p = planOf(it.id, it.kind);
           var rec = { id:it.id, big:big.name, small:row.sm.name, kind:it.kind, ord:i, round:p.r, off:p.off, q:it.q };
           if(OK[it.id]) rec.ok = true;
+          var ak = askOf(it.id); if(ak) rec.ask = ak;
           if(it.type) rec.type = it.type;
           if(EDITS[it.id] != null) rec.newQ = EDITS[it.id];
           var an = ansOf(it.id);
