@@ -96,6 +96,21 @@ for sm, rnd, figkey, q, ans, keys in S3.Q:
     added += 1
     log.append(('추가 r%d%s' % (rnd, ' +그림' if figkey else ''), q[:50]))
 
+# ── ⑤ 계단(3회차) 칸에 붙는 그림 — 칸 번호는 기록에 쓰는 것과 같다 ──────────
+LKEY = 'ladder:e6-2|3. 공간과 입체|'
+LADDER_FIG = {
+ LKEY + '02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양:1': 'b3l_hidden',
+ LKEY + '03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양:2': 'b3l_minmax',
+ LKEY + '04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기:2': 'b3l_nums',
+ LKEY + '05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양:2': 'b3l_layers',
+ LKEY + '06. 여러 가지 모양을 만들어 볼까요:2': 'b3l_two',
+}
+known = set(byid)
+for lid, fk in LADDER_FIG.items():
+    if lid not in known: raise SystemExit('계단 칸 못 찾음: ' + lid)
+    fig_map[lid] = S3.FIGS[fk]
+    log.append(('계단 칸에 그림', lid.split(':')[-2][:26] + ' ' + lid.split(':')[-1] + '칸'))
+
 items = list(out.values())
 for r in items: r.setdefault('by', 'claude')
 plan = {'format': 'qr-plan-2', 'grade': 'e6-2', 'rounds': 3, 'items': items, 'seen': []}

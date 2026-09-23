@@ -150,6 +150,13 @@
     $('dlCount').textContent = Math.min(R.pi + 1, R.plan.length) + ' / ' + R.plan.length + '칸';
   }
   function figureFor(step) {
+    // [v89.0] 질문 고르기와 같은 표(window.QR_FIG)에서 이 칸 번호로 그림을 찾는다.
+    //   칸 번호는 기록에 쓰는 것과 같은 'ladder:<소단원키>:<칸>' — 그려 둔 SVG({svg:'…'})도 받는다.
+    try {
+      const f = (window.QR_FIG || {})['ladder:' + R.ctx.key + ':' + (R.k + 1)];
+      if (f && f.svg) return '<div class="dl-fig">' + f.svg + '</div>';
+      if (f) return '<div class="dl-fig">' + ddFig(f) + '</div>';
+    } catch { }
     if (step.figScene) { try { return '<div class="dl-fig">' + ddFig(step.figScene) + '</div>'; } catch { return ''; } }
     if (!step.fig) return '';
     try {

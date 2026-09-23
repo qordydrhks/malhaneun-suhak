@@ -13,7 +13,7 @@
 """
 import os, sys, importlib.util
 _d = os.path.dirname(os.path.abspath(__file__))
-_sp = importlib.util.spec_from_file_location('draw', _d + os.sep + 'draw.py')
+_sp = importlib.util.spec_from_file_location('draw', os.path.dirname(_d) + os.sep + 'draw.py')
 D = importlib.util.module_from_spec(_sp); _sp.loader.exec_module(D)
 
 def stack(spec):
@@ -108,3 +108,37 @@ if __name__ == '__main__':
     for k, v in FIGS.items():
         print('%-14s %5d자' % (k, len(v)))
     print('그림 %d장' % len(FIGS))
+
+# ── 🪜 계단(3회차) 칸에 붙는 그림 ─────────────────────────────────────
+# 계단도 질문 번호(ladder:<소단원키>:<칸>)로 같은 표에서 그림을 찾는다 (v89.0).
+# 질문용 그림과 배치·수를 모두 다르게 한다.
+
+# 03칸2 — 개수가 한 가지로 안 정해지는 예 (가장 적을 때 8개 · 가장 많을 때 10개)
+FIGS['b3l_minmax'] = D.svg(D.row([
+    D.topview([(0,0),(1,0),(2,0),(0,1),(1,1),(2,1)], 'blue', title='위에서 본 모양'),
+    D.side([2, 2, 1], 'amber', title='앞에서 본 모양'),
+    D.side([2, 2],    'green', title='옆에서 본 모양'),
+], gap=44), note='왼쪽·가운데 줄은 2층으로, 오른쪽 줄은 1층으로 보여요.')
+
+# 04칸2 — 수를 쓴 것을 보고 앞에서 본 모양 알아내기
+_N = {(0,0): 2, (1,0): 1, (2,0): 3, (1,1): 2}
+FIGS['b3l_nums'] = D.svg(D.topview(_N, 'rose', title='위에서 본 모양에 쓴 수', nums=_N))
+
+# 05칸2 — 2층은 1층의 어느 자리 위에만 있을 수 있나
+FIGS['b3l_layers'] = D.svg(D.row([
+    D.topview([(0,0),(1,0),(0,1)], 'blue',  title='1층'),
+    D.topview([(0,0)],             'amber', title='2층'),
+], gap=52))
+
+# 02칸1 — 위에서 본 모양만으로는 개수를 알 수 없는 예
+_H = {(0,0): 1, (1,0): 2, (1,1): 1}
+FIGS['b3l_hidden'] = D.svg(D.row([
+    D.cubes(stack(_H), 'green', title='쌓은 모양'),
+    D.topview(_H, 'amber', title='위에서 본 모양'),
+], gap=58))
+
+# 06칸2 — 3개짜리 두 조각으로 만든 모양
+FIGS['b3l_two'] = D.svg(D.row([
+    D.cubes([(0,0,0),(1,0,0),(0,0,1)], 'blue',  title='조각 ㉮'),
+    D.cubes([(0,0,0),(0,1,0),(0,1,1)], 'green', title='조각 ㉯'),
+], gap=62), note='쌓기나무 3개씩으로 만든 두 조각이에요.')
