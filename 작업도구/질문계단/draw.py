@@ -294,6 +294,58 @@ def to_arrow(x, y, text='자르면'):
     f.add(_txt(x + 15, y - 9, text, 11.5, SOFT, 600), [(x - 8, y - 20), (x + 38, y - 20)])
     return f
 
+def ang(corner, p1, p2, text=None, r=22, color='#B55B45', size=12.5):
+    """각 표시 — corner 에서 p1 쪽부터 p2 쪽까지 호를 그리고 가운데에 글자.
+    text 를 '?' 로 두면 구해야 하는 각. **답이 되는 값은 적지 말 것**(대전제 세부 원칙)."""
+    import math
+    a1 = math.atan2(p1[1] - corner[1], p1[0] - corner[0])
+    a2 = math.atan2(p2[1] - corner[1], p2[0] - corner[0])
+    d = (a2 - a1) % (2 * math.pi)
+    if d > math.pi:                      # 늘 작은 쪽 각을 그린다
+        a1, a2, d = a2, a1, 2 * math.pi - d
+    f = Fig()
+    pa = (corner[0] + math.cos(a1) * r, corner[1] + math.sin(a1) * r)
+    pb = (corner[0] + math.cos(a1 + d) * r, corner[1] + math.sin(a1 + d) * r)
+    f.add('<path d="M%.1f,%.1f A%.1f,%.1f 0 0 1 %.1f,%.1f" fill="none" stroke="%s" stroke-width="1.5"/>'
+          % (pa[0], pa[1], r, r, pb[0], pb[1], color), [pa, pb, corner])
+    if text:
+        am = a1 + d / 2
+        tx, ty = corner[0] + math.cos(am) * (r + 15), corner[1] + math.sin(am) * (r + 15)
+        w = _textw(text, size)
+        f.add(_txt(tx, ty + 4, text, size, color, 800),
+              [(tx - w / 2, ty - size), (tx + w / 2, ty + 6)])
+    return f
+
+
+def dot(p, label=None, color='#3B6FA8', at='above', size=12.5):
+    """점 하나 + 이름. at: above/below/left/right"""
+    f = Fig()
+    f.add('<circle cx="%.1f" cy="%.1f" r="3.4" fill="%s"/>' % (p[0], p[1], color),
+          [(p[0] - 4, p[1] - 4), (p[0] + 4, p[1] + 4)])
+    if label:
+        dx, dy, an = {'above': (0, -10, 'middle'), 'below': (0, 17, 'middle'),
+                      'left': (-8, 4, 'end'), 'right': (8, 4, 'start')}[at]
+        w = _textw(label, size)
+        x0 = p[0] + dx - (w / 2 if an == 'middle' else (w if an == 'end' else 0))
+        f.add(_txt(p[0] + dx, p[1] + dy, label, size, INK, 700, an),
+              [(x0, p[1] + dy - size), (x0 + w, p[1] + dy + 4)])
+    return f
+
+
+def ray(p1, p2, label=None, style='solid', color='#6E6A86', width=1.5, over=0):
+    """직선 — over 만큼 양끝을 더 늘여 그린다(직선 '가' 처럼 끝이 없는 느낌)."""
+    import math
+    dx, dy = p2[0] - p1[0], p2[1] - p1[1]
+    L = math.hypot(dx, dy) or 1
+    ux, uy = dx / L, dy / L
+    a = (p1[0] - ux * over, p1[1] - uy * over)
+    b = (p2[0] + ux * over, p2[1] + uy * over)
+    f = seg(a, b, style, color, width)
+    if label:
+        f = merge(f, tag(b[0] + 12, b[1] + 4, label, SOFT, 12.5))
+    return f
+
+
 def regular(n, r, center=(0, 0), color='blue', start=-90):
     """정n각형"""
     import math
