@@ -386,6 +386,106 @@ def ray(p1, p2, label=None, style='solid', color='#6E6A86', width=1.5, over=0):
     return f
 
 
+U3 = 22          # 겨냥도 1 cm = 22 px (S 보다 작게 — 입체는 세 방향으로 커진다)
+DEPTH = 0.55     # 깊이 모서리를 45° 로 이만큼 줄여 그린다 (교재 겨냥도 모양)
+
+# 꼭짓점 이름 — 위 면 ㄱㄴㄷㄹ · 아래 면 ㅁㅂㅅㅇ (ㅇ 이 보이지 않는 꼭짓점)
+BOX_V = ['ㄱ', 'ㄴ', 'ㄷ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅅ', 'ㅇ']
+
+
+def box_pts(w, d, h, origin=(0, 0)):
+    """겨냥도 꼭짓점 8개 — 앞 위왼(ㄱ)·앞 위오(ㄴ)·뒤 위오(ㄷ)·뒤 위왼(ㄹ)·
+    앞 아래왼(ㅁ)·앞 아래오(ㅂ)·뒤 아래오(ㅅ)·뒤 아래왼(ㅇ) 순서."""
+    ox, oy = origin
+    W3, H3 = w * U3, h * U3
+    e = d * U3 * DEPTH * 0.7071            # 45° 로 비스듬히
+    FTL = (ox, oy);            FTR = (ox + W3, oy)
+    FBL = (ox, oy + H3);       FBR = (ox + W3, oy + H3)
+    BTL = (FTL[0] + e, FTL[1] - e); BTR = (FTR[0] + e, FTR[1] - e)
+    BBL = (FBL[0] + e, FBL[1] - e); BBR = (FBR[0] + e, FBR[1] - e)
+    return [FTL, FTR, BTR, BTL, FBL, FBR, BBR, BBL]
+
+
+def box(w, d, h, origin=(0, 0), color='blue', verts=False, dims=None,
+        hide=True, all_solid=False, base=False, title=None):
+    """직육면체 겨냥도.
+      verts=True   꼭짓점 이름 ㄱ~ㅇ (교재 방식 — 면을 '면 ㄱㄴㅂㅁ' 처럼 부를 수 있다)
+      dims         {'w':'5 cm','d':'3 cm','h':'4 cm'} 중 필요한 것만
+      hide=False   보이지 않는 모서리를 안 그린다
+      all_solid    12개 모서리를 **전부 실선**으로 (어디가 점선이어야 하는지 묻는 질문용)
+      base=True    밑면 하나를 옅게 칠한다 (밑면을 정했다는 조건)
+    """
+    g = box_pts(w, d, h, origin)
+    FTL, FTR, BTR, BTL, FBL, FBR, BBR, BBL = g
+    bg, edge = FLAT[color]
+    P3 = PAL[color]
+    f = Fig()
+    # 면 — 앞·오른쪽·위
+    for pts, col in (([FTL, FTR, FBR, FBL], P3['left']),      # 앞면
+                     ([FTR, BTR, BBR, FBR], P3['right']),     # 오른쪽 면
+                     ([FTL, FTR, BTR, BTL], P3['top'])):      # 위면
+        f.add(_poly(pts, col, edge, 0.9), pts)
+    if base:      # 밑면으로 정한 면을 옅게 칠한다.
+        # ⚠️ 아래 면은 **보이지 않는 면**이라 칠하면 상자 밖에 덧붙은 것처럼 보인다(9/26 확인).
+        #    질문이 '한 면을 밑면으로 정하면' 이므로 보이는 위 면을 칠한다.
+        bpts = [FTL, FTR, BTR, BTL]
+        f.add(_poly(bpts, '#FFF3D4', edge, 0.9), bpts)
+    solid = [(FTL, FTR), (FTR, FBR), (FBR, FBL), (FBL, FTL),    # 앞면 4
+             (FTL, BTL), (FTR, BTR), (BTL, BTR),                # 위 3
+             (FBR, BBR), (BBR, BTR)]                            # 오른쪽 2
+    dash = [(BTL, BBL), (BBL, BBR), (FBL, BBL)]                 # 보이지 않는 3
+    for p, q in solid:
+        f = merge(f, seg(p, q, 'solid', edge, 1.6))
+    for p, q in dash:
+        f = merge(f, seg(p, q, 'solid' if all_solid else 'dashed', edge, 1.6))
+    if verts:
+        ats = ['left', 'right', 'right', 'above', 'left', 'below', 'right', 'below']
+        for pt, nm, at in zip(g, BOX_V, ats):
+            f = merge(f, dot(pt, nm, edge, at, 12))
+    if dims:
+        if dims.get('w'): f = merge(f, tag((FBL[0] + FBR[0]) / 2, FBL[1] + 19, dims['w'], SOFT, 12))
+        if dims.get('h'): f = merge(f, tag(FTL[0] - 7, (FTL[1] + FBL[1]) / 2 + 4, dims['h'], SOFT, 12, 700, 'end'))
+        if dims.get('d'): f = merge(f, tag((FBR[0] + BBR[0]) / 2 + 12, (FBR[1] + BBR[1]) / 2 + 12,
+                                           dims['d'], SOFT, 12, 700, 'start'))
+    if title:
+        x0, y0, w2, _h = f.bbox(0)
+        f.add(_txt(x0 + w2 / 2, y0 - 12, title, 13, SOFT), [(x0, y0 - 24), (x0 + w2, y0 - 24)])
+    return f
+
+
+def net(cells, colw, rowh, labels=None, color='blue', origin=(0, 0), title=None):
+    """전개도. cells = [(열, 행), …] · colw/rowh = 열 너비·행 높이 목록(px).
+    바깥 둘레는 **실선**(잘린 모서리) · 안쪽 맞닿은 선은 **점선**(접는 모서리) — 교재 규칙.
+    labels = {(열,행): '글자'}"""
+    ox, oy = origin
+    bg, edge = FLAT[color]
+    X = [ox]
+    for w in colw: X.append(X[-1] + w)
+    Y = [oy]
+    for h in rowh: Y.append(Y[-1] + h)
+    have = set(cells)
+    f = Fig()
+    for (c, r) in cells:
+        pts = [(X[c], Y[r]), (X[c + 1], Y[r]), (X[c + 1], Y[r + 1]), (X[c], Y[r + 1])]
+        f.add(_poly(pts, bg, 'none', 0), pts)
+    for (c, r) in cells:                   # 모서리 — 이웃이 있으면 점선(접는 선)
+        e4 = [((X[c], Y[r]), (X[c + 1], Y[r]), (c, r - 1)),          # 위
+              ((X[c + 1], Y[r]), (X[c + 1], Y[r + 1]), (c + 1, r)),  # 오른쪽
+              ((X[c], Y[r + 1]), (X[c + 1], Y[r + 1]), (c, r + 1)),  # 아래
+              ((X[c], Y[r]), (X[c], Y[r + 1]), (c - 1, r))]          # 왼쪽
+        for p, q, nb in e4:
+            if nb in have:
+                if nb > (c, r): f = merge(f, seg(p, q, 'dashed', edge, 1.1))
+            else:
+                f = merge(f, seg(p, q, 'solid', edge, 1.7))
+    for (c, r), t in (labels or {}).items():
+        f = merge(f, tag((X[c] + X[c + 1]) / 2, (Y[r] + Y[r + 1]) / 2 + 5, t, INK, 13.5))
+    if title:
+        x0, y0, w2, _h = f.bbox(0)
+        f.add(_txt(x0 + w2 / 2, y0 - 12, title, 13, SOFT), [(x0, y0 - 24), (x0 + w2, y0 - 24)])
+    return f
+
+
 def regular(n, r, center=(0, 0), color='blue', start=-90):
     """정n각형"""
     import math
