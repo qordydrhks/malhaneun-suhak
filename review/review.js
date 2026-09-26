@@ -273,8 +273,6 @@
     + '#qreviewTab .qr-row.ok.open .qr-ans{display:block;}'
     + '#qreviewTab .qr-fig{margin:8px 0 2px;padding:8px 10px;background:#fff;border:1px solid #E7E3F3;border-radius:11px;display:block;max-width:340px;}'
     + '#qreviewTab .qr-fig svg{width:100%;height:auto;display:block;}'
-    + '#qreviewTab .qr-row.ok .qr-fig{display:none;}'
-    + '#qreviewTab .qr-row.ok.open .qr-fig{display:inline-block;}'
     + '#qreviewTab .qr-figcnt{font-size:11.5px;font-weight:800;color:#1D6FA5;background:#E6F1F8;padding:2px 8px;border-radius:999px;}'
     + '#qreviewTab .qr-act button.okbtn{min-width:52px;}'
     + '#qreviewTab .qr-act button.okbtn.on{background:#2C8459;border-color:#2C8459;color:#fff;font-weight:800;}'
