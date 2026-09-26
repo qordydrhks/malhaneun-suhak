@@ -125,6 +125,46 @@ def arrow(x1, y1, x2, y2, label=None, color=SOFT):
     return f
 
 
+def view_arrow(fig, side, label=None, length=64, color=SOFT):
+    """입체 그림을 **어느 쪽에서 보는지** 나타내는 비스듬한 화살표.
+
+    side = 'front'(앞) | 'right'(오른쪽 옆) | 'left'(왼쪽 옆)
+    투영이 x=(c-r)*W, y=(c+r)*H 이므로 화면에서
+      앞쪽(+r)은 왼쪽 아래 · 오른쪽(+c)은 오른쪽 아래로 간다.
+    → 앞에서 보는 사람은 **왼쪽 아래에서 오른쪽 위로**, 오른쪽 옆에서 보는 사람은 **오른쪽 아래에서 왼쪽 위로** 본다.
+    수직·수평 화살표를 쓰면 아이가 방향을 헷갈린다(마스터 지적 2026-09-26).
+    """
+    import math
+    L = math.hypot(W, H)
+    ux, uy = W / L, H / L                       # 화면에서 c 가 커지는 쪽(오른쪽 아래)의 단위 벡터
+    x0, y0, w, h = fig.bbox(0)
+    if side == 'front':                         # 왼쪽 아래 → 오른쪽 위
+        head = (x0 + w * 0.26, y0 + h + 10)
+        dx, dy = ux, -uy
+        at, anc = 'below', 'end'
+    elif side == 'right':                       # 오른쪽 아래 → 왼쪽 위
+        head = (x0 + w * 0.78, y0 + h + 10)
+        dx, dy = -ux, -uy
+        at, anc = 'below', 'start'
+    else:                                       # 'left' — 왼쪽 위 → 오른쪽 아래
+        head = (x0 + w * 0.22, y0 - 10)
+        dx, dy = ux, uy
+        at, anc = 'above', 'end'
+    tail = (head[0] - dx * length, head[1] - dy * length)
+
+    f = Fig()
+    f.add('<defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">'
+          '<path d="M0,0 L7,3 L0,6 z" fill="%s"/></marker></defs>' % color, [])
+    f.add('<line x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f" stroke="%s" stroke-width="1.6" '
+          'stroke-dasharray="5 4" marker-end="url(#ah)"/>'
+          % (tail[0], tail[1], head[0], head[1], color), [tail, head])
+    if label:
+        ly = tail[1] + (16 if at == 'below' else -8)
+        lx = tail[0] + (-4 if anc == 'end' else 4)
+        f = merge(f, tag(lx, ly, label, color, 12, 600, anc))
+    return f
+
+
 def row(figs, gap=46):
     """여러 장을 가로로 나란히 — 각 그림을 자기 자리로 옮긴다"""
     out = Fig()

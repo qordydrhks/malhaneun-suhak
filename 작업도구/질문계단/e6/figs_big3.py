@@ -29,10 +29,10 @@ def _place3():
     right = D.cubes(stack({(2, 0): 1}), 'green')    # 오른쪽 뒤
     front = D.cubes(stack({(0, 2): 1}), 'rose')     # 왼쪽 앞
     f = D.merge(back, right, front)
-    x0, y0, w, h = f.bbox(0)
-    a1 = D.arrow(x0 + w * 0.30, y0 + h + 46, x0 + w * 0.30, y0 + h + 10, '앞에서 보는 쪽')
-    a2 = D.arrow(x0 + w + 74, y0 + h * 0.52, x0 + w + 16, y0 + h * 0.52, '오른쪽 옆에서')
-    return D.svg(D.merge(f, a1, a2),
+    # ⚠️ 보는 방향 화살표는 **입체 축을 따라 비스듬히** (마스터 지적 9/26)
+    #    앞쪽(+r)은 화면 왼쪽 아래 · 오른쪽(+c)은 오른쪽 아래로 간다
+    return D.svg(D.merge(f, D.view_arrow(f, 'front', '앞에서 보는 쪽'),
+                            D.view_arrow(f, 'right', '오른쪽 옆에서 보는 쪽')),
                  note='빨강·초록 상자는 1층, 파랑 상자만 2층 높이예요.')
 
 FIGS['b3_place'] = _place3()
@@ -42,9 +42,8 @@ def _place_wrong():
     mid   = D.cubes(stack({(1, 1): 1}), 'blue')     # 가운데
     front = D.cubes(stack({(0, 2): 1}), 'rose')     # 왼쪽 앞
     f = D.merge(back, mid, front)
-    x0, y0, w, h = f.bbox(0)
-    ar = D.arrow(x0 + w * 0.42, y0 + h + 46, x0 + w * 0.42, y0 + h + 10, '앞에서 보는 쪽')
-    return D.svg(D.merge(f, ar), note='빨강 상자가 가장 앞줄에 있어요.')
+    return D.svg(D.merge(f, D.view_arrow(f, 'front', '앞에서 보는 쪽')),
+                 note='빨강 상자가 가장 앞줄에 있어요.')
 
 FIGS['b3_wrong'] = _place_wrong()
 
