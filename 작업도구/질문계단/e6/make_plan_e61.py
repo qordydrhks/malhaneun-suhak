@@ -40,6 +40,6 @@ assert not miss, miss
 plan = {'format': 'qr-plan-2', 'grade': 'e6-1', 'rounds': 3, 'items': items, 'seen': []}
 body = ('/* 질문 고르기 — 기본으로 실어 두는 분류안 (초6-1)\n'
         '   Claude 분류(2026-09-28): 기준표_초등_질문.md 1~17절 그대로. 원천 작업도구/질문계단/e6/spec_e61.py */\n'
-        "(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'e6-1_2026-09-28a', data:" + json.dumps(plan, ensure_ascii=False, indent=0) + '});\n')
+        "(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'e6-1_2026-09-28b', data:" + json.dumps(plan, ensure_ascii=False, indent=0) + '});\n')
 io.open(os.path.join(ROOT, 'review', 'plan_e6-1.js'), 'w', encoding='utf-8', newline='').write(body)
 print(cnt, 'items', len(items))
