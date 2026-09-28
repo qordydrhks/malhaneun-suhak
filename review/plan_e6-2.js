@@ -8070,3 +8070,596 @@
 ],
 "seen": []
 }});
+
+/* [0928c] 2026-09-28 초6-2 5단원 마스터 검토 반영 + 6단원 구별 기준 질문 (make_plan_0928c.py).
+   계단 5-01 2칸 문장은 원본 e6/ladder_E6_2_big5.json 에서 바꿨다(채점 기준까지). */
+(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'e6-2_2026-09-28c', data:{
+"format": "qr-plan-2",
+"grade": "e6-2",
+"rounds": 3,
+"items": [
+{
+"id": "1muug30:qapre0501",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1muug30:t0L1",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1muug30:t0L2",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1muug30:t0H1",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1muug30:t0H2",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1muug30:qrecall",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1muug30:qreason",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1muug30:qexample",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "qset",
+"off": true,
+"offWas": false,
+"newQ": "지름과 원주의 비율(원주율)이 어떤 원이든 똑같다는 것을 예로 들어 말해 봐.",
+"qWas": "지름과 원주의 비율(원주율)이 어떤 원이든 비슷하다는 것을 예로 들어 말해 봐.",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1muug30:qerror",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|5. 원의 둘레와 넓이|01. 원주와 원주율을 알아볼까요:1",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|5. 원의 둘레와 넓이|01. 원주와 원주율을 알아볼까요:2",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|5. 원의 둘레와 넓이|01. 원주와 원주율을 알아볼까요:3",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "2357m1:t0L1",
+"big": "5. 원의 둘레와 넓이",
+"small": "02. 원주와 지름을 구해 볼까요",
+"kind": "low",
+"answer": "지름 × 원주율=원주로 구해.",
+"keys": [
+"지름 × 원주율=원주"
+],
+"ansWas": {
+"a": "지름 × 원주율로 구해.",
+"k": [
+"지름 × 원주율"
+]
+},
+"ok": true,
+"by": "claude"
+},
+{
+"id": "2357m1:t0L2",
+"big": "5. 원의 둘레와 넓이",
+"small": "02. 원주와 지름을 구해 볼까요",
+"kind": "low",
+"answer": "지름×원주율=원주 로 구해.",
+"keys": [
+"지름×원주율=원주"
+],
+"ansWas": {
+"a": "원주 ÷ 원주율로 구해.",
+"k": [
+"원주 ÷ 원주율"
+]
+},
+"ok": true,
+"by": "claude"
+},
+{
+"id": "2357m1:t0H1",
+"big": "5. 원의 둘레와 넓이",
+"small": "02. 원주와 지름을 구해 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "2357m1:t0H2",
+"big": "5. 원의 둘레와 넓이",
+"small": "02. 원주와 지름을 구해 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "2357m1:qrecall",
+"big": "5. 원의 둘레와 넓이",
+"small": "02. 원주와 지름을 구해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "2357m1:qreason",
+"big": "5. 원의 둘레와 넓이",
+"small": "02. 원주와 지름을 구해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "2357m1:qexample",
+"big": "5. 원의 둘레와 넓이",
+"small": "02. 원주와 지름을 구해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "2357m1:qerror",
+"big": "5. 원의 둘레와 넓이",
+"small": "02. 원주와 지름을 구해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "2357m1:qa22e6221",
+"big": "5. 원의 둘레와 넓이",
+"small": "02. 원주와 지름을 구해 볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "2357m1:qa22e6222",
+"big": "5. 원의 둘레와 넓이",
+"small": "02. 원주와 지름을 구해 볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|5. 원의 둘레와 넓이|02. 원주와 지름을 구해 볼까요:1",
+"big": "5. 원의 둘레와 넓이",
+"small": "02. 원주와 지름을 구해 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|5. 원의 둘레와 넓이|02. 원주와 지름을 구해 볼까요:2",
+"big": "5. 원의 둘레와 넓이",
+"small": "02. 원주와 지름을 구해 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|5. 원의 둘레와 넓이|02. 원주와 지름을 구해 볼까요:3",
+"big": "5. 원의 둘레와 넓이",
+"small": "02. 원주와 지름을 구해 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "10ptnmf:t0L1",
+"big": "5. 원의 둘레와 넓이",
+"small": "03. 원의 넓이를 어림해 볼까요",
+"kind": "low",
+"off": false,
+"offWas": true,
+"round": 2,
+"rWas": 1,
+"newQ": "원의 넓이를 어림하는 방법을 설명해봐.",
+"qWas": "원의 넓이는 어떤 도형으로 어림해?",
+"answer": "원 안에 꼭 맞는 정사각형의 넓이보다는 크고, 원 밖을 둘러싼 정사각형의 넓이보다는 작다고 어림해.",
+"keys": [
+"원 안의 정사각형 넓이보다 크다",
+"원 밖의 정사각형 넓이보다 작다"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "원 안에 꼭 맞는 정사각형과 원 밖을 둘러싼 정사각형으로 어림해.",
+"k": [
+"원 안의 정사각형",
+"원 밖의 정사각형"
+]
+},
+"reopen": true,
+"by": "claude"
+},
+{
+"id": "10ptnmf:t0L2",
+"big": "5. 원의 둘레와 넓이",
+"small": "03. 원의 넓이를 어림해 볼까요",
+"kind": "low",
+"off": true,
+"offWas": false,
+"ok": true,
+"by": "claude"
+},
+{
+"id": "10ptnmf:t0H1",
+"big": "5. 원의 둘레와 넓이",
+"small": "03. 원의 넓이를 어림해 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "10ptnmf:t0H2",
+"big": "5. 원의 둘레와 넓이",
+"small": "03. 원의 넓이를 어림해 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "10ptnmf:qrecall",
+"big": "5. 원의 둘레와 넓이",
+"small": "03. 원의 넓이를 어림해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "10ptnmf:qreason",
+"big": "5. 원의 둘레와 넓이",
+"small": "03. 원의 넓이를 어림해 볼까요",
+"kind": "qset",
+"off": true,
+"offWas": false,
+"ok": true,
+"by": "claude"
+},
+{
+"id": "10ptnmf:qexample",
+"big": "5. 원의 둘레와 넓이",
+"small": "03. 원의 넓이를 어림해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "10ptnmf:qerror",
+"big": "5. 원의 둘레와 넓이",
+"small": "03. 원의 넓이를 어림해 볼까요",
+"kind": "qset",
+"off": false,
+"offWas": true,
+"round": 1,
+"rWas": 2,
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|5. 원의 둘레와 넓이|03. 원의 넓이를 어림해 볼까요:1",
+"big": "5. 원의 둘레와 넓이",
+"small": "03. 원의 넓이를 어림해 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|5. 원의 둘레와 넓이|03. 원의 넓이를 어림해 볼까요:2",
+"big": "5. 원의 둘레와 넓이",
+"small": "03. 원의 넓이를 어림해 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wbcjzk:qapre0504",
+"big": "5. 원의 둘레와 넓이",
+"small": "04. 원의 넓이를 구하는 방법을 알아볼까요",
+"kind": "add",
+"off": true,
+"offWas": false,
+"by": "claude"
+},
+{
+"id": "wbcjzk:t0L1",
+"big": "5. 원의 둘레와 넓이",
+"small": "04. 원의 넓이를 구하는 방법을 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wbcjzk:t0L2",
+"big": "5. 원의 둘레와 넓이",
+"small": "04. 원의 넓이를 구하는 방법을 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wbcjzk:t0H1",
+"big": "5. 원의 둘레와 넓이",
+"small": "04. 원의 넓이를 구하는 방법을 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wbcjzk:t0H2",
+"big": "5. 원의 둘레와 넓이",
+"small": "04. 원의 넓이를 구하는 방법을 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wbcjzk:qreason",
+"big": "5. 원의 둘레와 넓이",
+"small": "04. 원의 넓이를 구하는 방법을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wbcjzk:qexample",
+"big": "5. 원의 둘레와 넓이",
+"small": "04. 원의 넓이를 구하는 방법을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wbcjzk:qerror",
+"big": "5. 원의 둘레와 넓이",
+"small": "04. 원의 넓이를 구하는 방법을 알아볼까요",
+"kind": "qset",
+"off": true,
+"offWas": false,
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wbcjzk:qa22e6241",
+"big": "5. 원의 둘레와 넓이",
+"small": "04. 원의 넓이를 구하는 방법을 알아볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|5. 원의 둘레와 넓이|04. 원의 넓이를 구하는 방법을 알아볼까요:1",
+"big": "5. 원의 둘레와 넓이",
+"small": "04. 원의 넓이를 구하는 방법을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|5. 원의 둘레와 넓이|04. 원의 넓이를 구하는 방법을 알아볼까요:2",
+"big": "5. 원의 둘레와 넓이",
+"small": "04. 원의 넓이를 구하는 방법을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ctfuf0:t0L1",
+"big": "5. 원의 둘레와 넓이",
+"small": "05. 원의 둘레와 넓이를 활용해 볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ctfuf0:t0L2",
+"big": "5. 원의 둘레와 넓이",
+"small": "05. 원의 둘레와 넓이를 활용해 볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ctfuf0:t0H1",
+"big": "5. 원의 둘레와 넓이",
+"small": "05. 원의 둘레와 넓이를 활용해 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ctfuf0:t0H2",
+"big": "5. 원의 둘레와 넓이",
+"small": "05. 원의 둘레와 넓이를 활용해 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ctfuf0:qrecall",
+"big": "5. 원의 둘레와 넓이",
+"small": "05. 원의 둘레와 넓이를 활용해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ctfuf0:qreason",
+"big": "5. 원의 둘레와 넓이",
+"small": "05. 원의 둘레와 넓이를 활용해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ctfuf0:qexample",
+"big": "5. 원의 둘레와 넓이",
+"small": "05. 원의 둘레와 넓이를 활용해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ctfuf0:qerror",
+"big": "5. 원의 둘레와 넓이",
+"small": "05. 원의 둘레와 넓이를 활용해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ctfuf0:qa22e6251",
+"big": "5. 원의 둘레와 넓이",
+"small": "05. 원의 둘레와 넓이를 활용해 볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|5. 원의 둘레와 넓이|05. 원의 둘레와 넓이를 활용해 볼까요:1",
+"big": "5. 원의 둘레와 넓이",
+"small": "05. 원의 둘레와 넓이를 활용해 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|5. 원의 둘레와 넓이|05. 원의 둘레와 넓이를 활용해 볼까요:2",
+"big": "5. 원의 둘레와 넓이",
+"small": "05. 원의 둘레와 넓이를 활용해 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1muug30:qamukzmx8lp5fa",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "add",
+"q": "원을 설명해봐",
+"round": 1,
+"ord": 9,
+"answer": "원의 중심에서 원 위의 어느 점까지나 거리가 똑같은 둥근 도형이야. 그 거리가 반지름이고, 지름은 반지름의 2배야.",
+"keys": [
+"중심에서 원 위의 모든 점까지 거리가 같다",
+"반지름과 지름(반지름의 2배)"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "",
+"k": []
+},
+"reopen": true,
+"by": "claude"
+},
+{
+"id": "1muug30:qamukznsscvsch",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "add",
+"q": "원이 나오면 가장 중요하게 생각해야 하는것은 뭐지?",
+"round": 1,
+"ord": 10,
+"answer": "반지름이야. 원은 중심에서 원 위의 모든 점까지 반지름으로 거리가 같고, 원주(지름 × 원주율)와 넓이(반지름 × 반지름 × 원주율)도 반지름으로 정해져. 그래서 반지름이나 지름을 먼저 찾아.",
+"keys": [
+"반지름(지름)을 먼저 찾는다",
+"원주와 넓이가 반지름으로 정해진다"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "",
+"k": []
+},
+"reopen": true,
+"by": "claude"
+},
+{
+"id": "ctfuf0:qamul12c8np9ns",
+"big": "5. 원의 둘레와 넓이",
+"small": "05. 원의 둘레와 넓이를 활용해 볼까요",
+"kind": "add",
+"q": "우리가 잘 알지 못하는 모양의 둘레나 넓이를 구할 때는 어떤 방법으로 둘레나 넓이를 구해야 할지 설명해봐.",
+"round": 2,
+"ord": 9,
+"answer": "모르는 모양에 대한 도형을 우리가 아는 도형 여러개로 합치거나 빼서 모르는 모양을 만든다고 생각해서 구해",
+"keys": [
+"아는 도형으로 바꾸어 생각하기"
+],
+"ok": true,
+"by": "claude"
+},
+{
+"id": "dxxntc:qa28c641",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "04. 구를 알아볼까요",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "원기둥, 원뿔, 구는 무엇을 기준으로 구별해?",
+"answer": "평평한 밑면이 2개이면 원기둥, 밑면이 1개이고 뾰족한 꼭짓점이 있으면 원뿔, 평평한 면 없이 모두 굽은 면이면 구야.",
+"keys": [
+"밑면(평평한 면)의 수",
+"뾰족한 꼭짓점이 있는지"
+],
+"answerBy": "claude"
+}
+],
+"seen": []
+}});
