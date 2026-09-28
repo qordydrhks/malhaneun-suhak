@@ -8663,3 +8663,2951 @@
 ],
 "seen": []
 }});
+
+/* [0928d] 2026-09-28 초6-2 6단원 마스터 검토 반영 — 초6-2 검수 끝 (make_plan_0928d.py) */
+(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'e6-2_2026-09-28d', data:{
+"format": "qr-plan-2",
+"grade": "e6-2",
+"rounds": 3,
+"items": [
+{
+"id": "4tqc50:qapre0101",
+"big": "1. 분수의 나눗셈",
+"small": "01. 분모가 같은 (분수)÷(분수)(1)·나누어떨어지는 경우",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "4tqc50:t0L1",
+"big": "1. 분수의 나눗셈",
+"small": "01. 분모가 같은 (분수)÷(분수)(1)·나누어떨어지는 경우",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "4tqc50:t0L2",
+"big": "1. 분수의 나눗셈",
+"small": "01. 분모가 같은 (분수)÷(분수)(1)·나누어떨어지는 경우",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "4tqc50:t0H1",
+"big": "1. 분수의 나눗셈",
+"small": "01. 분모가 같은 (분수)÷(분수)(1)·나누어떨어지는 경우",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "4tqc50:t0H2",
+"big": "1. 분수의 나눗셈",
+"small": "01. 분모가 같은 (분수)÷(분수)(1)·나누어떨어지는 경우",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "4tqc50:qrecall",
+"big": "1. 분수의 나눗셈",
+"small": "01. 분모가 같은 (분수)÷(분수)(1)·나누어떨어지는 경우",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "4tqc50:qreason",
+"big": "1. 분수의 나눗셈",
+"small": "01. 분모가 같은 (분수)÷(분수)(1)·나누어떨어지는 경우",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "4tqc50:qexample",
+"big": "1. 분수의 나눗셈",
+"small": "01. 분모가 같은 (분수)÷(분수)(1)·나누어떨어지는 경우",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "4tqc50:qerror",
+"big": "1. 분수의 나눗셈",
+"small": "01. 분모가 같은 (분수)÷(분수)(1)·나누어떨어지는 경우",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "4tqc50:qa22e6211",
+"big": "1. 분수의 나눗셈",
+"small": "01. 분모가 같은 (분수)÷(분수)(1)·나누어떨어지는 경우",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|01. 분모가 같은 (분수)÷(분수)(1)·나누어떨어지는 경우:1",
+"big": "1. 분수의 나눗셈",
+"small": "01. 분모가 같은 (분수)÷(분수)(1)·나누어떨어지는 경우",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|01. 분모가 같은 (분수)÷(분수)(1)·나누어떨어지는 경우:2",
+"big": "1. 분수의 나눗셈",
+"small": "01. 분모가 같은 (분수)÷(분수)(1)·나누어떨어지는 경우",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1wjql2g:t0L1",
+"big": "1. 분수의 나눗셈",
+"small": "02. 분모가 같은 (분수)÷(분수)(2)·나누어떨어지지 않는 경우",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1wjql2g:t0L2",
+"big": "1. 분수의 나눗셈",
+"small": "02. 분모가 같은 (분수)÷(분수)(2)·나누어떨어지지 않는 경우",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1wjql2g:t0H1",
+"big": "1. 분수의 나눗셈",
+"small": "02. 분모가 같은 (분수)÷(분수)(2)·나누어떨어지지 않는 경우",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1wjql2g:t0H2",
+"big": "1. 분수의 나눗셈",
+"small": "02. 분모가 같은 (분수)÷(분수)(2)·나누어떨어지지 않는 경우",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1wjql2g:qrecall",
+"big": "1. 분수의 나눗셈",
+"small": "02. 분모가 같은 (분수)÷(분수)(2)·나누어떨어지지 않는 경우",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1wjql2g:qreason",
+"big": "1. 분수의 나눗셈",
+"small": "02. 분모가 같은 (분수)÷(분수)(2)·나누어떨어지지 않는 경우",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1wjql2g:qexample",
+"big": "1. 분수의 나눗셈",
+"small": "02. 분모가 같은 (분수)÷(분수)(2)·나누어떨어지지 않는 경우",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1wjql2g:qerror",
+"big": "1. 분수의 나눗셈",
+"small": "02. 분모가 같은 (분수)÷(분수)(2)·나누어떨어지지 않는 경우",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1wjql2g:qa22e6221",
+"big": "1. 분수의 나눗셈",
+"small": "02. 분모가 같은 (분수)÷(분수)(2)·나누어떨어지지 않는 경우",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|02. 분모가 같은 (분수)÷(분수)(2)·나누어떨어지지 않는 경우:1",
+"big": "1. 분수의 나눗셈",
+"small": "02. 분모가 같은 (분수)÷(분수)(2)·나누어떨어지지 않는 경우",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|02. 분모가 같은 (분수)÷(분수)(2)·나누어떨어지지 않는 경우:2",
+"big": "1. 분수의 나눗셈",
+"small": "02. 분모가 같은 (분수)÷(분수)(2)·나누어떨어지지 않는 경우",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rl95sd:t0L1",
+"big": "1. 분수의 나눗셈",
+"small": "03. 분모가 다른 (분수)÷(분수)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rl95sd:t0L2",
+"big": "1. 분수의 나눗셈",
+"small": "03. 분모가 다른 (분수)÷(분수)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rl95sd:t0H1",
+"big": "1. 분수의 나눗셈",
+"small": "03. 분모가 다른 (분수)÷(분수)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rl95sd:t0H2",
+"big": "1. 분수의 나눗셈",
+"small": "03. 분모가 다른 (분수)÷(분수)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rl95sd:qrecall",
+"big": "1. 분수의 나눗셈",
+"small": "03. 분모가 다른 (분수)÷(분수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rl95sd:qreason",
+"big": "1. 분수의 나눗셈",
+"small": "03. 분모가 다른 (분수)÷(분수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rl95sd:qexample",
+"big": "1. 분수의 나눗셈",
+"small": "03. 분모가 다른 (분수)÷(분수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rl95sd:qerror",
+"big": "1. 분수의 나눗셈",
+"small": "03. 분모가 다른 (분수)÷(분수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rl95sd:qa22e6231",
+"big": "1. 분수의 나눗셈",
+"small": "03. 분모가 다른 (분수)÷(분수)",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|03. 분모가 다른 (분수)÷(분수):1",
+"big": "1. 분수의 나눗셈",
+"small": "03. 분모가 다른 (분수)÷(분수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|03. 분모가 다른 (분수)÷(분수):2",
+"big": "1. 분수의 나눗셈",
+"small": "03. 분모가 다른 (분수)÷(분수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rymc4w:t0L1",
+"big": "1. 분수의 나눗셈",
+"small": "04. (자연수)÷(분수)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rymc4w:t0L2",
+"big": "1. 분수의 나눗셈",
+"small": "04. (자연수)÷(분수)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rymc4w:t0H1",
+"big": "1. 분수의 나눗셈",
+"small": "04. (자연수)÷(분수)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rymc4w:t0H2",
+"big": "1. 분수의 나눗셈",
+"small": "04. (자연수)÷(분수)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rymc4w:qrecall",
+"big": "1. 분수의 나눗셈",
+"small": "04. (자연수)÷(분수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rymc4w:qreason",
+"big": "1. 분수의 나눗셈",
+"small": "04. (자연수)÷(분수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rymc4w:qexample",
+"big": "1. 분수의 나눗셈",
+"small": "04. (자연수)÷(분수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rymc4w:qerror",
+"big": "1. 분수의 나눗셈",
+"small": "04. (자연수)÷(분수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rymc4w:qa22e6241",
+"big": "1. 분수의 나눗셈",
+"small": "04. (자연수)÷(분수)",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|04. (자연수)÷(분수):1",
+"big": "1. 분수의 나눗셈",
+"small": "04. (자연수)÷(분수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|04. (자연수)÷(분수):2",
+"big": "1. 분수의 나눗셈",
+"small": "04. (자연수)÷(분수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|04. (자연수)÷(분수):3",
+"big": "1. 분수의 나눗셈",
+"small": "04. (자연수)÷(분수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1jx91nq:qapre0105",
+"big": "1. 분수의 나눗셈",
+"small": "05. (분수)÷(분수)를 분수의 곱셈으로 나타내기",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1jx91nq:t0L1",
+"big": "1. 분수의 나눗셈",
+"small": "05. (분수)÷(분수)를 분수의 곱셈으로 나타내기",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1jx91nq:t0L2",
+"big": "1. 분수의 나눗셈",
+"small": "05. (분수)÷(분수)를 분수의 곱셈으로 나타내기",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1jx91nq:t0H1",
+"big": "1. 분수의 나눗셈",
+"small": "05. (분수)÷(분수)를 분수의 곱셈으로 나타내기",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1jx91nq:t0H2",
+"big": "1. 분수의 나눗셈",
+"small": "05. (분수)÷(분수)를 분수의 곱셈으로 나타내기",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1jx91nq:qrecall",
+"big": "1. 분수의 나눗셈",
+"small": "05. (분수)÷(분수)를 분수의 곱셈으로 나타내기",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1jx91nq:qreason",
+"big": "1. 분수의 나눗셈",
+"small": "05. (분수)÷(분수)를 분수의 곱셈으로 나타내기",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1jx91nq:qexample",
+"big": "1. 분수의 나눗셈",
+"small": "05. (분수)÷(분수)를 분수의 곱셈으로 나타내기",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1jx91nq:qerror",
+"big": "1. 분수의 나눗셈",
+"small": "05. (분수)÷(분수)를 분수의 곱셈으로 나타내기",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1jx91nq:qa22e6251",
+"big": "1. 분수의 나눗셈",
+"small": "05. (분수)÷(분수)를 분수의 곱셈으로 나타내기",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|05. (분수)÷(분수)를 분수의 곱셈으로 나타내기:1",
+"big": "1. 분수의 나눗셈",
+"small": "05. (분수)÷(분수)를 분수의 곱셈으로 나타내기",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|05. (분수)÷(분수)를 분수의 곱셈으로 나타내기:2",
+"big": "1. 분수의 나눗셈",
+"small": "05. (분수)÷(분수)를 분수의 곱셈으로 나타내기",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1hebvay:qapre0106",
+"big": "1. 분수의 나눗셈",
+"small": "06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수)",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1hebvay:t0L1",
+"big": "1. 분수의 나눗셈",
+"small": "06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1hebvay:t0L2",
+"big": "1. 분수의 나눗셈",
+"small": "06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1hebvay:t0H1",
+"big": "1. 분수의 나눗셈",
+"small": "06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1hebvay:t0H2",
+"big": "1. 분수의 나눗셈",
+"small": "06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1hebvay:qrecall",
+"big": "1. 분수의 나눗셈",
+"small": "06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1hebvay:qreason",
+"big": "1. 분수의 나눗셈",
+"small": "06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1hebvay:qexample",
+"big": "1. 분수의 나눗셈",
+"small": "06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1hebvay:qerror",
+"big": "1. 분수의 나눗셈",
+"small": "06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1hebvay:qa22e6261",
+"big": "1. 분수의 나눗셈",
+"small": "06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수)",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수):1",
+"big": "1. 분수의 나눗셈",
+"small": "06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수):2",
+"big": "1. 분수의 나눗셈",
+"small": "06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|1. 분수의 나눗셈|06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수):3",
+"big": "1. 분수의 나눗셈",
+"small": "06. 분수의 나눗셈을 계산해 볼까요·(대분수)÷(분수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1f2rp7u:t0L1",
+"big": "2. 소수의 나눗셈",
+"small": "01. (소수 한 자리 수)÷(소수 한 자리 수)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1f2rp7u:t0L2",
+"big": "2. 소수의 나눗셈",
+"small": "01. (소수 한 자리 수)÷(소수 한 자리 수)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1f2rp7u:t0H1",
+"big": "2. 소수의 나눗셈",
+"small": "01. (소수 한 자리 수)÷(소수 한 자리 수)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1f2rp7u:t0H2",
+"big": "2. 소수의 나눗셈",
+"small": "01. (소수 한 자리 수)÷(소수 한 자리 수)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1f2rp7u:qrecall",
+"big": "2. 소수의 나눗셈",
+"small": "01. (소수 한 자리 수)÷(소수 한 자리 수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1f2rp7u:qreason",
+"big": "2. 소수의 나눗셈",
+"small": "01. (소수 한 자리 수)÷(소수 한 자리 수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1f2rp7u:qexample",
+"big": "2. 소수의 나눗셈",
+"small": "01. (소수 한 자리 수)÷(소수 한 자리 수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1f2rp7u:qerror",
+"big": "2. 소수의 나눗셈",
+"small": "01. (소수 한 자리 수)÷(소수 한 자리 수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1f2rp7u:qa22e6211",
+"big": "2. 소수의 나눗셈",
+"small": "01. (소수 한 자리 수)÷(소수 한 자리 수)",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|2. 소수의 나눗셈|01. (소수 한 자리 수)÷(소수 한 자리 수):1",
+"big": "2. 소수의 나눗셈",
+"small": "01. (소수 한 자리 수)÷(소수 한 자리 수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|2. 소수의 나눗셈|01. (소수 한 자리 수)÷(소수 한 자리 수):2",
+"big": "2. 소수의 나눗셈",
+"small": "01. (소수 한 자리 수)÷(소수 한 자리 수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ou2559:t0L1",
+"big": "2. 소수의 나눗셈",
+"small": "02. (소수 두 자리 수)÷(소수 두 자리 수)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ou2559:t0L2",
+"big": "2. 소수의 나눗셈",
+"small": "02. (소수 두 자리 수)÷(소수 두 자리 수)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ou2559:t0H1",
+"big": "2. 소수의 나눗셈",
+"small": "02. (소수 두 자리 수)÷(소수 두 자리 수)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ou2559:t0H2",
+"big": "2. 소수의 나눗셈",
+"small": "02. (소수 두 자리 수)÷(소수 두 자리 수)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ou2559:qrecall",
+"big": "2. 소수의 나눗셈",
+"small": "02. (소수 두 자리 수)÷(소수 두 자리 수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ou2559:qreason",
+"big": "2. 소수의 나눗셈",
+"small": "02. (소수 두 자리 수)÷(소수 두 자리 수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ou2559:qexample",
+"big": "2. 소수의 나눗셈",
+"small": "02. (소수 두 자리 수)÷(소수 두 자리 수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ou2559:qerror",
+"big": "2. 소수의 나눗셈",
+"small": "02. (소수 두 자리 수)÷(소수 두 자리 수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ou2559:qa22e6221",
+"big": "2. 소수의 나눗셈",
+"small": "02. (소수 두 자리 수)÷(소수 두 자리 수)",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ou2559:qa22e6222",
+"big": "2. 소수의 나눗셈",
+"small": "02. (소수 두 자리 수)÷(소수 두 자리 수)",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|2. 소수의 나눗셈|02. (소수 두 자리 수)÷(소수 두 자리 수):1",
+"big": "2. 소수의 나눗셈",
+"small": "02. (소수 두 자리 수)÷(소수 두 자리 수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|2. 소수의 나눗셈|02. (소수 두 자리 수)÷(소수 두 자리 수):2",
+"big": "2. 소수의 나눗셈",
+"small": "02. (소수 두 자리 수)÷(소수 두 자리 수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1dkf48z:t0L1",
+"big": "2. 소수의 나눗셈",
+"small": "03. 자릿수가 다른 (소수)÷(소수)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1dkf48z:t0L2",
+"big": "2. 소수의 나눗셈",
+"small": "03. 자릿수가 다른 (소수)÷(소수)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1dkf48z:t0H1",
+"big": "2. 소수의 나눗셈",
+"small": "03. 자릿수가 다른 (소수)÷(소수)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1dkf48z:t0H2",
+"big": "2. 소수의 나눗셈",
+"small": "03. 자릿수가 다른 (소수)÷(소수)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1dkf48z:qrecall",
+"big": "2. 소수의 나눗셈",
+"small": "03. 자릿수가 다른 (소수)÷(소수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1dkf48z:qexample",
+"big": "2. 소수의 나눗셈",
+"small": "03. 자릿수가 다른 (소수)÷(소수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1dkf48z:qa22e6231",
+"big": "2. 소수의 나눗셈",
+"small": "03. 자릿수가 다른 (소수)÷(소수)",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|2. 소수의 나눗셈|03. 자릿수가 다른 (소수)÷(소수):1",
+"big": "2. 소수의 나눗셈",
+"small": "03. 자릿수가 다른 (소수)÷(소수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|2. 소수의 나눗셈|03. 자릿수가 다른 (소수)÷(소수):2",
+"big": "2. 소수의 나눗셈",
+"small": "03. 자릿수가 다른 (소수)÷(소수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|2. 소수의 나눗셈|03. 자릿수가 다른 (소수)÷(소수):3",
+"big": "2. 소수의 나눗셈",
+"small": "03. 자릿수가 다른 (소수)÷(소수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1d7jkp3:t0L2",
+"big": "2. 소수의 나눗셈",
+"small": "04. (자연수)÷(소수)",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1d7jkp3:t0H1",
+"big": "2. 소수의 나눗셈",
+"small": "04. (자연수)÷(소수)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1d7jkp3:t0H2",
+"big": "2. 소수의 나눗셈",
+"small": "04. (자연수)÷(소수)",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1d7jkp3:qrecall",
+"big": "2. 소수의 나눗셈",
+"small": "04. (자연수)÷(소수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1d7jkp3:qreason",
+"big": "2. 소수의 나눗셈",
+"small": "04. (자연수)÷(소수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1d7jkp3:qexample",
+"big": "2. 소수의 나눗셈",
+"small": "04. (자연수)÷(소수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1d7jkp3:qerror",
+"big": "2. 소수의 나눗셈",
+"small": "04. (자연수)÷(소수)",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1d7jkp3:qa22e6241",
+"big": "2. 소수의 나눗셈",
+"small": "04. (자연수)÷(소수)",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|2. 소수의 나눗셈|04. (자연수)÷(소수):1",
+"big": "2. 소수의 나눗셈",
+"small": "04. (자연수)÷(소수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|2. 소수의 나눗셈|04. (자연수)÷(소수):2",
+"big": "2. 소수의 나눗셈",
+"small": "04. (자연수)÷(소수)",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "8i73lk:t0L1",
+"big": "2. 소수의 나눗셈",
+"small": "05. 몫을 반올림하여 나타내 볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "8i73lk:t0L2",
+"big": "2. 소수의 나눗셈",
+"small": "05. 몫을 반올림하여 나타내 볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "8i73lk:t0H1",
+"big": "2. 소수의 나눗셈",
+"small": "05. 몫을 반올림하여 나타내 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "8i73lk:t0H2",
+"big": "2. 소수의 나눗셈",
+"small": "05. 몫을 반올림하여 나타내 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "8i73lk:qrecall",
+"big": "2. 소수의 나눗셈",
+"small": "05. 몫을 반올림하여 나타내 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "8i73lk:qreason",
+"big": "2. 소수의 나눗셈",
+"small": "05. 몫을 반올림하여 나타내 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "8i73lk:qexample",
+"big": "2. 소수의 나눗셈",
+"small": "05. 몫을 반올림하여 나타내 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "8i73lk:qerror",
+"big": "2. 소수의 나눗셈",
+"small": "05. 몫을 반올림하여 나타내 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "8i73lk:qa22e6251",
+"big": "2. 소수의 나눗셈",
+"small": "05. 몫을 반올림하여 나타내 볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "8i73lk:qa22e6252",
+"big": "2. 소수의 나눗셈",
+"small": "05. 몫을 반올림하여 나타내 볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|2. 소수의 나눗셈|05. 몫을 반올림하여 나타내 볼까요:1",
+"big": "2. 소수의 나눗셈",
+"small": "05. 몫을 반올림하여 나타내 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|2. 소수의 나눗셈|05. 몫을 반올림하여 나타내 볼까요:2",
+"big": "2. 소수의 나눗셈",
+"small": "05. 몫을 반올림하여 나타내 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1tom1oz:t0L2",
+"big": "2. 소수의 나눗셈",
+"small": "06. 나누어 주고 남는 양을 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1tom1oz:t0H1",
+"big": "2. 소수의 나눗셈",
+"small": "06. 나누어 주고 남는 양을 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1tom1oz:t0H2",
+"big": "2. 소수의 나눗셈",
+"small": "06. 나누어 주고 남는 양을 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1tom1oz:qerror",
+"big": "2. 소수의 나눗셈",
+"small": "06. 나누어 주고 남는 양을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1tom1oz:qa22e6261",
+"big": "2. 소수의 나눗셈",
+"small": "06. 나누어 주고 남는 양을 알아볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1tom1oz:qamudnm8aq8bux",
+"big": "2. 소수의 나눗셈",
+"small": "06. 나누어 주고 남는 양을 알아볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|2. 소수의 나눗셈|06. 나누어 주고 남는 양을 알아볼까요:1",
+"big": "2. 소수의 나눗셈",
+"small": "06. 나누어 주고 남는 양을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|2. 소수의 나눗셈|06. 나누어 주고 남는 양을 알아볼까요:2",
+"big": "2. 소수의 나눗셈",
+"small": "06. 나누어 주고 남는 양을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1niet2v:qab30101",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1niet2v:qab30102",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1niet2v:qab30103",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1niet2v:t0L1",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1niet2v:t0L2",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1niet2v:t0H1",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1niet2v:t0H2",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1niet2v:qrecall",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1niet2v:qreason",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1niet2v:qexample",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1niet2v:qerror",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|3. 공간과 입체|01. 어느 방향에서 보았는지 알아볼까요:1",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|3. 공간과 입체|01. 어느 방향에서 보았는지 알아볼까요:2",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1svq0id:qab30201",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1svq0id:qab30202",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1svq0id:qab30203",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1svq0id:t0L1",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1svq0id:t0L2",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1svq0id:t0H1",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1svq0id:t0H2",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1svq0id:qrecall",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1svq0id:qreason",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1svq0id:qexample",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1svq0id:qerror",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|3. 공간과 입체|02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양:1",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|3. 공간과 입체|02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양:2",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "13f0an5:qab30301",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "13f0an5:qab30302",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "13f0an5:qab30303",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "13f0an5:t0L1",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "13f0an5:t0L2",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "13f0an5:t0H1",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "13f0an5:t0H2",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "13f0an5:qrecall",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "13f0an5:qreason",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "13f0an5:qexample",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "13f0an5:qerror",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|3. 공간과 입체|03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양:1",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|3. 공간과 입체|03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양:2",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "doo3rd:qab30401",
+"big": "3. 공간과 입체",
+"small": "04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "doo3rd:qab30402",
+"big": "3. 공간과 입체",
+"small": "04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "doo3rd:t0L1",
+"big": "3. 공간과 입체",
+"small": "04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "doo3rd:t0L2",
+"big": "3. 공간과 입체",
+"small": "04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "doo3rd:t0H1",
+"big": "3. 공간과 입체",
+"small": "04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "doo3rd:t0H2",
+"big": "3. 공간과 입체",
+"small": "04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "doo3rd:qrecall",
+"big": "3. 공간과 입체",
+"small": "04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "doo3rd:qreason",
+"big": "3. 공간과 입체",
+"small": "04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "doo3rd:qexample",
+"big": "3. 공간과 입체",
+"small": "04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "doo3rd:qerror",
+"big": "3. 공간과 입체",
+"small": "04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|3. 공간과 입체|04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기:1",
+"big": "3. 공간과 입체",
+"small": "04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|3. 공간과 입체|04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기:2",
+"big": "3. 공간과 입체",
+"small": "04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wgfdv4:qab30501",
+"big": "3. 공간과 입체",
+"small": "05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wgfdv4:qab30502",
+"big": "3. 공간과 입체",
+"small": "05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wgfdv4:t0L1",
+"big": "3. 공간과 입체",
+"small": "05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wgfdv4:t0L2",
+"big": "3. 공간과 입체",
+"small": "05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wgfdv4:t0H1",
+"big": "3. 공간과 입체",
+"small": "05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wgfdv4:t0H2",
+"big": "3. 공간과 입체",
+"small": "05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wgfdv4:qrecall",
+"big": "3. 공간과 입체",
+"small": "05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wgfdv4:qreason",
+"big": "3. 공간과 입체",
+"small": "05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wgfdv4:qexample",
+"big": "3. 공간과 입체",
+"small": "05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|3. 공간과 입체|05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양:1",
+"big": "3. 공간과 입체",
+"small": "05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|3. 공간과 입체|05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양:2",
+"big": "3. 공간과 입체",
+"small": "05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ogp9kt:qab30601",
+"big": "3. 공간과 입체",
+"small": "06. 여러 가지 모양을 만들어 볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ogp9kt:qab30602",
+"big": "3. 공간과 입체",
+"small": "06. 여러 가지 모양을 만들어 볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ogp9kt:qab30603",
+"big": "3. 공간과 입체",
+"small": "06. 여러 가지 모양을 만들어 볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ogp9kt:t0L2",
+"big": "3. 공간과 입체",
+"small": "06. 여러 가지 모양을 만들어 볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ogp9kt:t0H1",
+"big": "3. 공간과 입체",
+"small": "06. 여러 가지 모양을 만들어 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1rppnci:qapre0401",
+"big": "4. 비례식과 비례배분",
+"small": "01. 비의 성질을 알아볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1rppnci:t0L1",
+"big": "4. 비례식과 비례배분",
+"small": "01. 비의 성질을 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1rppnci:t0L2",
+"big": "4. 비례식과 비례배분",
+"small": "01. 비의 성질을 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1rppnci:t0H1",
+"big": "4. 비례식과 비례배분",
+"small": "01. 비의 성질을 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1rppnci:qrecall",
+"big": "4. 비례식과 비례배분",
+"small": "01. 비의 성질을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1rppnci:qreason",
+"big": "4. 비례식과 비례배분",
+"small": "01. 비의 성질을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1rppnci:qexample",
+"big": "4. 비례식과 비례배분",
+"small": "01. 비의 성질을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1rppnci:qerror",
+"big": "4. 비례식과 비례배분",
+"small": "01. 비의 성질을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|01. 비의 성질을 알아볼까요:1",
+"big": "4. 비례식과 비례배분",
+"small": "01. 비의 성질을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|01. 비의 성질을 알아볼까요:2",
+"big": "4. 비례식과 비례배분",
+"small": "01. 비의 성질을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rnej04:qapre0402",
+"big": "4. 비례식과 비례배분",
+"small": "02. 간단한 자연수의 비로 나타내 볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rnej04:t0L1",
+"big": "4. 비례식과 비례배분",
+"small": "02. 간단한 자연수의 비로 나타내 볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rnej04:t0L2",
+"big": "4. 비례식과 비례배분",
+"small": "02. 간단한 자연수의 비로 나타내 볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rnej04:t0H1",
+"big": "4. 비례식과 비례배분",
+"small": "02. 간단한 자연수의 비로 나타내 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rnej04:t0H2",
+"big": "4. 비례식과 비례배분",
+"small": "02. 간단한 자연수의 비로 나타내 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rnej04:qrecall",
+"big": "4. 비례식과 비례배분",
+"small": "02. 간단한 자연수의 비로 나타내 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rnej04:qreason",
+"big": "4. 비례식과 비례배분",
+"small": "02. 간단한 자연수의 비로 나타내 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rnej04:qerror",
+"big": "4. 비례식과 비례배분",
+"small": "02. 간단한 자연수의 비로 나타내 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rnej04:qa22e6221",
+"big": "4. 비례식과 비례배분",
+"small": "02. 간단한 자연수의 비로 나타내 볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|02. 간단한 자연수의 비로 나타내 볼까요:1",
+"big": "4. 비례식과 비례배분",
+"small": "02. 간단한 자연수의 비로 나타내 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|02. 간단한 자연수의 비로 나타내 볼까요:2",
+"big": "4. 비례식과 비례배분",
+"small": "02. 간단한 자연수의 비로 나타내 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ewb7xm:t0L1",
+"big": "4. 비례식과 비례배분",
+"small": "03. 비례식을 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ewb7xm:t0L2",
+"big": "4. 비례식과 비례배분",
+"small": "03. 비례식을 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ewb7xm:t0H1",
+"big": "4. 비례식과 비례배분",
+"small": "03. 비례식을 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ewb7xm:t0H2",
+"big": "4. 비례식과 비례배분",
+"small": "03. 비례식을 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ewb7xm:qrecall",
+"big": "4. 비례식과 비례배분",
+"small": "03. 비례식을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ewb7xm:qreason",
+"big": "4. 비례식과 비례배분",
+"small": "03. 비례식을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ewb7xm:qexample",
+"big": "4. 비례식과 비례배분",
+"small": "03. 비례식을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ewb7xm:qerror",
+"big": "4. 비례식과 비례배분",
+"small": "03. 비례식을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|03. 비례식을 알아볼까요:1",
+"big": "4. 비례식과 비례배분",
+"small": "03. 비례식을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|03. 비례식을 알아볼까요:2",
+"big": "4. 비례식과 비례배분",
+"small": "03. 비례식을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "301yqk:t0L1",
+"big": "4. 비례식과 비례배분",
+"small": "04. 비례식의 성질을 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "301yqk:t0L2",
+"big": "4. 비례식과 비례배분",
+"small": "04. 비례식의 성질을 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "301yqk:t0H1",
+"big": "4. 비례식과 비례배분",
+"small": "04. 비례식의 성질을 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "301yqk:t0H2",
+"big": "4. 비례식과 비례배분",
+"small": "04. 비례식의 성질을 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "301yqk:qrecall",
+"big": "4. 비례식과 비례배분",
+"small": "04. 비례식의 성질을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "301yqk:qreason",
+"big": "4. 비례식과 비례배분",
+"small": "04. 비례식의 성질을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "301yqk:qexample",
+"big": "4. 비례식과 비례배분",
+"small": "04. 비례식의 성질을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "301yqk:qerror",
+"big": "4. 비례식과 비례배분",
+"small": "04. 비례식의 성질을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "301yqk:qa22e6241",
+"big": "4. 비례식과 비례배분",
+"small": "04. 비례식의 성질을 알아볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|04. 비례식의 성질을 알아볼까요:1",
+"big": "4. 비례식과 비례배분",
+"small": "04. 비례식의 성질을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|04. 비례식의 성질을 알아볼까요:2",
+"big": "4. 비례식과 비례배분",
+"small": "04. 비례식의 성질을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|04. 비례식의 성질을 알아볼까요:3",
+"big": "4. 비례식과 비례배분",
+"small": "04. 비례식의 성질을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ukj7lx:t0H1",
+"big": "4. 비례식과 비례배분",
+"small": "05. 비례식을 활용해 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ukj7lx:t0H2",
+"big": "4. 비례식과 비례배분",
+"small": "05. 비례식을 활용해 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ukj7lx:qrecall",
+"big": "4. 비례식과 비례배분",
+"small": "05. 비례식을 활용해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ukj7lx:qreason",
+"big": "4. 비례식과 비례배분",
+"small": "05. 비례식을 활용해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ukj7lx:qexample",
+"big": "4. 비례식과 비례배분",
+"small": "05. 비례식을 활용해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ukj7lx:qerror",
+"big": "4. 비례식과 비례배분",
+"small": "05. 비례식을 활용해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ukj7lx:qa22e6251",
+"big": "4. 비례식과 비례배분",
+"small": "05. 비례식을 활용해 볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|05. 비례식을 활용해 볼까요:1",
+"big": "4. 비례식과 비례배분",
+"small": "05. 비례식을 활용해 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|05. 비례식을 활용해 볼까요:2",
+"big": "4. 비례식과 비례배분",
+"small": "05. 비례식을 활용해 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|05. 비례식을 활용해 볼까요:3",
+"big": "4. 비례식과 비례배분",
+"small": "05. 비례식을 활용해 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1nja8s4:qapre0406",
+"big": "4. 비례식과 비례배분",
+"small": "06. 비례배분을 해 볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1nja8s4:t0L1",
+"big": "4. 비례식과 비례배분",
+"small": "06. 비례배분을 해 볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1nja8s4:t0L2",
+"big": "4. 비례식과 비례배분",
+"small": "06. 비례배분을 해 볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1nja8s4:t0H1",
+"big": "4. 비례식과 비례배분",
+"small": "06. 비례배분을 해 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1nja8s4:t0H2",
+"big": "4. 비례식과 비례배분",
+"small": "06. 비례배분을 해 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1nja8s4:qrecall",
+"big": "4. 비례식과 비례배분",
+"small": "06. 비례배분을 해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1nja8s4:qreason",
+"big": "4. 비례식과 비례배분",
+"small": "06. 비례배분을 해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1nja8s4:qexample",
+"big": "4. 비례식과 비례배분",
+"small": "06. 비례배분을 해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1nja8s4:qerror",
+"big": "4. 비례식과 비례배분",
+"small": "06. 비례배분을 해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1nja8s4:qa22e6261",
+"big": "4. 비례식과 비례배분",
+"small": "06. 비례배분을 해 볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|06. 비례배분을 해 볼까요:1",
+"big": "4. 비례식과 비례배분",
+"small": "06. 비례배분을 해 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|06. 비례배분을 해 볼까요:2",
+"big": "4. 비례식과 비례배분",
+"small": "06. 비례배분을 해 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1muug30:qapre0501",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1muug30:t0L1",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1muug30:t0L2",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1muug30:t0H1",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1muug30:t0H2",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1muug30:qrecall",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1muug30:qreason",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1muug30:qexample",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1muug30:qerror",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|5. 원의 둘레와 넓이|01. 원주와 원주율을 알아볼까요:1",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|5. 원의 둘레와 넓이|01. 원주와 원주율을 알아볼까요:2",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|5. 원의 둘레와 넓이|01. 원주와 원주율을 알아볼까요:3",
+"big": "5. 원의 둘레와 넓이",
+"small": "01. 원주와 원주율을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "2357m1:t0L1",
+"big": "5. 원의 둘레와 넓이",
+"small": "02. 원주와 지름을 구해 볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "2357m1:t0L2",
+"big": "5. 원의 둘레와 넓이",
+"small": "02. 원주와 지름을 구해 볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "2357m1:t0H1",
+"big": "5. 원의 둘레와 넓이",
+"small": "02. 원주와 지름을 구해 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "2357m1:t0H2",
+"big": "5. 원의 둘레와 넓이",
+"small": "02. 원주와 지름을 구해 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "2357m1:qrecall",
+"big": "5. 원의 둘레와 넓이",
+"small": "02. 원주와 지름을 구해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "2357m1:qreason",
+"big": "5. 원의 둘레와 넓이",
+"small": "02. 원주와 지름을 구해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "2357m1:qexample",
+"big": "5. 원의 둘레와 넓이",
+"small": "02. 원주와 지름을 구해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "2357m1:qerror",
+"big": "5. 원의 둘레와 넓이",
+"small": "02. 원주와 지름을 구해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "2357m1:qa22e6221",
+"big": "5. 원의 둘레와 넓이",
+"small": "02. 원주와 지름을 구해 볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "2357m1:qa22e6222",
+"big": "5. 원의 둘레와 넓이",
+"small": "02. 원주와 지름을 구해 볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|5. 원의 둘레와 넓이|02. 원주와 지름을 구해 볼까요:1",
+"big": "5. 원의 둘레와 넓이",
+"small": "02. 원주와 지름을 구해 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|5. 원의 둘레와 넓이|02. 원주와 지름을 구해 볼까요:2",
+"big": "5. 원의 둘레와 넓이",
+"small": "02. 원주와 지름을 구해 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|5. 원의 둘레와 넓이|02. 원주와 지름을 구해 볼까요:3",
+"big": "5. 원의 둘레와 넓이",
+"small": "02. 원주와 지름을 구해 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "10ptnmf:t0L2",
+"big": "5. 원의 둘레와 넓이",
+"small": "03. 원의 넓이를 어림해 볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "10ptnmf:t0H1",
+"big": "5. 원의 둘레와 넓이",
+"small": "03. 원의 넓이를 어림해 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "10ptnmf:t0H2",
+"big": "5. 원의 둘레와 넓이",
+"small": "03. 원의 넓이를 어림해 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "10ptnmf:qrecall",
+"big": "5. 원의 둘레와 넓이",
+"small": "03. 원의 넓이를 어림해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "10ptnmf:qreason",
+"big": "5. 원의 둘레와 넓이",
+"small": "03. 원의 넓이를 어림해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "10ptnmf:qexample",
+"big": "5. 원의 둘레와 넓이",
+"small": "03. 원의 넓이를 어림해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "10ptnmf:qerror",
+"big": "5. 원의 둘레와 넓이",
+"small": "03. 원의 넓이를 어림해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|5. 원의 둘레와 넓이|03. 원의 넓이를 어림해 볼까요:1",
+"big": "5. 원의 둘레와 넓이",
+"small": "03. 원의 넓이를 어림해 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|5. 원의 둘레와 넓이|03. 원의 넓이를 어림해 볼까요:2",
+"big": "5. 원의 둘레와 넓이",
+"small": "03. 원의 넓이를 어림해 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wbcjzk:t0L1",
+"big": "5. 원의 둘레와 넓이",
+"small": "04. 원의 넓이를 구하는 방법을 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wbcjzk:t0L2",
+"big": "5. 원의 둘레와 넓이",
+"small": "04. 원의 넓이를 구하는 방법을 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wbcjzk:t0H1",
+"big": "5. 원의 둘레와 넓이",
+"small": "04. 원의 넓이를 구하는 방법을 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wbcjzk:t0H2",
+"big": "5. 원의 둘레와 넓이",
+"small": "04. 원의 넓이를 구하는 방법을 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wbcjzk:qreason",
+"big": "5. 원의 둘레와 넓이",
+"small": "04. 원의 넓이를 구하는 방법을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wbcjzk:qexample",
+"big": "5. 원의 둘레와 넓이",
+"small": "04. 원의 넓이를 구하는 방법을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wbcjzk:qerror",
+"big": "5. 원의 둘레와 넓이",
+"small": "04. 원의 넓이를 구하는 방법을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wbcjzk:qa22e6241",
+"big": "5. 원의 둘레와 넓이",
+"small": "04. 원의 넓이를 구하는 방법을 알아볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|5. 원의 둘레와 넓이|04. 원의 넓이를 구하는 방법을 알아볼까요:1",
+"big": "5. 원의 둘레와 넓이",
+"small": "04. 원의 넓이를 구하는 방법을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|5. 원의 둘레와 넓이|04. 원의 넓이를 구하는 방법을 알아볼까요:2",
+"big": "5. 원의 둘레와 넓이",
+"small": "04. 원의 넓이를 구하는 방법을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ctfuf0:qamul12c8np9ns",
+"big": "5. 원의 둘레와 넓이",
+"small": "05. 원의 둘레와 넓이를 활용해 볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ctfuf0:t0L1",
+"big": "5. 원의 둘레와 넓이",
+"small": "05. 원의 둘레와 넓이를 활용해 볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ctfuf0:t0L2",
+"big": "5. 원의 둘레와 넓이",
+"small": "05. 원의 둘레와 넓이를 활용해 볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ctfuf0:t0H1",
+"big": "5. 원의 둘레와 넓이",
+"small": "05. 원의 둘레와 넓이를 활용해 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ctfuf0:t0H2",
+"big": "5. 원의 둘레와 넓이",
+"small": "05. 원의 둘레와 넓이를 활용해 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ctfuf0:qrecall",
+"big": "5. 원의 둘레와 넓이",
+"small": "05. 원의 둘레와 넓이를 활용해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ctfuf0:qreason",
+"big": "5. 원의 둘레와 넓이",
+"small": "05. 원의 둘레와 넓이를 활용해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ctfuf0:qexample",
+"big": "5. 원의 둘레와 넓이",
+"small": "05. 원의 둘레와 넓이를 활용해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ctfuf0:qerror",
+"big": "5. 원의 둘레와 넓이",
+"small": "05. 원의 둘레와 넓이를 활용해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ctfuf0:qa22e6251",
+"big": "5. 원의 둘레와 넓이",
+"small": "05. 원의 둘레와 넓이를 활용해 볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|5. 원의 둘레와 넓이|05. 원의 둘레와 넓이를 활용해 볼까요:1",
+"big": "5. 원의 둘레와 넓이",
+"small": "05. 원의 둘레와 넓이를 활용해 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|5. 원의 둘레와 넓이|05. 원의 둘레와 넓이를 활용해 볼까요:2",
+"big": "5. 원의 둘레와 넓이",
+"small": "05. 원의 둘레와 넓이를 활용해 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "16ugm2:qapre0601",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "01. 원기둥을 알아볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "16ugm2:t0L1",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "01. 원기둥을 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "16ugm2:t0L2",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "01. 원기둥을 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "16ugm2:t0H1",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "01. 원기둥을 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "16ugm2:t0H2",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "01. 원기둥을 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "16ugm2:qrecall",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "01. 원기둥을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "16ugm2:qreason",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "01. 원기둥을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "16ugm2:qexample",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "01. 원기둥을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "16ugm2:qerror",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "01. 원기둥을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|6. 원기둥, 원뿔, 구|01. 원기둥을 알아볼까요:1",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "01. 원기둥을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|6. 원기둥, 원뿔, 구|01. 원기둥을 알아볼까요:2",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "01. 원기둥을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|6. 원기둥, 원뿔, 구|01. 원기둥을 알아볼까요:3",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "01. 원기둥을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "nc4ahp:t0L1",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "02. 원기둥의 전개도를 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "nc4ahp:t0L2",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "02. 원기둥의 전개도를 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "nc4ahp:t0H1",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "02. 원기둥의 전개도를 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "nc4ahp:t0H2",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "02. 원기둥의 전개도를 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "nc4ahp:qrecall",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "02. 원기둥의 전개도를 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "nc4ahp:qreason",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "02. 원기둥의 전개도를 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "nc4ahp:qexample",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "02. 원기둥의 전개도를 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "nc4ahp:qerror",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "02. 원기둥의 전개도를 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "nc4ahp:qa22e6221",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "02. 원기둥의 전개도를 알아볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|6. 원기둥, 원뿔, 구|02. 원기둥의 전개도를 알아볼까요:1",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "02. 원기둥의 전개도를 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|6. 원기둥, 원뿔, 구|02. 원기둥의 전개도를 알아볼까요:2",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "02. 원기둥의 전개도를 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|6. 원기둥, 원뿔, 구|02. 원기둥의 전개도를 알아볼까요:3",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "02. 원기둥의 전개도를 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "p5tqmr:qapre0603",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "03. 원뿔을 알아볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "p5tqmr:t0L1",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "03. 원뿔을 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "p5tqmr:t0L2",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "03. 원뿔을 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "p5tqmr:t0H1",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "03. 원뿔을 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "p5tqmr:t0H2",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "03. 원뿔을 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "p5tqmr:qrecall",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "03. 원뿔을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "p5tqmr:qreason",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "03. 원뿔을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "p5tqmr:qexample",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "03. 원뿔을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "p5tqmr:qerror",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "03. 원뿔을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|6. 원기둥, 원뿔, 구|03. 원뿔을 알아볼까요:1",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "03. 원뿔을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|6. 원기둥, 원뿔, 구|03. 원뿔을 알아볼까요:2",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "03. 원뿔을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "dxxntc:t0L1",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "04. 구를 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "dxxntc:t0L2",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "04. 구를 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "dxxntc:t0H1",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "04. 구를 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "dxxntc:t0H2",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "04. 구를 알아볼까요",
+"kind": "high",
+"off": true,
+"offWas": false,
+"ok": true,
+"by": "claude"
+},
+{
+"id": "dxxntc:qrecall",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "04. 구를 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "dxxntc:qreason",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "04. 구를 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "dxxntc:qexample",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "04. 구를 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "dxxntc:qerror",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "04. 구를 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|6. 원기둥, 원뿔, 구|04. 구를 알아볼까요:1",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "04. 구를 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|6. 원기둥, 원뿔, 구|04. 구를 알아볼까요:2",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "04. 구를 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+}
+],
+"seen": []
+}});
