@@ -7489,3 +7489,584 @@
 ],
 "seen": []
 }});
+
+/* [0928b] 2026-09-28 초6-2 4단원 마스터 검토 반영 (make_plan_0928b.py).
+   계단 4-03·4-04 1칸 문장은 원본 e6/ladder_E6_2_big4.json 에서 바꿨다(채점 기준까지). */
+(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'e6-2_2026-09-28b', data:{
+"format": "qr-plan-2",
+"grade": "e6-2",
+"rounds": 3,
+"items": [
+{
+"id": "1rppnci:qapre0401",
+"big": "4. 비례식과 비례배분",
+"small": "01. 비의 성질을 알아볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1rppnci:t0L1",
+"big": "4. 비례식과 비례배분",
+"small": "01. 비의 성질을 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1rppnci:t0L2",
+"big": "4. 비례식과 비례배분",
+"small": "01. 비의 성질을 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1rppnci:t0H1",
+"big": "4. 비례식과 비례배분",
+"small": "01. 비의 성질을 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1rppnci:qrecall",
+"big": "4. 비례식과 비례배분",
+"small": "01. 비의 성질을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1rppnci:qreason",
+"big": "4. 비례식과 비례배분",
+"small": "01. 비의 성질을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1rppnci:qexample",
+"big": "4. 비례식과 비례배분",
+"small": "01. 비의 성질을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1rppnci:qerror",
+"big": "4. 비례식과 비례배분",
+"small": "01. 비의 성질을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|01. 비의 성질을 알아볼까요:1",
+"big": "4. 비례식과 비례배분",
+"small": "01. 비의 성질을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|01. 비의 성질을 알아볼까요:2",
+"big": "4. 비례식과 비례배분",
+"small": "01. 비의 성질을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rnej04:qapre0402",
+"big": "4. 비례식과 비례배분",
+"small": "02. 간단한 자연수의 비로 나타내 볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rnej04:t0L1",
+"big": "4. 비례식과 비례배분",
+"small": "02. 간단한 자연수의 비로 나타내 볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rnej04:t0L2",
+"big": "4. 비례식과 비례배분",
+"small": "02. 간단한 자연수의 비로 나타내 볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rnej04:t0H1",
+"big": "4. 비례식과 비례배분",
+"small": "02. 간단한 자연수의 비로 나타내 볼까요",
+"kind": "high",
+"off": false,
+"offWas": true,
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rnej04:t0H2",
+"big": "4. 비례식과 비례배분",
+"small": "02. 간단한 자연수의 비로 나타내 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rnej04:qrecall",
+"big": "4. 비례식과 비례배분",
+"small": "02. 간단한 자연수의 비로 나타내 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rnej04:qreason",
+"big": "4. 비례식과 비례배분",
+"small": "02. 간단한 자연수의 비로 나타내 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rnej04:qerror",
+"big": "4. 비례식과 비례배분",
+"small": "02. 간단한 자연수의 비로 나타내 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "rnej04:qa22e6221",
+"big": "4. 비례식과 비례배분",
+"small": "02. 간단한 자연수의 비로 나타내 볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|02. 간단한 자연수의 비로 나타내 볼까요:1",
+"big": "4. 비례식과 비례배분",
+"small": "02. 간단한 자연수의 비로 나타내 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|02. 간단한 자연수의 비로 나타내 볼까요:2",
+"big": "4. 비례식과 비례배분",
+"small": "02. 간단한 자연수의 비로 나타내 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ewb7xm:t0L1",
+"big": "4. 비례식과 비례배분",
+"small": "03. 비례식을 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ewb7xm:t0L2",
+"big": "4. 비례식과 비례배분",
+"small": "03. 비례식을 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ewb7xm:t0H1",
+"big": "4. 비례식과 비례배분",
+"small": "03. 비례식을 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ewb7xm:t0H2",
+"big": "4. 비례식과 비례배분",
+"small": "03. 비례식을 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ewb7xm:qrecall",
+"big": "4. 비례식과 비례배분",
+"small": "03. 비례식을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ewb7xm:qreason",
+"big": "4. 비례식과 비례배분",
+"small": "03. 비례식을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ewb7xm:qexample",
+"big": "4. 비례식과 비례배분",
+"small": "03. 비례식을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ewb7xm:qerror",
+"big": "4. 비례식과 비례배분",
+"small": "03. 비례식을 알아볼까요",
+"kind": "qset",
+"off": true,
+"offWas": false,
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|03. 비례식을 알아볼까요:1",
+"big": "4. 비례식과 비례배분",
+"small": "03. 비례식을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|03. 비례식을 알아볼까요:2",
+"big": "4. 비례식과 비례배분",
+"small": "03. 비례식을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "301yqk:t0L1",
+"big": "4. 비례식과 비례배분",
+"small": "04. 비례식의 성질을 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "301yqk:t0L2",
+"big": "4. 비례식과 비례배분",
+"small": "04. 비례식의 성질을 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "301yqk:t0H1",
+"big": "4. 비례식과 비례배분",
+"small": "04. 비례식의 성질을 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "301yqk:t0H2",
+"big": "4. 비례식과 비례배분",
+"small": "04. 비례식의 성질을 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "301yqk:qrecall",
+"big": "4. 비례식과 비례배분",
+"small": "04. 비례식의 성질을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "301yqk:qreason",
+"big": "4. 비례식과 비례배분",
+"small": "04. 비례식의 성질을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "301yqk:qexample",
+"big": "4. 비례식과 비례배분",
+"small": "04. 비례식의 성질을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "301yqk:qerror",
+"big": "4. 비례식과 비례배분",
+"small": "04. 비례식의 성질을 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "301yqk:qa22e6241",
+"big": "4. 비례식과 비례배분",
+"small": "04. 비례식의 성질을 알아볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|04. 비례식의 성질을 알아볼까요:1",
+"big": "4. 비례식과 비례배분",
+"small": "04. 비례식의 성질을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|04. 비례식의 성질을 알아볼까요:2",
+"big": "4. 비례식과 비례배분",
+"small": "04. 비례식의 성질을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|04. 비례식의 성질을 알아볼까요:3",
+"big": "4. 비례식과 비례배분",
+"small": "04. 비례식의 성질을 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ukj7lx:t0L1",
+"big": "4. 비례식과 비례배분",
+"small": "05. 비례식을 활용해 볼까요",
+"kind": "low",
+"newQ": "비의 성질과 비례식의 성질을 설명해봐",
+"qWas": "비례식으로 문제를 풀 때 먼저 어떻게 해?",
+"answer": "비의 성질은 전항과 후항에 0이 아닌 같은 수를 곱하거나 나누어도 비율이 같다는 거야. 비례식의 성질은 외항의 곱과 내항의 곱이 같다는 거야.",
+"keys": [
+"비의 성질: 0이 아닌 같은 수를 곱하거나 나누어도 비율이 같다",
+"비례식의 성질: 외항의 곱 = 내항의 곱"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "구하려는 것을 □로 놓고, 같은 순서로 두 비를 맞춰 비례식을 세워.",
+"k": [
+"구하려는 것을 □로",
+"비례식을 세운다"
+]
+},
+"reopen": true,
+"by": "claude"
+},
+{
+"id": "1ukj7lx:t0L2",
+"big": "4. 비례식과 비례배분",
+"small": "05. 비례식을 활용해 볼까요",
+"kind": "low",
+"off": false,
+"offWas": true,
+"round": 1,
+"rWas": 0,
+"newQ": "② 세운 비례식에서 □의 값은 어떤 성질을 이용해 구할까?",
+"qWas": "② 세운 비례식에서 □의 값은 어떤 성질을 이용해 구할까? (비/비례식의 성질)",
+"answer": "외항의 곱과 내항의 곱이 같다는 비례식의 성질을 이용해. 예를 들어 6 : 8 = 30 : □이면 6 × □ = 8 × 30이야. 비의 성질로 전항과 후항에 같은 수를 곱해 구해도 돼.",
+"keys": [
+"외항의 곱과 내항의 곱이 같다는 성질(또는 비의 성질)을 이용한다"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "",
+"k": []
+},
+"reopen": true,
+"by": "claude"
+},
+{
+"id": "1ukj7lx:t0H1",
+"big": "4. 비례식과 비례배분",
+"small": "05. 비례식을 활용해 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ukj7lx:t0H2",
+"big": "4. 비례식과 비례배분",
+"small": "05. 비례식을 활용해 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ukj7lx:qrecall",
+"big": "4. 비례식과 비례배분",
+"small": "05. 비례식을 활용해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ukj7lx:qreason",
+"big": "4. 비례식과 비례배분",
+"small": "05. 비례식을 활용해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ukj7lx:qexample",
+"big": "4. 비례식과 비례배분",
+"small": "05. 비례식을 활용해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ukj7lx:qerror",
+"big": "4. 비례식과 비례배분",
+"small": "05. 비례식을 활용해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1ukj7lx:qa22e6251",
+"big": "4. 비례식과 비례배분",
+"small": "05. 비례식을 활용해 볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|05. 비례식을 활용해 볼까요:1",
+"big": "4. 비례식과 비례배분",
+"small": "05. 비례식을 활용해 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|05. 비례식을 활용해 볼까요:2",
+"big": "4. 비례식과 비례배분",
+"small": "05. 비례식을 활용해 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|05. 비례식을 활용해 볼까요:3",
+"big": "4. 비례식과 비례배분",
+"small": "05. 비례식을 활용해 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1nja8s4:qapre0406",
+"big": "4. 비례식과 비례배분",
+"small": "06. 비례배분을 해 볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1nja8s4:t0L1",
+"big": "4. 비례식과 비례배분",
+"small": "06. 비례배분을 해 볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1nja8s4:t0L2",
+"big": "4. 비례식과 비례배분",
+"small": "06. 비례배분을 해 볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1nja8s4:t0H1",
+"big": "4. 비례식과 비례배분",
+"small": "06. 비례배분을 해 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1nja8s4:t0H2",
+"big": "4. 비례식과 비례배분",
+"small": "06. 비례배분을 해 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1nja8s4:qrecall",
+"big": "4. 비례식과 비례배분",
+"small": "06. 비례배분을 해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1nja8s4:qreason",
+"big": "4. 비례식과 비례배분",
+"small": "06. 비례배분을 해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1nja8s4:qexample",
+"big": "4. 비례식과 비례배분",
+"small": "06. 비례배분을 해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1nja8s4:qerror",
+"big": "4. 비례식과 비례배분",
+"small": "06. 비례배분을 해 볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1nja8s4:qa22e6261",
+"big": "4. 비례식과 비례배분",
+"small": "06. 비례배분을 해 볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|06. 비례배분을 해 볼까요:1",
+"big": "4. 비례식과 비례배분",
+"small": "06. 비례배분을 해 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|4. 비례식과 비례배분|06. 비례배분을 해 볼까요:2",
+"big": "4. 비례식과 비례배분",
+"small": "06. 비례배분을 해 볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+}
+],
+"seen": []
+}});
