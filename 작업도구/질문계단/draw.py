@@ -486,6 +486,194 @@ def net(cells, colw, rowh, labels=None, color='blue', origin=(0, 0), title=None)
     return f
 
 
+SHADE = ('#F6D58E', '#A97C22')     # 색칠한 부분 (채움, 테두리)
+EK = 0.30                           # 입체 밑면 타원의 납작한 정도 (세로/가로)
+
+
+def path(d, pts, fill='#E8F1FC', stroke='#3B6FA8', sw=1.6, dash=False, evenodd=False):
+    """곡선이 든 도형. pts = 화면 크기를 잴 점들(곡선의 바깥 끝을 꼭 넣을 것)"""
+    f = Fig()
+    f.add('<path d="%s" fill="%s" stroke="%s" stroke-width="%s"%s%s stroke-linejoin="round"/>'
+          % (d, fill, stroke, sw, ' stroke-dasharray="5 4"' if dash else '',
+             ' fill-rule="evenodd"' if evenodd else ''), pts)
+    return f
+
+
+def circle(c, r, color='blue', fill=True, style='solid', sw=1.6):
+    bg, edge = FLAT[color] if color in FLAT else (color, '#6E6A86')
+    f = Fig()
+    f.add('<circle cx="%.1f" cy="%.1f" r="%.1f" fill="%s" stroke="%s" stroke-width="%s"%s/>'
+          % (c[0], c[1], r, bg if fill else 'none', edge, sw,
+             ' stroke-dasharray="5 4"' if style == 'dashed' else ''),
+          [(c[0] - r, c[1] - r), (c[0] + r, c[1] + r)])
+    return f
+
+
+def _ell_front_back(cx, cy, rx, ry, edge, back_dash=True):
+    """밑면 타원 — 앞쪽 반(아래 호)은 실선, 뒤쪽 반(위 호)은 점선"""
+    f = path('M%.1f,%.1f A%.1f,%.1f 0 0 0 %.1f,%.1f' % (cx - rx, cy, rx, ry, cx + rx, cy),
+             [(cx - rx, cy), (cx + rx, cy + ry)], 'none', edge, 1.6)
+    f = merge(f, path('M%.1f,%.1f A%.1f,%.1f 0 0 1 %.1f,%.1f' % (cx - rx, cy, rx, ry, cx + rx, cy),
+                      [(cx - rx, cy - ry), (cx + rx, cy)], 'none', edge, 1.3, dash=back_dash))
+    return f
+
+
+def cyl(r, h, cx=0, top=0, color='blue'):
+    """원기둥 — 위 밑면은 다 보이고, 아래 밑면은 앞쪽 반만 보인다"""
+    P3 = PAL[color]; edge = P3['edge']; ry = r * EK
+    yb = top + h
+    body = ('M%.1f,%.1f L%.1f,%.1f A%.1f,%.1f 0 0 0 %.1f,%.1f L%.1f,%.1f A%.1f,%.1f 0 0 0 %.1f,%.1f Z'
+            % (cx - r, top, cx - r, yb, r, ry, cx + r, yb, cx + r, top, r, ry, cx - r, top))
+    f = path(body, [(cx - r, top - ry), (cx + r, yb + ry)], P3['left'], edge, 1.6)
+    f = merge(f, _ell_front_back(cx, yb, r, ry, edge))
+    f.add('<ellipse cx="%.1f" cy="%.1f" rx="%.1f" ry="%.1f" fill="%s" stroke="%s" stroke-width="1.6"/>'
+          % (cx, top, r, ry, P3['top'], edge), [(cx - r, top - ry), (cx + r, top + ry)])
+    return f
+
+
+def cone(r, h, cx=0, apex=0, color='rose'):
+    """원뿔 — 밑면 뒤쪽 반은 점선"""
+    P3 = PAL[color]; edge = P3['edge']; ry = r * EK
+    yb = apex + h
+    body = ('M%.1f,%.1f L%.1f,%.1f A%.1f,%.1f 0 0 0 %.1f,%.1f Z'
+            % (cx, apex, cx - r, yb, r, ry, cx + r, yb))
+    f = path(body, [(cx, apex), (cx - r, yb), (cx + r, yb + ry)], P3['left'], edge, 1.6)
+    return merge(f, _ell_front_back(cx, yb, r, ry, edge))
+
+
+def sphere(r, c=(0, 0), color='green'):
+    """구 — 적도 타원의 뒤쪽 반은 점선"""
+    P3 = PAL[color]; edge = P3['edge']
+    f = Fig()
+    f.add('<circle cx="%.1f" cy="%.1f" r="%.1f" fill="%s" stroke="%s" stroke-width="1.6"/>'
+          % (c[0], c[1], r, P3['left'], edge), [(c[0] - r, c[1] - r), (c[0] + r, c[1] + r)])
+    return merge(f, _ell_front_back(c[0], c[1], r, r * EK, edge))
+
+
+def spin(p1, p2, label='이 변을 기준으로 한 바퀴', color='#B55B45'):
+    """회전축(점선, 양끝을 늘여 그림) + 축을 도는 화살표. 결과 입체는 그리지 않는다(= 답)."""
+    import math
+    dx, dy = p2[0] - p1[0], p2[1] - p1[1]
+    L = math.hypot(dx, dy) or 1
+    ux, uy = dx / L, dy / L
+    a = (p1[0] - ux * 34, p1[1] - uy * 34)
+    b = (p2[0] + ux * 22, p2[1] + uy * 22)
+    f = seg(a, b, 'dashed', color, 1.6)
+    # 축의 머리 쪽에 납작한 타원 호 + 화살표
+    cx, cy = p1[0] - ux * 24, p1[1] - uy * 24      # 꼭짓점 이름과 겹치지 않게 축 끝에서 떨어뜨린다
+    vertical = abs(dy) >= abs(dx)
+    rx, ry = (17, 5.5) if vertical else (5.5, 17)
+    s_ = (cx - rx, cy) if vertical else (cx, cy - ry)
+    e_ = (cx + rx * 0.2, cy + ry) if vertical else (cx + rx, cy + ry * 0.2)
+    f.add('<defs><marker id="sp" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto">'
+          '<path d="M0,0 L7,3 L0,6 z" fill="%s"/></marker></defs>' % color, [])
+    f.add('<path d="M%.1f,%.1f A%.1f,%.1f 0 1 0 %.1f,%.1f" fill="none" stroke="%s" stroke-width="1.5" '
+          'marker-end="url(#sp)"/>' % (s_[0], s_[1], rx, ry, e_[0], e_[1], color),
+          [(cx - rx, cy - ry), (cx + rx, cy + ry)])
+    if label:
+        if vertical:
+            f = merge(f, tag(cx + rx + 6, cy + 4, label, color, 11.5, 600, 'start'))
+        else:
+            f = merge(f, tag(cx - rx - 8, cy + 4, label, color, 11.5, 600, 'end'))
+    return f
+
+
+GRID = '#E4E9F3'
+
+
+def linegraph(xs, ys, ymin, ymax, step, W=250, H=150, color='blue', bars=False, wave=False,
+              order=None, label_every=1, unit_y=None, unit_x=None, title=None, origin=(0, 0)):
+    """꺾은선그래프(교재 모양). ys 에 None 이 있으면 그 자리는 점을 찍지 않고 선도 끊는다.
+      bars=True  막대그래프로
+      wave=True  세로축 아래에 물결선(≈) — 0부터가 아니라 ymin 부터 그렸다는 표시
+      order      점을 잇는 차례(틀린 그래프용). 없으면 왼쪽부터 차례로
+      unit_y / unit_x  축 끝에 단위 — ⚠️ 가로·세로가 무엇인지 묻는 질문에서는 넣지 말 것(= 답)"""
+    ox, oy = origin
+    bg, edge = FLAT[color]
+    n = len(xs); dx = W / float(n)
+    X = lambda i: ox + dx * (i + 0.5)
+    Y = lambda v: oy + H - (v - ymin) * H / float(ymax - ymin)
+    f = Fig()
+    f.add('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="#FFFFFF"/>' % (ox, oy, W, H),
+          [(ox, oy), (ox + W, oy + H)])
+    v, k = ymin, 0
+    while v <= ymax + 1e-9:
+        y = Y(v)
+        f = merge(f, seg((ox, y), (ox + W, y), 'solid', GRID, 1))
+        if k % label_every == 0:
+            f = merge(f, tag(ox - 7, y + 4, ('%g' % v), SOFT, 11, 600, 'end'))
+        v += step; k += 1
+    for i in range(n):
+        f = merge(f, seg((X(i), oy), (X(i), oy + H), 'solid', GRID, 1))
+        f = merge(f, tag(X(i), oy + H + 16, xs[i], SOFT, 11, 600))
+    f = merge(f, seg((ox, oy), (ox, oy + H), 'solid', '#6E6A86', 1.4),
+                 seg((ox, oy + H), (ox + W, oy + H), 'solid', '#6E6A86', 1.4))
+    if wave:     # 물결선 — 세로축을 가로지르는 ≈
+        wy = oy + H - 9
+        for dy_ in (-3, 3):
+            f.add('<path d="M%.1f,%.1f q4,-5 8,0 t8,0" fill="none" stroke="#FFFFFF" stroke-width="5"/>'
+                  % (ox - 8, wy + dy_), [(ox - 8, wy - 8), (ox + 8, wy + 8)])
+        for dy_ in (-3, 3):
+            f.add('<path d="M%.1f,%.1f q4,-5 8,0 t8,0" fill="none" stroke="#6E6A86" stroke-width="1.4"/>'
+                  % (ox - 8, wy + dy_), [(ox - 8, wy - 8), (ox + 8, wy + 8)])
+    pts = [(X(i), Y(y_)) if y_ is not None else None for i, y_ in enumerate(ys)]
+    if bars:
+        for i, p in enumerate(pts):
+            if p is None: continue
+            bw = dx * 0.5
+            r = [(p[0] - bw / 2, p[1]), (p[0] + bw / 2, p[1]), (p[0] + bw / 2, oy + H), (p[0] - bw / 2, oy + H)]
+            f.add(_poly(r, PAL[color]['left'], edge, 1), r)
+    else:
+        seq = order if order else list(range(n))
+        for a, b in zip(seq, seq[1:]):
+            if pts[a] is None or pts[b] is None: continue
+            f = merge(f, seg(pts[a], pts[b], 'solid', edge, 2))
+        for p in pts:
+            if p is None: continue
+            f.add('<circle cx="%.1f" cy="%.1f" r="3.6" fill="%s" stroke="#FFFFFF" stroke-width="1.2"/>'
+                  % (p[0], p[1], edge), [(p[0] - 4, p[1] - 4), (p[0] + 4, p[1] + 4)])
+    if unit_y: f = merge(f, tag(ox - 4, oy - 10, unit_y, SOFT, 11, 600, 'end'))
+    if unit_x: f = merge(f, tag(ox + W + 6, oy + H + 16, unit_x, SOFT, 11, 600, 'start'))
+    if title:  f = merge(f, tag(ox + W / 2, oy - 12, title, INK, 12.5, 700))
+    return f
+
+
+def table(rows, colw, rowh=26, origin=(0, 0), color='blue'):
+    """표 — 첫 줄은 머리(옅게 칠함)"""
+    ox, oy = origin
+    bg, edge = FLAT[color]
+    f = Fig()
+    X = [ox]
+    for w in colw: X.append(X[-1] + w)
+    for r, row in enumerate(rows):
+        y = oy + r * rowh
+        for c, txt in enumerate(row):
+            cell = [(X[c], y), (X[c + 1], y), (X[c + 1], y + rowh), (X[c], y + rowh)]
+            f.add(_poly(cell, bg if r == 0 else '#FFFFFF', edge, 1), cell)
+            f = merge(f, tag((X[c] + X[c + 1]) / 2, y + rowh / 2 + 4.5, txt, INK if r else edge, 11.5, 700 if r == 0 else 600))
+    return f
+
+
+def fr(x, y, whole, num, den, unit='', color=INK, size=12.5):
+    """세운 분수 글자 (교재 모양) — 예: fr(0,0,'2','3','11',' km') → 2 3/11 km 를 위아래로.
+    x = 글자 묶음의 가운데. SVG 글자는 mfmt 를 못 쓰므로 직접 세운다."""
+    ws = _textw(whole, size) if whole else 0
+    wf = max(_textw(num, size - 1.5), _textw(den, size - 1.5)) + 4
+    wu = _textw(unit, size) if unit else 0
+    x0 = x - (ws + (2 if whole else 0) + wf + wu) / 2.0
+    f = Fig()
+    if whole:
+        f = merge(f, tag(x0 + ws / 2, y + 5, whole, color, size, 700))
+        x0 += ws + 2
+    cx = x0 + wf / 2
+    f = merge(f, tag(cx, y - 2, num, color, size - 1.5, 700),
+                 seg((x0, y + 1.5), (x0 + wf, y + 1.5), 'solid', color, 1.1),
+                 tag(cx, y + 14, den, color, size - 1.5, 700))
+    if unit:
+        f = merge(f, tag(x0 + wf + 2, y + 5, unit, color, size, 600, 'start'))
+    return f
+
+
 def regular(n, r, center=(0, 0), color='blue', start=-90):
     """정n각형"""
     import math

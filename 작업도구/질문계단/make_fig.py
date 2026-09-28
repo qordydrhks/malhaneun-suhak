@@ -13,6 +13,10 @@ sys.stdout.reconfigure(encoding='utf-8')
 ROOT = r'C:\Users\qordy\Documents\GitHub\malhaneun-suhak'
 
 grade, figpy, exp = sys.argv[1], sys.argv[2], sys.argv[3]
+# 넷째 인자 = 출력 파일 이름 꼬리(없으면 fig_<학년>.js). 한 학년에 그림 파일이 둘 이상일 때 쓴다.
+#   ⚠️ 초6-2 는 fig_e6-2.js 가 3단원(make_plan_big3.py) 몫이다 → 원·원기둥은 꼬리 'b' 로 fig_e6-2b.js.
+#      꼬리 없이 돌리면 3단원 그림을 덮어쓴다(2026-09-28 실제로 한 번 덮어써서 git 에서 되살렸다).
+outname = 'fig_' + grade + (sys.argv[4] if len(sys.argv) > 4 else '') + '.js'
 _sp = importlib.util.spec_from_file_location('figs', figpy)
 F = importlib.util.module_from_spec(_sp); _sp.loader.exec_module(F)
 E = json.load(open(exp, encoding='utf-8'))
@@ -45,7 +49,7 @@ for i, (qid, svg) in enumerate(out.items()):
     lines.append('  %s: { svg: %s }%s' % (json.dumps(qid, ensure_ascii=False),
                  json.dumps(svg, ensure_ascii=False), ',' if i < len(out) - 1 else ''))
 lines.append('});')
-p = ROOT + r'\review\fig_' + grade + '.js'
+p = ROOT + r'\review' + '\\' + outname
 io.open(p, 'w', encoding='utf-8', newline='').write('\n'.join(lines) + '\n')
 print('%s — 그림 %d개 붙임 → %s' % (grade, len(out), os.path.basename(p)))
 for (b, s, t, f) in F.MAP:
