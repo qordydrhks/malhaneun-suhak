@@ -6795,3 +6795,697 @@
 ],
 "seen": []
 }});
+
+/* [0928] 2026-09-28 초6-2 3단원 마스터 검토 반영 + 4~6단원에 같은 기준 (make_plan_0928.py).
+   3-06 은 3개짜리 그림을 주고 1개를 붙여 만들게 (마스터 지시) — 그림은 review/fig_e6-2c.js */
+(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'e6-2_2026-09-28a', data:{
+"format": "qr-plan-2",
+"grade": "e6-2",
+"rounds": 3,
+"items": [
+{
+"id": "1niet2v:qab30101",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1niet2v:qab30102",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1niet2v:qab30103",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1niet2v:t0L1",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1niet2v:t0L2",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1niet2v:t0H1",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1niet2v:t0H2",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1niet2v:qrecall",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1niet2v:qreason",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1niet2v:qexample",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1niet2v:qerror",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|3. 공간과 입체|01. 어느 방향에서 보았는지 알아볼까요:1",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|3. 공간과 입체|01. 어느 방향에서 보았는지 알아볼까요:2",
+"big": "3. 공간과 입체",
+"small": "01. 어느 방향에서 보았는지 알아볼까요",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1svq0id:qab30201",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1svq0id:qab30202",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1svq0id:qab30203",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1svq0id:t0L1",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1svq0id:t0L2",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1svq0id:t0H1",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1svq0id:t0H2",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1svq0id:qrecall",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1svq0id:qreason",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1svq0id:qexample",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "1svq0id:qerror",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|3. 공간과 입체|02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양:1",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|3. 공간과 입체|02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양:2",
+"big": "3. 공간과 입체",
+"small": "02. 쌓은 모양과 쌓기나무의 개수(1)·위에서 본 모양",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "13f0an5:qab30301",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "13f0an5:qab30302",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "13f0an5:qab30303",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "13f0an5:t0L1",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "13f0an5:t0L2",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "13f0an5:t0H1",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "high",
+"off": true,
+"offWas": false,
+"ok": true,
+"by": "claude"
+},
+{
+"id": "13f0an5:t0H2",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "high",
+"off": false,
+"offWas": true,
+"round": 1,
+"rWas": 2,
+"ok": true,
+"by": "claude"
+},
+{
+"id": "13f0an5:qrecall",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "13f0an5:qreason",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "13f0an5:qexample",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "13f0an5:qerror",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|3. 공간과 입체|03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양:1",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|3. 공간과 입체|03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양:2",
+"big": "3. 공간과 입체",
+"small": "03. 쌓은 모양과 쌓기나무의 개수(2)·위·앞·옆에서 본 모양",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "doo3rd:qab30401",
+"big": "3. 공간과 입체",
+"small": "04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "doo3rd:qab30402",
+"big": "3. 공간과 입체",
+"small": "04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "doo3rd:qab30403",
+"big": "3. 공간과 입체",
+"small": "04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기",
+"kind": "add",
+"off": true,
+"offWas": false,
+"by": "claude"
+},
+{
+"id": "doo3rd:t0L1",
+"big": "3. 공간과 입체",
+"small": "04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "doo3rd:t0L2",
+"big": "3. 공간과 입체",
+"small": "04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "doo3rd:t0H1",
+"big": "3. 공간과 입체",
+"small": "04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "doo3rd:t0H2",
+"big": "3. 공간과 입체",
+"small": "04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "doo3rd:qrecall",
+"big": "3. 공간과 입체",
+"small": "04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "doo3rd:qreason",
+"big": "3. 공간과 입체",
+"small": "04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "doo3rd:qexample",
+"big": "3. 공간과 입체",
+"small": "04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "doo3rd:qerror",
+"big": "3. 공간과 입체",
+"small": "04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|3. 공간과 입체|04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기:1",
+"big": "3. 공간과 입체",
+"small": "04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|3. 공간과 입체|04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기:2",
+"big": "3. 공간과 입체",
+"small": "04. 쌓은 모양과 쌓기나무의 개수(3)·위에서 본 모양에 수 쓰기",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wgfdv4:qab30501",
+"big": "3. 공간과 입체",
+"small": "05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wgfdv4:qab30502",
+"big": "3. 공간과 입체",
+"small": "05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wgfdv4:t0L1",
+"big": "3. 공간과 입체",
+"small": "05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wgfdv4:t0L2",
+"big": "3. 공간과 입체",
+"small": "05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wgfdv4:t0H1",
+"big": "3. 공간과 입체",
+"small": "05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wgfdv4:t0H2",
+"big": "3. 공간과 입체",
+"small": "05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wgfdv4:qrecall",
+"big": "3. 공간과 입체",
+"small": "05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wgfdv4:qreason",
+"big": "3. 공간과 입체",
+"small": "05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wgfdv4:qexample",
+"big": "3. 공간과 입체",
+"small": "05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양",
+"kind": "qset",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "wgfdv4:qerror",
+"big": "3. 공간과 입체",
+"small": "05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양",
+"kind": "qset",
+"off": true,
+"offWas": false,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|3. 공간과 입체|05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양:1",
+"big": "3. 공간과 입체",
+"small": "05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ladder:e6-2|3. 공간과 입체|05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양:2",
+"big": "3. 공간과 입체",
+"small": "05. 쌓은 모양과 쌓기나무의 개수(4)·층별로 나타낸 모양",
+"kind": "ladder",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ogp9kt:qab30601",
+"big": "3. 공간과 입체",
+"small": "06. 여러 가지 모양을 만들어 볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ogp9kt:qab30602",
+"big": "3. 공간과 입체",
+"small": "06. 여러 가지 모양을 만들어 볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ogp9kt:qab30603",
+"big": "3. 공간과 입체",
+"small": "06. 여러 가지 모양을 만들어 볼까요",
+"kind": "add",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ogp9kt:t0L1",
+"big": "3. 공간과 입체",
+"small": "06. 여러 가지 모양을 만들어 볼까요",
+"kind": "low",
+"off": true,
+"offWas": false,
+"by": "claude"
+},
+{
+"id": "ogp9kt:t0L2",
+"big": "3. 공간과 입체",
+"small": "06. 여러 가지 모양을 만들어 볼까요",
+"kind": "low",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ogp9kt:t0H1",
+"big": "3. 공간과 입체",
+"small": "06. 여러 가지 모양을 만들어 볼까요",
+"kind": "high",
+"ok": true,
+"by": "claude"
+},
+{
+"id": "ogp9kt:t0H2",
+"big": "3. 공간과 입체",
+"small": "06. 여러 가지 모양을 만들어 볼까요",
+"kind": "high",
+"off": true,
+"offWas": false,
+"by": "claude"
+},
+{
+"id": "ogp9kt:qexample",
+"big": "3. 공간과 입체",
+"small": "06. 여러 가지 모양을 만들어 볼까요",
+"kind": "qset",
+"off": true,
+"offWas": false,
+"by": "claude"
+},
+{
+"id": "ogp9kt:qerror",
+"big": "3. 공간과 입체",
+"small": "06. 여러 가지 모양을 만들어 볼까요",
+"kind": "qset",
+"off": true,
+"offWas": false,
+"by": "claude"
+},
+{
+"id": "ogp9kt:qab30604",
+"big": "3. 공간과 입체",
+"small": "06. 여러 가지 모양을 만들어 볼까요",
+"kind": "add",
+"q": "그림은 쌓기나무 3개를 한 줄로 붙인 모양이야. 여기에 쌓기나무 1개를 더 붙여서 서로 다른 4개짜리 모양을 만들려면 어디에 붙여 봐야 해?",
+"round": 1,
+"ord": 3,
+"answer": "끝에 이어 붙이면 4개가 한 줄이 되고, 끝 쌓기나무의 옆에 붙이면 ㄱ자, 가운데 쌓기나무의 옆에 붙이면 ㅗ자 모양이 돼. 위에 얹어도 돌려 보면 이 가운데 하나와 같아서 서로 다른 모양은 3가지야.",
+"keys": [
+"끝에 이어 붙이면 한 줄 모양이 된다",
+"끝의 옆·가운데의 옆에 붙이면 서로 다른 모양이 된다",
+"돌려서 겹치는 모양은 한 가지로 센다"
+],
+"answerBy": "claude",
+"by": "claude"
+},
+{
+"id": "ogp9kt:qab30605",
+"big": "3. 공간과 입체",
+"small": "06. 여러 가지 모양을 만들어 볼까요",
+"kind": "add",
+"q": "그림은 쌓기나무 3개를 ㄱ자로 붙인 모양이야. 여기에 1개를 더 붙여서 만들 수 있는 4개짜리 모양을 하나 만들고, 어디에 붙였는지 말해 봐.",
+"round": 2,
+"ord": 4,
+"answer": "예를 들어 꺾인 곳의 쌓기나무 위에 1개를 얹으면 가운데가 위로 솟은 모양이 되고, 한쪽 끝에 이어 붙이면 ㄱ자의 한쪽이 길어진 모양이 돼.",
+"keys": [
+"3개짜리 모양의 한 면에 1개를 붙인다",
+"붙인 자리를 분명히 말한다"
+],
+"answerBy": "claude",
+"by": "claude"
+},
+{
+"id": "16ugm2:qerror",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "01. 원기둥을 알아볼까요",
+"kind": "qset",
+"off": true,
+"offBy": "claude",
+"offWas": false,
+"by": "claude"
+},
+{
+"id": "dxxntc:qerror",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "04. 구를 알아볼까요",
+"kind": "qset",
+"off": true,
+"offBy": "claude",
+"offWas": false,
+"by": "claude"
+},
+{
+"id": "p5tqmr:qerror",
+"big": "6. 원기둥, 원뿔, 구",
+"small": "03. 원뿔을 알아볼까요",
+"kind": "qset",
+"off": true,
+"offBy": "claude",
+"offWas": false,
+"by": "claude"
+},
+{
+"id": "1rppnci:t0H2",
+"big": "4. 비례식과 비례배분",
+"small": "01. 비의 성질을 알아볼까요",
+"kind": "high",
+"off": false,
+"offWas": true,
+"round": 2,
+"rWas": 0,
+"newQ": "비의 전항과 후항에 0을 곱하면 안 되는 이유를 말해 봐.",
+"qWas": "② [주의] 전항과 후항에 0을 곱하거나 0으로 나누는 경우는 생각하지 않는 이유를 말해 줘.",
+"newQBy": "claude",
+"answer": "전항과 후항에 0을 곱하면 0 : 0이 돼서 원래 비가 어떤 비였는지, 비율이 얼마인지 알 수 없게 돼.",
+"keys": [
+"0을 곱하면 0 : 0이 된다",
+"원래 비의 비율을 알 수 없게 된다"
+],
+"answerBy": "claude",
+"ansWas": {
+"a": "",
+"k": []
+},
+"by": "claude"
+}
+],
+"seen": []
+}});

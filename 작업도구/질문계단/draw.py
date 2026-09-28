@@ -82,7 +82,7 @@ def cubes(blocks, color='blue', origin=(0, 0), title=None):
         f.add(_poly(top,   P['top'],   P['edge']), top)
     if title:
         x0, y0, w, _h = f.bbox(0)
-        f.add(_txt(x0 + w / 2, y0 - 12, title, 13, SOFT), [(x0, y0 - 24), (x0 + w, y0 - 24)])
+        f.add(_txt(x0 + w / 2, y0 - 12, title, 13, SOFT), [(x0 + w / 2 - _textw(title, 13) / 2, y0 - 24), (x0 + w / 2 + _textw(title, 13) / 2, y0 - 24)])
     return f
 
 
@@ -228,7 +228,7 @@ def poly(pts, color='blue', fill=True, style='solid', title=None):
           % (d, bg if fill else 'none', edge, dash), pts)
     if title:
         x0, y0, w, _h = f.bbox(0)
-        f.add(_txt(x0 + w / 2, y0 - 12, title, 13, SOFT), [(x0, y0 - 24), (x0 + w, y0 - 24)])
+        f.add(_txt(x0 + w / 2, y0 - 12, title, 13, SOFT), [(x0 + w / 2 - _textw(title, 13) / 2, y0 - 24), (x0 + w / 2 + _textw(title, 13) / 2, y0 - 24)])
     return f
 
 def seg(p1, p2, style='solid', color='#6E6A86', width=1.4):
@@ -449,7 +449,7 @@ def box(w, d, h, origin=(0, 0), color='blue', verts=False, dims=None,
                                            dims['d'], SOFT, 12, 700, 'start'))
     if title:
         x0, y0, w2, _h = f.bbox(0)
-        f.add(_txt(x0 + w2 / 2, y0 - 12, title, 13, SOFT), [(x0, y0 - 24), (x0 + w2, y0 - 24)])
+        f.add(_txt(x0 + w2 / 2, y0 - 12, title, 13, SOFT), [(x0 + w2 / 2 - _textw(title, 13) / 2, y0 - 24), (x0 + w2 / 2 + _textw(title, 13) / 2, y0 - 24)])
     return f
 
 
@@ -482,7 +482,7 @@ def net(cells, colw, rowh, labels=None, color='blue', origin=(0, 0), title=None)
         f = merge(f, tag((X[c] + X[c + 1]) / 2, (Y[r] + Y[r + 1]) / 2 + 5, t, INK, 13.5))
     if title:
         x0, y0, w2, _h = f.bbox(0)
-        f.add(_txt(x0 + w2 / 2, y0 - 12, title, 13, SOFT), [(x0, y0 - 24), (x0 + w2, y0 - 24)])
+        f.add(_txt(x0 + w2 / 2, y0 - 12, title, 13, SOFT), [(x0 + w2 / 2 - _textw(title, 13) / 2, y0 - 24), (x0 + w2 / 2 + _textw(title, 13) / 2, y0 - 24)])
     return f
 
 
