@@ -1,0 +1,3968 @@
+/* 질문 고르기 — 기본으로 실어 두는 분류안 (초3-2)
+   Claude 분류(2026-09-29): 기준표_초등_질문.md 1~19절 그대로. 원천 작업도구/질문계단/e3/spec_e32.py */
+(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'e3-2_2026-09-29a', data:{
+"format": "qr-plan-2",
+"grade": "e3-2",
+"rounds": 3,
+"items": [
+{
+"id": "1tidl2m:t0L1",
+"big": "1. 곱셈",
+"small": "01. 올림이 없는 (세 자리 수)×(한 자리 수)",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1tidl2m:t0L2",
+"big": "1. 곱셈",
+"small": "01. 올림이 없는 (세 자리 수)×(한 자리 수)",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "142 × 2를 계산하는 방법을 말해 봐.",
+"newQBy": "claude",
+"answer": "142를 100, 40, 2로 나누어 각각 2를 곱하면 200, 80, 4야. 모두 더하면 284야.",
+"keys": [
+"자리별로 나누어 곱한다",
+"284"
+],
+"answerBy": "claude"
+},
+{
+"id": "1tidl2m:t0H1",
+"big": "1. 곱셈",
+"small": "01. 올림이 없는 (세 자리 수)×(한 자리 수)",
+"kind": "high",
+"by": "claude",
+"round": 2,
+"newQ": "세 자리 수의 곱셈에서 일·십·백의 자리를 각각 곱한 뒤 더하면 답이 같은 이유를 설명해 봐.",
+"newQBy": "claude",
+"answer": "142는 100 + 40 + 2라서, 142를 2번 더한 것은 100, 40, 2를 각각 2번 더한 것과 같아. 그래서 각각 곱해 더해도 답이 같아.",
+"keys": [
+"142 = 100 + 40 + 2",
+"각각 곱해 더해도 같다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1tidl2m:t0H2",
+"big": "1. 곱셈",
+"small": "01. 올림이 없는 (세 자리 수)×(한 자리 수)",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1tidl2m:qrecall",
+"big": "1. 곱셈",
+"small": "01. 올림이 없는 (세 자리 수)×(한 자리 수)",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1tidl2m:qreason",
+"big": "1. 곱셈",
+"small": "01. 올림이 없는 (세 자리 수)×(한 자리 수)",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1tidl2m:qexample",
+"big": "1. 곱셈",
+"small": "01. 올림이 없는 (세 자리 수)×(한 자리 수)",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1tidl2m:qerror",
+"big": "1. 곱셈",
+"small": "01. 올림이 없는 (세 자리 수)×(한 자리 수)",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"round": 2,
+"newQ": "친구가 142 × 2 = 84라고 했어. 어디가 틀렸는지 찾고 바른 답도 말해 봐.",
+"newQBy": "claude",
+"answer": "백의 자리 100 × 2 = 200을 빠뜨렸어. 200 + 80 + 4 = 284야.",
+"keys": [
+"백의 자리 곱을 빠뜨렸다",
+"284"
+],
+"answerBy": "claude"
+},
+{
+"id": "1tidl2m:qa29e3211",
+"big": "1. 곱셈",
+"small": "01. 올림이 없는 (세 자리 수)×(한 자리 수)",
+"kind": "add",
+"round": 1,
+"by": "claude",
+"q": "한 봉지에 사탕이 213개씩 들어 있어. 3봉지에는 모두 몇 개야? 식과 답을 말해 봐.",
+"answer": "213 × 3 = 639라서 639개야.",
+"keys": [
+"213 × 3",
+"639개"
+],
+"answerBy": "claude"
+},
+{
+"id": "xltv1j:t0L1",
+"big": "1. 곱셈",
+"small": "02. 일의 자리에서 올림이 있는 곱셈",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "일의 자리를 곱해서 나온 수가 10보다 크면 어떻게 해?",
+"newQBy": "claude",
+"answer": "일의 자리 숫자만 쓰고, 십의 자리 숫자는 십의 자리로 올려서 십의 자리 곱에 더해.",
+"keys": [
+"일의 자리 숫자만 쓴다",
+"십의 자리로 올려 더한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "xltv1j:t0L2",
+"big": "1. 곱셈",
+"small": "02. 일의 자리에서 올림이 있는 곱셈",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "xltv1j:t0H1",
+"big": "1. 곱셈",
+"small": "02. 일의 자리에서 올림이 있는 곱셈",
+"kind": "high",
+"by": "claude",
+"round": 2,
+"newQ": "일의 자리 곱에서 생긴 올림을 십의 자리 곱에 더해 주는 이유를 설명해 봐.",
+"newQBy": "claude",
+"answer": "6 × 3 = 18에서 1은 10을 뜻해. 10은 십의 자리 값이라서 십의 자리 곱에 더해야 해.",
+"keys": [
+"올림한 1은 10을 뜻한다",
+"십의 자리 값이라서 더한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "xltv1j:t0H2",
+"big": "1. 곱셈",
+"small": "02. 일의 자리에서 올림이 있는 곱셈",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "xltv1j:qrecall",
+"big": "1. 곱셈",
+"small": "02. 일의 자리에서 올림이 있는 곱셈",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"round": 1,
+"newQ": "곱셈에서 올림이 뭐야?",
+"newQBy": "claude",
+"answer": "어떤 자리의 곱이 10이거나 10보다 크면 10을 바로 윗자리의 1로 올려 주는 거야.",
+"keys": [
+"10이 넘으면",
+"윗자리로 올린다"
+],
+"answerBy": "claude"
+},
+{
+"id": "xltv1j:qreason",
+"big": "1. 곱셈",
+"small": "02. 일의 자리에서 올림이 있는 곱셈",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "xltv1j:qexample",
+"big": "1. 곱셈",
+"small": "02. 일의 자리에서 올림이 있는 곱셈",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "xltv1j:qerror",
+"big": "1. 곱셈",
+"small": "02. 일의 자리에서 올림이 있는 곱셈",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"round": 2,
+"newQ": "친구가 126 × 3 = 368이라고 했어. 어디가 틀렸는지 찾고 바른 답도 말해 봐.",
+"newQBy": "claude",
+"answer": "6 × 3 = 18에서 올린 1을 십의 자리 곱에 더하지 않았어. 2 × 3 = 6에 1을 더해 7이라서 378이야.",
+"keys": [
+"올린 1을 더하지 않았다",
+"378"
+],
+"answerBy": "claude"
+},
+{
+"id": "xltv1j:qa29e3221",
+"big": "1. 곱셈",
+"small": "02. 일의 자리에서 올림이 있는 곱셈",
+"kind": "add",
+"round": 1,
+"by": "claude",
+"q": "217 × 4를 계산하는 방법을 말해 봐.",
+"answer": "7 × 4 = 28에서 8을 쓰고 2를 올려. 1 × 4 = 4에 2를 더해 6, 2 × 4 = 8이라서 868이야.",
+"keys": [
+"일의 자리 곱에서 올림",
+"868"
+],
+"answerBy": "claude"
+},
+{
+"id": "1veauft:t0L1",
+"big": "1. 곱셈",
+"small": "03. 십의 자리에서 올림이 있는 곱셈",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1veauft:t0L2",
+"big": "1. 곱셈",
+"small": "03. 십의 자리에서 올림이 있는 곱셈",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1veauft:t0H1",
+"big": "1. 곱셈",
+"small": "03. 십의 자리에서 올림이 있는 곱셈",
+"kind": "high",
+"by": "claude",
+"round": 1,
+"newQ": "152 × 4에서 십의 자리 곱에서 생긴 올림을 백의 자리로 올려 주는 과정을 설명해 봐.",
+"newQBy": "claude",
+"answer": "2 × 4 = 8. 5 × 4 = 20에서 0을 쓰고 2를 백의 자리로 올려. 1 × 4 = 4에 2를 더해 6이라서 608이야.",
+"keys": [
+"십의 자리 곱 20",
+"2를 백의 자리로 올린다",
+"608"
+],
+"answerBy": "claude"
+},
+{
+"id": "1veauft:t0H2",
+"big": "1. 곱셈",
+"small": "03. 십의 자리에서 올림이 있는 곱셈",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1veauft:qrecall",
+"big": "1. 곱셈",
+"small": "03. 십의 자리에서 올림이 있는 곱셈",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1veauft:qreason",
+"big": "1. 곱셈",
+"small": "03. 십의 자리에서 올림이 있는 곱셈",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"round": 2,
+"answer": "올림은 늘 바로 윗자리로 가. 일의 자리에서 생기면 십의 자리로, 십의 자리에서 생기면 백의 자리로 올라가.",
+"keys": [
+"바로 윗자리로 올라간다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1veauft:qexample",
+"big": "1. 곱셈",
+"small": "03. 십의 자리에서 올림이 있는 곱셈",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1veauft:qerror",
+"big": "1. 곱셈",
+"small": "03. 십의 자리에서 올림이 있는 곱셈",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"round": 2,
+"newQ": "친구가 182 × 4 = 428이라고 했어. 어디가 틀렸는지 찾고 바른 답도 말해 봐.",
+"newQBy": "claude",
+"answer": "8 × 4 = 32에서 2를 쓰고 올린 3을 백의 자리에 더하지 않았어. 1 × 4 = 4에 3을 더해 7이라서 728이야.",
+"keys": [
+"십의 자리 올림을 더하지 않았다",
+"728"
+],
+"answerBy": "claude"
+},
+{
+"id": "1tbzz59:t0L1",
+"big": "1. 곱셈",
+"small": "04. 올림이 여러 번 있는 곱셈",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1tbzz59:t0L2",
+"big": "1. 곱셈",
+"small": "04. 올림이 여러 번 있는 곱셈",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1tbzz59:t0H1",
+"big": "1. 곱셈",
+"small": "04. 올림이 여러 번 있는 곱셈",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1tbzz59:t0H2",
+"big": "1. 곱셈",
+"small": "04. 올림이 여러 번 있는 곱셈",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1tbzz59:qrecall",
+"big": "1. 곱셈",
+"small": "04. 올림이 여러 번 있는 곱셈",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"round": 1,
+"newQ": "378 × 4처럼 올림이 자리마다 여러 번 생기면 어떻게 계산하는지 말해 봐.",
+"newQBy": "claude",
+"answer": "일의 자리부터 곱하면서 생긴 올림을 바로 윗자리 곱에 더해. 32 → 2 쓰고 3 올림, 28 + 3 = 31 → 1 쓰고 3 올림, 12 + 3 = 15라서 1512야.",
+"keys": [
+"일의 자리부터",
+"올림을 윗자리 곱에 더한다",
+"1512"
+],
+"answerBy": "claude"
+},
+{
+"id": "1tbzz59:qreason",
+"big": "1. 곱셈",
+"small": "04. 올림이 여러 번 있는 곱셈",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1tbzz59:qexample",
+"big": "1. 곱셈",
+"small": "04. 올림이 여러 번 있는 곱셈",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1tbzz59:qerror",
+"big": "1. 곱셈",
+"small": "04. 올림이 여러 번 있는 곱셈",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"round": 2,
+"newQ": "친구가 257 × 3 = 671이라고 했어. 어디가 틀렸는지 찾고 바른 답도 말해 봐.",
+"newQBy": "claude",
+"answer": "십의 자리 5 × 3 + 2 = 17에서 올린 1을 백의 자리에 더하지 않았어. 2 × 3 = 6에 1을 더해 7이라서 771이야.",
+"keys": [
+"십의 자리 올림을 빠뜨렸다",
+"771"
+],
+"answerBy": "claude"
+},
+{
+"id": "1tbzz59:qa29e3241",
+"big": "1. 곱셈",
+"small": "04. 올림이 여러 번 있는 곱셈",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "한 상자에 구슬이 368개씩 들어 있어. 5상자에는 모두 몇 개야? 식과 답을 말해 봐.",
+"answer": "368 × 5야. 8 × 5 = 40(0 쓰고 4 올림), 6 × 5 = 30 + 4 = 34(4 쓰고 3 올림), 3 × 5 = 15 + 3 = 18이라서 1840개야.",
+"keys": [
+"368 × 5",
+"1840개"
+],
+"answerBy": "claude"
+},
+{
+"id": "eq21v4:t0L1",
+"big": "1. 곱셈",
+"small": "05. (몇십)×(몇십), (몇십몇)×(몇십)",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "60 × 30을 계산하는 방법을 말해 봐.",
+"newQBy": "claude",
+"answer": "6 × 3 = 18을 구하고 두 수의 0의 개수만큼 0을 두 개 붙여 1800이야.",
+"keys": [
+"6 × 3 = 18",
+"0을 두 개 붙인다",
+"1800"
+],
+"answerBy": "claude"
+},
+{
+"id": "eq21v4:t0L2",
+"big": "1. 곱셈",
+"small": "05. (몇십)×(몇십), (몇십몇)×(몇십)",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "eq21v4:t0H1",
+"big": "1. 곱셈",
+"small": "05. (몇십)×(몇십), (몇십몇)×(몇십)",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "eq21v4:t0H2",
+"big": "1. 곱셈",
+"small": "05. (몇십)×(몇십), (몇십몇)×(몇십)",
+"kind": "high",
+"by": "claude",
+"round": 1,
+"newQ": "17 × 60은 어떻게 계산해?",
+"newQBy": "claude",
+"answer": "17 × 6 = 102를 구하고 0을 하나 붙여 1020이야.",
+"keys": [
+"17 × 6 = 102",
+"1020"
+],
+"answerBy": "claude"
+},
+{
+"id": "eq21v4:qrecall",
+"big": "1. 곱셈",
+"small": "05. (몇십)×(몇십), (몇십몇)×(몇십)",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "eq21v4:qreason",
+"big": "1. 곱셈",
+"small": "05. (몇십)×(몇십), (몇십몇)×(몇십)",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"round": 2,
+"newQ": "40 × 30에서 4 × 3 = 12를 구한 뒤 0을 두 개 붙여야 하는 이유를 설명해 봐.",
+"newQBy": "claude",
+"answer": "40은 4의 10배, 30은 3의 10배라서 곱은 4 × 3의 100배야. 12의 100배는 1200이라 0을 두 개 붙여.",
+"keys": [
+"10배와 10배",
+"100배라서 0 두 개"
+],
+"answerBy": "claude"
+},
+{
+"id": "eq21v4:qexample",
+"big": "1. 곱셈",
+"small": "05. (몇십)×(몇십), (몇십몇)×(몇십)",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "eq21v4:qerror",
+"big": "1. 곱셈",
+"small": "05. (몇십)×(몇십), (몇십몇)×(몇십)",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "wo5xut:t0L1",
+"big": "1. 곱셈",
+"small": "06. (몇)×(몇십몇)",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "4 × 23을 계산하는 방법을 말해 봐.",
+"newQBy": "claude",
+"answer": "23을 20과 3으로 나누어 4 × 20 = 80, 4 × 3 = 12를 구해 더하면 92야.",
+"keys": [
+"20과 3으로 나눈다",
+"92"
+],
+"answerBy": "claude"
+},
+{
+"id": "wo5xut:t0L2",
+"big": "1. 곱셈",
+"small": "06. (몇)×(몇십몇)",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "wo5xut:t0H1",
+"big": "1. 곱셈",
+"small": "06. (몇)×(몇십몇)",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "wo5xut:t0H2",
+"big": "1. 곱셈",
+"small": "06. (몇)×(몇십몇)",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "wo5xut:qrecall",
+"big": "1. 곱셈",
+"small": "06. (몇)×(몇십몇)",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "wo5xut:qreason",
+"big": "1. 곱셈",
+"small": "06. (몇)×(몇십몇)",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"round": 2,
+"answer": "곱셈은 두 수의 순서를 바꿔도 곱이 같아. 4 × 23은 4씩 23묶음, 23 × 4는 23씩 4묶음인데 둘 다 92야.",
+"keys": [
+"순서를 바꿔도 곱은 같다"
+],
+"answerBy": "claude"
+},
+{
+"id": "wo5xut:qexample",
+"big": "1. 곱셈",
+"small": "06. (몇)×(몇십몇)",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "wo5xut:qerror",
+"big": "1. 곱셈",
+"small": "06. (몇)×(몇십몇)",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"round": 2,
+"newQ": "친구가 5 × 34 = 150이라고 했어. 어디가 틀렸는지 찾고 바른 답도 말해 봐.",
+"newQBy": "claude",
+"answer": "5 × 30 = 150만 구하고 5 × 4 = 20을 더하지 않았어. 150 + 20 = 170이야.",
+"keys": [
+"5 × 4를 빠뜨렸다",
+"170"
+],
+"answerBy": "claude"
+},
+{
+"id": "1dadj2y:t0L1",
+"big": "1. 곱셈",
+"small": "07. 올림이 한 번 있는 (몇십몇)×(몇십몇)",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "19 × 12를 계산하는 방법을 말해 봐.",
+"newQBy": "claude",
+"answer": "12를 10과 2로 나누어 19 × 10 = 190, 19 × 2 = 38을 구해 더하면 228이야.",
+"keys": [
+"10과 2로 나눈다",
+"228"
+],
+"answerBy": "claude"
+},
+{
+"id": "1dadj2y:t0L2",
+"big": "1. 곱셈",
+"small": "07. 올림이 한 번 있는 (몇십몇)×(몇십몇)",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1dadj2y:t0H1",
+"big": "1. 곱셈",
+"small": "07. 올림이 한 번 있는 (몇십몇)×(몇십몇)",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1dadj2y:t0H2",
+"big": "1. 곱셈",
+"small": "07. 올림이 한 번 있는 (몇십몇)×(몇십몇)",
+"kind": "high",
+"by": "claude",
+"round": 2,
+"newQ": "23 × 14를 어림해서 답이 맞는지 확인하는 방법을 말해 줘.",
+"newQBy": "claude",
+"answer": "23은 약 20, 14는 약 10이라서 20 × 10 = 200보다 크고, 25 × 14 = 350쯤보다 작아. 계산한 322가 그 사이라서 맞게 한 것 같아.",
+"keys": [
+"몇십으로 어림한다",
+"계산 값과 비교한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1dadj2y:qrecall",
+"big": "1. 곱셈",
+"small": "07. 올림이 한 번 있는 (몇십몇)×(몇십몇)",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1dadj2y:qreason",
+"big": "1. 곱셈",
+"small": "07. 올림이 한 번 있는 (몇십몇)×(몇십몇)",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"round": 2,
+"answer": "19 × 10은 190이라 십의 자리부터 시작하는 수야. 자리를 맞추지 않으면 19처럼 작은 수로 더하게 돼서 답이 틀려.",
+"keys": [
+"부분곱의 자리값",
+"자리를 안 맞추면 답이 작아진다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1dadj2y:qexample",
+"big": "1. 곱셈",
+"small": "07. 올림이 한 번 있는 (몇십몇)×(몇십몇)",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1dadj2y:qerror",
+"big": "1. 곱셈",
+"small": "07. 올림이 한 번 있는 (몇십몇)×(몇십몇)",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"round": 2,
+"newQ": "친구가 23 × 14를 230과 92로 나누어 구한 뒤 더해서 222라고 했어. 어디가 틀렸는지 찾고 바른 답도 말해 봐.",
+"newQBy": "claude",
+"answer": "230 + 92를 할 때 십의 자리 3 + 9 = 12에서 올림 1을 빠뜨렸어. 230 + 92 = 322야.",
+"keys": [
+"덧셈의 올림을 빠뜨렸다",
+"322"
+],
+"answerBy": "claude"
+},
+{
+"id": "18xozu7:t0L1",
+"big": "1. 곱셈",
+"small": "08. 올림이 여러 번 있는 (몇십몇)×(몇십몇)",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "18xozu7:t0L2",
+"big": "1. 곱셈",
+"small": "08. 올림이 여러 번 있는 (몇십몇)×(몇십몇)",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "48 × 12를 계산하는 방법을 말해 봐.",
+"newQBy": "claude",
+"answer": "48 × 2 = 96과 48 × 10 = 480을 구해 자리를 맞춰 더하면 576이야.",
+"keys": [
+"48 × 2와 48 × 10",
+"576"
+],
+"answerBy": "claude"
+},
+{
+"id": "18xozu7:t0H1",
+"big": "1. 곱셈",
+"small": "08. 올림이 여러 번 있는 (몇십몇)×(몇십몇)",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "18xozu7:t0H2",
+"big": "1. 곱셈",
+"small": "08. 올림이 여러 번 있는 (몇십몇)×(몇십몇)",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "18xozu7:qrecall",
+"big": "1. 곱셈",
+"small": "08. 올림이 여러 번 있는 (몇십몇)×(몇십몇)",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "18xozu7:qreason",
+"big": "1. 곱셈",
+"small": "08. 올림이 여러 번 있는 (몇십몇)×(몇십몇)",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "18xozu7:qexample",
+"big": "1. 곱셈",
+"small": "08. 올림이 여러 번 있는 (몇십몇)×(몇십몇)",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "18xozu7:qerror",
+"big": "1. 곱셈",
+"small": "08. 올림이 여러 번 있는 (몇십몇)×(몇십몇)",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"round": 2,
+"newQ": "친구가 19 × 23 = 417이라고 했어. 어디가 틀렸는지 찾고 바른 답도 말해 봐.",
+"newQBy": "claude",
+"answer": "19 × 3을 할 때 9 × 3 = 27에서 올림 2를 더하지 않아 37이 됐어. 19 × 3 = 57, 19 × 20 = 380이라서 437이야.",
+"keys": [
+"19 × 3에서 올림을 빠뜨렸다",
+"437"
+],
+"answerBy": "claude"
+},
+{
+"id": "18xozu7:qa29e3281",
+"big": "1. 곱셈",
+"small": "08. 올림이 여러 번 있는 (몇십몇)×(몇십몇)",
+"kind": "add",
+"round": 1,
+"by": "claude",
+"q": "두 자리 수끼리의 곱셈이 나오면 가장 먼저 무엇을 해야 해?",
+"answer": "곱하는 수를 몇십과 몇으로 나누어 두 번 곱할 준비를 해. 두 부분곱을 자리를 맞춰 쓰고, 올림을 빠뜨리지 않고 더해.",
+"keys": [
+"몇십과 몇으로 나눈다",
+"부분곱을 자리 맞춰 더한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "18xozu7:qa29e3282",
+"big": "1. 곱셈",
+"small": "08. 올림이 여러 번 있는 (몇십몇)×(몇십몇)",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "한 줄에 36명씩 24줄로 앉아 있어. 모두 몇 명이야? 식과 계산 방법을 말해 봐.",
+"answer": "36 × 24야. 36 × 4 = 144, 36 × 20 = 720을 더해 864명이야.",
+"keys": [
+"36 × 24",
+"144 + 720",
+"864명"
+],
+"answerBy": "claude"
+},
+{
+"id": "19fatby:t0L1",
+"big": "2. 나눗셈",
+"small": "01. 내림이 없는 (몇십)÷(몇)",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "19fatby:t0L2",
+"big": "2. 나눗셈",
+"small": "01. 내림이 없는 (몇십)÷(몇)",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "8 ÷ 4 = 2를 알면 80 ÷ 4의 몫은 어떻게 구해?",
+"newQBy": "claude",
+"answer": "80은 8의 10배라서 몫도 2의 10배인 20이야.",
+"keys": [
+"80은 8의 10배",
+"몫 20"
+],
+"answerBy": "claude"
+},
+{
+"id": "19fatby:t0H1",
+"big": "2. 나눗셈",
+"small": "01. 내림이 없는 (몇십)÷(몇)",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "19fatby:t0H2",
+"big": "2. 나눗셈",
+"small": "01. 내림이 없는 (몇십)÷(몇)",
+"kind": "high",
+"by": "claude",
+"round": 1,
+"newQ": "80 ÷ 4를 세로로 쓸 때 몫 2는 어느 자리에 써?",
+"newQBy": "claude",
+"answer": "8은 십의 자리 숫자라서 몫 2도 십의 자리에 써. 일의 자리에는 0을 써서 20이야.",
+"keys": [
+"몫 2는 십의 자리",
+"일의 자리에 0"
+],
+"answerBy": "claude"
+},
+{
+"id": "19fatby:qrecall",
+"big": "2. 나눗셈",
+"small": "01. 내림이 없는 (몇십)÷(몇)",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "19fatby:qreason",
+"big": "2. 나눗셈",
+"small": "01. 내림이 없는 (몇십)÷(몇)",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"round": 2,
+"newQ": "6 ÷ 3 = 2를 알면 60 ÷ 3의 몫에 왜 0을 하나 붙여야 하는지 이유를 말해 봐.",
+"newQBy": "claude",
+"answer": "60은 6의 10배라서 똑같이 3으로 나누면 몫도 10배가 돼. 2의 10배는 20이라서 0을 붙여.",
+"keys": [
+"60은 6의 10배",
+"몫도 10배"
+],
+"answerBy": "claude"
+},
+{
+"id": "19fatby:qexample",
+"big": "2. 나눗셈",
+"small": "01. 내림이 없는 (몇십)÷(몇)",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "19fatby:qcondition",
+"big": "2. 나눗셈",
+"small": "01. 내림이 없는 (몇십)÷(몇)",
+"kind": "qset",
+"by": "claude",
+"type": "condition",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "19fatby:qerror",
+"big": "2. 나눗셈",
+"small": "01. 내림이 없는 (몇십)÷(몇)",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"round": 2,
+"newQ": "'90 ÷ 3을 계산하면 9 ÷ 3 = 3이니까 90 ÷ 3도 그냥 3이야'라는 말은 어디가 틀렸는지, 어떻게 고쳐야 하는지 말해 봐.",
+"newQBy": "claude",
+"answer": "90은 9의 10배라서 몫도 10배가 돼야 해. 90 ÷ 3 = 30이야.",
+"keys": [
+"몫도 10배",
+"30"
+],
+"answerBy": "claude"
+},
+{
+"id": "1pcage3:t0L1",
+"big": "2. 나눗셈",
+"small": "02. 내림이 있는 (몇십)÷(몇)",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "90 ÷ 2처럼 십의 자리를 나눈 뒤 남는 수가 있으면 어떻게 해?",
+"newQBy": "claude",
+"answer": "남은 수를 일의 자리로 내려 일의 자리 수와 함께 나눠. 9 ÷ 2 = 4이고 1이 남으니 10 ÷ 2 = 5라서 45야.",
+"keys": [
+"남은 수를 일의 자리로 내린다",
+"45"
+],
+"answerBy": "claude"
+},
+{
+"id": "1pcage3:t0L2",
+"big": "2. 나눗셈",
+"small": "02. 내림이 있는 (몇십)÷(몇)",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1pcage3:t0H1",
+"big": "2. 나눗셈",
+"small": "02. 내림이 있는 (몇십)÷(몇)",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1pcage3:t0H2",
+"big": "2. 나눗셈",
+"small": "02. 내림이 있는 (몇십)÷(몇)",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1pcage3:qrecall",
+"big": "2. 나눗셈",
+"small": "02. 내림이 있는 (몇십)÷(몇)",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1pcage3:qreason",
+"big": "2. 나눗셈",
+"small": "02. 내림이 있는 (몇십)÷(몇)",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"round": 2,
+"newQ": "70 ÷ 5를 계산할 때 십의 자리에서 남은 수를 그냥 버리지 않고 일의 자리로 내려야 하는 이유를 말해 봐.",
+"newQBy": "claude",
+"answer": "십의 자리에 남은 2는 20이라서 아직 나누지 않은 양이야. 버리면 20만큼을 안 나눈 게 되니까 내려서 20 ÷ 5 = 4까지 나눠야 해. 몫은 14야.",
+"keys": [
+"남은 2는 20",
+"버리면 덜 나눈 것",
+"14"
+],
+"answerBy": "claude"
+},
+{
+"id": "1pcage3:qexample",
+"big": "2. 나눗셈",
+"small": "02. 내림이 있는 (몇십)÷(몇)",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1pcage3:qerror",
+"big": "2. 나눗셈",
+"small": "02. 내림이 있는 (몇십)÷(몇)",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"round": 2,
+"newQ": "'70 ÷ 5는 십의 자리 7 ÷ 5 = 1이니까 몫은 그냥 1이야'라는 말은 어디가 틀렸는지, 어떻게 고쳐야 하는지 말해 봐.",
+"newQBy": "claude",
+"answer": "십의 자리 몫 1은 10을 뜻하고, 남은 20도 더 나눠야 해. 20 ÷ 5 = 4라서 몫은 14야.",
+"keys": [
+"십의 자리 몫은 10",
+"남은 수를 더 나눈다",
+"14"
+],
+"answerBy": "claude"
+},
+{
+"id": "sthvx3:t0L1",
+"big": "2. 나눗셈",
+"small": "03. 내림이 없는 (몇십몇)÷(몇)",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "두 자리 수를 나눌 때는 어느 자리부터 나눠?",
+"newQBy": "claude",
+"answer": "십의 자리부터 나누고 그다음 일의 자리를 나눠.",
+"keys": [
+"십의 자리부터"
+],
+"answerBy": "claude"
+},
+{
+"id": "sthvx3:t0L2",
+"big": "2. 나눗셈",
+"small": "03. 내림이 없는 (몇십몇)÷(몇)",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "sthvx3:t0H1",
+"big": "2. 나눗셈",
+"small": "03. 내림이 없는 (몇십몇)÷(몇)",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "sthvx3:t0H2",
+"big": "2. 나눗셈",
+"small": "03. 내림이 없는 (몇십몇)÷(몇)",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "sthvx3:qrecall",
+"big": "2. 나눗셈",
+"small": "03. 내림이 없는 (몇십몇)÷(몇)",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"round": 1,
+"newQ": "36 ÷ 3을 계산할 때 십의 자리 몫과 일의 자리 몫을 각각 어떻게 구하는지 말해 봐.",
+"newQBy": "claude",
+"answer": "십의 자리 3 ÷ 3 = 1을 몫의 십의 자리에, 일의 자리 6 ÷ 3 = 2를 일의 자리에 써서 12야.",
+"keys": [
+"3 ÷ 3 = 1",
+"6 ÷ 3 = 2",
+"12"
+],
+"answerBy": "claude"
+},
+{
+"id": "sthvx3:qreason",
+"big": "2. 나눗셈",
+"small": "03. 내림이 없는 (몇십몇)÷(몇)",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"round": 2,
+"newQ": "48 ÷ 4에서 십의 자리와 일의 자리를 따로 나누어도 되는 이유를 말해 봐.",
+"newQBy": "claude",
+"answer": "48은 40과 8이야. 40 ÷ 4 = 10, 8 ÷ 4 = 2이고 둘 다 남는 수가 없어서 따로 나눠 합쳐도 12로 같아.",
+"keys": [
+"48 = 40 + 8",
+"남는 수가 없다"
+],
+"answerBy": "claude"
+},
+{
+"id": "sthvx3:qexample",
+"big": "2. 나눗셈",
+"small": "03. 내림이 없는 (몇십몇)÷(몇)",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "sthvx3:qerror",
+"big": "2. 나눗셈",
+"small": "03. 내림이 없는 (몇십몇)÷(몇)",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1wxnnoc:t0L1",
+"big": "2. 나눗셈",
+"small": "04. 내림이 있는 (몇십몇)÷(몇)",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1wxnnoc:t0L2",
+"big": "2. 나눗셈",
+"small": "04. 내림이 있는 (몇십몇)÷(몇)",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1wxnnoc:t0H1",
+"big": "2. 나눗셈",
+"small": "04. 내림이 있는 (몇십몇)÷(몇)",
+"kind": "high",
+"by": "claude",
+"round": 1,
+"newQ": "56 ÷ 2에서 십의 자리를 나누고 남은 수를 일의 자리와 합쳐 나누는 과정을 설명해 봐.",
+"newQBy": "claude",
+"answer": "5 ÷ 2 = 2이고 1이 남아. 남은 1을 내려 일의 자리 6과 합치면 16, 16 ÷ 2 = 8이라서 몫은 28이야.",
+"keys": [
+"남은 1을 내린다",
+"16 ÷ 2 = 8",
+"28"
+],
+"answerBy": "claude"
+},
+{
+"id": "1wxnnoc:t0H2",
+"big": "2. 나눗셈",
+"small": "04. 내림이 있는 (몇십몇)÷(몇)",
+"kind": "high",
+"by": "claude",
+"round": 2,
+"newQ": "내림이 있는 나눗셈이 세 자리 수 뺄셈의 받아내림과 비슷한 점을 말해 줘.",
+"newQBy": "claude",
+"answer": "둘 다 윗자리의 1을 아랫자리의 10으로 바꿔서 계산해. 나눗셈은 남은 1을 10으로 내려 함께 나누고, 뺄셈은 1을 10으로 빌려 와 빼.",
+"keys": [
+"윗자리 1 = 아랫자리 10"
+],
+"answerBy": "claude"
+},
+{
+"id": "1wxnnoc:qrecall",
+"big": "2. 나눗셈",
+"small": "04. 내림이 있는 (몇십몇)÷(몇)",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1wxnnoc:qreason",
+"big": "2. 나눗셈",
+"small": "04. 내림이 있는 (몇십몇)÷(몇)",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1wxnnoc:qexample",
+"big": "2. 나눗셈",
+"small": "04. 내림이 있는 (몇십몇)÷(몇)",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1wxnnoc:qerror",
+"big": "2. 나눗셈",
+"small": "04. 내림이 있는 (몇십몇)÷(몇)",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"round": 2,
+"newQ": "'52 ÷ 4에서 십의 자리는 5 ÷ 4 = 1 나머지 1이니까 몫은 그냥 1이야'라는 말은 어디가 틀렸는지, 어떻게 고쳐야 하는지 말해 봐.",
+"newQBy": "claude",
+"answer": "남은 1을 버리고 일의 자리를 나누지 않았어. 1을 내려 12 ÷ 4 = 3이라서 몫은 13이야.",
+"keys": [
+"남은 1을 내려야 한다",
+"13"
+],
+"answerBy": "claude"
+},
+{
+"id": "1wxnnoc:qa29e3241",
+"big": "2. 나눗셈",
+"small": "04. 내림이 있는 (몇십몇)÷(몇)",
+"kind": "add",
+"round": 1,
+"by": "claude",
+"q": "사탕 84개를 6명에게 똑같이 나누어 주면 한 명이 몇 개씩 가져? 식과 답을 말해 봐.",
+"answer": "84 ÷ 6이야. 8 ÷ 6 = 1이고 2가 남아. 2를 내려 24 ÷ 6 = 4라서 14개씩이야.",
+"keys": [
+"84 ÷ 6",
+"14개"
+],
+"answerBy": "claude"
+},
+{
+"id": "1dv64kx:t0L1",
+"big": "2. 나눗셈",
+"small": "05. 내림이 없고 나머지가 있는 (몇십몇)÷(몇)",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "23 ÷ 5처럼 똑같이 나누고 남는 수를 뭐라고 해?",
+"newQBy": "claude",
+"answer": "나머지라고 해. 23 ÷ 5는 몫이 4, 나머지가 3이야.",
+"keys": [
+"나머지",
+"몫 4, 나머지 3"
+],
+"answerBy": "claude"
+},
+{
+"id": "1dv64kx:t0L2",
+"big": "2. 나눗셈",
+"small": "05. 내림이 없고 나머지가 있는 (몇십몇)÷(몇)",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1dv64kx:t0L3",
+"big": "2. 나눗셈",
+"small": "05. 내림이 없고 나머지가 있는 (몇십몇)÷(몇)",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "나머지가 0이면 뭐라고 해?",
+"newQBy": "claude",
+"answer": "나누어떨어진다고 해.",
+"keys": [
+"나누어떨어진다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1dv64kx:t0L4",
+"big": "2. 나눗셈",
+"small": "05. 내림이 없고 나머지가 있는 (몇십몇)÷(몇)",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1dv64kx:t0H1",
+"big": "2. 나눗셈",
+"small": "05. 내림이 없고 나머지가 있는 (몇십몇)÷(몇)",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1dv64kx:t0H2",
+"big": "2. 나눗셈",
+"small": "05. 내림이 없고 나머지가 있는 (몇십몇)÷(몇)",
+"kind": "high",
+"by": "claude",
+"round": 2,
+"newQ": "나머지가 항상 나누는 수보다 작아야 하는 이유를 말해 줘.",
+"newQBy": "claude",
+"answer": "나머지가 나누는 수와 같거나 크면 한 번 더 나눌 수 있어서 몫이 1 커져야 해. 그래서 다 나누고 남은 나머지는 나누는 수보다 작아.",
+"keys": [
+"크면 한 번 더 나눌 수 있다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1dv64kx:t0H3",
+"big": "2. 나눗셈",
+"small": "05. 내림이 없고 나머지가 있는 (몇십몇)÷(몇)",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1dv64kx:t0H4",
+"big": "2. 나눗셈",
+"small": "05. 내림이 없고 나머지가 있는 (몇십몇)÷(몇)",
+"kind": "high",
+"by": "claude",
+"round": 2,
+"newQ": "'나누는 수 × 몫 + 나머지 = 나누어지는 수'로 나눗셈을 검산하는 이유를 말해 줘.",
+"newQBy": "claude",
+"answer": "나눗셈은 똑같이 몇 묶음씩 나누고 남은 거라서, 묶음을 다시 모으고(나누는 수 × 몫) 남은 것(나머지)을 더하면 처음 수가 돼.",
+"keys": [
+"묶음을 다시 모으면",
+"남은 것을 더하면 처음 수"
+],
+"answerBy": "claude"
+},
+{
+"id": "1dv64kx:qrecall",
+"big": "2. 나눗셈",
+"small": "05. 내림이 없고 나머지가 있는 (몇십몇)÷(몇)",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"round": 1,
+"newQ": "27 ÷ 4를 계산하면 몫과 나머지가 각각 얼마인지 말해 봐.",
+"newQBy": "claude",
+"answer": "4 × 6 = 24라서 몫은 6, 나머지는 3이야.",
+"keys": [
+"몫 6",
+"나머지 3"
+],
+"answerBy": "claude"
+},
+{
+"id": "1dv64kx:qreason",
+"big": "2. 나눗셈",
+"small": "05. 내림이 없고 나머지가 있는 (몇십몇)÷(몇)",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1dv64kx:qexample",
+"big": "2. 나눗셈",
+"small": "05. 내림이 없고 나머지가 있는 (몇십몇)÷(몇)",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1dv64kx:qerror",
+"big": "2. 나눗셈",
+"small": "05. 내림이 없고 나머지가 있는 (몇십몇)÷(몇)",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"round": 2,
+"newQ": "'27 ÷ 4를 나누면 몫이 5이고 나머지가 7이야'라는 말은 어디가 틀렸는지, 왜 그런지 말해 봐.",
+"newQBy": "claude",
+"answer": "나머지 7이 나누는 수 4보다 커서 한 번 더 나눌 수 있어. 몫은 6, 나머지는 3이야.",
+"keys": [
+"나머지가 나누는 수보다 크다",
+"몫 6, 나머지 3"
+],
+"answerBy": "claude"
+},
+{
+"id": "65atpe:t0L1",
+"big": "2. 나눗셈",
+"small": "06. 내림이 있고 나머지가 있는 (몇십몇)÷(몇)",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "65atpe:t0L2",
+"big": "2. 나눗셈",
+"small": "06. 내림이 있고 나머지가 있는 (몇십몇)÷(몇)",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "65atpe:t0H1",
+"big": "2. 나눗셈",
+"small": "06. 내림이 있고 나머지가 있는 (몇십몇)÷(몇)",
+"kind": "high",
+"by": "claude",
+"round": 1,
+"newQ": "57 ÷ 4처럼 내림도 있고 나머지도 있는 나눗셈을 계산하는 과정을 설명해 봐.",
+"newQBy": "claude",
+"answer": "5 ÷ 4 = 1이고 1이 남아. 1을 내려 17 ÷ 4 = 4이고 1이 남아. 몫은 14, 나머지는 1이야.",
+"keys": [
+"남은 수를 내린다",
+"마지막에 남은 수가 나머지",
+"몫 14, 나머지 1"
+],
+"answerBy": "claude"
+},
+{
+"id": "65atpe:t0H2",
+"big": "2. 나눗셈",
+"small": "06. 내림이 있고 나머지가 있는 (몇십몇)÷(몇)",
+"kind": "high",
+"by": "claude",
+"round": 1,
+"newQ": "57 ÷ 4의 몫 14와 나머지 1이 맞는지 어떻게 확인해?",
+"newQBy": "claude",
+"answer": "4 × 14 + 1을 계산해서 57이 나오면 맞아.",
+"keys": [
+"4 × 14 + 1",
+"57이 나오면 맞다"
+],
+"answerBy": "claude"
+},
+{
+"id": "65atpe:qrecall",
+"big": "2. 나눗셈",
+"small": "06. 내림이 있고 나머지가 있는 (몇십몇)÷(몇)",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "65atpe:qreason",
+"big": "2. 나눗셈",
+"small": "06. 내림이 있고 나머지가 있는 (몇십몇)÷(몇)",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "65atpe:qexample",
+"big": "2. 나눗셈",
+"small": "06. 내림이 있고 나머지가 있는 (몇십몇)÷(몇)",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "65atpe:qerror",
+"big": "2. 나눗셈",
+"small": "06. 내림이 있고 나머지가 있는 (몇십몇)÷(몇)",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"round": 2,
+"newQ": "'53 ÷ 4에서 십의 자리 5 ÷ 4 = 1 나머지 1이니까 몫은 1이고 나머지는 3이야'라는 말은 어디가 틀렸는지, 어떻게 고쳐야 하는지 말해 봐.",
+"newQBy": "claude",
+"answer": "십의 자리에서 남은 1을 내려 일의 자리와 함께 나눠야 해. 13 ÷ 4 = 3이고 1이 남아서 몫은 13, 나머지는 1이야.",
+"keys": [
+"남은 1을 내려야 한다",
+"몫 13, 나머지 1"
+],
+"answerBy": "claude"
+},
+{
+"id": "65atpe:qa29e3261",
+"big": "2. 나눗셈",
+"small": "06. 내림이 있고 나머지가 있는 (몇십몇)÷(몇)",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "구슬 75개를 한 명에게 6개씩 주면 몇 명에게 줄 수 있고 몇 개가 남아?",
+"answer": "75 ÷ 6이야. 7 ÷ 6 = 1이고 1이 남아. 15 ÷ 6 = 2이고 3이 남아서 12명에게 주고 3개가 남아.",
+"keys": [
+"75 ÷ 6",
+"12명, 3개 남음"
+],
+"answerBy": "claude"
+},
+{
+"id": "1u81xyv:t0L1",
+"big": "2. 나눗셈",
+"small": "07. 나머지가 없는 (세 자리 수)÷(한 자리 수)",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1u81xyv:t0L2",
+"big": "2. 나눗셈",
+"small": "07. 나머지가 없는 (세 자리 수)÷(한 자리 수)",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "128 ÷ 4처럼 백의 자리 1을 4로 나눌 수 없으면 어떻게 해?",
+"newQBy": "claude",
+"answer": "백의 자리 1을 십의 자리로 내려 12로 보고 나눠. 12 ÷ 4 = 3, 8 ÷ 4 = 2라서 몫은 32야.",
+"keys": [
+"백의 자리를 십의 자리와 함께 본다",
+"32"
+],
+"answerBy": "claude"
+},
+{
+"id": "1u81xyv:t0H1",
+"big": "2. 나눗셈",
+"small": "07. 나머지가 없는 (세 자리 수)÷(한 자리 수)",
+"kind": "high",
+"by": "claude",
+"round": 1,
+"newQ": "380 ÷ 2를 백·십·일의 자리 순서로 나누어 몫을 구하는 과정을 설명해 봐.",
+"newQBy": "claude",
+"answer": "3 ÷ 2 = 1이고 1이 남아. 1을 내려 18 ÷ 2 = 9, 0 ÷ 2 = 0이라서 몫은 190이야.",
+"keys": [
+"백의 자리부터",
+"190"
+],
+"answerBy": "claude"
+},
+{
+"id": "1u81xyv:t0H2",
+"big": "2. 나눗셈",
+"small": "07. 나머지가 없는 (세 자리 수)÷(한 자리 수)",
+"kind": "high",
+"by": "claude",
+"round": 2,
+"newQ": "어느 자리에서 나눌 수 없을 때 몫의 그 자리에 0을 쓰는 이유를 말해 줘.",
+"newQBy": "claude",
+"answer": "그 자리의 몫이 없다는 걸 0으로 표시해야 다음 자리 몫이 제자리에 들어가. 0을 안 쓰면 624 ÷ 6의 몫 104가 14처럼 작은 수가 돼.",
+"keys": [
+"자리를 지키려고",
+"빠뜨리면 몫이 작아진다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1u81xyv:qrecall",
+"big": "2. 나눗셈",
+"small": "07. 나머지가 없는 (세 자리 수)÷(한 자리 수)",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1u81xyv:qreason",
+"big": "2. 나눗셈",
+"small": "07. 나머지가 없는 (세 자리 수)÷(한 자리 수)",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1u81xyv:qexample",
+"big": "2. 나눗셈",
+"small": "07. 나머지가 없는 (세 자리 수)÷(한 자리 수)",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1u81xyv:qerror",
+"big": "2. 나눗셈",
+"small": "07. 나머지가 없는 (세 자리 수)÷(한 자리 수)",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "5yv5bq:t0L1",
+"big": "2. 나눗셈",
+"small": "08. 나머지가 있는 (세 자리 수)÷(한 자리 수)",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "5yv5bq:t0L2",
+"big": "2. 나눗셈",
+"small": "08. 나머지가 있는 (세 자리 수)÷(한 자리 수)",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "5yv5bq:t0H1",
+"big": "2. 나눗셈",
+"small": "08. 나머지가 있는 (세 자리 수)÷(한 자리 수)",
+"kind": "high",
+"by": "claude",
+"round": 1,
+"newQ": "125 ÷ 3의 몫과 나머지를 구하는 과정을 말해 봐.",
+"newQBy": "claude",
+"answer": "1은 3으로 나눌 수 없어서 12 ÷ 3 = 4, 일의 자리 5 ÷ 3 = 1이고 2가 남아. 몫은 41, 나머지는 2야.",
+"keys": [
+"12 ÷ 3 = 4",
+"몫 41, 나머지 2"
+],
+"answerBy": "claude"
+},
+{
+"id": "5yv5bq:t0H2",
+"big": "2. 나눗셈",
+"small": "08. 나머지가 있는 (세 자리 수)÷(한 자리 수)",
+"kind": "high",
+"by": "claude",
+"round": 2,
+"newQ": "125 ÷ 3의 몫 41과 나머지 2가 맞는지 검산하는 방법을 말해 줘.",
+"newQBy": "claude",
+"answer": "3 × 41 + 2 = 125가 나오면 맞아.",
+"keys": [
+"3 × 41 + 2 = 125"
+],
+"answerBy": "claude"
+},
+{
+"id": "5yv5bq:qrecall",
+"big": "2. 나눗셈",
+"small": "08. 나머지가 있는 (세 자리 수)÷(한 자리 수)",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "5yv5bq:qreason",
+"big": "2. 나눗셈",
+"small": "08. 나머지가 있는 (세 자리 수)÷(한 자리 수)",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "5yv5bq:qexample",
+"big": "2. 나눗셈",
+"small": "08. 나머지가 있는 (세 자리 수)÷(한 자리 수)",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "5yv5bq:qerror",
+"big": "2. 나눗셈",
+"small": "08. 나머지가 있는 (세 자리 수)÷(한 자리 수)",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"round": 2,
+"newQ": "'236 ÷ 5에서 십의 자리까지만 나누고 몫은 4, 나머지는 일의 자리 숫자 그대로 6이야'라는 말은 어디가 틀렸는지, 어떻게 고쳐야 하는지 말해 봐.",
+"newQBy": "claude",
+"answer": "십의 자리에서 남은 3을 내려 일의 자리와 함께 36 ÷ 5까지 나눠야 해. 몫은 47, 나머지는 1이야.",
+"keys": [
+"일의 자리까지 나눠야 한다",
+"몫 47, 나머지 1"
+],
+"answerBy": "claude"
+},
+{
+"id": "5yv5bq:qa29e3281",
+"big": "2. 나눗셈",
+"small": "08. 나머지가 있는 (세 자리 수)÷(한 자리 수)",
+"kind": "add",
+"round": 1,
+"by": "claude",
+"q": "나눗셈이 나오면 가장 먼저 생각해야 할 것은 뭐야?",
+"answer": "가장 높은 자리부터 나누고, 나누고 남은 수는 아래 자리로 내려 함께 나눠야 한다는 거야. 끝까지 나누고 남은 수가 나머지야.",
+"keys": [
+"높은 자리부터",
+"남은 수를 내린다"
+],
+"answerBy": "claude"
+},
+{
+"id": "5yv5bq:qa29e3282",
+"big": "2. 나눗셈",
+"small": "08. 나머지가 있는 (세 자리 수)÷(한 자리 수)",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "학생 130명이 한 번에 4명씩 보트를 타. 모두 타려면 보트가 적어도 몇 번 떠야 해?",
+"answer": "130 ÷ 4 = 32이고 2명이 남아. 남은 2명도 타야 하니까 33번 떠야 해.",
+"keys": [
+"130 ÷ 4 = 32 … 2",
+"33번"
+],
+"answerBy": "claude"
+},
+{
+"id": "1q7w585:t0L1",
+"big": "3. 원",
+"small": "01. 원의 중심, 반지름, 지름",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1q7w585:t0L2",
+"big": "3. 원",
+"small": "01. 원의 중심, 반지름, 지름",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "원의 반지름은 어떤 선분이야?",
+"newQBy": "claude",
+"answer": "원의 중심과 원 위의 한 점을 이은 선분이야.",
+"keys": [
+"원의 중심과 원 위의 한 점"
+],
+"answerBy": "claude"
+},
+{
+"id": "1q7w585:t0L3",
+"big": "3. 원",
+"small": "01. 원의 중심, 반지름, 지름",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "원의 지름은 어떤 선분이야?",
+"newQBy": "claude",
+"answer": "원 위의 두 점을 이은 선분 중 원의 중심을 지나는 선분이야.",
+"keys": [
+"원 위의 두 점을 잇는다",
+"원의 중심을 지난다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1q7w585:t0H1",
+"big": "3. 원",
+"small": "01. 원의 중심, 반지름, 지름",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1q7w585:t0H2",
+"big": "3. 원",
+"small": "01. 원의 중심, 반지름, 지름",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1q7w585:qrecall",
+"big": "3. 원",
+"small": "01. 원의 중심, 반지름, 지름",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1q7w585:qreason",
+"big": "3. 원",
+"small": "01. 원의 중심, 반지름, 지름",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"round": 2,
+"answer": "지름은 원의 중심을 지나야 하는데, 두 점을 이은 선분이 중심을 지나지 않으면 지름이 아니야.",
+"keys": [
+"중심을 지나야 지름"
+],
+"answerBy": "claude"
+},
+{
+"id": "1q7w585:qexample",
+"big": "3. 원",
+"small": "01. 원의 중심, 반지름, 지름",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"round": 2,
+"answer": "동전의 한가운데가 중심이고, 한가운데에서 동전 가장자리의 한 점까지 곧게 이은 선이 반지름이야.",
+"keys": [
+"한가운데가 중심",
+"중심에서 가장자리까지가 반지름"
+],
+"answerBy": "claude"
+},
+{
+"id": "1q7w585:qerror",
+"big": "3. 원",
+"small": "01. 원의 중심, 반지름, 지름",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ykdq30:t0L1",
+"big": "3. 원",
+"small": "02. 원의 성질",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ykdq30:t0L2",
+"big": "3. 원",
+"small": "02. 원의 성질",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ykdq30:t0L3",
+"big": "3. 원",
+"small": "02. 원의 성질",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "원에서 가장 긴 선분은 뭐야?",
+"newQBy": "claude",
+"answer": "지름이야. 원 위의 두 점을 이은 선분 중 중심을 지나는 지름이 가장 길어.",
+"keys": [
+"지름"
+],
+"answerBy": "claude"
+},
+{
+"id": "ykdq30:t0H1",
+"big": "3. 원",
+"small": "02. 원의 성질",
+"kind": "high",
+"by": "claude",
+"round": 2,
+"newQ": "한 원에서 반지름이 모두 같은 이유를 설명해 봐.",
+"newQBy": "claude",
+"answer": "원은 한 점(중심)에서 같은 거리만큼 떨어진 점들로 그려진 거라서, 중심에서 원 위의 어느 점까지 재도 길이가 같아.",
+"keys": [
+"중심에서 같은 거리"
+],
+"answerBy": "claude"
+},
+{
+"id": "ykdq30:t0H2",
+"big": "3. 원",
+"small": "02. 원의 성질",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ykdq30:t0H3",
+"big": "3. 원",
+"small": "02. 원의 성질",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ykdq30:qrecall",
+"big": "3. 원",
+"small": "02. 원의 성질",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"round": 1,
+"newQ": "한 원 안에는 반지름을 몇 개까지 그을 수 있어?",
+"newQBy": "claude",
+"answer": "셀 수 없이 많이 그을 수 있어.",
+"keys": [
+"셀 수 없이 많다"
+],
+"answerBy": "claude"
+},
+{
+"id": "ykdq30:qreason",
+"big": "3. 원",
+"small": "02. 원의 성질",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"round": 2,
+"newQ": "반지름이 4 cm인 원에서 원의 중심 ㅇ을 지나는 선분 ㄱㄴ을 그었어. ㄱㄴ의 길이는 얼마야? 이유도 말해 봐.",
+"newQBy": "claude",
+"answer": "선분 ㄱㄴ은 지름이야. 선분 ㄱㅇ과 선분 ㅇㄴ이 모두 반지름 4 cm라서 4 + 4 = 8 cm야.",
+"keys": [
+"지름 = 반지름 두 개",
+"8 cm"
+],
+"answerBy": "claude"
+},
+{
+"id": "ykdq30:qexample",
+"big": "3. 원",
+"small": "02. 원의 성질",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"round": 1,
+"newQ": "지름이 20 cm인 원의 반지름은 몇 cm야?",
+"newQBy": "claude",
+"answer": "반지름은 지름의 반이라서 10 cm야.",
+"keys": [
+"반지름 = 지름의 반",
+"10 cm"
+],
+"answerBy": "claude"
+},
+{
+"id": "ykdq30:qerror",
+"big": "3. 원",
+"small": "02. 원의 성질",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "15imlg7:t0L1",
+"big": "3. 원",
+"small": "03. 컴퍼스를 이용하여 원 그리기",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "15imlg7:t0L2",
+"big": "3. 원",
+"small": "03. 컴퍼스를 이용하여 원 그리기",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "반지름이 3 cm인 원을 그리려면 컴퍼스를 얼마만큼 벌려?",
+"newQBy": "claude",
+"answer": "반지름만큼 3 cm 벌려.",
+"keys": [
+"3 cm",
+"반지름만큼"
+],
+"answerBy": "claude"
+},
+{
+"id": "15imlg7:t0H1",
+"big": "3. 원",
+"small": "03. 컴퍼스를 이용하여 원 그리기",
+"kind": "high",
+"by": "claude",
+"round": 1,
+"newQ": "컴퍼스로 원을 그리는 순서를 차례대로 설명해 봐.",
+"newQBy": "claude",
+"answer": "원의 중심을 정하고, 컴퍼스를 반지름만큼 벌린 뒤, 침을 중심에 꽂고 한 바퀴 돌려.",
+"keys": [
+"중심을 정한다",
+"반지름만큼 벌린다",
+"침을 꽂고 돌린다"
+],
+"answerBy": "claude"
+},
+{
+"id": "15imlg7:t0H2",
+"big": "3. 원",
+"small": "03. 컴퍼스를 이용하여 원 그리기",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "15imlg7:qrecall",
+"big": "3. 원",
+"small": "03. 컴퍼스를 이용하여 원 그리기",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "15imlg7:qreason",
+"big": "3. 원",
+"small": "03. 컴퍼스를 이용하여 원 그리기",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"round": 2,
+"answer": "침이 원의 중심이라서, 움직이면 중심이 바뀌어 반지름이 모두 같은 원이 그려지지 않아.",
+"keys": [
+"침이 중심이다",
+"중심이 바뀌면 원이 안 된다"
+],
+"answerBy": "claude"
+},
+{
+"id": "15imlg7:qexample",
+"big": "3. 원",
+"small": "03. 컴퍼스를 이용하여 원 그리기",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "15imlg7:qerror",
+"big": "3. 원",
+"small": "03. 컴퍼스를 이용하여 원 그리기",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"round": 2,
+"answer": "컴퍼스를 벌린 길이는 반지름이야. 반지름이 5 cm라서 지름은 10 cm야.",
+"keys": [
+"벌린 길이는 반지름",
+"지름 10 cm"
+],
+"answerBy": "claude"
+},
+{
+"id": "g46jej:t0L1",
+"big": "3. 원",
+"small": "04. 원을 이용하여 여러 가지 모양 그리기",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "g46jej:t0L2",
+"big": "3. 원",
+"small": "04. 원을 이용하여 여러 가지 모양 그리기",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "원의 중심을 옮기면 무엇이 달라지고, 반지름을 바꾸면 무엇이 달라져?",
+"newQBy": "claude",
+"answer": "중심을 옮기면 원의 위치가 달라지고, 반지름을 바꾸면 원의 크기가 달라져.",
+"keys": [
+"중심 → 위치",
+"반지름 → 크기"
+],
+"answerBy": "claude"
+},
+{
+"id": "g46jej:t0H1",
+"big": "3. 원",
+"small": "04. 원을 이용하여 여러 가지 모양 그리기",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "g46jej:t0H2",
+"big": "3. 원",
+"small": "04. 원을 이용하여 여러 가지 모양 그리기",
+"kind": "high",
+"by": "claude",
+"round": 2,
+"newQ": "규칙적인 무늬를 만들려면 원의 중심을 어떻게 정하면 좋을지 말해 줘.",
+"newQBy": "claude",
+"answer": "중심을 같은 간격으로 옮기거나, 한 중심에서 반지름을 같은 만큼씩 늘리면 규칙적인 무늬가 돼.",
+"keys": [
+"같은 간격으로 옮긴다",
+"반지름을 같은 만큼 늘린다"
+],
+"answerBy": "claude"
+},
+{
+"id": "g46jej:qrecall",
+"big": "3. 원",
+"small": "04. 원을 이용하여 여러 가지 모양 그리기",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "g46jej:qreason",
+"big": "3. 원",
+"small": "04. 원을 이용하여 여러 가지 모양 그리기",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "g46jej:qexample",
+"big": "3. 원",
+"small": "04. 원을 이용하여 여러 가지 모양 그리기",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "g46jej:qerror",
+"big": "3. 원",
+"small": "04. 원을 이용하여 여러 가지 모양 그리기",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"round": 2,
+"answer": "중심을 옮기면 위치만 바뀌고 크기는 그대로야. 원을 크게 그리려면 컴퍼스를 더 벌려 반지름을 길게 해야 해.",
+"keys": [
+"중심은 위치",
+"반지름을 길게 한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "g46jej:qa29e3241",
+"big": "3. 원",
+"small": "04. 원을 이용하여 여러 가지 모양 그리기",
+"kind": "add",
+"round": 1,
+"by": "claude",
+"q": "원이 나오는 문제에서 가장 먼저 무엇을 떠올려야 해?",
+"answer": "원의 중심과 반지름·지름을 찾고, 한 원의 반지름은 모두 같고 지름은 반지름의 2배라는 걸 떠올려.",
+"keys": [
+"반지름은 모두 같다",
+"지름은 반지름의 2배"
+],
+"answerBy": "claude"
+},
+{
+"id": "g46jej:qa29e3242",
+"big": "3. 원",
+"small": "04. 원을 이용하여 여러 가지 모양 그리기",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "반지름이 4 cm인 원 3개를 서로 맞닿게 한 줄로 그렸어. 세 원을 감싸는 가장 작은 직사각형의 가로는 몇 cm야?",
+"answer": "원 하나의 지름이 8 cm이고 3개가 한 줄이라서 가로는 8 × 3 = 24 cm야.",
+"keys": [
+"지름 8 cm",
+"8 × 3 = 24 cm"
+],
+"answerBy": "claude"
+},
+{
+"id": "kd5anl:t0L1",
+"big": "4. 분수",
+"small": "01. 분수로 나타내기",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "kd5anl:t0L2",
+"big": "4. 분수",
+"small": "01. 분수로 나타내기",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "kd5anl:t0H1",
+"big": "4. 분수",
+"small": "01. 분수로 나타내기",
+"kind": "high",
+"by": "claude",
+"round": 1,
+"newQ": "12개를 4개씩 묶어 3묶음으로 나눴을 때, 1묶음이 전체의 1/3인 이유를 설명해 봐.",
+"newQBy": "claude",
+"answer": "전체가 똑같이 3묶음이고 그중 1묶음이라서 1/3이야.",
+"keys": [
+"똑같이 3묶음",
+"그중 1묶음"
+],
+"answerBy": "claude"
+},
+{
+"id": "kd5anl:t0H2",
+"big": "4. 분수",
+"small": "01. 분수로 나타내기",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "kd5anl:qrecall",
+"big": "4. 분수",
+"small": "01. 분수로 나타내기",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"round": 1,
+"newQ": "전체를 똑같이 나눈 것 중 몇 묶음인지를 분수로 나타낼 때, 분모와 분자에는 각각 어떤 수를 써?",
+"newQBy": "claude",
+"answer": "분모에는 전체 묶음 수, 분자에는 그중 몇 묶음인지를 써.",
+"keys": [
+"분모: 전체 묶음 수",
+"분자: 부분 묶음 수"
+],
+"answerBy": "claude"
+},
+{
+"id": "kd5anl:qreason",
+"big": "4. 분수",
+"small": "01. 분수로 나타내기",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"round": 2,
+"answer": "분수는 개수가 아니라 전체를 똑같이 나눈 묶음 중 몇 묶음인지를 나타내. 한 묶음에 몇 개가 들어 있든 3묶음 중 1묶음이면 1/3이야.",
+"keys": [
+"묶음 수로 나타낸다",
+"개수와 상관없다"
+],
+"answerBy": "claude"
+},
+{
+"id": "kd5anl:qexample",
+"big": "4. 분수",
+"small": "01. 분수로 나타내기",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "kd5anl:qerror",
+"big": "4. 분수",
+"small": "01. 분수로 나타내기",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"round": 2,
+"answer": "분모에 한 묶음의 개수 4를 썼어. 전체 묶음 수는 3이라서 2묶음은 2/3야.",
+"keys": [
+"분모는 전체 묶음 수",
+"2/3"
+],
+"answerBy": "claude"
+},
+{
+"id": "1fa2dqq:t0L1",
+"big": "4. 분수",
+"small": "02. 분수만큼은 얼마인지 알아보기 (1)",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "12의 1/3은 얼마야?",
+"newQBy": "claude",
+"answer": "12를 똑같이 3묶음으로 나누면 한 묶음이 4라서 4야.",
+"keys": [
+"3묶음으로 나눈다",
+"4"
+],
+"answerBy": "claude"
+},
+{
+"id": "1fa2dqq:t0L2",
+"big": "4. 분수",
+"small": "02. 분수만큼은 얼마인지 알아보기 (1)",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1fa2dqq:t0H1",
+"big": "4. 분수",
+"small": "02. 분수만큼은 얼마인지 알아보기 (1)",
+"kind": "high",
+"by": "claude",
+"round": 1,
+"newQ": "12의 2/3를 구하는 과정을 설명해 봐.",
+"newQBy": "claude",
+"answer": "12를 3묶음으로 나누면 한 묶음이 4야. 2/3는 2묶음이라서 8이야.",
+"keys": [
+"3묶음으로 나눈다",
+"2묶음",
+"8"
+],
+"answerBy": "claude"
+},
+{
+"id": "1fa2dqq:t0H2",
+"big": "4. 분수",
+"small": "02. 분수만큼은 얼마인지 알아보기 (1)",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1fa2dqq:qrecall",
+"big": "4. 분수",
+"small": "02. 분수만큼은 얼마인지 알아보기 (1)",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1fa2dqq:qreason",
+"big": "4. 분수",
+"small": "02. 분수만큼은 얼마인지 알아보기 (1)",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"round": 2,
+"newQ": "20의 3/4을 구할 때, 20을 4로 나눈 값 5를 그냥 답으로 쓰면 안 되는 이유를 설명해 봐.",
+"newQBy": "claude",
+"answer": "5는 한 묶음(1/4)의 양이야. 3/4은 한 묶음이 3개라서 5 × 3 = 15가 답이야.",
+"keys": [
+"5는 1/4의 양",
+"3묶음이라서 15"
+],
+"answerBy": "claude"
+},
+{
+"id": "1fa2dqq:qexample",
+"big": "4. 분수",
+"small": "02. 분수만큼은 얼마인지 알아보기 (1)",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1fa2dqq:qerror",
+"big": "4. 분수",
+"small": "02. 분수만큼은 얼마인지 알아보기 (1)",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"round": 2,
+"answer": "7은 21의 1/3이야. 2/3는 2묶음이라서 7 × 2 = 14가 답이야.",
+"keys": [
+"7은 1/3",
+"14"
+],
+"answerBy": "claude"
+},
+{
+"id": "1ve29g0:t0L1",
+"big": "4. 분수",
+"small": "03. 분수만큼은 얼마인지 알아보기 (2)",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "1 m의 1/4은 몇 cm야?",
+"newQBy": "claude",
+"answer": "1 m는 100 cm라서 똑같이 4묶음으로 나누면 한 묶음이 25 cm야.",
+"keys": [
+"100 cm",
+"25 cm"
+],
+"answerBy": "claude"
+},
+{
+"id": "1ve29g0:t0L2",
+"big": "4. 분수",
+"small": "03. 분수만큼은 얼마인지 알아보기 (2)",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1ve29g0:t0H1",
+"big": "4. 분수",
+"small": "03. 분수만큼은 얼마인지 알아보기 (2)",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1ve29g0:t0H2",
+"big": "4. 분수",
+"small": "03. 분수만큼은 얼마인지 알아보기 (2)",
+"kind": "high",
+"by": "claude",
+"round": 2,
+"newQ": "길이나 시간에도 분수만큼 구하기를 똑같이 쓸 수 있는 이유를 말해 줘.",
+"newQBy": "claude",
+"answer": "1 m는 100 cm, 1시간은 60분처럼 작은 단위의 수로 바꾸면, 개수를 묶음으로 나누는 것과 똑같이 나눌 수 있어.",
+"keys": [
+"작은 단위의 수로 바꾼다",
+"똑같이 묶음으로 나눈다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1ve29g0:qrecall",
+"big": "4. 분수",
+"small": "03. 분수만큼은 얼마인지 알아보기 (2)",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1ve29g0:qreason",
+"big": "4. 분수",
+"small": "03. 분수만큼은 얼마인지 알아보기 (2)",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"round": 1,
+"newQ": "1시간의 2/3는 몇 분이야? 60분을 어떻게 나누고 몇 묶음을 골랐는지 설명해 봐.",
+"newQBy": "claude",
+"answer": "60분을 똑같이 3묶음으로 나누면 한 묶음이 20분이야. 2묶음이라서 40분이야.",
+"keys": [
+"60분을 3묶음으로",
+"40분"
+],
+"answerBy": "claude"
+},
+{
+"id": "1ve29g0:qexample",
+"big": "4. 분수",
+"small": "03. 분수만큼은 얼마인지 알아보기 (2)",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1ve29g0:qerror",
+"big": "4. 분수",
+"small": "03. 분수만큼은 얼마인지 알아보기 (2)",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"round": 2,
+"answer": "1시간을 60분으로 바꾸면 돼. 60분을 3묶음으로 나누면 20분이라서 1시간의 1/3은 20분이야.",
+"keys": [
+"60분으로 바꾼다",
+"20분"
+],
+"answerBy": "claude"
+},
+{
+"id": "g9ohxy:t0L1",
+"big": "4. 분수",
+"small": "04. 여러 가지 분수",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "g9ohxy:t0L2",
+"big": "4. 분수",
+"small": "04. 여러 가지 분수",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "g9ohxy:t0L3",
+"big": "4. 분수",
+"small": "04. 여러 가지 분수",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "g9ohxy:t0H1",
+"big": "4. 분수",
+"small": "04. 여러 가지 분수",
+"kind": "high",
+"by": "claude",
+"round": 1,
+"newQ": "진분수, 가분수, 대분수를 분자와 분모의 크기로 구분해서 설명해 봐.",
+"newQBy": "claude",
+"answer": "분자가 분모보다 작으면 진분수, 분자가 분모와 같거나 크면 가분수야. 대분수는 자연수와 진분수로 이루어진 분수야.",
+"keys": [
+"진분수: 분자 < 분모",
+"가분수: 분자 ≥ 분모",
+"대분수: 자연수 + 진분수"
+],
+"answerBy": "claude"
+},
+{
+"id": "g9ohxy:t0H2",
+"big": "4. 분수",
+"small": "04. 여러 가지 분수",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "g9ohxy:qrecall",
+"big": "4. 분수",
+"small": "04. 여러 가지 분수",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "g9ohxy:qreason",
+"big": "4. 분수",
+"small": "04. 여러 가지 분수",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"round": 2,
+"answer": "전체를 똑같이 7로 나눈 것 중 7개, 곧 전체를 모두 가진 거라서 1과 같아.",
+"keys": [
+"7개 중 7개",
+"전체 = 1"
+],
+"answerBy": "claude"
+},
+{
+"id": "g9ohxy:qexample",
+"big": "4. 분수",
+"small": "04. 여러 가지 분수",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"round": 1,
+"newQ": "진분수, 가분수, 대분수의 예를 하나씩 말해 봐.",
+"newQBy": "claude",
+"answer": "진분수 2/5, 가분수 7/4, 대분수 1과 2/3야.",
+"keys": [
+"진분수 예",
+"가분수 예",
+"대분수 예"
+],
+"answerBy": "claude"
+},
+{
+"id": "g9ohxy:qerror",
+"big": "4. 분수",
+"small": "04. 여러 가지 분수",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"round": 2,
+"answer": "9/7는 분자가 분모보다 커서 가분수야. 대분수로 나타내면 1과 2/7이야.",
+"keys": [
+"가분수다",
+"1과 2/7"
+],
+"answerBy": "claude"
+},
+{
+"id": "q1ue5p:t0L1",
+"big": "4. 분수",
+"small": "05. 대분수와 가분수 서로 나타내기",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "대분수 2와 1/3을 가분수로 바꾸면 얼마야? 어떻게 바꿨어?",
+"newQBy": "claude",
+"answer": "2는 6/3이라서 6/3과 1/3을 합해 7/3이야.",
+"keys": [
+"2 = 6/3",
+"7/3"
+],
+"answerBy": "claude"
+},
+{
+"id": "q1ue5p:t0L2",
+"big": "4. 분수",
+"small": "05. 대분수와 가분수 서로 나타내기",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "q1ue5p:t0H1",
+"big": "4. 분수",
+"small": "05. 대분수와 가분수 서로 나타내기",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "q1ue5p:t0H2",
+"big": "4. 분수",
+"small": "05. 대분수와 가분수 서로 나타내기",
+"kind": "high",
+"by": "claude",
+"round": 1,
+"newQ": "가분수 11/4을 대분수로 바꾸는 과정을 말해 줘.",
+"newQBy": "claude",
+"answer": "4/4가 1이니까 11/4 안에 8/4 = 2가 있어. 남은 3/4을 붙여 2와 3/4이야.",
+"keys": [
+"8/4 = 2",
+"2와 3/4"
+],
+"answerBy": "claude"
+},
+{
+"id": "q1ue5p:qrecall",
+"big": "4. 분수",
+"small": "05. 대분수와 가분수 서로 나타내기",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "q1ue5p:qreason",
+"big": "4. 분수",
+"small": "05. 대분수와 가분수 서로 나타내기",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"round": 2,
+"newQ": "3과 2/5를 가분수로 바꾸면 17/5이 되는 이유를, 자연수 3을 15/5로 바꾸는 것과 연결해서 설명해 봐.",
+"newQBy": "claude",
+"answer": "1은 5/5라서 3은 15/5야. 15/5와 2/5를 합하면 17/5이야.",
+"keys": [
+"3 = 15/5",
+"15/5 + 2/5 = 17/5"
+],
+"answerBy": "claude"
+},
+{
+"id": "q1ue5p:qexample",
+"big": "4. 분수",
+"small": "05. 대분수와 가분수 서로 나타내기",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "q1ue5p:qerror",
+"big": "4. 분수",
+"small": "05. 대분수와 가분수 서로 나타내기",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"round": 2,
+"newQ": "도윤이가 '11/4을 대분수로 바꾸면 2야'라고 말했어. 어디가 틀렸는지, 어떻게 고쳐야 하는지 말해 봐.",
+"newQBy": "claude",
+"answer": "자연수 2만 쓰고 남은 3/4을 빠뜨렸어. 11/4 = 2와 3/4이야.",
+"keys": [
+"남은 3/4을 빠뜨렸다",
+"2와 3/4"
+],
+"answerBy": "claude"
+},
+{
+"id": "wb0d0d:t0L1",
+"big": "4. 분수",
+"small": "06. 분모가 같은 분수의 크기 비교",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "분모가 같은 가분수는 무엇을 보고 크기를 비교해?",
+"newQBy": "claude",
+"answer": "분자를 비교해. 분자가 클수록 큰 분수야.",
+"keys": [
+"분자를 비교한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "wb0d0d:t0L2",
+"big": "4. 분수",
+"small": "06. 분모가 같은 분수의 크기 비교",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "대분수끼리 비교할 때는 무엇을 먼저 봐?",
+"newQBy": "claude",
+"answer": "자연수 부분을 먼저 비교하고, 같으면 분수 부분을 비교해.",
+"keys": [
+"자연수 부분 먼저",
+"같으면 분수 부분"
+],
+"answerBy": "claude"
+},
+{
+"id": "wb0d0d:t0H1",
+"big": "4. 분수",
+"small": "06. 분모가 같은 분수의 크기 비교",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "wb0d0d:t0H2",
+"big": "4. 분수",
+"small": "06. 분모가 같은 분수의 크기 비교",
+"kind": "high",
+"by": "claude",
+"round": 2,
+"newQ": "대분수의 크기를 비교할 때 자연수 부분을 먼저 비교하는 이유를 말해 줘.",
+"newQBy": "claude",
+"answer": "대분수의 분수 부분은 진분수라서 1보다 작아. 그래서 자연수 부분이 크면 분수 부분과 상관없이 더 커.",
+"keys": [
+"분수 부분은 1보다 작다"
+],
+"answerBy": "claude"
+},
+{
+"id": "wb0d0d:qrecall",
+"big": "4. 분수",
+"small": "06. 분모가 같은 분수의 크기 비교",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "wb0d0d:qreason",
+"big": "4. 분수",
+"small": "06. 분모가 같은 분수의 크기 비교",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "wb0d0d:qexample",
+"big": "4. 분수",
+"small": "06. 분모가 같은 분수의 크기 비교",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "wb0d0d:qcondition",
+"big": "4. 분수",
+"small": "06. 분모가 같은 분수의 크기 비교",
+"kind": "qset",
+"by": "claude",
+"type": "condition",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "wb0d0d:qerror",
+"big": "4. 분수",
+"small": "06. 분모가 같은 분수의 크기 비교",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"round": 2,
+"answer": "자연수 부분을 먼저 봐야 해. 3이 2보다 커서 3과 4/5가 더 커.",
+"keys": [
+"자연수 부분부터",
+"3과 4/5가 더 크다"
+],
+"answerBy": "claude"
+},
+{
+"id": "wb0d0d:qa29e3261",
+"big": "4. 분수",
+"small": "06. 분모가 같은 분수의 크기 비교",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "7/5과 1과 3/5 중 어느 것이 더 커? 어떻게 비교했는지 말해 봐.",
+"answer": "1과 3/5을 가분수로 바꾸면 8/5이야. 분모가 같으니 분자 8이 7보다 커서 1과 3/5이 더 커.",
+"keys": [
+"같은 모양으로 바꾼다",
+"1과 3/5이 더 크다"
+],
+"answerBy": "claude"
+},
+{
+"id": "wb0d0d:qa29e3262",
+"big": "4. 분수",
+"small": "06. 분모가 같은 분수의 크기 비교",
+"kind": "add",
+"round": 1,
+"by": "claude",
+"q": "분수의 크기를 비교할 때 가장 먼저 무엇을 확인해야 해?",
+"answer": "분모가 같은지 확인하고, 가분수와 대분수가 섞여 있으면 같은 모양으로 바꿔. 분모가 같으면 분자를, 대분수끼리는 자연수 부분을 먼저 비교해.",
+"keys": [
+"분모가 같은지",
+"같은 모양으로 바꾼다"
+],
+"answerBy": "claude"
+},
+{
+"id": "ei9222:t0L1",
+"big": "5. 들이와 무게",
+"small": "01. 들이 비교하기",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ei9222:t0L2",
+"big": "5. 들이와 무게",
+"small": "01. 들이 비교하기",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ei9222:t0H1",
+"big": "5. 들이와 무게",
+"small": "01. 들이 비교하기",
+"kind": "high",
+"by": "claude",
+"round": 1,
+"newQ": "두 그릇의 들이를 비교하는 방법을 두 가지 말해 봐.",
+"newQBy": "claude",
+"answer": "한 그릇에 물을 가득 채워 다른 그릇에 옮겨 담아 보거나, 같은 컵으로 몇 번 들어가는지 세어 비교해.",
+"keys": [
+"옮겨 담기",
+"같은 컵으로 세기"
+],
+"answerBy": "claude"
+},
+{
+"id": "ei9222:t0H2",
+"big": "5. 들이와 무게",
+"small": "01. 들이 비교하기",
+"kind": "high",
+"by": "claude",
+"round": 2,
+"newQ": "두 그릇의 들이를 컵으로 셀 때 같은 컵을 써야 하는 이유를 말해 줘.",
+"newQBy": "claude",
+"answer": "컵의 크기가 다르면 한 번에 붓는 양이 달라서 횟수로 비교할 수 없어. 같은 컵이어야 횟수로 비교할 수 있어.",
+"keys": [
+"컵 크기가 다르면 비교할 수 없다"
+],
+"answerBy": "claude"
+},
+{
+"id": "ei9222:qrecall",
+"big": "5. 들이와 무게",
+"small": "01. 들이 비교하기",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"round": 1,
+"newQ": "들이가 뭐야?",
+"newQBy": "claude",
+"answer": "그릇에 담을 수 있는 물의 양이야.",
+"keys": [
+"그릇에 담을 수 있는 양"
+],
+"answerBy": "claude"
+},
+{
+"id": "ei9222:qreason",
+"big": "5. 들이와 무게",
+"small": "01. 들이 비교하기",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ei9222:qexample",
+"big": "5. 들이와 무게",
+"small": "01. 들이 비교하기",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "ei9222:qerror",
+"big": "5. 들이와 무게",
+"small": "01. 들이 비교하기",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"round": 2,
+"answer": "겉모양이 커도 두께나 모양 때문에 담기는 양은 적을 수 있어. 물을 옮겨 담거나 같은 컵으로 세어 비교해야 해.",
+"keys": [
+"겉모양만으로 알 수 없다",
+"옮겨 담아 비교한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "13inahp:t0L1",
+"big": "5. 들이와 무게",
+"small": "02. 들이의 단위와 들이 어림하기",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "13inahp:t0L2",
+"big": "5. 들이와 무게",
+"small": "02. 들이의 단위와 들이 어림하기",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "1 L는 몇 mL야?",
+"newQBy": "claude",
+"answer": "1 L는 1000 mL야.",
+"keys": [
+"1000 mL"
+],
+"answerBy": "claude"
+},
+{
+"id": "13inahp:t0L3",
+"big": "5. 들이와 무게",
+"small": "02. 들이의 단위와 들이 어림하기",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "1 L 500 mL는 몇 mL야?",
+"newQBy": "claude",
+"answer": "1 L는 1000 mL라서 1000 + 500 = 1500 mL야.",
+"keys": [
+"1000 + 500",
+"1500 mL"
+],
+"answerBy": "claude"
+},
+{
+"id": "13inahp:t0H1",
+"big": "5. 들이와 무게",
+"small": "02. 들이의 단위와 들이 어림하기",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "13inahp:t0H2",
+"big": "5. 들이와 무게",
+"small": "02. 들이의 단위와 들이 어림하기",
+"kind": "high",
+"by": "claude",
+"round": 2,
+"newQ": "물건에 따라 L와 mL 중 알맞은 단위를 고르는 방법을 말해 줘.",
+"newQBy": "claude",
+"answer": "물약병처럼 적은 들이는 mL, 욕조나 양동이처럼 많은 들이는 L로 나타내.",
+"keys": [
+"적으면 mL",
+"많으면 L"
+],
+"answerBy": "claude"
+},
+{
+"id": "13inahp:qrecall",
+"big": "5. 들이와 무게",
+"small": "02. 들이의 단위와 들이 어림하기",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "13inahp:qreason",
+"big": "5. 들이와 무게",
+"small": "02. 들이의 단위와 들이 어림하기",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "13inahp:qexample",
+"big": "5. 들이와 무게",
+"small": "02. 들이의 단위와 들이 어림하기",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "13inahp:qerror",
+"big": "5. 들이와 무게",
+"small": "02. 들이의 단위와 들이 어림하기",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"round": 2,
+"answer": "1 L는 100 mL가 아니라 1000 mL야.",
+"keys": [
+"1000 mL"
+],
+"answerBy": "claude"
+},
+{
+"id": "cbry63:t0L1",
+"big": "5. 들이와 무게",
+"small": "03. 들이의 덧셈과 뺄셈",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "2 L 300 mL + 1 L 400 mL는 어떻게 계산해?",
+"newQBy": "claude",
+"answer": "L는 L끼리, mL는 mL끼리 더해. 3 L 700 mL야.",
+"keys": [
+"같은 단위끼리",
+"3 L 700 mL"
+],
+"answerBy": "claude"
+},
+{
+"id": "cbry63:t0L2",
+"big": "5. 들이와 무게",
+"small": "03. 들이의 덧셈과 뺄셈",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "mL끼리 더한 값이 1000이 넘으면 어떻게 해?",
+"newQBy": "claude",
+"answer": "1000 mL를 1 L로 바꿔 L에 1을 더하고, 남은 mL만 써.",
+"keys": [
+"1000 mL = 1 L",
+"받아올림"
+],
+"answerBy": "claude"
+},
+{
+"id": "cbry63:t0H1",
+"big": "5. 들이와 무게",
+"small": "03. 들이의 덧셈과 뺄셈",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "cbry63:t0H2",
+"big": "5. 들이와 무게",
+"small": "03. 들이의 덧셈과 뺄셈",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "cbry63:qrecall",
+"big": "5. 들이와 무게",
+"small": "03. 들이의 덧셈과 뺄셈",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "cbry63:qreason",
+"big": "5. 들이와 무게",
+"small": "03. 들이의 덧셈과 뺄셈",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"round": 2,
+"newQ": "750 mL와 800 mL를 합한 들이를 한 친구는 1550 mL, 다른 친구는 1 L 550 mL라고 했어. 둘 다 맞아? 왜?",
+"newQBy": "claude",
+"answer": "둘 다 맞아. 1000 mL가 1 L라서 1550 mL는 1 L 550 mL와 같은 양이야.",
+"keys": [
+"둘 다 맞다",
+"1000 mL = 1 L"
+],
+"answerBy": "claude"
+},
+{
+"id": "cbry63:qexample",
+"big": "5. 들이와 무게",
+"small": "03. 들이의 덧셈과 뺄셈",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "cbry63:qerror",
+"big": "5. 들이와 무게",
+"small": "03. 들이의 덧셈과 뺄셈",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"round": 2,
+"answer": "1100 mL에서 1000 mL를 1 L로 받아올리지 않았어. 4 L 100 mL야.",
+"keys": [
+"받아올림을 안 했다",
+"4 L 100 mL"
+],
+"answerBy": "claude"
+},
+{
+"id": "cbry63:qa29e3231",
+"big": "5. 들이와 무게",
+"small": "03. 들이의 덧셈과 뺄셈",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "3 L 200 mL에서 1 L 500 mL를 덜어 냈어. 남은 들이는 얼마야? 계산 방법도 말해 봐.",
+"answer": "200 mL에서 500 mL를 뺄 수 없어서 1 L를 1000 mL로 받아내려 2 L 1200 mL로 바꿔. 2 L 1200 mL − 1 L 500 mL = 1 L 700 mL야.",
+"keys": [
+"1 L를 1000 mL로 받아내린다",
+"1 L 700 mL"
+],
+"answerBy": "claude"
+},
+{
+"id": "eqyll7:t0L1",
+"big": "5. 들이와 무게",
+"small": "04. 무게 비교하기",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "eqyll7:t0L2",
+"big": "5. 들이와 무게",
+"small": "04. 무게 비교하기",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "양팔 저울로 두 물건의 무게를 어떻게 비교해?",
+"newQBy": "claude",
+"answer": "양쪽 접시에 하나씩 올려서 아래로 내려간 쪽이 더 무거워.",
+"keys": [
+"양쪽에 올린다",
+"내려간 쪽이 무겁다"
+],
+"answerBy": "claude"
+},
+{
+"id": "eqyll7:t0H1",
+"big": "5. 들이와 무게",
+"small": "04. 무게 비교하기",
+"kind": "high",
+"by": "claude",
+"round": 2,
+"newQ": "물건의 무게를 비교할 때 바둑돌처럼 같은 물건 몇 개와 무게가 같은지 세어 비교하는 이유를 설명해 봐.",
+"newQBy": "claude",
+"answer": "같은 물건으로 세면 무게를 수로 나타낼 수 있어서 저울에 동시에 올리지 않아도 어느 것이 몇 개만큼 더 무거운지 알 수 있어.",
+"keys": [
+"수로 나타낼 수 있다",
+"얼마나 더 무거운지 안다"
+],
+"answerBy": "claude"
+},
+{
+"id": "eqyll7:t0H2",
+"big": "5. 들이와 무게",
+"small": "04. 무게 비교하기",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "eqyll7:qrecall",
+"big": "5. 들이와 무게",
+"small": "04. 무게 비교하기",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "eqyll7:qreason",
+"big": "5. 들이와 무게",
+"small": "04. 무게 비교하기",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "eqyll7:qexample",
+"big": "5. 들이와 무게",
+"small": "04. 무게 비교하기",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "eqyll7:qerror",
+"big": "5. 들이와 무게",
+"small": "04. 무게 비교하기",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"round": 2,
+"answer": "크기가 크다고 더 무거운 건 아니야. 저울에 올려 재어 봐야 해.",
+"keys": [
+"크기와 무게는 다르다",
+"저울로 잰다"
+],
+"answerBy": "claude"
+},
+{
+"id": "xh0j2m:t0L1",
+"big": "5. 들이와 무게",
+"small": "05. 무게의 단위와 무게 어림하기",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "xh0j2m:t0L2",
+"big": "5. 들이와 무게",
+"small": "05. 무게의 단위와 무게 어림하기",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "1 kg은 몇 g이야?",
+"newQBy": "claude",
+"answer": "1 kg은 1000 g이야.",
+"keys": [
+"1000 g"
+],
+"answerBy": "claude"
+},
+{
+"id": "xh0j2m:t0L3",
+"big": "5. 들이와 무게",
+"small": "05. 무게의 단위와 무게 어림하기",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "1 t은 몇 kg이야?",
+"newQBy": "claude",
+"answer": "1 t은 1000 kg이야.",
+"keys": [
+"1000 kg"
+],
+"answerBy": "claude"
+},
+{
+"id": "xh0j2m:t0H1",
+"big": "5. 들이와 무게",
+"small": "05. 무게의 단위와 무게 어림하기",
+"kind": "high",
+"by": "claude",
+"round": 1,
+"newQ": "1 kg 500 g을 g으로 바꾸는 과정을 설명해 봐.",
+"newQBy": "claude",
+"answer": "1 kg은 1000 g이라서 1000 + 500 = 1500 g이야.",
+"keys": [
+"1 kg = 1000 g",
+"1500 g"
+],
+"answerBy": "claude"
+},
+{
+"id": "xh0j2m:t0H2",
+"big": "5. 들이와 무게",
+"small": "05. 무게의 단위와 무게 어림하기",
+"kind": "high",
+"by": "claude",
+"round": 2,
+"newQ": "물건에 따라 g, kg, t 중 알맞은 단위를 고르는 방법을 말해 줘.",
+"newQBy": "claude",
+"answer": "연필처럼 가벼운 것은 g, 사람이나 수박은 kg, 트럭처럼 아주 무거운 것은 t으로 나타내.",
+"keys": [
+"가벼우면 g",
+"무거우면 kg",
+"아주 무거우면 t"
+],
+"answerBy": "claude"
+},
+{
+"id": "xh0j2m:qrecall",
+"big": "5. 들이와 무게",
+"small": "05. 무게의 단위와 무게 어림하기",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "xh0j2m:qreason",
+"big": "5. 들이와 무게",
+"small": "05. 무게의 단위와 무게 어림하기",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "xh0j2m:qexample",
+"big": "5. 들이와 무게",
+"small": "05. 무게의 단위와 무게 어림하기",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "xh0j2m:qerror",
+"big": "5. 들이와 무게",
+"small": "05. 무게의 단위와 무게 어림하기",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1cpeetk:t0L1",
+"big": "5. 들이와 무게",
+"small": "06. 무게의 덧셈과 뺄셈",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "2 kg 300 g + 1 kg 500 g은 어떻게 계산해?",
+"newQBy": "claude",
+"answer": "kg은 kg끼리, g은 g끼리 더해. 3 kg 800 g이야.",
+"keys": [
+"같은 단위끼리",
+"3 kg 800 g"
+],
+"answerBy": "claude"
+},
+{
+"id": "1cpeetk:t0L2",
+"big": "5. 들이와 무게",
+"small": "06. 무게의 덧셈과 뺄셈",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "g끼리 더한 값이 1000이 넘으면 어떻게 해?",
+"newQBy": "claude",
+"answer": "1000 g을 1 kg으로 바꿔 kg에 1을 더하고, 남은 g만 써.",
+"keys": [
+"1000 g = 1 kg",
+"받아올림"
+],
+"answerBy": "claude"
+},
+{
+"id": "1cpeetk:t0H1",
+"big": "5. 들이와 무게",
+"small": "06. 무게의 덧셈과 뺄셈",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1cpeetk:t0H2",
+"big": "5. 들이와 무게",
+"small": "06. 무게의 덧셈과 뺄셈",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1cpeetk:qrecall",
+"big": "5. 들이와 무게",
+"small": "06. 무게의 덧셈과 뺄셈",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1cpeetk:qreason",
+"big": "5. 들이와 무게",
+"small": "06. 무게의 덧셈과 뺄셈",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1cpeetk:qexample",
+"big": "5. 들이와 무게",
+"small": "06. 무게의 덧셈과 뺄셈",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1cpeetk:qerror",
+"big": "5. 들이와 무게",
+"small": "06. 무게의 덧셈과 뺄셈",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"round": 2,
+"answer": "1100 g에서 1000 g을 1 kg으로 받아올리지 않았어. 4 kg 100 g이야.",
+"keys": [
+"받아올림을 안 했다",
+"4 kg 100 g"
+],
+"answerBy": "claude"
+},
+{
+"id": "1cpeetk:qa29e3261",
+"big": "5. 들이와 무게",
+"small": "06. 무게의 덧셈과 뺄셈",
+"kind": "add",
+"round": 2,
+"by": "claude",
+"q": "가방과 책을 함께 재니 5 kg 200 g, 가방만 재니 2 kg 800 g이었어. 책의 무게는 얼마야?",
+"answer": "5 kg 200 g − 2 kg 800 g이야. 1 kg을 1000 g으로 받아내려 4 kg 1200 g − 2 kg 800 g = 2 kg 400 g이야.",
+"keys": [
+"전체 − 가방",
+"2 kg 400 g"
+],
+"answerBy": "claude"
+},
+{
+"id": "1cpeetk:qa29e3262",
+"big": "5. 들이와 무게",
+"small": "06. 무게의 덧셈과 뺄셈",
+"kind": "add",
+"round": 1,
+"by": "claude",
+"q": "들이나 무게를 계산하는 문제가 나오면 가장 먼저 무엇을 확인해야 해?",
+"answer": "단위를 확인해서 L는 L끼리, mL는 mL끼리(kg은 kg끼리, g은 g끼리) 계산해. 1000이 넘거나 모자라면 1 L = 1000 mL, 1 kg = 1000 g으로 받아올리거나 받아내려.",
+"keys": [
+"같은 단위끼리",
+"1000씩 바뀐다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1ndsujf:t0L1",
+"big": "6. 그림그래프",
+"small": "01. 그림그래프 알아보기",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1ndsujf:t0L2",
+"big": "6. 그림그래프",
+"small": "01. 그림그래프 알아보기",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1ndsujf:t0H1",
+"big": "6. 그림그래프",
+"small": "01. 그림그래프 알아보기",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1ndsujf:t0H2",
+"big": "6. 그림그래프",
+"small": "01. 그림그래프 알아보기",
+"kind": "high",
+"by": "claude",
+"round": 2,
+"newQ": "표와 그림그래프는 각각 어떤 점이 좋은지 비교해서 말해 줘.",
+"newQBy": "claude",
+"answer": "표는 정확한 수와 합계를 알기 쉽고, 그림그래프는 그림으로 되어 있어 많고 적음을 한눈에 비교하기 쉬워.",
+"keys": [
+"표: 정확한 수",
+"그림그래프: 한눈에 비교"
+],
+"answerBy": "claude"
+},
+{
+"id": "1ndsujf:qrecall",
+"big": "6. 그림그래프",
+"small": "01. 그림그래프 알아보기",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"round": 1,
+"answer": "조사한 수를 그림으로 나타낸 그래프야.",
+"keys": [
+"수를 그림으로 나타낸 그래프"
+],
+"answerBy": "claude"
+},
+{
+"id": "1ndsujf:qreason",
+"big": "6. 그림그래프",
+"small": "01. 그림그래프 알아보기",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"round": 2,
+"answer": "그림이 나타내는 수를 정해야 그림 개수를 보고 정확한 수를 읽을 수 있어. 정하지 않으면 같은 그림을 보고 서로 다른 수로 읽게 돼.",
+"keys": [
+"단위를 정해야 수를 읽는다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1ndsujf:qexample",
+"big": "6. 그림그래프",
+"small": "01. 그림그래프 알아보기",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1ndsujf:qerror",
+"big": "6. 그림그래프",
+"small": "01. 그림그래프 알아보기",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1ndsujf:qa29e3211",
+"big": "6. 그림그래프",
+"small": "01. 그림그래프 알아보기",
+"kind": "add",
+"round": 1,
+"by": "claude",
+"q": "큰 그림이 10명, 작은 그림이 1명을 나타낼 때 큰 그림 4개와 작은 그림 6개는 몇 명이야?",
+"answer": "큰 그림 4개는 40명, 작은 그림 6개는 6명이라서 46명이야.",
+"keys": [
+"40 + 6",
+"46명"
+],
+"answerBy": "claude"
+},
+{
+"id": "1fqvjev:t0L1",
+"big": "6. 그림그래프",
+"small": "02. 그림그래프의 내용 알아보기",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "그림그래프에서 가장 많은 것은 어떻게 찾아?",
+"newQBy": "claude",
+"answer": "큰 그림의 수를 먼저 비교하고, 큰 그림 수가 같으면 작은 그림의 수를 비교해.",
+"keys": [
+"큰 그림 먼저",
+"같으면 작은 그림"
+],
+"answerBy": "claude"
+},
+{
+"id": "1fqvjev:t0L2",
+"big": "6. 그림그래프",
+"small": "02. 그림그래프의 내용 알아보기",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1fqvjev:t0H1",
+"big": "6. 그림그래프",
+"small": "02. 그림그래프의 내용 알아보기",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1fqvjev:t0H2",
+"big": "6. 그림그래프",
+"small": "02. 그림그래프의 내용 알아보기",
+"kind": "high",
+"by": "claude",
+"round": 2,
+"newQ": "마을별 학생 수 그림그래프를 보고 학교에서 무엇을 더 준비해야 할지 예상하는 방법을 말해 줘.",
+"newQBy": "claude",
+"answer": "학생이 가장 많은 마을을 찾아 그 마을로 가는 버스를 늘리는 것처럼, 수가 많은 곳과 적은 곳을 비교해 필요한 것을 예상해.",
+"keys": [
+"많은 곳과 적은 곳을 비교한다",
+"필요한 것을 예상한다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1fqvjev:qrecall",
+"big": "6. 그림그래프",
+"small": "02. 그림그래프의 내용 알아보기",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1fqvjev:qreason",
+"big": "6. 그림그래프",
+"small": "02. 그림그래프의 내용 알아보기",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"round": 2,
+"answer": "큰 그림 1개가 작은 그림 여러 개보다 많을 수 있는데, 개수만 세면 그림이 많은 쪽이 크다고 잘못 읽게 돼.",
+"keys": [
+"개수가 많아도 적을 수 있다"
+],
+"answerBy": "claude"
+},
+{
+"id": "1fqvjev:qexample",
+"big": "6. 그림그래프",
+"small": "02. 그림그래프의 내용 알아보기",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1fqvjev:qcondition",
+"big": "6. 그림그래프",
+"small": "02. 그림그래프의 내용 알아보기",
+"kind": "qset",
+"by": "claude",
+"type": "condition",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "1fqvjev:qerror",
+"big": "6. 그림그래프",
+"small": "02. 그림그래프의 내용 알아보기",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "pgfcjz:t0L1",
+"big": "6. 그림그래프",
+"small": "03. 그림그래프로 나타내기",
+"kind": "low",
+"by": "claude",
+"round": 1,
+"newQ": "그림그래프를 그릴 때 가장 먼저 무엇을 정해?",
+"newQBy": "claude",
+"answer": "어떤 그림으로 나타낼지와 큰 그림·작은 그림이 각각 몇을 나타낼지(단위)를 정해.",
+"keys": [
+"그림",
+"단위"
+],
+"answerBy": "claude"
+},
+{
+"id": "pgfcjz:t0L2",
+"big": "6. 그림그래프",
+"small": "03. 그림그래프로 나타내기",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "pgfcjz:t0H1",
+"big": "6. 그림그래프",
+"small": "03. 그림그래프로 나타내기",
+"kind": "high",
+"by": "claude",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "pgfcjz:t0H2",
+"big": "6. 그림그래프",
+"small": "03. 그림그래프로 나타내기",
+"kind": "high",
+"by": "claude",
+"round": 1,
+"newQ": "32 kg을 10 kg 그림과 1 kg 그림으로 어떻게 나타내?",
+"newQBy": "claude",
+"answer": "10 kg 그림 3개와 1 kg 그림 2개로 나타내.",
+"keys": [
+"10 kg 3개",
+"1 kg 2개"
+],
+"answerBy": "claude"
+},
+{
+"id": "pgfcjz:qrecall",
+"big": "6. 그림그래프",
+"small": "03. 그림그래프로 나타내기",
+"kind": "qset",
+"by": "claude",
+"type": "recall",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "pgfcjz:qreason",
+"big": "6. 그림그래프",
+"small": "03. 그림그래프로 나타내기",
+"kind": "qset",
+"by": "claude",
+"type": "reason",
+"round": 2,
+"answer": "무엇을 조사한 그래프인지 알 수 없어서, 그림 수를 읽어도 무슨 수인지 모르게 돼.",
+"keys": [
+"무엇을 나타내는지 모른다"
+],
+"answerBy": "claude"
+},
+{
+"id": "pgfcjz:qexample",
+"big": "6. 그림그래프",
+"small": "03. 그림그래프로 나타내기",
+"kind": "qset",
+"by": "claude",
+"type": "example",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "pgfcjz:qcondition",
+"big": "6. 그림그래프",
+"small": "03. 그림그래프로 나타내기",
+"kind": "qset",
+"by": "claude",
+"type": "condition",
+"round": 2,
+"newQ": "조사한 수가 모두 5처럼 작으면, 큰 그림 없이 작은 그림만 써서 나타내도 돼? 왜 그런지 말해 봐.",
+"newQBy": "claude",
+"answer": "돼. 수가 작으면 작은 그림만으로도 개수를 쉽게 셀 수 있어. 큰 그림은 수가 클 때 그림 수를 줄이려고 써.",
+"keys": [
+"수가 작으면 작은 그림만으로 된다",
+"큰 그림은 수가 클 때"
+],
+"answerBy": "claude"
+},
+{
+"id": "pgfcjz:qerror",
+"big": "6. 그림그래프",
+"small": "03. 그림그래프로 나타내기",
+"kind": "qset",
+"by": "claude",
+"type": "error",
+"off": true,
+"offBy": "claude"
+},
+{
+"id": "pgfcjz:qa29e3231",
+"big": "6. 그림그래프",
+"small": "03. 그림그래프로 나타내기",
+"kind": "add",
+"round": 1,
+"by": "claude",
+"q": "그림그래프가 나오면 가장 먼저 무엇을 확인해야 해?",
+"answer": "큰 그림과 작은 그림이 각각 몇을 나타내는지(단위)를 먼저 확인해.",
+"keys": [
+"그림의 단위를 확인한다"
+],
+"answerBy": "claude"
+}
+],
+"seen": []
+}});
+
+/* [pre] 2026-09-29 🌱 선수 개념 질문 — 소단원 맨 앞(ord 0) · 1회차. 어른 화면 구분 표시는 review/pre_e3-2.js.
+   원천 작업도구/질문계단/e3/make_pre_e32.py */
+(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'e3-2_pre_2026-09-29', data:{
+"format": "qr-plan-2",
+"grade": "e3-2",
+"rounds": 3,
+"items": [
+{
+"id": "1tidl2m:qapre0101",
+"big": "1. 곱셈",
+"small": "01. 올림이 없는 (세 자리 수)×(한 자리 수)",
+"kind": "add",
+"q": "24 × 3은 얼마야? 어떻게 계산했어?",
+"round": 1,
+"ord": 0,
+"answer": "4 × 3 = 12에서 2를 쓰고 1을 올려. 2 × 3 = 6에 1을 더해 7이라서 72야.",
+"keys": [
+"올림한 1을 더한다",
+"72"
+],
+"answerBy": "claude",
+"by": "claude"
+},
+{
+"id": "19fatby:qapre0201",
+"big": "2. 나눗셈",
+"small": "01. 내림이 없는 (몇십)÷(몇)",
+"kind": "add",
+"q": "35 ÷ 7의 몫은 얼마이고, 어떤 곱셈구구로 구해?",
+"round": 1,
+"ord": 0,
+"answer": "7단에서 7 × 5 = 35라서 몫은 5야.",
+"keys": [
+"7단",
+"몫 5"
+],
+"answerBy": "claude",
+"by": "claude"
+},
+{
+"id": "1q7w585:qapre0301",
+"big": "3. 원",
+"small": "01. 원의 중심, 반지름, 지름",
+"kind": "add",
+"q": "선분은 어떤 선이야?",
+"round": 1,
+"ord": 0,
+"answer": "두 점을 곧게 이은 선이야.",
+"keys": [
+"두 점을 곧게 이은 선"
+],
+"answerBy": "claude",
+"by": "claude"
+},
+{
+"id": "kd5anl:qapre0401",
+"big": "4. 분수",
+"small": "01. 분수로 나타내기",
+"kind": "add",
+"q": "분수 3/4에서 분모 4와 분자 3은 각각 무엇을 나타내?",
+"round": 1,
+"ord": 0,
+"answer": "분모 4는 전체를 똑같이 나눈 수, 분자 3은 그중 몇 개인지를 나타내.",
+"keys": [
+"분모: 똑같이 나눈 수",
+"분자: 그중 몇 개"
+],
+"answerBy": "claude",
+"by": "claude"
+},
+{
+"id": "13inahp:qapre0502",
+"big": "5. 들이와 무게",
+"small": "02. 들이의 단위와 들이 어림하기",
+"kind": "add",
+"q": "1 km는 몇 m야?",
+"round": 1,
+"ord": 0,
+"answer": "1 km는 1000 m야.",
+"keys": [
+"1000 m"
+],
+"answerBy": "claude",
+"by": "claude"
+}
+],
+"seen": []
+}});
