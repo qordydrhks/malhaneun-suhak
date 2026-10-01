@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>대화형 풀이 시안</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap">
+<style>
+/* 시안: 위 문제 카드 · 가운데 풀이 노트(뚜삐가 받아 씀) · 아래 대화. 앱 색(보라·파랑)에 맞춤 */
+:root{--bg:#F5F4FB;--card:#fff;--ink:#2A2350;--soft:#7C7399;--line:#E2DDF0;--acc:#5B4BC4;--acc2:#3B6FA8;
+  --ok:#2E8B64;--okbg:#E4F5EC;--no:#C2553F;--nobg:#FCEAE5;--mid:#B7791F;--midbg:#FDF3E0;--note:#FFFDF5;
+  --disp:"Jua","Gowun Dodum","Malgun Gothic",sans-serif;--body:"Gowun Dodum","Malgun Gothic",sans-serif;
+  --math:"Cambria Math","Cambria","Times New Roman",serif}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 var(--body)}
+.w{max-width:760px;margin:0 auto;padding:14px 16px 40px;display:flex;flex-direction:column;gap:12px}
+h1{font:400 20px var(--disp);margin:0}.s{color:var(--soft);font-size:13px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button{font:15px var(--disp);background:var(--card);border:2px solid var(--line);border-radius:999px;padding:6px 14px;color:var(--ink);cursor:pointer}
+.tabs button[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:#fff}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.prob .tag{font:13px var(--disp);color:var(--acc2)}
+.prob .q{font-size:16px;line-height:1.8}
+.choices{display:flex;flex-wrap:wrap;gap:4px 22px;margin-top:4px}
+.note{background:var(--note);border:1px dashed #D9CFA8;border-radius:14px;padding:10px 14px;min-height:54px}
+.note .t{font:13px var(--disp);color:var(--mid);margin-bottom:4px}
+.ln{display:flex;gap:8px;align-items:baseline;padding:4px 0;border-top:1px dotted #EDE4C2;animation:in .35s}
+.ln:first-of-type{border-top:0}.ln b{font:13px var(--disp);color:var(--soft);min-width:22px}
+.ln.st{background:var(--nobg);border-radius:6px;padding-inline:6px}
+.ln .who{margin-left:auto;font-size:11.5px;color:var(--soft);white-space:nowrap}
+@keyframes in{from{opacity:0;transform:translateY(4px)}}
+.chat{display:flex;flex-direction:column;gap:8px}
+.b{max-width:86%;padding:8px 12px;border-radius:14px;line-height:1.55}
+.b.t{background:var(--card);border:1px solid var(--line);align-self:flex-start;border-top-left-radius:4px}
+.b.t::before{content:"🐣 ";}
+.b.me{background:var(--acc);color:#fff;align-self:flex-end;border-top-right-radius:4px}
+.b.teach{background:var(--midbg);border:1px solid #F0D49A}
+.b.good{background:var(--okbg);border:1px solid #AEDAC3}
+.ask{position:sticky;bottom:0;background:var(--bg);padding-top:6px;display:flex;flex-direction:column;gap:6px}
+.row{display:flex;gap:6px}
+.row input{flex:1;min-width:0;font:16px var(--body);padding:10px 12px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}
+.row button{font:16px var(--disp);border:0;border-radius:12px;padding:0 16px;cursor:pointer}
+.send{background:var(--acc);color:#fff}.dunno{background:#fff;border:2px solid var(--line)!important;color:var(--ink)}
+.ex{display:flex;gap:6px;flex-wrap:wrap}.ex span{font-size:12.5px;color:var(--soft);align-self:center}
+.ex button{font:13px var(--body);background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px 10px;cursor:pointer;color:var(--ink)}
+.rec{display:flex;flex-direction:column;gap:4px}.rec h3{font:400 16px var(--disp);margin:0 0 4px}
+.rec .r{display:flex;gap:8px;align-items:center;font-size:14px}
+.pill{font-size:12px;border-radius:999px;padding:1px 8px;white-space:nowrap}
+.p-ok{background:var(--okbg);color:var(--ok)}.p-re{background:var(--midbg);color:var(--mid)}.p-st{background:var(--nobg);color:var(--no)}
+.m{font-family:var(--math);font-size:1.06em;white-space:nowrap}
+.m var{font-style:italic}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.86em;line-height:1.15;margin:0 1px}
+.fr>i{font-style:normal;padding:0 2px}.fr>i:first-child{border-bottom:1px solid currentColor}
+.rt{border-top:1px solid currentColor;padding:0 1px;margin-left:1px}
+.u{text-decoration:underline;text-decoration-color:#E0677F;text-decoration-thickness:2px;text-underline-offset:3px}
+.foot{font-size:12.5px;color:var(--soft)}
+.figc{padding:8px;display:flex;flex-direction:column;align-items:center;gap:2px}.figc .t{font:13px var(--disp);color:var(--acc2);align-self:flex-start}
+.figc svg{width:100%;max-width:440px;height:auto}.figc .cap{font-size:12.5px;color:var(--soft)}
+@keyframes fin{from{opacity:0}}.fig-new{animation:fin .6s}
+.picks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;width:100%}.pk{background:#fff;border:2px solid var(--line);border-radius:12px;padding:4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;font:15px var(--disp);color:var(--ink)}.pk:hover{border-color:var(--acc)}.pk svg{width:100%;height:auto}
+@media(max-width:520px){.picks{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style></head><body><div class="w">
+<div><h1>대화형 풀이 시안 — 고등</h1><div class="s">학생은 생각을 말하고, 풀이는 뚜삐가 받아 써요 · 시안이라 판정은 낱말로 흉내 냈어요(실제 앱은 AI가 판정)</div></div>
+<div class="tabs" id="tabs"></div>
+<div class="card prob" id="prob"></div>
+<div class="card figc" id="figc" hidden><div class="t">🖼 그림 — 맞게 말하면 그림이 하나씩 그려져요</div><div id="fig"></div><div class="cap" id="figcap"></div></div>
+<div class="note"><div class="t">📝 풀이 노트 — 맞게 말하면 뚜삐가 여기에 써 줘요</div><div id="note"></div></div>
+<div class="chat" id="chat"></div>
+<div class="card rec" id="rec" hidden></div>
+<div class="ask" id="ask">
+  <div class="ex" id="ex"></div>
+  <div class="row"><input id="inp" placeholder="생각한 걸 말하거나 적어 봐 (실제 앱은 마이크)" autocomplete="off"><button class="dunno" id="dunno">모르겠어요</button><button class="send" id="send">말하기</button></div>
+</div>
+<div class="foot">⚙️ 단계마다 [묻는 말 · 인정할 핵심 · 써 줄 식 · 되묻기 · 짧은 설명]을 미리 정해 둔다. 한 번에 여러 단계를 말하면 한꺼번에 써 준다. 두 번 막히면 설명하고 그 줄은 뚜삐가 써 준 뒤 넘어간다.</div>
+</div>
+<script>
+const v=s=>`<var>${s}</var>`, M=s=>`<span class="m">${s}</span>`, F=(a,b)=>`<span class="fr"><i>${a}</i><i>${b}</i></span>`, R=s=>`√<span class="rt">${s}</span>`;
+const x=v('x'),y=v('y'),a=v('a'),A=v('A'),B=v('B'),U=v('U'),C='<sup>C</sup>';
+const S3=Math.sqrt(3);
+
+/* ── 좌표평면 그리기 ── */
+const COL={soft:'#A7A1BD',ink:'#2A2350',blue:'#3B6FA8',line:'#5B4BC4',hi:'#E0677F',q:'#C2553F',ok:'#2E8B64',fillA:'rgba(91,75,196,.16)'};
+function plane(x0,x1,y0,y1,s=26){
+  const X=u=>((u-x0)*s).toFixed(1), Y=u=>((y1-u)*s).toFixed(1), W=(x1-x0)*s, H=(y1-y0)*s;
+  const g={W,H,X,Y,s,
+    axes(){let o=`<line x1="0" y1="${Y(0)}" x2="${W}" y2="${Y(0)}" stroke="${COL.soft}" stroke-width="1.2" marker-end="url(#ah)"/><line x1="${X(0)}" y1="${H}" x2="${X(0)}" y2="0" stroke="${COL.soft}" stroke-width="1.2" marker-end="url(#ah)"/>`;
+      o+=`<text x="${W-10}" y="${+Y(0)+16}" class="lx">x</text><text x="${+X(0)+8}" y="12" class="lx">y</text><text x="${+X(0)-12}" y="${+Y(0)+15}" class="lb">O</text>`;return o},
+    circ(cx,cy,r,col,dash,fill){return `<circle cx="${X(cx)}" cy="${Y(cy)}" r="${(r*s).toFixed(1)}" fill="${fill||'none'}" stroke="${col}" stroke-width="2" ${dash?'stroke-dasharray="6 5"':''}/>`},
+    seg(p,q,col,w=2,dash){return `<line x1="${X(p[0])}" y1="${Y(p[1])}" x2="${X(q[0])}" y2="${Y(q[1])}" stroke="${col}" stroke-width="${w}" ${dash?'stroke-dasharray="6 5"':''} stroke-linecap="round"/>`},
+    line(p,q,col,dash){const dx=q[0]-p[0],dy=q[1]-p[1];return g.seg([p[0]-dx*40,p[1]-dy*40],[p[0]+dx*40,p[1]+dy*40],col,1.8,dash)},
+    arrow(p,q,col){return `<line x1="${X(p[0])}" y1="${Y(p[1])}" x2="${X(q[0])}" y2="${Y(q[1])}" stroke="${col}" stroke-width="1.8" stroke-dasharray="4 4" marker-end="url(#ah2)"/>`},
+    dot(p,col,lb,dx=8,dy=-8){return `<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="4.2" fill="${col}"/>`+(lb?`<text x="${+X(p[0])+dx}" y="${+Y(p[1])+dy}" class="lb" fill="${col}">${lb}</text>`:'')},
+    text(p,t,col,anchor='start'){return `<text x="${X(p[0])}" y="${Y(p[1])}" class="tx" fill="${col}" text-anchor="${anchor}">${t}</text>`},
+    poly(ps,fill){return `<polygon points="${ps.map(p=>X(p[0])+','+Y(p[1])).join(' ')}" fill="${fill}" stroke="none"/>`},
+    rt(c,u1,u2){const k=.32,p1=[c[0]+u1[0]*k,c[1]+u1[1]*k],p2=[c[0]+u2[0]*k,c[1]+u2[1]*k],p3=[p1[0]+u2[0]*k,p1[1]+u2[1]*k];return `<polyline points="${X(p1[0])},${Y(p1[1])} ${X(p3[0])},${Y(p3[1])} ${X(p2[0])},${Y(p2[1])}" fill="none" stroke="${COL.hi}" stroke-width="1.5"/>`}
+  };return g;}
+function svgWrap(g,body){return `<svg viewBox="0 0 ${g.W} ${g.H}" xmlns="http://www.w3.org/2000/svg" style="font-family:'Cambria Math',Cambria,'Times New Roman',serif">
+ <style>.lx{font-style:italic;font-size:14px;fill:${COL.soft}}.lb{font-size:15px;font-weight:600}.tx{font-family:'Gowun Dodum','Malgun Gothic',sans-serif;font-size:13px}</style>
+ <defs><clipPath id="cl"><rect width="${g.W}" height="${g.H}"/></clipPath>
+ <marker id="ah" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0L6,3L0,6z" fill="${COL.soft}"/></marker>
+ <marker id="ah2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0L6,3L0,6z" fill="${COL.hi}"/></marker></defs>
+ <g clip-path="url(#cl)">${body}</g></svg>`}
+
+/* ── 벤 다이어그램 ── */
+function venn(layer){
+  const cA='cx="150" cy="95" r="62"', cB='cx="230" cy="95" r="62"';
+  let o=`<defs><mask id="noA"><rect width="380" height="190" fill="#fff"/><circle ${cA} fill="#000"/></mask><mask id="noB"><rect width="380" height="190" fill="#fff"/><circle ${cB} fill="#000"/></mask>
+  <pattern id="hat" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="${COL.q}" stroke-width="2"/></pattern></defs>
+  <rect x="20" y="10" width="340" height="170" rx="10" fill="#fff" stroke="${COL.soft}" stroke-width="1.6"/><text x="32" y="30" font-style="italic" font-size="16" fill="${COL.soft}">U</text>`;
+  o+=layer;
+  o+=`<circle ${cA} fill="none" stroke="${COL.line}" stroke-width="2"/><circle ${cB} fill="none" stroke="${COL.blue}" stroke-width="2"/>
+  <text x="110" y="52" font-style="italic" font-size="17" fill="${COL.line}">A</text><text x="262" y="52" font-style="italic" font-size="17" fill="${COL.blue}">B</text>`;
+  return `<svg viewBox="0 0 380 190" xmlns="http://www.w3.org/2000/svg" style="font-family:'Cambria Math',Cambria,serif">${o}</svg>`;
+}
+
+/* ── 벤 다이어그램 작은 그림: 영역 a(A만) ab(겹침) b(B만) o(바깥) ── */
+let vid=0;
+function vmini(regs,h=96,lab){const k='v'+(++vid),fill='rgba(91,75,196,.42)';
+  const cA='cx="58" cy="52" r="30"',cB='cx="92" cy="52" r="30"';
+  let o=`<defs><clipPath id="${k}cb"><circle ${cB}/></clipPath><mask id="${k}na"><rect width="150" height="104" fill="#fff"/><circle ${cA} fill="#000"/></mask>
+  <mask id="${k}nb"><rect width="150" height="104" fill="#fff"/><circle ${cB} fill="#000"/></mask><mask id="${k}nab"><rect width="150" height="104" fill="#fff"/><circle ${cA} fill="#000"/><circle ${cB} fill="#000"/></mask></defs>
+  <rect x="6" y="8" width="138" height="88" rx="6" fill="#fff" stroke="#A7A1BD" stroke-width="1.3"/>`;
+  if(regs.includes('o')) o+=`<rect x="6" y="8" width="138" height="88" rx="6" fill="${fill}" mask="url(#${k}nab)"/>`;
+  if(regs.includes('a')) o+=`<circle ${cA} fill="${fill}" mask="url(#${k}nb)"/>`;
+  if(regs.includes('b')) o+=`<circle ${cB} fill="${fill}" mask="url(#${k}na)"/>`;
+  if(regs.includes('ab')) o+=`<circle ${cA} fill="${fill}" clip-path="url(#${k}cb)"/>`;
+  o+=`<circle ${cA} fill="none" stroke="#5B4BC4" stroke-width="1.6"/><circle ${cB} fill="none" stroke="#3B6FA8" stroke-width="1.6"/>
+  <text x="34" y="30" font-style="italic" font-size="14" fill="#5B4BC4">A</text><text x="109" y="30" font-style="italic" font-size="14" fill="#3B6FA8">B</text><text x="12" y="22" font-style="italic" font-size="11" fill="#A7A1BD">U</text>`;
+  return `<svg viewBox="0 0 150 104" height="${h}" style="font-family:Cambria,serif;vertical-align:middle">${o}</svg>`;}
+const LABS=['가','나','다','라'];
+function pickLabel(raw){const m=raw.match(/(^|[^가-힣])(가|나|다|라)(?=\s*(번|그림|요|야|이|$|[.!,]))/);return m?m[2]:null;}
+function cmpLine(s){const c=s.cmp,same=JSON.stringify([...c.L].sort())===JSON.stringify([...c.R].sort());
+  const ok=c.rel==='⊂'?false:same;
+  return `${s.lb[0]} ${c.ll} ${vmini(c.L,40)} ${c.rel?(c.rel+' '):'= '}${c.rl} ${vmini(c.R,40)} → ${ok?'<b style="color:#2E8B64">✓ 같다</b>':'<b style="color:#C2553F">✗ '+(c.rel==='⊂'?'A가 A ∩ B 안에 들어가지 않을 수 있다':'다르다')+'</b>'}`;}
+
+/* ── 교육청 문제 좌표 ── */
+const pA=[1,-S3], pB=[3,S3], H=[1.5,-S3/2], Qp=[-3*S3/2,1.5], Pp=[3*S3/2,2.5], Qs=[-1.2,2.75];
+
+const P=[
+{name:'대칭이동 ①', tag:'기본 예제 09-1 (1) · 점의 대칭이동',
+ q:`점 ${M(`(${a}, 2)`)}를 ${y}축에 대하여 대칭이동시킨 후 직선 ${M(`${y}=${x}`)}에 대하여 대칭이동시킨 점이 <span class="u">직선 ${M(`${y}=${x}+4`)} 위에 있을 때</span>, ${a}의 값을 구하시오.`,
+ fig:{g:()=>plane(-7.5,7.5,-2,8.5,22),base:g=>g.axes(),cap:['','','대칭축 y = x','a = −6이니까 실제 점들을 찍어 봤어요']},
+ steps:[
+ {lb:'조건 찾기',ask:'이 문제의 조건이 뭐야?',ok:[['직선','위에','지나','대입']],
+  line:`조건: 두 번 대칭이동한 점이 직선 ${M(`${y}=${x}+4`)} 위에 있다`,hint:'두 번 옮긴 점이 어디에 있다고 했지?',teach:'두 번 대칭이동한 점이 직선 y = x + 4 위에 있다는 게 조건이야.',
+  ex:['두 번 옮긴 점이 직선 y=x+4 위에 있어요','a를 구하는 거요']},
+ {lb:'y축 대칭',ask:`점 ${M(`(${a}, 2)`)}를 ${y}축에 대해 대칭이동하면?`,no:['y좌표'],ok:[['x좌표','-a','마이너스a','마이너스에이']],jump:[['-a,2']],
+  line:M(`(${a}, 2) → (−${a}, 2)`),hint:'y축을 접는 선으로 생각해 봐. 어느 좌표의 부호가 바뀌지?',teach:'y축에 대해 대칭이동하면 x좌표의 부호만 바뀌어. (a, 2) → (−a, 2)야.',
+  ex:['x좌표 부호가 바뀌어요','y좌표 부호가 바뀌어요']},
+ {lb:'y = x 대칭',ask:`그 점을 직선 ${M(`${y}=${x}`)}에 대해 대칭이동하면?`,no:['부호'],ok:[['바꿔','바뀌','바꾼','자리','서로','2,-a']],jump:[['2,-a','서로바','바꾸고','바꿔서']],
+  line:M(`(−${a}, 2) → (2, −${a})`),hint:'그건 x축 대칭이야. 직선 y = x에 대해 대칭하면 두 좌표가 어떻게 되지?',teach:'직선 y = x에 대해 대칭이동하면 x좌표와 y좌표가 서로 자리를 바꿔. (−a, 2) → (2, −a)야.',
+  ex:['x랑 y를 서로 바꿔요','y좌표 부호가 바뀌어요'],
+  fig:g=>g.line([0,0],[1,1],COL.blue,true)+g.text([5.2,6.4],'y = x',COL.blue)},
+ {lb:'직선에 대입',ask:`그 점이 직선 ${M(`${y}=${x}+4`)} 위에 있으니까 어떻게 해?`,ok:[['대입','넣','-a=6','a=-6','-6']],jump:[['대입','넣으']],
+  line:M(`−${a}=2+4　∴ ${a}=−6`),hint:'점이 직선 위에 있으면, 그 점의 좌표를 직선의 식에 어떻게 할 수 있지?',teach:'점이 직선 위에 있으면 그 점의 좌표를 직선의 식에 대입해. 그래서 −a = 2 + 4야.',
+  ex:['직선 식에 대입해요','그래프를 그려요'],
+  fig:g=>g.line([0,4],[1,5],COL.line)+g.text([-6.6,-1.3],'y = x + 4',COL.line)+g.dot([-6,2],COL.soft,'(−6, 2)',-14,-10)+g.arrow([-6,2],[5.7,2],COL.hi)+g.dot([6,2],COL.ink,'(6, 2)',-10,20)+g.arrow([6,2],[2.25,5.75],COL.hi)+g.dot([2,6],COL.q,'(2, 6)',-52,-6)}],
+ all:'y축 대칭하면 (-a,2), 서로 바꿔서 (2,-a)고 그걸 직선 식에 대입해요'},
+
+{name:'대칭이동 ②', tag:'기본 예제 09-1 (2) · 점의 대칭이동',
+ q:`점 A(3, 5)를 ${x}축에 대하여 대칭이동시킨 점을 P, 점 P를 원점에 대하여 대칭이동시킨 점을 Q라 할 때, 선분 PQ의 길이를 구하시오.`,
+ fig:{g:()=>plane(-5.5,5.5,-6.5,6.5,22),base:g=>g.axes()+g.dot([3,5],COL.ink,'A(3, 5)',8,-6)},
+ steps:[
+ {lb:'x축 대칭',ask:`점 A를 ${x}축에 대해 대칭이동한 점 P는?`,no:['x좌표의부호','x좌표부호'],ok:[['y좌표','-5','마이너스5','마이너스오']],jump:[['3,-5']],
+  line:M(`A(3, 5) → P(3, −5)`),hint:'x축을 접는 선으로 생각해 봐. 어느 좌표의 부호가 바뀌지?',teach:'x축에 대해 대칭이동하면 y좌표의 부호만 바뀌어. P(3, −5)야.',
+  ex:['y좌표 부호가 바뀌어요','x좌표 부호가 바뀌어요'],
+  fig:g=>g.arrow([3,5],[3,-4.6],COL.hi)+g.dot([3,-5],COL.ink,'P(3, −5)',8,4)},
+ {lb:'원점 대칭',ask:'점 P를 원점에 대해 대칭이동한 점 Q는?',ok:[['둘다','모두','두좌표','x좌표와y좌표','x,y','-3','마이너스3']],jump:[['-3,5']],
+  line:M(`P(3, −5) → Q(−3, 5)`),hint:'원점에 대한 대칭은 x축 대칭과 y축 대칭을 둘 다 한 거야. 그럼 부호는?',teach:'원점에 대해 대칭이동하면 x좌표와 y좌표의 부호가 둘 다 바뀌어. Q(−3, 5)야.',
+  ex:['둘 다 부호가 바뀌어요','x좌표만 바뀌어요'],
+  fig:g=>g.arrow([3,-5],[-2.8,4.65],COL.hi)+g.dot([-3,5],COL.q,'Q(−3, 5)',-62,-6)},
+ {lb:'두 점 사이의 거리',ask:'선분 PQ의 길이는 어떻게 구해?',ok:[['거리','공식','피타고라스','루트']],jump:[['거리공식','두점사이']],
+  line:M(`PQ=${R('(−3−3)²+(5+5)²')}=${R('136')}=2${R('34')}`),hint:'두 점의 좌표를 알 때 길이를 구하는 공식이 있었지?',teach:'두 점 사이의 거리 공식을 써. x좌표의 차와 y좌표의 차를 각각 제곱해서 더하고 루트를 씌워.',
+  ex:['두 점 사이의 거리 공식으로 구해요','x좌표끼리 빼요'],
+  fig:g=>g.seg([3,-5],[-3,5],COL.line,3.2)+g.text([-2.2,-1.6],'PQ = 2√34',COL.line)}],
+ all:'y좌표 부호 바꿔서 P(3,-5), 둘 다 부호 바꿔서 Q(-3,5), 두 점 사이 거리 공식으로 구해요'},
+
+{name:'원 위의 점 (교육청)', tag:'교육청 · 도형의 이동 + 점과 직선 사이의 거리',
+ q:`원 ${M(`${x}²+(${y}−1)²=9`)} 위의 점 P가 있다. 점 P를 ${y}축의 방향으로 −1만큼 평행이동한 후 ${y}축에 대하여 대칭이동시킨 점을 Q라 하자. 두 점 ${M(`A(1, −${R('3')})`)}, ${M(`B(3, ${R('3')})`)}에 대하여 삼각형 ABQ의 넓이가 최대일 때, 점 P의 ${y}좌표는?
+ <div class="choices"><span>① ${F(5,2)}</span><span>② ${F(11,4)}</span><span>③ 3</span><span>④ ${F(13,4)}</span><span>⑤ ${F(7,2)}</span></div>`,
+ fig:{g:()=>plane(-4.6,5.2,-3.6,4.8,32),
+  base:g=>g.axes()+g.circ(0,1,3,COL.soft,true)+g.text([-4.4,4.35],'처음 원 (P가 있는 원)',COL.soft)+g.dot(pA,COL.ink,'A',8,14)+g.dot(pB,COL.ink,'B',8,-4),
+  cap:['Q가 있는 원 — 처음 원을 똑같이 옮긴 원','넓이가 크려면 높이가 길어야 해요','직선 AB','원의 중심에서 거리 √3, 반지름 3을 더하면 √3 + 3','가장 먼 점 Q','Q를 거꾸로 옮기면 P']},
+ steps:[
+ {lb:'Q가 있는 원',ask:'점 Q는 어떤 원 위에 있을까?',ok:[['원을','원도','원자체','이동시킨원','옮긴원','옮기','이동시','x²+y²','x^2+y^2','원점']],jump:[['원을옮','원자체','이동시킨원']],
+  line:`원 ${M(`${x}²+(${y}−1)²=9`)} → (${y}방향 −1) ${M(`${x}²+${y}²=9`)} → (${y}축 대칭) ${M(`${x}²+${y}²=9`)}　∴ Q는 원 ${M(`${x}²+${y}²=9`)} 위의 점`,
+  hint:'점 P는 처음 원 위에 있어. P를 옮기면, P가 있던 원은 어떻게 될까?',teach:'점 P를 옮긴 것처럼 처음 원을 똑같이 옮기면, 그 원 위에 Q가 있어. 옮기면 x² + y² = 9야.',
+  ex:['점 P를 이동시킨 것처럼 주어진 원을 이동시킨 원 위에 있어요','P랑 같은 원이요'],
+  fig:(g,d)=>g.circ(0,0,3,COL.blue)+g.arrow([0,1],[0,0.18],COL.hi)+g.text([2.2,-3.05],'x² + y² = 9',COL.blue)},
+ {lb:'넓이가 최대일 때',ask:'삼각형 ABQ의 넓이가 가장 크려면?',ok:[['높이','거리','멀','떨어']],jump:[['높이','거리가최대','가장멀']],
+  line:'밑변 AB는 정해져 있다 → 넓이 최대 ⇔ Q에서 직선 AB까지의 거리(높이) 최대',hint:'A와 B는 정해진 점이야. 그럼 삼각형에서 바뀌는 건 뭐야?',teach:'밑변 AB는 정해져 있으니까, Q에서 직선 AB까지의 거리인 높이가 길수록 넓이가 커져.',
+  ex:['높이가 가장 길어야 해요','AB가 길어야 해요'],
+  fig:(g,d)=>d>=5?'':g.poly([pA,pB,Qs],COL.fillA)+g.seg(pA,Qs,COL.line,1.4)+g.seg(pB,Qs,COL.line,1.4)+g.seg(pA,pB,COL.line,1.4)+g.dot(Qs,COL.line,'Q?',-30,-4)},
+ {lb:'직선 AB',ask:'높이를 구하려면 뭐가 필요해?',ok:[['직선','식','방정식','기울기']],jump:[['직선ab','직선의방정식']],
+  line:`기울기 ${M(`=${F(`${R('3')}−(−${R('3')})`,'3−1')}=${R('3')}`)}　→　직선 AB: ${M(`${y}=${R('3')}${x}−2${R('3')}`)}`,hint:'높이는 점에서 직선까지의 거리야. 그러려면 무엇의 식이 있어야 할까?',teach:'높이는 점과 직선 AB 사이의 거리라서, 직선 AB의 방정식이 먼저 있어야 해.',
+  ex:['직선 AB의 방정식이요','원의 넓이요'],
+  fig:g=>g.line(pA,pB,COL.line)+g.text([4.25,4.45],'y = √3x − 2√3',COL.line,'end')},
+ {lb:'높이가 가장 길 때',ask:'높이가 가장 길 때는 언제야?',ok:[['반지름','중심','더해','+3','원점에서']],jump:[['반지름을더','중심에서']],
+  line:`원점에서 직선 AB까지의 거리 ${M(`=${F(`|−2${R('3')}|`,R('3+1'))}=${R('3')}`)}　→　가장 긴 높이 ${M(`=${R('3')}+3`)}`,hint:'원의 중심에서 직선까지의 거리를 먼저 생각해 봐. 원 위의 점은 거기서 얼마나 더 멀어질 수 있을까?',teach:'원의 중심에서 직선까지의 거리에 반지름을 더할 때 높이가 가장 길어. √3 + 3이야.',
+  ex:['중심에서 직선까지 거리에 반지름을 더할 때요','A에서 가장 멀 때요'],
+  fig:g=>g.seg([0,0],H,COL.hi,2.6)+g.rt(H,[-.866,.5],[.5,.866])+g.text([1.05,-.15],'√3',COL.hi)+g.seg([0,0],Qp,COL.hi,2.6,true)+g.text([-1.55,0.4],'3',COL.hi)},
+ {lb:'그때 점 Q',ask:'그때 점 Q는 어디에 있어?',ok:[['수직','수선','반대','먼쪽','교점']],jump:[['수직','수선']],
+  line:`원점을 지나고 AB에 수직인 직선 ${M(`${y}=−${F(1,R('3'))}${x}`)}과 원의 교점 중 AB에서 먼 쪽 → ${M(`Q(−${F(`3${R('3')}`,2)}, ${F(3,2)})`)}`,hint:'방금 그린 높이 선을 봐. 원점을 지나 직선 AB에 수직인 선이 원과 어디서 만나지?',teach:'원점을 지나고 직선 AB에 수직인 직선이 원과 만나는 두 점 중, 직선 AB에서 먼 쪽이 Q야.',
+  ex:['원점을 지나고 AB에 수직인 직선과 원이 만나는 점 중 먼 쪽이요','A랑 B의 중점이요'],
+  fig:g=>g.poly([pA,pB,Qp],COL.fillA)+g.seg(pA,Qp,COL.line,1.6)+g.seg(pB,Qp,COL.line,1.6)+g.dot(Qp,COL.q,'Q',-22,-8)},
+ {lb:'P로 되돌리기',ask:`점 P의 ${y}좌표는 어떻게 구해?`,ok:[['거꾸로','되돌','반대로','+1','1을더','1더','위로1','5/2','2분의5']],jump:[['거꾸로','되돌']],
+  line:`Q의 ${y}좌표 = (P의 ${y}좌표) − 1 → P의 ${y}좌표 ${M(`=${F(3,2)}+1=${F(5,2)}`)}　∴ ①`,hint:'Q는 P를 옮긴 점이야. 옮긴 걸 거꾸로 하면?',teach:'옮긴 걸 거꾸로 되돌리면 P야. y축 대칭은 y좌표를 안 바꾸니까, Q의 y좌표에 1만 더하면 돼.',
+  ex:['Q를 거꾸로 옮겨요. y좌표에 1을 더해요','Q의 y좌표가 답이에요'],
+  fig:g=>g.arrow(Qp,[Pp[0]-.25,Pp[1]-.05],COL.hi)+g.dot(Pp,COL.ok,'P',8,-6)+g.seg([0,2.5],Pp,COL.ok,1.3,true)+g.text([-.95,2.6],'5/2',COL.ok)}],
+ all:'점 P를 이동시킨 것처럼 주어진 원을 이동시킨 원 위에 있고, 높이가 가장 길어야 하니까 직선 AB의 방정식을 구하고 중심에서 거리에 반지름을 더해요'},
+
+{name:'집합의 연산', tag:'기본 예제 13-3 · 집합의 연산의 성질',
+ q:`전체집합 ${U}의 두 부분집합 ${A}, ${B}에 대하여 다음 중 항상 옳은 것은?
+ <div class="choices"><span>① ${M(`${U}−${A}${C}=${B}`)}</span><span>② ${M(`${A}⊂(${A}∩${B})`)}</span><span>③ ${M(`${A}${C}∩${B}=${A}−${B}`)}</span><span>④ ${M(`${A}∩(${A}∪${B})=${A}`)}</span><span>⑤ ${M(`${A}∩(${B}∪${B}${C})=∅`)}</span></div>`,
+ sets:true,
+ steps:[
+ {lb:'① U − Aᶜ',pick:true,ask:`① ${M(`${U}−${A}${C}`)}을 나타낸 그림은 어느 거야?`,
+  opts:[['b','o'],['a','ab','b'],['b','ab'],['a','ab']],ans:'라',
+  why:{가:'그건 Aᶜ이야. 전체 U에서 Aᶜ를 빼면 어디가 남을까?',나:'그건 A ∪ B야. U에서 A가 아닌 부분을 다 빼면 B만 있는 조각도 빠져.',다:'그건 B야. U에서 Aᶜ를 빼면 A가 아닌 곳이 전부 빠져.'},
+  teach:'U − Aᶜ는 전체에서 A가 아닌 부분을 뺀 거라 A만 남아. 라 그림이야.',
+  cmp:{ll:'U − Aᶜ',L:['a','ab'],R:['b','ab'],rl:'B'},ex:['라 그림이요','나 그림이요']},
+ {lb:'② A ∩ B',pick:true,ask:`② ${M(`${A}∩${B}`)}를 나타낸 그림은 어느 거야?`,
+  opts:[['a','ab','b'],['ab'],['a'],['b']],ans:'나',
+  why:{가:'그건 A ∪ B야. 교집합은 두 집합에 모두 들어 있는 곳이야.',다:'그건 A − B야. A와 B에 모두 들어 있는 곳은?',라:'그건 B − A야. A와 B에 모두 들어 있는 곳은?'},
+  teach:'A ∩ B는 A와 B에 모두 들어 있는 가운데 부분이야. 나 그림이야.',
+  cmp:{ll:'A',L:['a','ab'],R:['ab'],rel:'⊂',rl:'A ∩ B'},ex:['나 그림이요','가 그림이요']},
+ {lb:'③ Aᶜ ∩ B',pick:true,ask:`③ ${M(`${A}${C}∩${B}`)}를 나타낸 그림은 어느 거야?`,
+  opts:[['a'],['o'],['b'],['ab']],ans:'다',
+  why:{가:'그건 A − B야. Aᶜ ∩ B는 B 중에서 A가 아닌 곳이야.',나:'그건 (A ∪ B)ᶜ야. B 안에 있어야 해.',라:'그건 A ∩ B야. A가 아닌 곳이어야 해.'},
+  teach:'Aᶜ ∩ B는 B 중에서 A가 아닌 부분이라 B − A야. 다 그림이야.',
+  cmp:{ll:'Aᶜ ∩ B',L:['b'],R:['a'],rl:'A − B'},ex:['다 그림이요','가 그림이요']},
+ {lb:'④ A ∩ (A ∪ B)',pick:true,ask:`④ ${M(`${A}∩(${A}∪${B})`)}를 나타낸 그림은 어느 거야?`,
+  opts:[['a','ab'],['ab'],['a','ab','b'],['b','ab']],ans:'가',
+  why:{나:'그건 A ∩ B야. A ∪ B는 A를 통째로 품고 있어.',다:'그건 A ∪ B야. A와 겹치는 곳만 남겨야 해.',라:'그건 B야. A 쪽을 봐.'},
+  teach:'A는 A ∪ B 안에 통째로 들어 있어서 둘의 교집합은 A 전체야. 가 그림이야.',
+  cmp:{ll:'A ∩ (A ∪ B)',L:['a','ab'],R:['a','ab'],rl:'A'},ex:['가 그림이요','다 그림이요']},
+ {lb:'⑤ A ∩ (B ∪ Bᶜ)',pick:true,ask:`⑤ ${M(`${A}∩(${B}∪${B}${C})`)}를 나타낸 그림은 어느 거야?`,
+  opts:[['ab'],['a','ab'],[],['a','ab','b','o']],ans:'나',
+  why:{가:'그건 A ∩ B야. B ∪ Bᶜ는 B만이 아니야.',다:'그건 아무것도 없는 ∅이야. B ∪ Bᶜ는 무엇일까?',라:'그건 U 전체야. A와 겹치는 곳만 남겨야 해.'},
+  teach:'B ∪ Bᶜ는 전체집합 U야. 그래서 A ∩ U = A, 나 그림이야.',
+  cmp:{ll:'A ∩ (B ∪ Bᶜ)',L:['a','ab'],R:[],rl:'∅'},ex:['나 그림이요','다 그림이요']},
+ {lb:'정답',ask:'그럼 항상 옳은 건 몇 번이야?',ok:[['4','사번','④']],
+  line:`양쪽 그림이 같은 건 ④뿐　∴ ④`,hint:'풀이 노트에서 양쪽 그림이 같은(✓) 보기를 찾아봐.',teach:'양쪽 그림이 같은 건 ④ 하나야.',ex:['4번이요','3번이요']}],
+ all:''}
+];
+
+const $=id=>document.getElementById(id);
+const norm=s=>s.toLowerCase().replace(/[−–]/g,'-').replace(/\s+/g,'');
+const hit=(t,list)=>(list||[]).some(k=>t.includes(norm(k)));
+const okStep=(t,st,k)=>{const g=st[k]; if(!g) return false; if(hit(t,st.no)) return false; return g.every(grp=>hit(t,grp));};
+let pi=0,si=0,tries=0,rec=[];
+function drawFig(){const p=P[pi],box=$('figc');
+  if(p.sets){const s=p.steps[si];box.hidden=false;
+    if(s&&s.pick){$('fig').innerHTML='<div class="picks">'+s.opts.map((r,k)=>`<button class="pk" data-l="${LABS[k]}"><b>${LABS[k]}</b>${vmini(r,92)}</button>`).join('')+'</div>';
+      $('fig').querySelectorAll('.pk').forEach(b=>b.onclick=()=>{const l=b.dataset.l;bubble('me',l+' 그림이요');judge(l+' 그림이요')});
+      $('figcap').textContent='그림을 누르거나 “가 그림이요”처럼 말해 봐';}
+    else{$('fig').innerHTML='';$('figcap').textContent='';box.hidden=true;}return;}
+  if(p.venn){box.hidden=false;let l='';for(let i=0;i<si;i++) if(p.steps[i].vl) l=p.steps[i].vl;
+    $('fig').innerHTML=venn(l);$('figcap').textContent=(p.cap||[])[si-1]||'';return;}
+  if(!p.fig){box.hidden=true;return;} box.hidden=false;
+  const g=p.fig.g(); let body=p.fig.base(g); for(let i=0;i<si;i++){const f=p.steps[i].fig; if(f) body+=f(g,si);}
+  $('fig').innerHTML=svgWrap(g,body); $('fig').firstChild.classList.add('fig-new'); $('figcap').textContent=(p.fig.cap||[])[si-1]||'';}
+function bubble(cls,html){const d=document.createElement('div');d.className='b '+cls;d.innerHTML=html;$('chat').appendChild(d);d.scrollIntoView({block:'end',behavior:'smooth'})}
+function write(i,stuck){const s=P[pi].steps[i];const d=document.createElement('div');d.className='ln'+(stuck?' st':'');d.innerHTML=`<b>${i+1}</b><span>${s.line}</span><span class="who">${stuck?'뚜삐가 대신 씀':'네 말을 받아 씀'}</span>`;$('note').appendChild(d)}
+function load(i){pi=i;si=0;tries=0;rec=[];const p=P[i];p.steps.forEach(s=>{s.picked=[]});
+  document.querySelectorAll('#tabs button').forEach((b,k)=>b.setAttribute('aria-pressed',k===i));
+  $('prob').innerHTML=`<div class="tag">${p.tag}</div><div class="q">${p.q}</div>`;$('note').innerHTML='';$('chat').innerHTML='';$('rec').hidden=true;$('ask').hidden=false;
+  drawFig();bubble('t',p.steps[0].ask);exs();}
+function exs(){const s=P[pi].steps[si];const e=$('ex');e.innerHTML='<span>예시 답:</span>';
+  const add=(t,lab)=>{const b=document.createElement('button');b.textContent=lab+' '+t;b.onclick=()=>{$('inp').value=t;send()};e.appendChild(b)};
+  add(s.ex[0],'✅');add(s.ex[1],'❌');if(si===0&&P[pi].all)add(P[pi].all,'⚡ 한 번에:');}
+function send(){const raw=$('inp').value.trim();if(!raw)return;$('inp').value='';bubble('me',raw);judge(raw);}
+function judge(raw){const t=norm(raw),steps=P[pi].steps,s=steps[si];const dunno=/모르|몰라/.test(raw);
+  if(s.pick){const lab=dunno?null:pickLabel(raw);
+    if(lab===s.ans){rec[si]=tries?'re':'ok';s.line=cmpLine(s);write(si,false);si++;tries=0;drawFig();bubble('good','맞아! 풀이 노트에 양쪽 그림을 나란히 놓았어.');return next();}
+    tries++;(s.picked=s.picked||[]).push(lab||'?');
+    if(tries===1){bubble('t',(lab&&s.why[lab])||'식을 앞에서부터 하나씩 색칠해 봐. 어느 그림이 맞을까?');return;}
+    rec[si]='st';s.line=cmpLine(s);bubble('teach','💡 '+s.teach);write(si,true);si++;tries=0;drawFig();return next();}
+  if(!dunno&&okStep(t,s,'ok')){rec[si]=tries?'re':'ok';write(si,false);let n=si+1;
+    while(n<steps.length&&okStep(t,steps[n],'jump')){rec[n]='ok';write(n,false);n++;}
+    const cnt=n-si;si=n;tries=0;drawFig();
+    bubble('good',cnt>1?`좋아! ${cnt}단계를 한 번에 말했네.`:'맞아!');return next();}
+  tries++;
+  if(tries===1){bubble('t',s.hint);return;}
+  rec[si]='st';bubble('teach','💡 '+s.teach);write(si,true);si++;tries=0;drawFig();next();}
+function next(){const steps=P[pi].steps;if(si<steps.length){bubble('t',steps[si].ask);exs();return;}
+  bubble('good','🎉 끝까지 풀었어!');$('ask').hidden=true;
+  const L={ok:['p-ok','한 번에'],re:['p-re','되묻고 나서'],st:['p-st','막힘 · 설명 봄']};
+  const miss=steps.filter((s,i)=>rec[i]==='st').map(s=>s.lb);
+  $('rec').innerHTML=`<h3>📋 선생님·부모님이 보는 기록</h3>`+steps.map((s,i)=>`<div class="r"><span class="pill ${L[rec[i]][0]}">${L[rec[i]][1]}</span>${i+1}. ${s.lb}${s.picked&&s.picked.length?` <span style="color:#7C7399;font-size:12.5px">(처음에 고른 그림: ${s.picked.join(', ')})</span>`:''}</div>`).join('')
+   +`<div class="r" style="margin-top:6px">${miss.length?`➡️ 다음에 다시 볼 것: <b>${miss.join(', ')}</b>`:'➡️ 모든 단계를 스스로 말했어요'}</div>`;
+  $('rec').hidden=false;$('rec').scrollIntoView({behavior:'smooth'});}
+P.forEach((p,i)=>{const b=document.createElement('button');b.textContent=p.name;b.onclick=()=>load(i);$('tabs').appendChild(b)});
+$('send').onclick=send;$('inp').addEventListener('keydown',e=>{if(e.key==='Enter')send()});
+$('dunno').onclick=()=>{bubble('me','모르겠어요');judge('모르겠어요')};
+load(0);
+</script></body></html>

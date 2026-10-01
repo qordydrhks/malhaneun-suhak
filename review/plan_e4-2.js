@@ -5008,3 +5008,23 @@
 ],
 "seen": []
 }});
+
+/* [0929e4b] 4-07 선수 개념과 글자까지 같은 t0L1 뺌 (make_plan_0929e4b.py) */
+(window.QR_BASE_PLANS = window.QR_BASE_PLANS || []).push({ key:'e4-2_2026-09-29b', data:{
+"format": "qr-plan-2",
+"grade": "e4-2",
+"rounds": 3,
+"items": [
+{
+"id": "1c2e69e:t0L1",
+"big": "4. 사각형",
+"small": "07. 여러 가지 사각형",
+"kind": "low",
+"by": "claude",
+"off": true,
+"offWas": false,
+"offBy": "claude"
+}
+],
+"seen": []
+}});
