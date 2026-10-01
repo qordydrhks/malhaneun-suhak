@@ -136,9 +136,12 @@ body.ddc-lock{overflow:hidden}
 .ddc-pk-card.sel .ddc-pk-stage .ddc-bubble::after{left:calc(50% - 6px);bottom:-5px}
 @keyframes ddcBubbleC{0%{opacity:0;transform:translateX(-50%) translateY(6px) scale(.9)}100%{opacity:1;transform:translateX(-50%)}}
 .ddc-pk-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;flex-wrap:wrap}
-.ddc-pk-story{margin:0;font-size:14px;color:#e4e0ff;min-height:1.4em}
-.ddc-pk-story b{color:#fff}
-.ddc-pk-say{display:none;margin-top:4px;color:#fff;font-weight:700}
+.ddc-pk-story{margin:0;flex:1 1 420px;min-width:0;font-size:14.5px;line-height:1.65;color:#ece9ff;min-height:1.4em;
+  display:flex;gap:12px;align-items:flex-start}
+.ddc-pk-story.show{animation:ddcFade .35s ease}
+.ddc-pk-name{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;font-weight:800;color:#fff;font-size:15px;white-space:nowrap}
+.ddc-pk-name i{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:12.5px;background:var(--ddc-color)}
+.ddc-pk-tale{text-wrap:pretty;word-break:keep-all}
 .ddc-pk-btns{display:flex;gap:8px;margin-left:auto}
 .ddc-pk-ok,.ddc-pk-cancel{border:0;border-radius:14px;padding:13px 22px;font:inherit;font-weight:800;font-size:15px;cursor:pointer}
 .ddc-pk-ok{background:linear-gradient(180deg,#fff,#ece8ff);color:#2b2466;box-shadow:0 8px 20px rgba(0,0,0,.25)}
@@ -164,7 +167,7 @@ body.ddc-lock{overflow:hidden}
   .ddc-pk-row{gap:8px}
   .ddc-pk-card{width:calc((100% - 16px) / 3)}
   .ddc-pk-card.sel .ddc-pk-stage .ddc-bubble{display:none}
-  .ddc-pk-say{display:block!important}
+  .ddc-pk-story{flex-direction:column;gap:6px;max-height:9.5em;overflow:auto;font-size:13.5px}
   .ddc-pk-foot{flex-direction:column;align-items:stretch}
   .ddc-pk-btns{margin-left:0}.ddc-pk-ok{flex:1}
   .ddc-s-home{--ddc-w:100px}

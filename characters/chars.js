@@ -20,6 +20,7 @@
   const CHARS = {
     exi: { num:'0', name:'엑시', color:'#c58ad8', tint:'#f6e9fb', tempo:3.9,
       intro:'조용히 들어 주는 친구', story:'아무것도 없어 보여도 자릿값을 지키는 0',
+      tale:"나는 0이야. 아무것도 없는 것 같지만, 내가 자리를 지켜 줘야 1이 10이 되고 100이 돼. 우주에도 눈에 안 보이지만 분명히 있는 '암흑물질'이 있대. 과학자들이 찾고 있는 그 후보 중 하나가 '액시온'인데, 내 이름이 거기서 왔어.",
       hello:['왔구나. 오늘도 네 말 들려줘.','천천히, 한 가지씩.'],
       question:['네 말로 들려줘.','한 가지씩 말해 줘.','천천히, 정확하게.'],
       listening:['응, 듣고 있어.','계속 말해 줘.'],
@@ -31,6 +32,7 @@
       quizGood:['전부 맞혔어. 정확해.'], quizMid:['틀린 것만 다시 보자.'] },
     pola: { num:'1', name:'폴라', color:'#f2737a', tint:'#fdeceb', tempo:3.0,
       intro:'첫걸음을 같이 떼는 친구', story:'모든 시작의 첫걸음, 1',
+      tale:"나는 1이야. 셈은 언제나 1부터 시작하지. 어떤 수에 1을 곱해도 그 수는 그대로야. 내 이름은 길을 알려 주는 북극성 '폴라리스'에서 왔어. 방향은 내가 알려 줄게, 첫걸음은 네가 떼는 거야!",
       hello:['좋아, 오늘도 출발!','첫걸음부터 같이 가자!'],
       question:['어디부터 말해 볼까?','첫걸음부터 같이 가자!','좋아, 출발해 볼까?'],
       listening:['응응, 듣고 있어!','계속 말해 줘!'],
@@ -41,7 +43,8 @@
       retry:['좋아, 다시 출발!','한 걸음만 더 가 보자!'],
       quizGood:['전부 맞혔어! 완벽한 탐험!'], quizMid:['좋아, 다시 출발해 보자!'] },
     aresi:{ num:'2', name:'아레시', color:'#4fb3e6', tint:'#e6f5fc', tempo:3.4,
-      intro:'뚜삐랑 단서를 찾는 친구', story:'둘이 짝이 되는 수, 2',
+      intro:'뚜삐랑 단서를 찾는 친구', story:'가장 작은 소수, 2',
+      tale:"나는 2, 머리 위 친구는 뚜삐야. 1보다 큰 수 중에서 1과 자기 자신으로만 나누어떨어지는 수를 '소수'라고 해. 0.1 같은 소수와는 다른 수야. 2는 그중 가장 작고, 짝수인 소수는 나 하나뿐이지. 1974년, 사람들은 아레시보 망원경으로 우주에 점 1679개로 된 신호를 보냈어. 1679 = 23 × 73, 두 소수의 곱이라서 점을 23개씩 73줄로 늘어놓으면 그림이 나타나. 내 이름은 그 망원경에서 왔어. 네 말 속 신호도 뚜삐랑 같이 풀어 볼게!",
       hello:['뚜삐랑 기다리고 있었어!','오늘은 어떤 신호를 보내 줄래?'],
       question:['네 말에서 단서를 찾아볼게.','뚜삐랑 같이 들을게!','신호를 보내 줘!'],
       listening:['신호 받는 중!','뚜삐도 듣고 있어.'],
@@ -53,6 +56,7 @@
       quizGood:['전부 맞혔어! 해독 완료!'], quizMid:['틀린 신호만 다시 보자!'] },
     iris: { num:'7', name:'이리스', color:'#6f63e0', tint:'#ecebfc', tempo:3.6,
       intro:'함정을 찾아내는 친구', story:'준비한 사람이 찾는 행운, 7',
+      tale:"나는 7이야. 일주일은 7일, 무지개는 일곱 빛깔이지. 내 이름은 일곱 번째로 발견된 소행성 '이리스'에서 왔어. 무지개 여신의 이름이기도 해. 행운은 준비한 사람에게 온대. 숨은 함정은 내가 같이 찾아 줄게.",
       hello:['준비됐지? 시작하자.','오늘 함정도 같이 찾자.'],
       question:['조건부터 차근차근.','준비됐지? 들어 볼게.','네 생각을 말해 봐.'],
       listening:['응, 계속 말해 봐.','듣고 있어.'],
@@ -64,6 +68,7 @@
       quizGood:['전부 맞혔어. 깔끔해.'], quizMid:['틀린 문제의 조건만 다시 보자.'] },
     lemma:{ num:'8', name:'렘마', color:'#5fc9a4', tint:'#e8f8f1', tempo:4.8,
       intro:'생각할 시간을 주는 친구', story:'옆으로 누우면 무한대가 되는 8',
+      tale:"나는 8이야. 옆으로 누우면 끝이 없다는 뜻의 무한대(∞) 모양이 돼. 매일 같은 시각에 해의 위치를 1년 동안 찍으면 하늘에 8자 모양이 그려진대. 그걸 '아날렘마'라고 하는데, 내 이름은 거기서 따왔어. 천천히 해도 괜찮아.",
       hello:['천천히 해도 돼.','오늘도 느긋하게, 같이.'],
       question:['천천히 해도 돼. 답은 도망가지 않아.','생각이 익으면 말해 줘.','편하게 말해 봐.'],
       listening:['응, 천천히.','계속 들을게.'],
@@ -286,8 +291,11 @@
         Object.keys(stages).forEach(k => { if(k !== id){ act(stages[k], 'base', {line:''}); } });
         const c = CHARS[id], hi = pick(c.hello);
         act(stages[id], 'praise', {line: hi, lineMs: 0});
-        ov.querySelector('.ddc-pk-story').innerHTML = '<b>' + c.num + ' · ' + esc(c.name) + '</b> — ' + esc(c.story) +
-          '<span class="ddc-pk-say">“' + esc(hi) + '”</span>';
+        // 터치하면 그 친구의 이야기(설정집 5절 서사를 아이 눈높이로 — 2026-10-01 마스터 승인)
+        const tale = ov.querySelector('.ddc-pk-story');
+        tale.innerHTML = '<span class="ddc-pk-name" style="--ddc-color:' + c.color + '"><i>' + c.num + '</i>' + esc(c.name) + '</span>' +
+          '<span class="ddc-pk-tale">' + esc(c.tale || c.story) + '</span>';
+        tale.classList.remove('show'); void tale.offsetWidth; tale.classList.add('show'); tale.scrollTop = 0;
         const ok = ov.querySelector('.ddc-pk-ok');
         ok.disabled = false; ok.textContent = c.name + (/[가-힣]$/.test(c.name) && ((c.name.charCodeAt(c.name.length-1) - 0xAC00) % 28) ? '이랑' : '랑') + ' 같이 할래요!';
       });
