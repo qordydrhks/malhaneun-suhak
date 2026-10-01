@@ -1,0 +1,127 @@
+<title>숫자 친구들 움직임</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@500;700;800&display=swap">
+<link rel="stylesheet" href="characters/chars.css">
+<style>
+/* 레이아웃: 밤하늘 무대 하나 + 상황 버튼 줄. 앱의 친구 고르기 화면과 같은 세계. 한 가지 어두운 테마로 고정 */
+:root{
+  --sky:#1d1844; --sky2:#2b2466; --ink:#f4f2ff; --sub:#bdb6ea; --glass:rgba(255,255,255,.09); --line:rgba(255,255,255,.18);
+  --accent:#ffd36b;
+  --f-body:"Noto Sans KR","Malgun Gothic",sans-serif; --f-hand:"Gowun Dodum","Noto Sans KR",sans-serif;
+  color-scheme:dark;
+}
+body{margin:0;background:var(--sky);color:var(--ink);font-family:var(--f-body)}
+.wrap{max-width:980px;margin:0 auto;padding-inline:16px;padding-block:28px 48px;display:flex;flex-direction:column;gap:22px}
+.bg{position:fixed;inset:0;z-index:-1;background:
+  radial-gradient(1.2px 1.2px at 12% 18%,#fff 60%,transparent),radial-gradient(1px 1px at 28% 72%,#fff 60%,transparent),
+  radial-gradient(1.4px 1.4px at 46% 30%,#fff 60%,transparent),radial-gradient(1px 1px at 63% 82%,#fff 60%,transparent),
+  radial-gradient(1.2px 1.2px at 78% 22%,#fff 60%,transparent),radial-gradient(1px 1px at 90% 60%,#fff 60%,transparent),
+  radial-gradient(60% 50% at 18% 8%,rgba(150,110,240,.42),transparent 70%),
+  radial-gradient(55% 45% at 88% 92%,rgba(70,190,200,.3),transparent 70%),
+  linear-gradient(160deg,var(--sky),var(--sky2) 50%,#182a52)}
+header h1{margin:0;font-size:clamp(24px,5vw,34px);font-weight:800;letter-spacing:-.02em;text-wrap:balance}
+header p{margin:6px 0 0;color:var(--sub);font-size:15px;line-height:1.6;max-width:62ch}
+.picks{display:flex;flex-wrap:wrap;gap:8px}
+.picks button{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--glass);color:var(--ink);
+  border-radius:99px;padding:8px 14px 8px 8px;font:700 15px var(--f-body);cursor:pointer}
+.picks button i{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:800;font-size:13px;color:#fff}
+.picks button[aria-pressed="true"]{background:#fff;color:#241d55}
+.picks button:focus-visible,.acts button:focus-visible,.open:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.stage{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:20px;align-items:center;
+  background:var(--glass);border:1px solid var(--line);border-radius:28px;padding:26px}
+.floor{position:relative;display:flex;justify-content:center;align-items:flex-end;min-height:340px;padding-top:70px}
+.floor .ddc{--ddc-w:220px}
+.floor .ddc-bubble{font-size:16px}
+.side{display:flex;flex-direction:column;gap:14px;min-width:0}
+.now{font-family:var(--f-hand);font-size:22px;color:var(--accent);margin:0}
+.where{margin:0;color:var(--sub);font-size:14.5px;line-height:1.6}
+.acts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.acts button{border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--ink);border-radius:14px;padding:11px 6px;
+  font:700 14px var(--f-body);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+.acts button small{font-weight:500;font-size:11.5px;color:var(--sub)}
+.acts button[aria-pressed="true"]{border-color:var(--accent);background:rgba(255,211,107,.14)}
+.open{align-self:flex-start;border:0;border-radius:14px;padding:12px 18px;font:800 15px var(--f-body);background:#fff;color:#241d55;cursor:pointer}
+.rules{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.rules div{border-top:1px solid var(--line);padding-top:10px}
+.rules b{display:block;font-size:14px;margin-bottom:4px}
+.rules p{margin:0;color:var(--sub);font-size:13.5px;line-height:1.55}
+@media (max-width:760px){
+  .stage{grid-template-columns:1fr;padding:18px}
+  .floor{min-height:280px}.floor .ddc{--ddc-w:170px}
+  .acts{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .rules{grid-template-columns:1fr}
+}
+</style>
+<div class="bg" aria-hidden="true"></div>
+<div class="wrap">
+  <header>
+    <h1>숫자 친구들 움직임 미리보기</h1>
+    <p>앱(v92.0)에 넣은 것과 같은 파일로 움직입니다. 친구를 고르고 아래 상황 버튼을 눌러 보세요. 초등 학생 화면에만 나옵니다.</p>
+  </header>
+  <div class="picks" id="picks" role="group" aria-label="친구 고르기"></div>
+  <section class="stage">
+    <div class="floor" id="floor"></div>
+    <div class="side">
+      <p class="now" id="now"></p>
+      <p class="where" id="where"></p>
+      <div class="acts" id="acts" role="group" aria-label="상황"></div>
+      <button class="open" id="open" type="button">앱의 친구 고르기 화면 열기</button>
+    </div>
+  </section>
+  <section class="rules" aria-label="움직임 규칙">
+    <div><b>한 화면에 친구는 하나</b><p>결과가 뜨면 마이크 옆 친구가 결과 줄로 옮겨 가서 반응합니다.</p></div>
+    <div><b>채점 전엔 평가하지 않기</b><p>듣는 동안엔 "듣고 있어" 같은 말만. 칭찬은 70점을 넘었을 때만 합니다.</p></div>
+    <div><b>생각할 땐 조용히</b><p>질문·녹음 화면에선 숨쉬기와 상황 몸짓만. 홈에서만 가끔 혼자 움직입니다.</p></div>
+  </section>
+</div>
+<script>var session = { student: { id: 'preview', name: '미리보기', grade: '초4' } };</script>
+<script src="characters/chars.js"></script>
+<script>
+(function(){
+  const D = window.DDC, C = D.CHARS;
+  const ACTS = [
+    ['hello','인사','홈'], ['question','질문','질문이 뜰 때'], ['listening','듣기','녹음 중'], ['thinking','생각','채점 중'],
+    ['praise','합격','70점 이상'], ['retry','다시','70점 미만'], ['hint','힌트','다시 볼 곳'], ['solving','문제 풀기','기본문제']
+  ];
+  const WHERE = {
+    hello:'학생 홈 공부 카드 오른쪽 위. 손 흔들어 인사하고, 5~10초마다 작게 움직입니다.',
+    question:'질문 화면 마이크 왼쪽. 톡 튀어나와 짧게 묻습니다.',
+    listening:'마이크를 누르면 마이크 쪽으로 몸을 기울입니다. 말이 글자로 잡힐 때마다 끄덕여요(여기선 1.2초마다 흉내).',
+    thinking:'"설명 마치기"를 누른 뒤 채점하는 동안 좌우로 천천히 흔들립니다.',
+    praise:'결과 줄에서 두 번 점프하고 반짝이가 터집니다.',
+    retry:'잠깐 처졌다가 2초 뒤 힌트를 가리키는 얼굴로 바뀝니다.',
+    hint:'"다시 말해볼 포인트" 쪽을 가리킵니다.',
+    solving:'문제 풀기 카드 오른쪽 위에서 집중합니다. 전부 맞히면 점프합니다.'
+  };
+  let cur = 'pola', el = null, nodT = null, lastAct = 'hello';
+  const picks = document.getElementById('picks'), acts = document.getElementById('acts');
+  D.ORDER.forEach(id => {
+    const b = document.createElement('button'); b.type = 'button'; b.dataset.id = id;
+    b.innerHTML = '<i style="background:' + C[id].color + '">' + C[id].num + '</i>' + C[id].name;
+    b.onclick = () => { cur = id; mount(); run(lastAct); }; picks.appendChild(b);
+  });
+  ACTS.forEach(([k, t, s]) => {
+    const b = document.createElement('button'); b.type = 'button'; b.dataset.k = k;
+    b.innerHTML = t + '<small>' + s + '</small>'; b.onclick = () => run(k); acts.appendChild(b);
+  });
+  function mount(){
+    const f = document.getElementById('floor'); f.innerHTML = '';
+    el = D.makeStage(cur, {state:'base', bubbleSide:'top'}); f.appendChild(el);
+    picks.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.id === cur)));
+  }
+  function run(k){
+    lastAct = k; clearInterval(nodT); el.classList.remove('ddc-idle-fidget');
+    if(k === 'retry'){
+      D.act(el, 'retry', {lineMs: 1800});
+      setTimeout(() => { if(lastAct === 'retry') D.act(el, 'hint', {lineMs: 0}); }, 1900);
+    } else if(k === 'hello'){
+      D.act(el, 'hello', {lines:'hello', lineMs: 0});
+    } else D.act(el, k, {lineMs: 0});
+    if(k === 'listening') nodT = setInterval(() => D.gesture(el, 'nod'), 1200);
+    acts.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.k === k)));
+    document.getElementById('now').textContent = C[cur].name + ' · ' + ACTS.find(a => a[0] === k)[1];
+    document.getElementById('where').textContent = WHERE[k];
+  }
+  document.getElementById('open').onclick = () => D.openPicker();
+  mount(); run('hello');
+})();
+</script>

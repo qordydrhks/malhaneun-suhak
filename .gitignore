@@ -1,3 +1,5 @@
 *.pdf
 영상 및 자막 파일/
 __pycache__/
+# 캐릭터 원본 그림(GPT, 약 40MB)은 저장소에 올리지 않는다 — 앱은 characters/img 만 쓴다
+docs/character-design/**/*.png

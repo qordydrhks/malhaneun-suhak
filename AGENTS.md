@@ -204,3 +204,5 @@ commit 메시지는 변경 내용을 알 수 있도록 작성한다.
 - `DD_CURRICULUM`은 10만 자가 넘는 한 줄짜리 선언이다. 줄바꿈하지 않는다.
 - 원본 데이터(`DD_CURRICULUM`, `DD_CARDS`)는 직접 고치지 않고 별도 표나 override에 둔다.
 - 수정하면 `APP_VERSION`을 올린다 (마스터가 배포 반영을 확인하는 표시).
+
+캐릭터(숫자 친구들) 작업을 할 때는 `docs/character-design/CHARACTER_BIBLE.md`(설정집)를 먼저 읽는다. 앱 연결 방식과 쓰는 규칙은 그 문서 11절에 있다.
