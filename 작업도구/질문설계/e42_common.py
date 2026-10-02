@@ -50,6 +50,11 @@ def _tick(p, q):
     mx, my = (p[0] + q[0]) / 2, (p[1] + q[1]) / 2; dx, dy = q[0] - p[0], q[1] - p[1]; L = math.hypot(dx, dy); nx, ny = -dy / L * 6, dx / L * 6
     return '<line x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f" stroke="#2f5fb3" stroke-width="2"/>' % (mx - nx, my - ny, mx + nx, my + ny)
 
+def _tick2(p, q):   # 같은 길이 표시 두 줄 — 다른 길이 짝과 구별
+    mx, my = (p[0] + q[0]) / 2, (p[1] + q[1]) / 2; dx, dy = q[0] - p[0], q[1] - p[1]; L = math.hypot(dx, dy)
+    ux, uy = dx / L * 3, dy / L * 3
+    return _tick((p[0] - ux, p[1] - uy), (q[0] - ux, q[1] - uy)) + _tick((p[0] + ux, p[1] + uy), (q[0] + ux, q[1] + uy))
+
 def fig(key):
     if key == 'iso_apex':   # 이등변: 꼭지각 40° 표시만
         A, B, C = (130, 18), (70, 168), (190, 168)
@@ -91,8 +96,26 @@ def fig(key):
     if key == 'eq_mid':     # 정삼각형, 꼭짓점에서 마주 보는 변의 한가운데로 선분
         A, B, C = (120, 20), (40, 158), (200, 158)
         body = _poly([A, B, C]) + _tick(A, B) + _tick(A, C) + '<line x1="120" y1="20" x2="120" y2="158" stroke="#b45309" stroke-width="2" stroke-dasharray="6 4"/>'
-        body += _tick(B, (120, 158)) + _tick((120, 158), C)
+        body += _tick2(B, (120, 158)) + _tick2((120, 158), C)   # 밑변 반쪽끼리는 두 줄 — 네 변이 다 같아 보이지 않게(마스터 10/1)
         return _svg(240, 172, body)
+    if key == 'grid_iso':   # 모눈 위 선분 ㄴㄷ과 점 ①②③ — ①만 한가운데 바로 위
+        g = 26; ox, oy = 14, 14; body = ''
+        for i in range(7): body += '<line x1="%d" y1="%d" x2="%d" y2="%d" stroke="#d6dbe6" stroke-width="1"/>' % (ox + i * g, oy, ox + i * g, oy + 6 * g)
+        for j in range(7): body += '<line x1="%d" y1="%d" x2="%d" y2="%d" stroke="#d6dbe6" stroke-width="1"/>' % (ox, oy + j * g, ox + 6 * g, oy + j * g)
+        P = lambda c, r: (ox + c * g, oy + r * g)
+        B, C = P(1, 5), P(5, 5)
+        body += '<line x1="%d" y1="%d" x2="%d" y2="%d" stroke="#2f5fb3" stroke-width="2.5"/>' % (B + C)
+        body += _t(B[0], B[1] + 18, 'ㄴ') + _t(C[0], C[1] + 18, 'ㄷ')
+        for (c, r), lab in (((3, 1), '①'), ((4, 2), '②'), ((1, 2), '③')):
+            x, y = P(c, r); body += '<circle cx="%d" cy="%d" r="4" fill="#b45309"/>' % (x, y) + _t(x + 12, y - 6, lab, '#b45309', 13)
+        return _svg(190, 196, body)
+    if key == 'compass_eq': # 선분 ㄱㄴ, 양 끝에서 반지름 ㄱㄴ 인 원, 만나는 점 ㄷ
+        A, B = (90, 150), (170, 150); r = 80; Cp = (130, 150 - r * math.sqrt(3) / 2)
+        body = '<circle cx="90" cy="150" r="80" fill="none" stroke="#9aa3b2" stroke-width="1.4" stroke-dasharray="5 4"/>'
+        body += '<circle cx="170" cy="150" r="80" fill="none" stroke="#9aa3b2" stroke-width="1.4" stroke-dasharray="5 4"/>'
+        body += _poly([A, B, Cp], 'none') + ''.join('<circle cx="%.1f" cy="%.1f" r="3" fill="#374151"/>' % p for p in (A, B, Cp))
+        body += _t(A[0] - 12, A[1] + 16, 'ㄱ') + _t(B[0] + 12, B[1] + 16, 'ㄴ') + _t(Cp[0], Cp[1] - 10, 'ㄷ')
+        return _svg(260, 240, body)
     return ''
 
 def render(units, title, src, ask, rules):
