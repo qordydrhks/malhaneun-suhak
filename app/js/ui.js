@@ -77,7 +77,7 @@
         <span class="chip">${E.ROUND[open]} ${c.done}/${c.n}</span></button>`;
     }).join('');
     frame(`<section class="hero stage">${buddy('idle')}<div class="bubble">${esc(line('hello'))}</div></section>
-      ${nx ? `<button class="primary big go" data-go="small:${nx.small.code}" data-r="${nx.r}"><span>오늘 갈 곳</span><small>${nx.small.code} · ${esc(nx.small.title)} · ${E.ROUND[nx.r]}${nx.why === 'again' ? ' · 다시 열린 질문' : ''}</small></button>`
+      ${nx ? `<button class="primary big go" data-go="small:${nx.small.code}" data-r="${nx.r}"><span>오늘 갈 곳</span><small>${nx.small.code} · ${esc(nx.small.title)} · ${E.ROUND[nx.r]}${nx.why === 'again' ? ' · 다시 열린 질문' : nx.why === 'mission' ? ' · ' + A.M.name(nx.r) : ''}</small></button>`
              : `<div class="done-all">지금 열린 곳은 모두 탐험했어요 ✦</div>`}
       <h3 class="sect">E4-2 은하</h3><div class="galaxy">${bigs}</div>`, {crumb: 'E4-2 은하'});
   }
@@ -92,7 +92,7 @@
       const c = E.count(s, r), t = E.tasks(s, r), today = t.some(x => E.state(x.id).k === 'today'), again = t.some(x => E.state(x.id).k === 'next');
       const cls = c.n && c.done === c.n ? 'lit' : (c.done ? 'half' : '');
       return `<button class="planet ${cls}" data-go="small:${s.code}" data-r="${r}" style="--p:${PLANET[i % 8]}"><span class="orb"></span>
-        <span class="code">${s.code}</span><span class="nm">${esc(s.title)}</span><span class="cnt">${c.done}/${c.n}${today ? ' · 내일 열림' : ''}${again ? ' · 다시 열림' : ''}</span></button>`;
+        <span class="code">${s.code}</span><span class="nm">${esc(s.title)}</span><span class="cnt">${c.done}/${c.n}${today ? ' · 내일 열림' : ''}${again ? ' · 다시 열림' : ''}${A.M.done(s, r) ? ' · ✦' : (A.M.ready(s, r) ? ' · ' + A.M.name(r) : '')}</span></button>`;
     }).join('');
     frame(`<h2 class="ttl"><span class="code">${b.code}</span>${esc(b.title)}</h2><div class="tabs">${tabs}</div><div class="planets">${planets}</div>
       ${r < open ? '<p class="sub">지난 탐사는 연습으로 다시 할 수 있어요. 점수와 등급은 그대로예요.</p>' : ''}`, {back: 'home', backText: '은하', crumb: b.code});
@@ -110,8 +110,10 @@
       <div class="code">${small.code}</div><h2>${esc(small.title)}</h2><div class="chip">${E.ROUND[r]}</div>
       <p class="sub">${todo.length ? `질문 ${todo.length}개 · 하나에 약 ${min}분` : (locked ? `남은 질문 ${locked}개는 내일 다시 열려요` : '다 탐험했어요')}</p>
       ${todo.length ? `<button class="primary big" id="go">출발</button>` : ''}
-      ${practice ? `<button class="secondary" id="pr">연습하기 (점수는 그대로)</button>` : ''}</section>`, {back: 'big:' + big.no, backText: big.code, crumb: small.code});
+      ${!todo.length && A.M.ready(small, r) ? missionBtns(small, r) : ''}
+      ${practice ? `<button class="secondary" id="pr">질문 연습하기 (점수는 그대로)</button>` : ''}</section>`, {back: 'big:' + big.no, backText: big.code, crumb: small.code});
     if ($('#go')) $('#go').onclick = () => run(big, small, r, todo, false);
+    bindMission(big, small, r);
     if ($('#pr')) $('#pr').onclick = () => run(big, small, r, t, true);
   }
 
@@ -122,6 +124,7 @@
     sessionStart();
     let opened = 0, passed = 0;
     for (let i = 0; i < list.length; i++) {
+      if (!practice && E.tasks(small, r).filter(x => E.state(x.id).k !== 'done').length <= 2) A.M.prefetch(small, r);
       const out = await ask(big, small, list[i], i, list.length, practice);
       if (out === 'quit') return planet(small.code, r);
       if (out && out.pass) passed++;
@@ -141,7 +144,65 @@
     frame(`<section class="center-msg stage">${buddy(passed ? 'praise' : 'idle')}<h2>${practice ? '연습 끝!' : (passed === n ? '행성에 불이 켜졌어!' : '탐사 끝!')}</h2>
       <p class="sub">${small.code} · ${E.ROUND[r]} — 통과 ${passed}/${n}${passed < n && !practice ? ' · 남은 질문은 내일 다시 열려요' : ''}</p>
       ${opened ? `<div class="unlock">✦ ${big.code}의 ${E.ROUND[opened]}가 열렸어요!</div>` : ''}
-      <button class="primary big" data-go="big:${big.no}">${big.code}로</button><button class="ghost" data-go="home">은하로</button></section>`);
+      ${!practice && A.M.ready(small, r) && !A.M.done(small, r) ? missionBtns(small, r) : `<button class="primary big" data-go="big:${big.no}">${big.code}로</button>`}
+      <button class="ghost" data-go="home">은하로</button></section>`);
+    bindMission(big, small, r);
+  }
+
+  // ── mission (문제 풀기) ──
+  function missionBtns(small, r) {
+    const res = A.M.result(small, r), hres = A.M.result(small, r, true);
+    if (!res) return `<button class="primary big mbtn" id="mGo"><span>${A.M.name(r)}</span><small>문제 ${A.M.count(small, r)}개 · 퉁구리가 숨긴 별빛 찾기</small></button>`;
+    return `<div class="mres">${A.M.name(r)} ✦ ${res.c}/${res.n}${hres ? ` · ${A.M.name(r, true)} ✦ ${hres.c}/${hres.n}` : ''}</div>
+      ${!hres ? `<button class="secondary mbtn" id="mHard"><b>${A.M.name(r, true)}</b> <small>도전해 볼래? (선택 · 틀려도 괜찮아)</small></button>` : ''}
+      <button class="ghost" id="mAgain">${A.M.name(r)} 다시 풀기 (연습)</button>`;
+  }
+  function bindMission(big, small, r) {
+    if ($('#mGo')) $('#mGo').onclick = () => mission(big, small, r, false);
+    if ($('#mHard')) $('#mHard').onclick = () => mission(big, small, r, true);
+    if ($('#mAgain')) $('#mAgain').onclick = () => mission(big, small, r, false);
+  }
+  async function mission(big, small, r, hard) {
+    if (!A.isAcademyDevice()) return blocked();
+    const name = A.M.name(r, hard);
+    frame(`<section class="center-msg stage"><img class="mload" src="img/tunguri.webp" alt=""><h2>${esc(name)}</h2><p class="sub"><span class="spin"></span> 퉁구리가 숨겨 둔 문제를 찾는 중…</p></section>`, {crumb: small.code + ' · ' + name});
+    let quiz;
+    try { quiz = await A.M.get(small, r, hard); }
+    catch (e) {
+      frame(`<section class="center-msg stage">${buddy('retry')}<h2>문제를 못 찾았어</h2><p class="sub">${esc(e.message)}</p><button class="primary big" id="rt">다시 찾기</button><button class="ghost" data-go="big:${big.no}">${big.code}로</button></section>`);
+      $('#rt').onclick = () => mission(big, small, r, hard);
+      return;
+    }
+    const first = !A.M.done(small, r, hard);
+    let k = 0, ok = 0;
+    const one = () => {
+      const it = quiz[k];
+      const dots = quiz.map((_, j) => `<i class="${j < k ? 'd' : j === k ? 'c' : ''}"></i>`).join('');
+      frame(`<div class="qtop"><div class="dots">${dots}</div><span class="mtag">${esc(name)}${first ? '' : ' · 연습'}</span></div>
+        <section class="qcard mq"><div class="q">${fm(it.stem)}</div>
+        <div class="chs">${it.choices.map((c, j) => `<button class="ch" data-j="${j}"><span>${'①②③④'[j]}</span>${fm(c)}</button>`).join('')}</div>
+        <div class="say" id="say"></div></section><div class="row" id="nx"></div>`, {back: 'big:' + big.no, backText: '그만하기', crumb: small.code});
+      root().querySelectorAll('.ch').forEach(b => b.onclick = () => {
+        const j = +b.dataset.j, right = j === it.answer; if (right) ok++;
+        root().querySelectorAll('.ch').forEach(x => { x.disabled = true; if (+x.dataset.j === it.answer) x.classList.add('right'); });
+        if (!right) b.classList.add('wrong');
+        $('#say').innerHTML = `<div class="sbubble ${right ? 'ok' : 'warn'}"><b>${right ? '정답!' : '아쉬워!'}</b> ${fm(it.explain)}</div>`;
+        $('#nx').innerHTML = `<button class="primary big" id="nb">${k < quiz.length - 1 ? '다음 문제' : '결과 보기'}</button>`;
+        $('#nb').onclick = () => { k++; k < quiz.length ? one() : done(); };
+      });
+    };
+    const done = async () => {
+      const saved = first ? await A.M.save(big, small, r, hard, ok, quiz.length) : false;
+      const all = ok === quiz.length;
+      frame(`<section class="center-msg stage">${all ? buddy('praise') : `<img class="mload" src="img/tunguri.webp" alt="">`}
+        <h2>${all ? '별빛을 모두 되찾았어!' : ok ? '별빛을 조금 되찾았어!' : '퉁구리가 도망갔어…'}</h2>
+        <div class="score">${ok}<small> / ${quiz.length}</small></div>
+        <p class="sub">${esc(name)}${saved ? '' : ' · 연습(처음 결과는 그대로)'}</p>
+        ${!hard && !A.M.done(small, r, true) ? `<button class="secondary mbtn" id="mHard"><b>${A.M.name(r, true)}</b> <small>도전해 볼래? (선택 · 틀려도 괜찮아)</small></button>` : ''}
+        <button class="primary big" data-go="big:${big.no}">${big.code}로</button><button class="ghost" data-go="home">은하로</button></section>`);
+      bindMission(big, small, r);
+    };
+    one();
   }
 
   // ── 7. 질문 하나 (상태 흐름) ──

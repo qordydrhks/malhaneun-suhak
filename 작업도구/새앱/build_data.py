@@ -96,7 +96,7 @@ for ui, U in enumerate(UNITS, 1):
                           'fig': qfig(q[5] if len(q) > 5 else None)})
             n['lad'] += 1
         big['smalls'].append({'no': s['no'], 'code': 'E4-2-%d-%d' % (ui, si), 'title': old['small'].split('. ', 1)[1], 'page': s.get('page', ''),
-                              'key': rkey, 'unitId': old['id'], 'unitLabel': old['label'], 'items': items, 'ladder': steps})
+                              'key': rkey, 'unitId': old['id'], 'unitLabel': old['label'], 'quiz': ROUNDS[rkey].get('quiz', {'1': 3, '2': 2}), 'items': items, 'ladder': steps})
     out['bigs'].append(big)
 
 js = ('/* 새 앱 데이터 — 초4-2. 만들기: 작업도구/새앱/build_data.py (직접 고치지 말 것) */\n'

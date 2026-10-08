@@ -67,6 +67,11 @@
   E.nextPlace = () => {
     for (const b of E.bigs()) for (let r = 1; r <= 3; r++) for (const s of b.smalls)
       if (E.tasks(s, r).some(x => E.state(x.id).k === 'next')) return {big: b, small: s, r, why: 'again'};
+    for (const b of E.bigs()) {                         // 질문은 다 했는데 mission 이 남은 행성
+      const open = E.openRound(b.no);
+      for (let r = 1; r <= open; r++) for (const s of b.smalls)
+        if (A.M && A.M.ready(s, r) && !A.M.done(s, r)) return {big: b, small: s, r, why: 'mission'};
+    }
     for (const b of E.bigs()) {
       const open = E.openRound(b.no);
       for (let r = 1; r <= open; r++) for (const s of b.smalls)
