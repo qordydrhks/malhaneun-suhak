@@ -1,0 +1,316 @@
+<title>우주 지도 시안</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+/* 게임 지도 시안 2판 (10/6) — 은하 = 학기 · 별 = 대단원 · 행성 = 소단원 · 별계 끝 블랙홀 = 대단원 최종 관문
+   마스터 지적 반영: ① 별·행성을 크고 자세하게 ② 회차가 바뀌면 확실히 달라지게(1회차 행성 → 2회차 달의 궤도 → 3회차 행성 속 핵)
+   ③ 대단원 끝 보스 관문. 바탕은 검정으로 비워 둔다(지난 피드백 "지저분"). */
+:root{--bg:#04050b;--ink:#eef0fb;--mute:#8a8fae;--line:rgba(238,240,251,.14);--gold:#f2c46a;--teal:#7fe0e6;--violet:#b9a2ff;--panel:#0f1120;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans KR","Malgun Gothic",sans-serif}
+.app{max-width:560px;margin:0 auto;padding-inline:16px;padding-block:14px 120px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.tabs{display:flex;gap:6px;min-width:0}
+.tab{border:1px solid var(--line);background:transparent;color:var(--mute);border-radius:99px;padding:7px 12px;font:600 13px inherit;font-family:inherit;cursor:pointer;white-space:nowrap}
+.tab.on{color:var(--ink);border-color:var(--ink)}
+.rank{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:99px;padding:5px 12px 5px 6px;font-size:13px;cursor:pointer;background:transparent;color:var(--ink);font-family:inherit;white-space:nowrap}
+.rank i{width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff7dd,#f2c46a 55%,#a8761f)}
+.rank small{color:var(--mute)}
+h1{font-size:20px;margin:18px 0 2px;font-weight:700}
+.sub{color:var(--mute);font-size:13px;margin:0}
+.rounds{display:flex;gap:6px;margin:14px 0 0}
+.rd{flex:1;border:1px solid var(--line);background:transparent;color:var(--mute);border-radius:12px;padding:9px 4px;font:600 13px inherit;font-family:inherit;cursor:pointer}
+.rd.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.rd small{display:block;font-weight:500;font-size:11px;opacity:.8}
+.banner{margin:10px 0 0;padding:10px 12px;border-radius:12px;font-size:13px;line-height:1.5;border:1px solid var(--line);background:rgba(255,255,255,.03);transition:background .4s,border-color .4s}
+.banner b{font-weight:700}
+.banner.r2{border-color:rgba(185,162,255,.45);background:rgba(185,162,255,.08)}
+.banner.r3{border-color:rgba(242,196,106,.5);background:rgba(242,196,106,.08)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--mute);margin:10px 0 0}
+.legend span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:-1px;background:var(--c)}
+svg#map{display:block;width:100%;height:auto;margin-top:4px}
+svg#map .fade{animation:fade .7s ease both}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.go{position:fixed;left:0;right:0;bottom:0;padding:12px 16px calc(14px + env(safe-area-inset-bottom,0px));background:linear-gradient(transparent,var(--bg) 35%)}
+.go button{display:block;width:100%;max-width:528px;margin:0 auto;border:0;border-radius:16px;padding:14px;font:700 16px inherit;font-family:inherit;background:var(--teal);color:#062026;cursor:pointer}
+.go small{display:block;font-weight:500;font-size:12px;opacity:.75}
+.sheet{position:fixed;left:0;right:0;bottom:0;transform:translateY(105%);transition:transform .35s ease;z-index:5;padding:0 12px calc(12px + env(safe-area-inset-bottom,0px))}
+.sheet.show{transform:none}
+.sheet .in{max-width:520px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:16px 18px;max-height:80vh;overflow-y:auto}
+.sheet h3{margin:0 0 2px;font-size:17px}
+.sheet p{margin:0 0 10px;color:var(--mute);font-size:13px;line-height:1.55}
+.sheet .q{color:var(--ink);font-size:15.5px;line-height:1.6;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.05);border-left:3px solid var(--gold);margin:6px 0 10px}
+.sheet ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.sheet li{display:flex;justify-content:space-between;gap:10px;font-size:14px;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.04)}
+.sheet li b{font-weight:500;min-width:0}
+.sheet li em{font-style:normal;font-size:12px;white-space:nowrap}
+.st-done{color:var(--gold)}.st-now{color:var(--teal)}.st-lock{color:var(--mute)}
+.sheet .x{margin-top:12px;width:100%;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:12px;padding:11px;font:600 14px inherit;font-family:inherit;cursor:pointer}
+.note{margin:18px 0 0;padding:12px 14px;border:1px dashed var(--line);border-radius:14px;color:var(--mute);font-size:12.5px;line-height:1.6}
+.note b{color:var(--ink)}
+button:focus-visible,[role=button]:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<div class="app">
+  <div class="top">
+    <div class="tabs" aria-label="은하(학기) 바꾸기">
+      <button class="tab on" data-g="e4-2">초4-2 은하</button>
+      <button class="tab" data-g="e5-1">초5-1 · 선행</button>
+    </div>
+    <button class="rank" id="rank"><i></i>솔 <small>태양</small></button>
+  </div>
+  <h1>초4-2 은하</h1>
+  <p class="sub">별 6개(대단원) · 행성 33개(소단원) · 블랙홀 관문 6개</p>
+  <div class="rounds" aria-label="회차">
+    <button class="rd on" data-r="1">1회차<small>행성</small></button>
+    <button class="rd" data-r="2">2회차<small>달의 궤도</small></button>
+    <button class="rd" data-r="3">3회차<small>행성 속 핵</small></button>
+  </div>
+  <div class="banner" id="banner"></div>
+  <div class="legend"><span style="--c:#f2c46a">밝게 = 통과</span><span style="--c:var(--teal)">청록 고리 = 오늘 할 곳</span><span style="--c:#2a2d44">그림자 = 아직</span></div>
+  <svg id="map" role="img" aria-label="초4-2 은하 지도"></svg>
+  <div class="note">
+    <b>시안에서 볼 것</b> — 은하 하나 = 학기 하나 · 별 = 대단원 · 행성 = 소단원 · 별계 끝의 <b>블랙홀</b> = 대단원 최종 관문.
+    회차 단추를 눌러 보세요: 2회차에는 행성마다 <b>달과 궤도</b>가 생기고, 3회차에는 행성이 <b>잘려 속(핵)</b>이 보여요. 별·블랙홀을 누르면 자세한 내용이 나와요.
+  </div>
+</div>
+<div class="go"><button id="go"></button></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="false"><div class="in" id="sheetIn"></div></div>
+<script>
+(function(){
+  const UNITS = [
+    ['분수의 덧셈과 뺄셈',['분수의 덧셈 (1)','분수의 덧셈 (2)','분수의 뺄셈 (1)','분수의 뺄셈 (2)','분수의 뺄셈 (3)']],
+    ['삼각형',['변의 길이에 따라 분류하기','이등변삼각형의 성질','정삼각형의 성질','각의 크기에 따라 분류하기','두 가지 기준으로 분류하기']],
+    ['소수의 덧셈과 뺄셈',['소수 두 자리 수','소수 세 자리 수','소수의 크기 비교','소수 사이의 관계','소수 한 자리 수의 덧셈','소수 두 자리 수의 덧셈','소수 한 자리 수의 뺄셈','소수 두 자리 수의 뺄셈']],
+    ['사각형',['수직과 수선','평행과 평행선','평행선 사이의 거리','사다리꼴','평행사변형','마름모','여러 가지 사각형']],
+    ['꺾은선그래프',['알아보기','내용 알아보기','나타내기','해석하기']],
+    ['다각형',['다각형','정다각형','대각선','모양 만들기, 모양 채우기']],
+  ];
+  // 블랙홀 관문(대단원 최종 질문) — 마스터 10/6: 1회차 = 배운 낱말 말하기 · 2회차 = 내용 정리하기 · 3회차 = 어떻게 쓸지 + 느낀 점
+  const BOSS = UNITS.map(([n])=>[
+    '「'+n+'」에서 배운 수학 낱말을 아는 대로 말해 봐.',
+    '「'+n+'」에서 배운 내용을 차례대로 정리해서 말해 봐.',
+    '「'+n+'」에서 배운 것을 생활이나 다른 문제에서 어떻게 쓸 수 있을지 말해 봐. 공부하면서 느낀 점도 말해 줘.']);
+  // 시안용 진도: 1회차는 다각형 별만 남음 / 2회차는 1단원 끝 · 2단원 두 개까지 · 지금 2-3
+  function state(r,u,s){
+    if(r===1){ if(u<5) return 'done'; return s<2?'done':s===2?'now':'lock'; }
+    if(r===2){ if(u===0) return 'done'; if(u===1&&s<2) return 'done'; if(u===1&&s===2) return 'now'; return 'lock'; }
+    return 'lock';
+  }
+  function bossState(r,u){
+    if(r===1) return u<5?'done':'lock';
+    if(r===2) return u===0?'now':'lock';
+    return 'lock';
+  }
+  // 별: 실제 별 색 종류 + 크기는 소단원 수만큼
+  const STAR=[
+    {c:'#ffe08a',e:'#ff9d2e',n:'노란 별'}, {c:'#c9dcff',e:'#5f86ff',n:'청백색 별'}, {c:'#ffbf7a',e:'#ff6a2b',n:'주황 거성'},
+    {c:'#fff6e4',e:'#ffc98a',n:'흰 별'}, {c:'#ffa08a',e:'#e0413a',n:'붉은 왜성'}, {c:'#e2d6ff',e:'#8f6bff',n:'보랏빛 별'}];
+  // 행성 8가지
+  const PL=[
+    {k:'saturn', c:['#fbe9c6','#d9a35e','#6e431b'], band:'#b07a3c', ring:['#efd9a8','#c9a46a','#f5e6c4'], r:15},
+    {k:'earth',  c:['#cdeeff','#2f7fc4','#0e2a52'], land:'#4fb36d', atm:'#9fd6ff', r:13},
+    {k:'mars',   c:['#ffd9c2','#d4683a','#4f180a'], cap:'#fff3ea', r:11},
+    {k:'storm',  c:['#efe8ff','#9a84ea','#2e1f66'], band:'#7a62d6', spot:'#e7dcff', r:15},
+    {k:'ice',    c:['#effffd','#86d9cc','#1b5852'], crack:'#ffffff', ring:['#c9f5ee'], atm:'#c9f5ee', r:12},
+    {k:'rock',   c:['#f4f4f6','#a6a7b4','#33343f'], r:10},
+    {k:'jupiter',c:['#fff1c8','#e8b048','#6a4206'], band:'#c08223', spot:'#d9643a', r:18},
+    {k:'lava',   c:['#5a2a1e','#2a120c','#0c0504'], crack:'#ff8a3a', r:12}];
+  let round=1;
+  const map=document.getElementById('map'), NS='http://www.w3.org/2000/svg', W=400;
+  const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||map).appendChild(e);return e;};
+  let seed=11; const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+
+  // 자리 계산: 별계 → 블랙홀 → 별계 …
+  const SYS=[]; let y=190;
+  UNITS.forEach(([name,smalls],u)=>{
+    const n=smalls.length, R=18+n*2, rx0=R*1.6+26, rxMax=Math.min(150, rx0+(n-1)*26), step=n>1?(rxMax-rx0)/(n-1):0, k=0.4;
+    if(u){ const prev=SYS[u-1]; y=prev.bossY+70+rxMax*k+70; }
+    const cx=u%2?212:188, s={u,name,smalls,cx,cy:y,R,rx0,step,k,ry:rxMax*k};
+    s.bossY=y+s.ry+130; s.bossX=u%2?110:290;
+    SYS.push(s);
+  });
+  const H=SYS[SYS.length-1].bossY+90;
+  map.setAttribute('viewBox','0 0 '+W+' '+H);
+  const BG=[...Array(Math.round(H/12))].map(()=>[rnd()*W,rnd()*H,rnd()*0.8+0.25,rnd()*0.45+0.12]);
+
+  function defs(){
+    const d=el('defs',{});
+    STAR.forEach((s,u)=>{
+      const g=el('radialGradient',{id:'core'+u},d);
+      [['0','#ffffff',1],['0.3','#fffdf4',1],['0.55',s.c,1],['0.85',s.e,.95],['1',s.e,0]].forEach(([o,c,a])=>el('stop',{offset:o,'stop-color':c,'stop-opacity':a},g));
+      const h=el('radialGradient',{id:'halo'+u},d);
+      [['0',s.c,.5],['0.25',s.e,.18],['1',s.e,0]].forEach(([o,c,a])=>el('stop',{offset:o,'stop-color':c,'stop-opacity':a},h));
+      const sp=el('linearGradient',{id:'spk'+u},d);
+      [['0',s.c,0],['0.5','#ffffff',.85],['1',s.c,0]].forEach(([o,c,a])=>el('stop',{offset:o,'stop-color':c,'stop-opacity':a},sp));
+    });
+    [['g2','#b9a2ff'],['g3','#f2c46a']].forEach(([id,c])=>{ const g=el('radialGradient',{id},d); el('stop',{offset:'0','stop-color':c,'stop-opacity':.16},g); el('stop',{offset:'1','stop-color':c,'stop-opacity':0},g); });
+    const bh=el('radialGradient',{id:'bhglow'},d);
+    [['0','#000',1],['0.35','#000',1],['0.42','#ffd27a',.9],['0.6','#ff7a2a',.35],['1','#ff5a1a',0]].forEach(([o,c,a])=>el('stop',{offset:o,'stop-color':c,'stop-opacity':a},bh));
+    const disk=el('linearGradient',{id:'disk'},d);
+    [['0','#ff6a1a',.2],['0.5','#fff1c8',1],['1','#ff6a1a',.2]].forEach(([o,c,a])=>el('stop',{offset:o,'stop-color':c,'stop-opacity':a},disk));
+    const moon=el('radialGradient',{id:'moonG',cx:'0.35',cy:'0.3',r:'0.8'},d);
+    [['0','#f6f6f8'],['0.6','#a9aab6'],['1','#3a3b46']].forEach(([o,c])=>el('stop',{offset:o,'stop-color':c},moon));
+    const f=el('filter',{id:'dark'},d); el('feColorMatrix',{type:'matrix',values:'0.18 0 0 0 0.02  0 0.18 0 0 0.02  0 0 0.22 0 0.05  0 0 0 1 0'},f);
+    return d;
+  }
+  let uid=0;
+  function planet(x,y,p,ti,parent,r,lx,ly,dark){
+    const g=el('g',{},parent), D=map.querySelector('defs'), id=uid++;
+    const base=el('radialGradient',{id:'pb'+id,cx:(0.5+lx*0.3).toFixed(2),cy:(0.5+ly*0.3).toFixed(2),r:'0.75'},D);
+    [['0',p.c[0]],['0.55',p.c[1]],['1',p.c[2]]].forEach(([o,c])=>el('stop',{offset:o,'stop-color':c},base));
+    const sh=el('radialGradient',{id:'ps'+id,cx:(0.5+lx*0.45).toFixed(2),cy:(0.5+ly*0.45).toFixed(2),r:'0.85'},D);
+    [['0.45','#000',0],['1','#000',.72]].forEach(([o,c,a])=>el('stop',{offset:o,'stop-color':c,'stop-opacity':a},sh));
+    if(dark) g.setAttribute('filter','url(#dark)');
+    const ringBack=()=>{ const rg=el('g',{transform:`translate(${x} ${y}) rotate(-20)`},g);
+      p.ring.forEach((c,j)=>el('ellipse',{cx:0,cy:0,rx:r*(1.75+j*.28),ry:r*(.5+j*.08),fill:'none',stroke:c,'stroke-width':r*(j===1?.1:.2),opacity:.45},rg)); };
+    const ringFront=()=>{ const rg=el('g',{transform:`translate(${x} ${y}) rotate(-20)`},g);
+      p.ring.forEach((c,j)=>{ const a=r*(1.75+j*.28), b=r*(.5+j*.08); el('path',{d:`M ${-a} 0 A ${a} ${b} 0 0 0 ${a} 0`,fill:'none',stroke:c,'stroke-width':r*(j===1?.1:.2),opacity:.95},rg); }); };
+    if(p.ring) ringBack();
+    if(p.atm) el('circle',{cx:x,cy:y,r:r*1.12,fill:p.atm,opacity:.18},g);
+    el('circle',{cx:x,cy:y,r:r,fill:'url(#pb'+id+')'},g);
+    const cp=el('clipPath',{id:'pc'+id},D); el('circle',{cx:x,cy:y,r:r},cp);
+    const inn=el('g',{'clip-path':'url(#pc'+id+')'},g);
+    if(p.band){ [-.62,-.3,.05,.38,.66].forEach((t,j)=>{ const yy=y+t*r, w=r*(.07+.05*(j%2)); el('path',{d:`M ${x-r} ${yy} Q ${x-r*.3} ${yy+r*.09} ${x} ${yy} T ${x+r} ${yy}`,fill:'none',stroke:p.band,'stroke-width':w,opacity:.65},inn); }); }
+    if(p.spot){ el('ellipse',{cx:x+r*.28,cy:y+r*.22,rx:r*.3,ry:r*.17,fill:p.spot,opacity:.85},inn); el('ellipse',{cx:x+r*.28,cy:y+r*.22,rx:r*.15,ry:r*.08,fill:p.c[2],opacity:.35},inn); }
+    if(p.land){ [[-.35,-.2,.42,.26,-20],[.35,.3,.3,.2,15],[.1,-.55,.2,.12,0]].forEach(([a,b,rx,ry,rot])=>el('ellipse',{cx:x+a*r,cy:y+b*r,rx:rx*r,ry:ry*r,fill:p.land,transform:`rotate(${rot} ${x+a*r} ${y+b*r})`},inn));
+      [[-.1,-.05,.55,.07],[.2,.48,.4,.06],[-.45,.4,.3,.05]].forEach(([a,b,rx,ry])=>el('ellipse',{cx:x+a*r,cy:y+b*r,rx:rx*r,ry:ry*r,fill:'#fff',opacity:.75},inn)); }
+    if(p.k==='mars'||p.k==='rock'){ (p.k==='rock'?[[-.3,-.25,.2],[.35,.1,.15],[-.05,.45,.12],[.3,-.45,.1],[-.5,.2,.09]]:[[-.3,.1,.16],[.3,.35,.11]]).forEach(([a,b,c])=>{
+        el('circle',{cx:x+a*r,cy:y+b*r,r:c*r,fill:'#000',opacity:.2},inn); el('circle',{cx:x+a*r-c*r*.25,cy:y+b*r-c*r*.25,r:c*r*.7,fill:'#fff',opacity:.08},inn); }); }
+    if(p.cap){ el('ellipse',{cx:x-r*.05,cy:y-r*.86,rx:r*.45,ry:r*.2,fill:p.cap,opacity:.9},inn); }
+    if(p.k==='ice'){ [`M ${x-r*.7} ${y-r*.2} L ${x-r*.1} ${y+r*.05} L ${x+r*.5} ${y-r*.35}`,`M ${x-r*.2} ${y+r*.6} L ${x+r*.15} ${y+r*.15} L ${x+r*.7} ${y+r*.3}`].forEach(dd=>el('path',{d:dd,fill:'none',stroke:p.crack,'stroke-width':r*.06,opacity:.7},inn)); }
+    if(p.k==='lava'){ [`M ${x-r*.8} ${y-r*.1} Q ${x-r*.3} ${y-r*.4} ${x+r*.1} ${y-r*.1} T ${x+r*.8} ${y+r*.1}`,`M ${x-r*.4} ${y+r*.55} Q ${x} ${y+r*.25} ${x+r*.45} ${y+r*.6}`,`M ${x-r*.1} ${y-r*.75} L ${x+r*.15} ${y-r*.35}`].forEach(dd=>{
+        el('path',{d:dd,fill:'none',stroke:p.crack,'stroke-width':r*.2,opacity:.25},inn); el('path',{d:dd,fill:'none',stroke:'#ffd27a','stroke-width':r*.06},inn); }); }
+    el('circle',{cx:x,cy:y,r:r,fill:'url(#ps'+id+')'},inn);
+    el('circle',{cx:x,cy:y,r:r,fill:'none',stroke:'#fff','stroke-opacity':.12,'stroke-width':.6},g);
+    if(p.ring) ringFront();
+    return g;
+  }
+  function pulse(x,y,r0,parent,c){
+    const p=el('circle',{cx:x,cy:y,r:r0,fill:'none',stroke:c||'var(--teal)','stroke-width':2},parent);
+    p.innerHTML=`<animate attributeName="r" values="${r0};${r0+10};${r0}" dur="2.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="2.2s" repeatCount="indefinite"/>`;
+  }
+  // 3회차: 행성을 잘라 속(지각·맨틀·핵)을 보여 준다
+  function cutaway(x,y,r,st,parent){
+    const D=map.querySelector('defs'), id=uid++, a1=-10*Math.PI/180, a2=80*Math.PI/180;
+    const wedge=`M ${x} ${y} L ${x+r*Math.cos(a1)} ${y+r*Math.sin(a1)} A ${r} ${r} 0 0 1 ${x+r*Math.cos(a2)} ${y+r*Math.sin(a2)} Z`;
+    const cp=el('clipPath',{id:'cw'+id},D); el('path',{d:wedge},cp);
+    const g=el('g',{'clip-path':'url(#cw'+id+')',class:'fade'},parent);
+    el('circle',{cx:x,cy:y,r:r,fill:'#2a1a12'},g);
+    el('circle',{cx:x,cy:y,r:r*.82,fill:'#7a3a1c'},g);
+    el('circle',{cx:x,cy:y,r:r*.58,fill:st==='lock'?'#3b2a22':'#d9762e'},g);
+    el('circle',{cx:x,cy:y,r:r*.34,fill:st==='done'?'#fff1b8':st==='now'?'#7fe0e6':'#1a1a22'},g);
+    if(st==='done') el('circle',{cx:x,cy:y,r:r*.34,fill:'none',stroke:'#fff','stroke-width':1.2,opacity:.8},g);
+    el('path',{d:wedge,fill:'none',stroke:'#fff','stroke-opacity':.55,'stroke-width':.8,class:'fade'},parent);
+    if(st==='now') pulse(x,y,r*.36,parent);
+  }
+  function star(s,parent){
+    const {cx,cy,R,u}=s;
+    el('circle',{cx,cy,r:R*4.6,fill:'url(#halo'+u+')'},parent);
+    const L=R*3.6, w=R*.07;
+    [0,90].forEach(a=>el('rect',{x:cx-L,y:cy-w,width:L*2,height:w*2,fill:'url(#spk'+u+')',transform:`rotate(${a} ${cx} ${cy})`},parent));
+    [45,135].forEach(a=>el('rect',{x:cx-L*.55,y:cy-w*.7,width:L*1.1,height:w*1.4,fill:'url(#spk'+u+')',opacity:.55,transform:`rotate(${a} ${cx} ${cy})`},parent));
+    el('circle',{cx,cy,r:R*1.25,fill:STAR[u].c,opacity:.12},parent);
+    el('circle',{cx,cy,r:R,fill:'url(#core'+u+')'},parent);
+    // 표면 무늬(쌀알 무늬) — 아주 옅게
+    for(let i=0;i<10;i++){ const a=i*2.4, rr=R*(.25+.45*((i*37)%10)/10); el('circle',{cx:cx+rr*Math.cos(a),cy:cy+rr*Math.sin(a),r:R*.12,fill:'#fff',opacity:.12},parent); }
+  }
+  function blackhole(s,parent){
+    const x=s.bossX, y=s.bossY, st=bossState(round,s.u), dim=st==='lock';
+    const g=el('g',{tabindex:0,role:'button','aria-label':(s.u+1)+'단원 블랙홀 관문',opacity:dim?.45:1},parent); g.style.cursor='pointer';
+    el('circle',{cx:x,cy:y,r:46,fill:'url(#bhglow)'},g);
+    const rg=el('g',{transform:`translate(${x} ${y}) rotate(-14)`},g);
+    el('ellipse',{cx:0,cy:0,rx:44,ry:11,fill:'none',stroke:'url(#disk)','stroke-width':5,opacity:.9},rg);
+    el('circle',{cx:x,cy:y,r:17,fill:'#000'},g);
+    el('circle',{cx:x,cy:y,r:18.5,fill:'none',stroke:'#fff4d6','stroke-width':1.2,opacity:.9},g);
+    el('path',{d:`M ${-44} 0 A 44 11 0 0 0 44 0`,fill:'none',stroke:'url(#disk)','stroke-width':5,transform:`translate(${x} ${y}) rotate(-14)`},g);
+    if(st==='now') pulse(x,y,24,g);
+    if(st==='done'){ // 받은 보상: 빛나는 결정
+      el('path',{d:`M ${x+30} ${y-34} l 7 -10 l 7 10 l -7 12 z`,fill:'#f2c46a',stroke:'#fff7dd','stroke-width':1},g);
+    }
+    const t=el('text',{x:x,y:y+44,'text-anchor':'middle',fill:dim?'#8a8fae':'#ffd9a0','font-size':12.5,'font-weight':700},g); t.textContent='블랙홀 관문';
+    const t2=el('text',{x:x,y:y+60,'text-anchor':'middle',fill:'#8a8fae','font-size':11},g);
+    t2.textContent=st==='done'?'통과 · 보상 받음':st==='now'?'도전할 수 있어요!':'행성을 다 밝히면 열려요';
+    const open=()=>bossSheet(s.u); g.addEventListener('click',open); g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});
+  }
+  function draw(){
+    map.innerHTML=''; uid=0; defs();
+    BG.forEach(([x,yy,r,o])=>el('circle',{cx:x,cy:yy,r:r,fill:'#fff',opacity:o}));
+    // 항로: 별 → 블랙홀 → 다음 별
+    let d='';
+    SYS.forEach((s,i)=>{ d+=(i?' L ':'M ')+s.cx+' '+s.cy+' L '+s.bossX+' '+s.bossY; });
+    el('path',{d,fill:'none',stroke:'rgba(238,240,251,.12)','stroke-width':1.4,'stroke-dasharray':'2 8'});
+    SYS.forEach(s=>{
+      const {u,name,smalls,cx,cy,rx0,step,k,R}=s;
+      if(round>1) el('circle',{cx,cy,r:200,fill:'url(#g'+round+')',class:'fade'});
+      const g=el('g',{tabindex:0,role:'button','aria-label':(u+1)+'. '+name+' 별'}); g.style.cursor='pointer';
+      const items=smalls.map((t,i)=>{
+        const rx=rx0+i*step, ry=rx*k, a=(u*61+i*137.5)*Math.PI/180, x=cx+rx*Math.cos(a), yy=cy+ry*Math.sin(a);
+        const dx=cx-x, dy=cy-yy, L=Math.hypot(dx,dy)||1;
+        return {i,rx,ry,x,y:yy,back:Math.sin(a)<0,a,lx:dx/L,ly:dy/L};
+      });
+      items.forEach(it=>el('ellipse',{cx,cy,rx:it.rx,ry:it.ry,fill:'none',stroke:'#ffffff','stroke-opacity':.08},g));
+      const drawItem=it=>{
+        const ti=(u*3+it.i)%PL.length, p=PL[ti], r=p.r*1.3*(it.back?.86:1), st1=state(1,u,it.i);
+        planet(it.x,it.y,p,ti,g,r,it.lx,it.ly,st1==='lock');
+        if(round===1&&st1==='now') pulse(it.x,it.y,r+4,g);
+        if(round>=2){ // 2회차: 달과 달의 궤도
+          const st2=state(2,u,it.i), orx=r*(p.ring?2.6:1.9), ory=orx*.38, ma=it.a+2.2;
+          const og=el('g',{class:'fade'},g);
+          el('ellipse',{cx:it.x,cy:it.y,rx:orx,ry:ory,fill:'none',stroke:st2==='done'?'#f2c46a':'#b9a2ff','stroke-opacity':st2==='lock'?.25:.6,'stroke-width':1,'stroke-dasharray':st2==='lock'?'2 3':'none'},og);
+          const mx=it.x+orx*Math.cos(ma), my=it.y+ory*Math.sin(ma), mr=Math.max(4.2,r*.32);
+          if(st2==='done') el('circle',{cx:mx,cy:my,r:mr*1.9,fill:'#f2c46a',opacity:.22},og);
+          const mc=el('circle',{cx:mx,cy:my,r:mr,fill:'url(#moonG)'},og);
+          if(st2==='lock') mc.setAttribute('filter','url(#dark)');
+          if(st2==='now') pulse(mx,my,mr+2,og);
+        }
+        if(round>=3) cutaway(it.x,it.y,r,state(3,u,it.i),g);
+      };
+      items.filter(it=>it.back).forEach(drawItem);
+      star(s,g);
+      items.filter(it=>!it.back).forEach(drawItem);
+      const ly=cy+s.ry+30;
+      const t=el('text',{x:cx,y:ly,'text-anchor':'middle',fill:'#eef0fb','font-size':15,'font-weight':700},g); t.textContent=(u+1)+'. '+name;
+      const done=smalls.filter((x,i)=>state(round,u,i)==='done').length;
+      const t2=el('text',{x:cx,y:ly+18,'text-anchor':'middle',fill:'#8a8fae','font-size':12},g); t2.textContent=STAR[u].n+' · '+round+'회차 '+done+'/'+smalls.length;
+      const open=()=>sheet(u); g.addEventListener('click',open); g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});
+      blackhole(s,map);
+    });
+    const B={1:'<b>1회차 · 행성</b> — 소단원 행성을 하나씩 밝혀요. 아직 안 한 행성은 그림자로 보여요.',
+             2:'<b>2회차 · 달의 궤도가 열렸어요</b> — 행성마다 달이 생겼어요. 더 깊은 질문으로 달을 밝혀요.',
+             3:'<b>3회차 · 행성 속이 열렸어요</b> — 행성을 갈라 가장 깊은 핵까지 밝혀요. 가장 깊이 이해하는 관문이에요.'};
+    const bn=document.getElementById('banner'); bn.innerHTML=B[round]; bn.className='banner r'+round;
+    let now=null; SYS.forEach(s=>s.smalls.forEach((t,i)=>{ if(!now&&state(round,s.u,i)==='now') now=[s,t]; }));
+    let boss=null; SYS.forEach(s=>{ if(!boss&&bossState(round,s.u)==='now') boss=s; });
+    const go=document.getElementById('go');
+    if(now){ go.innerHTML='오늘 할 곳 · '+now[0].name+' 별 › '+now[1]+'<small>'+round+'회차 · '+WORD[round]+'</small>'; go.onclick=()=>sheet(now[0].u); }
+    else if(boss){ go.innerHTML='블랙홀 관문 도전 · '+boss.name+'<small>'+round+'회차 최종 질문</small>'; go.onclick=()=>bossSheet(boss.u); }
+    else { go.innerHTML='3회차는 아직 열리지 않았어요<small>선생님이 회차를 열어 줘요</small>'; go.onclick=null; }
+  }
+  const LBL={done:['통과','st-done'],now:['오늘 할 곳','st-now'],lock:['아직','st-lock']};
+  const WORD={1:'행성',2:'달',3:'행성 속 핵'};
+  function show(html){ const sh=document.getElementById('sheet'); document.getElementById('sheetIn').innerHTML=html+'<button class="x" id="x">닫기</button>'; sh.classList.add('show'); document.getElementById('x').onclick=()=>sh.classList.remove('show'); }
+  function sheet(u){
+    const [name,smalls]=UNITS[u];
+    show('<h3>'+(u+1)+'. '+name+' · '+STAR[u].n+'</h3><p>'+round+'회차 · 행성을 누르면 그 소단원의 '+WORD[round]+'(으)로 가요</p><ul>'+
+      smalls.map((s,i)=>{const st=state(round,u,i);return '<li><b>'+s+'</b><em class="'+LBL[st][1]+'">'+LBL[st][0]+'</em></li>';}).join('')+'</ul>');
+  }
+  function bossSheet(u){
+    const st=bossState(round,u), q=BOSS[u][round-1];
+    show('<h3>'+(u+1)+'. '+UNITS[u][0]+' · 블랙홀 관문</h3><p>'+round+'회차 최종 질문 — '+['','배운 낱말을 말해요','배운 내용을 정리해요','어떻게 쓸지와 느낀 점을 말해요'][round]+'</p>'+
+      '<div class="q">'+q+'</div><p>· 그 별의 행성을 모두 밝히면 열려요<br>· 핵심을 다 말하면 통과 → <b style="color:var(--gold)">좋은 보상</b>(예: 학습 코인 꾸러미 · 이 관문에서만 얻는 장식)<br>· 못 넘어도 깎이는 건 없어요. 내일 다시 도전!</p>'+
+      '<p class="'+LBL[st][1]+'">지금: '+(st==='done'?'통과했어요':st==='now'?'도전할 수 있어요':'아직 잠겨 있어요')+'</p>');
+  }
+  document.querySelectorAll('.rd').forEach(b=>b.onclick=()=>{
+    round=+b.dataset.r; document.querySelectorAll('.rd').forEach(x=>x.classList.toggle('on',x===b));
+    document.getElementById('sheet').classList.remove('show'); draw();
+  });
+  document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
+    if(b.dataset.g==='e5-1'){ b.blur(); show('<h3>초5-1 은하 (선행)</h3><p>은하 하나 = 학기 하나예요. 선생님이 선행 과정을 열어 주면 이 탭으로 다른 은하(지도)에 갈 수 있어요. 등급도 은하마다 따로예요. — 시안에서는 초4-2만 그렸어요.</p>'); }
+  });
+  document.getElementById('rank').onclick=()=>show('<h3>지금 등급 · 솔 (태양)</h3><p>루나(달) → 테라(지구) → 솔(태양) → 갤럭시(은하) → 코스모스(우주). 스스로 한 번에 잘 답할수록 빛이 크게 모여 등급이 올라가요.</p>');
+  draw();
+  if(location.hash==='#r2') document.querySelector('.rd[data-r="2"]').click();
+  if(location.hash==='#r3') document.querySelector('.rd[data-r="3"]').click();
+})();
+</script>

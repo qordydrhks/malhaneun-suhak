@@ -79,6 +79,8 @@
       retry:['한 번 쉬어 보고 다시 보자.','괜찮아, 다시 천천히.'],
       quizGood:['전부 맞혔어! 느긋하게 해냈네.'], quizMid:['틀린 것만 천천히 다시.'] }
   };
+  // 상황별 대사는 characters/lines.js(window.DDC_LINES) 가 있으면 그것으로 바꾼다 — 상황마다 10개 이상, 랜덤
+  try{ const LN = window.DDC_LINES || {}; Object.keys(LN).forEach(id => { if(CHARS[id]) Object.keys(LN[id]).forEach(k => { if(Array.isArray(LN[id][k]) && LN[id][k].length) CHARS[id][k] = LN[id][k]; }); }); }catch(e){}
   const ORDER = ['exi','pola','aresi','iris','lemma'];
   // 눈 감은 그림이 있는 표정 — 그 표정일 때만 깜빡인다
   const BLINK = {"exi": ["question", "listening", "thinking", "hint", "solving", "retry"], "pola": ["question", "listening", "thinking", "hint", "solving", "retry"], "aresi": ["question", "listening", "thinking", "hint", "solving", "retry"], "iris": ["question", "listening", "thinking", "hint", "solving", "retry"], "lemma": ["question", "listening", "thinking", "hint", "solving", "retry"]};   // ← 작업도구/캐릭터/prepare.py 가 고치는 줄
@@ -118,7 +120,10 @@
   const on = () => isElem() && !!myChar();
   const src = (id, st) => IMG + id + '/' + st + '.webp?v=' + V;
   function preload(id){ STATES.forEach(st => { const i = new Image(); i.src = src(id, st); }); }
-  const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+  // 랜덤으로 고르되 바로 앞에 나온 말은 다시 고르지 않는다
+  const lastLine = new WeakMap();
+  const pick = arr => { if(!arr || !arr.length) return ''; if(arr.length === 1) return arr[0];
+    let k, last = lastLine.get(arr); do { k = Math.floor(Math.random() * arr.length); } while(arr[k] === last); lastLine.set(arr, arr[k]); return arr[k]; };
   const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
   /* ---------- 캐릭터 한 개 (무대) ---------- */

@@ -1,0 +1,12 @@
+/* [v75.1] 수식 표시 — mfmt() 가 만든 조각들 */
+.mf{font-family:"Cambria Math","STIX Two Math","STIX Two Text","Latin Modern Math","Times New Roman",Georgia,"Noto Serif KR",serif;}
+.mf-v{font-style:italic;}
+.mf-mi{font-family:"Cambria Math","STIX Two Math","Latin Modern Math","Noto Sans Math","Times New Roman",serif;font-style:normal;}
+.mf-frac{display:inline-flex;flex-direction:column;text-align:center;margin:0 .18em;
+  font-size:.9em;line-height:1.15;vertical-align:middle;position:relative;top:-.08em;}
+.mf-num{border-bottom:1px solid currentColor;padding:0 .32em;}
+.mf-den{padding:1px .32em 0;}
+.mf-rad{white-space:nowrap;}
+.mf-rcd{border-top:1px solid currentColor;padding:1px .14em 0 .05em;margin-left:-.06em;}
+sup.mf-sup{font-size:.68em;vertical-align:.55em;line-height:0;}
+sub.mf-sub{font-size:.68em;vertical-align:-.2em;line-height:0;}

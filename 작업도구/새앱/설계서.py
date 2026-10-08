@@ -1,0 +1,121 @@
+# -*- coding: utf-8 -*-
+"""새 앱 설계서 1판 (2026-10-03) — 마스터와 10/2~10/3 대화로 정한 것을 한 장에. 인쇄용 PDF.
+   python -X utf8 작업도구/새앱/설계서.py → 작업도구/새앱/설계서_새앱_v1.pdf
+"""
+import io, os, shutil, subprocess, tempfile
+HERE = os.path.dirname(os.path.abspath(__file__))
+
+CSS = '''@page{size:A4;margin:8mm 10mm}
+body{font:8.1pt/1.4 "Pretendard","Malgun Gothic",sans-serif;color:#1f2430;margin:0}
+h1{font-size:15pt;margin:0}.sub{color:#5b6270;font-size:8.6pt;margin:2px 0 8px}
+h2{font-size:9.6pt;margin:6px 0 2px;padding-bottom:2px;border-bottom:1.6px solid #1f2430}
+.cols{columns:2;column-gap:7mm}.cols section{break-inside:avoid}
+ul{margin:0;padding-left:14px}li{margin:1px 0}
+table{width:100%;border-collapse:collapse;font-size:7.9pt;margin:2px 0}td,th{border:1px solid #d6dae2;padding:1px 4px;text-align:left;vertical-align:top}
+th{background:#f3f4f7;font-weight:700}
+b{font-weight:700}.k{color:#15803d;font-weight:700}.w{color:#b45309;font-weight:700}.x{color:#8b93a1}
+.box{border:1px solid #d6dae2;border-radius:6px;padding:5px 8px;margin:4px 0;background:#fafbfc}
+.q{border-left:3px solid #b45309;padding-left:16px}'''
+
+BODY = '''
+<h1>새 앱 설계서 1판 — 말하는 수학 (우주 · 숫자 친구들)</h1>
+<div class="sub">2026-10-03 · 마스터와 정한 것(10/2~10/3) · 지금 앱 v92.2 는 그대로 두고 학생 화면부터 새로 · 지도 시안 따로(시안_지도.html)</div>
+<div class="box"><b>대전제</b> ① 아이가 개념을 정확히 이해했는지 확인하고 이해하게 만든다 ② 어른이 그 이해도를 정확히 판단한다 — 게임 요소는 이 둘을 돕는 만큼만.</div>
+
+<div class="cols">
+<section><h2>1. 그대로 쓰는 것 · 새로 만드는 것</h2><ul>
+<li><b>그대로</b>: GitHub 같은 저장소(새 폴더) · Supabase(학생·기록) · AI 채점 서버 · 초4-2 질문·계단·그림 데이터</li>
+<li>기록 모양은 지금과 같게(질문 번호 · 회차 r1~r3) → 옛 선생님·학부모 화면에서도 보임</li>
+<li><b>새로</b>: 학생 화면 전부 · Supabase 표 1~2개(코인·장식·메달)</li>
+<li>시범 = 초4-2, 학원 4학년에게 배정. 다른 학년은 옛 앱 그대로(옛 질문은 참고만)</li>
+<li>만드는 순서: <b>학생 화면 → 선생님 대시보드 → 학부모 리포트</b></li></ul></section>
+
+<section><h2>2. 지도 (A안)</h2><ul>
+<li><b>은하 = 학기</b> 하나(지도 한 장) · <b>별 = 대단원</b> · <b>행성 = 소단원</b>(별을 도는 행성)</li>
+<li>회차마다 지도가 넓어짐: 1회차 <b>행성</b> → 2회차 행성의 <b>달</b> → 3회차 행성 <b>속(핵)</b></li>
+<li>선행: 선생님이 연 과정마다 은하 따로, 위에서 바꾸기 · 등급도 은하마다</li>
+<li>홈 = 지도 + 등급 배지 + 큰 단추 「오늘 할 곳」. 진도는 빛나는 행성으로 보임(글자 최소)</li></ul></section>
+
+<section><h2>3. 질문 스테이지 (한 화면에 질문 하나)</h2><ul>
+<li>친구가 묻고 아이는 말(또는 글)로 답 · 합격 70점</li>
+<li><b>합격</b> → 점수 + 짚은 핵심 ✓ + <b>모범 답</b></li>
+<li><b>불합격</b> → 1·2·3회차 모두 계단 방식: <b>되묻기 → 짧은 설명 → 다시 묻기</b>(숫자 바꾼 새 질문) → 그래도 못 하면 그날 잠금(내일 다시). 옛 「개념 다시 보기」 팝업은 버림</li>
+<li><b>시간 제한</b>(질문당): 1회차 약 2분 · 2회차 3분 · 3회차 4분 · 계산·연습장이 필요한 1·2회차 질문 +1분 · 채점 시간 제외 · 시간 다 되면 떨어진 것과 같게</li>
+<li>소단원 끝 = <b>문제 풀기 스테이지</b>(기본문제, 처음 결과만) → 원하면 <b>응용 보너스 스테이지</b></li>
+<li>7일 복습 알림 = <b>힌트 보거나 한 번에 못 한 것만</b>(한 번에 통과한 건 3회차에서 자연히 다시 봄)</li></ul></section>
+
+<section><h2>4. 이해 점수 → 등급 (점수는 선생님만)</h2>
+<table><tr><th>통과한 모습</th><th>점수</th><th style="white-space:nowrap">회차 무게</th></tr>
+<tr><td>한 번에, 힌트 없이</td><td>1.0</td><td rowspan="5">1회차 1<br>2회차 1.5<br>3회차 2</td></tr>
+<tr><td>힌트 보고 · 두 번째 시도</td><td>0.7 · 0.6</td></tr>
+<tr><td>복습에서 제대로</td><td>0.8</td></tr>
+<tr><td>떨어지고 다음 날</td><td>0.4</td></tr>
+<tr><td>계단: 한 번에·되묻기 후·설명 보고·막힘 뒤</td><td>1 · .85 · .7 · .3</td></tr></table>
+<ul><li>기본문제도 넣음(처음 결과만) · <b>응용은 가산점</b>(맞히면 +, 틀려도 감점 없음, 심화는 더 큼)</li>
+<li>처음 통과만 셈(다시 풀어 올리기 불가) · 지금까지 푼 것의 <b>누적 평균</b> → 첫 소단원부터 바로 등급, 계속 바뀜</li>
+<li><b>루나</b>(달) 시작 · <b>테라</b>(지구) 50 · <b>솔</b>(태양) 70 · <b>갤럭시</b>(은하) 80 + 2회차 · <b>코스모스</b>(우주) 90 + 3회차 계단</li>
+<li>학기 끝 → <b>메달</b>(등급 + 점수 + 진도 n/33)으로 영구 보관 · 아이에겐 등급만, 내역은 선생님(비교 시비 때 설명 자료)</li></ul></section>
+
+<section><h2>5. 나의 기록</h2><ul>
+<li>배지·캐릭터 누르면 열림: 별자리 + "한 번에 21 · 힌트 후 6 · 아직 2"</li>
+<li>숫자 누르면 그 질문 목록 · <b>아직 n → 누르면 바로 다시 학습</b>(오늘 떨어진 건 "내일 열려요")</li>
+<li>모범 답은 <b>통과한 질문만</b> 보임 · 다시 해도 이해 점수는 그대로(연습 기록만)</li></ul></section>
+
+<section><h2>6. 코인 · 상점 · 친구</h2><ul>
+<li>코인 = 처음 통과할 때 · <b>등급은 살 수 없음</b>(실력) / 장식은 코인(노력)</li>
+<li>상점: 크기·장식·배경·받침대·<b>별자리 특징을 가진 펫</b>(펫도 꾸미기) · 값에 따라 살 수 있는 것 제한</li>
+<li>숫자 친구 5명 그대로(고르기·반응·깜빡임·이야기) · 선생님 배정 문제 보상은 나중</li></ul></section>
+
+<section><h2>7. 연습 공간 (코인은 작게)</h2>
+<table><tr><th></th><th>스피드 연산</th><th>용어 맞히기</th></tr>
+<tr><td>문제</td><td>10문제 · 그 학년 암산 수준</td><td>5문제 · 지금 단원 + 통과한 것 + 이전 학기·학년</td></tr>
+<tr><td>답</td><td>숫자 키패드</td><td>말로</td></tr>
+<tr><td>속도</td><td>빠를수록 코인 더</td><td>점수와 무관 · 제한 시간 넘으면 답 보여 주고 다음</td></tr>
+<tr><td>그 밖</td><td>하루 상한 · AI 안 씀</td><td>워밍업 — 이해 점수에 안 넣음</td></tr></table></section>
+
+<section><h2>8. 안내 (늘 띄우지 않기)</h2><ul>
+<li>처음 튜토리얼(친구가 3~4장, 건너뛰기·다시 보기) · 처음 겪는 순간 한 번 안내 · 눌러서 보기 · 홈 구석 「우주 안내서」</li>
+<li>점수 설명은 숫자 없이: "스스로 한 번에 답하면 빛이 크게 모여" · "힌트 봐도 안 하는 것보다 훨씬 많이 모여"</li></ul></section>
+
+<section><h2>9. 선생님 · 학부모</h2><ul>
+<li>로그인 첫 화면 새 컨셉으로 · PIN·권한·학생 관리·도움 알림·회차 열기·AI 비용·비번 = 꼭</li>
+<li>대시보드: 설명 걷어내고 깔끔하게, 전체 이력 한꺼번에 안 보이게 · 이해 점수·내역 여기서</li>
+<li>학부모 리포트: 내용 보완 · <b>링크에 비밀 글자(토큰)</b></li>
+<li><span class="w">나중</span> 문제은행 · 문제 미리 만들기 · 편집기(보류 — 선생님이 질문·답 고치는 건 중요, 서버 저장으로 다시)</li>
+<li><span class="x">버림</span> 질문 목록 고르기 · 이의 제기 · 대화형 · 빈칸 · 질문 고르기 화면</li></ul></section>
+
+<section><h2>10. 내용 작업 (Claude) — 마스터 검토는 줄인다</h2><ul>
+<li>1·2회차 157질문에 <b>되묻기·짧은 설명·다시 묻기</b> 새로 · 계산 필요 표시 · 용어 문제(초3~초4-2, 개념카드에서) · 연산 문제 만들기 규칙</li>
+<li>품질은 <b>규칙 + 자동 검사 + AI 채점 시험</b>으로: 다시 묻기 숫자 전부 검산 · 원래 질문과 숫자 다름 · 짧은 설명이 답을 통째로 주지 않음 · 모범/절반/틀린 답 시험 통과</li>
+<li>마스터는 <b>🤔 표시한 것만</b> + 실제 사용 기록(통과율 낮은 질문)으로 고침</li></ul></section>
+
+<section><h2>11. 남은 결정</h2><ul class="q">
+<li>코인 이름(별가루 등) · 상품 목록과 값 · 연산 하루 상한</li>
+<li>친구끼리 서로 꾸민 캐릭터를 볼 수 있게 할지</li>
+<li>등급 기준 숫자(50·70·80·90)는 시범 기록으로 조정</li>
+<li>만들기 전에(GPT 검토 정리에서): 도중에 나갔을 때 이어하기 · 그날 잠금을 선생님이 풀 수 있게 할지 · 마이크가 안 될 때 글 입력으로 넘어가기</li></ul></section>
+
+<section><h2>12. 만드는 차례</h2><ol style="margin:0;padding-left:16px">
+<li>내용 보강(10번) — 초4-2</li>
+<li>학생: 질문 스테이지를 <b>대표 소단원 하나로 끝까지</b> 먼저 시험 → 로그인 · 친구 고르기 · 지도 · 문제 스테이지</li>
+<li>이해 점수 · 등급 · 나의 기록 · 메달</li>
+<li>코인 · 상점 · 펫 (그림은 GPT)</li>
+<li>용어 맞히기 → 스피드 연산</li>
+<li>안내(튜토리얼 · 우주 안내서)</li>
+<li>선생님 대시보드 → 학부모 리포트</li></ol></section>
+</div>
+'''
+
+def make_pdf(html_text, name):
+    out = os.path.join(HERE, name + '.html'); io.open(out, 'w', encoding='utf-8').write(html_text)
+    tmp = os.path.join(tempfile.gettempdir(), 'claude', 'sheet'); os.makedirs(tmp, exist_ok=True)
+    shutil.copy(out, os.path.join(tmp, 'u.html'))
+    chrome = r'C:\Program Files\Google\Chrome\Application\chrome.exe'
+    subprocess.run([chrome, '--headless=new', '--disable-gpu', '--no-pdf-header-footer', '--user-data-dir=' + os.path.join(tmp, 'prof'),
+                    '--print-to-pdf=' + os.path.join(tmp, 'u.pdf'), 'file:///' + os.path.join(tmp, 'u.html').replace('\\', '/')], check=True, timeout=180)
+    shutil.copy(os.path.join(tmp, 'u.pdf'), os.path.join(HERE, name + '.pdf'))
+    return os.path.join(HERE, name + '.pdf')
+
+if __name__ == '__main__':
+    html = '<!doctype html><html lang="ko"><head><meta charset="utf-8"><title>새 앱 설계서</title><style>%s</style></head><body>%s</body></html>' % (CSS, BODY)
+    print(make_pdf(html, '설계서_새앱_v1'))

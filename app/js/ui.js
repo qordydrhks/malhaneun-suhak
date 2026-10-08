@@ -1,0 +1,316 @@
+/* 새 앱 — 화면. 한 화면에 한 가지 일만(마스터 10/8: 최대한 간단하고 직관적으로, 뭘 해야 할지 바로 알게). */
+(() => {
+  'use strict';
+  const A = window.APP, E = A.E, $ = s => document.querySelector(s), esc = A.esc, fm = A.fm;
+  const root = () => $('#app');
+
+  // ── 숫자 친구 ──
+  const FR = {exi: ['엑시', '#c58ad8'], pola: ['폴라', '#f2737a'], aresi: ['아레시', '#4fb3e6'], iris: ['이리스', '#6f63e0'], lemma: ['렘마', '#5fc9a4']};
+  const IMG = '../characters/img/';
+  const BLINK = {question: 1, listening: 1, thinking: 1, hint: 1, solving: 1, retry: 1};
+  let friend = null, lastLine = {};
+  const myFriend = () => friend || A.ls.raw('dd:char:' + A.session.student.id) || null;
+  const line = (sit) => {
+    const id = myFriend() || 'exi', arr = (window.DDC_LINES?.[id]?.[sit]) || [''];
+    let s = arr[Math.floor(Math.random() * arr.length)];
+    if (arr.length > 1 && s === lastLine[sit]) s = arr[(arr.indexOf(s) + 1) % arr.length];
+    return (lastLine[sit] = s);
+  };
+  const buddy = (state, size) => {
+    const id = myFriend() || 'exi';
+    return `<div class="buddy ${size || ''}" data-state="${state}"><img src="${IMG}${id}/${state}.webp" alt="${FR[id][0]}" data-id="${id}" data-st="${state}"></div>`;
+  };
+  setInterval(() => {                                          // 가끔 눈을 깜빡인다
+    document.querySelectorAll('.buddy img').forEach(img => {
+      const st = img.dataset.st; if (!BLINK[st] || Math.random() > 0.35) return;
+      img.src = IMG + img.dataset.id + '/' + st + '-blink.webp';
+      setTimeout(() => { img.src = IMG + img.dataset.id + '/' + st + '.webp'; }, 150);
+    });
+  }, 2600);
+  const setBuddy = (state) => document.querySelectorAll('.stage .buddy img').forEach(img => { img.dataset.st = state; img.src = IMG + img.dataset.id + '/' + state + '.webp'; img.parentNode.dataset.state = state; });
+
+  // ── 공통 틀 ──
+  function frame(inner, opt) {
+    opt = opt || {};
+    const s = A.session.student;
+    root().innerHTML = `<header class="bar">${opt.back ? `<button class="ghost" data-go="${opt.back}">‹ ${esc(opt.backText || '뒤로')}</button>` : `<span class="logo">말하는 수학</span>`}
+      <span class="crumb">${esc(opt.crumb || '')}</span>
+      <span class="who">${s ? `<button class="ghost small" data-go="logout">${esc(s.name)} · 나가기</button>` : ''}</span></header><main class="${opt.cls || ''}">${inner}</main>`;
+    window.scrollTo(0, 0);
+  }
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-go]'); if (!b) return;
+    const g = b.dataset.go;
+    if (g === 'home') home(); else if (g === 'logout') { A.logout(); login(); }
+    else if (g.startsWith('big:')) star(+g.slice(4)); else if (g.startsWith('small:')) planet(g.slice(6), +b.dataset.r);
+  });
+  const toast = (t) => { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.classList.add('on'), 20); setTimeout(() => { d.classList.remove('on'); setTimeout(() => d.remove(), 400); }, 2600); };
+
+  // ── 1. 로그인 ──
+  function login(msg) {
+    frame(`<section class="login">
+      <div class="title"><div class="mark">✦</div><h1>말하는 수학</h1><p>우주를 탐험하며 친구에게 말로 설명해요</p></div>
+      <label>이름<input id="ln" autocomplete="username"></label>
+      <label>비밀번호<input id="lp" type="password" autocomplete="current-password"></label>
+      <button class="primary big" id="lb">들어가기</button><div class="msg">${esc(msg || '')}</div></section>`, {cls: 'center'});
+    const go = async () => {
+      const n = $('#ln').value, p = $('#lp').value;
+      if (!n.trim() || !p) { $('.msg').textContent = '이름과 비밀번호를 넣어 줘.'; return; }
+      $('.msg').textContent = '확인 중…';
+      try { await A.login(n, p); await enter(); } catch (e) { $('.msg').textContent = e.message; }
+    };
+    $('#lb').onclick = go; $('#lp').onkeydown = e => { if (e.key === 'Enter') go(); };
+  }
+  async function enter() {
+    root().innerHTML = '<div class="loading">불러오는 중…</div>';
+    await E.load();
+    friend = A.ls.raw('dd:char:' + A.session.student.id);
+    if (!friend) { const v = await A.store.get('char:' + A.session.student.id); if (v && FR[v.id]) { friend = v.id; A.ls.set('dd:char:' + A.session.student.id, v.id); } }
+    if (!friend) return pick(); else home();
+  }
+
+  // ── 2. 친구 고르기 ──
+  function pick() {
+    frame(`<section class="pick"><h2>함께 탐험할 친구를 골라 줘</h2><div class="cards">${Object.keys(FR).map(id => `<button class="fcard" data-id="${id}"><img src="${IMG}${id}/card.webp" alt=""><b>${FR[id][0]}</b></button>`).join('')}</div><p class="sub">나중에 바꿀 수 있어요</p></section>`);
+    root().querySelectorAll('.fcard').forEach(b => b.onclick = () => {
+      friend = b.dataset.id; try { localStorage.setItem('dd:char:' + A.session.student.id, friend); } catch (e) {}
+      A.store.set('char:' + A.session.student.id, {id: friend, at: new Date().toISOString()});
+      home();
+    });
+  }
+
+  // ── 3. 은하(홈) ──
+  const HUES = ['#f3c969', '#7aa7ff', '#f29b8f', '#8fd6b4', '#c9a6ff', '#ffb36b'];
+  function home() {
+    const nx = E.nextPlace();
+    const bigs = E.bigs().map((b, i) => {
+      const open = E.openRound(b.no), c = E.bigCount(b, open), lit = c.n ? c.done / c.n : 0;
+      return `<button class="starbtn" data-go="big:${b.no}" style="--h:${HUES[i]};--lit:${lit.toFixed(2)}">
+        <span class="star"><i></i></span><span class="code">${b.code}</span><span class="nm">${esc(b.title)}</span>
+        <span class="chip">${E.ROUND[open]} ${c.done}/${c.n}</span></button>`;
+    }).join('');
+    frame(`<section class="hero stage">${buddy('idle')}<div class="bubble">${esc(line('hello'))}</div></section>
+      ${nx ? `<button class="primary big go" data-go="small:${nx.small.code}" data-r="${nx.r}"><span>오늘 갈 곳</span><small>${nx.small.code} · ${esc(nx.small.title)} · ${E.ROUND[nx.r]}${nx.why === 'again' ? ' · 다시 열린 질문' : ''}</small></button>`
+             : `<div class="done-all">지금 열린 곳은 모두 탐험했어요 ✦</div>`}
+      <h3 class="sect">E4-2 은하</h3><div class="galaxy">${bigs}</div>`, {crumb: 'E4-2 은하'});
+  }
+
+  // ── 4. 별(대단원) ──
+  const PLANET = ['#e8b04b', '#5b8def', '#e07a6a', '#55b892', '#a07ce0', '#e98b3f', '#4cb3c4', '#c46aa0'];
+  function star(no, r) {
+    const b = E.big(no), open = E.openRound(no);
+    r = r || open;
+    const tabs = [1, 2, 3].map(k => `<button class="tab ${k === r ? 'on' : ''}" ${k > open ? 'disabled' : ''} data-r="${k}">${k > open ? '🔒 ' : ''}${E.ROUND[k]}</button>`).join('');
+    const planets = b.smalls.map((s, i) => {
+      const c = E.count(s, r), t = E.tasks(s, r), today = t.some(x => E.state(x.id).k === 'today'), again = t.some(x => E.state(x.id).k === 'next');
+      const cls = c.n && c.done === c.n ? 'lit' : (c.done ? 'half' : '');
+      return `<button class="planet ${cls}" data-go="small:${s.code}" data-r="${r}" style="--p:${PLANET[i % 8]}"><span class="orb"></span>
+        <span class="code">${s.code}</span><span class="nm">${esc(s.title)}</span><span class="cnt">${c.done}/${c.n}${today ? ' · 내일 열림' : ''}${again ? ' · 다시 열림' : ''}</span></button>`;
+    }).join('');
+    frame(`<h2 class="ttl"><span class="code">${b.code}</span>${esc(b.title)}</h2><div class="tabs">${tabs}</div><div class="planets">${planets}</div>
+      ${r < open ? '<p class="sub">지난 탐사는 연습으로 다시 할 수 있어요. 점수와 등급은 그대로예요.</p>' : ''}`, {back: 'home', backText: '은하', crumb: b.code});
+    root().querySelectorAll('.tab').forEach(t => t.onclick = () => star(no, +t.dataset.r));
+  }
+
+  // ── 5. 행성 입구 ──
+  function planet(code, r) {
+    const {big, small} = E.small(code), t = E.tasks(small, r);
+    const todo = t.filter(x => ['new', 'next'].includes(E.state(x.id).k));
+    const locked = t.filter(x => E.state(x.id).k === 'today').length;
+    const practice = !todo.length && !locked;
+    const min = Math.round(E.LIMIT[r] / 60);
+    frame(`<section class="entry stage"><div class="orb big" style="--p:${PLANET[big.smalls.indexOf(small) % 8]}"></div>
+      <div class="code">${small.code}</div><h2>${esc(small.title)}</h2><div class="chip">${E.ROUND[r]}</div>
+      <p class="sub">${todo.length ? `질문 ${todo.length}개 · 하나에 약 ${min}분` : (locked ? `남은 질문 ${locked}개는 내일 다시 열려요` : '다 탐험했어요')}</p>
+      ${todo.length ? `<button class="primary big" id="go">출발</button>` : ''}
+      ${practice ? `<button class="secondary" id="pr">연습하기 (점수는 그대로)</button>` : ''}</section>`, {back: 'big:' + big.no, backText: big.code, crumb: small.code});
+    if ($('#go')) $('#go').onclick = () => run(big, small, r, todo, false);
+    if ($('#pr')) $('#pr').onclick = () => run(big, small, r, t, true);
+  }
+
+  // ── 6. 한 행성의 질문들 ──
+  const sessionStart = () => { let t = +sessionStorage.getItem('app:sessionStart'); if (!t) { t = Date.now(); sessionStorage.setItem('app:sessionStart', t); } return t; };
+  async function run(big, small, r, list, practice) {
+    if (!A.isAcademyDevice()) return blocked();
+    sessionStart();
+    let opened = 0, passed = 0;
+    for (let i = 0; i < list.length; i++) {
+      const out = await ask(big, small, list[i], i, list.length, practice);
+      if (out === 'quit') return planet(small.code, r);
+      if (out && out.pass) passed++;
+      if (out && out.opened) opened = out.opened;
+      if ((Date.now() - sessionStart()) / 60000 >= E.SESSION_MIN && i < list.length - 1) return sessionEnd(passed);
+    }
+    finish(big, small, r, passed, list.length, opened, practice);
+  }
+  function blocked() {
+    frame(`<section class="center-msg stage">${buddy('retry')}<h2>학원 태블릿에서만 공부할 수 있어요</h2><p class="sub">선생님이 이 기기를 학원 기기로 등록하면 열려요.<br>(옛 앱 → 선생님 → AI 연결 → 학원 기기 등록)</p><button class="secondary" data-go="home">은하로</button></section>`);
+  }
+  function sessionEnd(passed) {
+    sessionStorage.removeItem('app:sessionStart');
+    frame(`<section class="center-msg stage">${buddy('praise')}<h2>오늘은 여기까지!</h2><p class="sub">${E.SESSION_MIN}분 동안 질문 ${passed}개에 불을 켰어요.</p><button class="primary big" data-go="home">은하로 돌아가기</button></section>`);
+  }
+  function finish(big, small, r, passed, n, opened, practice) {
+    frame(`<section class="center-msg stage">${buddy(passed ? 'praise' : 'idle')}<h2>${practice ? '연습 끝!' : (passed === n ? '행성에 불이 켜졌어!' : '탐사 끝!')}</h2>
+      <p class="sub">${small.code} · ${E.ROUND[r]} — 통과 ${passed}/${n}${passed < n && !practice ? ' · 남은 질문은 내일 다시 열려요' : ''}</p>
+      ${opened ? `<div class="unlock">✦ ${big.code}의 ${E.ROUND[opened]}가 열렸어요!</div>` : ''}
+      <button class="primary big" data-go="big:${big.no}">${big.code}로</button><button class="ghost" data-go="home">은하로</button></section>`);
+  }
+
+  // ── 7. 질문 하나 (상태 흐름) ──
+  /* 할 일 → 이번에 보여 줄 질문 모양 */
+  function shape(task, practice) {
+    const st = E.state(task.id), x = task.src;
+    const mode = practice ? 'practice' : st.k === 'next' ? ((st.help === 'short' || st.help === 'long') ? 'again' : 'nextday') : 'first';
+    if (task.kind === 'q') {
+      const h = x.help, ag = h.again;
+      if (mode === 'again') return {mode, q: ag.q, keys: ag.keys, ans: ag.ans, fig: ag.fig || '', asks: (ag.keys.length === h.ask.length ? h.ask : []), help: h, base: E.Q[st.help]};
+      return {mode, q: x.q, keys: x.keys, ans: x.ans, fig: x.fig, asks: h.ask, help: h, base: mode === 'nextday' ? E.Q.nextday : E.Q.first, pre: x.pre};
+    }
+    const keys = x.ideas.map(d => d.t), asks = x.ideas.map(d => d.ask);
+    const help = {kw: null, short: x.teach, long: null, lfig: ''};
+    if (mode === 'again') return {mode, q: x.again, keys, ans: x.teach, fig: '', asks, help, base: E.Q.short};
+    return {mode, q: x.q, keys, ans: x.teach, fig: x.fig, asks, help, base: mode === 'nextday' ? E.Q.nextday : E.Q.first};
+  }
+
+  function ask(big, small, task, i, n, practice) {
+    return new Promise(resolve => {
+      const S = shape(task, practice);
+      const limit = E.LIMIT[task.r] + (task.src.calc && task.r < 3 ? 60 : 0);
+      let answers = [], reasks = 0, used = new Set(), helpNow = '', kwShown = false, last = null, left = limit, ticking = false, done = false;
+      let tim = null;
+      const dots = Array.from({length: n}, (_, k) => `<i class="${k < i ? 'd' : k === i ? 'c' : ''}"></i>`).join('');
+      frame(`<div class="qtop"><div class="dots">${dots}</div><div class="timer"><b></b></div></div>
+        <section class="stage qstage">${buddy('question', 'mini')}<div class="qcard">
+          ${S.pre ? `<div class="pre">🌱 ${esc(S.pre)}에서 배운 것</div>` : ''}${S.mode === 'again' ? '<div class="pre">어제 본 설명으로 다시 묻기</div>' : ''}
+          <div class="q" id="qt">${fm(S.q)}</div>${S.fig ? `<div class="figbox">${S.fig}</div>` : ''}<div class="say" id="say"></div></div></section>
+        <section class="answer" id="ans"></section>`, {back: 'quit', backText: '그만하기', crumb: small.code + ' · ' + E.ROUND[task.r]});
+      root().querySelector('[data-go="quit"]').onclick = (e) => { e.stopPropagation(); stop(); resolve('quit'); };
+      const say = (t, cls) => { $('#say').innerHTML = t ? `<div class="sbubble ${cls || ''}">${t}</div>` : ''; };
+      const stop = () => { done = true; clearInterval(tim); try { rec && rec.stop(); } catch (e) {} };
+      // 타이머 — 채점하는 동안은 멈춘다. 다 되면 떨어진 것과 같다(내일 다시)
+      const drawT = () => { const b = $('.timer b'); if (b) { b.style.width = Math.max(0, left / limit * 100) + '%'; b.parentNode.classList.toggle('low', left < 30); } };
+      tim = setInterval(() => { if (!ticking || done) return; left -= 0.25; drawT(); if (left <= 0) { ticking = false; timeout(); } }, 250);
+
+      // 답 입력(말하기 기본 · 글 입력 대안)
+      let rec = null, recFails = 0, typed = false;
+      function input(prompt, onSubmit) {
+        ticking = true;
+        $('#ans').innerHTML = `<div class="prompt">${prompt || ''}</div>
+          <div class="tr" id="tr" ${typed ? '' : 'hidden'}><textarea id="ta" rows="3" placeholder="여기에 써도 돼"></textarea></div>
+          <div class="live" id="live"></div>
+          <div class="row"><button class="mic" id="mic" aria-label="말하기"><span></span></button></div>
+          <div class="row"><button class="ghost small" id="tw">${typed ? '말로 하기' : '글로 쓰기'}</button><button class="ghost small" id="clr">지우고 다시</button><button class="primary" id="sub" disabled>다 말했어</button></div>`;
+        let text = '';
+        const ta = $('#ta'), live = $('#live'), sub = $('#sub');
+        const upd = t => { text = t; live.textContent = typed ? '' : t; if (typed && ta.value !== t) ta.value = t; sub.disabled = !text.trim(); };
+        ta.oninput = () => upd(ta.value);
+        $('#tw').onclick = () => { typed = !typed; stopRec(); input(prompt, onSubmit); };
+        $('#clr').onclick = () => { stopRec(); upd(''); ta.value = ''; };
+        $('#mic').onclick = () => (rec ? stopRec() : startRec());
+        sub.onclick = () => { stopRec(); const t = (typed ? ta.value : text).trim(); if (!t) return; ticking = false; onSubmit(t); };
+        function startRec() {
+          const R = window.SpeechRecognition || window.webkitSpeechRecognition;
+          if (!R) { typed = true; return input(prompt, onSubmit); }
+          let base = text ? text + ' ' : '';
+          rec = new R(); rec.lang = 'ko-KR'; rec.interimResults = true; rec.continuous = true;
+          rec.onresult = ev => { let fin = '', inter = ''; for (let k = ev.resultIndex; k < ev.results.length; k++) { const t = ev.results[k][0].transcript; if (ev.results[k].isFinal) fin += t; else inter += t; } if (fin) base += fin; upd((base + inter).trim()); };
+          rec.onerror = ev => { if (ev.error === 'not-allowed' || ++recFails >= 2) { typed = true; toast('글로 써도 괜찮아'); input(prompt, onSubmit); } };
+          rec.onend = () => { rec = null; $('#mic')?.classList.remove('on'); setBuddy('question'); };
+          try { rec.start(); $('#mic').classList.add('on'); setBuddy('listening'); } catch (e) { rec = null; }
+        }
+        function stopRec() { if (rec) { try { rec.stop(); } catch (e) {} rec = null; $('#mic')?.classList.remove('on'); } }
+        if (typed) ta.focus();
+      }
+
+      async function judge(t) {
+        answers.push(t);
+        $('#ans').innerHTML = `<div class="thinking"><span class="spin"></span> ${esc(line('thinking'))}</div>`; setBuddy('thinking');
+        try { last = await E.grade({question: S.q, keys: S.keys, answer: t, prev: answers.length > 1 ? answers.slice(0, -1).join(' / ') : '', unitId: small.unitId}); }
+        catch (e) { answers.pop(); setBuddy('retry'); say(esc(e.message), 'warn'); return null; }   // AI 실패 → 기록 없음, 다시 말하기
+        return last;
+      }
+      // 답 받기 → 채점 → 다음 단계 (AI 가 실패하면 기록 없이 같은 자리에서 다시 말하기)
+      const answerThen = (prompt, cb) => input(prompt, async t => { const g = await judge(t); if (!g) return answerThen('다시 말해 줄래?', cb); cb(g); });
+      say(esc(line('question')));
+      answerThen('', step);
+
+      function step(g) {
+        if (g.miss < 0) return pass();
+        if (g.misconception && !kwShown && S.help.kw) {            // 틀린 생각 → "살짝 부족해" + 핵심 키워드만
+          kwShown = true; helpNow = 'kw'; setBuddy('hint');
+          say(`${esc(g.ack)}<br><b>살짝 부족해.</b> ${chips(S.help.kw)}`, 'hint');
+          return answerThen('키워드를 생각하면서 다시 말해 줘.', step);
+        }
+        if (S.asks[g.miss] && !used.has(g.miss)) {                 // 빠진 핵심마다 되묻기 1번(방향만)
+          used.add(g.miss); reasks++; setBuddy('hint');
+          say(`${esc(g.ack)}<br>${fm(S.asks[g.miss])}`, 'hint');
+          return answerThen('', step);
+        }
+        helpMenu(g);
+      }
+      const chips = arr => '<span class="kw">' + arr.map(k => `<span>${fm(k)}</span>`).join('') + '</span>';
+
+      function helpMenu(g) {
+        ticking = false; setBuddy('retry');
+        say(`${esc(g ? g.ack : '')}<br><b>살짝 부족해.</b> 도움을 볼까?`, 'hint');
+        const H = S.help;
+        $('#ans').innerHTML = `<div class="helps">
+          ${H.kw && !kwShown ? `<button class="hbtn" data-h="kw"><b>🔑 키워드</b><small>오늘 다시 답할 수 있어요</small></button>` : ''}
+          ${H.short ? `<button class="hbtn" data-h="short"><b>💬 짧은 설명</b><small>내일 다시 묻기로 확인해요</small></button>` : ''}
+          ${H.long ? `<button class="hbtn" data-h="long"><b>📖 긴 설명 · 그림</b><small>내일 다시 묻기로 확인해요</small></button>` : ''}
+          <button class="hbtn plain" data-h="none"><b>내일 다시 할게</b><small>내일 새벽 4시에 열려요</small></button></div>`;
+        $('#ans').querySelectorAll('.hbtn').forEach(b => b.onclick = () => useHelp(b.dataset.h));
+      }
+      function useHelp(h) {
+        if (h === 'kw') {
+          kwShown = true; helpNow = 'kw'; setBuddy('hint'); say(chips(S.help.kw), 'hint');
+          return answerThen('키워드를 보고 다시 말해 줘.', g => (g.miss < 0 ? pass() : helpMenu(g)));
+        }
+        if (h === 'short' || h === 'long') {
+          helpNow = h; setBuddy('hint');
+          say(`<div class="expl">${fm(h === 'short' ? S.help.short : S.help.long)}</div>${h === 'long' && S.help.lfig ? `<div class="figbox">${S.help.lfig}</div>` : ''}`, 'expl');
+          $('#ans').innerHTML = `<div class="prompt">설명을 잘 읽었으면, 내일 비슷한 질문으로 다시 물어볼게.</div><div class="row"><button class="primary big" id="ok">알겠어</button></div>`;
+          return $('#ok').onclick = () => end({st: 'wait', help: h, stage: h, pass: false});
+        }
+        end({st: 'lock', help: 'none', stage: 'lock', pass: false, needTeacher: true});
+      }
+      function timeout() {
+        stop(); say('<b>시간이 다 됐어.</b> 내일 다시 열려요.', 'warn'); setBuddy('retry');
+        $('#ans').innerHTML = `<div class="row"><button class="primary big" id="ok">다음</button></div>`;
+        $('#ok').onclick = () => end({st: 'lock', help: helpNow || 'none', stage: 'timeout', pass: false}, true);
+      }
+      function pass() {
+        stop();
+        const q = S.mode === 'practice' ? null : Math.min(S.base, helpNow === 'kw' ? E.Q.kw : reasks ? E.Q.reask : E.Q.first);
+        setBuddy('praise');
+        const keysHtml = S.keys.map((k, j) => `<li class="${last && last.hits[j]?.hit ? 'hit' : ''}">${last && last.hits[j]?.hit ? '✓' : '·'} ${fm(k)}</li>`).join('');
+        say(`<b>${esc(line('praise'))}</b>`, 'ok');
+        $('#ans').innerHTML = `<div class="result">${q != null ? `<div class="score">${q}<small>점</small></div>` : '<div class="score small">연습</div>'}
+          <ul class="keys">${keysHtml}</ul><div class="model"><b>모범 답</b>${fm(S.ans)}</div>
+          <div class="row"><button class="primary big" id="ok">${i < n - 1 ? '다음 질문' : '끝내기'}</button></div></div>`;
+        $('#ok').onclick = () => end({st: 'pass', q, help: helpNow || (S.mode === 'again' || S.mode === 'nextday' ? (E.status(task.id)?.help || '') : ''), helpNow: !!helpNow, stage: helpNow === 'kw' ? 'kw' : reasks ? 'reask' : (S.mode === 'first' ? 'first' : S.mode), pass: true});
+      }
+      async function end(r, already) {
+        if (!already) stop();
+        let opened = 0;
+        const score = r.pass ? Math.max(70, r.q || 70) : Math.round(60 * (last ? last.h / Math.max(1, last.n) : 0));
+        if (!practice) {
+          opened = E.record(big.no, task.id, {st: r.st, q: r.q, help: r.help, helpNow: r.helpNow});
+          await E.submit({big, small, task, question: S.q, transcript: answers.map((a, k) => (k + 1) + '차: ' + a).join('\n'), score, pass: r.pass, stage: r.stage,
+                          help: r.help || 'none', quality: r.q ?? null, misconception: last?.misconception || '', ack: last?.ack || '', attempt: answers.length, reasks, needTeacher: r.needTeacher});
+          await E.save();
+        } else {
+          await E.submit({big, small, task, question: S.q, transcript: answers.join('\n'), score, pass: r.pass, stage: 'practice', help: r.help, quality: null, practice: true, attempt: answers.length, reasks});
+        }
+        resolve({pass: r.pass, opened});
+      }
+    });
+  }
+
+  // ── 시작 ──
+  A.start = async () => {
+    try { if (await A.autoLogin()) return enter(); } catch (e) {}
+    login();
+  };
+})();

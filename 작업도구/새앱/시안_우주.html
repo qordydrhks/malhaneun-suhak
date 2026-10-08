@@ -1,0 +1,324 @@
+<title>별빛 교신 시안</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Gowun+Dodum&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* 콘셉트 「별빛 교신」 — 화면 전체가 제임스 웹이 본 성운(금빛 먼지 절벽 · 청록 가스 · 육각 회절 별).
+   친구는 성운 속에 떠 있고, 질문은 친구가 보낸 '신호'로 유리판에 떠오른다.
+   진행 = 금빛 육각 거울 조각(18개짜리 주경을 본뜸) · 꼭 말할 핵심 = 별 → 다 짚으면 별자리.
+   일부러 한 가지(어두운 우주) 모습으로만 만든다. */
+:root{
+  --void:#05060f; --glass:rgba(10,12,32,.62); --glass-hi:rgba(22,26,60,.72); --edge:rgba(255,214,150,.28);
+  --ink:#f5f1ff; --mute:#b9b3dc; --gold:#f2c46a; --gold-deep:#c8902f; --teal:#7fe0e6; --violet:#b9a2ff; --rose:#ff9db0;
+  --f-ui:"IBM Plex Sans KR","Malgun Gothic",sans-serif; --f-say:"Gowun Dodum","IBM Plex Sans KR",sans-serif; --f-num:"IBM Plex Mono",monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--void);color:var(--ink);font-family:var(--f-ui);overflow-x:hidden}
+#sky,#twinkle{position:fixed;inset:0;width:100%;height:100%;display:block}
+#sky{filter:saturate(1.08)}
+#twinkle{pointer-events:none}
+.scrim{position:fixed;inset:0;pointer-events:none;background:
+  radial-gradient(120% 70% at 50% 38%,rgba(5,6,15,0) 0%,rgba(5,6,15,.25) 60%,rgba(5,6,15,.55) 100%),
+  linear-gradient(180deg,rgba(5,6,15,.45) 0%,rgba(5,6,15,0) 22%,rgba(5,6,15,0) 62%,rgba(5,6,15,.7) 100%)}
+.app{position:relative;max-width:560px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;padding-inline:16px;padding-block:14px 20px}
+
+/* 위 — 어디인지 · 거울 조각 진행 */
+.top{display:flex;align-items:center;gap:10px}
+.close{width:40px;height:40px;border-radius:50%;border:1px solid var(--edge);background:var(--glass);color:var(--mute);display:grid;place-items:center;cursor:pointer;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.where{flex:1;min-width:0;font-size:12.5px;letter-spacing:.04em;color:var(--mute);line-height:1.35}
+.where b{display:block;color:var(--ink);font-size:15px;letter-spacing:0;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mirror{display:flex;gap:3px;align-items:center}
+.mirror i{width:22px;height:25px;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:rgba(242,196,106,.16);
+  box-shadow:inset 0 0 0 1px var(--edge);transition:background .5s,filter .5s,transform .5s}
+.mirror i.lit{background:linear-gradient(150deg,#ffe7a8,#f2c46a 45%,#b57a1f);filter:drop-shadow(0 0 6px rgba(242,196,106,.8));transform:scale(1.08)}
+.mirror i.now{background:rgba(242,196,106,.34);animation:hum 2.4s ease-in-out infinite}
+@keyframes hum{50%{background:rgba(242,196,106,.5)}}
+
+/* 가운데 — 떠 있는 친구 · 신호판 */
+.scene{position:relative;margin-top:18px;display:grid;grid-template-columns:132px minmax(0,1fr);gap:10px;align-items:start}
+.buddy{position:relative;width:132px;height:143px;animation:drift 7s ease-in-out infinite}
+@keyframes drift{0%,100%{transform:translate(0,0) rotate(-1deg)}50%{transform:translate(0,-8px) rotate(1.2deg)}}
+.buddy::after{content:"";position:absolute;left:10%;right:10%;bottom:-6px;height:30px;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(127,224,230,.35),transparent);filter:blur(4px);animation:halo 7s ease-in-out infinite}
+@keyframes halo{50%{transform:scale(.85);opacity:.7}}
+.buddy .mv{position:absolute;inset:0;transform-origin:50% 95%}
+.buddy img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .2s;filter:drop-shadow(0 0 14px rgba(185,162,255,.35))}
+.buddy img.on{opacity:1}.buddy img.blink{transition:none}
+.mv.talk{animation:talk .22s ease-in-out infinite alternate}@keyframes talk{to{transform:scale(1.02,.97)}}
+.mv.pop{animation:pop .4s cubic-bezier(.3,1.5,.5,1)}@keyframes pop{0%{transform:scale(.93,1.05)}55%{transform:scale(1.03,.97)}}
+.mv.leap{animation:leap 1.1s cubic-bezier(.3,1.2,.5,1)}@keyframes leap{25%{transform:translateY(-18%) rotate(-6deg)}50%{transform:translateY(0) scale(1.05,.95)}70%{transform:translateY(-7%) rotate(4deg)}}
+.mv.nod{animation:nod .45s ease-in-out}@keyframes nod{40%{transform:rotate(4deg) translateY(2%)}}
+.mv.sink{animation:sink .8s ease-out}@keyframes sink{40%{transform:translateY(5%) scale(1.02,.95)}}
+
+.signal{position:relative;margin-top:14px;border-radius:22px;padding:16px 18px 18px;background:var(--glass);border:1px solid var(--edge);
+  backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);box-shadow:0 18px 50px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.08)}
+/* 꼬리 대신 '빛줄기' — 친구에서 신호판으로 이어지는 가는 금빛 선 */
+.signal::before{content:"";position:absolute;left:-26px;top:34px;width:30px;height:2px;border-radius:2px;background:linear-gradient(90deg,rgba(242,196,106,0),var(--gold))}
+.signal::after{content:"";position:absolute;left:-30px;top:31px;width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold)}
+.sig-tag{font-size:12px;font-weight:600;letter-spacing:.06em;color:var(--gold);text-transform:uppercase;margin-bottom:6px}
+.say{font-family:var(--f-say);font-size:20px;line-height:1.6;color:var(--ink);word-break:keep-all;min-height:2.4em}
+.say span{opacity:0;filter:blur(3px);animation:land .35s ease forwards}
+@keyframes land{to{opacity:1;filter:none}}
+.fig{margin:14px 0 0;border-radius:16px;padding:10px;background:rgba(245,241,255,.94);max-width:300px}
+.fig svg{width:100%;height:auto;display:block}
+
+.mine{align-self:flex-end;max-width:88%;margin-top:16px;border-radius:20px;padding:12px 16px;background:linear-gradient(140deg,rgba(185,162,255,.26),rgba(127,224,230,.16));
+  border:1px solid rgba(185,162,255,.4);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);animation:rise .35s ease}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}}
+.mine small{display:block;font-size:11.5px;font-weight:600;letter-spacing:.06em;color:var(--violet);margin-bottom:3px}
+.mine p{margin:0;font-size:16.5px;line-height:1.55}
+#mineBox{display:flex;flex-direction:column}
+.grow{flex:1;min-height:12px}
+
+/* 아래 — 렌즈 마이크 */
+.dock{position:relative;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;margin-top:14px}
+.side{border:1px solid var(--edge);background:var(--glass);color:var(--ink);border-radius:99px;padding:11px 16px;font:600 14.5px var(--f-ui);cursor:pointer;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);justify-self:start;min-height:46px}
+.side.r{justify-self:end}
+.side:disabled{opacity:.4;cursor:default}
+.send{background:linear-gradient(150deg,#ffe7a8,#f2c46a 50%,#c8902f);color:#2a1a05;border:0;font-weight:700}
+.lens{position:relative;width:84px;height:84px;border-radius:50%;border:0;cursor:pointer;color:#fff;
+  background:radial-gradient(circle at 35% 30%,#3a3480 0%,#1a1745 55%,#0c0b26 100%);
+  box-shadow:0 0 0 3px rgba(242,196,106,.55),0 0 0 9px rgba(242,196,106,.12),0 0 30px rgba(127,224,230,.25)}
+.lens::before{content:"";position:absolute;inset:12px;border-radius:50%;border:1px solid rgba(255,255,255,.18)}
+.lens svg{position:relative}
+.lens.on{animation:listen 1.6s ease-in-out infinite}
+@keyframes listen{50%{box-shadow:0 0 0 3px rgba(242,196,106,.9),0 0 0 16px rgba(242,196,106,.18),0 0 44px rgba(127,224,230,.55)}}
+.lens-cap{text-align:center;font-size:12.5px;color:var(--mute);margin-top:6px}
+.write{display:none;margin-top:12px}
+.write.show{display:block}
+.write textarea{width:100%;resize:none;border-radius:18px;border:1px solid var(--edge);background:var(--glass-hi);color:var(--ink);font:500 16.5px/1.55 var(--f-ui);padding:12px 14px;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.demo{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;font-size:12px;color:var(--mute)}
+.demo button{border:1px dashed var(--edge);background:transparent;color:var(--mute);border-radius:99px;padding:5px 11px;font:500 12px var(--f-ui);cursor:pointer}
+button:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+
+/* 결과 — 별자리 판 */
+.result{position:fixed;left:0;right:0;bottom:0;transform:translateY(105%);transition:transform .45s cubic-bezier(.25,1.1,.4,1);z-index:5;
+  padding:16px 16px calc(18px + env(safe-area-inset-bottom,0px))}
+.result.show{transform:none}
+.result .in{max-width:560px;margin:0 auto;border-radius:26px;padding:16px 18px 18px;background:rgba(10,12,32,.86);border:1px solid var(--edge);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 -10px 50px rgba(0,0,0,.45)}
+.result h3{margin:0;font-size:20px;font-weight:700}
+.result.ok h3{color:var(--gold)} .result.hint h3{color:var(--teal)}
+.const{display:block;width:100%;max-width:320px;height:72px;margin:4px auto 2px}
+.clue{margin:0 0 4px;border-left:3px solid var(--teal);padding:4px 0 4px 10px;font-family:var(--f-say);font-size:17px;line-height:1.55}
+.keys{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px}
+.keys span{font-size:13px;font-weight:600;border-radius:99px;padding:4px 11px;border:1px solid var(--edge)}
+.keys .y{color:var(--gold);background:rgba(242,196,106,.1)} .keys .n{color:var(--mute)}
+.result p{margin:0;font-size:15.5px;line-height:1.6;color:var(--ink)}
+.result p.ans{font-family:var(--f-say);font-size:17px}
+.result .go{margin-top:12px;width:100%;border:0;border-radius:16px;padding:15px;font:700 16px var(--f-ui);cursor:pointer;
+  background:linear-gradient(150deg,#ffe7a8,#f2c46a 50%,#c8902f);color:#2a1a05}
+.result.hint .go{background:linear-gradient(150deg,#c9fbff,#7fe0e6 50%,#3fa9b3);color:#06222a}
+.end{margin:auto 0;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px}
+.end h2{margin:0;font-size:26px;font-weight:700}.end p{margin:0;color:var(--mute)}
+.note{text-align:center;font-size:11.5px;color:var(--mute);margin-top:12px;opacity:.85}
+.who{position:fixed;right:12px;bottom:12px;z-index:4;border:1px solid var(--edge);background:var(--glass);color:var(--mute);border-radius:99px;padding:6px 10px;font:500 12px var(--f-ui)}
+@media (max-width:420px){.scene{grid-template-columns:108px minmax(0,1fr)}.buddy{width:108px;height:117px}.say{font-size:18.5px}.lens{width:76px;height:76px}}
+@media (prefers-reduced-motion:reduce){.buddy,.buddy::after,.mv,.say span,.lens.on,.mirror i.now{animation:none!important}.say span{opacity:1;filter:none}}
+</style>
+<canvas id="sky" aria-hidden="true"></canvas><canvas id="twinkle" aria-hidden="true"></canvas><div class="scrim"></div>
+<div class="app">
+  <div class="top">
+    <button class="close" id="close" aria-label="처음으로"><svg width="16" height="16" viewBox="0 0 16 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l10 10M13 3L3 13"/></svg></button>
+    <div class="where">삼각형 · 1회차<b>이등변삼각형의 성질</b></div>
+    <div class="mirror" id="mirror" aria-label="진행"></div>
+  </div>
+  <div id="stage" style="display:flex;flex-direction:column;flex:1"></div>
+  <p class="note">디자인 시안 — 채점은 핵심 낱말로 흉내 냅니다. 이 페이지에선 마이크 대신 글로 답해요.</p>
+</div>
+<select class="who" id="who" aria-label="친구 바꾸기"></select>
+<div class="result" id="result" role="status" aria-live="polite"><div class="in" id="resultIn"></div></div>
+<script>
+(function(){
+  /* ── 성운 그리기: 값 노이즈 fbm 으로 '우주 절벽'(아래 금빛 먼지 · 위 청록 가스)을 작은 캔버스에 만들고 크게 늘린다 ── */
+  const sky = document.getElementById('sky'), tw = document.getElementById('twinkle');
+  function rng(seed){ return () => (seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296; }
+  const R0 = rng(20261002), P = new Uint8Array(512); { const p = [...Array(256).keys()]; for (let i = 255; i > 0; i--) { const j = Math.floor(R0() * (i + 1)); [p[i], p[j]] = [p[j], p[i]]; } for (let i = 0; i < 512; i++) P[i] = p[i & 255]; }
+  const G = new Float32Array(256).map(() => R0());
+  const fade = t => t * t * (3 - 2 * t);
+  function vn(x, y){ const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi;
+    const h = (a, b) => G[P[(P[a & 255] + b) & 255]];
+    const a = h(xi, yi), b = h(xi + 1, yi), c = h(xi, yi + 1), d = h(xi + 1, yi + 1), u = fade(xf), v = fade(yf);
+    return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v; }
+  function fbm(x, y, o){ let s = 0, a = .5, f = 1; for (let i = 0; i < o; i++) { s += a * vn(x * f, y * f); f *= 2.03; a *= .5; } return s; }
+  const mix = (a, b, t) => a + (b - a) * t, clamp = t => t < 0 ? 0 : t > 1 ? 1 : t;
+  function lerpC(c1, c2, t){ return [mix(c1[0], c2[0], t), mix(c1[1], c2[1], t), mix(c1[2], c2[2], t)]; }
+  let stars = [];
+  function paint(){
+    const W = innerWidth, H = innerHeight, dpr = Math.min(2, devicePixelRatio || 1);
+    sky.width = W * dpr; sky.height = H * dpr; tw.width = W * dpr; tw.height = H * dpr;
+    const w = Math.max(160, Math.round(W / 3)), h = Math.max(260, Math.round(H / 3));
+    const off = document.createElement('canvas'); off.width = w; off.height = h; const ox = off.getContext('2d'), img = ox.createImageData(w, h), d = img.data;
+    const deep = [5, 7, 20], teal = [26, 92, 120], ice = [120, 196, 214], amber = [214, 128, 52], rust = [120, 46, 22], cream = [255, 226, 170], dusk = [52, 22, 34];
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const nx = x / w * 3.2, ny = y / h * 3.2 * (h / w) * .55;
+      const gas = fbm(nx + 1.7, ny + 3.1, 5), wisp = fbm(nx * 2.1 + 9, ny * 2.1, 4);
+      const edge = .6 + (fbm(nx * 1.15 + 4, 2.2, 5) - .5) * .42;              // 절벽 윤곽(가로로 흔들림)
+      const yy = y / h;
+      let c = lerpC(deep, teal, clamp((gas - .32) * 1.9));
+      c = lerpC(c, ice, clamp((wisp - .62) * 2.6) * .55);
+      c = lerpC(c, dusk, clamp((fbm(nx * .8 + 20, ny * .8, 3) - .55) * 2) * .6);
+      if (yy > edge - .015) {                                                  // 아래 — 먼지 절벽
+        const depth = clamp((yy - edge) * 3.2), tex = fbm(nx * 2.6 + 30, ny * 4.2, 5);
+        let dc = lerpC(amber, rust, clamp(depth * 1.1 + (tex - .5) * .9));
+        dc = lerpC(dc, cream, clamp(1 - Math.abs(yy - edge) * 22) * clamp((tex - .35) * 2));   // 가장자리 빛
+        dc = lerpC(dc, [18, 8, 10], clamp(depth - .35) * .85);
+        c = lerpC(c, dc, clamp((yy - edge + .015) * 40));
+      } else {
+        const glow = clamp(1 - (edge - yy) * 7) * .35;                         // 절벽 위로 번지는 빛
+        c = lerpC(c, [255, 190, 120], glow * clamp(gas * 1.4));
+      }
+      const i = (y * w + x) * 4; d[i] = c[0]; d[i + 1] = c[1]; d[i + 2] = c[2]; d[i + 3] = 255;
+    }
+    ox.putImageData(img, 0, 0);
+    const g = sky.getContext('2d'); g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
+    g.drawImage(off, 0, 0, sky.width, sky.height);
+    // 별 — 작은 별 + 여섯 갈래 빛줄기(웹 망원경 특유의 회절) 큰 별 몇 개
+    const R = rng(77); stars = [];
+    for (let i = 0; i < Math.round(W * H / 1700); i++) {
+      const x = R() * sky.width, y = R() * sky.height * .72, r = (R() * R() * 1.6 + .3) * dpr, a = .35 + R() * .6;
+      g.fillStyle = 'rgba(255,248,235,' + a + ')'; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill();
+      if (R() < .06) stars.push({x, y, r, a, ph: R() * 6});
+    }
+    // 큰 별은 글이 놓이는 가운데 띠를 피해 양옆 가장자리에만(읽기 방해 금지)
+    const SP = [[.07,.30,9],[.93,.16,7],[.88,.50,5],[.12,.62,4.5],[.95,.80,3.5]];
+    SP.forEach(([fx, fy, s], i) => spike(g, fx * sky.width, fy * sky.height, s * dpr * (W < 500 ? .8 : 1), ['#fff3d6', '#cfe9ff', '#ffd9a8'][i % 3]));
+    twinkle(performance.now());
+  }
+  function spike(g, x, y, s, col){
+    g.save(); g.translate(x, y); g.globalCompositeOperation = 'lighter';
+    const halo = g.createRadialGradient(0, 0, 0, 0, 0, s * 1.6); halo.addColorStop(0, col); halo.addColorStop(.25, 'rgba(255,240,220,.35)'); halo.addColorStop(1, 'rgba(255,240,220,0)');
+    g.fillStyle = halo; g.beginPath(); g.arc(0, 0, s * 1.6, 0, 7); g.fill();
+    const ray = (ang, len, wid) => { g.save(); g.rotate(ang); const gr = g.createLinearGradient(0, 0, len, 0); gr.addColorStop(0, col); gr.addColorStop(1, 'rgba(255,255,255,0)');
+      g.fillStyle = gr; g.beginPath(); g.moveTo(0, -wid); g.lineTo(len, 0); g.lineTo(0, wid); g.closePath(); g.fill(); g.restore(); };
+    for (let k = 0; k < 6; k++) ray(Math.PI / 2 + k * Math.PI / 3, s * 5.5, s * .16);
+    ray(0, s * 2.6, s * .08); ray(Math.PI, s * 2.6, s * .08);
+    g.restore();
+  }
+  let twT = 0;
+  function twinkle(t){
+    const g = tw.getContext('2d'); g.clearRect(0, 0, tw.width, tw.height);
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches)
+      for (const s of stars) { const k = .5 + .5 * Math.sin(t / 900 + s.ph); g.fillStyle = 'rgba(255,250,240,' + (k * .9) + ')'; g.beginPath(); g.arc(s.x, s.y, s.r * (1 + k), 0, 7); g.fill(); }
+    cancelAnimationFrame(twT); twT = requestAnimationFrame(twinkle);
+  }
+  let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(paint, 200); });
+  paint();
+
+  /* ── 장면 ── */
+  const GRID = `<svg viewBox="0 0 190 196" width="129" xmlns="http://www.w3.org/2000/svg" font-family="Malgun Gothic,sans-serif"><line x1="14" y1="14" x2="14" y2="170" stroke="#d6dbe6" stroke-width="1"/><line x1="40" y1="14" x2="40" y2="170" stroke="#d6dbe6" stroke-width="1"/><line x1="66" y1="14" x2="66" y2="170" stroke="#d6dbe6" stroke-width="1"/><line x1="92" y1="14" x2="92" y2="170" stroke="#d6dbe6" stroke-width="1"/><line x1="118" y1="14" x2="118" y2="170" stroke="#d6dbe6" stroke-width="1"/><line x1="144" y1="14" x2="144" y2="170" stroke="#d6dbe6" stroke-width="1"/><line x1="170" y1="14" x2="170" y2="170" stroke="#d6dbe6" stroke-width="1"/><line x1="14" y1="14" x2="170" y2="14" stroke="#d6dbe6" stroke-width="1"/><line x1="14" y1="40" x2="170" y2="40" stroke="#d6dbe6" stroke-width="1"/><line x1="14" y1="66" x2="170" y2="66" stroke="#d6dbe6" stroke-width="1"/><line x1="14" y1="92" x2="170" y2="92" stroke="#d6dbe6" stroke-width="1"/><line x1="14" y1="118" x2="170" y2="118" stroke="#d6dbe6" stroke-width="1"/><line x1="14" y1="144" x2="170" y2="144" stroke="#d6dbe6" stroke-width="1"/><line x1="14" y1="170" x2="170" y2="170" stroke="#d6dbe6" stroke-width="1"/><line x1="40" y1="144" x2="144" y2="144" stroke="#2f5fb3" stroke-width="2.5"/><text x="40.0" y="162.0" font-size="13" fill="#374151" text-anchor="middle">ㄴ</text><text x="144.0" y="162.0" font-size="13" fill="#374151" text-anchor="middle">ㄷ</text><circle cx="92" cy="40" r="4" fill="#b45309"/><text x="104.0" y="34.0" font-size="13" fill="#b45309" text-anchor="middle">①</text><circle cx="118" cy="66" r="4" fill="#b45309"/><text x="130.0" y="60.0" font-size="13" fill="#b45309" text-anchor="middle">②</text><circle cx="40" cy="66" r="4" fill="#b45309"/><text x="52.0" y="60.0" font-size="13" fill="#b45309" text-anchor="middle">③</text></svg>`;
+  const CH = {pola:'폴라', exi:'엑시', aresi:'아레시', iris:'이리스', lemma:'렘마'};
+  const BLINK = ['question', 'listening', 'thinking', 'hint', 'retry'];
+  const QS = [
+    {q:'이등변삼각형의 각에는 어떤 성질이 있어?', ans:'길이가 같은 두 변에 있는 두 각의 크기가 같아요.',
+     keys:[['길이가 같은 두 변', /두\s*변|같은\s*변/], ['두 각의 크기가 같다', /두\s*각|각.*같|같은\s*각/]],
+     hint:'길이가 같은 두 변을 먼저 찾아봐. 그 두 변에 붙어 있는 각은 어때?', good:'길이가 같은 두 변에 있는 두 각의 크기가 같아요.', half:'두 변의 길이가 같아요.'},
+    {q:'이등변삼각형 모양의 종이를 반으로 접으면, 두 각이 같다는 걸 어떻게 알 수 있어?', ans:'반으로 접으면 두 각이 꼭 겹쳐요. 겹치니까 크기가 같아요.',
+     keys:[['접으면 두 각이 겹친다', /겹/], ['겹치니까 크기가 같다', /같/]],
+     hint:'반으로 접었을 때 두 각은 어떻게 돼?', good:'접으면 두 각이 딱 겹쳐서 크기가 같다는 걸 알아요.', half:'반으로 접어 봐요.'},
+    {q:'모눈종이에 선분 ㄴㄷ이 있어. 점 ①, ②, ③ 중 어느 점과 이어야 이등변삼각형이 될까? 왜?', fig:true,
+     ans:'①이에요. ①은 선분 ㄴㄷ의 한가운데 바로 위에 있어서, ①에서 ㄴ까지와 ①에서 ㄷ까지의 길이가 같아요.',
+     keys:[['①', /①|1번|일번|첫\s*번째/], ['ㄴ과 ㄷ까지 길이가 같다', /길이.*같|같은\s*길이|가운데/]],
+     hint:'세 점에서 ㄴ까지와 ㄷ까지의 길이를 비교해 봐.', good:'①번이요. 가운데 위에 있어서 ㄴ까지랑 ㄷ까지 길이가 같아요.', half:'①번이요.'},
+  ];
+  let cur = 'iris'; try { cur = localStorage.getItem('dd-sky-who') || 'iris'; } catch (e) {}
+  const who = document.getElementById('who');
+  who.innerHTML = Object.keys(CH).map(k => '<option value="' + k + '"' + (k === cur ? ' selected' : '') + '>친구: ' + CH[k] + '</option>').join('');
+  who.onchange = () => { cur = who.value; try { localStorage.setItem('dd-sky-who', cur); } catch (e) {} start(qi); };
+  const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const src = st => 'characters/img/' + cur + '/' + st + '.webp';
+  let qi = 0, tries = 0, passed = [], buddy, sayEl, blinkT;
+
+  function mirror(){ document.getElementById('mirror').innerHTML = QS.map((_, i) => '<i class="' + (passed[i] ? 'lit' : i === qi ? 'now' : '') + '"></i>').join(''); }
+  function makeBuddy(){
+    const b = document.createElement('div'); b.className = 'buddy';
+    b.innerHTML = '<div class="mv"><img class="a on" alt=""><img class="b" alt=""><img class="blink" alt=""></div>'; b._st = '';
+    clearTimeout(blinkT);
+    const loop = () => { blinkT = setTimeout(() => { blink(b); if (Math.random() < .2) setTimeout(() => blink(b), 260); loop(); }, 2400 + Math.random() * 3600); }; loop();
+    return b;
+  }
+  function blink(b){ if (reduced() || !BLINK.includes(b._st)) return; const k = b.querySelector('.blink'); if (!k.naturalWidth) return; k.classList.add('on'); setTimeout(() => k.classList.remove('on'), 130); }
+  function face(st){ const b = buddy; if (b._st === st) return; b._st = st;
+    const imgs = b.querySelectorAll('img.a,img.b'), on = imgs[0].classList.contains('on') ? imgs[0] : imgs[1], nx = on === imgs[0] ? imgs[1] : imgs[0];
+    nx.onload = () => { nx.classList.add('on'); on.classList.remove('on'); }; nx.src = src(st);
+    const k = b.querySelector('.blink'); if (BLINK.includes(st)) k.src = src(st + '-blink'); else k.removeAttribute('src'); }
+  function move(m){ if (reduced()) return; const v = buddy.querySelector('.mv'); v.classList.remove('talk', 'pop', 'leap', 'nod', 'sink'); void v.offsetWidth; if (m) v.classList.add(m); }
+  // 글자가 별가루처럼 내려앉는다(타자기 대신)
+  function say(text){
+    sayEl.innerHTML = ''; const frag = document.createDocumentFragment();
+    [...text].forEach((ch, i) => { const s = document.createElement('span'); s.textContent = ch; s.style.animationDelay = (i * 28) + 'ms'; frag.appendChild(s); });
+    sayEl.appendChild(frag); if (!reduced()) { move('talk'); setTimeout(() => move(null), Math.min(3200, text.length * 28 + 300)); }
+  }
+  function hideResult(){ document.getElementById('result').className = 'result'; }
+  function start(i){
+    hideResult(); qi = i; tries = 0; mirror();
+    const st = document.getElementById('stage');
+    if (i >= QS.length) return finish();
+    const Q = QS[i];
+    st.innerHTML = '<div class="scene"><div id="bslot"></div><div class="signal"><div class="sig-tag">' + CH[cur] + '의 질문 · ' + (i + 1) + '/' + QS.length + '</div><div class="say"></div>' + (Q.fig ? '<div class="fig">' + GRID + '</div>' : '') + '</div></div>' +
+      '<div id="mineBox"></div><div class="grow"></div>' +
+      '<div class="dock"><button class="side" id="write">글로 쓰기</button><button class="lens" id="lens" aria-label="말하기"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg></button><button class="side r send" id="send" disabled>보내기</button></div>' +
+      '<div class="lens-cap" id="cap">렌즈를 누르고 말해 봐</div>' +
+      '<div class="write" id="wbox"><textarea id="txt" rows="2" placeholder="여기에 답을 써 봐"></textarea></div>' +
+      '<div class="demo"><span>시안용 예시 답:</span><button data-k="good">잘 말한 답</button><button data-k="half">덜 말한 답</button></div>';
+    buddy = makeBuddy(); st.querySelector('#bslot').replaceWith(buddy); sayEl = st.querySelector('.say');
+    face('question'); move('pop'); say(Q.q);
+    const txt = st.querySelector('#txt'), send = st.querySelector('#send'), wbox = st.querySelector('#wbox'), lens = st.querySelector('#lens'), cap = st.querySelector('#cap');
+    let t0 = 0;
+    const typed = () => { send.disabled = txt.value.trim().length < 2; face('listening'); const n = Date.now(); if (n - t0 > 1200) { t0 = n; move('nod'); } };
+    txt.oninput = typed;
+    st.querySelector('#write').onclick = () => { wbox.classList.toggle('show'); if (wbox.classList.contains('show')) txt.focus(); };
+    lens.onclick = () => { lens.classList.toggle('on'); face(lens.classList.contains('on') ? 'listening' : 'question'); cap.textContent = lens.classList.contains('on') ? '듣고 있어… (시안에선 아래 예시 답을 눌러 봐)' : '렌즈를 누르고 말해 봐'; };
+    st.querySelectorAll('.demo button').forEach(b => b.onclick = () => { wbox.classList.add('show'); txt.value = Q[b.dataset.k]; typed(); });
+    send.onclick = () => check(txt.value.trim());
+  }
+  function constellation(hit, full){
+    // 핵심 = 별. 켜진 별끼리 금빛 선으로 잇는다. 다 켜지면 별자리 완성.
+    const n = hit.length, pts = hit.map((_, i) => [40 + i * (220 / Math.max(1, n - 1)), i % 2 ? 26 : 70]);
+    let s = '<svg class="const" viewBox="0 0 300 96" preserveAspectRatio="xMidYMid meet" aria-hidden="true">';
+    if (full) s += '<polyline points="' + pts.map(p => p.join(',')).join(' ') + '" fill="none" stroke="#f2c46a" stroke-width="1.6" stroke-dasharray="4 4" opacity=".9"/>';
+    pts.forEach((p, i) => { s += hit[i]
+      ? '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="13" fill="rgba(242,196,106,.18)"/><path transform="translate(' + p[0] + ',' + p[1] + ')" d="M0,-9 L2.4,-2.4 9,0 2.4,2.4 0,9 -2.4,2.4 -9,0 -2.4,-2.4Z" fill="#ffe7a8"/>'
+      : '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="5" fill="none" stroke="#6f6a9c" stroke-width="1.4" stroke-dasharray="2 2"/>'; });
+    return s + '</svg>';
+  }
+  function check(a){
+    const Q = QS[qi];
+    document.getElementById('mineBox').innerHTML = '<div class="mine"><small>나의 신호</small><p>' + a.replace(/[<>&]/g, '') + '</p></div>';
+    const send = document.getElementById('send'); send.disabled = true; document.getElementById('lens').classList.remove('on');
+    face('thinking'); move('pop'); say('네 신호를 읽는 중이야…');
+    setTimeout(() => {
+      const hit = Q.keys.map(k => k[1].test(a)); tries++;
+      const box = document.getElementById('result'), inn = document.getElementById('resultIn');
+      if (hit.every(Boolean)) {
+        passed[qi] = true; mirror(); face('praise'); move('leap'); say('별자리가 완성됐어!');
+        inn.innerHTML = '<h3>별자리 완성</h3>' + constellation(hit, true) + '<div class="keys">' + Q.keys.map(k => '<span class="y">✦ ' + k[0] + '</span>').join('') + '</div><p class="ans">' + Q.ans + '</p><button class="go" id="next">다음 신호로</button>';
+        box.className = 'result show ok'; document.getElementById('next').onclick = () => start(qi + 1);
+      } else if (tries < 2) {
+        face('retry'); move('sink'); setTimeout(() => { face('hint'); move('pop'); say(Q.hint); }, 1200);
+        const miss = hit.filter(h => !h).length;
+        inn.innerHTML = '<h3>아직 어두운 별이 ' + miss + '개 있어</h3>' + constellation(hit, false) +
+          '<div class="keys">' + Q.keys.filter((k, j) => hit[j]).map(k => '<span class="y">✦ ' + k[0] + '</span>').join('') + '<span class="n">? ' + miss + '개 더</span></div>' +
+          '<p class="clue">' + Q.hint + '</p><button class="go" id="again">단서 보고 다시 말하기</button>';
+        box.className = 'result show hint';
+        document.getElementById('again').onclick = () => { hideResult(); face('question'); };
+      } else {
+        face('hint'); move('pop'); say('괜찮아, 같이 별을 이어 보자.');
+        inn.innerHTML = '<h3>이렇게 말하면 별자리가 돼</h3>' + constellation(Q.keys.map(() => true), true) + '<p class="ans">' + Q.ans + '</p><p style="font-size:13px;color:var(--mute);margin-top:6px">이 신호는 내일 다시 와요.</p><button class="go" id="next">다음 신호로</button>';
+        box.className = 'result show hint'; document.getElementById('next').onclick = () => start(qi + 1);
+      }
+    }, 1200);
+  }
+  function finish(){
+    mirror();
+    const st = document.getElementById('stage');
+    st.innerHTML = '<div class="end"><div id="bslot"></div><h2>거울 조각을 다 모았어</h2><p>1회차 질문 끝 · 이제 문제 풀기로 확인해요</p><button class="side send" id="re" style="justify-self:center">처음부터 다시 보기</button></div>';
+    buddy = makeBuddy(); st.querySelector('#bslot').replaceWith(buddy); sayEl = document.createElement('div'); face('praise'); move('leap');
+    document.getElementById('re').onclick = () => { passed = []; start(0); };
+  }
+  document.getElementById('close').onclick = () => { passed = []; start(0); };
+  start(0);
+})();
+</script>
