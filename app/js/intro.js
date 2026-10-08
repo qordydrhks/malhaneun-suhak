@@ -34,6 +34,7 @@
         <button class="lg-go" type="submit">출동!</button>
         <div class="lg-msg" id="lgMsg">${esc(msg || '')}</div>
       </form>
+      <a class="lg-teacher" href="teacher.html">선생님</a>
     </section>`;
     // 로그인
     const form = document.getElementById('lgForm'), m = document.getElementById('lgMsg');

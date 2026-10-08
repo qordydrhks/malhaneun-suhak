@@ -26,14 +26,19 @@
     : s.items.filter(it => it.r === r).map(it => ({kind: 'q', id: it.id, r, src: it}));
 
   // ── 진도(공유 저장소 app:prog:<학생>:<과정>) ──
-  let P = null;
+  let P = null, T = {};                             // T = 선생님이 연 회차(따로 저장 — 학생 기기가 저장하다 덮어쓰지 않게)
   const pkey = () => 'app:prog:' + A.session.student.id + ':e4-2';
+  E.okey = sid => 'app:open:' + sid + ':e4-2';
   E.blank = () => ({v: 1, st: {}, open: {}, resume: null, log: []});
   E.load = async () => {
     P = (await A.store.get(pkey())) || E.blank();
     P.st = P.st || {}; P.open = P.open || {};
+    T = (await A.store.get(E.okey(A.session.student.id))) || {};
     return P;
   };
+  /* 선생님·학부모 화면: 다른 학생의 진도를 잠깐 들여다볼 때 */
+  E.use = (p, t) => { P = p || E.blank(); P.st = P.st || {}; P.open = P.open || {}; T = t || {}; return P; };
+  E.teacherOpen = () => T;
   E.save = async () => { if (P) { P.at = Date.now(); await A.store.set(pkey(), P); } };
   E.prog = () => P;
   E.status = id => P.st[id] || null;
@@ -45,7 +50,7 @@
     if (x.day === A.today()) return {k: 'today', help: x.help};
     return {k: 'next', help: x.help};
   };
-  E.openRound = bigNo => (A.isTester() ? 3 : Math.max(1, P.open[bigNo] || 1));
+  E.openRound = bigNo => (A.isTester() ? 3 : Math.min(3, Math.max(1, P.open[bigNo] || 1, +T[bigNo] || 1)));
   /* 소단원·회차 진행: 통과 수 / 전체 */
   E.count = (s, r) => { const t = E.tasks(s, r); return {done: t.filter(x => E.state(x.id).k === 'done').length, n: t.length}; };
   E.bigCount = (b, r) => b.smalls.reduce((a, s) => { const c = E.count(s, r); return {done: a.done + c.done, n: a.n + c.n}; }, {done: 0, n: 0});

@@ -243,3 +243,70 @@ body.intro-on .ver{z-index:5}
 .g-tiers{list-style:none;padding:0;margin:10px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:8px}
 .g-tiers li{display:flex;flex-direction:column;align-items:center;padding:8px;border-radius:10px;background:rgba(255,255,255,.04)}
 .g-tiers span{font-size:22px}.g-tiers b{color:var(--gold)}.g-tiers small{color:var(--sub)}
+
+/* 선생님 화면 (teacher.html) — 설명 없이 깔끔하게 */
+body.tpage #app{max-width:1000px}
+.tmain{padding-bottom:30px}
+.thead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:6px 0 12px}
+.thead h2{margin:0;font-size:22px}.thead h2 small{font-size:14px;color:var(--sub);font-weight:500}
+.tlist{display:grid;gap:6px}
+.trow{display:grid;grid-template-columns:minmax(90px,1.2fr) 1.3fr .9fr 1.4fr .8fr .8fr;align-items:center;gap:10px;text-align:left;background:var(--sky2);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14.5px}
+.trow:hover{border-color:#3a4570}
+.tname{font-weight:700;min-width:0}.tname small{display:block;font-weight:400;color:var(--sub);font-size:12px}
+.trank b{color:var(--gold);margin-left:4px}.trank i{color:var(--sub);font-style:normal}
+.tlit,.tnow,.tago{color:var(--sub);font-size:13px;min-width:0}
+.talert.on{color:#241a00;background:var(--warn);border-radius:99px;padding:2px 10px;font-weight:700;font-size:12.5px;justify-self:start}
+.tfoot{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-top:18px}
+.tfoot a{color:var(--sub);text-decoration:none}
+.tcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
+.tcard{background:var(--sky2);border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;gap:2px}
+.tcard b{font-size:20px;color:var(--gold)}.tcard span{font-size:13px}.tcard small{color:var(--sub);font-size:12px}
+.tcard.warn b{color:var(--warn)}
+.tsec{margin:22px 0 8px;font-size:16px}.tsec small{color:var(--sub);font-weight:500;margin-left:4px}
+.tli{list-style:none;padding:0;margin:0;display:grid;gap:6px}
+.tli>li{background:var(--sky2);border:1px solid var(--line);border-radius:12px;padding:10px 14px;min-width:0}
+.tq{display:block}.tq .code{display:block;font-size:12px;margin-bottom:2px}
+.tmeta{color:var(--sub);font-size:13px;margin-top:4px}
+.tmis{color:var(--warn);font-size:13px;margin-top:3px}
+.tli details{margin-top:4px;font-size:13.5px}.tli summary{color:var(--blue);cursor:pointer}
+.tli details p{margin:6px 0 0;white-space:pre-wrap;color:var(--ink)}
+.tscroll{overflow-x:auto}
+.tbig{border-collapse:collapse;width:100%;min-width:620px;font-size:14px}
+.tbig th,.tbig td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;vertical-align:top}
+.tbig thead th{color:var(--sub);font-weight:500;font-size:12.5px}
+.tbig tbody th{font-weight:600}.tbig tbody th .code{display:block}
+.tbig td small{display:block;color:var(--sub);font-size:11.5px}
+.tbig td.full{color:var(--ok)}.tbig td.off{color:#5a6488}
+.topen{font:inherit;font-size:13px;color:var(--ink);background:var(--sky);border:1px solid var(--line);border-radius:8px;padding:4px 6px}
+.tpar{display:grid;gap:8px}
+.tpar textarea,.turl{font:inherit;font-size:14px;color:var(--ink);background:var(--sky2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;width:100%}
+.tpar .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.primary.small,.secondary.small{padding:8px 14px;font-size:14px}
+@media (max-width:640px){
+  .trow{grid-template-columns:1fr auto;grid-template-areas:"n a" "r g" "l w"}
+  .tname{grid-area:n}.talert{grid-area:a;justify-self:end!important}.trank{grid-area:r}.tago{grid-area:g;text-align:right}.tlit{grid-area:l}.tnow{grid-area:w;text-align:right}
+}
+
+/* 학부모 리포트 (parent.html) */
+.preport{max-width:640px;margin:0 auto;padding:18px 0 40px;display:grid;gap:12px}
+.phead{text-align:center;padding:10px 0 4px}.phead h1{margin:4px 0;font-size:26px}
+.pcard{background:var(--sky2);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.pcard h2{margin:0 0 8px;font-size:17px}.pcard p{margin:6px 0}.pcard b{color:var(--gold)}
+.prank{display:flex;gap:14px;align-items:center}.pri{font-size:40px}.prn{font-size:22px;font-weight:800;color:var(--gold)}.prn small{font-size:14px;color:var(--sub);font-weight:500}
+.pdays{display:flex;gap:6px;margin:4px 0 8px}.pdays span{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:13px;color:var(--sub);border:1px solid var(--line)}
+.pdays span.on{background:var(--gold);color:#241a00;border-color:var(--gold);font-weight:700}
+.pstars{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:8px}
+.pstars li{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center}
+.pst{font-weight:600}.pstars .sub{grid-column:1/-1;font-size:12.5px}
+.pbar{display:flex;gap:4px}.pbar i{width:26px;height:8px;border-radius:4px;background:var(--line)}
+.pbar i.half{background:#8a7a45}.pbar i.full{background:var(--gold)}.pbar i.off{background:#1b2240}
+.ptodos{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.ptodo{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--sky)}
+.pq{font-weight:600;line-height:1.6}
+.pwhy{color:var(--warn);font-size:13.5px;margin-top:4px}.pwhy b{color:var(--ok)}
+.phow{margin:8px 0 0;padding-left:20px;font-size:14px;line-height:1.7;color:var(--ink)}
+.pkw{display:inline-block;border:1px solid #f2c45f66;color:var(--gold);border-radius:99px;padding:0 9px;margin:2px 2px 0 0;font-size:13px}
+.pcard blockquote{margin:8px 0 0;padding:10px 14px;border-left:3px solid var(--gold);background:var(--sky);border-radius:0 10px 10px 0;line-height:1.7}
+.pcm{white-space:pre-wrap;line-height:1.7}
+.pfail{text-align:center;display:grid;gap:10px;justify-items:center;padding:20px}
+.lg-teacher{position:relative;z-index:2;display:block;width:max-content;margin:14px auto 0;color:#6f7899;font-size:13px;text-decoration:none;padding:6px 12px}
