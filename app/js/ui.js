@@ -42,7 +42,7 @@
     const b = e.target.closest('[data-go]'); if (!b) return;
     const g = b.dataset.go;
     if (g === 'home') home(); else if (g === 'logout') { A.logout(); login(); }
-    else if (g.startsWith('big:')) star(+g.slice(4)); else if (g.startsWith('small:')) planet(g.slice(6), +b.dataset.r);
+    else if (g.startsWith('big:')) star(+g.slice(4)); else if (g.startsWith('small:')) planet(g.slice(6), +b.dataset.r); else if (g.startsWith('bh:')) blackhole(+g.slice(3), +b.dataset.r);
   });
   const toast = (t) => { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.classList.add('on'), 20); setTimeout(() => { d.classList.remove('on'); setTimeout(() => d.remove(), 400); }, 2600); };
 
@@ -70,16 +70,12 @@
   const HUES = ['#f3c969', '#7aa7ff', '#f29b8f', '#8fd6b4', '#c9a6ff', '#ffb36b'];
   function home() {
     const nx = E.nextPlace();
-    const bigs = E.bigs().map((b, i) => {
-      const open = E.openRound(b.no), c = E.bigCount(b, open), lit = c.n ? c.done / c.n : 0;
-      return `<button class="starbtn" data-go="big:${b.no}" style="--h:${HUES[i]};--lit:${lit.toFixed(2)}">
-        <span class="star"><i></i></span><span class="code">${b.code}</span><span class="nm">${esc(b.title)}</span>
-        <span class="chip">${E.ROUND[open]} ${c.done}/${c.n}</span></button>`;
-    }).join('');
     frame(`<section class="hero stage">${buddy('idle')}<div class="bubble">${esc(line('hello'))}</div></section>
-      ${nx ? `<button class="primary big go" data-go="small:${nx.small.code}" data-r="${nx.r}"><span>오늘 갈 곳</span><small>${nx.small.code} · ${esc(nx.small.title)} · ${E.ROUND[nx.r]}${nx.why === 'again' ? ' · 다시 열린 질문' : nx.why === 'mission' ? ' · ' + A.M.name(nx.r) : ''}</small></button>`
+      ${nx ? (nx.why === 'bh'
+               ? `<button class="primary big go" data-go="bh:${nx.big.no}" data-r="${nx.r}"><span>오늘 갈 곳</span><small>${nx.big.code} · 블랙홀 관문 · ${E.ROUND[nx.r]}</small></button>`
+               : `<button class="primary big go" data-go="small:${nx.small.code}" data-r="${nx.r}"><span>오늘 갈 곳</span><small>${nx.small.code} · ${esc(nx.small.title)} · ${E.ROUND[nx.r]}${nx.why === 'again' ? ' · 다시 열린 질문' : nx.why === 'mission' ? ' · ' + A.M.name(nx.r) : ''}</small></button>`)
              : `<div class="done-all">지금 열린 곳은 모두 탐험했어요 ✦</div>`}
-      <h3 class="sect">E4-2 은하</h3><div class="galaxy">${bigs}</div>`, {crumb: 'E4-2 은하'});
+      <h3 class="sect">E4-2 은하</h3><div class="mapbox">${A.galaxyMap()}</div>`, {crumb: 'E4-2 은하'});
   }
 
   // ── 4. 별(대단원) ──
@@ -88,15 +84,13 @@
     const b = E.big(no), open = E.openRound(no);
     r = r || open;
     const tabs = [1, 2, 3].map(k => `<button class="tab ${k === r ? 'on' : ''}" ${k > open ? 'disabled' : ''} data-r="${k}">${k > open ? '🔒 ' : ''}${E.ROUND[k]}</button>`).join('');
-    const planets = b.smalls.map((s, i) => {
-      const c = E.count(s, r), t = E.tasks(s, r), today = t.some(x => E.state(x.id).k === 'today'), again = t.some(x => E.state(x.id).k === 'next');
-      const cls = c.n && c.done === c.n ? 'lit' : (c.done ? 'half' : '');
-      return `<button class="planet ${cls}" data-go="small:${s.code}" data-r="${r}" style="--p:${PLANET[i % 8]}"><span class="orb"></span>
-        <span class="code">${s.code}</span><span class="nm">${esc(s.title)}</span><span class="cnt">${c.done}/${c.n}${today ? ' · 내일 열림' : ''}${again ? ' · 다시 열림' : ''}${A.M.done(s, r) ? ' · ✦' : (A.M.ready(s, r) ? ' · ' + A.M.name(r) : '')}</span></button>`;
-    }).join('');
-    frame(`<h2 class="ttl"><span class="code">${b.code}</span>${esc(b.title)}</h2><div class="tabs">${tabs}</div><div class="planets">${planets}</div>
-      ${r < open ? '<p class="sub">지난 탐사는 연습으로 다시 할 수 있어요. 점수와 등급은 그대로예요.</p>' : ''}`, {back: 'home', backText: '은하', crumb: b.code});
+    const c = E.bigCount(b, r);
+    frame(`<h2 class="ttl"><span class="code">${b.code}</span>${esc(b.title)}</h2><div class="tabs">${tabs}</div>
+      <div class="mapbox">${A.starMap(b, r)}</div>
+      <p class="sub center">${E.ROUND[r]} — 불 켠 행성 ${b.smalls.filter(s => { const k = E.count(s, r); return k.n && k.done === k.n; }).length}/${b.smalls.length}${r < open ? ' · 지난 탐사는 연습(점수·등급 그대로)' : ''}</p>`, {back: 'home', backText: '은하', crumb: b.code});
     root().querySelectorAll('.tab').forEach(t => t.onclick = () => star(no, +t.dataset.r));
+    const bh = document.getElementById('bhBtn');
+    if (bh) bh.onclick = () => (A.bhOpen(b, r) ? blackhole(no, r) : toast(E.ROUND[r] + '의 행성을 모두 밝히면 열려요'));
   }
 
   // ── 5. 행성 입구 ──
@@ -147,6 +141,27 @@
       ${!practice && A.M.ready(small, r) && !A.M.done(small, r) ? missionBtns(small, r) : `<button class="primary big" data-go="big:${big.no}">${big.code}로</button>`}
       <button class="ghost" data-go="home">은하로</button></section>`);
     bindMission(big, small, r);
+  }
+
+  // ── 블랙홀 관문 (퉁구리 은신처) ──
+  async function blackhole(no, r) {
+    if (!A.isAcademyDevice()) return blocked();
+    const big = E.big(no), id = A.bhTaskId(big, r), done = A.bhDone(big, r), st = E.state(id);
+    if (!A.bhOpen(big, r)) return star(no, r);
+    if (st.k === 'today') return frame(`<section class="center-msg stage"><img class="mload" src="img/tunguri.webp" alt=""><h2>블랙홀이 닫혔어</h2><p class="sub">내일 새벽 4시에 다시 열려요.</p><button class="primary big" data-go="big:${no}">${big.code}로</button></section>`);
+    frame(`<section class="center-msg stage bhin"><div class="bhole"></div><img class="mload peek" src="img/tunguri.webp" alt="">
+      <h2>${big.code} 블랙홀 관문</h2><p class="sub">퉁구리가 이 안에 별빛을 숨겼어!<br>${E.ROUND[r]}에서 배운 것을 말하면 블랙홀을 통과할 수 있어.</p>
+      <button class="primary big" id="bgo">${done ? '다시 들어가기 (연습)' : '들어가기'}</button><button class="ghost" data-go="big:${no}">${big.code}로</button></section>`, {back: 'big:' + no, backText: big.code, crumb: big.code + ' · 블랙홀'});
+    $('#bgo').onclick = async () => {
+      const pseudo = {code: big.code + ' 블랙홀', title: '블랙홀 관문', unitId: '', unitLabel: '🕳 블랙홀 · ' + big.title, key: ''};
+      const out = await ask(big, pseudo, {kind: 'bh', id, r, src: big.bh[r]}, 0, 1, done);
+      if (out === 'quit') return star(no, r);
+      if (out && out.pass && !done) {
+        frame(`<section class="center-msg stage"><div class="chest">✦</div><h2>별빛 상자를 찾았어!</h2>
+          <p class="sub">퉁구리가 숨겨 둔 별빛을 되찾았어. 퉁구리는 깜짝 놀라 다음 별로 도망갔어!</p>
+          <img class="mload flee" src="img/tunguri.webp" alt=""><button class="primary big" data-go="home">은하로</button></section>`);
+      } else star(no, r);
+    };
   }
 
   // ── mission (문제 풀기) ──
@@ -215,6 +230,11 @@
       if (mode === 'again') return {mode, q: ag.q, keys: ag.keys, ans: ag.ans, fig: ag.fig || '', asks: (ag.keys.length === h.ask.length ? h.ask : []), help: h, base: E.Q[st.help]};
       return {mode, q: x.q, keys: x.keys, ans: x.ans, fig: x.fig, asks: h.ask, help: h, base: mode === 'nextday' ? E.Q.nextday : E.Q.first, pre: x.pre};
     }
+    if (task.kind === 'bh') {
+      const base = mode === 'nextday' ? E.Q.nextday : E.Q.first;
+      if (task.r === 1) return {mode, q: x.q, words: x.words, need: x.need, keys: x.words, ans: '이 별의 낱말: ' + x.words.join(' · '), fig: '', asks: ['다른 행성들에서 배운 낱말도 떠올려 봐.'], help: {}, base};
+      return {mode, q: x.q, keys: x.keys, ans: x.keys.join(' / '), fig: '', asks: x.keys.map(() => '이 별의 행성들을 하나씩 떠올려 봐. 빠진 내용은 없어?'), help: {}, base, feel: x.feel};
+    }
     const keys = x.ideas.map(d => d.t), asks = x.ideas.map(d => d.ask);
     const help = {kw: null, short: x.teach, long: null, lfig: ''};
     if (mode === 'again') return {mode, q: x.again, keys, ans: x.teach, fig: '', asks, help, base: E.Q.short};
@@ -274,6 +294,11 @@
       async function judge(t) {
         answers.push(t);
         $('#ans').innerHTML = `<div class="thinking"><span class="spin"></span> ${esc(line('thinking'))}</div>`; setBuddy('thinking');
+        if (S.words) {
+          const all = answers.join(' ').replace(/\s+/g, '');
+          const hits = S.words.map(w => ({hit: all.includes(w.replace(/\s+/g, '')), evidence: ''})), h = hits.filter(x => x.hit).length;
+          return (last = {hits, h, n: hits.length, miss: h >= S.need ? -1 : 0, misconception: '', ack: h ? '낱말 ' + h + '개를 말했어!' : '좋아, 하나씩 떠올려 보자.'});
+        }
         try { last = await E.grade({question: S.q, keys: S.keys, answer: t, prev: answers.length > 1 ? answers.slice(0, -1).join(' / ') : '', unitId: small.unitId}); }
         catch (e) { answers.pop(); setBuddy('retry'); say(esc(e.message), 'warn'); return null; }   // AI 실패 → 기록 없음, 다시 말하기
         return last;
@@ -283,7 +308,12 @@
       say(esc(line('question')));
       answerThen('', step);
 
+      let feel = '';
       function step(g) {
+        if (g.miss < 0 && S.feel && !feel) {
+          setBuddy('question'); say(`${esc(g.ack)}<br>${esc(S.feel)}`, 'hint');
+          return input('', t => { feel = t; answers.push('느낀 점: ' + t); pass(); });
+        }
         if (g.miss < 0) return pass();
         if (g.misconception && !kwShown && S.help.kw) {            // 틀린 생각 → "살짝 부족해" + 핵심 키워드만
           kwShown = true; helpNow = 'kw'; setBuddy('hint');
@@ -301,8 +331,8 @@
 
       function helpMenu(g) {
         ticking = false; setBuddy('retry');
-        say(`${esc(g ? g.ack : '')}<br><b>살짝 부족해.</b> 도움을 볼까?`, 'hint');
         const H = S.help;
+        say(`${esc(g ? g.ack : '')}<br><b>살짝 부족해.</b> ${H.kw || H.short || H.long ? '도움을 볼까?' : '내일 다시 도전하자!'}`, 'hint');
         $('#ans').innerHTML = `<div class="helps">
           ${H.kw && !kwShown ? `<button class="hbtn" data-h="kw"><b>🔑 키워드</b><small>오늘 다시 답할 수 있어요</small></button>` : ''}
           ${H.short ? `<button class="hbtn" data-h="short"><b>💬 짧은 설명</b><small>내일 다시 묻기로 확인해요</small></button>` : ''}

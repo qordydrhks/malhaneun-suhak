@@ -193,3 +193,18 @@ body.intro-on .ver{z-index:5}
 .ch{display:flex;gap:10px;align-items:center;text-align:left;background:#fff;border:1.5px solid #dde2ee;border-radius:12px;padding:12px 14px;color:#1d2233;font-size:17px}
 .ch span{color:#8a93b0;font-weight:700}.ch:hover:not(:disabled){border-color:#f2c45f}
 .ch.right{border-color:#2fae77;background:#e7f8ef}.ch.wrong{border-color:#e0705a;background:#fdeee9}
+
+/* 지도 */
+.mapbox{margin:4px -6px 6px;overflow:hidden}
+.starmap,.galmap{width:100%;height:auto;display:block}
+.starmap .pl:hover circle{filter:brightness(1.2)}
+.center{text-align:center}
+/* 블랙홀 */
+.bhin{position:relative}
+.bhole{width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,#000 0 34%,#120a2a 46%,#7c4dff66 60%,transparent 70%);box-shadow:0 0 60px #7c4dff55;animation:spinbh 9s linear infinite;margin-bottom:-120px}
+@keyframes spinbh{to{transform:rotate(360deg)}}
+.mload.peek{width:min(170px,50%);position:relative;animation:peek 3.2s ease-in-out infinite}
+@keyframes peek{0%,100%{transform:translateY(16px) scale(.92);opacity:.85}50%{transform:translateY(-6px) scale(1);opacity:1}}
+.chest{font-size:64px;color:var(--gold);text-shadow:0 0 30px #f2c45f}
+.mload.flee{width:min(150px,40%);animation:flee 2.4s ease-in forwards}
+@keyframes flee{0%{transform:none;opacity:1}100%{transform:translate(220px,-160px) scale(.2) rotate(30deg);opacity:0}}

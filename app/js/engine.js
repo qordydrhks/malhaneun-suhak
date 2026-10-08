@@ -72,6 +72,10 @@
       for (let r = 1; r <= open; r++) for (const s of b.smalls)
         if (A.M && A.M.ready(s, r) && !A.M.done(s, r)) return {big: b, small: s, r, why: 'mission'};
     }
+    for (const b of E.bigs()) {                         // 행성을 다 밝혔는데 블랙홀이 남은 별계
+      const open = E.openRound(b.no);
+      for (let r = 1; r <= open; r++) if (A.bhOpen && A.bhOpen(b, r) && ['new', 'next'].includes(E.state(A.bhTaskId(b, r)).k)) return {big: b, r, why: 'bh'};
+    }
     for (const b of E.bigs()) {
       const open = E.openRound(b.no);
       for (let r = 1; r <= open; r++) for (const s of b.smalls)

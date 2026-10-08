@@ -12,7 +12,7 @@ import io, json, os, re, sys, importlib
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
 QD = os.path.join(ROOT, '작업도구', '질문설계')
-sys.path.insert(0, QD)
+sys.path.insert(0, QD); sys.path.insert(0, HERE)
 import e42_1, e42_23, e42_456, e42_common as C, app_e42_data as D
 
 G = 'e4-2'
@@ -98,6 +98,9 @@ for ui, U in enumerate(UNITS, 1):
         big['smalls'].append({'no': s['no'], 'code': 'E4-2-%d-%d' % (ui, si), 'title': old['small'].split('. ', 1)[1], 'page': s.get('page', ''),
                               'key': rkey, 'unitId': old['id'], 'unitLabel': old['label'], 'quiz': ROUNDS[rkey].get('quiz', {'1': 3, '2': 2}), 'items': items, 'ladder': steps})
     out['bigs'].append(big)
+
+import blackhole_e42
+blackhole_e42.build(out['bigs'])
 
 js = ('/* 새 앱 데이터 — 초4-2. 만들기: 작업도구/새앱/build_data.py (직접 고치지 말 것) */\n'
       'window.APP_DATA = window.APP_DATA || {};\nwindow.APP_DATA["%s"] = %s;\n' % (G, json.dumps(out, ensure_ascii=False)))
