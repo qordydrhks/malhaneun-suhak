@@ -66,6 +66,8 @@
   /* 「오늘 갈 곳」(마스터 10/8 확정): ① 다시 열린 질문(어제 잠긴 것) ② 열린 회차에서 아직 안 한 다음 행성 */
   E.nextPlace = () => {
     for (const b of E.bigs()) for (let r = 1; r <= 3; r++) for (const s of b.smalls)
+      if (E.reviewList(s, r).length) return {big: b, small: s, r, why: 'review'};
+    for (const b of E.bigs()) for (let r = 1; r <= 3; r++) for (const s of b.smalls)
       if (E.tasks(s, r).some(x => E.state(x.id).k === 'next')) return {big: b, small: s, r, why: 'again'};
     for (const b of E.bigs()) {                         // 질문은 다 했는데 mission 이 남은 행성
       const open = E.openRound(b.no);
@@ -82,6 +84,63 @@
         if (E.tasks(s, r).some(x => E.state(x.id).k === 'new')) return {big: b, small: s, r, why: 'new'};
     }
     return null;
+  };
+
+
+  // ── 7일 복습(다시 빛내기) — 한 번에 통과하지 못한 것만(마스터 10/3). 잘하면 회복하되 처음 한 번에 한 것보다 조금 낮게(80) ──
+  E.reviewDue = id => {
+    const x = E.status(id);
+    return !!(x && x.st === 'pass' && (x.q ?? 100) < 100 && !x.rv && Date.now() - (x.at || 0) >= 7 * 864e5 && x.rvDay !== A.today());
+  };
+  E.reviewList = (s, r) => E.tasks(s, r).filter(t => E.reviewDue(t.id));
+  E.review = (id, ok, q) => {
+    const x = P.st[id]; if (!x) return;
+    if (ok) { x.qFirst = x.qFirst ?? x.q; x.q = Math.max(x.q || 0, q || E.Q.review); x.rv = Date.now(); }
+    else x.rvDay = A.today();
+  };
+
+  // ── 등급(마스터 10/2): 지금까지 푼 질문의 품질 평균(처음 통과만, 아직 못 한 것은 0) + 깊이 관문 ──
+  E.TIERS = [['루나', '달', '🌙'], ['테라', '지구', '🌍'], ['솔', '태양', '☀️'], ['갤럭시', '은하', '🌌'], ['코스모스', '우주', '✨']];
+  E.W = {1: 1, 2: 1.5, 3: 2};
+  E.all = () => {
+    const out = [];
+    for (const b of E.bigs()) {
+      for (let r = 1; r <= 3; r++) {
+        for (const s of b.smalls) for (const t of E.tasks(s, r)) out.push({t, s, b, r});
+        if (b.bh) out.push({t: {kind: 'bh', id: b.bh.id + ':r' + r, r}, s: null, b, r});
+      }
+    }
+    return out;
+  };
+  E.rank = () => {
+    let sw = 0, sq = 0, deep = 0, bonus = 0;
+    for (const {t, r} of E.all()) {
+      const x = E.status(t.id); if (!x) continue;
+      const q = x.st === 'pass' ? (x.q ?? 100) : 0;            // 복습으로 회복한 점수(80)까지 반영
+      sw += E.W[r]; sq += E.W[r] * q;
+      if (x.st === 'pass') deep = Math.max(deep, r);
+    }
+    for (const [k, m] of Object.entries(P.mis || {})) {
+      if (m.basic) { sw += 1; sq += 100 * m.basic.c / Math.max(1, m.basic.n); }
+      if (m.hard) bonus += 1.5 * m.hard.c / Math.max(1, m.hard.n);
+    }
+    const score = sw ? Math.min(100, sq / sw + Math.min(5, bonus)) : null;
+    let tier = 0;
+    if (score != null) tier = score >= 90 && deep >= 3 ? 4 : score >= 80 && deep >= 2 ? 3 : score >= 70 ? 2 : score >= 50 ? 1 : 0;
+    const lit = E.bigs().reduce((a, b) => a + b.smalls.filter(s => { const c = E.count(s, 1); return c.n && c.done === c.n; }).length, 0);
+    const total = E.bigs().reduce((a, b) => a + b.smalls.length, 0);
+    return {score, tier, name: E.TIERS[tier][0], ko: E.TIERS[tier][1], icon: E.TIERS[tier][2], lit, total};
+  };
+  /* 나의 기록 — 처음 통과한 모습별(마스터 손글씨: one pass · hint 1 · hint 2 · 아직) */
+  E.book = () => {
+    const g = {one: [], h1: [], h2: [], yet: []};
+    for (const it of E.all()) {
+      const x = E.status(it.t.id); if (!x) continue;
+      if (x.st !== 'pass') { g.yet.push(it); continue; }
+      const q = x.qFirst ?? x.q ?? 100;
+      (q >= 100 ? g.one : q >= 90 ? g.h1 : g.h2).push(it);
+    }
+    return g;
   };
 
   // ── 채점 (질문계단 grade 와 같은 규칙 — 핵심별 판정) ──
@@ -118,7 +177,7 @@
       student_id: s.id, name: s.name, student_grade: s.grade || '',
       course_id: 'e4-2', course_name: E.course().oldName || '초4-2학기',
       unit_id: task.kind === 'lad' ? '' : small.unitId, unit_label: (task.kind === 'lad' ? '🪜 ' + small.key.split('|')[2] : small.unitLabel),
-      level: task.kind === 'lad' ? (practice ? 'ladder' : 'ladder') : ('r' + task.r + (practice ? 're' : '')),
+      level: task.kind === 'lad' ? 'ladder' : ('r' + task.r + (practice === 'review' ? 'rv' : practice ? 're' : '')),
       question, question_id: task.id, transcript, score: Math.round(score),
       praise: ack || '', hint: help && help !== 'none' ? ('도움: ' + ({kw: '키워드', short: '짧은 설명', long: '긴 설명'}[help] || help)) : '',
       retry_point: '', misconception: misconception || '', attempt: attempt || 1, need_teacher: !!needTeacher,

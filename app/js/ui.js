@@ -42,7 +42,7 @@
     const b = e.target.closest('[data-go]'); if (!b) return;
     const g = b.dataset.go;
     if (g === 'home') home(); else if (g === 'logout') { A.logout(); login(); }
-    else if (g.startsWith('big:')) star(+g.slice(4)); else if (g.startsWith('small:')) planet(g.slice(6), +b.dataset.r); else if (g.startsWith('bh:')) blackhole(+g.slice(3), +b.dataset.r);
+    else if (g.startsWith('big:')) star(+g.slice(4)); else if (g.startsWith('small:')) planet(g.slice(6), +b.dataset.r); else if (g.startsWith('bh:')) blackhole(+g.slice(3), +b.dataset.r); else if (g === 'record') record();
   });
   const toast = (t) => { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.classList.add('on'), 20); setTimeout(() => { d.classList.remove('on'); setTimeout(() => d.remove(), 400); }, 2600); };
 
@@ -70,10 +70,12 @@
   const HUES = ['#f3c969', '#7aa7ff', '#f29b8f', '#8fd6b4', '#c9a6ff', '#ffb36b'];
   function home() {
     const nx = E.nextPlace();
-    frame(`<section class="hero stage">${buddy('idle')}<div class="bubble">${esc(line('hello'))}</div></section>
+    const rk = E.rank();
+    frame(`<button class="rankbtn" data-go="record"><span>${rk.icon}</span><b>${rk.name}</b><small>행성 ${rk.lit}/${rk.total} · 나의 기록 ›</small></button>
+      <section class="hero stage">${buddy('idle')}<div class="bubble">${esc(line('hello'))}</div></section>
       ${nx ? (nx.why === 'bh'
                ? `<button class="primary big go" data-go="bh:${nx.big.no}" data-r="${nx.r}"><span>오늘 갈 곳</span><small>${nx.big.code} · 블랙홀 관문 · ${E.ROUND[nx.r]}</small></button>`
-               : `<button class="primary big go" data-go="small:${nx.small.code}" data-r="${nx.r}"><span>오늘 갈 곳</span><small>${nx.small.code} · ${esc(nx.small.title)} · ${E.ROUND[nx.r]}${nx.why === 'again' ? ' · 다시 열린 질문' : nx.why === 'mission' ? ' · ' + A.M.name(nx.r) : ''}</small></button>`)
+               : `<button class="primary big go" data-go="small:${nx.small.code}" data-r="${nx.r}"><span>오늘 갈 곳</span><small>${nx.small.code} · ${esc(nx.small.title)} · ${E.ROUND[nx.r]}${nx.why === 'again' ? ' · 다시 열린 질문' : nx.why === 'mission' ? ' · ' + A.M.name(nx.r) : nx.why === 'review' ? ' · 다시 빛내기' : ''}</small></button>`)
              : `<div class="done-all">지금 열린 곳은 모두 탐험했어요 ✦</div>`}
       <h3 class="sect">E4-2 은하</h3><div class="mapbox">${A.galaxyMap()}</div>`, {crumb: 'E4-2 은하'});
   }
@@ -98,15 +100,18 @@
     const {big, small} = E.small(code), t = E.tasks(small, r);
     const todo = t.filter(x => ['new', 'next'].includes(E.state(x.id).k));
     const locked = t.filter(x => E.state(x.id).k === 'today').length;
+    const rv = E.reviewList(small, r);
     const practice = !todo.length && !locked;
     const min = Math.round(E.LIMIT[r] / 60);
     frame(`<section class="entry stage"><div class="orb big" style="--p:${PLANET[big.smalls.indexOf(small) % 8]}"></div>
       <div class="code">${small.code}</div><h2>${esc(small.title)}</h2><div class="chip">${E.ROUND[r]}</div>
       <p class="sub">${todo.length ? `질문 ${todo.length}개 · 하나에 약 ${min}분` : (locked ? `남은 질문 ${locked}개는 내일 다시 열려요` : '다 탐험했어요')}</p>
+      ${rv.length ? `<button class="primary big" id="rv"><span>다시 빛내기 ${rv.length}개</span><small>일주일 전에 도움을 받았던 질문이야</small></button>` : ''}
       ${todo.length ? `<button class="primary big" id="go">출발</button>` : ''}
       ${!todo.length && A.M.ready(small, r) ? missionBtns(small, r) : ''}
       ${practice ? `<button class="secondary" id="pr">질문 연습하기 (점수는 그대로)</button>` : ''}</section>`, {back: 'big:' + big.no, backText: big.code, crumb: small.code});
     if ($('#go')) $('#go').onclick = () => run(big, small, r, todo, false);
+    if ($('#rv')) $('#rv').onclick = () => run(big, small, r, rv, 'review');
     bindMission(big, small, r);
     if ($('#pr')) $('#pr').onclick = () => run(big, small, r, t, true);
   }
@@ -162,6 +167,25 @@
           <img class="mload flee" src="img/tunguri.webp" alt=""><button class="primary big" data-go="home">은하로</button></section>`);
       } else star(no, r);
     };
+  }
+
+  // ── 나의 기록 ──
+  function record(which) {
+    const rk = E.rank(), bk = E.book();
+    const LBL = {one: ['한 번에', 'one pass'], h1: ['되묻기 뒤', 'hint 1'], h2: ['도움 뒤', 'hint 2'], yet: ['아직', '다시 하면 빛나요']};
+    const nameOf = it => it.t.kind === 'bh' ? it.b.code + ' 블랙홀 · ' + E.ROUND[it.r] : it.s.code + ' · ' + E.ROUND[it.r];
+    const qOf = it => { const x = E.status(it.t.id); return it.t.kind === 'bh' ? it.b.bh[it.r].q : it.t.kind === 'lad' ? it.t.src.q : it.t.src.q; };
+    const list = which ? bk[which].map(it => `<li><button class="rec" ${which === 'yet' && it.s ? `data-go="small:${it.s.code}" data-r="${it.r}"` : (which === 'yet' ? `data-go="bh:${it.b.no}" data-r="${it.r}"` : '')}>
+        <span class="code">${esc(nameOf(it))}</span><span>${fm(qOf(it))}</span>${which === 'yet' ? '<b>다시 하기 →</b>' : ''}</button></li>`).join('') : '';
+    frame(`<section class="book">
+      <div class="rankcard"><div class="ri">${rk.icon}</div><div><div class="rn">${rk.name} <small>(${rk.ko})</small></div>
+        <div class="sub">행성 ${rk.lit}/${rk.total}개를 밝혔어</div></div></div>
+      <details class="how"><summary>등급은 어떻게 올라가?</summary><p>스스로 한 번에 답하면 빛이 가장 크게 모여. 되묻기나 도움을 봐도 안 하는 것보다 훨씬 많이 모여!<br>
+        루나 → 테라 → 솔 → 갤럭시 → 코스모스. 갤럭시는 별계 탐사, 코스모스는 은하 탐사까지 해야 될 수 있어.</p></details>
+      <div class="stats">${Object.keys(LBL).map(k => `<button class="stat ${which === k ? 'on' : ''}" data-k="${k}"><b>${bk[k].length}</b><span>${LBL[k][0]}</span><small>${LBL[k][1]}</small></button>`).join('')}</div>
+      ${which ? `<ul class="reclist">${list || '<li class="sub">아직 없어요</li>'}</ul>` : '<p class="sub center">숫자를 누르면 그 질문들을 볼 수 있어.</p>'}
+    </section>`, {back: 'home', backText: '은하', crumb: '나의 기록'});
+    root().querySelectorAll('.stat').forEach(b => b.onclick = () => record(b.dataset.k === which ? null : b.dataset.k));
   }
 
   // ── mission (문제 풀기) ──
@@ -224,9 +248,10 @@
   /* 할 일 → 이번에 보여 줄 질문 모양 */
   function shape(task, practice) {
     const st = E.state(task.id), x = task.src;
-    const mode = practice ? 'practice' : st.k === 'next' ? ((st.help === 'short' || st.help === 'long') ? 'again' : 'nextday') : 'first';
+    const mode = practice === 'review' ? 'review' : practice ? 'practice' : st.k === 'next' ? ((st.help === 'short' || st.help === 'long') ? 'again' : 'nextday') : 'first';
     if (task.kind === 'q') {
       const h = x.help, ag = h.again;
+      if (mode === 'review') return {mode, q: ag.q, keys: ag.keys, ans: ag.ans, fig: ag.fig || '', asks: (ag.keys.length === h.ask.length ? h.ask : []), help: h, base: E.Q.review};
       if (mode === 'again') return {mode, q: ag.q, keys: ag.keys, ans: ag.ans, fig: ag.fig || '', asks: (ag.keys.length === h.ask.length ? h.ask : []), help: h, base: E.Q[st.help]};
       return {mode, q: x.q, keys: x.keys, ans: x.ans, fig: x.fig, asks: h.ask, help: h, base: mode === 'nextday' ? E.Q.nextday : E.Q.first, pre: x.pre};
     }
@@ -237,7 +262,7 @@
     }
     const keys = x.ideas.map(d => d.t), asks = x.ideas.map(d => d.ask);
     const help = {kw: null, short: x.teach, long: null, lfig: ''};
-    if (mode === 'again') return {mode, q: x.again, keys, ans: x.teach, fig: '', asks, help, base: E.Q.short};
+    if (mode === 'again' || mode === 'review') return {mode, q: x.again, keys, ans: x.teach, fig: '', asks, help, base: mode === 'review' ? E.Q.review : E.Q.short};
     return {mode, q: x.q, keys, ans: x.teach, fig: x.fig, asks, help, base: mode === 'nextday' ? E.Q.nextday : E.Q.first};
   }
 
@@ -373,7 +398,12 @@
         if (!already) stop();
         let opened = 0;
         const score = r.pass ? Math.max(70, r.q || 70) : Math.round(60 * (last ? last.h / Math.max(1, last.n) : 0));
-        if (!practice) {
+        if (practice === 'review') {
+          E.review(task.id, r.pass, r.q);
+          await E.submit({big, small, task, question: S.q, transcript: answers.map((a, k) => (k + 1) + '차: ' + a).join('\n'), score, pass: r.pass, stage: 'review',
+                          help: r.help || 'none', quality: r.pass ? r.q : null, misconception: last?.misconception || '', ack: last?.ack || '', attempt: answers.length, reasks, practice: 'review'});
+          await E.save();
+        } else if (!practice) {
           opened = E.record(big.no, task.id, {st: r.st, q: r.q, help: r.help, helpNow: r.helpNow});
           await E.submit({big, small, task, question: S.q, transcript: answers.map((a, k) => (k + 1) + '차: ' + a).join('\n'), score, pass: r.pass, stage: r.stage,
                           help: r.help || 'none', quality: r.q ?? null, misconception: last?.misconception || '', ack: last?.ack || '', attempt: answers.length, reasks, needTeacher: r.needTeacher});

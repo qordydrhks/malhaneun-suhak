@@ -208,3 +208,18 @@ body.intro-on .ver{z-index:5}
 .chest{font-size:64px;color:var(--gold);text-shadow:0 0 30px #f2c45f}
 .mload.flee{width:min(150px,40%);animation:flee 2.4s ease-in forwards}
 @keyframes flee{0%{transform:none;opacity:1}100%{transform:translate(220px,-160px) scale(.2) rotate(30deg);opacity:0}}
+
+/* 등급 · 나의 기록 */
+.rankbtn{display:flex;align-items:center;gap:8px;margin:2px 0 0 auto;background:var(--sky2);border:1px solid var(--line);border-radius:99px;padding:6px 14px 6px 10px}
+.rankbtn span{font-size:20px}.rankbtn b{color:var(--gold)}.rankbtn small{color:var(--sub)}
+.book{display:grid;gap:14px}
+.rankcard{display:flex;gap:14px;align-items:center;background:linear-gradient(135deg,#1b2350,#141a33);border:1px solid #33407a;border-radius:var(--r);padding:16px}
+.rankcard .ri{font-size:44px}.rankcard .rn{font-size:26px;font-weight:800;color:var(--gold)}.rankcard .rn small{font-size:15px;color:var(--sub);font-weight:500}
+.how summary{cursor:pointer;color:var(--blue);font-size:14px}.how p{color:var(--sub);font-size:14.5px;margin:6px 0 0}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.stat{display:grid;justify-items:center;background:var(--sky2);border:1px solid var(--line);border-radius:14px;padding:12px 4px}
+.stat b{font-size:26px;color:var(--ink)}.stat span{font-size:14px}.stat small{font-size:11px;color:var(--sub)}.stat.on{border-color:var(--gold)}
+.reclist{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.rec{display:grid;gap:2px;width:100%;text-align:left;background:var(--sky2);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.rec b{color:var(--gold);font-size:13px}
+@media (max-width:520px){.stats{grid-template-columns:repeat(2,1fr)}}
