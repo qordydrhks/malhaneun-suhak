@@ -223,3 +223,23 @@ body.intro-on .ver{z-index:5}
 .rec{display:grid;gap:2px;width:100%;text-align:left;background:var(--sky2);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
 .rec b{color:var(--gold);font-size:13px}
 @media (max-width:520px){.stats{grid-template-columns:repeat(2,1fr)}}
+
+/* 처음 안내 · 우주 안내서 */
+.story{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px 20px;max-width:520px;margin:0 auto;text-align:center}
+.st-top{align-self:stretch;display:flex;justify-content:flex-end;min-height:36px}
+.st-pic{height:min(220px,34vh);display:flex;align-items:flex-end;justify-content:center}
+.st-tung{max-height:min(220px,34vh);max-width:88%;animation:breath 3.6s ease-in-out infinite;filter:drop-shadow(0 0 28px rgba(140,110,255,.35))}
+.buddy.st-me{width:min(200px,34vh)}
+.story h2{font-size:24px;margin:6px 0 0;color:var(--gold)}
+.story p{font-size:17px;line-height:1.7;color:var(--ink);margin:0;text-wrap:balance}.story p b{color:var(--gold)}
+.st-dots{display:flex;gap:8px;margin:6px 0}.st-dots i{width:8px;height:8px;border-radius:50%;background:var(--line)}.st-dots i.on{background:var(--gold);width:22px;border-radius:4px}
+.st-nav{display:flex;justify-content:space-between;align-items:center;width:100%;margin-top:6px}
+.homebar{display:flex;gap:8px;justify-content:flex-end;align-items:center;flex-wrap:wrap}
+.homebar .rankbtn{margin:0}
+.guidebtn{background:var(--sky2);border:1px solid var(--line);border-radius:99px;padding:8px 14px;color:var(--sub)}
+.guide{max-width:620px;margin:0 auto}.guide h2{margin:4px 0 14px}
+.guide details{background:var(--sky2);border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin-bottom:10px}
+.guide summary{cursor:pointer;font-weight:700}.guide p{line-height:1.7;margin:10px 0 4px;color:var(--ink)}.guide p b{color:var(--gold)}
+.g-tiers{list-style:none;padding:0;margin:10px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:8px}
+.g-tiers li{display:flex;flex-direction:column;align-items:center;padding:8px;border-radius:10px;background:rgba(255,255,255,.04)}
+.g-tiers span{font-size:22px}.g-tiers b{color:var(--gold)}.g-tiers small{color:var(--sub)}

@@ -42,7 +42,7 @@
     const b = e.target.closest('[data-go]'); if (!b) return;
     const g = b.dataset.go;
     if (g === 'home') home(); else if (g === 'logout') { A.logout(); login(); }
-    else if (g.startsWith('big:')) star(+g.slice(4)); else if (g.startsWith('small:')) planet(g.slice(6), +b.dataset.r); else if (g.startsWith('bh:')) blackhole(+g.slice(3), +b.dataset.r); else if (g === 'record') record();
+    else if (g.startsWith('big:')) star(+g.slice(4)); else if (g.startsWith('small:')) planet(g.slice(6), +b.dataset.r); else if (g.startsWith('bh:')) blackhole(+g.slice(3), +b.dataset.r); else if (g === 'record') record(); else if (g === 'guide') guide();
   });
   const toast = (t) => { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.classList.add('on'), 20); setTimeout(() => { d.classList.remove('on'); setTimeout(() => d.remove(), 400); }, 2600); };
 
@@ -51,9 +51,17 @@
   async function enter() {
     root().innerHTML = '<div class="loading">불러오는 중…</div>';
     await E.load();
-    friend = A.ls.raw('dd:char:' + A.session.student.id);
-    if (!friend) { const v = await A.store.get('char:' + A.session.student.id); if (v && FR[v.id]) { friend = v.id; A.ls.set('dd:char:' + A.session.student.id, v.id); } }
-    if (!friend) return pick(); else home();
+    friend = (A.ls.raw('dd:char:' + A.session.student.id) || '').replace(/"/g, '');
+    if (!FR[friend]) friend = null;
+    if (!friend) { const v = await A.store.get('char:' + A.session.student.id); if (v && FR[v.id]) { friend = v.id; try { localStorage.setItem('dd:char:' + A.session.student.id, v.id); } catch (e) {} } }
+    if (!friend) return pick();
+    if (!(await storySeen())) return story(home);
+    home();
+  }
+  async function storySeen() {
+    if (A.ls.raw('app:story:' + A.session.student.id)) return true;
+    const v = await A.store.get('story:' + A.session.student.id); if (v) { A.ls.set('app:story:' + A.session.student.id, '1'); return true; }
+    return false;
   }
 
   // ── 2. 친구 고르기 ──
@@ -62,8 +70,54 @@
     root().querySelectorAll('.fcard').forEach(b => b.onclick = () => {
       friend = b.dataset.id; try { localStorage.setItem('dd:char:' + A.session.student.id, friend); } catch (e) {}
       A.store.set('char:' + A.session.student.id, {id: friend, at: new Date().toISOString()});
-      home();
+      storySeen().then(seen => (seen ? home() : story(home)));
     });
+  }
+
+  // ── 2-1. 처음 안내(이야기 4장) — 처음 한 번만, 우주 안내서에서 다시 보기 ──
+  const storyKey = () => 'app:story:' + A.session.student.id;
+  const SLIDES = [
+    {who: 'tung', t: '큰일 났어!', b: '우주 몬스터 <b>퉁구리</b>가 E4-2 은하의 별빛을 몽땅 삼키고 어딘가에 숨어 버렸어.'},
+    {who: 'me', st: 'question', t: '퉁구리의 약점은 수학!', b: '퉁구리는 <b>우주의 언어, 수학</b>을 못 알아들어. 네가 수학을 <b>네 말로 설명</b>하면 행성에 별빛이 다시 켜져.'},
+    {who: 'me', st: 'hint', t: '막히면 내가 도와줄게', b: '대답하다 막히면 내가 생각할 방향을 알려 줄게. <b>스스로 한 번에 답하면 빛이 더 크게 모여.</b> 그래도 힌트를 보는 건 안 하는 것보다 훨씬 나아!'},
+    {who: 'me', st: 'praise', t: '블랙홀까지 가자!', b: '별의 행성을 다 밝히면 끝에 있는 <b>블랙홀 관문</b>이 열려. 거기가 퉁구리 은신처야. 출동!'},
+  ];
+  function story(done) {
+    let i = 0;
+    const fin = () => { A.ls.set(storyKey(), '1'); A.store.set('story:' + A.session.student.id, {at: new Date().toISOString()}); done(); };
+    const draw = () => {
+      const s = SLIDES[i], last = i === SLIDES.length - 1;
+      const pic = s.who === 'tung' ? `<img class="st-tung" src="img/tunguri.webp" alt="퉁구리">` : buddy(s.st, 'st-me');
+      root().innerHTML = `<section class="story stage" data-i="${i}">
+        <div class="st-top">${last ? '' : '<button class="ghost small" id="stSkip">건너뛰기 ›</button>'}</div>
+        <div class="st-pic">${pic}</div>
+        <h2>${s.t}</h2><p>${s.b}</p>
+        <div class="st-dots">${SLIDES.map((_, k) => `<i class="${k === i ? 'on' : ''}"></i>`).join('')}</div>
+        <div class="st-nav">${i ? '<button class="ghost" id="stPrev">‹ 이전</button>' : '<span></span>'}<button class="primary" id="stNext">${last ? '출동!' : '다음 ›'}</button></div>
+      </section>`;
+      window.scrollTo(0, 0);
+      document.getElementById('stNext').onclick = () => (last ? fin() : (i++, draw()));
+      const pv = document.getElementById('stPrev'); if (pv) pv.onclick = () => { i--; draw(); };
+      const sk = document.getElementById('stSkip'); if (sk) sk.onclick = fin;
+    };
+    draw();
+  }
+
+  // ── 2-2. 우주 안내서 — 궁금한 아이가 눌러서 보는 설명(마스터 10/2: 설명은 늘 띄우지 않는다) ──
+  function guide() {
+    const tiers = E.TIERS.map(t => `<li><span>${t[2]}</span><b>${t[0]}</b><small>${t[1]}</small></li>`).join('');
+    frame(`<section class="guide">
+      <h2>우주 안내서</h2>
+      <details open><summary>우리는 무엇을 하나요?</summary><p>퉁구리가 삼킨 별빛을 되찾는 탐험이에요. 행성마다 질문이 있고, 네 말로 설명하면 행성에 불이 켜져요. 별의 행성을 다 밝히면 블랙홀 관문이 열려요.</p><button class="ghost small" id="gStory">이야기 다시 보기 ›</button></details>
+      <details><summary>행성 탐사 · 별계 탐사 · 은하 탐사</summary><p>같은 별을 세 번 탐험해요. <b>행성 탐사</b>는 기본 뜻과 방법, <b>별계 탐사</b>는 조금 더 깊게, <b>은하 탐사</b>는 여러 개념을 이어서 생각하는 탐험이에요. 앞 탐사를 마치면 다음 탐사가 열려요.</p></details>
+      <details><summary>등급 이름은 왜 이렇게 생겼나요?</summary><p>이해가 커질수록 더 큰 세상으로 가요.</p><ul class="g-tiers">${tiers}</ul><p>스스로 한 번에 답하면 빛이 더 크게 모여요. 힌트를 봐도 안 한 것보다 훨씬 나아요. 깊은 탐사까지 가야 높은 등급이 열려요.</p></details>
+      <details><summary>막히면 어떻게 하나요?</summary><p>친구가 먼저 생각할 방향을 알려 줘요. 그래도 어려우면 <b>도움</b>을 열어 키워드나 설명을 볼 수 있어요. 설명을 본 질문은 다음 날 다시 도전해요.</p></details>
+      <details><summary>mission 은 뭐예요?</summary><p>행성의 질문을 다 하면 <b>mission</b>(문제 풀기)이 열려요. 더 어려운 <b>hard mission</b>은 하고 싶은 친구만 도전해요. 틀려도 깎이지 않아요.</p></details>
+      <details><summary>다시 빛내기는 뭐예요?</summary><p>도움을 받아 통과했던 질문은 일주일 뒤에 다시 물어봐요. 이번에 스스로 답하면 별빛이 다시 환해져요.</p></details>
+      <details><summary>내 친구는 누구예요?</summary><p>숫자 탐험대 다섯 친구 중 네가 고른 친구가 함께 다녀요.</p><button class="ghost small" id="gPick">친구 바꾸기 ›</button></details>
+    </section>`, {back: 'home', backText: '은하', crumb: '우주 안내서'});
+    document.getElementById('gStory').onclick = () => story(guide);
+    document.getElementById('gPick').onclick = () => pick();
   }
 
   // ── 3. 은하(홈) ──
@@ -71,7 +125,7 @@
   function home() {
     const nx = E.nextPlace();
     const rk = E.rank();
-    frame(`<button class="rankbtn" data-go="record"><span>${rk.icon}</span><b>${rk.name}</b><small>행성 ${rk.lit}/${rk.total} · 나의 기록 ›</small></button>
+    frame(`<div class="homebar"><button class="guidebtn" data-go="guide" aria-label="우주 안내서">📖 안내서</button><button class="rankbtn" data-go="record"><span>${rk.icon}</span><b>${rk.name}</b><small>행성 ${rk.lit}/${rk.total} · 나의 기록 ›</small></button></div>
       <section class="hero stage">${buddy('idle')}<div class="bubble">${esc(line('hello'))}</div></section>
       ${nx ? (nx.why === 'bh'
                ? `<button class="primary big go" data-go="bh:${nx.big.no}" data-r="${nx.r}"><span>오늘 갈 곳</span><small>${nx.big.code} · 블랙홀 관문 · ${E.ROUND[nx.r]}</small></button>`
