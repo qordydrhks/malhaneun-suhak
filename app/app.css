@@ -129,3 +129,57 @@ button:disabled{opacity:.35;cursor:default}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 @media (max-width:520px){.qstage .buddy.mini{display:none}.qcard .q{font-size:18px}.buddy{width:120px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ── 첫 화면(로그인) — 우주 수배: 퉁구리 ── */
+body.intro-on #app{max-width:none;padding:0}
+body.intro-on .ver{z-index:5}
+.lg{position:relative;min-height:100vh;min-height:100dvh;overflow:hidden;display:flex;flex-direction:column;align-items:center;
+  padding:calc(18px + env(safe-area-inset-top,0px)) 16px calc(26px + env(safe-area-inset-bottom,0px));
+  background:radial-gradient(60% 42% at 50% 34%,#163a4f 0,#0f1d3a55 45%,transparent 75%),radial-gradient(40% 30% at 82% 70%,#3a1f5c66 0,transparent 70%),
+    radial-gradient(35% 26% at 12% 80%,#0f3b4c55 0,transparent 70%),#070a18}
+.lg-sky{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.lg>*:not(.lg-sky){position:relative;z-index:1}
+.lg-top{width:100%;max-width:560px;display:flex;justify-content:center}
+.lg-badge{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;letter-spacing:.18em;color:#ffb3a1;border:1px solid #ff8a7055;background:#2a0f1a99;border-radius:99px;padding:5px 14px 5px 10px}
+.lg-badge i{width:8px;height:8px;border-radius:50%;background:#ff6b5a;box-shadow:0 0 10px #ff6b5a;animation:blinkR 1.2s steps(2,start) infinite}
+@keyframes blinkR{to{visibility:hidden}}
+.lg-stage{width:min(560px,100%);aspect-ratio:908/714;margin:14px auto 4px;display:flex;align-items:center;justify-content:center}
+.lg-hud{position:absolute;inset:4% 2% 6%;pointer-events:none}
+.lg-hud b{position:absolute;width:34px;height:34px;border:2px solid #7ff0d2aa}
+.lg-hud b:nth-child(1){left:0;top:0;border-right:0;border-bottom:0;border-radius:10px 0 0 0}
+.lg-hud b:nth-child(2){right:0;top:0;border-left:0;border-bottom:0;border-radius:0 10px 0 0}
+.lg-hud b:nth-child(3){left:0;bottom:0;border-right:0;border-top:0;border-radius:0 0 0 10px}
+.lg-hud b:nth-child(4){right:0;bottom:0;border-left:0;border-top:0;border-radius:0 0 10px 0}
+.lg-hud .scan{position:absolute;left:3%;right:3%;height:2px;top:0;background:linear-gradient(90deg,transparent,#7ff0d2,transparent);opacity:.6;animation:scan 3.4s ease-in-out infinite}
+@keyframes scan{0%,100%{top:4%}50%{top:94%}}
+.lg-tung{width:86%;filter:drop-shadow(0 18px 28px #000a) drop-shadow(0 0 26px #5fe0c044);cursor:pointer;
+  animation:tungIn 1.1s cubic-bezier(.2,1.4,.4,1) both,float 4.6s 1.1s ease-in-out infinite;transform-origin:50% 80%;-webkit-tap-highlight-color:transparent}
+@keyframes tungIn{0%{opacity:0;transform:translateY(40px) scale(.6) rotate(-8deg)}100%{opacity:1;transform:none}}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-12px) rotate(1.5deg)}}
+.lg-tung.boing{animation:boing .6s ease-out,float 4.6s .6s ease-in-out infinite}
+@keyframes boing{0%{transform:scale(1)}25%{transform:scale(1.08,.9)}50%{transform:scale(.94,1.08) rotate(-4deg)}75%{transform:scale(1.03,.97)}100%{transform:scale(1)}}
+.lg-taunt{position:absolute;left:4%;top:-2%;max-width:62%;background:#fffdf6;color:#2b2035;font-weight:700;font-size:15px;border-radius:16px 16px 16px 4px;padding:8px 14px;
+  box-shadow:0 6px 20px #0008;opacity:0;transform:translateY(8px) scale(.9);transition:.25s;pointer-events:none}
+.lg-taunt.on{opacity:1;transform:none}
+.lg-wanted{position:absolute;right:2%;bottom:3%;text-align:right;background:#06121bcc;border:1px solid #7ff0d255;border-radius:12px;padding:7px 12px;backdrop-filter:blur(4px)}
+.lg-wanted small{display:block;font-size:11px;letter-spacing:.2em;color:#7ff0d2}
+.lg-wanted b{display:block;font-size:16px;color:#fff}.lg-wanted span{font-size:11.5px;color:#a9b8d6}
+.lg-title{margin:6px 0 2px;font-family:"Black Han Sans",Pretendard,sans-serif;font-weight:400;font-size:clamp(40px,10vw,64px);letter-spacing:.02em;line-height:1;
+  background:linear-gradient(180deg,#fff7d6 0,#f4c55c 55%,#e08a2c 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 4px 0 #6b3a0c) drop-shadow(0 0 18px #f2c45f55)}
+.lg-title span{font-size:.62em;vertical-align:.18em}
+.lg-story{margin:8px 0 6px;text-align:center;color:#c9d3ee;font-size:15.5px;line-height:1.6}.lg-story b{color:#7ff0d2}
+.lg-squad{display:flex;gap:4px;justify-content:center;margin:2px 0 6px}
+.lg-squad img{width:58px;height:58px;object-fit:contain;animation:hopq 2.4s var(--d) ease-in-out infinite;filter:drop-shadow(0 6px 6px #0008)}
+@keyframes hopq{0%,70%,100%{transform:translateY(0)}80%{transform:translateY(-10px)}90%{transform:translateY(0)}}
+.lg-form{width:min(400px,100%);display:grid;gap:10px;background:linear-gradient(180deg,#141c3acc,#0c1228e6);border:1px solid #2c3866;border-radius:20px;padding:16px 16px 12px;
+  box-shadow:0 20px 50px #0009,inset 0 1px 0 #ffffff14;backdrop-filter:blur(6px)}
+.lg-ttl{text-align:center;font-size:12.5px;letter-spacing:.22em;color:#8fa2d8}
+.lg-form label{display:grid;gap:4px}.lg-form label span{font-size:12.5px;color:#8fa2d8;padding-left:4px}
+.lg-form input{font:inherit;font-size:17px;color:#fff;background:#060a1a;border:1.5px solid #2c3866;border-radius:12px;padding:12px 14px}
+.lg-form input:focus{outline:none;border-color:#7ff0d2;box-shadow:0 0 0 3px #7ff0d22a}
+.lg-go{margin-top:4px;font-family:"Black Han Sans",Pretendard,sans-serif;font-size:22px;letter-spacing:.06em;color:#2a1600;border-radius:14px;padding:13px;
+  background:linear-gradient(180deg,#ffe08a,#f2b445);box-shadow:0 5px 0 #a8661c,0 0 24px #f2c45f66;transition:transform .08s}
+.lg-go:active{transform:translateY(3px);box-shadow:0 2px 0 #a8661c,0 0 18px #f2c45f55}
+.lg-msg{min-height:20px;text-align:center;color:#ffb3a1;font-size:14px}
+@media (max-width:520px){.lg-wanted b{font-size:14px}.lg-squad img{width:48px;height:48px}.lg-story{font-size:14.5px}}
+@media (min-height:1000px){.lg{justify-content:center}}

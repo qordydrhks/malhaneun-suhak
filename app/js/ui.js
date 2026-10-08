@@ -47,20 +47,7 @@
   const toast = (t) => { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.classList.add('on'), 20); setTimeout(() => { d.classList.remove('on'); setTimeout(() => d.remove(), 400); }, 2600); };
 
   // ── 1. 로그인 ──
-  function login(msg) {
-    frame(`<section class="login">
-      <div class="title"><div class="mark">✦</div><h1>말하는 수학</h1><p>우주를 탐험하며 친구에게 말로 설명해요</p></div>
-      <label>이름<input id="ln" autocomplete="username"></label>
-      <label>비밀번호<input id="lp" type="password" autocomplete="current-password"></label>
-      <button class="primary big" id="lb">들어가기</button><div class="msg">${esc(msg || '')}</div></section>`, {cls: 'center'});
-    const go = async () => {
-      const n = $('#ln').value, p = $('#lp').value;
-      if (!n.trim() || !p) { $('.msg').textContent = '이름과 비밀번호를 넣어 줘.'; return; }
-      $('.msg').textContent = '확인 중…';
-      try { await A.login(n, p); await enter(); } catch (e) { $('.msg').textContent = e.message; }
-    };
-    $('#lb').onclick = go; $('#lp').onkeydown = e => { if (e.key === 'Enter') go(); };
-  }
+  function login(msg) { A.intro(enter, msg); }
   async function enter() {
     root().innerHTML = '<div class="loading">불러오는 중…</div>';
     await E.load();
