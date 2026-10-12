@@ -311,3 +311,7 @@ body.tpage #app{max-width:1000px}
 .pfail{text-align:center;display:grid;gap:10px;justify-items:center;padding:20px}
 .lg-teacher{position:relative;z-index:2;display:block;width:max-content;margin:14px auto 0;color:#6f7899;font-size:13px;text-decoration:none;padding:6px 12px}
 .center-msg a.ghost{text-decoration:none;color:var(--sub)}
+.syms{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.sym{min-width:44px;min-height:40px;padding:6px 10px;border-radius:10px;background:var(--sky2);border:1px solid var(--line);color:var(--ink);font-size:16px}
+.sym:active{background:var(--line)}
+.tpv{min-height:0;margin-top:8px;font-size:19px;color:var(--ink)}.tpv:empty{display:none}.tpv small{font-size:12px;color:var(--sub);margin-right:6px}

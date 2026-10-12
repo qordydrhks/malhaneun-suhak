@@ -44,6 +44,40 @@
     if (g === 'home') home(); else if (g === 'logout') { A.logout(); login(); }
     else if (g.startsWith('big:')) star(+g.slice(4)); else if (g.startsWith('small:')) planet(g.slice(6), +b.dataset.r); else if (g.startsWith('bh:')) blackhole(+g.slice(3), +b.dataset.r); else if (g === 'record') record(); else if (g === 'guide') guide();
   });
+
+  // ── 뒤로 가기(폰의 뒤로·취소 버튼) = 앱 안의 이전 화면 (옛 앱 v81.7 과 같은 방식) ──
+  /* 화면을 누를 때(사용자 조작 순간) history 에 한 칸씩 쌓고, 뒤로 가면 그 칸의 화면을 다시 그린다.
+     ⚠️ popstate 안에서는 pushState 를 하지 않는다(크롬이 조작 없이 넣은 칸을 건너뛰어 앱이 나가 버림 — 옛 앱 v81.5 에서 겪음).
+     질문·mission 화면은 칸 하나('q')로 치고, 그 안에서 뒤로 가면 그만두고 앞 화면(행성 입구)으로. */
+  const NAV = {cur: null, stack: [], restoring: false, silent: false, quit: null, backQuit: false};
+  function navMark(route) {
+    const key = JSON.stringify(route);
+    if (route[0] !== 'q') NAV.quit = null;           // 질문 화면을 떠나면 그만두기 연결도 끊는다
+    if (NAV.restoring) { NAV.cur = route; return; }
+    const c = NAV.cur;
+    if (c && JSON.stringify(c) === key) return;
+    const st = {app: route, i: 0};
+    try {
+      if (!NAV.stack.length) { history.replaceState(st, ''); NAV.stack = [key]; }
+      else if (NAV.stack.length >= 2 && NAV.stack[NAV.stack.length - 2] === key) { NAV.silent = true; history.back(); }   // 앱 안 ‹ 버튼으로 바로 앞 화면에 가면 칸을 쌓지 않고 되돌린다
+      else if (c && c[0] === route[0] && (route[0] === 'record' || (route[0] === 'star' && c[1] === route[1]))) { st.i = NAV.stack.length - 1; history.replaceState(st, ''); NAV.stack[st.i] = key; }   // 탭만 바꿈
+      else { st.i = NAV.stack.length; history.pushState(st, ''); NAV.stack.push(key); }
+    } catch (e) {}
+    NAV.cur = route;
+  }
+  function navGo(rt) {
+    NAV.restoring = true;
+    try { ({home, star, planet, record, guide, blackhole})[rt[0]](...rt.slice(1)); } finally { NAV.restoring = false; }
+  }
+  addEventListener('popstate', e => {
+    const st = e.state && e.state.app ? e.state : null;
+    if (!st || !A.session.student) return;
+    NAV.stack.length = Math.min(NAV.stack.length, st.i + 1);
+    if (NAV.silent) { NAV.silent = false; NAV.cur = st.app; return; }
+    if (NAV.quit) { const q = NAV.quit; NAV.quit = null; NAV.backQuit = !!q(); }   // 질문·mission 중 → 그만두기(기록 없음)
+    if (st.app[0] === 'q') { NAV.cur = st.app; history.back(); return; }              // 끝난 질문 칸은 건너뛴다
+    navGo(st.app);
+  });
   const toast = (t) => { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.classList.add('on'), 20); setTimeout(() => { d.classList.remove('on'); setTimeout(() => d.remove(), 400); }, 2600); };
 
   // ── 1. 로그인 ──
@@ -105,6 +139,7 @@
 
   // ── 2-2. 우주 안내서 — 궁금한 아이가 눌러서 보는 설명(마스터 10/2: 설명은 늘 띄우지 않는다) ──
   function guide() {
+    navMark(['guide']);
     const tiers = E.TIERS.map(t => `<li><span>${t[2]}</span><b>${t[0]}</b><small>${t[1]}</small></li>`).join('');
     frame(`<section class="guide">
       <h2>우주 안내서</h2>
@@ -123,6 +158,7 @@
   // ── 3. 은하(홈) ──
   const HUES = ['#f3c969', '#7aa7ff', '#f29b8f', '#8fd6b4', '#c9a6ff', '#ffb36b'];
   function home() {
+    navMark(['home']);
     const nx = E.nextPlace();
     const rk = E.rank();
     frame(`<div class="homebar"><button class="guidebtn" data-go="guide" aria-label="우주 안내서">📖 안내서</button><button class="rankbtn" data-go="record"><span>${rk.icon}</span><b>${rk.name}</b><small>행성 ${rk.lit}/${rk.total} · 나의 기록 ›</small></button></div>
@@ -139,6 +175,7 @@
   function star(no, r) {
     const b = E.big(no), open = E.openRound(no);
     r = r || open;
+    navMark(['star', no, r]);
     const tabs = [1, 2, 3].map(k => `<button class="tab ${k === r ? 'on' : ''}" ${k > open ? 'disabled' : ''} data-r="${k}">${k > open ? '🔒 ' : ''}${E.ROUND[k]}</button>`).join('');
     const c = E.bigCount(b, r);
     frame(`<h2 class="ttl"><span class="code">${b.code}</span>${esc(b.title)}</h2><div class="tabs">${tabs}</div>
@@ -151,6 +188,7 @@
 
   // ── 5. 행성 입구 ──
   function planet(code, r) {
+    navMark(['planet', code, r]);
     const {big, small} = E.small(code), t = E.tasks(small, r);
     const todo = t.filter(x => ['new', 'next'].includes(E.state(x.id).k));
     const locked = t.filter(x => E.state(x.id).k === 'today').length;
@@ -179,7 +217,7 @@
     for (let i = 0; i < list.length; i++) {
       if (!practice && E.tasks(small, r).filter(x => E.state(x.id).k !== 'done').length <= 2) A.M.prefetch(small, r);
       const out = await ask(big, small, list[i], i, list.length, practice);
-      if (out === 'quit') return planet(small.code, r);
+      if (out === 'quit') { if (NAV.backQuit) { NAV.backQuit = false; return; } return planet(small.code, r); }
       if (out && out.pass) passed++;
       if (out && out.opened) opened = out.opened;
       if ((Date.now() - sessionStart()) / 60000 >= E.SESSION_MIN && i < list.length - 1) return sessionEnd(passed);
@@ -207,6 +245,7 @@
     if (!A.isAcademyDevice()) return blocked();
     const big = E.big(no), id = A.bhTaskId(big, r), done = A.bhDone(big, r), st = E.state(id);
     if (!A.bhOpen(big, r)) return star(no, r);
+    navMark(['blackhole', no, r]);
     if (st.k === 'today') return frame(`<section class="center-msg stage"><img class="mload" src="img/tunguri.webp" alt=""><h2>블랙홀이 닫혔어</h2><p class="sub">내일 새벽 4시에 다시 열려요.</p><button class="primary big" data-go="big:${no}">${big.code}로</button></section>`);
     frame(`<section class="center-msg stage bhin"><div class="bhole"></div><img class="mload peek" src="img/tunguri.webp" alt="">
       <h2>${big.code} 블랙홀 관문</h2><p class="sub">퉁구리가 이 안에 별빛을 숨겼어!<br>${E.ROUND[r]}에서 배운 것을 말하면 블랙홀을 통과할 수 있어.</p>
@@ -214,7 +253,7 @@
     $('#bgo').onclick = async () => {
       const pseudo = {code: big.code + ' 블랙홀', title: '블랙홀 관문', unitId: '', unitLabel: '🕳 블랙홀 · ' + big.title, key: ''};
       const out = await ask(big, pseudo, {kind: 'bh', id, r, src: big.bh[r]}, 0, 1, done);
-      if (out === 'quit') return star(no, r);
+      if (out === 'quit') { if (NAV.backQuit) { NAV.backQuit = false; return; } return star(no, r); }
       if (out && out.pass && !done) {
         frame(`<section class="center-msg stage"><div class="chest">✦</div><h2>별빛 상자를 찾았어!</h2>
           <p class="sub">퉁구리가 숨겨 둔 별빛을 되찾았어. 퉁구리는 깜짝 놀라 다음 별로 도망갔어!</p>
@@ -225,6 +264,7 @@
 
   // ── 나의 기록 ──
   function record(which) {
+    navMark(['record', which || null]);
     const rk = E.rank(), bk = E.book();
     const LBL = {one: ['한 번에', 'one pass'], h1: ['되묻기 뒤', 'hint 1'], h2: ['도움 뒤', 'hint 2'], yet: ['아직', '다시 하면 빛나요']};
     const nameOf = it => it.t.kind === 'bh' ? it.b.code + ' 블랙홀 · ' + E.ROUND[it.r] : it.s.code + ' · ' + E.ROUND[it.r];
@@ -258,10 +298,13 @@
   async function mission(big, small, r, hard) {
     if (!A.isAcademyDevice()) return blocked();
     const name = A.M.name(r, hard);
+    navMark(['q']); let alive = true; NAV.quit = () => { alive = false; };
     frame(`<section class="center-msg stage"><img class="mload" src="img/tunguri.webp" alt=""><h2>${esc(name)}</h2><p class="sub"><span class="spin"></span> 퉁구리가 숨겨 둔 문제를 찾는 중…</p></section>`, {crumb: small.code + ' · ' + name});
     let quiz;
-    try { quiz = await A.M.get(small, r, hard); }
+    try { quiz = await A.M.get(small, r, hard); if (!alive) return; }
     catch (e) {
+      if (!alive) return;
+      NAV.quit = null;
       frame(`<section class="center-msg stage">${buddy('retry')}<h2>문제를 못 찾았어</h2><p class="sub">${esc(e.message)}</p><button class="primary big" id="rt">다시 찾기</button><button class="ghost" data-go="big:${big.no}">${big.code}로</button></section>`);
       $('#rt').onclick = () => mission(big, small, r, hard);
       return;
@@ -285,6 +328,7 @@
       });
     };
     const done = async () => {
+      NAV.quit = null;
       const saved = first ? await A.M.save(big, small, r, hard, ok, quiz.length) : false;
       const all = ok === quiz.length;
       frame(`<section class="center-msg stage">${all ? buddy('praise') : `<img class="mload" src="img/tunguri.webp" alt="">`}
@@ -320,6 +364,8 @@
     return {mode, q: x.q, keys, ans: x.teach, fig: x.fig, asks, help, base: mode === 'nextday' ? E.Q.nextday : E.Q.first};
   }
 
+  /* 글로 쓸 때 기호·수식 버튼(마스터 9/22 메모) — 초4-2 에 나오는 것. 분수는 3/5 처럼, 대분수는 "2와 1/3" 처럼 쓰면 교재 모양으로 보인다 */
+  const SYMS = [['분수 /', '/'], ['대분수 와', '와 '], ['×', '×'], ['÷', '÷'], ['+', '+'], ['−', '−'], ['=', '='], ['<', '<'], ['>', '>'], ['°', '°'], ['cm', ' cm'], ['.', '.']];
   function ask(big, small, task, i, n, practice) {
     return new Promise(resolve => {
       const S = shape(task, practice);
@@ -332,7 +378,8 @@
           ${S.pre ? `<div class="pre">🌱 ${esc(S.pre)}에서 배운 것</div>` : ''}${S.mode === 'again' ? '<div class="pre">어제 본 설명으로 다시 묻기</div>' : ''}
           <div class="q" id="qt">${fm(S.q)}</div>${S.fig ? `<div class="figbox">${S.fig}</div>` : ''}<div class="say" id="say"></div></div></section>
         <section class="answer" id="ans"></section>`, {back: 'quit', backText: '그만하기', crumb: small.code + ' · ' + E.ROUND[task.r]});
-      root().querySelector('[data-go="quit"]').onclick = (e) => { e.stopPropagation(); stop(); resolve('quit'); };
+      root().querySelector('[data-go="quit"]').onclick = (e) => { e.stopPropagation(); NAV.quit = null; stop(); resolve('quit'); };
+      navMark(['q']); NAV.quit = () => { stop(); resolve('quit'); return true; };
       const say = (t, cls) => { $('#say').innerHTML = t ? `<div class="sbubble ${cls || ''}">${t}</div>` : ''; };
       const stop = () => { done = true; clearInterval(tim); try { rec && rec.stop(); } catch (e) {} };
       // 타이머 — 채점하는 동안은 멈춘다. 다 되면 떨어진 것과 같다(내일 다시)
@@ -344,14 +391,26 @@
       function input(prompt, onSubmit) {
         ticking = true;
         $('#ans').innerHTML = `<div class="prompt">${prompt || ''}</div>
-          <div class="tr" id="tr" ${typed ? '' : 'hidden'}><textarea id="ta" rows="3" placeholder="여기에 써도 돼"></textarea></div>
+          <div class="tr" id="tr" ${typed ? '' : 'hidden'}><textarea id="ta" rows="3" placeholder="여기에 써도 돼"></textarea>
+            <div class="syms">${SYMS.map((x, k) => `<button type="button" class="sym" data-k="${k}">${x[0]}</button>`).join('')}</div>
+            <div class="tpv" id="tpv"></div></div>
           <div class="live" id="live"></div>
           <div class="row"><button class="mic" id="mic" aria-label="말하기"><span></span></button></div>
           <div class="row"><button class="ghost small" id="tw">${typed ? '말로 하기' : '글로 쓰기'}</button><button class="ghost small" id="clr">지우고 다시</button><button class="primary" id="sub" disabled>다 말했어</button></div>`;
         let text = '';
         const ta = $('#ta'), live = $('#live'), sub = $('#sub');
         const upd = t => { text = t; live.textContent = typed ? '' : t; if (typed && ta.value !== t) ta.value = t; sub.disabled = !text.trim(); };
-        ta.oninput = () => upd(ta.value);
+        const pv = () => { const el = $('#tpv'); if (el) el.innerHTML = /[0-9/×÷°<>=]/.test(ta.value) ? '<small>이렇게 보여요</small> ' + fm(ta.value) : ''; };
+        ta.oninput = () => { upd(ta.value); pv(); };
+        // 기호 버튼 — 누른 자리(커서)에 넣는다. 누르는 순간 입력칸 커서를 잃지 않게 mousedown 을 막는다
+        root().querySelectorAll('.sym').forEach(b => {
+          b.onmousedown = e => e.preventDefault();
+          b.onclick = () => {
+            const ins = SYMS[+b.dataset.k][1], a0 = ta.selectionStart ?? ta.value.length, a1 = ta.selectionEnd ?? a0;
+            ta.value = ta.value.slice(0, a0) + ins + ta.value.slice(a1); const c = a0 + ins.length;
+            ta.focus(); try { ta.setSelectionRange(c, c); } catch (e) {} upd(ta.value); pv();
+          };
+        });
         $('#tw').onclick = () => { typed = !typed; stopRec(); input(prompt, onSubmit); };
         $('#clr').onclick = () => { stopRec(); upd(''); ta.value = ''; };
         $('#mic').onclick = () => (rec ? stopRec() : startRec());
@@ -465,6 +524,7 @@
         } else {
           await E.submit({big, small, task, question: S.q, transcript: answers.join('\n'), score, pass: r.pass, stage: 'practice', help: r.help, quality: null, practice: true, attempt: answers.length, reasks});
         }
+        NAV.quit = null;
         resolve({pass: r.pass, opened});
       }
     });
