@@ -17,7 +17,7 @@
     for (const s of b.smalls) for (let r = 1; r <= 3; r++) for (const t of E.tasks(s, r)) IDX[t.id] = {b, s, r, t, q: t.src.q, ans: t.kind === 'lad' ? t.src.teach : t.src.ans};
     for (let r = 1; r <= 3; r++) if (b.bh) IDX[b.bh.id + ':r' + r] = {b, s: null, r, t: {kind: 'bh'}, q: b.bh[r].q};
   }
-  const where = x => x ? (x.s ? x.s.code : x.b.code + ' 블랙홀') + ' · ' + E.ROUND[x.r] : '';
+  const where = x => x ? (x.s ? x.s.code : x.b.code + ' 블랙홀') + ' · ' + E.RT(x.r) : '';
   const ago = t => {
     if (!t) return '—';
     const d0 = A.dayKey(t), today = A.today();
@@ -98,7 +98,7 @@
         <span class="tname">${esc(s.name)}<small>${esc(s.grade)}</small></span>
         <span class="trank">${v.any && v.rk.score != null ? `${v.rk.icon} ${v.rk.name} <b>${Math.round(v.rk.score)}</b>` : '<i>시작 전</i>'}</span>
         <span class="tlit">행성 ${v.rk.lit}/${v.rk.total}</span>
-        <span class="tnow">${v.any && v.nx ? esc(v.nx.small ? v.nx.small.code : v.nx.big.code + ' 블랙홀') + ' · ' + E.ROUND[v.nx.r] : ''}</span>
+        <span class="tnow">${v.any && v.nx ? esc(v.nx.small ? v.nx.small.code : v.nx.big.code + ' 블랙홀') + ' · ' + E.RT(v.nx.r) : ''}</span>
         <span class="talert ${v.stuck.length ? 'on' : ''}">${v.stuck.length ? '막힘 ' + v.stuck.length : ''}</span>
         <span class="tago">${ago(v.at)}${v.ses !== 10 || v.qmin ? `<small>⏱ ${v.ses}분${v.qmin ? ' · 질문 ' + v.qmin + '분' : ''}</small>` : ''}</span></button>`).join('') || '<p class="sub">초4 학생이 없어요.</p>'}</div>
       <div class="tacad"><label>학원 이름 <input id="tAcad" maxlength="20" placeholder="예: 두드림 수학" value="${esc(ACAD)}"></label><button class="secondary small" id="tAcadS">저장</button><span class="sub" id="tAcadM">학생 화면 왼쪽 위에 보여요(비우면 「말하는 수학」)</span></div>
@@ -124,12 +124,12 @@
       const ls = lastSub[id];
       const state = x.day === A.today() ? '내일 다시 열림' : '다시 열림';
       return `<li><div class="tq"><span class="code">${esc(where(ix))}</span>${fm(ix.q)}</div>
-        <div class="tmeta">${esc(ST[ls?.stage] || (x.st === 'wait' ? '설명 보고 내일' : '막힘'))} · ${esc(helpTxt(x))} · ${x.tries || 1}번째 · ${state}</div>
+        <div class="tmeta">${esc([ST[ls?.stage] || (x.st === 'wait' ? '설명 보고 내일' : '막힘'), helpTxt(x), (x.tries || 1) + '번째', x.by === 'teacher' ? '선생님이 다시 열어 줌' : state].filter(Boolean).join(' · '))}</div>
         ${ls && ls.misconception ? `<div class="tmis">생각: ${esc(ls.misconception)}</div>` : ''}
         ${ls && ls.transcript ? `<details><summary>말한 내용</summary><p>${esc(ls.transcript)}</p></details>` : ''}</li>`;
     }).join('');
     const helpedHtml = v.helped.slice(0, 12).map(({x, ix}) => `<li><div class="tq"><span class="code">${esc(where(ix))}</span>${fm(ix.q)}</div>
-        <div class="tmeta">${(x.qFirst ?? x.q)}점 · ${esc(helpTxt(x) || '다음 날 통과')}${x.rv ? ' · 다시 빛내기 통과(' + x.q + ')' : ''}</div></li>`).join('');
+        <div class="tmeta">${(x.qFirst ?? x.q)}점 · ${esc(helpTxt(x) || '다음 날 통과')}${x.rv ? ' · 다시 빛내기 통과(' + x.q + ')' : ''}${x.by === 'teacher' ? ' · 선생님이 다시 열어 줌' : ''}</div></li>`).join('');
     const bigsHtml = E.bigs().map(b => {
       const open = E.openRound(b.no), tOpen = +(OPEN[s.id] || {})[b.no] || 0;
       const cells = [1, 2, 3].map(r => {
@@ -137,7 +137,7 @@
         return `<td class="${r > open ? 'off' : c.n && c.done === c.n ? 'full' : ''}">${r > open ? '🔒' : `${c.done}/${c.n}`}<small>${r <= open ? `mission ${mis}/${b.smalls.length}${bh ? ' · 블랙홀 ✓' : ''}` : ''}</small></td>`;
       }).join('');
       return `<tr><th><span class="code">${b.code}</span>${esc(b.title)}</th>${cells}
-        <td><select data-big="${b.no}" class="topen">${[1, 2, 3].map(r => `<option value="${r}" ${r === open ? 'selected' : ''}>${E.ROUND[r]}까지</option>`).join('')}</select>${tOpen ? '<small>선생님이 엶</small>' : ''}</td></tr>`;
+        <td><select data-big="${b.no}" class="topen">${[1, 2, 3].map(r => `<option value="${r}" ${r === open ? 'selected' : ''}>${E.RT(r)}까지</option>`).join('')}</select>${tOpen ? '<small>선생님이 엶</small>' : ''}</td></tr>`;
     }).join('');
     const recHtml = subs.slice(0, 40).map(r => {
       const ix = IDX[r.question_id];
@@ -162,6 +162,8 @@
       <ul class="tli">${helpedHtml || '<li class="sub">없어요</li>'}</ul>
       <h3 class="tsec">별마다 탐사</h3>
       <div class="tscroll"><table class="tbig"><thead><tr><th></th><th>행성 탐사</th><th>별계 탐사</th><th>은하 탐사</th><th>열린 회차</th></tr></thead><tbody>${bigsHtml}</tbody></table></div>
+      <h3 class="tsec">오늘 다시 열어 주기</h3>
+      <div class="tset"><button class="secondary small" data-cmd="5">⏱ 5분 더</button><button class="secondary small" data-cmd="10">⏱ 10분 더</button><button class="secondary small" data-cmd="u" ${v.stuck.some(z => z.x.day === A.today()) ? '' : 'disabled'}>🔓 오늘 잠긴 질문 다시 열기 (${v.stuck.filter(z => z.x.day === A.today()).length}개)</button><span class="sub" id="tCmdM">학생 태블릿이 30초 안에 받아요 · 다시 연 질문은 '다음 날' 점수로 남아요</span></div>
       <h3 class="tsec">시간</h3>
       <div class="tset"><label>한 번 앉는 시간 <select id="tSes">${E.SESSIONS.map(m => `<option value="${m}" ${m === E.sessionMin() ? 'selected' : ''}>${m}분</option>`).join('')}</select></label>
         <label>질문당 시간 <select id="tPace"><option value="0" ${!E.qmin() ? 'selected' : ''}>기본 (행성 2분 · 별계 3분 · 은하 4분)</option>${E.QMINS.map(m => `<option value="${m}" ${m === E.qmin() ? 'selected' : ''}>${m}분</option>`).join('')}</select></label>
@@ -176,6 +178,11 @@
     root().querySelectorAll('.topen').forEach(sel => sel.onchange = async () => {
       const t = Object.assign({}, OPEN[s.id] || {}); t[sel.dataset.big] = +sel.value;
       await A.store.set(E.okey(s.id), t); OPEN[s.id] = t; detail(s);
+    });
+    root().querySelectorAll('[data-cmd]').forEach(b => b.onclick = async () => {
+      const k = E.ckey(s.id), cur = (await A.store.get(k)) || {}, cmds = (cur.cmds || []).slice(-9);
+      cmds.push({id: Date.now(), add: b.dataset.cmd === 'u' ? 0 : +b.dataset.cmd, unlock: b.dataset.cmd === 'u'});
+      await A.store.set(k, {cmds}); $('#tCmdM').textContent = '보냈어요 · 학생 태블릿이 30초 안에 받아요'; if (b.dataset.cmd === 'u') b.disabled = true;
     });
     const saveSet = async () => {
       const v = {session: +$('#tSes').value, qmin: +$('#tPace').value, at: Date.now()};

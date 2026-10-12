@@ -44,13 +44,12 @@
   function tickClock() {
     if (!A.session.student || document.body.classList.contains('intro-on')) { document.getElementById('sclock')?.remove(); return; }
     const el = clockEl();
-    const total = E.sessionMin() * 60, st = +sessionStorage.getItem('app:sessionStart') || 0;
-    const left = st ? Math.max(0, Math.ceil(total - (Date.now() - st) / 1000)) : total;
+    const o = sess(), st = o.start, left = o.done ? 0 : sessLeft(o);
     el.querySelector('b').textContent = String(Math.floor(left / 60)).padStart(2, '0') + ':' + String(left % 60).padStart(2, '0');
-    el.dataset.say = !st ? `오늘 공부 시간은 ${E.sessionMin()}분이야. 질문을 시작하면 줄어들어!` : left ? `오늘 공부 시간이 ${Math.ceil(left / 60)}분 남았어` : '오늘 시간이 다 됐어!';
-    el.classList.toggle('idle', !st); el.classList.toggle('low', !!st && left > 0 && left <= 60); el.classList.toggle('end', !!st && left === 0);
+    el.dataset.say = !st ? `오늘 공부 시간은 ${E.sessionMin() + (o.extra || 0)}분이야. 질문을 시작하면 줄어들어!` : left ? `오늘 공부 시간이 ${Math.ceil(left / 60)}분 남았어` : '오늘 시간이 다 됐어!';
+    el.classList.toggle('idle', !st && !o.done); el.classList.toggle('low', !!st && left > 0 && left <= 60); el.classList.toggle('end', left === 0);
     if (st && left === 60 && !el.dataset.b60) { el.dataset.b60 = '1'; A.buzz(40); }
-    if (st && left === 0 && !clockWarned) { clockWarned = true; A.buzz([60, 80, 60]); toast('오늘 시간이 다 됐어! 지금 질문까지만 하자.'); }
+    if (st && left === 0 && !o.done && !clockWarned) { clockWarned = true; A.buzz([60, 80, 60]); toast('오늘 시간이 다 됐어! 지금 질문까지만 하자.'); }
     if (left > 0) clockWarned = false;
   }
   setInterval(tickClock, 1000);
@@ -94,6 +93,71 @@
     if (st.app[0] === 'q') { NAV.cur = st.app; history.back(); return; }              // 끝난 질문 칸은 건너뛴다
     navGo(st.app);
   });
+
+
+  // ── 오늘 공부 시간 — 기기에 날짜별로 기억(새로고침·다시 로그인해도 이어짐, 새벽 4시에 새 날) ──
+  /* 마스터 10/12: 시간이 끝나면 선생님이 시간을 더 주기 전까지는 다시 시작하지 않는다 */
+  const SKEY = () => 'app:sess:' + A.session.student.id;
+  const sess = () => { let o = A.ls.get(SKEY(), null); if (!o || o.day !== A.today()) o = {day: A.today(), start: 0, extra: 0, done: false}; return o; };
+  const sessSave = o => A.ls.set(SKEY(), o);
+  const sessTotal = o => (E.sessionMin() + (o.extra || 0)) * 60;
+  const sessLeft = o => (o.start ? Math.max(0, Math.ceil(sessTotal(o) - (Date.now() - o.start) / 1000)) : sessTotal(o));
+  const sessOver = o => !!(o.done || (o.start && sessLeft(o) === 0));
+  const addTime = min => {                                         // 이미 끝났으면 '지금부터 min 분'
+    const o = sess();
+    if (sessOver(o) && o.start) o.extra = Math.ceil((Date.now() - o.start) / 60000) - E.sessionMin() + min; else o.extra = (o.extra || 0) + min;
+    o.done = false; sessSave(o); tickClock();
+  };
+
+  // ── 🔑 선생님 열쇠(마스터 10/12) — 아이 태블릿에서 PIN 을 넣고 바로: 시간 더 주기 · 오늘 잠긴 질문 다시 열기 ──
+  function keyModal(after) {
+    document.querySelector('.kpop')?.remove();
+    const d = document.createElement('div'); d.className = 'kpop';
+    const locked = Object.values(E.prog().st).filter(x => x.st !== 'pass' && x.day === A.today()).length;
+    d.innerHTML = `<form class="kpop-in" id="kf" autocomplete="off"><b>🔑 선생님 열쇠</b>
+      <label>선생님 PIN<input id="kp" type="password" inputmode="numeric" autocomplete="off"></label><div class="kmsg" id="km"></div>
+      <div class="krow" id="kact" hidden><button type="button" class="secondary" data-a="5">⏱ 5분 더</button><button type="button" class="secondary" data-a="10">⏱ 10분 더</button>
+        <button type="button" class="secondary" data-a="u" ${locked ? '' : 'disabled'}>🔓 오늘 잠긴 질문 다시 열기 (${locked}개)</button></div>
+      <div class="krow"><button type="submit" class="primary" id="kok">확인</button><button type="button" class="ghost" id="kx">닫기</button></div></form>`;
+    document.body.appendChild(d);
+    const close = () => d.remove();
+    d.querySelector('#kx').onclick = close;
+    d.onclick = e => { if (e.target === d) close(); };
+    d.querySelector('#kp').focus();
+    d.querySelector('#kf').onsubmit = async e => {
+      e.preventDefault();
+      if (!d.querySelector('#kact').hidden) return;
+      d.querySelector('#km').textContent = '확인 중…';
+      let ok = false; try { ok = await A.checkPin(d.querySelector('#kp').value); } catch (err) {}
+      if (!ok) { d.querySelector('#km').textContent = 'PIN 이 맞지 않아요.'; return; }
+      d.querySelector('#km').textContent = '무엇을 할까요?'; d.querySelector('#kact').hidden = false; d.querySelector('#kok').hidden = true; d.querySelector('label').hidden = true;
+    };
+    d.querySelectorAll('[data-a]').forEach(b => b.onclick = async () => {
+      const a = b.dataset.a, p = E.prog(); p.log = p.log || [];
+      if (a === 'u') { const n = E.unlockToday(); p.log.push({at: Date.now(), teacher: 'unlock', n}); await E.save(); toast(`선생님이 잠긴 질문 ${n}개를 다시 열어 주셨어!`); }
+      else { addTime(+a); p.log.push({at: Date.now(), teacher: 'time', add: +a}); await E.save(); toast(`선생님이 ${a}분을 더 주셨어!`); }
+      A.buzz([20, 40, 20]); close(); if (after) after();
+    });
+  }
+  const keyBtn = () => '<button class="kbtn" data-key="1" aria-label="선생님 열쇠">🔑</button>';
+  document.addEventListener('click', e => { if (e.target.closest('[data-key]')) { const f = NAV.cur; keyModal(() => f && f[0] !== 'q' ? navGo(f) : home()); } });
+
+  // ── 선생님 화면에서 보낸 명령 받기(30초마다) ──
+  async function applyCmds() {
+    if (!A.session.student || !E.prog()) return;
+    let v = null; try { v = await A.store.get(E.ckey(A.session.student.id)); } catch (e) { return; }
+    const p = E.prog(), seen = p.cmdSeen || 0, nw = ((v && v.cmds) || []).filter(c => c.id > seen);
+    if (!nw.length) return;
+    let add = 0, n = 0;
+    for (const c of nw) { if (c.add) { addTime(+c.add); add += +c.add; } if (c.unlock) n += E.unlockToday(); }
+    p.cmdSeen = Math.max(...nw.map(c => c.id)); p.log = p.log || []; p.log.push({at: Date.now(), teacher: 'remote', add, n});
+    await E.save(); A.buzz([20, 40, 20]);
+    toast(add && n ? `선생님이 ${add}분을 더 주고 잠긴 질문 ${n}개를 열어 주셨어!` : add ? `선생님이 ${add}분을 더 주셨어!` : `선생님이 잠긴 질문 ${n}개를 다시 열어 주셨어!`);
+    const f = NAV.cur; if (f && !NAV.quit && ['home', 'star', 'planet'].includes(f[0])) navGo(f);
+  }
+  setInterval(() => { if (document.visibilityState === 'visible') applyCmds(); }, 30000);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') applyCmds(); });   // 화면이 다시 켜지면 바로
+  A.applyCmds = applyCmds;
 
   // ── 용어 설명(마스터 10/12: 우리끼리 정한 이름은 가볍게 쓰되, 누르면 뜻이 나오게) ──
   const TERMS = {
@@ -157,6 +221,7 @@
     root().innerHTML = '<div class="loading">불러오는 중…</div>';
     await E.load();
     try { A.academy = ((await A.store.get('app:academy')) || {}).name || ''; } catch (e) {}
+    await applyCmds();
     friend = (A.ls.raw('dd:char:' + A.session.student.id) || '').replace(/"/g, '');
     if (!FR[friend]) friend = null;
     if (!friend) { const v = await A.store.get('char:' + A.session.student.id); if (v && FR[v.id]) { friend = v.id; try { localStorage.setItem('dd:char:' + A.session.student.id, v.id); } catch (e) {} } }
@@ -243,7 +308,7 @@
     navMark(['home']);
     const nx = E.nextPlace();
     const rk = E.rank();
-    const lv = r => `<span class="tm" data-term="난이도">난이도 ${r}</span>`;
+    const lv = r => `${E.ROUND[r]}<span class="lvt tm" data-term="난이도">난이도 ${r}</span>`;
     frame(`<div class="homebar"><button class="rankbtn" data-go="record"><span class="rk-l">탐험가 등급<i class="tq" data-term="탐험가 등급">?</i></span><span class="rk-i">${rk.icon}</span><b>${rk.name}</b><small>밝힌 행성 ${rk.lit}/${rk.total} ›</small></button></div>
       <section class="hero stage">${buddy('idle')}<div class="bubble">${esc(line('hello'))}</div></section>
       ${nx ? (nx.why === 'bh'
@@ -260,11 +325,11 @@
     const b = E.big(no), open = E.openRound(no);
     r = r || open;
     navMark(['star', no, r]);
-    const tabs = [1, 2, 3].map(k => `<button class="tab ${k === r ? 'on' : ''}" ${k > open ? 'disabled' : ''} data-r="${k}">${k > open ? '🔒 ' : ''}${E.ROUND[k]}</button>`).join('');
+    const tabs = [1, 2, 3].map(k => `<button class="tab ${k === r ? 'on' : ''}" ${k > open ? 'disabled' : ''} data-r="${k}">${k > open ? '🔒 ' : ''}${E.RL(k)}</button>`).join('');
     const c = E.bigCount(b, r);
     frame(`<h2 class="ttl"><span class="code">${b.code}</span>${esc(b.title)}</h2><div class="tabs">${tabs}</div>
       <div class="mapbox">${A.starMap(b, r)}</div>
-      <p class="sub center">${E.ROUND[r]} — 밝힌 행성 ${b.smalls.filter(s => { const k = E.count(s, r); return k.n && k.done === k.n; }).length}/${b.smalls.length}${r < open ? ' · 지난 탐사는 연습(점수·등급 그대로)' : ''}</p>
+      <p class="sub center">${E.RL(r)} — 밝힌 행성 ${b.smalls.filter(s => { const k = E.count(s, r); return k.n && k.done === k.n; }).length}/${b.smalls.length}${r < open ? ' · 지난 탐사는 연습(점수·등급 그대로)' : ''}</p>
       <ul class="plist">${b.smalls.map((s, i) => {                   // 행성 이름은 지도 아래 목록으로(마스터 10/12: 지도 글씨가 너무 작다)
         const c = E.count(s, r), t = E.tasks(s, r), k = t.map(x => E.state(x.id).k);
         const done = c.n && c.done === c.n;
@@ -273,7 +338,7 @@
       }).join('')}</ul>`, {back: 'home', backText: '은하', crumb: b.code});
     root().querySelectorAll('.tab').forEach(t => t.onclick = () => star(no, +t.dataset.r));
     const bh = document.getElementById('bhBtn');
-    if (bh) bh.onclick = () => (A.bhOpen(b, r) ? blackhole(no, r) : toast(E.ROUND[r] + '의 행성을 모두 밝히면 열려요'));
+    if (bh) bh.onclick = () => (A.bhOpen(b, r) ? blackhole(no, r) : toast(E.RT(r) + '의 행성을 모두 밝히면 열려요'));
   }
 
   // ── 5. 행성 입구 ──
@@ -286,8 +351,8 @@
     const practice = !todo.length && !locked;
     const min = Math.round(E.limit(r) / 60 * 2) / 2;
     frame(`<section class="entry stage"><div class="orb big" style="--p:${PLANET[big.smalls.indexOf(small) % 8]}"></div>
-      <div class="code">${small.code}</div><h2>${esc(small.title)}</h2><div class="chip">${E.ROUND[r]}</div>
-      <p class="sub">${todo.length ? `질문 ${todo.length}개 · 하나에 약 ${min}분` : (locked ? `남은 질문 ${locked}개는 내일 다시 열려요` : '다 탐험했어요')}</p>
+      <div class="code">${small.code}</div><h2>${esc(small.title)}</h2><div class="chip">${E.RL(r)}</div>
+      <p class="sub">${todo.length ? `질문 ${todo.length}개 · 하나에 약 ${min}분` : (locked ? `남은 질문 ${locked}개는 내일 다시 열려요` : '다 탐험했어요')}</p>${locked && !todo.length ? keyBtn() : ''}
       ${rv.length ? `<button class="primary big" id="rv"><span>다시 빛내기 ${rv.length}개</span><small>일주일 전에 도움을 받았던 질문이야</small></button>` : ''}
       ${todo.length ? `<button class="primary big" id="go">출발</button>` : ''}
       ${!todo.length && A.M.ready(small, r) ? missionBtns(small, r) : ''}
@@ -299,12 +364,12 @@
   }
 
   // ── 6. 한 행성의 질문들 ──
-  const sessionStart = () => { let t = +sessionStorage.getItem('app:sessionStart'); if (!t) { t = Date.now(); sessionStorage.setItem('app:sessionStart', t); } return t; };
   async function run(big, small, r, list, practice) {
     if (!A.isAcademyDevice()) return blocked();
     await E.loadSettings();                       // 선생님이 바꾼 시간이 바로 들어오게
-    if ((Date.now() - (+sessionStorage.getItem('app:sessionStart') || Date.now())) / 60000 >= E.sessionMin()) return sessionEnd(0);
-    sessionStart(); tickClock();
+    await applyCmds();
+    { const o = sess(); if (sessOver(o)) return sessionEnd(0); if (!o.start) { o.start = Date.now(); sessSave(o); } }
+    tickClock();
     let opened = 0, passed = 0;
     for (let i = 0; i < list.length; i++) {
       if (!practice && E.tasks(small, r).filter(x => E.state(x.id).k !== 'done').length <= 2) A.M.prefetch(small, r);
@@ -312,7 +377,7 @@
       if (out === 'quit') { if (NAV.backQuit) { NAV.backQuit = false; return; } return planet(small.code, r); }
       if (out && out.pass) passed++;
       if (out && out.opened) opened = out.opened;
-      if ((Date.now() - sessionStart()) / 60000 >= E.sessionMin() && i < list.length - 1) return sessionEnd(passed);
+      if (sessOver(sess()) && i < list.length - 1) return sessionEnd(passed);
     }
     finish(big, small, r, passed, list.length, opened, practice);
   }
@@ -320,13 +385,13 @@
     frame(`<section class="center-msg stage">${buddy('retry')}<h2>학원 태블릿에서만 공부할 수 있어요</h2><p class="sub">선생님이 이 기기를 학원 기기로 등록하면 열려요.</p><button class="secondary" data-go="home">은하로</button><a class="ghost small" href="teacher.html">선생님: 이 기기 등록하기 ›</a></section>`);
   }
   function sessionEnd(passed) {
-    sessionStorage.removeItem('app:sessionStart');
-    frame(`<section class="center-msg stage">${buddy('praise')}<h2>오늘은 여기까지!</h2><p class="sub">${passed ? `${E.sessionMin()}분 동안 질문 ${passed}개에 불을 켰어요.` : `오늘 ${E.sessionMin()}분을 다 썼어요. 다음에 또 만나!`}</p><button class="primary big" data-go="home">은하로 돌아가기</button></section>`);
+    const o = sess(); o.done = true; sessSave(o); tickClock();
+    frame(`<section class="center-msg stage">${buddy('praise')}<h2>오늘은 여기까지!</h2><p class="sub">${passed ? `오늘 질문 ${passed}개에 불을 켰어요.` : `오늘 공부 시간을 다 썼어요. 다음에 또 만나!`}</p><button class="primary big" data-go="home">은하로 돌아가기</button>${keyBtn()}</section>`);
   }
   function finish(big, small, r, passed, n, opened, practice) {
     frame(`<section class="center-msg stage">${buddy(passed ? 'praise' : 'idle')}<h2>${practice ? '연습 끝!' : (passed === n ? '행성에 불이 켜졌어!' : '탐사 끝!')}</h2>
-      <p class="sub">${small.code} · ${E.ROUND[r]} — 통과 ${passed}/${n}${passed < n && !practice ? ' · 남은 질문은 내일 다시 열려요' : ''}</p>
-      ${opened ? `<div class="unlock">✦ ${big.code}의 ${E.ROUND[opened]}가 열렸어요!</div>` : ''}
+      <p class="sub">${esc(small.title)} · ${E.RL(r)} — 통과 ${passed}/${n}${passed < n && !practice ? ' · 남은 질문은 내일 다시 열려요' : ''}</p>
+      ${opened ? `<div class="unlock">✦ ${esc(big.title)}의 ${E.RT(opened)}가 열렸어요!</div>` : ''}
       ${!practice && A.M.ready(small, r) && !A.M.done(small, r) ? missionBtns(small, r) : `<button class="primary big" data-go="big:${big.no}">${big.code}로</button>`}
       <button class="ghost" data-go="home">은하로</button></section>`);
     bindMission(big, small, r);
@@ -340,7 +405,7 @@
     navMark(['blackhole', no, r]);
     if (st.k === 'today') return frame(`<section class="center-msg stage"><img class="mload" src="img/tunguri.webp" alt=""><h2>블랙홀이 닫혔어</h2><p class="sub">내일 새벽 4시에 다시 열려요.</p><button class="primary big" data-go="big:${no}">${big.code}로</button></section>`);
     frame(`<section class="center-msg stage bhin"><div class="bhole"></div><img class="mload peek" src="img/tunguri.webp" alt="">
-      <h2>${big.code} 블랙홀 관문</h2><p class="sub">퉁구리가 이 안에 별빛을 숨겼어!<br>${E.ROUND[r]}에서 배운 것을 말하면 블랙홀을 통과할 수 있어.</p>
+      <h2>${big.code} 블랙홀 관문</h2><p class="sub">퉁구리가 이 안에 별빛을 숨겼어!<br>${E.RT(r)}에서 배운 것을 말하면 블랙홀을 통과할 수 있어.</p>
       <button class="primary big" id="bgo">${done ? '다시 들어가기 (연습)' : '들어가기'}</button><button class="ghost" data-go="big:${no}">${big.code}로</button></section>`, {back: 'big:' + no, backText: big.code, crumb: big.code + ' · 블랙홀'});
     $('#bgo').onclick = async () => {
       const pseudo = {code: big.code + ' 블랙홀', title: '블랙홀 관문', unitId: '', unitLabel: '🕳 블랙홀 · ' + big.title, key: ''};
@@ -359,7 +424,7 @@
     navMark(['record', which || null]);
     const rk = E.rank(), bk = E.book();
     const LBL = {one: ['한 번에', 'one pass'], h1: ['되묻기 뒤', 'hint 1'], h2: ['도움 뒤', 'hint 2'], yet: ['아직', '다시 하면 빛나요']};
-    const nameOf = it => it.t.kind === 'bh' ? it.b.code + ' 블랙홀 · ' + E.ROUND[it.r] : it.s.code + ' · ' + E.ROUND[it.r];
+    const nameOf = it => it.t.kind === 'bh' ? it.b.title + ' 블랙홀 · ' + E.RT(it.r) : it.s.title + ' · ' + E.RT(it.r);
     const qOf = it => { const x = E.status(it.t.id); return it.t.kind === 'bh' ? it.b.bh[it.r].q : it.t.kind === 'lad' ? it.t.src.q : it.t.src.q; };
     const list = which ? bk[which].map(it => `<li><button class="rec" ${which === 'yet' && it.s ? `data-go="small:${it.s.code}" data-r="${it.r}"` : (which === 'yet' ? `data-go="bh:${it.b.no}" data-r="${it.r}"` : '')}>
         <span class="code">${esc(nameOf(it))}</span><span>${fm(qOf(it))}</span>${which === 'yet' ? '<b>다시 하기 →</b>' : ''}</button></li>`).join('') : '';
@@ -538,7 +603,7 @@
         <section class="stage qstage">${buddy('question', 'mini')}<div class="qcard">
           ${S.pre ? `<div class="pre">🌱 ${esc(S.pre)}에서 배운 것</div>` : ''}${S.mode === 'again' ? '<div class="pre">어제 본 설명으로 다시 묻기</div>' : ''}
           <div class="q" id="qt">${fm(S.q)}</div>${S.fig ? `<div class="figbox">${S.fig}</div>` : ''}<div class="say" id="say"></div></div></section>
-        <section class="answer" id="ans"></section>`, {back: 'quit', backText: '그만하기', crumb: small.code + ' · ' + E.ROUND[task.r]});
+        <section class="answer" id="ans"></section>`, {back: 'quit', backText: '그만하기', crumb: E.RT(task.r)});
       root().querySelector('[data-go="quit"]').onclick = (e) => { e.stopPropagation(); NAV.quit = null; stop(); resolve('quit'); };
       navMark(['q']); NAV.quit = () => { stop(); resolve('quit'); return true; };
       const say = (t, cls) => { $('#say').innerHTML = t ? `<div class="sbubble ${cls || ''}">${t}</div>` : ''; };

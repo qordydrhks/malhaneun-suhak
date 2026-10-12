@@ -11,6 +11,9 @@
   const A = window.APP;
   const E = A.E = {};
   E.ROUND = {1: '행성 탐사', 2: '별계 탐사', 3: '은하 탐사'};
+  /* 마스터 10/12: 탐사 이름만으로는 뜻을 몰라서 '난이도'를 같이 — 화면은 이름 + 작은 꼬리표, 글은 '행성 탐사(난이도 1)' */
+  E.RL = r => E.ROUND[r] + '<span class="lvt">난이도 ' + r + '</span>';
+  E.RT = r => E.ROUND[r] + '(난이도 ' + r + ')';
   E.LIMIT = {1: 120, 2: 180, 3: 240};               // 질문당 초(채점 시간 빼고) · 계산 필요하면 1·2회차 +60
   E.Q = {first: 100, reask: 90, kw: 85, short: 75, long: 60, nextday: 60, review: 80};
   E.SESSION_MIN = 10;                                // 한 번 앉는 시간(마스터 10/8: 처음엔 10분) — 학생마다 선생님이 바꿀 수 있다
@@ -65,6 +68,10 @@
   /* 소단원·회차 진행: 통과 수 / 전체 */
   E.count = (s, r) => { const t = E.tasks(s, r); return {done: t.filter(x => E.state(x.id).k === 'done').length, n: t.length}; };
   E.bigCount = (b, r) => b.smalls.reduce((a, s) => { const c = E.count(s, r); return {done: a.done + c.done, n: a.n + c.n}; }, {done: 0, n: 0});
+  /* 선생님이 오늘 잠긴 질문을 다시 열기(마스터 10/12) — 다음 날처럼 바뀐다: 다시 묻기 질문으로, 점수도 '다음 날' 수준(60~75)
+     표시 by:'teacher' 가 남아 기록·선생님 화면에 '선생님이 다시 열어 줌'으로 보인다 */
+  E.unlockToday = () => { let n = 0; for (const x of Object.values(P.st)) if (x.st !== 'pass' && x.day === A.today()) { x.day = ''; x.by = 'teacher'; n++; } return n; };
+  E.ckey = sid => 'app:cmd:' + sid + ':e4-2';                 // 선생님 화면 → 학생 태블릿 명령 {cmds:[{id, add(분), unlock}]}
   /* 결과 반영 → 대단원 회차가 다 끝났으면 다음 회차 열기(돌려준 값 = 새로 열린 회차) */
   E.record = (bigNo, id, rec) => {
     const prev = P.st[id];
@@ -204,7 +211,7 @@
       level: task.kind === 'lad' ? 'ladder' : ('r' + task.r + (practice === 'review' ? 'rv' : practice ? 're' : '')),
       question, question_id: task.id, transcript, score: Math.round(score),
       praise: ack || '', hint: help && help !== 'none' ? ('도움: ' + ({kw: '키워드', short: '짧은 설명', long: '긴 설명'}[help] || help)) : '',
-      retry_point: '', misconception: misconception || '', attempt: attempt || 1, need_teacher: !!needTeacher,
+      retry_point: (E.status(task.id)?.by === 'teacher' ? '선생님이 다시 열어 줌' : ''), misconception: misconception || '', attempt: attempt || 1, need_teacher: !!needTeacher,
       hints_used: reasks || 0, review_due: pass ? new Date(Date.now() + 7 * 864e5).toISOString() : null
     };
     const extra = {help: help || 'none', stage, quality: quality ?? null};

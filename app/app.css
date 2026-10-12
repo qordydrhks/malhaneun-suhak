@@ -385,3 +385,20 @@ body.intro-on .sclock{display:none}
 .tacad label{display:flex;gap:8px;align-items:center;font-size:14px}
 .tacad input{font:inherit;font-size:14px;color:var(--ink);background:var(--sky2);border:1px solid var(--line);border-radius:8px;padding:6px 10px;width:12em;max-width:52vw}
 .rankbtn{max-width:100%}.rankbtn small{white-space:nowrap}
+/* 난이도 꼬리표(마스터 10/12) */
+.lvt{display:inline-block;margin-left:6px;font-size:.74em;font-weight:700;line-height:1.5;padding:0 7px;border-radius:99px;border:1px solid currentColor;opacity:.85;vertical-align:1px;white-space:nowrap}
+.tab .lvt{margin-left:5px}
+.go .lvt{margin-left:4px}
+/* 🔑 선생님 열쇠 */
+.kbtn{margin-top:4px;font-size:18px;width:40px;height:40px;border-radius:50%;background:var(--sky2);border:1px solid var(--line);opacity:.7}
+.kbtn:hover{opacity:1}
+.kpop{position:fixed;inset:0;z-index:60;background:#000a;display:flex;align-items:center;justify-content:center;padding:16px}
+.kpop-in{width:min(380px,100%);background:var(--sky2);border:1px solid var(--line);border-radius:18px;padding:18px;display:grid;gap:12px;box-shadow:0 20px 50px #000c}
+.kpop-in b{font-size:17px}
+.kpop-in label{display:grid;gap:6px;font-size:14px;color:var(--sub)}
+.kpop-in input{font:inherit;font-size:18px;color:var(--ink);background:var(--sky);border:1.5px solid var(--line);border-radius:12px;padding:11px 13px;width:100%}
+.krow{display:flex;flex-wrap:wrap;gap:8px}.krow .secondary{flex:1 1 auto}
+.kmsg{min-height:20px;font-size:14px;color:var(--gold)}
+.tabs{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;line-height:1.25}
+.tab .lvt{margin:0;font-size:11px}

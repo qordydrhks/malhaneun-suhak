@@ -46,7 +46,7 @@
       const now1 = parts.filter(x => x.on).pop();
       const started = parts.some(x => x.c.done);
       return `<li><span class="pst">${esc(b.title)}</span><span class="pbar">${parts.map(x => `<i class="${x.on ? (x.c.n && x.c.done === x.c.n ? 'full' : x.c.done ? 'half' : '') : 'off'}" title="${E.ROUND[x.r]}"></i>`).join('')}</span>
-        <span class="sub">${started ? E.ROUND[now1.r] + ' ' + now1.c.done + '/' + now1.c.n : '아직'}</span></li>`;
+        <span class="sub">${started ? E.RT(now1.r) + ' ' + now1.c.done + '/' + now1.c.n : '아직'}</span></li>`;
     }).join('');
     // 더 연습이 필요한 것: 아직 통과 못 한 것 → 설명을 보고 통과한 것
     const yet = [], helped = [];
