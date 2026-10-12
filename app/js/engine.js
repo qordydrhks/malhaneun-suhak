@@ -13,7 +13,17 @@
   E.ROUND = {1: '행성 탐사', 2: '별계 탐사', 3: '은하 탐사'};
   E.LIMIT = {1: 120, 2: 180, 3: 240};               // 질문당 초(채점 시간 빼고) · 계산 필요하면 1·2회차 +60
   E.Q = {first: 100, reask: 90, kw: 85, short: 75, long: 60, nextday: 60, review: 80};
-  E.SESSION_MIN = 10;                                // 한 번 앉는 시간(마스터 10/8: 처음엔 10분)
+  E.SESSION_MIN = 10;                                // 한 번 앉는 시간(마스터 10/8: 처음엔 10분) — 학생마다 선생님이 바꿀 수 있다
+  /* 학생마다 시간 설정(마스터 10/12) — 선생님 화면에서 정한다. 공유 저장소 app:set:<학생>:e4-2 = {session: 분, qmin: 질문당 분(1~5, 없으면 기본 2·3·4분)} */
+  E.QMINS = [1, 2, 3, 4, 5];
+  E.SESSIONS = [5, 10, 15, 20, 25, 30];
+  let SET = {};
+  E.skey = sid => 'app:set:' + sid + ':e4-2';
+  E.loadSettings = async () => { SET = (await A.store.get(E.skey(A.session.student.id))) || {}; return SET; };
+  E.useSettings = s => { SET = s || {}; };
+  E.sessionMin = () => (E.SESSIONS.includes(+SET.session) ? +SET.session : E.SESSION_MIN);
+  E.qmin = () => (E.QMINS.includes(+SET.qmin) ? +SET.qmin : 0);                     // 0 = 기본(탐사마다 2·3·4분)
+  E.limit = (r, calc) => (E.qmin() ? E.qmin() * 60 : E.LIMIT[r]) + (calc && r < 3 ? 60 : 0);   // 질문당 초 · 계산 질문은 1분 더
 
   // ── 데이터 ──
   E.course = () => window.APP_DATA['e4-2'];
@@ -34,6 +44,7 @@
     P = (await A.store.get(pkey())) || E.blank();
     P.st = P.st || {}; P.open = P.open || {};
     T = (await A.store.get(E.okey(A.session.student.id))) || {};
+    await E.loadSettings();
     return P;
   };
   /* 선생님·학부모 화면: 다른 학생의 진도를 잠깐 들여다볼 때 */

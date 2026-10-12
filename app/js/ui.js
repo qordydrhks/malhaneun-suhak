@@ -34,10 +34,23 @@
     opt = opt || {};
     const s = A.session.student;
     root().innerHTML = `<header class="bar">${opt.back ? `<button class="ghost" data-go="${opt.back}">‹ ${esc(opt.backText || '뒤로')}</button>` : `<span class="logo">말하는 수학</span>`}
-      <span class="crumb">${esc(opt.crumb || '')}</span>
+      <span class="crumb">${esc(opt.crumb || '')}</span>${s ? '<span class="sclock" id="sclock" title="오늘 남은 시간"></span>' : ''}
       <span class="who">${s ? `<button class="ghost small" data-go="logout">${esc(s.name)} · 나가기</button>` : ''}</span></header><main class="${opt.cls || ''}">${inner}</main>`;
     window.scrollTo(0, 0);
+    tickClock();
   }
+  /* 한 번 앉는 시간 시계(마스터 10/12: 10분 제한이 안 보여 조절이 안 됨) — 첫 질문을 시작하면 줄어든다 */
+  let clockWarned = false;
+  function tickClock() {
+    const el = document.getElementById('sclock'); if (!el || !A.session.student) return;
+    const total = E.sessionMin() * 60, st = +sessionStorage.getItem('app:sessionStart') || 0;
+    const left = st ? Math.max(0, Math.ceil(total - (Date.now() - st) / 1000)) : total;
+    el.textContent = '⏱ ' + String(Math.floor(left / 60)).padStart(2, '0') + ':' + String(left % 60).padStart(2, '0');
+    el.className = 'sclock' + (!st ? ' idle' : left === 0 ? ' end' : left <= 60 ? ' low' : '');
+    if (st && left === 0 && !clockWarned) { clockWarned = true; toast('오늘 시간이 다 됐어! 지금 질문까지만 하자.'); }
+    if (left > 0) clockWarned = false;
+  }
+  setInterval(tickClock, 1000);
   document.addEventListener('click', e => {
     const b = e.target.closest('[data-go]'); if (!b) return;
     const g = b.dataset.go;
@@ -194,7 +207,7 @@
     const locked = t.filter(x => E.state(x.id).k === 'today').length;
     const rv = E.reviewList(small, r);
     const practice = !todo.length && !locked;
-    const min = Math.round(E.LIMIT[r] / 60);
+    const min = Math.round(E.limit(r) / 60 * 2) / 2;
     frame(`<section class="entry stage"><div class="orb big" style="--p:${PLANET[big.smalls.indexOf(small) % 8]}"></div>
       <div class="code">${small.code}</div><h2>${esc(small.title)}</h2><div class="chip">${E.ROUND[r]}</div>
       <p class="sub">${todo.length ? `질문 ${todo.length}개 · 하나에 약 ${min}분` : (locked ? `남은 질문 ${locked}개는 내일 다시 열려요` : '다 탐험했어요')}</p>
@@ -212,7 +225,9 @@
   const sessionStart = () => { let t = +sessionStorage.getItem('app:sessionStart'); if (!t) { t = Date.now(); sessionStorage.setItem('app:sessionStart', t); } return t; };
   async function run(big, small, r, list, practice) {
     if (!A.isAcademyDevice()) return blocked();
-    sessionStart();
+    await E.loadSettings();                       // 선생님이 바꾼 시간이 바로 들어오게
+    if ((Date.now() - (+sessionStorage.getItem('app:sessionStart') || Date.now())) / 60000 >= E.sessionMin()) return sessionEnd(0);
+    sessionStart(); tickClock();
     let opened = 0, passed = 0;
     for (let i = 0; i < list.length; i++) {
       if (!practice && E.tasks(small, r).filter(x => E.state(x.id).k !== 'done').length <= 2) A.M.prefetch(small, r);
@@ -220,7 +235,7 @@
       if (out === 'quit') { if (NAV.backQuit) { NAV.backQuit = false; return; } return planet(small.code, r); }
       if (out && out.pass) passed++;
       if (out && out.opened) opened = out.opened;
-      if ((Date.now() - sessionStart()) / 60000 >= E.SESSION_MIN && i < list.length - 1) return sessionEnd(passed);
+      if ((Date.now() - sessionStart()) / 60000 >= E.sessionMin() && i < list.length - 1) return sessionEnd(passed);
     }
     finish(big, small, r, passed, list.length, opened, practice);
   }
@@ -229,7 +244,7 @@
   }
   function sessionEnd(passed) {
     sessionStorage.removeItem('app:sessionStart');
-    frame(`<section class="center-msg stage">${buddy('praise')}<h2>오늘은 여기까지!</h2><p class="sub">${E.SESSION_MIN}분 동안 질문 ${passed}개에 불을 켰어요.</p><button class="primary big" data-go="home">은하로 돌아가기</button></section>`);
+    frame(`<section class="center-msg stage">${buddy('praise')}<h2>오늘은 여기까지!</h2><p class="sub">${passed ? `${E.sessionMin()}분 동안 질문 ${passed}개에 불을 켰어요.` : `오늘 ${E.sessionMin()}분을 다 썼어요. 다음에 또 만나!`}</p><button class="primary big" data-go="home">은하로 돌아가기</button></section>`);
   }
   function finish(big, small, r, passed, n, opened, practice) {
     frame(`<section class="center-msg stage">${buddy(passed ? 'praise' : 'idle')}<h2>${practice ? '연습 끝!' : (passed === n ? '행성에 불이 켜졌어!' : '탐사 끝!')}</h2>
@@ -438,7 +453,7 @@
   function ask(big, small, task, i, n, practice) {
     return new Promise(resolve => {
       const S = shape(task, practice);
-      const limit = E.LIMIT[task.r] + (task.src.calc && task.r < 3 ? 60 : 0);
+      const limit = E.limit(task.r, task.src.calc);
       let answers = [], reasks = 0, used = new Set(), helpNow = '', kwShown = false, last = null, left = limit, ticking = false, done = false;
       let tim = null;
       const dots = Array.from({length: n}, (_, k) => `<i class="${k < i ? 'd' : k === i ? 'c' : ''}"></i>`).join('');

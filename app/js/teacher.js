@@ -58,11 +58,12 @@
   }
 
   // ── 데이터 ──
-  let STU = [], PROG = {}, OPEN = {};
+  let STU = [], PROG = {}, OPEN = {}, SETS = {};
   async function loadAll() {
     const like = p => 'key=like.' + encodeURIComponent(p) + '&select=key,value&limit=1000';
-    const [studs, progs, opens] = await Promise.all([A.loadStudents(), A.sbSelect('ai_cache', like('app:prog:*:e4-2')), A.sbSelect('ai_cache', like('app:open:*:e4-2'))]);
-    PROG = {}; OPEN = {};
+    const [studs, progs, opens, sets] = await Promise.all([A.loadStudents(), A.sbSelect('ai_cache', like('app:prog:*:e4-2')), A.sbSelect('ai_cache', like('app:open:*:e4-2')), A.sbSelect('ai_cache', like('app:set:*:e4-2'))]);
+    PROG = {}; OPEN = {}; SETS = {};
+    for (const r of sets || []) SETS[r.key.split(':')[2]] = r.value;
     for (const r of progs || []) PROG[r.key.split(':')[2]] = r.value;
     for (const r of opens || []) OPEN[r.key.split(':')[2]] = r.value;
     STU = (studs || []).filter(s => /초\s*4|4학년/.test(s.grade || '') || PROG[s.id]).map(s => ({id: s.id, name: s.name, grade: s.grade || ''}));
@@ -70,7 +71,7 @@
   /* 학생 한 명의 진도를 엔진에 올려 계산한다 */
   function look(s) {
     A.session.student = {id: s.id, name: s.name, grade: s.grade};
-    E.use(PROG[s.id] ? JSON.parse(JSON.stringify(PROG[s.id])) : null, OPEN[s.id] || {});
+    E.use(PROG[s.id] ? JSON.parse(JSON.stringify(PROG[s.id])) : null, OPEN[s.id] || {}); E.useSettings(SETS[s.id]);
     const rk = E.rank(), bk = E.book(), p = E.prog();
     const stuck = [], helped = [];
     for (const [id, x] of Object.entries(p.st)) {
@@ -80,7 +81,7 @@
     }
     stuck.sort((a, b) => (b.x.at || 0) - (a.x.at || 0)); helped.sort((a, b) => (b.x.at || 0) - (a.x.at || 0));
     const nx = E.nextPlace();
-    return {rk, bk, p, stuck, helped, nx, at: p.at || 0, any: !!PROG[s.id]};
+    return {rk, bk, p, stuck, helped, nx, at: p.at || 0, any: !!PROG[s.id], ses: E.sessionMin(), qmin: E.qmin()};
   }
 
   // ── 학생 목록 ──
@@ -98,7 +99,7 @@
         <span class="tlit">행성 ${v.rk.lit}/${v.rk.total}</span>
         <span class="tnow">${v.any && v.nx ? esc(v.nx.small ? v.nx.small.code : v.nx.big.code + ' 블랙홀') + ' · ' + E.ROUND[v.nx.r] : ''}</span>
         <span class="talert ${v.stuck.length ? 'on' : ''}">${v.stuck.length ? '막힘 ' + v.stuck.length : ''}</span>
-        <span class="tago">${ago(v.at)}</span></button>`).join('') || '<p class="sub">초4 학생이 없어요.</p>'}</div>
+        <span class="tago">${ago(v.at)}${v.ses !== 10 || v.qmin ? `<small>⏱ ${v.ses}분${v.qmin ? ' · 질문 ' + v.qmin + '분' : ''}</small>` : ''}</span></button>`).join('') || '<p class="sub">초4 학생이 없어요.</p>'}</div>
       <div class="tfoot">
         <button class="secondary small" id="tDev">${dev ? '✅ 이 기기는 학원 기기 · 해제' : '이 기기를 학원 기기로 등록'}</button>
         <a class="ghost small" href="index.html">학생 화면 ›</a><a class="ghost small" href="../dodream.html">학생 등록 · 비밀번호 · AI 연결 (옛 선생님 화면) ›</a>
@@ -158,6 +159,10 @@
       <ul class="tli">${helpedHtml || '<li class="sub">없어요</li>'}</ul>
       <h3 class="tsec">별마다 탐사</h3>
       <div class="tscroll"><table class="tbig"><thead><tr><th></th><th>행성 탐사</th><th>별계 탐사</th><th>은하 탐사</th><th>열린 회차</th></tr></thead><tbody>${bigsHtml}</tbody></table></div>
+      <h3 class="tsec">시간</h3>
+      <div class="tset"><label>한 번 앉는 시간 <select id="tSes">${E.SESSIONS.map(m => `<option value="${m}" ${m === E.sessionMin() ? 'selected' : ''}>${m}분</option>`).join('')}</select></label>
+        <label>질문당 시간 <select id="tPace"><option value="0" ${!E.qmin() ? 'selected' : ''}>기본 (행성 2분 · 별계 3분 · 은하 4분)</option>${E.QMINS.map(m => `<option value="${m}" ${m === E.qmin() ? 'selected' : ''}>${m}분</option>`).join('')}</select></label>
+        <span class="sub" id="tSetMsg">계산이 필요한 질문은 1분 더</span></div>
       <h3 class="tsec">학부모 리포트</h3>
       <div class="tpar"><textarea id="tCm" rows="3" placeholder="선생님 한마디 (리포트에 그대로 보여요)">${esc(comment.text || '')}</textarea>
         <div class="row"><button class="secondary small" id="tCmS">한마디 저장</button><button class="primary small" id="tLink">리포트 링크 복사</button><span class="sub" id="tMsg"></span></div>
@@ -169,6 +174,11 @@
       const t = Object.assign({}, OPEN[s.id] || {}); t[sel.dataset.big] = +sel.value;
       await A.store.set(E.okey(s.id), t); OPEN[s.id] = t; detail(s);
     });
+    const saveSet = async () => {
+      const v = {session: +$('#tSes').value, qmin: +$('#tPace').value, at: Date.now()};
+      await A.store.set(E.skey(s.id), v); SETS[s.id] = v; $('#tSetMsg').textContent = '저장했어요 · 다음 행성부터 적용';
+    };
+    $('#tSes').onchange = saveSet; $('#tPace').onchange = saveSet;
     $('#tCmS').onclick = async () => { await A.store.set('app:comment:' + s.id + ':e4-2', {text: $('#tCm').value.trim(), at: Date.now()}); $('#tMsg').textContent = '저장했어요'; };
     $('#tLink').onclick = async () => {
       const url = await parentLink(s.id);
