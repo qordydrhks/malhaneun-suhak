@@ -3,7 +3,7 @@
 (() => {
   'use strict';
   const A = window.APP = window.APP || {};
-  A.VERSION = 'app 0.12 (2026-10-12)';
+  A.VERSION = 'app 0.12.1 (2026-10-12)';
   const URL = 'https://cnyrbxsmxwajhlrvcdml.supabase.co';
   const KEY = 'sb_publishable_e2iVXV5K1sl7-kJ-d3v1Ow_VEzNUJGv';
   A.esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -59,6 +59,16 @@
   };
   A.logout = () => { A.ls.del('dd:autoLogin'); A.session.student = null; document.getElementById('sclock')?.remove(); try { sessionStorage.removeItem('app:sessionStart'); } catch (e) {} };
   A.checkPin = async v => { const saved = await A.store.get('config:teacherPin'); const want = saved && saved.hash ? saved.hash : await A.sha256('0000'); return (await A.sha256(String(v || ''))) === want; };
+  /* 음성 인식 자동 교정 — 옛 앱 window.fixMathSpeech 와 같은 표(실제 단어가 아닌 오인식만). 필요하면 여기에 추가 */
+  A.fixSpeech = text => {
+    if (!text) return text;
+    let s = ' ' + text + ' ';
+    const map = {'바다올림': '받아올림', '바다 올림': '받아올림', '받아 올림': '받아올림', '바다내림': '받아내림', '바다 내림': '받아내림', '받아 내림': '받아내림',
+      '분보': '분모', '곰셈': '곱셈', '곱 셈': '곱셈', '나누셈': '나눗셈', '나눈셈': '나눗셈', '나눗 셈': '나눗셈',
+      '지각삼각형': '직각삼각형', '직각 삼각형': '직각삼각형', '정 사각형': '정사각형', '직 사각형': '직사각형'};
+    for (const k in map) s = s.split(k).join(map[k]);
+    return s.replace(/\s+/g, ' ').trim();
+  };
   A.isTester = () => /테스트/.test(A.session.student?.name || '');
   A.isAcademyDevice = () => A.ls.raw('dd:academyDevice') === '1';
 

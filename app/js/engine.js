@@ -176,14 +176,15 @@
 - "네", "될 것 같아요"처럼 결론만 있고 내용이 없으면 인정하지 마. 핵심의 절반만 말했으면 인정하지 마.
 - 같은 답이면 언제 채점해도 같은 판정이 나오게, 애매하면 "핵심이 분명히 들어 있는가" 하나로만 판단.
 - [이전 답]이 있으면 이전 답과 이번 답을 합쳐서 판정.
+- [대안 후보]가 주어지면 그중 올바른 수학 용어에 가까운 게 있는지도 살펴보고 학생에게 유리한 쪽으로 해석해.
 - 틀린 내용을 말했으면 misconception 에 학생 생각을 한 줄로. 없으면 "".
 - focus: 아직 못 짚은 핵심 중 틀리게 말한 내용과 가장 관련된 것의 id. 틀린 말이 없으면 못 짚은 첫 핵심의 id. 다 짚었으면 "".
 [ack] 25자 안팎 반말 한 문장. 맞게 말한 부분만 구체적으로 인정. 맞은 게 없으면 "좋아, 같이 하나씩 생각해 보자." 같은 격려만. ack 에 정답·빠진 핵심·힌트를 절대 넣지 마.
 반드시 JSON만: {"hits":[{"id":"a","hit":true,"evidence":"..."}],"misconception":"","focus":"b","ack":"..."}`;
   /* need = 통과에 필요한 핵심 묶음(질문마다, 마스터 10/12). 없으면 핵심을 모두. [[0,1]] = 둘 중 하나, [[0]] = ①만 꼭.
      돌려주는 miss = 되물을 핵심, cand = 그 묶음에서 아직 못 짚은 핵심들(되묻기를 이미 쓴 것은 화면이 건너뛴다) */
-  E.grade = async ({question, keys, answer, prev, unitId, need}) => {
-    const user = `[질문] ${question}\n[꼭 말할 핵심]\n${keys.map((k, i) => IDS[i] + ') ' + k).join('\n')}\n` + (prev ? `[이전 답] ${prev}\n` : '') + `[학생의 답(음성 인식)] ${answer}`;
+  E.grade = async ({question, keys, answer, prev, unitId, need, alt}) => {
+    const user = `[질문] ${question}\n[꼭 말할 핵심]\n${keys.map((k, i) => IDS[i] + ') ' + k).join('\n')}\n` + (prev ? `[이전 답] ${prev}\n` : '') + `[학생의 답(음성 인식)] ${answer}` + (alt && alt.trim() ? `\n[대안 후보(같은 말의 다른 인식 결과 — 참고용)] ${alt}` : '');
     const raw = await A.ai({task: 'grade', system: SYSTEM, messages: [{role: 'user', content: user}], max_tokens: 700, grade_id: 'e4-2', unit_id: unitId});
     let o = null; try { o = JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1)); } catch (e) {}
     if (!o) throw new Error('친구가 답을 잘 못 알아들었어. 한 번 더 말해 줄래?');

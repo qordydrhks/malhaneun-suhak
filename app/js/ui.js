@@ -620,7 +620,7 @@
       tim = setInterval(() => { if (!ticking || done) return; left -= 0.25; drawT(); if (left <= 0) { ticking = false; timeout(); } }, 250);
 
       // 답 입력(말하기 기본 · 글 입력 대안)
-      let rec = null, recFails = 0, typed = false;
+      let rec = null, recFails = 0, typed = false; const altPieces = [];
       function input(prompt, onSubmit) {
         ticking = true;
         $('#ans').innerHTML = `<div class="prompt">${prompt || ''}</div>
@@ -634,24 +634,55 @@
         const upd = t => { text = t; live.textContent = typed ? '' : t; sub.disabled = !text.trim(); };
         MI.bind(ta, () => upd(MI.value(ta)));
         $('#tw').onclick = () => { typed = !typed; stopRec(); input(prompt, onSubmit); };
-        $('#clr').onclick = () => { stopRec(); ta.innerHTML = ''; upd(''); };
+        $('#clr').onclick = () => { stopRec(); ta.innerHTML = ''; altPieces.length = 0; upd(''); };
         $('#mic').onclick = () => (rec ? stopRec() : startRec());
         sub.onclick = () => {
           stopRec(); const t = (typed ? MI.value(ta) : text).trim(); if (!t) return;
           if (typed && t.includes('□')) { toast('분수 칸을 모두 채워 줘'); MI.focusEmpty(ta); return; }
           ticking = false; onSubmit(t);
         };
+        /* 마이크 — 옛 앱(dodream.html startRecording)과 같은 방식(마스터 10/12 "이전 앱이랑 똑같이")
+           · interimResults=false: 확정된 문장만 받는다 → 중간 결과가 겹쳐 반복되는 문제(안드로이드) 원천 차단
+           · 새로 확정된 조각만 resultIndex 부터 모은다 · 2순위 이하 인식 후보도 모아 채점에 같이 넘긴다
+           · 안드로이드가 저절로 끊으면 다시 켠다(직접 멈춘 때만 끝) · 4초 안에 안 켜지면 글로 쓰기로 */
         function startRec() {
           const R = window.SpeechRecognition || window.webkitSpeechRecognition;
-          if (!R) { typed = true; return input(prompt, onSubmit); }
-          let base = text ? text + ' ' : '';
-          rec = new R(); rec.lang = 'ko-KR'; rec.interimResults = true; rec.continuous = true;
-          rec.onresult = ev => { let fin = '', inter = ''; for (let k = ev.resultIndex; k < ev.results.length; k++) { const t = ev.results[k][0].transcript; if (ev.results[k].isFinal) fin += t; else inter += t; } if (fin) base += fin; upd((base + inter).trim()); };
-          rec.onerror = ev => { if (ev.error === 'not-allowed' || ++recFails >= 2) { typed = true; toast('글로 써도 괜찮아'); input(prompt, onSubmit); } };
-          rec.onend = () => { rec = null; $('#mic')?.classList.remove('on'); setBuddy('question'); };
-          try { rec.start(); $('#mic').classList.add('on'); setBuddy('listening'); A.buzz(BZ.micOn); } catch (e) { rec = null; }
+          if (!R) { typed = true; toast('이 기기는 말하기가 안 돼서 글로 써 줘'); return input(prompt, onSubmit); }
+          const pieces = text ? [text] : [];
+          let manualStop = false, started = false;
+          const r = new R(); r.lang = 'ko-KR'; r.continuous = true; r.interimResults = false; r.maxAlternatives = 5;
+          rec = r; r._stop = () => { manualStop = true; };
+          const render = () => upd(A.fixSpeech(pieces.join(' ').replace(/\s+/g, ' ').trim()));
+          const watchdog = setTimeout(() => { if (!started) { try { r.abort(); } catch (e) {} rec = null; typed = true; toast('이 기기에서 말하기가 시작되지 않아요. 글로 써 줘'); input(prompt, onSubmit); } }, 4000);
+          r.onstart = () => { started = true; clearTimeout(watchdog); $('#mic')?.classList.add('on'); setBuddy('listening'); if (!live.textContent) live.innerHTML = '<span class="hear">듣고 있어… 다 말하면 마이크를 다시 눌러 줘</span>'; };
+          r.onresult = ev => {
+            for (let k = ev.resultIndex; k < ev.results.length; k++) {
+              const res = ev.results[k]; if (!res.isFinal) continue;
+              const t = (res[0].transcript || '').trim(); if (t) pieces.push(t);
+              const alts = []; for (let a = 1; a < res.length && a < 5; a++) { const at = ((res[a] && res[a].transcript) || '').trim(); if (at && at !== t) alts.push(at); }
+              if (alts.length) altPieces.push(alts.join(' / '));
+            }
+            render();
+          };
+          r.onerror = ev => {
+            clearTimeout(watchdog);
+            if (ev.error === 'no-speech' || ev.error === 'aborted') return;
+            if (ev.error === 'not-allowed' || ev.error === 'service-not-allowed' || ev.error === 'network') {
+              manualStop = true; rec = null; typed = true;
+              toast(ev.error === 'network' ? '음성 인식 서버에 연결하지 못했어. 글로 써 줘' : '마이크가 막혀 있어. 글로 써 줘');
+              input(prompt, onSubmit);
+            }
+          };
+          r.onend = () => {
+            clearTimeout(watchdog);
+            if (!manualStop && rec === r) { try { r.start(); return; } catch (e) {} }   // 안드로이드가 끊은 것 → 이어서 듣기
+            if (rec === r) rec = null;
+            $('#mic')?.classList.remove('on'); setBuddy('question');
+            if (!text.trim() && !typed) live.textContent = '';
+          };
+          try { r.start(); A.buzz(BZ.micOn); } catch (e) { clearTimeout(watchdog); rec = null; typed = true; toast('마이크를 시작할 수 없어. 글로 써 줘'); input(prompt, onSubmit); }
         }
-        function stopRec() { if (rec) { try { rec.stop(); } catch (e) {} rec = null; $('#mic')?.classList.remove('on'); A.buzz(BZ.micOff); } }
+        function stopRec() { if (rec) { const r = rec; rec = null; try { r._stop && r._stop(); r.stop(); } catch (e) {} $('#mic')?.classList.remove('on'); A.buzz(BZ.micOff); } }
         if (typed) { ta.focus(); put0(ta); }
       }
       function put0(ta) { const r = document.createRange(); r.selectNodeContents(ta); r.collapse(false); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
@@ -664,7 +695,7 @@
           const hits = S.words.map(w => ({hit: all.includes(w.replace(/\s+/g, '')), evidence: ''})), h = hits.filter(x => x.hit).length;
           return (last = {hits, h, n: hits.length, miss: h >= S.need ? -1 : 0, misconception: '', ack: h ? '낱말 ' + h + '개를 말했어!' : '좋아, 하나씩 떠올려 보자.'});
         }
-        try { last = await E.grade({question: S.q, keys: S.keys, need: S.need, answer: t, prev: answers.length > 1 ? answers.slice(0, -1).join(' / ') : '', unitId: small.unitId}); }
+        try { last = await E.grade({question: S.q, keys: S.keys, need: S.need, alt: altPieces.join(' | '), answer: t, prev: answers.length > 1 ? answers.slice(0, -1).join(' / ') : '', unitId: small.unitId}); }
         catch (e) { answers.pop(); setBuddy('retry'); say(esc(e.message), 'warn'); return null; }   // AI 실패 → 기록 없음, 다시 말하기
         return last;
       }

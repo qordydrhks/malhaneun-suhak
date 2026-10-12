@@ -402,3 +402,4 @@ body.intro-on .sclock{display:none}
 .tabs{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;line-height:1.25}
 .tab .lvt{margin:0;font-size:11px}
+.live .hear{color:var(--sub);font-size:15px}
