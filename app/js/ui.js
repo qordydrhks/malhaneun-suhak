@@ -295,6 +295,8 @@
     if ($('#mHard')) $('#mHard').onclick = () => mission(big, small, r, true);
     if ($('#mAgain')) $('#mAgain').onclick = () => mission(big, small, r, false);
   }
+  /* AI 문제의 대분수 "1 2/9"(띄어 씀) → "1과 2/9" 로 바꿔 교재처럼 자연수 바로 옆에 분수가 붙게 (mfmt 가 와/과 꼴을 대분수로 그린다) */
+  const mx = t => String(t ?? '').replace(/(^|[^\d.\/])(\d+) (\d+\/\d+)/g, (m, p, w, f) => p + w + ({0: '과', 1: '과', 3: '과', 6: '과', 7: '과', 8: '과'}[w.slice(-1)] || '와') + ' ' + f);
   async function mission(big, small, r, hard) {
     if (!A.isAcademyDevice()) return blocked();
     const name = A.M.name(r, hard);
@@ -315,14 +317,14 @@
       const it = quiz[k];
       const dots = quiz.map((_, j) => `<i class="${j < k ? 'd' : j === k ? 'c' : ''}"></i>`).join('');
       frame(`<div class="qtop"><div class="dots">${dots}</div><span class="mtag">${esc(name)}${first ? '' : ' · 연습'}</span></div>
-        <section class="qcard mq"><div class="q">${fm(it.stem)}</div>
-        <div class="chs">${it.choices.map((c, j) => `<button class="ch" data-j="${j}"><span>${'①②③④'[j]}</span>${fm(c)}</button>`).join('')}</div>
+        <section class="qcard mq"><div class="q">${fm(mx(it.stem))}</div>
+        <div class="chs">${it.choices.map((c, j) => `<button class="ch" data-j="${j}"><span class="cn">${'①②③④'[j]}</span><span class="ct">${fm(mx(c))}</span></button>`).join('')}</div>
         <div class="say" id="say"></div></section><div class="row" id="nx"></div>`, {back: 'big:' + big.no, backText: '그만하기', crumb: small.code});
       root().querySelectorAll('.ch').forEach(b => b.onclick = () => {
         const j = +b.dataset.j, right = j === it.answer; if (right) ok++;
         root().querySelectorAll('.ch').forEach(x => { x.disabled = true; if (+x.dataset.j === it.answer) x.classList.add('right'); });
         if (!right) b.classList.add('wrong');
-        $('#say').innerHTML = `<div class="sbubble ${right ? 'ok' : 'warn'}"><b>${right ? '정답!' : '아쉬워!'}</b> ${fm(it.explain)}</div>`;
+        $('#say').innerHTML = `<div class="sbubble ${right ? 'ok' : 'warn'}"><b>${right ? '정답!' : '아쉬워!'}</b> ${fm(mx(it.explain))}</div>`;
         $('#nx').innerHTML = `<button class="primary big" id="nb">${k < quiz.length - 1 ? '다음 문제' : '결과 보기'}</button>`;
         $('#nb').onclick = () => { k++; k < quiz.length ? one() : done(); };
       });
@@ -364,8 +366,75 @@
     return {mode, q: x.q, keys, ans: x.teach, fig: x.fig, asks, help, base: mode === 'nextday' ? E.Q.nextday : E.Q.first};
   }
 
-  /* 글로 쓸 때 기호·수식 버튼(마스터 9/22 메모) — 초4-2 에 나오는 것. 분수는 3/5 처럼, 대분수는 "2와 1/3" 처럼 쓰면 교재 모양으로 보인다 */
-  const SYMS = [['분수 /', '/'], ['대분수 와', '와 '], ['×', '×'], ['÷', '÷'], ['+', '+'], ['−', '−'], ['=', '='], ['<', '<'], ['>', '>'], ['°', '°'], ['cm', ' cm'], ['.', '.']];
+  /* ── 글로 쓰기: 수식 넣기(마스터 10/12 — 매쓰홀릭처럼) ──
+     「분수」「대분수」를 누르면 그 자리에 네모칸이 있는 분수가 생기고, 칸에 숫자만 넣으면 교재 모양 그대로 보인다.
+     답으로 보낼 때는 글자로 바꾼다: 3/5 · 2와 1/3 (자연수 끝소리에 따라 와/과) — 채점·기록·선생님 화면이 그대로 읽는 모양 */
+  const SYMS = [['×', '×'], ['÷', '÷'], ['+', '+'], ['−', '−'], ['=', '='], ['<', '<'], ['>', '>'], ['°', '°'], ['cm', ' cm'], ['.', '.']];
+  const FRAC_ICON = mixed => `<span class="fico">${mixed ? '<i class="w"></i>' : ''}<span><i></i><i></i></span></span>`;
+  const MI = (() => {
+    const JOSA = {0: '과', 1: '과', 2: '와', 3: '과', 4: '와', 5: '와', 6: '과', 7: '과', 8: '과', 9: '와'};
+    const box = (cls, label) => `<input class="${cls}" inputmode="numeric" pattern="[0-9]*" maxlength="4" aria-label="${label}" autocomplete="off">`;
+    const chip = mixed => { const s = document.createElement('span'); s.className = 'fx'; s.contentEditable = 'false';
+      s.innerHTML = (mixed ? box('fw', '자연수') : '') + `<span class="fs">${box('fn', '분자')}${box('fd', '분모')}</span>`; return s; };
+    let saved = null;
+    const inTa = (ta, n) => n && ta.contains(n);
+    const caretEnd = ta => { const r = document.createRange(); r.selectNodeContents(ta); r.collapse(false); return r; };
+    const put = (ta, r) => { const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); saved = r.cloneRange(); };
+    const where = ta => {                                            // 넣을 자리: 분수 칸 안이면 그 분수 바로 뒤, 아니면 마지막 커서 자리
+      const ae = document.activeElement;
+      if (ae && ae.tagName === 'INPUT' && inTa(ta, ae)) { const r = document.createRange(); r.setStartAfter(ae.closest('.fx')); r.collapse(true); return r; }
+      return saved && inTa(ta, saved.startContainer) ? saved.cloneRange() : caretEnd(ta);
+    };
+    const size = inp => { inp.style.width = Math.max(1, inp.value.length) * 0.62 + 0.75 + 'em'; inp.classList.toggle('on', !!inp.value); };
+    const after = (ta, fx) => { const r = document.createRange(); r.setStartAfter(fx); r.collapse(true); ta.focus(); put(ta, r); };
+    return {
+      value(ta) {
+        let s = '';
+        ta.childNodes.forEach(n => {
+          if (n.nodeType === 3) s += n.nodeValue;
+          else if (n.classList && n.classList.contains('fx')) {
+            const w = (n.querySelector('.fw')?.value || '').trim(), a = n.querySelector('.fn').value.trim(), b = n.querySelector('.fd').value.trim();
+            if (!a && !b) { if (w) s += w; return; }
+            s += (w ? w + JOSA[w.slice(-1)] + ' ' : '') + (a || '□') + '/' + (b || '□');
+          } else if (n.nodeName === 'BR') s += ' ';
+          else s += n.textContent;
+        });
+        return s.replace(/\u00a0/g, ' ').replace(/[ \t]+/g, ' ').replace(/(\/\d+|□) (이|가|은|는|을|를|와|과|의|에|로|으로|도|만)(?=\s|$|[^가-힣])/g, '$1$2');   // 분수 뒤 조사는 붙여 쓴다
+      },
+      focusEmpty(ta) { const e = [...ta.querySelectorAll('.fx input')].find(i => !i.value.trim() && !i.classList.contains('fw')); if (e) e.focus(); },
+      bind(ta, changed) {
+        document.onselectionchange = () => { const s = getSelection(); if (s.rangeCount && inTa(ta, s.anchorNode) && s.anchorNode.nodeName !== 'INPUT') saved = s.getRangeAt(0).cloneRange(); };
+        ta.addEventListener('input', e => { if (e.target.tagName === 'INPUT') { e.target.value = e.target.value.replace(/[^0-9]/g, ''); size(e.target); } changed(); });
+        ta.addEventListener('keydown', e => {                          // 칸 안에서 Enter·→ : 다음 칸으로, 마지막 칸이면 분수 뒤로
+          const t = e.target; if (t.tagName !== 'INPUT') return;
+          const atEnd = t.selectionStart === t.value.length;
+          if (e.key === 'Enter' || (e.key === 'ArrowRight' && atEnd)) {
+            e.preventDefault(); const fx = t.closest('.fx'), list = [...fx.querySelectorAll('input')], k = list.indexOf(t);
+            if (k < list.length - 1) list[k + 1].focus(); else after(ta, fx);
+          } else if (e.key === 'Backspace' && !t.value) {             // 빈 칸에서 지우기: 앞 칸으로, 첫 칸이면 분수를 지운다
+            e.preventDefault(); const fx = t.closest('.fx'), list = [...fx.querySelectorAll('input')], k = list.indexOf(t);
+            if (k > 0) list[k - 1].focus(); else { const r = document.createRange(); r.setStartBefore(fx); r.collapse(true); fx.remove(); ta.focus(); put(ta, r); changed(); }
+          }
+        });
+        root().querySelectorAll('.sym').forEach(b => {
+          b.onmousedown = e => e.preventDefault();                     // 누르는 순간 입력칸 커서를 잃지 않게
+          b.onclick = () => {
+            const r = where(ta);
+            if (b.dataset.f != null) {
+              const fx = chip(b.dataset.f === '1'); r.deleteContents(); r.insertNode(fx);
+              const sp = document.createTextNode('\u00a0'); fx.after(sp);
+              const r2 = document.createRange(); r2.setStart(sp, 1); r2.collapse(true); saved = r2;
+              fx.querySelectorAll('input').forEach(size); fx.querySelector('input').focus();
+            } else {
+              const tn = document.createTextNode(SYMS[+b.dataset.k][1]); r.deleteContents(); r.insertNode(tn);
+              const r2 = document.createRange(); r2.setStartAfter(tn); r2.collapse(true); ta.focus(); put(ta, r2);
+            }
+            changed();
+          };
+        });
+      }
+    };
+  })();
   function ask(big, small, task, i, n, practice) {
     return new Promise(resolve => {
       const S = shape(task, practice);
@@ -391,30 +460,23 @@
       function input(prompt, onSubmit) {
         ticking = true;
         $('#ans').innerHTML = `<div class="prompt">${prompt || ''}</div>
-          <div class="tr" id="tr" ${typed ? '' : 'hidden'}><textarea id="ta" rows="3" placeholder="여기에 써도 돼"></textarea>
-            <div class="syms">${SYMS.map((x, k) => `<button type="button" class="sym" data-k="${k}">${x[0]}</button>`).join('')}</div>
-            <div class="tpv" id="tpv"></div></div>
+          <div class="tr" id="tr" ${typed ? '' : 'hidden'}><div id="ta" class="ced" contenteditable="true" data-ph="여기에 써도 돼" role="textbox" aria-multiline="true"></div>
+            <div class="syms"><button type="button" class="sym fbtn" data-f="0" aria-label="분수 넣기">${FRAC_ICON(false)}<small>분수</small></button><button type="button" class="sym fbtn" data-f="1" aria-label="대분수 넣기">${FRAC_ICON(true)}<small>대분수</small></button>${SYMS.map((x, k) => `<button type="button" class="sym" data-k="${k}">${x[0]}</button>`).join('')}</div></div>
           <div class="live" id="live"></div>
           <div class="row"><button class="mic" id="mic" aria-label="말하기"><span></span></button></div>
-          <div class="row"><button class="ghost small" id="tw">${typed ? '말로 하기' : '글로 쓰기'}</button><button class="ghost small" id="clr">지우고 다시</button><button class="primary" id="sub" disabled>다 말했어</button></div>`;
+          <div class="row"><button class="ghost small" id="tw">${typed ? '말로 하기' : '글로 쓰기'}</button><button class="ghost small" id="clr">지우고 다시</button><button class="primary" id="sub" disabled>${typed ? '다 썼어' : '다 말했어'}</button></div>`;
         let text = '';
         const ta = $('#ta'), live = $('#live'), sub = $('#sub');
-        const upd = t => { text = t; live.textContent = typed ? '' : t; if (typed && ta.value !== t) ta.value = t; sub.disabled = !text.trim(); };
-        const pv = () => { const el = $('#tpv'); if (el) el.innerHTML = /[0-9/×÷°<>=]/.test(ta.value) ? '<small>이렇게 보여요</small> ' + fm(ta.value) : ''; };
-        ta.oninput = () => { upd(ta.value); pv(); };
-        // 기호 버튼 — 누른 자리(커서)에 넣는다. 누르는 순간 입력칸 커서를 잃지 않게 mousedown 을 막는다
-        root().querySelectorAll('.sym').forEach(b => {
-          b.onmousedown = e => e.preventDefault();
-          b.onclick = () => {
-            const ins = SYMS[+b.dataset.k][1], a0 = ta.selectionStart ?? ta.value.length, a1 = ta.selectionEnd ?? a0;
-            ta.value = ta.value.slice(0, a0) + ins + ta.value.slice(a1); const c = a0 + ins.length;
-            ta.focus(); try { ta.setSelectionRange(c, c); } catch (e) {} upd(ta.value); pv();
-          };
-        });
+        const upd = t => { text = t; live.textContent = typed ? '' : t; sub.disabled = !text.trim(); };
+        MI.bind(ta, () => upd(MI.value(ta)));
         $('#tw').onclick = () => { typed = !typed; stopRec(); input(prompt, onSubmit); };
-        $('#clr').onclick = () => { stopRec(); upd(''); ta.value = ''; };
+        $('#clr').onclick = () => { stopRec(); ta.innerHTML = ''; upd(''); };
         $('#mic').onclick = () => (rec ? stopRec() : startRec());
-        sub.onclick = () => { stopRec(); const t = (typed ? ta.value : text).trim(); if (!t) return; ticking = false; onSubmit(t); };
+        sub.onclick = () => {
+          stopRec(); const t = (typed ? MI.value(ta) : text).trim(); if (!t) return;
+          if (typed && t.includes('□')) { toast('분수 칸을 모두 채워 줘'); MI.focusEmpty(ta); return; }
+          ticking = false; onSubmit(t);
+        };
         function startRec() {
           const R = window.SpeechRecognition || window.webkitSpeechRecognition;
           if (!R) { typed = true; return input(prompt, onSubmit); }
@@ -426,8 +488,9 @@
           try { rec.start(); $('#mic').classList.add('on'); setBuddy('listening'); } catch (e) { rec = null; }
         }
         function stopRec() { if (rec) { try { rec.stop(); } catch (e) {} rec = null; $('#mic')?.classList.remove('on'); } }
-        if (typed) ta.focus();
+        if (typed) { ta.focus(); put0(ta); }
       }
+      function put0(ta) { const r = document.createRange(); r.selectNodeContents(ta); r.collapse(false); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
 
       async function judge(t) {
         answers.push(t);

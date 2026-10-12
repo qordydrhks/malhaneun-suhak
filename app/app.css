@@ -186,7 +186,7 @@ body.intro-on .ver{z-index:5}
 .mtag{font-size:13px;color:var(--gold);letter-spacing:.04em}
 .mq .chs{display:grid;gap:8px;margin-top:14px}
 .ch{display:flex;gap:10px;align-items:center;text-align:left;background:#fff;border:1.5px solid #dde2ee;border-radius:12px;padding:12px 14px;color:#1d2233;font-size:17px}
-.ch span{color:#8a93b0;font-weight:700}.ch:hover:not(:disabled){border-color:#f2c45f}
+.ch .cn{color:#8a93b0;font-weight:700}.ch .ct{min-width:0}.ch:hover:not(:disabled){border-color:#f2c45f}
 .ch.right{border-color:#2fae77;background:#e7f8ef}.ch.wrong{border-color:#e0705a;background:#fdeee9}
 
 /* 지도 */
@@ -315,3 +315,24 @@ body.tpage #app{max-width:1000px}
 .lg-form label,.login label{min-width:0}
 .lg-form input,.login input,.lg-go{width:100%;min-width:0}
 @keyframes float{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-12px) rotate(1.5deg)}}
+/* 글로 쓰기 — 수식 칸(분수 네모칸) */
+.ced{min-height:84px;max-height:220px;overflow-y:auto;font-size:17px;line-height:2.1;color:#1d2233;background:var(--paper);border-radius:12px;padding:10px 12px;outline:none;white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere}
+.ced:empty::before{content:attr(data-ph);color:#9aa2b8}
+.ced:focus{box-shadow:0 0 0 3px #f2c45f66}
+.fx{display:inline-flex;align-items:center;gap:2px;vertical-align:middle;margin:0 2px;padding:1px 2px}
+.fx input{font:inherit;font-size:15px;text-align:center;color:#1d2233;background:#fff;border:1.5px dashed #9aa6c8;border-radius:5px;padding:0 2px;height:1.55em;min-width:1.35em;line-height:1}
+.fx input:focus{outline:none;border:1.5px solid #e0a21c;background:#fff8e1}
+.fx input.on{border-style:solid;border-color:#c9cfdf}
+.fx input.on:not(:focus){border-color:transparent;background:transparent}
+.fx .fw{font-size:17px;height:1.7em}
+.fx .fs{display:inline-flex;flex-direction:column;align-items:center;gap:2px}
+.fx .fs .fn{border-bottom-left-radius:5px}
+.fx .fs::after{content:"";order:1;display:block;width:100%;height:1.5px;background:#1d2233;margin:0}
+.fx .fs .fd{order:2}
+.sym.fbtn{display:inline-flex;align-items:center;gap:6px}.sym.fbtn small{font-size:13px}
+.fico{display:inline-flex;align-items:center;gap:2px}
+.fico i{display:block;width:9px;height:9px;border:1.5px solid currentColor;border-radius:2px}
+.fico span{display:inline-flex;flex-direction:column;align-items:center;gap:2px;position:relative}
+.fico span::after{content:"";position:absolute;left:-2px;right:-2px;top:50%;height:1.5px;background:currentColor}
+.fico .w{width:10px;height:13px}
+.ch:disabled{opacity:.6}.ch.right:disabled,.ch.wrong:disabled{opacity:1}
