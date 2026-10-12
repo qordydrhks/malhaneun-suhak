@@ -315,3 +315,7 @@ body.tpage #app{max-width:1000px}
 .sym{min-width:44px;min-height:40px;padding:6px 10px;border-radius:10px;background:var(--sky2);border:1px solid var(--line);color:var(--ink);font-size:16px}
 .sym:active{background:var(--line)}
 .tpv{min-height:0;margin-top:8px;font-size:19px;color:var(--ink)}.tpv:empty{display:none}.tpv small{font-size:12px;color:var(--sub);margin-right:6px}
+/* 입력칸이 기본 너비를 고집해 상자 밖으로 삐져나가던 것(폰 글씨를 크게 하면 심해짐) — 상자 너비에 맞춘다 */
+.lg-form,.login{grid-template-columns:minmax(0,1fr)}
+.lg-form label,.login label{min-width:0}
+.lg-form input,.login input,.lg-go{width:100%;min-width:0}
