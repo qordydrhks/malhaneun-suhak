@@ -193,7 +193,13 @@
     const c = E.bigCount(b, r);
     frame(`<h2 class="ttl"><span class="code">${b.code}</span>${esc(b.title)}</h2><div class="tabs">${tabs}</div>
       <div class="mapbox">${A.starMap(b, r)}</div>
-      <p class="sub center">${E.ROUND[r]} — 불 켠 행성 ${b.smalls.filter(s => { const k = E.count(s, r); return k.n && k.done === k.n; }).length}/${b.smalls.length}${r < open ? ' · 지난 탐사는 연습(점수·등급 그대로)' : ''}</p>`, {back: 'home', backText: '은하', crumb: b.code});
+      <p class="sub center">${E.ROUND[r]} — 밝힌 행성 ${b.smalls.filter(s => { const k = E.count(s, r); return k.n && k.done === k.n; }).length}/${b.smalls.length}${r < open ? ' · 지난 탐사는 연습(점수·등급 그대로)' : ''}</p>
+      <ul class="plist">${b.smalls.map((s, i) => {                   // 행성 이름은 지도 아래 목록으로(마스터 10/12: 지도 글씨가 너무 작다)
+        const c = E.count(s, r), t = E.tasks(s, r), k = t.map(x => E.state(x.id).k);
+        const done = c.n && c.done === c.n;
+        const st = done ? '✦ 밝힘' : k.includes('next') ? '다시 열림' : (k.includes('today') && !k.includes('new')) ? '내일 열림' : c.done ? c.done + '/' + c.n : '';
+        return `<li><button class="prow ${done ? 'lit' : ''}" data-go="small:${s.code}" data-r="${r}"><i style="--p:${A.planetColor(i)}">${i + 1}</i><span>${esc(s.title)}</span><b>${st}</b></button></li>`;
+      }).join('')}</ul>`, {back: 'home', backText: '은하', crumb: b.code});
     root().querySelectorAll('.tab').forEach(t => t.onclick = () => star(no, +t.dataset.r));
     const bh = document.getElementById('bhBtn');
     if (bh) bh.onclick = () => (A.bhOpen(b, r) ? blackhole(no, r) : toast(E.ROUND[r] + '의 행성을 모두 밝히면 열려요'));
