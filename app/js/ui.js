@@ -180,10 +180,14 @@
   }, true);
 
   // ── 진동(안드로이드만 — 아이패드·아이폰은 웹에서 진동을 막아 둠) ──
-  A.buzz = p => { try { if (navigator.vibrate && localStorage.getItem('app:buzz') !== '0') navigator.vibrate(p); } catch (e) {} };
+  /* 진동 넣는 곳(마스터 10/12 승인): 통과 톡톡 · 행성 밝힘 두-둥 · 큰 성취(mission 다 맞힘·블랙홀 통과·다음 난이도) 리듬 · 마이크 켜고 끌 때 톡 · 시계 1분/끝.
+     틀렸을 때는 넣지 않는다(벌처럼 느껴져 되묻기·도움을 피하게 됨). 버튼마다 넣지 않는다 */
+  const BZ = {pass: [25, 50, 25], planet: [60, 50, 140], big: [30, 40, 30, 40, 160], micOn: 14, micOff: 8, tap: 15};
+  A.BZ = BZ;
+  A.buzz = p => { try { if (p && navigator.vibrate && localStorage.getItem('app:buzz') !== '0') navigator.vibrate(p); } catch (e) {} };
   document.addEventListener('click', e => {                           // 캐릭터를 누르면 살짝 흔들리고 톡
     const img = e.target.closest('.buddy img'); if (!img) return;
-    img.classList.remove('wig'); void img.offsetWidth; img.classList.add('wig'); A.buzz(15);
+    img.classList.remove('wig'); void img.offsetWidth; img.classList.add('wig'); A.buzz(BZ.tap);
   });
 
   // ── 오늘 공부 시간 시계 — 떠 있는 작은 시계, 끌어서 아무 데나 옮긴다(마스터 10/12) ──
@@ -389,6 +393,7 @@
     frame(`<section class="center-msg stage">${buddy('praise')}<h2>오늘은 여기까지!</h2><p class="sub">${passed ? `오늘 질문 ${passed}개에 불을 켰어요.` : `오늘 공부 시간을 다 썼어요. 다음에 또 만나!`}</p><button class="primary big" data-go="home">은하로 돌아가기</button>${keyBtn()}</section>`);
   }
   function finish(big, small, r, passed, n, opened, practice) {
+    if (!practice) A.buzz(opened ? BZ.big : passed === n ? BZ.planet : 0);
     frame(`<section class="center-msg stage">${buddy(passed ? 'praise' : 'idle')}<h2>${practice ? '연습 끝!' : (passed === n ? '행성에 불이 켜졌어!' : '탐사 끝!')}</h2>
       <p class="sub">${esc(small.title)} · ${E.RL(r)} — 통과 ${passed}/${n}${passed < n && !practice ? ' · 남은 질문은 내일 다시 열려요' : ''}</p>
       ${opened ? `<div class="unlock">✦ ${esc(big.title)}의 ${E.RT(opened)}가 열렸어요!</div>` : ''}
@@ -412,6 +417,7 @@
       const out = await ask(big, pseudo, {kind: 'bh', id, r, src: big.bh[r]}, 0, 1, done);
       if (out === 'quit') { if (NAV.backQuit) { NAV.backQuit = false; return; } return star(no, r); }
       if (out && out.pass && !done) {
+        A.buzz(BZ.big);
         frame(`<section class="center-msg stage"><div class="chest">✦</div><h2>별빛 상자를 찾았어!</h2>
           <p class="sub">퉁구리가 숨겨 둔 별빛을 되찾았어. 퉁구리는 깜짝 놀라 다음 별로 도망갔어!</p>
           <img class="mload flee" src="img/tunguri.webp" alt=""><button class="primary big" data-go="home">은하로</button></section>`);
@@ -490,6 +496,7 @@
       NAV.quit = null;
       const saved = first ? await A.M.save(big, small, r, hard, ok, quiz.length) : false;
       const all = ok === quiz.length;
+      if (all && first) A.buzz(BZ.big);
       frame(`<section class="center-msg stage">${all ? buddy('praise') : `<img class="mload" src="img/tunguri.webp" alt="">`}
         <h2>${all ? '별빛을 모두 되찾았어!' : ok ? '별빛을 조금 되찾았어!' : '퉁구리가 도망갔어…'}</h2>
         <div class="score">${ok}<small> / ${quiz.length}</small></div>
@@ -642,9 +649,9 @@
           rec.onresult = ev => { let fin = '', inter = ''; for (let k = ev.resultIndex; k < ev.results.length; k++) { const t = ev.results[k][0].transcript; if (ev.results[k].isFinal) fin += t; else inter += t; } if (fin) base += fin; upd((base + inter).trim()); };
           rec.onerror = ev => { if (ev.error === 'not-allowed' || ++recFails >= 2) { typed = true; toast('글로 써도 괜찮아'); input(prompt, onSubmit); } };
           rec.onend = () => { rec = null; $('#mic')?.classList.remove('on'); setBuddy('question'); };
-          try { rec.start(); $('#mic').classList.add('on'); setBuddy('listening'); } catch (e) { rec = null; }
+          try { rec.start(); $('#mic').classList.add('on'); setBuddy('listening'); A.buzz(BZ.micOn); } catch (e) { rec = null; }
         }
-        function stopRec() { if (rec) { try { rec.stop(); } catch (e) {} rec = null; $('#mic')?.classList.remove('on'); } }
+        function stopRec() { if (rec) { try { rec.stop(); } catch (e) {} rec = null; $('#mic')?.classList.remove('on'); A.buzz(BZ.micOff); } }
         if (typed) { ta.focus(); put0(ta); }
       }
       function put0(ta) { const r = document.createRange(); r.selectNodeContents(ta); r.collapse(false); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
@@ -720,7 +727,7 @@
       function pass() {
         stop();
         const q = S.mode === 'practice' ? null : Math.min(S.base, helpNow === 'kw' ? E.Q.kw : reasks ? E.Q.reask : E.Q.first);
-        setBuddy('praise');
+        setBuddy('praise'); A.buzz(BZ.pass);
         const keysHtml = S.keys.map((k, j) => `<li class="${last && last.hits[j]?.hit ? 'hit' : ''}">${last && last.hits[j]?.hit ? '✓' : '·'} ${fm(k)}</li>`).join('');
         say(`<b>${esc(line('praise'))}</b>`, 'ok');
         $('#ans').innerHTML = `<div class="result">${q != null ? `<div class="score">${q}<small>점</small></div>` : '<div class="score small">연습</div>'}

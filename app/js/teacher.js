@@ -104,10 +104,12 @@
       <div class="tacad"><label>학원 이름 <input id="tAcad" maxlength="20" placeholder="예: 두드림 수학" value="${esc(ACAD)}"></label><button class="secondary small" id="tAcadS">저장</button><span class="sub" id="tAcadM">학생 화면 왼쪽 위에 보여요(비우면 「말하는 수학」)</span></div>
       <div class="tfoot">
         <button class="secondary small" id="tDev">${dev ? '✅ 이 기기는 학원 기기 · 해제' : '이 기기를 학원 기기로 등록'}</button>
+        <button class="secondary small" id="tBuzz">${localStorage.getItem('app:buzz') === '0' ? '📳 진동 꺼짐 (이 기기) · 켜기' : '📳 진동 켜짐 (이 기기) · 끄기'}</button>
         <a class="ghost small" href="index.html">학생 화면 ›</a><a class="ghost small" href="../dodream.html">학생 등록 · 비밀번호 · AI 연결 (옛 선생님 화면) ›</a>
       </div>`);
     $('#tRe').onclick = list;
     $('#tAcadS').onclick = async () => { ACAD = $('#tAcad').value.trim(); await A.store.set('app:academy', {name: ACAD, at: Date.now()}); $('#tAcadM').textContent = '저장했어요'; };
+    $('#tBuzz').onclick = () => { try { if (localStorage.getItem('app:buzz') === '0') { localStorage.removeItem('app:buzz'); navigator.vibrate && navigator.vibrate(30); } else localStorage.setItem('app:buzz', '0'); } catch (e) {} list(); };
     $('#tDev').onclick = () => { try { if (dev) localStorage.removeItem('dd:academyDevice'); else localStorage.setItem('dd:academyDevice', '1'); } catch (e) {} list(); };
     root().querySelectorAll('.trow').forEach(b => b.onclick = () => detail(STU.find(s => s.id === b.dataset.id)));
   }
