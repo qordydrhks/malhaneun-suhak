@@ -162,16 +162,24 @@
 - focus: 아직 못 짚은 핵심 중 틀리게 말한 내용과 가장 관련된 것의 id. 틀린 말이 없으면 못 짚은 첫 핵심의 id. 다 짚었으면 "".
 [ack] 25자 안팎 반말 한 문장. 맞게 말한 부분만 구체적으로 인정. 맞은 게 없으면 "좋아, 같이 하나씩 생각해 보자." 같은 격려만. ack 에 정답·빠진 핵심·힌트를 절대 넣지 마.
 반드시 JSON만: {"hits":[{"id":"a","hit":true,"evidence":"..."}],"misconception":"","focus":"b","ack":"..."}`;
-  E.grade = async ({question, keys, answer, prev, unitId}) => {
+  /* need = 통과에 필요한 핵심 묶음(질문마다, 마스터 10/12). 없으면 핵심을 모두. [[0,1]] = 둘 중 하나, [[0]] = ①만 꼭.
+     돌려주는 miss = 되물을 핵심, cand = 그 묶음에서 아직 못 짚은 핵심들(되묻기를 이미 쓴 것은 화면이 건너뛴다) */
+  E.grade = async ({question, keys, answer, prev, unitId, need}) => {
     const user = `[질문] ${question}\n[꼭 말할 핵심]\n${keys.map((k, i) => IDS[i] + ') ' + k).join('\n')}\n` + (prev ? `[이전 답] ${prev}\n` : '') + `[학생의 답(음성 인식)] ${answer}`;
     const raw = await A.ai({task: 'grade', system: SYSTEM, messages: [{role: 'user', content: user}], max_tokens: 700, grade_id: 'e4-2', unit_id: unitId});
     let o = null; try { o = JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1)); } catch (e) {}
     if (!o) throw new Error('친구가 답을 잘 못 알아들었어. 한 번 더 말해 줄래?');
     const hits = keys.map((k, i) => { const f = (o.hits || []).find(h => h && h.id === IDS[i]); return {hit: !!(f && f.hit), evidence: (f && f.hit && f.evidence) || ''}; });
-    let miss = hits.findIndex(h => !h.hit);
+    const groups = (Array.isArray(need) && need.length && need.every(g => g.every(i => i >= 0 && i < hits.length))) ? need : keys.map((_, i) => [i]);
     const fi = typeof o.focus === 'string' ? o.focus.trim().charCodeAt(0) - 97 : -1;
-    if (miss >= 0 && fi >= 0 && fi < hits.length && !hits[fi].hit) miss = fi;
-    return {hits, h: hits.filter(x => x.hit).length, n: hits.length, miss, misconception: String(o.misconception || '').trim(), ack: String(o.ack || '').trim()};
+    const open = groups.filter(g => !g.some(i => hits[i].hit));
+    let cand = [];
+    if (open.length) {
+      const g = open.find(x => x.includes(fi)) || open[0];
+      cand = g.filter(i => !hits[i].hit); if (cand.includes(fi)) cand = [fi].concat(cand.filter(i => i !== fi));
+    }
+    const miss = cand.length ? cand[0] : -1;
+    return {hits, h: hits.filter(x => x.hit).length, n: hits.length, miss, cand, misconception: String(o.misconception || '').trim(), ack: String(o.ack || '').trim()};
   };
 
   // ── 기록(submissions — 옛 선생님 화면이 그대로 읽는 모양 + 새 칸 help·stage·quality) ──

@@ -349,9 +349,9 @@
     const mode = practice === 'review' ? 'review' : practice ? 'practice' : st.k === 'next' ? ((st.help === 'short' || st.help === 'long') ? 'again' : 'nextday') : 'first';
     if (task.kind === 'q') {
       const h = x.help, ag = h.again;
-      if (mode === 'review') return {mode, q: ag.q, keys: ag.keys, ans: ag.ans, fig: ag.fig || '', asks: (ag.keys.length === h.ask.length ? h.ask : []), help: h, base: E.Q.review};
-      if (mode === 'again') return {mode, q: ag.q, keys: ag.keys, ans: ag.ans, fig: ag.fig || '', asks: (ag.keys.length === h.ask.length ? h.ask : []), help: h, base: E.Q[st.help]};
-      return {mode, q: x.q, keys: x.keys, ans: x.ans, fig: x.fig, asks: h.ask, help: h, base: mode === 'nextday' ? E.Q.nextday : E.Q.first, pre: x.pre};
+      if (mode === 'review') return {mode, q: ag.q, keys: ag.keys, ans: ag.ans, fig: ag.fig || '', asks: (ag.keys.length === h.ask.length ? h.ask : []), help: h, base: E.Q.review, need: ag.need};
+      if (mode === 'again') return {mode, q: ag.q, keys: ag.keys, ans: ag.ans, fig: ag.fig || '', asks: (ag.keys.length === h.ask.length ? h.ask : []), help: h, base: E.Q[st.help], need: ag.need};
+      return {mode, q: x.q, keys: x.keys, ans: x.ans, fig: x.fig, asks: h.ask, help: h, base: mode === 'nextday' ? E.Q.nextday : E.Q.first, pre: x.pre, need: x.need};
     }
     if (task.kind === 'bh') {
       const base = mode === 'nextday' ? E.Q.nextday : E.Q.first;
@@ -437,7 +437,7 @@
           const hits = S.words.map(w => ({hit: all.includes(w.replace(/\s+/g, '')), evidence: ''})), h = hits.filter(x => x.hit).length;
           return (last = {hits, h, n: hits.length, miss: h >= S.need ? -1 : 0, misconception: '', ack: h ? '낱말 ' + h + '개를 말했어!' : '좋아, 하나씩 떠올려 보자.'});
         }
-        try { last = await E.grade({question: S.q, keys: S.keys, answer: t, prev: answers.length > 1 ? answers.slice(0, -1).join(' / ') : '', unitId: small.unitId}); }
+        try { last = await E.grade({question: S.q, keys: S.keys, need: S.need, answer: t, prev: answers.length > 1 ? answers.slice(0, -1).join(' / ') : '', unitId: small.unitId}); }
         catch (e) { answers.pop(); setBuddy('retry'); say(esc(e.message), 'warn'); return null; }   // AI 실패 → 기록 없음, 다시 말하기
         return last;
       }
@@ -458,9 +458,10 @@
           say(`${esc(g.ack)}<br><b>살짝 부족해.</b> ${chips(S.help.kw)}`, 'hint');
           return answerThen('키워드를 생각하면서 다시 말해 줘.', step);
         }
-        if (S.asks[g.miss] && !used.has(g.miss)) {                 // 빠진 핵심마다 되묻기 1번(방향만)
-          used.add(g.miss); reasks++; setBuddy('hint');
-          say(`${esc(g.ack)}<br>${fm(S.asks[g.miss])}`, 'hint');
+        const k = (g.cand && g.cand.length ? g.cand : [g.miss]).find(j => S.asks[j] && !used.has(j));
+        if (k != null) {                                            // 빠진 핵심마다 되묻기 1번(방향만)
+          used.add(k); reasks++; setBuddy('hint');
+          say(`${esc(g.ack)}<br>${fm(S.asks[k])}`, 'hint');
           return answerThen('', step);
         }
         helpMenu(g);

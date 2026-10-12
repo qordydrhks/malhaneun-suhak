@@ -102,6 +102,18 @@ for ui, U in enumerate(UNITS, 1):
 import blackhole_e42
 blackhole_e42.build(out['bigs'])
 
+# 통과 기준(질문마다 — 마스터 10/12) : 글자 일부로 정확히 한 질문만 걸려야 한다
+import pass_e42
+for sub, need in pass_e42.NEED:
+    hit = [it for b_ in out['bigs'] for s_ in b_['smalls'] for it in s_['items'] if sub in it['q']]
+    assert len(hit) == 1, ('통과 기준 질문을 하나로 못 찾음', sub, len(hit))
+    it = hit[0]
+    assert all(0 <= i < len(it['keys']) for g in need for i in g), sub
+    it['need'] = need
+    ag = it['help']['again']
+    if ag.get('keys') and len(ag['keys']) == len(it['keys']): ag['need'] = need   # 다음 날 다시 묻기도 같은 모양이면 같은 기준
+    n['need'] = n.get('need', 0) + 1
+
 js = ('/* 새 앱 데이터 — 초4-2. 만들기: 작업도구/새앱/build_data.py (직접 고치지 말 것) */\n'
       'window.APP_DATA = window.APP_DATA || {};\nwindow.APP_DATA["%s"] = %s;\n' % (G, json.dumps(out, ensure_ascii=False)))
 p = os.path.join(ROOT, 'app', 'data', '%s.js' % G)
