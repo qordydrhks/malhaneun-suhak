@@ -20,11 +20,11 @@ for s in U['smalls']:
         for k, a in zip(keys, h['ask']):
             hit = [t for t in toks(k) if t in a and not t.isdigit()]
             if hit: w.append('되묻기에 핵심 낱말 %s → "%s"' % (hit, a))
-            if nums(k) & nums(a): w.append('되묻기에 답 숫자 → "%s"' % a)
+            if (nums(k) & nums(a)) - nums(q[2]): w.append('되묻기에 답 숫자 → "%s"' % a)
         if len([x for x in sents(h['short']) if not re.search(r'학년.{0,9}배운', x)]) > 2: w.append('짧은 설명 %d문장' % len(sents(h['short'])))
         if nums(q[2]) and nums(q[2]) == nums(h['again']['q']): w.append('다시 묻기 숫자가 같음')
         if len(h['again']['keys']) != len(keys): w.append('다시 묻기 핵심 수 다름')
-        ln = {x for x in nums(h['long']) & nums(h['again']['q']) if not re.fullmatch(r'\d|10|100|1000', x)}
+        ln = {x for x in nums(h['long']) & nums(h['again']['q']) if not re.fullmatch(r'\d|10|100|1000|0\.1|0\.01|0\.001', x)}
         if ln: w.append('긴 설명 숫자가 다시 묻기와 겹침 %s' % ln)
         if w: bad += 1; print('■', tag, i, q[2][:40]); [print('   -', x) for x in w]
     q3 = [q for q in s['qs'] if q[0] == 3]
