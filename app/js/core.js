@@ -3,7 +3,7 @@
 (() => {
   'use strict';
   const A = window.APP = window.APP || {};
-  A.VERSION = 'app 0.9.2 (2026-10-12)';
+  A.VERSION = 'app 0.10.2 (2026-10-12)';
   const URL = 'https://cnyrbxsmxwajhlrvcdml.supabase.co';
   const KEY = 'sb_publishable_e2iVXV5K1sl7-kJ-d3v1Ow_VEzNUJGv';
   A.esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -57,7 +57,7 @@
     const all = await A.loadStudents(); const s = all.find(x => x.id === saved.id); if (!s) return null;
     return (A.session.student = {id: s.id, name: s.name, grade: s.grade || ''});
   };
-  A.logout = () => { A.ls.del('dd:autoLogin'); A.session.student = null; try { sessionStorage.removeItem('app:sessionStart'); } catch (e) {} };
+  A.logout = () => { A.ls.del('dd:autoLogin'); A.session.student = null; document.getElementById('sclock')?.remove(); try { sessionStorage.removeItem('app:sessionStart'); } catch (e) {} };
   A.isTester = () => /테스트/.test(A.session.student?.name || '');
   A.isAcademyDevice = () => A.ls.raw('dd:academyDevice') === '1';
 

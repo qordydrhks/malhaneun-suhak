@@ -58,11 +58,12 @@
   }
 
   // ── 데이터 ──
-  let STU = [], PROG = {}, OPEN = {}, SETS = {};
+  let STU = [], PROG = {}, OPEN = {}, SETS = {}, ACAD = '';
   async function loadAll() {
     const like = p => 'key=like.' + encodeURIComponent(p) + '&select=key,value&limit=1000';
     const [studs, progs, opens, sets] = await Promise.all([A.loadStudents(), A.sbSelect('ai_cache', like('app:prog:*:e4-2')), A.sbSelect('ai_cache', like('app:open:*:e4-2')), A.sbSelect('ai_cache', like('app:set:*:e4-2'))]);
     PROG = {}; OPEN = {}; SETS = {};
+    try { ACAD = ((await A.store.get('app:academy')) || {}).name || ''; } catch (e) {}
     for (const r of sets || []) SETS[r.key.split(':')[2]] = r.value;
     for (const r of progs || []) PROG[r.key.split(':')[2]] = r.value;
     for (const r of opens || []) OPEN[r.key.split(':')[2]] = r.value;
@@ -100,11 +101,13 @@
         <span class="tnow">${v.any && v.nx ? esc(v.nx.small ? v.nx.small.code : v.nx.big.code + ' 블랙홀') + ' · ' + E.ROUND[v.nx.r] : ''}</span>
         <span class="talert ${v.stuck.length ? 'on' : ''}">${v.stuck.length ? '막힘 ' + v.stuck.length : ''}</span>
         <span class="tago">${ago(v.at)}${v.ses !== 10 || v.qmin ? `<small>⏱ ${v.ses}분${v.qmin ? ' · 질문 ' + v.qmin + '분' : ''}</small>` : ''}</span></button>`).join('') || '<p class="sub">초4 학생이 없어요.</p>'}</div>
+      <div class="tacad"><label>학원 이름 <input id="tAcad" maxlength="20" placeholder="예: 두드림 수학" value="${esc(ACAD)}"></label><button class="secondary small" id="tAcadS">저장</button><span class="sub" id="tAcadM">학생 화면 왼쪽 위에 보여요(비우면 「말하는 수학」)</span></div>
       <div class="tfoot">
         <button class="secondary small" id="tDev">${dev ? '✅ 이 기기는 학원 기기 · 해제' : '이 기기를 학원 기기로 등록'}</button>
         <a class="ghost small" href="index.html">학생 화면 ›</a><a class="ghost small" href="../dodream.html">학생 등록 · 비밀번호 · AI 연결 (옛 선생님 화면) ›</a>
       </div>`);
     $('#tRe').onclick = list;
+    $('#tAcadS').onclick = async () => { ACAD = $('#tAcad').value.trim(); await A.store.set('app:academy', {name: ACAD, at: Date.now()}); $('#tAcadM').textContent = '저장했어요'; };
     $('#tDev').onclick = () => { try { if (dev) localStorage.removeItem('dd:academyDevice'); else localStorage.setItem('dd:academyDevice', '1'); } catch (e) {} list(); };
     root().querySelectorAll('.trow').forEach(b => b.onclick = () => detail(STU.find(s => s.id === b.dataset.id)));
   }

@@ -82,7 +82,7 @@
         <circle cx="${x}" cy="${y}" r="${R.toFixed(1)}" fill="${f ? `url(#gc${i})` : '#39406a'}" opacity="${f ? 1 : .85}"/>
         <text x="${x}" y="${ty.toFixed(1)}" text-anchor="middle" font-size="${FS.code}" fill="${col}" font-weight="700" letter-spacing="1">${b.code}</text>
         <text x="${x}" y="${(ty + FS.title + 3).toFixed(1)}" text-anchor="middle" font-size="${FS.title}" fill="#eef1f8" font-weight="700">${esc(b.title)}</text>
-        <text x="${x}" y="${(ty + FS.title + FS.sub + 7).toFixed(1)}" text-anchor="middle" font-size="${FS.sub}" fill="#9aa3c0">${E.ROUND[open]} ${c.done}/${c.n}</text></g>`;
+        <text x="${x}" y="${(ty + FS.title + FS.sub + 7).toFixed(1)}" text-anchor="middle" font-size="${FS.sub}" fill="#9aa3c0">난이도 ${open} · ${c.done}/${c.n}</text></g>`;
     }).join('');
     defs += '</defs>';
     return `<svg class="galmap" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${defs}

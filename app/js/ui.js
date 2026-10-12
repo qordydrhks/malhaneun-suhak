@@ -33,8 +33,8 @@
   function frame(inner, opt) {
     opt = opt || {};
     const s = A.session.student;
-    root().innerHTML = `<header class="bar">${opt.back ? `<button class="ghost" data-go="${opt.back}">‹ ${esc(opt.backText || '뒤로')}</button>` : `<span class="logo">말하는 수학</span>`}
-      <span class="crumb">${esc(opt.crumb || '')}</span>${s ? '<span class="sclock" id="sclock" title="오늘 남은 시간"></span>' : ''}
+    root().innerHTML = `<header class="bar">${opt.back ? `<button class="ghost" data-go="${opt.back}">‹ ${esc(opt.backText || '뒤로')}</button>` : `<span class="logo">${esc(A.academy || '말하는 수학')}</span>`}
+      <span class="crumb">${esc(opt.crumb || '')}</span>
       <span class="who">${s ? `<button class="ghost small" data-go="logout">${esc(s.name)} · 나가기</button>` : ''}</span></header><main class="${opt.cls || ''}">${inner}</main>`;
     window.scrollTo(0, 0);
     tickClock();
@@ -42,12 +42,15 @@
   /* 한 번 앉는 시간 시계(마스터 10/12: 10분 제한이 안 보여 조절이 안 됨) — 첫 질문을 시작하면 줄어든다 */
   let clockWarned = false;
   function tickClock() {
-    const el = document.getElementById('sclock'); if (!el || !A.session.student) return;
+    if (!A.session.student || document.body.classList.contains('intro-on')) { document.getElementById('sclock')?.remove(); return; }
+    const el = clockEl();
     const total = E.sessionMin() * 60, st = +sessionStorage.getItem('app:sessionStart') || 0;
     const left = st ? Math.max(0, Math.ceil(total - (Date.now() - st) / 1000)) : total;
-    el.textContent = '⏱ ' + String(Math.floor(left / 60)).padStart(2, '0') + ':' + String(left % 60).padStart(2, '0');
-    el.className = 'sclock' + (!st ? ' idle' : left === 0 ? ' end' : left <= 60 ? ' low' : '');
-    if (st && left === 0 && !clockWarned) { clockWarned = true; toast('오늘 시간이 다 됐어! 지금 질문까지만 하자.'); }
+    el.querySelector('b').textContent = String(Math.floor(left / 60)).padStart(2, '0') + ':' + String(left % 60).padStart(2, '0');
+    el.dataset.say = !st ? `오늘 공부 시간은 ${E.sessionMin()}분이야. 질문을 시작하면 줄어들어!` : left ? `오늘 공부 시간이 ${Math.ceil(left / 60)}분 남았어` : '오늘 시간이 다 됐어!';
+    el.classList.toggle('idle', !st); el.classList.toggle('low', !!st && left > 0 && left <= 60); el.classList.toggle('end', !!st && left === 0);
+    if (st && left === 60 && !el.dataset.b60) { el.dataset.b60 = '1'; A.buzz(40); }
+    if (st && left === 0 && !clockWarned) { clockWarned = true; A.buzz([60, 80, 60]); toast('오늘 시간이 다 됐어! 지금 질문까지만 하자.'); }
     if (left > 0) clockWarned = false;
   }
   setInterval(tickClock, 1000);
@@ -91,6 +94,61 @@
     if (st.app[0] === 'q') { NAV.cur = st.app; history.back(); return; }              // 끝난 질문 칸은 건너뛴다
     navGo(st.app);
   });
+
+  // ── 용어 설명(마스터 10/12: 우리끼리 정한 이름은 가볍게 쓰되, 누르면 뜻이 나오게) ──
+  const TERMS = {
+    '난이도': '같은 별(큰 단원)을 세 번 공부해요. 난이도 1은 기본 뜻과 방법, 난이도 2는 조금 더 깊게, 난이도 3은 여러 개념을 이어서 생각해요. 앞 난이도를 다 하면 다음이 열려요.',
+    '탐험가 등급': '얼마나 잘 이해했는지 보여 주는 등급이에요. 루나(달) → 테라(지구) → 솔(태양) → 갤럭시(은하) → 코스모스(우주) 순서로 올라가요. 스스로 한 번에 설명할수록 빨리 올라가요.',
+    'mission': '행성 질문을 다 마치면 열리는 문제 풀기예요. 보기에서 답을 골라요.',
+    '블랙홀 관문': '별의 행성을 모두 밝히면 열리는 마무리 질문이에요. 퉁구리가 숨어 있는 곳!',
+    '다시 빛내기': '도움을 받아 통과한 질문을 일주일 뒤에 다시 물어봐요. 스스로 답하면 별빛이 다시 환해져요.',
+    '다시 열린 질문': '어제 못 했던 질문이 오늘 다시 열렸어요. 먼저 해 보자!'
+  };
+  function showTerm(k) {
+    document.querySelector('.tpop')?.remove();
+    const d = document.createElement('div'); d.className = 'tpop';
+    d.innerHTML = `<div class="tpop-in"><b>${esc(k)}</b><p>${esc(TERMS[k] || '')}</p><button class="ghost small">알겠어</button></div>`;
+    d.onclick = () => d.remove(); document.body.appendChild(d); A.buzz(8);
+  }
+  document.addEventListener('click', e => {                           // 용어를 누르면 설명(바깥 버튼이 눌리지 않게 먼저 잡는다)
+    const t = e.target.closest('[data-term]'); if (!t) return;
+    e.preventDefault(); e.stopPropagation(); showTerm(t.dataset.term);
+  }, true);
+
+  // ── 진동(안드로이드만 — 아이패드·아이폰은 웹에서 진동을 막아 둠) ──
+  A.buzz = p => { try { if (navigator.vibrate && localStorage.getItem('app:buzz') !== '0') navigator.vibrate(p); } catch (e) {} };
+  document.addEventListener('click', e => {                           // 캐릭터를 누르면 살짝 흔들리고 톡
+    const img = e.target.closest('.buddy img'); if (!img) return;
+    img.classList.remove('wig'); void img.offsetWidth; img.classList.add('wig'); A.buzz(15);
+  });
+
+  // ── 오늘 공부 시간 시계 — 떠 있는 작은 시계, 끌어서 아무 데나 옮긴다(마스터 10/12) ──
+  function clockEl() {
+    let el = document.getElementById('sclock');
+    if (el) return el;
+    el = document.createElement('div'); el.id = 'sclock'; el.className = 'sclock'; el.setAttribute('role', 'timer'); el.title = '오늘 남은 공부 시간 · 끌어서 옮길 수 있어요';
+    el.innerHTML = '<img src="img/ddoopi.webp" alt=""><b>10:00</b>';
+    document.body.appendChild(el);
+    const pos = A.ls.get('app:clockPos', null);
+    const place = (x, y) => {                                        // 화면 밖으로 나가지 않게
+      const w = el.offsetWidth || 90, h = el.offsetHeight || 34;
+      x = Math.min(Math.max(4, x), innerWidth - w - 4); y = Math.min(Math.max(4, y), innerHeight - h - 4);
+      el.style.left = x + 'px'; el.style.top = y + 'px'; el.style.right = 'auto'; el.style.bottom = 'auto';
+    };
+    if (pos) requestAnimationFrame(() => { if (!el.dataset.dragged) place(pos.x * innerWidth, pos.y * innerHeight); });
+    let drag = null;
+    el.addEventListener('pointerdown', e => { const r = el.getBoundingClientRect(); drag = {dx: e.clientX - r.left, dy: e.clientY - r.top, x0: e.clientX, y0: e.clientY, moved: false}; el.setPointerCapture(e.pointerId); el.classList.add('hold'); });
+    el.addEventListener('pointermove', e => { if (!drag) return; if (Math.abs(e.clientX - drag.x0) + Math.abs(e.clientY - drag.y0) > 6) drag.moved = true; if (drag.moved) place(e.clientX - drag.dx, e.clientY - drag.dy); });
+    const up = () => {
+      if (!drag) return; el.classList.remove('hold');
+      if (drag.moved) { el.dataset.dragged = '1'; const r = el.getBoundingClientRect(); A.ls.set('app:clockPos', {x: r.left / innerWidth, y: r.top / innerHeight}); }
+      else { el.classList.remove('wig'); void el.offsetWidth; el.classList.add('wig'); toast(el.dataset.say || '오늘 남은 공부 시간이야'); }
+      drag = null;
+    };
+    el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+    addEventListener('resize', () => { const r = el.getBoundingClientRect(); place(r.left, r.top); });
+    return el;
+  }
   const toast = (t) => { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.classList.add('on'), 20); setTimeout(() => { d.classList.remove('on'); setTimeout(() => d.remove(), 400); }, 2600); };
 
   // ── 1. 로그인 ──
@@ -98,6 +156,7 @@
   async function enter() {
     root().innerHTML = '<div class="loading">불러오는 중…</div>';
     await E.load();
+    try { A.academy = ((await A.store.get('app:academy')) || {}).name || ''; } catch (e) {}
     friend = (A.ls.raw('dd:char:' + A.session.student.id) || '').replace(/"/g, '');
     if (!FR[friend]) friend = null;
     if (!friend) { const v = await A.store.get('char:' + A.session.student.id); if (v && FR[v.id]) { friend = v.id; try { localStorage.setItem('dd:char:' + A.session.student.id, v.id); } catch (e) {} } }
@@ -154,19 +213,29 @@
   function guide() {
     navMark(['guide']);
     const tiers = E.TIERS.map(t => `<li><span>${t[2]}</span><b>${t[0]}</b><small>${t[1]}</small></li>`).join('');
+    const bigs = E.bigs().map(b => `<li><b>${esc(b.title)}</b><small>행성 ${b.smalls.length}개</small></li>`).join('');
     frame(`<section class="guide">
-      <h2>우주 안내서</h2>
-      <details open><summary>우리는 무엇을 하나요?</summary><p>퉁구리가 삼킨 별빛을 되찾는 탐험이에요. 행성마다 질문이 있고, 네 말로 설명하면 행성에 불이 켜져요. 별의 행성을 다 밝히면 블랙홀 관문이 열려요.</p><button class="ghost small" id="gStory">이야기 다시 보기 ›</button></details>
-      <details><summary>행성 탐사 · 별계 탐사 · 은하 탐사</summary><p>같은 별을 세 번 탐험해요. <b>행성 탐사</b>는 기본 뜻과 방법, <b>별계 탐사</b>는 조금 더 깊게, <b>은하 탐사</b>는 여러 개념을 이어서 생각하는 탐험이에요. 앞 탐사를 마치면 다음 탐사가 열려요.</p></details>
-      <details><summary>등급 이름은 왜 이렇게 생겼나요?</summary><p>이해가 커질수록 더 큰 세상으로 가요.</p><ul class="g-tiers">${tiers}</ul><p>스스로 한 번에 답하면 빛이 더 크게 모여요. 힌트를 봐도 안 한 것보다 훨씬 나아요. 깊은 탐사까지 가야 높은 등급이 열려요.</p></details>
-      <details><summary>막히면 어떻게 하나요?</summary><p>친구가 먼저 생각할 방향을 알려 줘요. 그래도 어려우면 <b>도움</b>을 열어 키워드나 설명을 볼 수 있어요. 설명을 본 질문은 다음 날 다시 도전해요.</p></details>
-      <details><summary>mission 은 뭐예요?</summary><p>행성의 질문을 다 하면 <b>mission</b>(문제 풀기)이 열려요. 더 어려운 <b>hard mission</b>은 하고 싶은 친구만 도전해요. 틀려도 깎이지 않아요.</p></details>
-      <details><summary>다시 빛내기는 뭐예요?</summary><p>도움을 받아 통과했던 질문은 일주일 뒤에 다시 물어봐요. 이번에 스스로 답하면 별빛이 다시 환해져요.</p></details>
-      <details><summary>내 친구는 누구예요?</summary><p>숫자 탐험대 다섯 친구 중 네가 고른 친구가 함께 다녀요.</p><button class="ghost small" id="gPick">친구 바꾸기 ›</button></details>
-    </section>`, {back: 'home', backText: '은하', crumb: '우주 안내서'});
+      <h2>E4-2 은하 탐험 안내</h2><p class="sub">4학년 2학기 수학이 하나의 은하예요. 퉁구리가 삼킨 별빛을 모두 되찾으면 클리어!</p>
+      <details open><summary>🌌 은하 · 별 · 행성</summary><p><b>은하</b> = 한 학기 수학 전체 · <b>별</b> = 큰 단원 · <b>행성</b> = 작은 단원이에요. 이 은하에는 별이 6개 있어요.</p><ul class="g-bigs">${bigs}</ul></details>
+      <details open><summary>✦ 어떻게 클리어해요?</summary><ol class="g-steps">
+        <li>행성을 골라 <b>질문에 내 말로 설명</b>해요. 질문을 다 통과하면 행성이 밝아져요.</li>
+        <li>행성을 다 밝히면 <b>mission</b>(문제 풀기)이 열려요.</li>
+        <li>별의 행성을 모두 밝히면 별 옆의 <b>블랙홀 관문</b>이 열려요. 퉁구리가 숨은 곳이에요!</li>
+        <li>별 하나를 다 하면 그 별의 <b>다음 난이도</b>가 열려요. 난이도 3까지 다 하면 그 별은 완전히 빛나요.</li></ol></details>
+      <details><summary>🎚 난이도 1 · 2 · 3</summary><p>같은 별을 세 번 탐험해요.<br><b>난이도 1</b>(행성 탐사) 기본 뜻과 방법 · <b>난이도 2</b>(별계 탐사) 조금 더 깊게 · <b>난이도 3</b>(은하 탐사) 여러 개념을 이어서 생각하기. 지난 난이도는 언제든 연습할 수 있어요(점수는 그대로).</p></details>
+      <details><summary>🎙 질문에 답하는 법</summary><p>마이크를 누르고 말하거나, <b>글로 쓰기</b>를 눌러 써도 돼요. 분수는 <b>분수·대분수 버튼</b>을 누르면 네모칸이 생겨요.<br>질문마다 <b>시간</b>이 있어요(위쪽 막대). 시간이 다 되면 그 질문은 내일 다시 열려요.</p></details>
+      <details><summary>🤔 막히면?</summary><p>친구가 먼저 생각할 방향을 물어봐 줘요(<b>되묻기</b>). 그래도 어려우면 <b>도움</b>을 열어요. 키워드를 보면 오늘 다시 도전하고, 설명을 보면 <b>내일</b> 비슷한 질문으로 다시 물어봐요.</p></details>
+      <details><summary>🎯 mission · hard mission</summary><p>행성 질문을 다 마치면 열리는 문제 풀기예요. 보기에서 답을 골라요. <b>hard mission</b>은 더 어려운 문제로, 하고 싶은 친구만! 틀려도 깎이지 않아요. 처음 푼 결과만 기록돼요.</p></details>
+      <details><summary>✨ 다시 빛내기</summary><p>도움을 받아 통과한 질문은 일주일 뒤에 다시 물어봐요. 이번에 스스로 답하면 별빛이 다시 환해져요.</p></details>
+      <details><summary>🏅 탐험가 등급</summary><p>이해가 커질수록 더 큰 세상으로 가요.</p><ul class="g-tiers">${tiers}</ul><p>스스로 한 번에 답하면 빛이 더 크게 모여요. 힌트를 봐도 안 한 것보다 훨씬 나아요. 갤럭시는 난이도 2, 코스모스는 난이도 3까지 해야 될 수 있어요.</p></details>
+      <details><summary>⏱ 오늘 공부 시간</summary><p>화면에 떠 있는 작은 시계는 <b>오늘 남은 공부 시간</b>이에요. 다 되면 지금 질문까지만 하고 쉬어요. 시계는 <b>꾹 눌러 끌면</b> 다른 곳으로 옮길 수 있어요.</p></details>
+      <details><summary>🔒 잠긴 질문</summary><p>오늘 못 한 질문은 <b>다음 날 새벽 4시</b>에 다시 열려요.</p></details>
+      <details><summary>👋 친구 · 이야기</summary><p>숫자 탐험대 다섯 친구 중 네가 고른 친구가 함께 다녀요.</p><button class="ghost small" id="gPick">친구 바꾸기 ›</button> <button class="ghost small" id="gStory">이야기 다시 보기 ›</button></details>
+    </section>`, {back: 'home', backText: '은하', crumb: '탐험 안내'});
     document.getElementById('gStory').onclick = () => story(guide);
     document.getElementById('gPick').onclick = () => pick();
   }
+
 
   // ── 3. 은하(홈) ──
   const HUES = ['#f3c969', '#7aa7ff', '#f29b8f', '#8fd6b4', '#c9a6ff', '#ffb36b'];
@@ -174,14 +243,16 @@
     navMark(['home']);
     const nx = E.nextPlace();
     const rk = E.rank();
-    frame(`<div class="homebar"><button class="guidebtn" data-go="guide" aria-label="우주 안내서">📖 안내서</button><button class="rankbtn" data-go="record"><span>${rk.icon}</span><b>${rk.name}</b><small>행성 ${rk.lit}/${rk.total} · 나의 기록 ›</small></button></div>
+    const lv = r => `<span class="tm" data-term="난이도">난이도 ${r}</span>`;
+    frame(`<div class="homebar"><button class="rankbtn" data-go="record"><span class="rk-l">탐험가 등급<i class="tq" data-term="탐험가 등급">?</i></span><span class="rk-i">${rk.icon}</span><b>${rk.name}</b><small>밝힌 행성 ${rk.lit}/${rk.total} ›</small></button></div>
       <section class="hero stage">${buddy('idle')}<div class="bubble">${esc(line('hello'))}</div></section>
       ${nx ? (nx.why === 'bh'
-               ? `<button class="primary big go" data-go="bh:${nx.big.no}" data-r="${nx.r}"><span>오늘 갈 곳</span><small>${nx.big.code} · 블랙홀 관문 · ${E.ROUND[nx.r]}</small></button>`
-               : `<button class="primary big go" data-go="small:${nx.small.code}" data-r="${nx.r}"><span>오늘 갈 곳</span><small>${nx.small.code} · ${esc(nx.small.title)} · ${E.ROUND[nx.r]}${nx.why === 'again' ? ' · 다시 열린 질문' : nx.why === 'mission' ? ' · ' + A.M.name(nx.r) : nx.why === 'review' ? ' · 다시 빛내기' : ''}</small></button>`)
+               ? `<button class="primary big go" data-go="bh:${nx.big.no}" data-r="${nx.r}"><span>오늘 갈 곳</span><small>${esc(nx.big.title)} · <span class="tm" data-term="블랙홀 관문">블랙홀 관문</span> · ${lv(nx.r)}</small></button>`
+               : `<button class="primary big go" data-go="small:${nx.small.code}" data-r="${nx.r}"><span>오늘 갈 곳</span><small>${esc(nx.small.title)} · ${lv(nx.r)}${nx.why === 'again' ? ' · <span class="tm" data-term="다시 열린 질문">다시 열린 질문</span>' : nx.why === 'mission' ? ` · <span class="tm" data-term="mission">${A.M.name(nx.r)}</span>` : nx.why === 'review' ? ' · <span class="tm" data-term="다시 빛내기">다시 빛내기</span>' : ''}</small></button>`)
              : `<div class="done-all">지금 열린 곳은 모두 탐험했어요 ✦</div>`}
-      <h3 class="sect">E4-2 은하</h3><div class="mapbox">${A.galaxyMap()}</div>`, {crumb: 'E4-2 은하'});
+      <button class="galbtn" data-go="guide"><b>E4-2 은하</b><span>4학년 2학기 · 탐험 안내 ›</span></button><div class="mapbox">${A.galaxyMap()}</div>`, {crumb: ''});
   }
+
 
   // ── 4. 별(대단원) ──
   const PLANET = ['#e8b04b', '#5b8def', '#e07a6a', '#55b892', '#a07ce0', '#e98b3f', '#4cb3c4', '#c46aa0'];
