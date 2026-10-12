@@ -1,14 +1,14 @@
 /* 새 앱 — 첫 화면(로그인). 이야기: 우주 몬스터 퉁구리가 별빛을 삼키고 E4-2 은하에 숨었다.
-   숫자 탐험대(숫자 친구들)가 우주의 언어인 수학으로 미션을 풀며 퉁구리를 쫓는다. (마스터 10/8)
-   · 하늘(canvas): 반짝이는 별 · 가끔 별똥별 · 퉁구리 입으로 빨려 들어가는 별빛 알갱이
-   · 퉁구리를 누르면 놀리는 말 · 탐험대 다섯이 줄지어 대기
-   A.intro(onLogin) 로 그린다. 그림을 바꾸려면 app/img/tunguri.webp 만 바꾸면 된다. */
+   마스터 10/12: 첫 화면은 뚜삐와 퉁구리 둘만 — 뚜삐가 퉁구리를 잡으려고 쫓아가는 모습. 숫자 친구 고르기는 로그인 뒤에.
+   · 하늘(canvas): 반짝이는 별 · 가끔 별똥별 · 퉁구리가 흘리는 별빛 가루(뚜삐가 그걸 따라 달린다)
+   · 뚜삐가 다가가면 퉁구리가 쌩 달아난다(반복) · 퉁구리를 누르면 놀리는 말, 뚜삐를 누르면 한마디
+   그림: app/img/tunguri.webp · app/img/ddoopi.webp (원본 작업도구/캐릭터/ddoopi_run_src.png) */
 (() => {
   'use strict';
   const A = window.APP, esc = A.esc;
   const TAUNT = ['흥! 잡아 볼 테면 잡아 봐~', '별빛은 내 간식이야. 냠냠.', '수학? 그게 뭔데. 흥.', '여기까지 오다니… 제법인데?',
-                 '나 찾으려면 문제 많이 풀어야 할걸?', '꺼억— 방금 별 하나 먹었어.', '…따, 딱히 무서운 건 아니거든!', '직선은 싫어. 빙글빙글 돌아서 숨을 거야.'];
-  const SQUAD = ['exi', 'pola', 'aresi', 'iris', 'lemma'];
+                 '나 찾으려면 문제 많이 풀어야 할걸?', '꺼억— 방금 별 하나 먹었어.', '…따, 딱히 무서운 건 아니거든!', '병아리한테 잡힐 내가 아니지!'];
+  const CHEER = ['거기 서, 퉁구리!', '별빛 돌려줘!', '수학으로 꼭 잡을 거야!', '같이 쫓아가자!'];
   let raf = 0;
 
   A.intro = (onLogin, msg) => {
@@ -17,18 +17,14 @@
     document.body.classList.add('intro-on');
     root.innerHTML = `<section class="lg">
       <canvas class="lg-sky" id="lgSky"></canvas>
-      <div class="lg-top"><span class="lg-badge"><i></i>긴급 수배 · E4-2 은하</span></div>
-      <div class="lg-stage" id="lgStage">
-        <div class="lg-hud"><b></b><b></b><b></b><b></b><span class="scan"></span></div>
-        <img class="lg-tung" id="lgTung" src="img/tunguri.webp" alt="우주 몬스터 퉁구리">
-        <div class="lg-taunt" id="lgTaunt"></div>
-        <div class="lg-wanted"><small>목표 발견</small><b>우주 몬스터 퉁구리</b><span>특기 · 별빛 삼키기 &nbsp;|&nbsp; 위험도 ★★★</span></div>
+      <div class="lg-run" id="lgRun">
+        <div class="lg-tw"><img class="lg-tung" id="lgTung" src="img/tunguri.webp" alt="우주 몬스터 퉁구리"></div>
+        <div class="lg-dw"><img class="lg-dd" id="lgDd" src="img/ddoopi.webp" alt="뚜삐"></div>
+        <div class="lg-taunt" id="lgTaunt"></div><div class="lg-cheer" id="lgCheer"></div>
       </div>
       <h1 class="lg-title"><span>말하는</span> 수학</h1>
-      <p class="lg-story">퉁구리가 은하의 별빛을 삼키고 숨어 버렸어!<br><b>우주의 언어, 수학</b>으로 미션을 풀어 별빛을 되찾자.</p>
-      <div class="lg-squad">${SQUAD.map((id, i) => `<img src="../characters/img/${id}/base.webp" alt="" style="--d:${i * 0.18}s">`).join('')}</div>
+      <p class="lg-story">퉁구리가 은하의 별빛을 삼키고 도망쳤어!<br>뚜삐와 함께 <b>우주의 언어, 수학</b>으로 별빛을 되찾자.</p>
       <form class="lg-form" id="lgForm" autocomplete="on">
-        <div class="lg-ttl">숫자 탐험대 출동 준비</div>
         <label><span>탐험대원 이름</span><input id="ln" autocomplete="username" placeholder="이름"></label>
         <label><span>비밀 코드</span><input id="lp" type="password" autocomplete="current-password" placeholder="비밀번호"></label>
         <button class="lg-go" type="submit">출동!</button>
@@ -45,12 +41,13 @@
       m.textContent = '탐험대원 확인 중…';
       try { await A.login(n, p); stop(); await onLogin(); } catch (err) { m.textContent = err.message; }
     };
-    // 퉁구리 놀리기
-    const tung = document.getElementById('lgTung'), taunt = document.getElementById('lgTaunt');
-    let ti = Math.floor(Math.random() * TAUNT.length), tt = 0;
-    const say = () => { taunt.textContent = TAUNT[ti++ % TAUNT.length]; taunt.classList.add('on'); clearTimeout(tt); tt = setTimeout(() => taunt.classList.remove('on'), 2600); };
-    tung.onclick = () => { tung.classList.remove('boing'); void tung.offsetWidth; tung.classList.add('boing'); say(); };
-    setTimeout(say, 1600);
+    // 말풍선
+    const bubble = (el, arr, st) => { el.textContent = arr[st.i++ % arr.length]; el.classList.add('on'); clearTimeout(st.t); st.t = setTimeout(() => el.classList.remove('on'), 2400); };
+    const tung = document.getElementById('lgTung'), dd = document.getElementById('lgDd');
+    const ts = {i: Math.floor(Math.random() * TAUNT.length), t: 0}, cs = {i: 0, t: 0};
+    tung.onclick = () => { tung.classList.remove('boing'); void tung.offsetWidth; tung.classList.add('boing'); bubble(document.getElementById('lgTaunt'), TAUNT, ts); };
+    dd.onclick = () => { dd.classList.remove('jump'); void dd.offsetWidth; dd.classList.add('jump'); bubble(document.getElementById('lgCheer'), CHEER, cs); };
+    setTimeout(() => document.getElementById('lgTaunt') && bubble(document.getElementById('lgTaunt'), TAUNT, ts), 1800);
     sky();
   };
   function stop() { cancelAnimationFrame(raf); document.body.classList.remove('intro-on'); }
@@ -68,14 +65,10 @@
         c: Math.random() < 0.12 ? '255,214,140' : Math.random() < 0.2 ? '170,200,255' : '255,255,255'}));
     };
     fit(); addEventListener('resize', fit);
-    const mouth = () => {                       // 퉁구리 입(그림의 왼쪽 위 1/4쯤) — 화면 좌표
+    const tail = () => {                        // 퉁구리 몸 아래쪽 — 훔친 별빛이 새어 나오는 곳
       const img = document.getElementById('lgTung'); if (!img) return null;
       const r = img.getBoundingClientRect(), c = cv.getBoundingClientRect();
-      return {x: r.left - c.left + r.width * 0.22, y: r.top - c.top + r.height * 0.33};
-    };
-    const spawn = (mo) => {                     // 별빛 알갱이 — 화면 가장자리에서 입으로
-      const a = Math.random() * 6.28, R = Math.max(W, H) * (0.35 + Math.random() * 0.3);
-      dust.push({x: mo.x + Math.cos(a) * R, y: mo.y + Math.sin(a) * R, a, R, w: (Math.random() < 0.5 ? 1 : -1) * (0.6 + Math.random() * 0.6), life: 0});
+      return {x: r.left - c.left + r.width * (0.25 + Math.random() * 0.35), y: r.top - c.top + r.height * (0.55 + Math.random() * 0.3)};
     };
     const loop = (now) => {
       const dt = Math.min(50, now - t0); t0 = now;
@@ -93,18 +86,15 @@
           ctx.strokeStyle = g; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + 90, y - 43); ctx.stroke();
           if (k > 1) shoot = null;
         }
-        const mo = mouth();
-        if (mo) {
-          if (dust.length < 34 && Math.random() < 0.3) spawn(mo);
-          for (const d of dust) {
-            d.life += dt; d.R *= 0.985; d.a += d.w * dt / 1000 * (1 + 260 / (d.R + 20));
-            d.x = mo.x + Math.cos(d.a) * d.R; d.y = mo.y + Math.sin(d.a) * d.R * 0.7;
-            const al = Math.min(1, d.life / 500) * Math.min(1, d.R / 40);
-            ctx.fillStyle = `rgba(255,220,130,${al})`; ctx.shadowColor = 'rgba(255,210,110,.9)'; ctx.shadowBlur = 8;
-            ctx.beginPath(); ctx.arc(d.x, d.y, 1.8, 0, 6.28); ctx.fill(); ctx.shadowBlur = 0;
-          }
-          dust = dust.filter(d => d.R > 6);
+        // 퉁구리가 흘리는 별빛 가루 — 왼쪽(뚜삐 쪽)으로 흩날리다 사라진다
+        if (dust.length < 40 && Math.random() < 0.35) { const p = tail(); if (p) dust.push({x: p.x, y: p.y, vx: -(0.04 + Math.random() * 0.06), vy: -(0.005 + Math.random() * 0.02), life: 0, max: 1200 + Math.random() * 900, r: 1.2 + Math.random() * 1.4}); }
+        for (const d of dust) {
+          d.life += dt; d.x += d.vx * dt; d.y += d.vy * dt; d.vy += 0.00002 * dt;
+          const al = Math.min(1, d.life / 200) * Math.max(0, 1 - d.life / d.max);
+          ctx.fillStyle = `rgba(255,222,130,${al})`; ctx.shadowColor = 'rgba(255,210,110,.9)'; ctx.shadowBlur = 8;
+          ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, 6.28); ctx.fill(); ctx.shadowBlur = 0;
         }
+        dust = dust.filter(d => d.life < d.max);
       }
       if (document.getElementById('lgSky')) raf = requestAnimationFrame(loop);
     };
