@@ -101,7 +101,7 @@
         <span class="tago">${ago(v.at)}</span></button>`).join('') || '<p class="sub">초4 학생이 없어요.</p>'}</div>
       <div class="tfoot">
         <button class="secondary small" id="tDev">${dev ? '✅ 이 기기는 학원 기기 · 해제' : '이 기기를 학원 기기로 등록'}</button>
-        <a class="ghost small" href="../dodream.html">학생 등록 · 비밀번호 · AI 연결 (옛 선생님 화면) ›</a>
+        <a class="ghost small" href="index.html">학생 화면 ›</a><a class="ghost small" href="../dodream.html">학생 등록 · 비밀번호 · AI 연결 (옛 선생님 화면) ›</a>
       </div>`);
     $('#tRe').onclick = list;
     $('#tDev').onclick = () => { try { if (dev) localStorage.removeItem('dd:academyDevice'); else localStorage.setItem('dd:academyDevice', '1'); } catch (e) {} list(); };

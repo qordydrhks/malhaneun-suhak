@@ -187,7 +187,7 @@
     finish(big, small, r, passed, list.length, opened, practice);
   }
   function blocked() {
-    frame(`<section class="center-msg stage">${buddy('retry')}<h2>학원 태블릿에서만 공부할 수 있어요</h2><p class="sub">선생님이 이 기기를 학원 기기로 등록하면 열려요.<br>(옛 앱 → 선생님 → AI 연결 → 학원 기기 등록)</p><button class="secondary" data-go="home">은하로</button></section>`);
+    frame(`<section class="center-msg stage">${buddy('retry')}<h2>학원 태블릿에서만 공부할 수 있어요</h2><p class="sub">선생님이 이 기기를 학원 기기로 등록하면 열려요.</p><button class="secondary" data-go="home">은하로</button><a class="ghost small" href="teacher.html">선생님: 이 기기 등록하기 ›</a></section>`);
   }
   function sessionEnd(passed) {
     sessionStorage.removeItem('app:sessionStart');
