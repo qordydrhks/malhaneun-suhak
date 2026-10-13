@@ -394,16 +394,19 @@
       if (out === 'quit') { if (NAV.backQuit) { NAV.backQuit = false; return; } return planet(small.code, r); }
       if (out && out.pass) passed++;
       if (out && out.opened) opened = out.opened;
+      if (out && out.timedOut && practice !== true) return sessionEnd(passed, 'timeout');
       if (sessOver(sess()) && i < list.length - 1) return sessionEnd(passed);
     }
     finish(big, small, r, passed, list.length, opened, practice);
   }
+  /* 오늘 공부가 끝났으면(시간이 다 됨 · 질문 시간 초과) 질문으로 들어가는 모든 길을 막는다 — 계산 연습·계산 대결은 질문이 아니라 열어 둠 */
+  const studyOver = () => { const o = sess(); if (sessOver(o)) { sessionEnd(0); return true; } return false; };
   function blocked() {
     frame(`<section class="center-msg stage">${buddy('retry')}<h2>학원 태블릿에서만 공부할 수 있어요</h2><p class="sub">선생님이 이 기기를 학원 기기로 등록하면 열려요.</p><button class="secondary" data-go="home">은하로</button><a class="ghost small" href="teacher.html">선생님: 이 기기 등록하기 ›</a></section>`);
   }
-  function sessionEnd(passed) {
+  function sessionEnd(passed, why) {
     const o = sess(); o.done = true; sessSave(o); tickClock();
-    frame(`<section class="center-msg stage">${buddy('praise')}<h2>오늘은 여기까지!</h2><p class="sub">${passed ? `오늘 질문 ${passed}개에 불을 켰어요.` : `오늘 공부 시간을 다 썼어요. 다음에 또 만나!`}</p><button class="primary big" data-go="home">은하로 돌아가기</button>${keyBtn()}</section>`);
+    frame(`<section class="center-msg stage">${buddy(why === 'timeout' ? 'retry' : 'praise')}<h2>오늘은 여기까지!</h2><p class="sub">${why === 'timeout' ? '질문 시간이 다 돼서 오늘 공부는 여기서 끝났어요.<br>' : ''}${passed ? `오늘 질문 ${passed}개에 불을 켰어요.` : why === 'timeout' ? '내일 다시 도전하자!' : `오늘 공부 시간을 다 썼어요. 다음에 또 만나!`}</p><button class="primary big" data-go="home">은하로 돌아가기</button>${keyBtn()}</section>`);
   }
   function finish(big, small, r, passed, n, opened, practice) {
     if (!practice) A.buzz(opened ? BZ.big : passed === n ? BZ.planet : 0);
@@ -427,9 +430,11 @@
       <h2>${big.code} 블랙홀 관문</h2><p class="sub">퉁구리가 이 안에 별빛을 숨겼어!<br>${E.RT(r)}에서 배운 것을 말하면 블랙홀을 통과할 수 있어.</p>
       <button class="primary big" id="bgo">${done ? '다시 들어가기 (연습)' : '들어가기'}</button><button class="ghost" data-go="big:${no}">${big.code}로</button></section>`, {back: 'big:' + no, backText: big.code, crumb: big.code + ' · 블랙홀'});
     $('#bgo').onclick = async () => {
+      if (studyOver()) return;
       const pseudo = {code: big.code + ' 블랙홀', title: '블랙홀 관문', unitId: '', unitLabel: '🕳 블랙홀 · ' + big.title, key: ''};
       const out = await ask(big, pseudo, {kind: 'bh', id, r, src: big.bh[r]}, 0, 1, done);
       if (out === 'quit') { if (NAV.backQuit) { NAV.backQuit = false; return; } return star(no, r); }
+      if (out && out.timedOut && !done) return sessionEnd(0, 'timeout');
       if (out && out.pass && !done) {
         A.buzz(BZ.big);
         frame(`<section class="center-msg stage"><div class="chest">✦</div><h2>별빛 상자를 찾았어!</h2>
@@ -586,8 +591,10 @@
   A.UI.badgeChips = badgeChips;
 
   async function battleHub(kind) {
-    bKind = kind || bKind; navMark(['battle', bKind]);
-    if (!A.isAcademyDevice()) return blocked();
+    const dev = A.isAcademyDevice();
+    bKind = kind || bKind; if (!dev) bKind = 'calc';
+    navMark(['battle', bKind]);
+    if (bKind === 'concept' && studyOver()) return;
     BT.enter(bKind); stopPoll();
     const draw = list => {
       if (!NAV.cur || NAV.cur[0] !== 'battle') return;
@@ -597,7 +604,8 @@
       L.querySelectorAll('[data-inv]').forEach(b => b.onclick = () => pickContent({sid: b.dataset.inv, name: b.dataset.nm}));
     };
     frame(`<section class="battle"><h2>⚔ 친구와 대결</h2>
-      <div class="tabs two">${['concept', 'calc'].map(k => `<button class="tab ${k === bKind ? 'on' : ''}" data-k="${k}">${k === 'concept' ? '🎙 개념 대결' : '⚡ 계산 대결'}</button>`).join('')}</div>
+      <div class="tabs two">${['concept', 'calc'].map(k => `<button class="tab ${k === bKind ? 'on' : ''}" data-k="${k}" ${k === 'concept' && !dev ? 'disabled' : ''}>${k === 'concept' ? (dev ? '🎙 개념 대결' : '🔒 개념 대결') : '⚡ 계산 대결'}</button>`).join('')}</div>
+      ${dev ? '' : '<p class="sub">🎙 개념 대결은 학원 태블릿에서만 할 수 있어요. ⚡ 계산 대결은 어디서나!</p>'}
       <div class="brule">${RULE[bKind]}</div>
       <div class="bme"><span>내 배지</span>${badgeChips(BT.top(), 30) || '<small>아직 없어 — 대결에서 이기면 생겨</small>'}<button class="ghost small" id="bWhy">배지 보기 ›</button></div>
       <h3 class="hsec">대기실 <small>같이 들어와 있는 친구</small></h3><ul class="blist" id="bList"><li class="sub">찾는 중…</li></ul></section>`, {back: 'home', backText: '은하', crumb: '친구와 대결'});
@@ -653,6 +661,8 @@
     document.body.appendChild(d); A.buzz([20, 40, 20]); A.S.sound('gain');
     d.querySelector('#bN').onclick = async () => { d.remove(); const room = await BT.room(inv.id); if (room) BT.answer(room, false); else BT.clearInbox(); };
     d.querySelector('#bY').onclick = async () => {
+      if (inv.kind !== 'calc' && !A.isAcademyDevice()) { d.remove(); toast('개념 대결은 학원 태블릿에서만 할 수 있어'); const rm = await BT.room(inv.id); if (rm) BT.answer(rm, false); return; }
+      if (inv.kind !== 'calc' && sessOver(sess())) { d.remove(); toast('오늘 공부 시간이 끝나서 개념 대결은 내일 하자'); const rm = await BT.room(inv.id); if (rm) BT.answer(rm, false); return; }
       d.remove(); const room = await BT.room(inv.id);
       if (!room) { toast('대결이 사라졌어. 다시 신청해 줘'); BT.clearInbox(); return; }
       stopPoll(); BT.busy(true); await BT.answer(room, true); play(room);
@@ -838,6 +848,7 @@
   const mx = t => String(t ?? '').replace(/(^|[^\d.\/])(\d+) (\d+\/\d+)/g, (m, p, w, f) => p + w + ({0: '과', 1: '과', 3: '과', 6: '과', 7: '과', 8: '과'}[w.slice(-1)] || '와') + ' ' + f);
   async function mission(big, small, r, hard) {
     if (!A.isAcademyDevice()) return blocked();
+    if (studyOver()) return;
     const name = A.M.name(r, hard);
     navMark(['q']); let alive = true; NAV.quit = () => { alive = false; };
     frame(`<section class="center-msg stage"><img class="mload" src="img/tunguri.webp" alt=""><h2>${esc(name)}</h2><p class="sub"><span class="spin"></span> 퉁구리가 숨겨 둔 문제를 찾는 중…</p></section>`, {crumb: small.code + ' · ' + name});
@@ -1148,7 +1159,9 @@
       }
       function timeout() {
         if (practice === 'battle') return battleDone(null);
-        stop(); say('<b>시간이 다 됐어.</b> 내일 다시 열려요.', 'warn'); setBuddy('retry');
+        stop(); setBuddy('retry');
+        if (practice !== true) { const o = sess(); o.done = true; sessSave(o); tickClock(); }   // 마스터 10/13: 질문 시간이 다 되면 오늘 공부는 여기서 끝(다른 질문도 닫힘)
+        say('<b>시간이 다 됐어.</b> 오늘 공부는 여기까지야. 이 질문은 내일 다시 열려요.', 'warn');
         $('#ans').innerHTML = `<div class="row"><button class="primary big" id="ok">다음</button></div>`;
         $('#ok').onclick = () => end({st: 'lock', help: helpNow || 'none', stage: 'timeout', pass: false}, true);
       }
@@ -1171,7 +1184,7 @@
         if (!practice && q >= 90) A.N.post({task, small, r: task.r, q, answers: answers.slice(), keys: S.keys, question: S.q, ans: S.ans});   // ✦ 별빛노트 후보(AI 가 한 번 더 보고 올린다)
         $('#ok').onclick = async () => { $('#ok').disabled = true; const opened = await saving; NAV.quit = null; resolve({pass: true, opened}); };
       }
-      async function end(r, already) { const opened = await commit(r, already); NAV.quit = null; resolve({pass: r.pass, opened}); }
+      async function end(r, already) { const opened = await commit(r, already); NAV.quit = null; resolve({pass: r.pass, opened, timedOut: r.stage === 'timeout'}); }
       async function commit(r, already) {
         if (!already) stop();
         let opened = 0;
