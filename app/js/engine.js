@@ -70,6 +70,13 @@
   E.bigCount = (b, r) => b.smalls.reduce((a, s) => { const c = E.count(s, r); return {done: a.done + c.done, n: a.n + c.n}; }, {done: 0, n: 0});
   /* 선생님이 오늘 잠긴 질문을 다시 열기(마스터 10/12) — 다음 날처럼 바뀐다: 다시 묻기 질문으로, 점수도 '다음 날' 수준(60~75)
      표시 by:'teacher' 가 남아 기록·선생님 화면에 '선생님이 다시 열어 줌'으로 보인다 */
+  /* 🗺 별지도(도움 화폐, 마스터 10/13 「무료 2회」): 하루 2장 · 새벽 4시에 다시 2장(모아 두지 않음) · 도움(키워드·짧은 설명·긴 설명) 하나에 1장.
+     선생님 열쇠로 더 줄 수 있다(extra, 그날만). 틀린 생각에 저절로 나오는 키워드·되묻기는 별지도를 쓰지 않는다 */
+  E.MAP_DAY = 2;
+  const smap = () => { const d = A.today(); if (!P.smap || P.smap.day !== d) P.smap = {day: d, used: 0, extra: 0}; return P.smap; };
+  E.maps = () => { if (!P) return 0; const m = smap(); return Math.max(0, E.MAP_DAY + (m.extra || 0) - (m.used || 0)); };
+  E.useMap = () => { if (E.maps() <= 0) return false; smap().used++; return true; };
+  E.giveMap = n => { if (P) smap().extra = (smap().extra || 0) + n; };
   E.unlockToday = () => { let n = 0; for (const x of Object.values(P.st)) if (x.st !== 'pass' && x.day === A.today()) { x.day = ''; x.by = 'teacher'; n++; } return n; };
   E.ckey = sid => 'app:cmd:' + sid + ':e4-2';                 // 선생님 화면 → 학생 태블릿 명령 {cmds:[{id, add(분), unlock}]}
   /* 결과 반영 → 대단원 회차가 다 끝났으면 다음 회차 열기(돌려준 값 = 새로 열린 회차) */

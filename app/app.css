@@ -571,3 +571,14 @@ textarea.tin{width:100%}
 .tcalc{list-style:none;margin:0;padding:0;display:grid;gap:6px}.tcalc li{display:grid}.tcalc span{color:var(--sub);font-size:13px}
 @media (max-width:620px){.tcards.four{grid-template-columns:1fr 1fr}.tmenu{grid-template-columns:1fr 1fr}.tmbtn{grid-template-columns:1fr;grid-template-rows:auto;row-gap:2px;padding:12px}.tmbtn i{grid-row:auto;font-size:22px}
   .tstu{grid-template-columns:1fr auto 12px;row-gap:4px}.tsr{grid-column:1}.tsx{grid-row:1/3;grid-column:2}.tsgo{grid-row:1/3;grid-column:3}}
+
+/* ── 📖 용어 맞히기 · 🗺 별지도 (app 0.15) ── */
+.funbtn.wq{background:linear-gradient(135deg,#1f3a3a,#13232a);border-color:#3f8a80}
+.cfrom{font-size:12.5px;color:#2f8a57;text-align:center;margin-top:2px}
+.cq.cword{font-size:24px;font-weight:800}
+.cchs.long{grid-template-columns:1fr}.cchs.long .ch{justify-content:flex-start;text-align:left;font-size:15.5px;font-weight:600;line-height:1.45;padding:12px 14px}
+.wsay{display:grid;gap:10px;margin-top:10px}.wsay .row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.wsay .live{min-height:24px;text-align:center;font-size:15px}
+.wtype input{flex:1;min-width:200px;max-width:280px;font-size:18px;padding:10px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--sky2);color:var(--ink)}
+.mapct{font-size:13.5px;color:var(--sub);text-align:center;margin:2px 0 8px}.mapct b{color:var(--gold)}
+.hbtn:disabled{opacity:.45}

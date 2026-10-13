@@ -246,7 +246,7 @@
         <p class="sub" id="tMsg"></p>`;
     } else if (sec === 'fun') {
       const st = STAR[s.id] || {}, calc = v.p.calc || {}, bd = v.p.badge || {};
-      const units = Object.entries(calc).map(([k, r]) => { const u = A.C && A.C.unit ? A.C.unit(k) : null; return `<li><b>${esc(u ? u.g.name + ' ' + u.u.title : k.startsWith('w:') ? '용어 맞히기' : k)}</b><span>${r.plays}판 · 퉁구리 ${r.wins}승 · 최고 ${r.best.c}/10 ${r.best.t}초</span></li>`; }).join('');
+      const units = Object.entries(calc).map(([k, r]) => { const u = A.C && A.C.unit ? A.C.unit(k) : null; return `<li><b>${esc(u ? u.g.name + ' ' + u.u.title : A.C && A.C.wunit && A.C.wunit(k) ? '📖 용어 ' + A.C.wunit(k).gid.replace('e', '초') + ' ' + A.C.wunit(k).title : k.startsWith('w:') ? '용어 맞히기' : k)}</b><span>${r.plays}판 · 퉁구리 ${r.wins}승 · 최고 ${r.best.c}/${r.best.n || 10} ${r.best.t}초</span></li>`; }).join('');
       body = `<div class="tcards">
           <div class="tcard"><b>⭐ ${semStars(s.id).toLocaleString('ko-KR')}</b><span>학기 별빛</span><small>${esc(A.S.sem().name)}</small></div>
           <div class="tcard"><b>🌌 ${(st.total || 0).toLocaleString('ko-KR')}</b><span>이 과정 전체 별빛</span></div>
