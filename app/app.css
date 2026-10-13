@@ -514,8 +514,8 @@ table.tiers td:nth-child(3){white-space:nowrap}
 .kpad .kz{grid-column:span 3}
 .kpad [data-x="→"]{font-size:14px}
 .cchs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
-.cchs .ch{background:var(--sky2);border:1.5px solid var(--line);border-radius:14px;padding:14px 8px;font-size:18px;font-weight:700}
-.cchs .ch.right{border-color:var(--ok);background:#163a2c}.cchs .ch.wrong{border-color:var(--warn);background:#3a1d16}
+.cchs .ch{justify-content:center;text-align:center;background:var(--sky2);border:1.5px solid var(--line);border-radius:14px;padding:14px 8px;font-size:18px;font-weight:700;color:var(--ink)}
+.cchs .ch.right{border-color:var(--ok);background:#163a2c;color:#bff3da}.cchs .ch.wrong{border-color:var(--warn);background:#3a1d16}
 /* ⚔ 대결 */
 .funbtn.vs{background:linear-gradient(135deg,#3a1f4a,#1a1533);border-color:#7a4fa0}
 .battle{display:grid;gap:12px}.battle h2{margin:4px 0 0}
