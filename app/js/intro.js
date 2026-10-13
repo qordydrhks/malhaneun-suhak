@@ -23,7 +23,7 @@
         <div class="lg-taunt" id="lgTaunt"></div><div class="lg-cheer" id="lgCheer"></div>
       </div>
       <h1 class="lg-title"><span>말하는</span> 수학</h1>
-      <p class="lg-story">퉁구리가 은하의 별빛을 삼키고 도망쳤어!<br>뚜삐와 함께 <b>우주의 언어, 수학</b>으로 별빛을 되찾자.</p>
+      <p class="lg-story">퉁구리가 삼킨 별빛을 <b>수학</b>으로 되찾자!</p>
       <form class="lg-form" id="lgForm" autocomplete="on">
         <label><span>탐험대원 이름</span><input id="ln" autocomplete="username" placeholder="이름"></label>
         <label><span>비밀 코드</span><input id="lp" type="password" autocomplete="current-password" placeholder="비밀번호"></label>

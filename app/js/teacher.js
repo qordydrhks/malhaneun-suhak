@@ -132,7 +132,7 @@
     const list = (A.S.sems() || []).slice().sort((a, b) => (a.start < b.start ? -1 : 1)), cur = A.S.sem();
     const row = x => `<div class="semrow"><input type="date" class="semd" value="${esc(x.start || '')}"><input class="semn" maxlength="20" placeholder="이름 (예: 2026년 2학기)" value="${esc(x.name || '')}"><button type="button" class="ghost small semx">빼기</button></div>`;
     return `<h3>학기 <small>지금: ${esc(cur.name)} (${cur.start}부터${cur.end ? ' ~ ' + cur.end + ' 전날' : ''})</small></h3>
-      <div class="tsem"><p class="sub">학원 학기가 시작하는 날을 적어 두면 그날부터 <b>학기 별빛</b>이 0에서 다시 모여요(전체 별빛은 그대로). 아무것도 없으면 3월 1일 · 9월 1일로 바뀌어요.</p>
+      <div class="tsem"><p class="sub">시작하는 날부터 학기 별빛이 0에서 다시 모여요 <details class="tq2"><summary>?</summary>전체 별빛은 그대로예요. 아무것도 없으면 3월 1일 · 9월 1일로 바뀌어요.</details></p>
       <div id="semRows">${list.map(row).join('')}</div>
       <div class="row"><button class="secondary small" id="semAdd">+ 학기 추가</button><button class="primary small" id="semSave">학기 저장</button><span class="sub" id="semMsg"></span></div></div>`;
   }
@@ -157,7 +157,7 @@
     const rows = showAll ? v.rows : v.rows.filter(x => !x.mod);
     const qOf = x => { const ix = IDX[x.qid]; return ix ? ix : null; };
     frame(`<div class="thead"><h2>✦ 별빛노트</h2><button class="ghost small" id="nbAll">${showAll ? '확인 안 한 것만' : '전부 보기'}</button></div>
-      <p class="sub">학생에게는 질문마다 100점 대답 중 무작위 하나(없으면 90점)가 보여요. AI 가 다시 확인해서 통과한 것만 올라와요.<br>틀린 내용이 있으면 <b>숨기기</b> — 다른 대답이 대신 보여요. 괜찮으면 <b>확인</b>(새로 올라옴 표시가 사라져요).</p>
+      <p class="sub">틀린 내용이면 <b>숨기기</b> · 괜찮으면 <b>확인</b> <details class="tq2"><summary>?</summary>학생에게는 질문마다 100점 대답 중 무작위 하나(없으면 90점)가 보여요. AI 가 다시 확인해서 통과한 것만 올라와요. 숨기면 다른 대답이 대신 보여요.</details></p>
       <ul class="tli tnb">${rows.map(x => { const ix = qOf(x); return `<li data-k="${esc(x.key)}"><div class="tqq"><span class="code">${esc(ix ? where(ix) : x.code)}</span><div class="tqt">${ix ? fm(ix.q) : ''}</div></div>
         <div class="tmeta"><b>${esc(x.name)}</b> · ${x.q}점 · ${ago(x.at)}${x.mod === 'hide' ? ' · 숨김' : x.mod === 'ok' ? ' · 확인함' : ' · 새로 올라옴'}${x.why ? ' · AI: ' + esc(x.why) : ''}</div>
         <p class="tans">${fm(x.ans)}</p>
@@ -218,7 +218,7 @@
       body = `<p class="sub">되묻기·키워드·설명을 본 뒤에 통과한 질문이에요.</p><ul class="tli">${v.helped.map(({x, ix}) => qItem(ix, ix.q,
         `${x.qFirst ?? x.q}점 · ${esc(helpTxt(x) || '다음 날 통과')}${x.rv ? ' · 다시 빛내기 통과(' + x.q + ')' : ''}${x.by === 'teacher' ? ' · 선생님이 다시 열어 줌' : ''}`)).join('') || '<li class="sub">없어요</li>'}</ul>`;
     } else if (sec === 'stars') {
-      body = `<p class="sub">별(큰 단원)마다 난이도 1·2·3 진도예요. 「열린 난이도」를 바꾸면 학생이 그 난이도까지 바로 할 수 있어요.</p><div class="tbigs">${E.bigs().map(b => {
+      body = `<p class="sub">「열린 난이도」를 바꾸면 학생이 그 난이도까지 바로 할 수 있어요.</p><div class="tbigs">${E.bigs().map(b => {
         const open = E.openRound(b.no), tOpen = +(OPEN[s.id] || {})[b.no] || 0;
         return `<div class="tbigc"><div class="tbh"><span class="code">${b.code}</span><b>${esc(b.title)}</b></div>
           <div class="tbr">${[1, 2, 3].map(r => { const c = E.bigCount(b, r), mis = b.smalls.filter(sm => A.M.done(sm, r)).length, bh = E.state(b.bh.id + ':r' + r).k === 'done';
@@ -226,7 +226,7 @@
           <label class="tbo">열린 난이도 <select data-big="${b.no}" class="topen">${[1, 2, 3].map(r => `<option value="${r}" ${r === open ? 'selected' : ''}>난이도 ${r}까지</option>`).join('')}</select>${tOpen ? '<small>선생님이 엶</small>' : ''}</label></div>`;
       }).join('')}</div>`;
     } else if (sec === 'rec') {
-      body = `<p class="sub">최근 40개 · 「말한 내용 보기」를 누르면 아이가 말한 그대로 보여요.</p><ul class="tli">${subs.slice(0, 40).map(r => {
+      body = `<p class="sub">최근 40개</p><ul class="tli">${subs.slice(0, 40).map(r => {
         const ix = IDX[r.question_id], ok = r.quality != null || PASS_ST.includes(r.stage), old = !r.stage;
         return qItem(ix, r.question, `${ago(new Date(r.created_at).getTime())} · ${old ? '옛 앱' : ok ? '통과' : '아직'}${r.stage ? ' · ' + esc(ST[r.stage] || r.stage) : ''}${r.quality != null ? ' · ' + r.quality + '점' : ''}${r.help && r.help !== 'none' ? ' · ' + esc(HELP[r.help] || r.help) : ''}`,
           (r.misconception ? `<div class="tmis">생각: ${esc(r.misconception)}</div>` : '') + said(r.transcript));

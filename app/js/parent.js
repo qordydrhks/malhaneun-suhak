@@ -62,9 +62,9 @@
       return `<li class="ptodo">
         <div class="pq">${fm(it.q)}</div>
         <div class="pwhy">${x.st !== 'pass' ? (x.help === 'short' || x.help === 'long' ? '설명을 보고 내일 다시 확인해요' : '아직 설명이 어려워요') : '설명을 보고 다음 날 통과했어요'}${pre ? ` · <b>🌱 ${esc(pre)}</b>에서 배운 내용` : ''}</div>
-        <ol class="phow"><li>아이에게 이 질문을 <b>말로 설명해 보라고</b> 해 주세요. 정답을 먼저 알려 주지 마세요.</li>
+        <details class="phowd"><summary>이렇게 도와주세요</summary><ol class="phow"><li>아이에게 이 질문을 <b>말로 설명해 보라고</b> 해 주세요. 정답을 먼저 알려 주지 마세요.</li>
           ${kw.length ? `<li>막히면 이 낱말을 넣어 다시 말해 보게 해 주세요: ${kw.map(k => `<span class="pkw">${fm(k)}</span>`).join(' ')}</li>` : ''}
-          <li>${pre ? `${esc(pre)} 단원(지난 학년 교과서)을` : `교재 ${esc(ix.s.page || '')}을`} 같이 펴 보세요.</li></ol></li>`;
+          <li>${pre ? `${esc(pre)} 단원(지난 학년 교과서)을` : `교재 ${esc(ix.s.page || '')}을`} 같이 펴 보세요.</li></ol></details></li>`;
     };
     // 아이의 멋진 설명(한 번에 통과한 것 중 가장 최근)
     const good = subs.find(r => r.pass && r.stage === 'first' && r.transcript && r.transcript.length > 12);
@@ -72,12 +72,12 @@
     root().innerHTML = `<main class="preport">
       <header class="phead"><div class="sub">말하는 수학 · 4학년 2학기</div><h1>${esc(name)}의 우주 탐험</h1><div class="sub">${now.getMonth() + 1}월 ${now.getDate()}일 기준</div></header>
       <section class="pcard prank"><div class="pri">${rk.icon}</div><div><div class="prn">${rk.name} <small>${rk.ko}</small></div>
-        <div class="sub">밝힌 행성 ${rk.lit} / ${rk.total} · 등급은 루나 → 테라 → 솔 → 갤럭시 → 코스모스 순서로 올라가요</div></div></section>
+        <div class="sub">밝힌 행성 ${rk.lit} / ${rk.total}</div></div></section>
       <section class="pcard"><h2>이번 주</h2>
         <div class="pdays">${DAYS.map((d, i) => `<span class="${onDay.has(i) ? 'on' : ''}">${d}</span>`).join('')}</div>
         <p>이번 주에 질문 <b>${wkPass}개</b>를 말로 설명해 통과했어요.</p>
         ${passed ? `<p>지금까지 통과한 질문 ${passed}개 중 <b>${bk.one.length}개</b>는 도움 없이 한 번에 설명했어요.</p>` : ''}</section>
-      <section class="pcard"><h2>어디까지 왔나</h2><p class="sub">한 단원을 세 번(행성 탐사 → 별계 탐사 → 은하 탐사) 점점 깊게 공부해요.</p><ul class="pstars">${stars}</ul></section>
+      <section class="pcard"><h2>어디까지 왔나</h2><ul class="pstars">${stars}</ul></section>
       <section class="pcard"><h2>집에서 함께 볼 것</h2>
         ${todo.length ? `<ul class="ptodos">${todo.map(card).join('')}</ul>` : '<p class="sub">지금은 특별히 어려워한 질문이 없어요.</p>'}</section>
       ${goodIx ? `<section class="pcard"><h2>아이의 멋진 설명</h2><div class="pq">${fm(good.question || goodIx.t.src.q)}</div><blockquote>${esc(good.transcript.replace(/^\d차:\s*/, ''))}</blockquote></section>` : ''}
