@@ -4,4 +4,4 @@ __pycache__/
 # 캐릭터 원본 그림(GPT, 약 40MB)은 저장소에 올리지 않는다 — 앱은 characters/img 만 쓴다
 docs/character-design/**/*.png
 # 새 앱 시험용 페이지(서버·AI 흉내) — 배포하지 않는다
-app/_test*.html
+app/_*test*.html
