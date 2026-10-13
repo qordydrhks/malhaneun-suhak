@@ -57,7 +57,7 @@
     const b = e.target.closest('[data-go]'); if (!b) return;
     const g = b.dataset.go;
     if (g === 'home') home(); else if (g === 'logout') { A.logout(); login(); }
-    else if (g === 'hall') hall();
+    else if (g === 'hall') hall(); else if (g === 'calc') calcHub();
     else if (g.startsWith('big:')) star(+g.slice(4)); else if (g.startsWith('small:')) planet(g.slice(6), +b.dataset.r); else if (g.startsWith('bh:')) blackhole(+g.slice(3), +b.dataset.r); else if (g === 'record') record(); else if (g === 'guide') guide();
   });
 
@@ -83,7 +83,7 @@
   }
   function navGo(rt) {
     NAV.restoring = true;
-    try { ({home, star, planet, record, guide, blackhole, note, hall})[rt[0]](...rt.slice(1)); } finally { NAV.restoring = false; }
+    try { ({home, star, planet, record, guide, blackhole, note, hall, calc: calcHub, calcu: calcUnit})[rt[0]](...rt.slice(1)); } finally { NAV.restoring = false; }
   }
   addEventListener('popstate', e => {
     const st = e.state && e.state.app ? e.state : null;
@@ -326,6 +326,7 @@
                ? `<button class="primary big go" data-go="bh:${nx.big.no}" data-r="${nx.r}"><span>오늘 갈 곳</span><small>${esc(nx.big.title)} · <span class="tm" data-term="블랙홀 관문">블랙홀 관문</span> · ${lv(nx.r)}</small></button>`
                : `<button class="primary big go" data-go="small:${nx.small.code}" data-r="${nx.r}"><span>오늘 갈 곳</span><small>${esc(nx.small.title)} · ${lv(nx.r)}${nx.why === 'again' ? ' · <span class="tm" data-term="다시 열린 질문">다시 열린 질문</span>' : nx.why === 'mission' ? ` · <span class="tm" data-term="mission">${A.M.name(nx.r)}</span>` : nx.why === 'review' ? ' · <span class="tm" data-term="다시 빛내기">다시 빛내기</span>' : ''}</small></button>`)
              : `<div class="done-all">지금 열린 곳은 모두 탐험했어요 ✦</div>`}
+      <div class="funrow"><button class="funbtn" data-go="calc"><span>⚡</span><b>계산 연습</b><small>퉁구리와 경주</small></button></div>
       <button class="galbtn" data-go="guide"><b>E4-2 은하</b><span>4학년 2학기 · 탐험 안내 ›</span></button><div class="mapbox">${A.galaxyMap()}</div>`, {crumb: ''});
   }
 
@@ -434,6 +435,130 @@
       } else star(no, r);
     };
   }
+
+  // ── ⚡ 계산 연습(마스터 10/13) — 퉁구리와 경주. 데이터·문제 생성은 js/calc.js ──
+  const C = A.C;
+  let calcGrade = 'e4-2';
+  function calcHub(gid) {
+    calcGrade = gid || calcGrade; navMark(['calc', calcGrade]);
+    const g = C.GRADES.find(x => x.id === calcGrade) || C.GRADES[0], rec = E.prog().calc || {};
+    const best = k => { const r = rec[k]; return r ? `최고 ${r.best.c}/10 · ${r.best.t}초${r.wins ? ' · 🏁 ' + r.wins + '승' : ''}` : '아직 안 해 봤어'; };
+    frame(`<section class="calc"><h2>⚡ 계산 연습</h2><p class="sub">단원을 골라 퉁구리와 경주해! 정확하게, 그리고 빠르게.</p>
+      <div class="tabs">${C.GRADES.map(x => `<button class="tab ${x.id === g.id ? 'on' : ''}" data-g="${x.id}">${x.name}</button>`).join('')}</div>
+      <ul class="cunits">${g.units.map(u => `<li><button class="cunit" data-k="${u.key}"><b>${esc(u.title)}</b><small>${u.types.map(t => esc(C.T[t].name)).join(' · ')}</small><i>${best(u.key)}</i></button></li>`).join('')}
+        ${C.WORDS[g.id] ? `<li><button class="cunit word" data-k="w:${g.id}"><b>📖 용어 맞히기</b><small>뜻을 읽고 어떤 낱말인지 골라요</small><i>${best('w:' + g.id)}</i></button></li>` : ''}</ul></section>`,
+      {back: 'home', backText: '은하', crumb: '계산 연습'});
+    root().querySelectorAll('[data-g]').forEach(b => b.onclick = () => calcHub(b.dataset.g));
+    root().querySelectorAll('.cunit').forEach(b => b.onclick = () => calcUnit(b.dataset.k));
+  }
+  function calcUnit(key) {
+    navMark(['calcu', key]);
+    const word = key.startsWith('w:'), info = word ? null : C.unit(key), gid = word ? key.slice(2) : info.g.id;
+    const tips = word ? [['용어 맞히기', ['뜻을 끝까지 읽고 어떤 낱말인지 골라요.', '비슷한 낱말이 함께 나오니 뜻의 작은 차이를 잘 봐!', '']]] : info.u.types.map(t => [C.T[t].name, C.TIP[t] || []]);
+    let sp = A.ls.get('app:calcSpeed', 'mid'); if (!C.SPEED[sp]) sp = 'mid';
+    frame(`<section class="calc"><h2>${esc(word ? '📖 용어 맞히기' : info.u.title)}</h2><p class="sub">${esc(word ? (C.GRADES.find(x => x.id === gid) || {}).name : info.g.name)} · 10문제${!word && C.WORDS[gid] ? ' (용어 맞히기 2문제 섞임)' : ''}</p>
+      <div class="ctips">${tips.map(([nm, L]) => `<div class="ctip"><b>💡 ${esc(nm)}</b><ul>${L.filter(Boolean).map((x, k) => `<li class="${k === L.length - 1 && L.length === 3 && /[=→]/.test(x) ? 'ex' : ''}">${fm(x)}</li>`).join('')}</ul></div>`).join('')}</div>
+      <div class="cspeed"><span>상대</span>${Object.entries(C.SPEED).map(([k, v]) => `<button class="${k === sp ? 'on' : ''}" data-s="${k}">${v[0]}</button>`).join('')}</div>
+      <button class="primary big" id="cGo">퉁구리와 출발!</button></section>`, {back: 'calc', backText: '계산 연습', crumb: '팁'});
+    root().querySelector('[data-go="calc"]').onclick = e => { e.stopPropagation(); calcHub(gid); };
+    root().querySelectorAll('[data-s]').forEach(b => b.onclick = () => { A.ls.set('app:calcSpeed', b.dataset.s); root().querySelectorAll('[data-s]').forEach(x => x.classList.toggle('on', x === b)); });
+    $('#cGo').onclick = () => calcPlay(key, A.ls.get('app:calcSpeed', 'mid'));
+  }
+  async function calcPlay(key, sp, opt) {
+    opt = opt || {};
+    const list = opt.list || C.round(key), sp1 = C.SPEED[sp] || C.SPEED.mid;
+    const total = Math.round(list.reduce((a, p) => a + p.sec, 0) * sp1[1]);
+    navMark(['q']); let alive = true; NAV.quit = () => { alive = false; clearInterval(tim); return false; };
+    let k = 0, ok = 0, t0 = 0, tim = null, lock = false, inp = {};
+    frame(`<div class="race"><div class="lane"><span class="tok me" id="rMe"><img src="${IMG}${myFriend() || 'exi'}/card.webp" alt=""></span></div>
+        <div class="lane"><span class="tok tg" id="rTg"><img src="img/tunguri.webp" alt=""></span></div><div class="goal">🏁</div></div>
+      <div class="cnum"><span><span id="cK">1</span> / ${list.length}</span><b id="cT">0초</b></div>
+      <section class="ccard" id="cQ"></section><section id="cA"></section>`, {back: 'calc', backText: '그만하기', crumb: opt.crumb || '계산 연습', nostar: !!opt.vs});
+    root().querySelector('[data-go="calc"]').onclick = e => { e.stopPropagation(); alive = false; clearInterval(tim); NAV.quit = null; opt.onQuit ? opt.onQuit() : calcUnit(key); };
+    const pos = () => {
+      const el = (Date.now() - t0) / 1000;
+      $('#cT') && ($('#cT').textContent = Math.floor(el) + '초');
+      const tg = $('#rTg'); if (tg && !opt.vs) tg.style.left = Math.min(1, el / total) * 88 + '%';
+      if (opt.tick) opt.tick(el, k, ok);
+    };
+    const draw = () => {
+      const p = list[k]; inp = p.form === 'frac' ? {w: '', n: '', d: '', f: 'w'} : {v: ''};
+      $('#cK').textContent = k + 1;
+      $('#cQ').innerHTML = `${p.word ? '<div class="ctag">📖 이 뜻을 가진 낱말은?</div>' : ''}<div class="cq">${fm(p.q)}</div>${p.fig ? `<div class="figbox">${p.fig}</div>` : ''}<div class="cfb" id="cFb"></div>`;
+      if (p.word) {
+        $('#cA').innerHTML = `<div class="cchs">${p.choices.map((c, j) => `<button class="ch" data-j="${j}">${esc(c)}</button>`).join('')}</div>`;
+        $('#cA').querySelectorAll('.ch').forEach(b => b.onclick = () => submit({c: p.choices[+b.dataset.j]}, b));
+      } else {
+        const box = f => `<button class="kbox ${inp.f === f ? 'on' : ''}" data-f="${f}">${esc(inp[f]) || '&nbsp;'}</button>`;
+        $('#cA').innerHTML = `<div class="kdisp">${p.form === 'frac' ? `<span class="kmix">${box('w')}<span class="kfr">${box('n')}<i></i>${box('d')}</span></span>` : `<span class="kone">${esc(inp.v) || '&nbsp;'}</span>`}${p.unit ? `<span class="kunit">${esc(p.unit)}</span>` : ''}</div>
+          ${p.form === 'frac' ? '<p class="khint">자연수 → 분자 → 분모 차례로 · 자연수가 없으면 「다음 칸」</p>' : ''}
+          <div class="kpad">${['7', '8', '9', '⌫', '4', '5', '6', p.form === 'frac' ? '→' : '.', '1', '2', '3', '확인', '0'].map(x => `<button class="${x === '확인' ? 'kok' : x === '0' ? 'kz' : ''}" data-x="${x}">${x === '→' ? '다음 칸' : x}</button>`).join('')}</div>`;
+        $('#cA').querySelectorAll('.kbox').forEach(b => b.onclick = () => { inp.f = b.dataset.f; redraw(); });
+        $('#cA').querySelectorAll('[data-x]').forEach(b => b.onclick = () => key1(b.dataset.x));
+      }
+    };
+    const redraw = () => {
+      const p = list[k]; if (!p || p.word) return;
+      if (p.form === 'frac') $('#cA').querySelectorAll('.kbox').forEach(b => { b.innerHTML = esc(inp[b.dataset.f]) || '&nbsp;'; b.classList.toggle('on', inp.f === b.dataset.f); });
+      else $('#cA').querySelector('.kone').innerHTML = esc(inp.v) || '&nbsp;';
+    };
+    const key1 = x => {
+      if (lock) return; const p = list[k]; if (!p || p.word) return;
+      const f = p.form === 'frac' ? inp.f : 'v';
+      if (x === '확인') return submit(inp);
+      if (x === '⌫') inp[f] = inp[f].slice(0, -1);
+      else if (x === '→') inp.f = {w: 'n', n: 'd', d: 'w'}[inp.f];
+      else if (x === '.') { if (!inp.v.includes('.')) inp.v = (inp.v || '0') + '.'; }
+      else if ((inp[f] || '').length < 7) inp[f] = (inp[f] || '') + x;
+      redraw();
+    };
+    const onKey = e => {
+      if (!alive) return removeEventListener('keydown', onKey);
+      const p = list[k]; if (!p) return;
+      if (p.word) { const j = +e.key - 1; if (j >= 0 && j < 4) { const b = $('#cA').querySelectorAll('.ch')[j]; b && b.click(); } return; }
+      if (/^[0-9]$/.test(e.key)) key1(e.key); else if (e.key === 'Backspace') key1('⌫'); else if (e.key === 'Enter') key1('확인');
+      else if (e.key === '.') key1(p.form === 'frac' ? '→' : '.'); else if (e.key === 'Tab' || e.key === '/') { e.preventDefault(); key1('→'); }
+    };
+    addEventListener('keydown', onKey);
+    const submit = (v, btn) => {
+      if (lock) return; const p = list[k];
+      if (!p.word && !C.parse(v, p.form)) { toast(p.form === 'frac' ? '분자와 분모를 채워 줘' : '답을 넣어 줘'); return; }
+      lock = true;
+      const right = C.check(p, v), fb = $('#cFb');
+      if (right) { ok++; A.S.sound('tick'); A.buzz(12); const bt = C.better(p, v); fb.innerHTML = `<span class="ok">✓ 정답!${bt ? ' <small>(' + fm(bt) + ')</small>' : ''}</span>`; }
+      else fb.innerHTML = `<span class="no">아쉬워! 정답은 <b>${fm(C.answerText(p))}</b></span>`;
+      if (btn) { btn.classList.add(right ? 'right' : 'wrong'); if (!right) $('#cA').querySelectorAll('.ch').forEach(b => { if (b.textContent === p.ans) b.classList.add('right'); }); }
+      $('#rMe').style.left = (k + 1) / list.length * 88 + '%';
+      if (opt.onAnswer) opt.onAnswer(k, right);
+      setTimeout(() => { if (!alive) return; lock = false; k++; if (k < list.length) draw(); else end(); }, right ? 650 : 1500);
+    };
+    const end = async () => {
+      alive = false; clearInterval(tim); removeEventListener('keydown', onKey); NAV.quit = null;
+      const T = Math.round((Date.now() - t0) / 1000);
+      if (opt.onEnd) return opt.onEnd({ok, n: list.length, t: T});
+      const win = ok >= 8 && T <= total, P = E.prog();
+      P.calc = P.calc || {}; const r = P.calc[key] = P.calc[key] || {plays: 0, wins: 0, best: {c: 0, t: 999}};
+      r.plays++; if (win) r.wins++;
+      if (ok > r.best.c || (ok === r.best.c && T < r.best.t)) r.best = {c: ok, t: T};
+      let gain = 0;
+      if (win) { const day = A.today(), n = (P.pts || []).filter(x => x.why === 'calc' && A.dayKey(x.at) === day).length; if (n < C.WIN_MAX) gain = A.S.add('calc:' + day + ':' + n, C.WIN_STARS, 'calc', 0); }
+      await E.save();
+      if (win) A.buzz(BZ.big);
+      frame(`<section class="center-msg stage">${win ? buddy('praise') : '<img class="mload" src="img/tunguri.webp" alt="">'}
+        <h2>${win ? '퉁구리를 이겼어!' : ok >= 8 ? '정확했는데 퉁구리가 조금 더 빨랐어!' : '퉁구리가 먼저 도착했어…'}</h2>
+        <div class="score">${ok}<small> / ${list.length}</small></div>${A.S.chip(gain, 0, 'calc')}
+        <p class="sub">나 ${T}초 · ${esc(sp1[0])} ${total}초${!win && ok < 8 ? ' · 8문제 이상 맞히고 먼저 도착하면 이겨' : ''}${win && !gain ? ' · 오늘 받을 수 있는 별빛은 다 받았어' : ''}</p>
+        <button class="primary big" id="cAg">한 번 더!</button><button class="secondary" id="cTip">팁 다시 보기</button><button class="ghost" data-go="calc">다른 단원</button></section>`, {crumb: '계산 연습'});
+      if (gain) A.S.gain(gain, $('#gainChip'), true);
+      $('#cAg').onclick = () => calcPlay(key, sp); $('#cTip').onclick = () => calcUnit(key);
+    };
+    // 3 · 2 · 1 출발
+    $('#cQ').innerHTML = '<div class="count" id="cCnt">3</div>';
+    for (const c of ['3', '2', '1']) { if (!alive) return; $('#cCnt') && ($('#cCnt').textContent = c); A.S.sound('tick'); await new Promise(r => setTimeout(r, 650)); }
+    if (!alive) return;
+    t0 = Date.now(); tim = setInterval(() => { if (alive) pos(); }, 200); draw();
+  }
+  A.UI = {frame, buddy, toast, navMark, esc, fm, calcPlay, NAV, root};
 
   // ── 🏆 빛나는 탐험가 ──
   async function hall() {

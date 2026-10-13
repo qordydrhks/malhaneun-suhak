@@ -148,6 +148,7 @@
       if (k < 1) requestAnimationFrame(step); else { el.textContent = fmt(now); setTimeout(() => btn && btn.classList.remove('bump'), 400); }
     };
     requestAnimationFrame(step);
+    setTimeout(() => { const el = document.getElementById('starCt'); if (el) el.textContent = fmt(now); }, 1700);   // 화면이 가려져 애니메이션이 멈춰도 숫자는 맞게
     shown = now;
   };
   /* 결과 화면의 '별빛 +n' 표 */
