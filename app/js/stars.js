@@ -153,6 +153,42 @@
   /* 결과 화면의 '별빛 +n' 표 */
   S.chip = (n, r, why) => n ? `<div class="gain" id="gainChip"><b>✦ 별빛 +${fmt(n)}</b>${r > 1 && why !== 'mis' ? `<small>난이도 ${r}라서 ×${S.W[r]}</small>` : why === 'rv' ? '<small>다시 빛내기</small>' : ''}</div>` : '';
 
+  // ── 🏆 빛나는 탐험가(마스터 10/13): 학기 별빛 상위 3명(학년 상관없이) + 이번 주 상 5가지 ──
+  /* 전체 등수표는 만들지 않는다. 상은 한 아이가 여러 개를 가져가지 않게 차례로 나눈다(더 많은 아이가 뽑히게).
+     선행하는 아이는 과정마다 별빛이 따로라, 순위는 과정별 학기 별빛 중 큰 것으로(두 과정을 한다고 유리하지 않게). */
+  S.TOP = [['북극성', '🌟', '이번 학기 별빛 1등. 북극성은 밤하늘에서 늘 그 자리에서 길을 알려 주는 별이에요.'],
+           ['샛별', '✨', '이번 학기 별빛 2등. 샛별은 새벽에 가장 먼저, 가장 밝게 빛나는 별이에요.'],
+           ['혜성', '💫', '이번 학기 별빛 3등. 혜성은 꼬리를 그리며 빠르게 날아오르는 별이에요.']];
+  S.AWARDS = [['wk', '🚀', '쑥쑥상', '이번 주 별빛을 많이 모은 친구에게 주는 상이에요.'],
+              ['note', '✦', '별빛노트상', '이번 주 별빛노트에 대답이 많이 오른 친구에게 주는 상이에요.'],
+              ['came', '📅', '개근상', '이번 주에 빠지지 않고 여러 날 공부한 친구에게 주는 상이에요.'],
+              ['one', '🎯', '한방상', '이번 주 질문을 한 번에 통과한 게 많은 친구에게 주는 상이에요.'],
+              ['grit', '💪', '끈기상', '이번 주 되묻기나 도움 뒤에도 포기하지 않고 끝까지 통과한 게 많은 친구에게 주는 상이에요.']];
+  S.hall = async () => {
+    const lk = p => 'key=like.' + encodeURIComponent(p) + '&select=key,value&limit=2000';
+    let rows = [], nb = {rows: []};
+    try { [rows, nb] = await Promise.all([A.sbSelect('ai_cache', lk('app:star:*')), A.N ? A.N.all() : Promise.resolve({rows: []})]); } catch (e) {}
+    const sem = S.sem(), wk = S.weekStart(), by = {};
+    for (const r of rows || []) {
+      const v = r.value; if (!v || !v.sid) continue;
+      const o = by[v.sid] || (by[v.sid] = {sid: v.sid, name: v.name || '', grade: v.grade || '', sem: 0, wk: 0, one: 0, grit: 0, came: 0, note: 0});
+      let semN = 0, wkN = 0;
+      for (const [d, n] of Object.entries(v.days || {})) { if (d >= sem.start && (!sem.end || d < sem.end)) semN += n; if (d >= wk) wkN += n; }
+      o.sem = Math.max(o.sem, semN); o.wk += wkN;
+      if (v.wk && v.wk.id === wk) { o.one += v.wk.one || 0; o.grit += v.wk.grit || 0; o.came = Math.max(o.came, v.wk.came || 0); }
+      if (v.name) o.name = v.name;
+    }
+    for (const x of (nb && nb.rows) || []) if (x.mod !== 'hide' && A.dayKey(x.at) >= wk && by[x.sid]) by[x.sid].note++;
+    const list = Object.values(by).filter(x => !/테스트/.test(x.name));
+    const top = list.filter(x => x.sem > 0).sort((a, b) => b.sem - a.sem).slice(0, 3);
+    const used = new Set(), awards = [];
+    for (const [k, ic, nm, desc] of S.AWARDS) {
+      const c = list.filter(x => x[k] > 0 && !used.has(x.sid)).sort((a, b) => (b[k] - a[k]) || (b.wk - a.wk))[0] || null;
+      awards.push({k, ic, nm, desc, who: c, v: c ? c[k] : 0}); if (c) used.add(c.sid);
+    }
+    return {sem, wk, top, awards, n: list.length};
+  };
+
   // ── 등급표(안내) ──
   S.TIER_RANGE = [['0 ~ 49', ''], ['50 ~ 69', ''], ['70 ~ 79', ''], ['80 ~ 89', '난이도 2까지 해야'], ['90 ~ 100', '난이도 3까지 해야']];
 })();

@@ -57,6 +57,7 @@
     const b = e.target.closest('[data-go]'); if (!b) return;
     const g = b.dataset.go;
     if (g === 'home') home(); else if (g === 'logout') { A.logout(); login(); }
+    else if (g === 'hall') hall();
     else if (g.startsWith('big:')) star(+g.slice(4)); else if (g.startsWith('small:')) planet(g.slice(6), +b.dataset.r); else if (g.startsWith('bh:')) blackhole(+g.slice(3), +b.dataset.r); else if (g === 'record') record(); else if (g === 'guide') guide();
   });
 
@@ -82,7 +83,7 @@
   }
   function navGo(rt) {
     NAV.restoring = true;
-    try { ({home, star, planet, record, guide, blackhole, note})[rt[0]](...rt.slice(1)); } finally { NAV.restoring = false; }
+    try { ({home, star, planet, record, guide, blackhole, note, hall})[rt[0]](...rt.slice(1)); } finally { NAV.restoring = false; }
   }
   addEventListener('popstate', e => {
     const st = e.state && e.state.app ? e.state : null;
@@ -171,6 +172,9 @@
     '다시 열린 질문': '어제 못 했던 질문이 오늘 다시 열렸어요. 먼저 해 보자!',
     '별빛노트': '친구들의 별처럼 빛나는 대답 모음이에요. 질문마다 100점을 받은 친구 대답 중에서 무작위로 하나를 골라 보여 줘요(100점이 없으면 90점). 행성 질문을 다 마치면 볼 수 있어요. 네 대답도 오를 수 있어!'
   };
+  A.S.TOP.forEach(t => { TERMS[t[1] + ' ' + t[0]] = t[2]; });
+  A.S.AWARDS.forEach(t => { TERMS[t[2]] = t[3] + ' 월요일마다 새로 뽑아요. 한 친구가 상을 여러 개 받지 않게 나눠요.'; });
+  TERMS['빛나는 탐험가'] = '이번 학기 별빛을 가장 많이 모은 세 친구(학년 상관없이)와 이번 주 상을 받은 친구들이에요. 별빛은 질문을 처음 통과할 때 모여요.';
   function showTerm(k) {
     document.querySelector('.tpop')?.remove();
     const d = document.createElement('div'); d.className = 'tpop';
@@ -316,7 +320,7 @@
     const nx = E.nextPlace();
     const rk = E.rank();
     const lv = r => `${E.ROUND[r]}<span class="lvt tm" data-term="난이도">난이도 ${r}</span>`;
-    frame(`<div class="homebar"><button class="rankbtn" data-go="record"><span class="rk-l">탐험가 등급<i class="tq" data-term="탐험가 등급">?</i></span><span class="rk-i">${rk.icon}</span><b>${rk.name}</b><small>밝힌 행성 ${rk.lit}/${rk.total} ›</small></button></div>
+    frame(`<div class="homebar"><button class="hallbtn" data-go="hall">🏆 <span>빛나는 탐험가</span></button><button class="rankbtn" data-go="record"><span class="rk-l">탐험가 등급<i class="tq" data-term="탐험가 등급">?</i></span><span class="rk-i">${rk.icon}</span><b>${rk.name}</b><small>밝힌 행성 ${rk.lit}/${rk.total} ›</small></button></div>
       <section class="hero stage">${buddy('idle')}<div class="bubble">${esc(line('hello'))}</div></section>
       ${nx ? (nx.why === 'bh'
                ? `<button class="primary big go" data-go="bh:${nx.big.no}" data-r="${nx.r}"><span>오늘 갈 곳</span><small>${esc(nx.big.title)} · <span class="tm" data-term="블랙홀 관문">블랙홀 관문</span> · ${lv(nx.r)}</small></button>`
@@ -429,6 +433,25 @@
           <img class="mload flee" src="img/tunguri.webp" alt=""><button class="primary big" data-go="home">은하로</button></section>`);
       } else star(no, r);
     };
+  }
+
+  // ── 🏆 빛나는 탐험가 ──
+  async function hall() {
+    navMark(['hall']);
+    frame('<div class="loading">별빛을 세는 중…</div>', {back: 'home', backText: '은하', crumb: '빛나는 탐험가'});
+    const h = await A.S.hall();
+    if (!NAV.cur || NAV.cur[0] !== 'hall') return;
+    const me = A.session.student.id;
+    const pod = [1, 0, 2].map(k => { const x = h.top[k], t = A.S.TOP[k];
+      return `<div class="pod p${k + 1} ${x && x.sid === me ? 'me' : ''}"><div class="pod-ic">${t[1]}</div><div class="pod-t tm" data-term="${t[1]} ${t[0]}">${t[0]}</div>
+        <b>${x ? esc(x.name) : '—'}</b><small>${x ? '⭐ ' + x.sem.toLocaleString('ko-KR') : '아직 비어 있어요'}</small><div class="pod-bar"></div></div>`; }).join('');
+    frame(`<section class="hall"><h2><span class="tm" data-term="빛나는 탐험가">🏆 빛나는 탐험가</span></h2>
+      <p class="sub">${esc(h.sem.name)} · 학기 별빛이 가장 많은 세 친구 (학년 상관없이)</p>
+      <div class="podium">${pod}</div>
+      <h3 class="hsec">이번 주 상 <small>월요일마다 새로 뽑아요</small></h3>
+      <ul class="awards">${h.awards.map(a => `<li class="${a.who && a.who.sid === me ? 'me' : ''}"><span class="aw-ic">${a.ic}</span><span class="aw-n tm" data-term="${a.nm}">${a.nm}</span>
+        <b>${a.who ? esc(a.who.name) + (a.who.sid === me ? ' (나!)' : '') : '<i>이번 주 주인공을 기다려요</i>'}</b></li>`).join('')}</ul>
+      <p class="sub center">내 학기 별빛 ⭐ ${A.S.semPts().toLocaleString('ko-KR')} · 질문을 처음 통과할 때마다 별빛이 모여요</p></section>`, {back: 'home', backText: '은하', crumb: '빛나는 탐험가'});
   }
 
   // ── 나의 기록 ──
