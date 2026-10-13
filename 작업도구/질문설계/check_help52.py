@@ -4,8 +4,8 @@ import re, sys, importlib
 import app_e52_data as D
 n = sys.argv[1] if len(sys.argv) > 1 else '1'
 H = importlib.import_module('help_e52_%s' % n).H
-M = importlib.import_module('e52_%s' % n)
-U = [v for k, v in vars(M).items() if re.fullmatch(r'U\d*', k) and isinstance(v, dict)][0]
+M = importlib.import_module('e52_56' if n in ('5', '6') else 'e52_%s' % n)
+U = getattr(M, 'U' + n) if n in ('5', '6') else [v for k, v in vars(M).items() if re.fullmatch(r'U\d*', k) and isinstance(v, dict)][0]
 STOP = set('그 그럼 이 수 있다 한다 것 두 한 는 은 이다 같다 이야 거야'.split())
 def toks(s): return [t for t in re.findall(r'[가-힣A-Za-z0-9°①-⑨]+', s) if len(t) >= 2 and t not in STOP]
 def nums(s): return set(re.findall(r'\d+(?:\.\d+)?(?:/\d+)?', s))
