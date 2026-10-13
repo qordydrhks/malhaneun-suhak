@@ -120,7 +120,7 @@
         <button type="button" class="secondary" data-a="u" ${locked ? '' : 'disabled'}>🔓 오늘 잠긴 질문 다시 열기 (${locked}개)</button></div>
       <div class="krow"><button type="submit" class="primary" id="kok">확인</button><button type="button" class="ghost" id="kx">닫기</button></div></form>`;
     document.body.appendChild(d);
-    const close = () => d.remove();
+    const close = () => d.remove(); let okPin = false;
     d.querySelector('#kx').onclick = close;
     d.onclick = e => { if (e.target === d) close(); };
     d.querySelector('#kp').focus();
@@ -130,9 +130,11 @@
       d.querySelector('#km').textContent = '확인 중…';
       let ok = false; try { ok = await A.checkPin(d.querySelector('#kp').value); } catch (err) {}
       if (!ok) { d.querySelector('#km').textContent = 'PIN 이 맞지 않아요.'; return; }
+      okPin = true;
       d.querySelector('#km').textContent = '무엇을 할까요?'; d.querySelector('#kact').hidden = false; d.querySelector('#kok').hidden = true; d.querySelector('label').hidden = true;
     };
     d.querySelectorAll('[data-a]').forEach(b => b.onclick = async () => {
+      if (!okPin) return;   // PIN 확인 전에는 아무것도 안 함(10/13 마스터: PIN 없이 시간 연장되던 것)
       const a = b.dataset.a, p = E.prog(); p.log = p.log || [];
       if (a === 'u') { const n = E.unlockToday(); p.log.push({at: Date.now(), teacher: 'unlock', n}); await E.save(); toast(`선생님이 잠긴 질문 ${n}개를 다시 열어 주셨어!`); }
       else { addTime(+a); p.log.push({at: Date.now(), teacher: 'time', add: +a}); await E.save(); toast(`선생님이 ${a}분을 더 주셨어!`); }

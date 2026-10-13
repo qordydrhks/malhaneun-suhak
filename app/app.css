@@ -397,7 +397,7 @@ body.intro-on .sclock{display:none}
 .kpop-in b{font-size:17px}
 .kpop-in label{display:grid;gap:6px;font-size:14px;color:var(--sub)}
 .kpop-in input{font:inherit;font-size:18px;color:var(--ink);background:var(--sky);border:1.5px solid var(--line);border-radius:12px;padding:11px 13px;width:100%}
-.krow{display:flex;flex-wrap:wrap;gap:8px}.krow .secondary{flex:1 1 auto}
+.krow{display:flex;flex-wrap:wrap;gap:8px}.krow[hidden],.kpop [hidden]{display:none!important}.krow .secondary{flex:1 1 auto}
 .kmsg{min-height:20px;font-size:14px;color:var(--gold)}
 .tabs{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;line-height:1.25}
