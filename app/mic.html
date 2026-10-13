@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>마이크 점검</title>
+<style>
+:root{--bg:#0f1530;--card:#18204a;--ink:#eef1ff;--sub:#9aa6d6;--ok:#2fae77;--no:#e0705a;--gold:#f2c45f}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,'Malgun Gothic',sans-serif;padding:16px}
+h1{font-size:20px;margin:0 0 8px}.card{background:var(--card);border-radius:14px;padding:14px;margin:10px 0}
+button{font:inherit;font-weight:700;border:0;border-radius:12px;padding:14px 18px;background:var(--gold);color:#1d2233;width:100%;margin:6px 0}
+button.sec{background:#2a356e;color:var(--ink)}
+#log{font:13px/1.5 ui-monospace,Consolas,monospace;white-space:pre-wrap;word-break:break-all;color:var(--sub)}
+.ok{color:var(--ok)}.no{color:var(--no)}#heard{font-size:22px;font-weight:800;min-height:30px}
+</style></head><body>
+<h1>🎙 마이크 점검</h1>
+<p style="color:var(--sub);margin:0">아래 버튼을 누르고 "안녕하세요"라고 말해 보세요. 끝나면 이 화면을 캡처해서 보내 주세요.</p>
+<div class="card" id="info"></div>
+<div class="card"><button id="b1">① 말하기 시험 (앱과 같은 방식)</button><button id="b2" class="sec">② 마이크 권한만 시험</button>
+  <div id="heard"></div></div>
+<div class="card"><b>기록</b><div id="log"></div></div>
+<script>
+const L = document.getElementById('log'), H = document.getElementById('heard');
+const t0 = Date.now(), log = (m, c) => { const d = document.createElement('div'); if (c) d.className = c; d.textContent = ((Date.now() - t0) / 1000).toFixed(1) + '초  ' + m; L.appendChild(d); };
+const R = window.SpeechRecognition || window.webkitSpeechRecognition;
+const ua = navigator.userAgent;
+const inApp = /KAKAOTALK|NAVER|Instagram|FBAN|FBAV|Line\//i.test(ua);
+const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+document.getElementById('info').innerHTML = [
+  ['말하기 기능(SpeechRecognition)', R ? '있음' : '없음', !!R],
+  ['주소', location.protocol === 'https:' ? '안전한 주소(https)' : location.protocol, location.protocol === 'https:'],
+  ['앱 안 브라우저(카카오톡 등)', inApp ? '예 — 크롬이나 사파리로 열어 주세요' : '아니요', !inApp],
+  ['홈 화면 앱으로 실행', standalone ? '예' : '아니요(브라우저)', true],
+  ['기기·브라우저', ua, true]
+].map(([k, v, ok]) => `<div><b>${k}</b>: <span class="${ok ? 'ok' : 'no'}">${v.replace(/</g, '&lt;')}</span></div>`).join('');
+if (navigator.permissions && navigator.permissions.query) navigator.permissions.query({name: 'microphone'}).then(p => { log('마이크 권한 상태: ' + p.state, p.state === 'denied' ? 'no' : ''); }).catch(() => log('마이크 권한 상태: 알 수 없음'));
+document.getElementById('b1').onclick = () => {
+  if (!R) { log('이 브라우저에는 말하기 기능이 없어요', 'no'); return; }
+  H.textContent = '';
+  const r = new R(); r.lang = 'ko-KR'; r.continuous = true; r.interimResults = false; r.maxAlternatives = 3;
+  ['start', 'audiostart', 'soundstart', 'speechstart', 'speechend', 'soundend', 'audioend', 'nomatch'].forEach(ev => r['on' + ev] = () => log('이벤트: ' + ev, ev === 'start' || ev === 'speechstart' ? 'ok' : ''));
+  r.onresult = e => { for (let i = e.resultIndex; i < e.results.length; i++) { const res = e.results[i]; log('결과(' + (res.isFinal ? '확정' : '중간') + '): ' + res[0].transcript, 'ok'); if (res.isFinal) H.textContent = '들은 말: ' + res[0].transcript; } };
+  r.onerror = e => log('오류: ' + e.error + (e.message ? ' / ' + e.message : ''), 'no');
+  r.onend = () => log('끝(end)');
+  try { r.start(); log('start() 불렀어요 — 말해 보세요. 7초 뒤에 멈춰요'); } catch (e) { log('start() 실패: ' + e.message, 'no'); }
+  setTimeout(() => { try { r.stop(); } catch (e) {} }, 7000);
+};
+document.getElementById('b2').onclick = async () => {
+  try { const s = await navigator.mediaDevices.getUserMedia({audio: true}); log('마이크 권한 받음 — 마이크 장치 ' + s.getAudioTracks().map(t => t.label || '(이름 없음)').join(', '), 'ok'); s.getTracks().forEach(t => t.stop()); }
+  catch (e) { log('마이크 권한 실패: ' + e.name + ' ' + e.message, 'no'); }
+};
+</script></body></html>
