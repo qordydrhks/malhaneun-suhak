@@ -15,8 +15,9 @@ U = getattr(M, 'U' + n)
 H = importlib.import_module('help_e62_%s' % n).H
 LF = importlib.import_module('help_figs_e62_%s' % n)
 RN = {0: '🌱 선수', 1: '1회차', 2: '2회차', 3: '3회차'}
-TOPIC_PAGES = {'1': {c: 13 + k for k, c in enumerate('①②③④⑤⑥⑦⑧⑨', 1)}}   # 최상위 6-2 심화유형 쪽(인쇄 쪽 = PDF 인덱스 + 1)
-INFO = {'1': ('8~18쪽', '①~⑨', 9)}
+TOPIC_PAGES = {'1': {c: 13 + k for k, c in enumerate('①②③④⑤⑥⑦⑧⑨', 1)},
+               '2': {c: 39 + k for k, c in enumerate('①②③④⑤⑥⑦⑧⑨', 1)}}   # 최상위 6-2 심화유형 쪽(인쇄 쪽 = PDF 인덱스 + 1)
+INFO = {'1': ('8~18쪽', '①~⑨', 9), '2': ('38~48쪽', '①~⑨', 9)}
 
 CSS = '''@page{size:A4;margin:10mm 11mm}
 body{font:9.2pt/1.5 "Pretendard","Malgun Gothic",sans-serif;color:#1f2430;margin:0}
