@@ -74,6 +74,12 @@ L = {
  '305a':   {(0, 0): 3, (1, 0): 2, (0, 1): 2, (1, 1): 1, (0, 2): 1},
  '305c':   {(0, 0): 1, (1, 0): 3, (2, 0): 1, (1, 1): 2, (1, 2): 1},
  '305d':   {(0, 0): 1, (1, 0): 2, (2, 0): 1, (0, 1): 3, (1, 1): 1, (2, 1): 2},
+ '305e':   {(0, 0): 3, (1, 0): 2, (0, 1): 2, (1, 1): 1, (2, 1): 1},     # 겉넓이: 위 5 · 앞 6 · 옆 5 → 32면, 보이지 않는 면 없음(면 계산 32)
+}
+# 3회차 ⑦·⑨ — 세 방향 모양만 주는 그림(답은 __main__ 에서 가짓수·최대·최소 계산)
+VIEWS = {
+ '304f': ([(0, 0), (1, 0), (0, 1), (1, 1), (2, 1)], [2, 3, 1], [3, 2]),            # 5가지
+ '306c': ([(0, 0), (1, 0), (2, 0), (0, 1), (1, 1), (2, 1)], [3, 2, 1], [2, 3]),    # 9개 ~ 11개
 }
 NUM = {
  '303a': {(0, 0): '1', (1, 0): '2', (2, 0): '3', (0, 1): '4', (1, 1): '5', (2, 1): '6'},
@@ -140,6 +146,9 @@ def build():
     o2 = D.cubes([(0, 0, 0), (1, 0, 0), (2, 0, 0), (3, 0, 0)], 'green', title='나')
     o3 = D.cubes([(0, 0, 0), (1, 0, 0), (0, 1, 0), (0, 2, 0)], 'green', title='다')
     F['306b'] = S(D.row([base, o1, o2, o3], 40), 440)
+    for k, (cells, fv, rv) in VIEWS.items():
+        F[k] = S(D.row([top({p: 1 for p in cells}, title='위'), sidev(fv, '앞'), sidev(rv, '옆')], 34), 330)
+    F['305e'] = S(iso(L['305e']), 220)
     return F
 
 if __name__ == '__main__':
@@ -147,6 +156,11 @@ if __name__ == '__main__':
     for k in ('302b', '302e'):
         h = L[k]; hid = [p for p in h if colpix(h, p) == 0]
         print(k, '숨은 자리', [(p, maxhidden(dict(h, **{}) if False else {q: (1 if q == p else n) for q, n in h.items()}, p)) for p in hid])
+    import itertools
+    for k, (cells, fv, rv) in VIEWS.items():
+        sols = [dict(zip(cells, hs)) for hs in itertools.product(range(1, 4), repeat=len(cells))]
+        sols = [h for h in sols if fview(h) == fv and rview(h) == rv]; ns = [sum(h.values()) for h in sols]
+        print(k, '가짓수', len(sols), '가장 적을 때', min(ns), '가장 많을 때', max(ns))
     for k, h in L.items():
         vis = visible(h); bad = [(p, n, v) for p, n, v in vis if v < 25]
         print(k, '개수', sum(h.values()), '앞', fview(h), '옆', rview(h), '가려짐' if bad else '', bad)

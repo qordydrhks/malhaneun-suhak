@@ -18,7 +18,7 @@ for s in U['smalls']:
         total += 1; keys = D.KEYS[tag][i]; w = []
         if len(h['ask']) != len(keys): w.append('되묻기 수 %d≠핵심 %d' % (len(h['ask']), len(keys)))
         for k, a in zip(keys, h['ask']):
-            hit = [t for t in toks(k) if t in a and not t.isdigit()]
+            hit = [t for t in toks(k) if t in a and not t.isdigit() and t not in q[2]]   # 질문에 이미 있는 낱말은 단서가 아님
             if hit: w.append('되묻기에 핵심 낱말 %s → "%s"' % (hit, a))
             if (nums(k) & nums(a)) - nums(q[2]): w.append('되묻기에 답 숫자 → "%s"' % a)
         if len([x for x in sents(h['short']) if not re.search(r'학년.{0,9}배운', x)]) > 2: w.append('짧은 설명 %d문장' % len(sents(h['short'])))
