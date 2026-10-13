@@ -82,7 +82,7 @@
   }
   function navGo(rt) {
     NAV.restoring = true;
-    try { ({home, star, planet, record, guide, blackhole})[rt[0]](...rt.slice(1)); } finally { NAV.restoring = false; }
+    try { ({home, star, planet, record, guide, blackhole, note})[rt[0]](...rt.slice(1)); } finally { NAV.restoring = false; }
   }
   addEventListener('popstate', e => {
     const st = e.state && e.state.app ? e.state : null;
@@ -168,7 +168,8 @@
     'mission': '행성 질문을 다 마치면 열리는 문제 풀기예요. 보기에서 답을 골라요.',
     '블랙홀 관문': '별의 행성을 모두 밝히면 열리는 마무리 질문이에요. 퉁구리가 숨어 있는 곳!',
     '다시 빛내기': '도움을 받아 통과한 질문을 일주일 뒤에 다시 물어봐요. 스스로 답하면 별빛이 다시 환해져요.',
-    '다시 열린 질문': '어제 못 했던 질문이 오늘 다시 열렸어요. 먼저 해 보자!'
+    '다시 열린 질문': '어제 못 했던 질문이 오늘 다시 열렸어요. 먼저 해 보자!',
+    '별빛노트': '친구들의 별처럼 빛나는 대답 모음이에요. 질문마다 100점을 받은 친구 대답 중에서 무작위로 하나를 골라 보여 줘요(100점이 없으면 90점). 행성 질문을 다 마치면 볼 수 있어요. 네 대답도 오를 수 있어!'
   };
   function showTerm(k) {
     document.querySelector('.tpop')?.remove();
@@ -361,11 +362,12 @@
       <p class="sub">${todo.length ? `질문 ${todo.length}개 · 하나에 약 ${min}분` : (locked ? `남은 질문 ${locked}개는 내일 다시 열려요` : '다 탐험했어요')}</p>${locked && !todo.length ? keyBtn() : ''}
       ${rv.length ? `<button class="primary big" id="rv"><span>다시 빛내기 ${rv.length}개</span><small>일주일 전에 도움을 받았던 질문이야</small></button>` : ''}
       ${todo.length ? `<button class="primary big" id="go">출발</button>` : ''}
-      ${!todo.length && A.M.ready(small, r) ? missionBtns(small, r) : ''}
+      ${!todo.length && A.M.ready(small, r) ? missionBtns(small, r) + noteBtn() : ''}
       ${practice ? `<button class="secondary" id="pr">질문 연습하기 (점수는 그대로)</button>` : ''}</section>`, {back: 'big:' + big.no, backText: big.code, crumb: small.code});
     if ($('#go')) $('#go').onclick = () => run(big, small, r, todo, false);
     if ($('#rv')) $('#rv').onclick = () => run(big, small, r, rv, 'review');
     bindMission(big, small, r);
+    bindNote(small, r);
     if ($('#pr')) $('#pr').onclick = () => run(big, small, r, t, true);
   }
 
@@ -400,9 +402,10 @@
     frame(`<section class="center-msg stage">${buddy(passed ? 'praise' : 'idle')}<h2>${practice ? '연습 끝!' : (passed === n ? '행성에 불이 켜졌어!' : '탐사 끝!')}</h2>
       <p class="sub">${esc(small.title)} · ${E.RL(r)} — 통과 ${passed}/${n}${passed < n && !practice ? ' · 남은 질문은 내일 다시 열려요' : ''}</p>
       ${opened ? `<div class="unlock">✦ ${esc(big.title)}의 ${E.RT(opened)}가 열렸어요!</div>` : ''}
-      ${!practice && A.M.ready(small, r) && !A.M.done(small, r) ? missionBtns(small, r) : `<button class="primary big" data-go="big:${big.no}">${big.code}로</button>`}
+      ${!practice && A.M.ready(small, r) && !A.M.done(small, r) ? missionBtns(small, r) : `<button class="primary big" data-go="big:${big.no}">${big.code}로</button>`}${A.M.ready(small, r) ? noteBtn() : ''}
       <button class="ghost" data-go="home">은하로</button></section>`);
     bindMission(big, small, r);
+    bindNote(small, r);
   }
 
   // ── 블랙홀 관문 (퉁구리 은신처) ──
@@ -489,6 +492,33 @@
     root().querySelectorAll('.stat').forEach(b => b.onclick = () => record(b.dataset.k === which ? null : b.dataset.k));
     $('#rkS').onclick = () => tierPop(rk.score);
     $('#sndT').onclick = () => { if (A.S.soundOn()) A.ls.set('app:sound', 0); else { A.ls.del('app:sound'); A.S.sound('gain'); } record(which); };
+  }
+
+  // ── ✦ 별빛노트(마스터 10/13) — 행성 질문을 다 마친 아이가 친구들의 잘한 대답을 본다 ──
+  const noteBtn = () => `<button class="notebtn" id="nbGo"><span class="nbs">✦</span><span class="nbt"><b><span class="tm" data-term="별빛노트">별빛노트</span></b><small>100점을 받은 친구들의 대답</small></span><span class="nba">›</span></button>`;
+  function bindNote(small, r) { if ($('#nbGo')) $('#nbGo').onclick = () => note(small.code, r); }
+  let NOTE = null;
+  async function note(code, r, again) {
+    const {big, small} = E.small(code);
+    navMark(['note', code, r]);
+    if (!again || !NOTE || NOTE.code !== code || NOTE.r !== r) {
+      frame('<div class="loading">별빛노트를 펼치는 중…</div>', {back: 'small:' + code, crumb: small.code + ' · 별빛노트'});
+      root().querySelector('[data-go="small:' + code + '"]').dataset.r = r;
+      NOTE = {code, r, at: Date.now()};
+    }
+    const L = await A.N.load(small, r);
+    if (!NAV.cur || NAV.cur[0] !== 'note') return;
+    const any = L.some(x => x.pick), many = L.some(x => x.n > 1);
+    frame(`<section class="snote"><div class="sn-head"><span class="nbs big">✦</span><div><h2><span class="tm" data-term="별빛노트">별빛노트</span></h2><p class="sub">${esc(small.title)} · ${E.RL(r)}</p></div></div>
+      <p class="sn-note">질문마다 <b>100점을 받은 친구 대답 중에서 무작위로 하나</b>를 골랐어요. 100점 대답이 없으면 90점 대답 중에서 골라요.</p>
+      <ol class="sn-list">${L.map((x, k) => `<li><div class="sn-q"><span class="sn-n">${k + 1}</span>${fm(x.task.src.q)}</div>
+        ${x.pick ? `<div class="sn-a ${x.pick.mine ? 'mine' : ''}"><div class="sn-who">⭐ ${x.pick.mine ? '내 대답이 뽑혔어!' : esc(x.pick.name) + '의 대답'}<small>${x.level === 100 ? '100점' : '90점 · 되묻기 뒤'}${x.pick.fresh ? ' · 새로 올라옴' : ''}</small></div><p>${fm(x.pick.ans)}</p></div>`
+                 : `<div class="sn-a none">아직 별빛노트에 오른 대답이 없어. 다음에 이 질문에서 별처럼 빛날 대답을 기다리고 있어 ✦</div>`}</li>`).join('')}</ol>
+      ${many ? '<button class="secondary" id="snMore">다른 친구 대답 보기</button>' : ''}
+      ${any ? '' : '<p class="sub center">친구들이 이 행성을 더 탐험하면 대답이 쌓여요.</p>'}
+      <button class="primary big" data-go="small:${code}" data-r="${r}">행성으로</button></section>`, {back: 'small:' + code, backText: small.code, crumb: '별빛노트'});
+    root().querySelectorAll('[data-go="small:' + code + '"]').forEach(b => b.dataset.r = r);
+    if ($('#snMore')) $('#snMore').onclick = () => note(code, r, true);
   }
 
   // ── mission (문제 풀기) ──
@@ -819,6 +849,7 @@
           <ul class="keys">${keysHtml}</ul><div class="model"><b>모범 답</b>${fm(S.ans)}</div>
           <div class="row"><button class="primary big" id="ok">${i < n - 1 ? '다음 질문' : '끝내기'}</button></div></div>`;
         if (gain) A.S.gain(gain, $('#gainChip'));
+        if (!practice && q >= 90) A.N.post({task, small, r: task.r, q, answers: answers.slice(), keys: S.keys, question: S.q, ans: S.ans});   // ✦ 별빛노트 후보(AI 가 한 번 더 보고 올린다)
         $('#ok').onclick = async () => { $('#ok').disabled = true; const opened = await saving; NAV.quit = null; resolve({pass: true, opened}); };
       }
       async function end(r, already) { const opened = await commit(r, already); NAV.quit = null; resolve({pass: r.pass, opened}); }

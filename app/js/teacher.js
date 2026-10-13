@@ -58,12 +58,13 @@
   }
 
   // ── 데이터 ──
-  let STU = [], PROG = {}, OPEN = {}, SETS = {}, STAR = {}, ACAD = '';
+  let STU = [], PROG = {}, OPEN = {}, SETS = {}, STAR = {}, ACAD = '', NB = {n: 0, fresh: 0};
   async function loadAll() {
     const like = p => 'key=like.' + encodeURIComponent(p) + '&select=key,value&limit=1000';
     const [studs, progs, opens, sets, stars] = await Promise.all([A.loadStudents(), A.sbSelect('ai_cache', like('app:prog:*:e4-2')), A.sbSelect('ai_cache', like('app:open:*:e4-2')), A.sbSelect('ai_cache', like('app:set:*:e4-2')), A.sbSelect('ai_cache', like('app:star:*:e4-2')), A.S.loadSems()]);
     PROG = {}; OPEN = {}; SETS = {}; STAR = {};
     for (const r of stars || []) STAR[r.key.split(':')[2]] = r.value;
+    try { const v = await A.N.all(); NB = {n: v.rows.filter(x => x.mod !== 'hide').length, fresh: v.rows.filter(x => !x.mod).length}; } catch (e) {}
     try { ACAD = ((await A.store.get('app:academy')) || {}).name || ''; } catch (e) {}
     for (const r of sets || []) SETS[r.key.split(':')[2]] = r.value;
     for (const r of progs || []) PROG[r.key.split(':')[2]] = r.value;
@@ -103,6 +104,8 @@
         <span class="talert ${v.stuck.length ? 'on' : ''}">${v.stuck.length ? '막힘 ' + v.stuck.length : ''}</span>
         <span class="tago">${ago(v.at)}${v.ses !== 10 || v.qmin ? `<small>⏱ ${v.ses}분${v.qmin ? ' · 질문 ' + v.qmin + '분' : ''}</small>` : ''}</span></button>`).join('') || '<p class="sub">초4 학생이 없어요.</p>'}</div>
       <div class="tacad"><label>학원 이름 <input id="tAcad" maxlength="20" placeholder="예: 두드림 수학" value="${esc(ACAD)}"></label><button class="secondary small" id="tAcadS">저장</button><span class="sub" id="tAcadM">학생 화면 왼쪽 위에 보여요(비우면 「말하는 수학」)</span></div>
+      <h3 class="tsec">✦ 별빛노트 <small>${NB.fresh ? '새로 올라온 대답 ' + NB.fresh + '개 — 확인해 주세요' : '새로 올라온 대답 없음'}</small></h3>
+      <div class="tset"><button class="${NB.fresh ? 'primary' : 'secondary'} small" id="tNb">별빛노트 보기 (${NB.n}개)</button><span class="sub">AI 가 한 번 더 확인한 100·90점 대답만 올라가요. 숨기면 다른 대답이 대신 보여요.</span></div>
       ${semEditor()}
       <div class="tfoot">
         <button class="secondary small" id="tDev">${dev ? '✅ 이 기기는 학원 기기 · 해제' : '이 기기를 학원 기기로 등록'}</button>
@@ -111,6 +114,7 @@
       </div>`);
     $('#tRe').onclick = list;
     bindSem();
+    $('#tNb').onclick = () => noteAdmin(false);
     $('#tAcadS').onclick = async () => { ACAD = $('#tAcad').value.trim(); await A.store.set('app:academy', {name: ACAD, at: Date.now()}); $('#tAcadM').textContent = '저장했어요'; };
     $('#tBuzz').onclick = () => { try { if (localStorage.getItem('app:buzz') === '0') { localStorage.removeItem('app:buzz'); navigator.vibrate && navigator.vibrate(30); } else localStorage.setItem('app:buzz', '0'); } catch (e) {} list(); };
     $('#tDev').onclick = () => { try { if (dev) localStorage.removeItem('dd:academyDevice'); else localStorage.setItem('dd:academyDevice', '1'); } catch (e) {} list(); };
@@ -140,6 +144,22 @@
       await A.store.set('app:semesters', {list: out, at: Date.now()}); A.S.useSems(out);
       $('#semMsg').textContent = '저장했어요'; setTimeout(list, 500);
     };
+  }
+
+  // ── ✦ 별빛노트 관리(마스터 10/13) — 새로 올라온 것부터 · 확인 / 숨기기 ──
+  async function noteAdmin(showAll) {
+    frame('<div class="loading">불러오는 중…</div>', {back: list, backText: '학생', crumb: '별빛노트'});
+    const v = await A.N.all();
+    const rows = showAll ? v.rows : v.rows.filter(x => !x.mod);
+    const qOf = x => { const ix = IDX[x.qid]; return ix ? ix : null; };
+    frame(`<div class="thead"><h2>✦ 별빛노트</h2><button class="ghost small" id="nbAll">${showAll ? '확인 안 한 것만' : '전부 보기'}</button></div>
+      <p class="sub">학생에게는 질문마다 100점 대답 중 무작위 하나(없으면 90점)가 보여요. AI 가 다시 확인해서 통과한 것만 올라와요.<br>틀린 내용이 있으면 <b>숨기기</b> — 다른 대답이 대신 보여요. 괜찮으면 <b>확인</b>(새로 올라옴 표시가 사라져요).</p>
+      <ul class="tli tnb">${rows.map(x => { const ix = qOf(x); return `<li data-k="${esc(x.key)}"><div class="tq"><span class="code">${esc(ix ? where(ix) : x.code)}</span>${ix ? fm(ix.q) : ''}</div>
+        <div class="tmeta"><b>${esc(x.name)}</b> · ${x.q}점 · ${ago(x.at)}${x.mod === 'hide' ? ' · 숨김' : x.mod === 'ok' ? ' · 확인함' : ' · 새로 올라옴'}${x.why ? ' · AI: ' + esc(x.why) : ''}</div>
+        <p class="tans">${fm(x.ans)}</p>
+        <div class="row">${x.mod !== 'ok' ? '<button class="secondary small" data-m="ok">✓ 확인</button>' : ''}${x.mod !== 'hide' ? '<button class="ghost small" data-m="hide">숨기기</button>' : '<button class="ghost small" data-m="">다시 보이기</button>'}</div></li>`; }).join('') || '<li class="sub">확인할 대답이 없어요</li>'}</ul>`, {back: list, backText: '학생', crumb: '별빛노트'});
+    $('#nbAll').onclick = () => noteAdmin(!showAll);
+    root().querySelectorAll('[data-m]').forEach(b => b.onclick = async () => { b.disabled = true; await A.N.setMod(b.closest('li').dataset.k, b.dataset.m); noteAdmin(showAll); });
   }
 
   // ── 학생 한 명 ──
