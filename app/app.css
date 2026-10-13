@@ -403,3 +403,33 @@ body.intro-on .sclock{display:none}
 .tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;line-height:1.25}
 .tab .lvt{margin:0;font-size:11px}
 .live .hear{color:var(--sub);font-size:15px}
+/* ⭐ 별빛(마스터 10/13) — 위쪽 숫자 · 결과의 '+n' · 날아가는 별 가루 */
+.bar .who{display:flex;align-items:center;gap:4px}
+.starct{display:inline-flex;align-items:center;gap:4px;background:linear-gradient(180deg,#2a2a14,#1d1d10);border:1px solid #f2c45f66;border-radius:99px;padding:4px 11px 4px 8px;color:var(--gold);font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;transition:transform .2s}
+.starct i{font-style:normal;font-size:15px}
+.starct.bump{transform:scale(1.18);box-shadow:0 0 18px #f2c45f88}
+.gain{display:flex;flex-direction:column;align-items:center;gap:1px;margin-top:-4px;animation:gainIn .5s cubic-bezier(.3,1.6,.5,1) both}
+.gain b{color:var(--gold);font-size:19px;letter-spacing:.02em;text-shadow:0 0 14px #f2c45f88}
+.gain small{color:var(--sub);font-size:12px}
+@keyframes gainIn{0%{transform:scale(.4);opacity:0}100%{transform:scale(1);opacity:1}}
+.sdust{position:fixed;z-index:80;pointer-events:none;font-style:normal;color:var(--gold);font-size:17px;text-shadow:0 0 10px #f2c45f}
+.starcards{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.scard{display:grid;gap:2px;background:linear-gradient(135deg,#29260f,#17150b);border:1px solid #f2c45f55;border-radius:var(--r);padding:12px 14px}
+.scard span{font-size:13px;color:var(--sub)}.scard b{font-size:28px;color:var(--gold);font-variant-numeric:tabular-nums;line-height:1.15}.scard small{font-size:11.5px;color:var(--sub)}
+.scard.all{background:linear-gradient(135deg,#1b2350,#141a33);border-color:#33407a}.scard.all b{color:var(--blue)}
+.rankcard .rkscore{margin-left:auto;display:grid;justify-items:center;background:#0006;border:1px solid #33407a;border-radius:14px;padding:6px 12px}
+.rkscore b{font-size:24px;color:var(--ink);line-height:1.1}.rkscore small{font-size:11px;color:var(--sub)}
+table.tiers{width:100%;border-collapse:collapse;margin:8px 0;font-size:14.5px}
+table.tiers td{padding:6px 6px;border-bottom:1px solid #e3e0d4}table.tiers td:first-child{font-size:20px;width:30px}
+table.tiers tr.me{background:#fff2c9}table.tiers small{color:#6b7190}
+.rec .myd{margin-top:4px}.rec .myd summary{font-size:13px;color:var(--gold);cursor:pointer}
+.rec .myd p{margin:6px 0 2px;padding:8px 10px;background:#0005;border-radius:10px;font-size:14.5px;line-height:1.6}
+.rec .redo{justify-self:start;color:var(--gold);padding:4px 0}
+@media (max-width:520px){.starct{padding:3px 8px 3px 6px;font-size:14px}.bar .who .ghost.small{font-size:12.5px;padding:6px 6px}}
+.tsem{display:grid;gap:8px}
+.semrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.semrow input{font:inherit;font-size:14px;color:var(--ink);background:var(--sky2);border:1px solid var(--line);border-radius:8px;padding:6px 10px;color-scheme:dark}
+.semrow .semn{width:13em;max-width:60vw}
+.tlit small{display:block;color:var(--gold);font-size:12px}
+.rec .myd p small{color:var(--sub);font-size:11.5px;margin-right:4px}
+table.tiers td:nth-child(3){white-space:nowrap}

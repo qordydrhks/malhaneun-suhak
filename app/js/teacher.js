@@ -58,11 +58,12 @@
   }
 
   // ── 데이터 ──
-  let STU = [], PROG = {}, OPEN = {}, SETS = {}, ACAD = '';
+  let STU = [], PROG = {}, OPEN = {}, SETS = {}, STAR = {}, ACAD = '';
   async function loadAll() {
     const like = p => 'key=like.' + encodeURIComponent(p) + '&select=key,value&limit=1000';
-    const [studs, progs, opens, sets] = await Promise.all([A.loadStudents(), A.sbSelect('ai_cache', like('app:prog:*:e4-2')), A.sbSelect('ai_cache', like('app:open:*:e4-2')), A.sbSelect('ai_cache', like('app:set:*:e4-2'))]);
-    PROG = {}; OPEN = {}; SETS = {};
+    const [studs, progs, opens, sets, stars] = await Promise.all([A.loadStudents(), A.sbSelect('ai_cache', like('app:prog:*:e4-2')), A.sbSelect('ai_cache', like('app:open:*:e4-2')), A.sbSelect('ai_cache', like('app:set:*:e4-2')), A.sbSelect('ai_cache', like('app:star:*:e4-2')), A.S.loadSems()]);
+    PROG = {}; OPEN = {}; SETS = {}; STAR = {};
+    for (const r of stars || []) STAR[r.key.split(':')[2]] = r.value;
     try { ACAD = ((await A.store.get('app:academy')) || {}).name || ''; } catch (e) {}
     for (const r of sets || []) SETS[r.key.split(':')[2]] = r.value;
     for (const r of progs || []) PROG[r.key.split(':')[2]] = r.value;
@@ -97,21 +98,48 @@
       <div class="tlist">${rows.map(({s, v}) => `<button class="trow" data-id="${esc(s.id)}">
         <span class="tname">${esc(s.name)}<small>${esc(s.grade)}</small></span>
         <span class="trank">${v.any && v.rk.score != null ? `${v.rk.icon} ${v.rk.name} <b>${Math.round(v.rk.score)}</b>` : '<i>시작 전</i>'}</span>
-        <span class="tlit">행성 ${v.rk.lit}/${v.rk.total}</span>
+        <span class="tlit">행성 ${v.rk.lit}/${v.rk.total}<small>⭐ ${semStars(s.id).toLocaleString('ko-KR')}</small></span>
         <span class="tnow">${v.any && v.nx ? esc(v.nx.small ? v.nx.small.code : v.nx.big.code + ' 블랙홀') + ' · ' + E.RT(v.nx.r) : ''}</span>
         <span class="talert ${v.stuck.length ? 'on' : ''}">${v.stuck.length ? '막힘 ' + v.stuck.length : ''}</span>
         <span class="tago">${ago(v.at)}${v.ses !== 10 || v.qmin ? `<small>⏱ ${v.ses}분${v.qmin ? ' · 질문 ' + v.qmin + '분' : ''}</small>` : ''}</span></button>`).join('') || '<p class="sub">초4 학생이 없어요.</p>'}</div>
       <div class="tacad"><label>학원 이름 <input id="tAcad" maxlength="20" placeholder="예: 두드림 수학" value="${esc(ACAD)}"></label><button class="secondary small" id="tAcadS">저장</button><span class="sub" id="tAcadM">학생 화면 왼쪽 위에 보여요(비우면 「말하는 수학」)</span></div>
+      ${semEditor()}
       <div class="tfoot">
         <button class="secondary small" id="tDev">${dev ? '✅ 이 기기는 학원 기기 · 해제' : '이 기기를 학원 기기로 등록'}</button>
         <button class="secondary small" id="tBuzz">${localStorage.getItem('app:buzz') === '0' ? '📳 진동 꺼짐 (이 기기) · 켜기' : '📳 진동 켜짐 (이 기기) · 끄기'}</button>
         <a class="ghost small" href="index.html">학생 화면 ›</a><a class="ghost small" href="../dodream.html">학생 등록 · 비밀번호 · AI 연결 (옛 선생님 화면) ›</a>
       </div>`);
     $('#tRe').onclick = list;
+    bindSem();
     $('#tAcadS').onclick = async () => { ACAD = $('#tAcad').value.trim(); await A.store.set('app:academy', {name: ACAD, at: Date.now()}); $('#tAcadM').textContent = '저장했어요'; };
     $('#tBuzz').onclick = () => { try { if (localStorage.getItem('app:buzz') === '0') { localStorage.removeItem('app:buzz'); navigator.vibrate && navigator.vibrate(30); } else localStorage.setItem('app:buzz', '0'); } catch (e) {} list(); };
     $('#tDev').onclick = () => { try { if (dev) localStorage.removeItem('dd:academyDevice'); else localStorage.setItem('dd:academyDevice', '1'); } catch (e) {} list(); };
     root().querySelectorAll('.trow').forEach(b => b.onclick = () => detail(STU.find(s => s.id === b.dataset.id)));
+  }
+
+  /* 학기 별빛 = 학생 요약의 날짜별 별빛을 지금 학기 날짜로 더한 것(마스터가 학기 날짜를 바꾸면 바로 다시 계산) */
+  const semStars = sid => { const v = STAR[sid]; if (!v || !v.days) return 0; const sm = A.S.sem(); return Object.entries(v.days).reduce((a, [d, n]) => a + ((d >= sm.start && (!sm.end || d < sm.end)) ? n : 0), 0); };
+  // ── 학기 시작일(마스터 10/13: 실제 학기와 학원 학기가 다를 수 있어서 직접 정한다) ──
+  function semEditor() {
+    const list = (A.S.sems() || []).slice().sort((a, b) => (a.start < b.start ? -1 : 1)), cur = A.S.sem();
+    const row = x => `<div class="semrow"><input type="date" class="semd" value="${esc(x.start || '')}"><input class="semn" maxlength="20" placeholder="이름 (예: 2026년 2학기)" value="${esc(x.name || '')}"><button type="button" class="ghost small semx">빼기</button></div>`;
+    return `<h3 class="tsec">학기 <small>지금: ${esc(cur.name)} (${cur.start}부터${cur.end ? ' ~ ' + cur.end + ' 전날' : ''})</small></h3>
+      <div class="tsem"><p class="sub">학원 학기가 시작하는 날을 적어 두면 그날부터 <b>학기 별빛</b>이 0에서 다시 모여요(전체 별빛은 그대로). 아무것도 없으면 3월 1일 · 9월 1일로 바뀌어요.</p>
+      <div id="semRows">${list.map(row).join('')}</div>
+      <div class="row"><button class="secondary small" id="semAdd">+ 학기 추가</button><button class="primary small" id="semSave">학기 저장</button><span class="sub" id="semMsg"></span></div></div>`;
+  }
+  function bindSem() {
+    const rows = $('#semRows'); if (!rows) return;
+    const bindX = () => rows.querySelectorAll('.semx').forEach(b => b.onclick = () => b.parentNode.remove());
+    bindX();
+    $('#semAdd').onclick = () => { const d = document.createElement('div'); d.className = 'semrow'; d.innerHTML = '<input type="date" class="semd"><input class="semn" maxlength="20" placeholder="이름 (예: 2026년 2학기)"><button type="button" class="ghost small semx">빼기</button>'; rows.appendChild(d); bindX(); d.querySelector('.semd').focus(); };
+    $('#semSave').onclick = async () => {
+      const out = [...rows.querySelectorAll('.semrow')].map(r => ({start: r.querySelector('.semd').value, name: r.querySelector('.semn').value.trim()})).filter(x => /^\d{4}-\d{2}-\d{2}$/.test(x.start));
+      out.forEach(x => { if (!x.name) x.name = x.start.slice(0, 4) + '년 ' + (+x.start.slice(5, 7) >= 2 && +x.start.slice(5, 7) <= 6 ? '1학기' : '2학기'); });
+      out.sort((a, b) => (a.start < b.start ? -1 : 1));
+      await A.store.set('app:semesters', {list: out, at: Date.now()}); A.S.useSems(out);
+      $('#semMsg').textContent = '저장했어요'; setTimeout(list, 500);
+    };
   }
 
   // ── 학생 한 명 ──

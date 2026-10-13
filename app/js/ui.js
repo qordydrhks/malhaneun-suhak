@@ -35,7 +35,7 @@
     const s = A.session.student;
     root().innerHTML = `<header class="bar">${opt.back ? `<button class="ghost" data-go="${opt.back}">‹ ${esc(opt.backText || '뒤로')}</button>` : `<span class="logo">${esc(A.academy || '말하는 수학')}</span>`}
       <span class="crumb">${esc(opt.crumb || '')}</span>
-      <span class="who">${s ? `<button class="ghost small" data-go="logout">${esc(s.name)} · 나가기</button>` : ''}</span></header><main class="${opt.cls || ''}">${inner}</main>`;
+      <span class="who">${s && E.prog() && A.S && !opt.nostar ? A.S.badge() : ''}${s ? `<button class="ghost small" data-go="logout">${esc(s.name)} · 나가기</button>` : ''}</span></header><main class="${opt.cls || ''}">${inner}</main>`;
     window.scrollTo(0, 0);
     tickClock();
   }
@@ -372,6 +372,7 @@
   // ── 6. 한 행성의 질문들 ──
   async function run(big, small, r, list, practice) {
     if (!A.isAcademyDevice()) return blocked();
+    MYSUBS = null;
     await E.loadSettings();                       // 선생님이 바꾼 시간이 바로 들어오게
     await applyCmds();
     { const o = sess(); if (sessOver(o)) return sessionEnd(0); if (!o.start) { o.start = Date.now(); sessSave(o); } }
@@ -428,23 +429,66 @@
   }
 
   // ── 나의 기록 ──
-  function record(which) {
+  /* 마스터 10/13: 별빛(학기·전체)을 따로 보여 주고, 질문 목록에서 내가 어떻게 대답했는지도 볼 수 있게(서버 기록 submissions 에서 읽음) */
+  let MYSUBS = null, MYSUBS_AT = 0;
+  async function mySubs() {
+    if (MYSUBS && Date.now() - MYSUBS_AT < 60000) return MYSUBS;
+    const sid = encodeURIComponent(A.session.student.id), base = 'student_id=eq.' + sid + '&course_id=eq.e4-2&order=created_at.desc&limit=1000&select=question_id,transcript,pass,score,created_at,level';
+    let rows = null;
+    try { rows = await A.sbSelect('submissions', base + ',stage'); } catch (e) { try { rows = await A.sbSelect('submissions', base); } catch (e2) {} }
+    if (!rows) return MYSUBS || {};
+    const m = {};
+    for (const r of rows) {
+      if (!r.question_id) continue;
+      const o = m[r.question_id] || (m[r.question_id] = {});
+      const prac = r.stage === 'practice' || /re$/.test(r.level || '');
+      if (r.pass && !prac && !o.pass) o.pass = r;
+      if (!o.last) o.last = r;
+    }
+    MYSUBS = m; MYSUBS_AT = Date.now();
+    return m;
+  }
+  const ansHtml = t => { const L = String(t || '').trim().split('\n'); return L.length > 1 ? L.map(x => esc(x).replace(/^(\d+)차:\s*/, '<small>$1번째</small> ')).join('<br>') : esc(L[0].replace(/^\d+차:\s*/, '')); };
+  function tierPop(score) {
+    document.querySelector('.tpop')?.remove();
+    const d = document.createElement('div'); d.className = 'tpop';
+    const cur = E.rank().tier;
+    d.innerHTML = `<div class="tpop-in"><b>탐험가 등급표</b>
+      <table class="tiers">${E.TIERS.map((t, k) => `<tr class="${k === cur && score != null ? 'me' : ''}"><td>${t[2]}</td><td><b>${t[0]}</b> <small>${t[1]}</small></td><td>${A.S.TIER_RANGE[k][0]}점</td><td><small>${A.S.TIER_RANGE[k][1]}</small></td></tr>`).join('')}</table>
+      <p>등급 점수는 지금까지 한 질문을 <b>얼마나 잘 설명했는지</b>의 평균이야. 스스로 한 번에 설명하면 100, 되묻기 뒤면 90처럼 모여.${score != null ? ` 지금 내 등급 점수는 <b>${Math.round(score)}점</b>.` : ''}<br>별빛은 쌓은 양이고, 등급은 이해한 정도야.</p>
+      <button class="ghost small">알겠어</button></div>`;
+    d.onclick = () => d.remove(); document.body.appendChild(d); A.buzz(8);
+  }
+  async function record(which) {
     navMark(['record', which || null]);
-    const rk = E.rank(), bk = E.book();
+    const rk = E.rank(), bk = E.book(), sem = A.S.sem();
     const LBL = {one: ['한 번에', 'one pass'], h1: ['되묻기 뒤', 'hint 1'], h2: ['도움 뒤', 'hint 2'], yet: ['아직', '다시 하면 빛나요']};
     const nameOf = it => it.t.kind === 'bh' ? it.b.title + ' 블랙홀 · ' + E.RT(it.r) : it.s.title + ' · ' + E.RT(it.r);
-    const qOf = it => { const x = E.status(it.t.id); return it.t.kind === 'bh' ? it.b.bh[it.r].q : it.t.kind === 'lad' ? it.t.src.q : it.t.src.q; };
-    const list = which ? bk[which].map(it => `<li><button class="rec" ${which === 'yet' && it.s ? `data-go="small:${it.s.code}" data-r="${it.r}"` : (which === 'yet' ? `data-go="bh:${it.b.no}" data-r="${it.r}"` : '')}>
-        <span class="code">${esc(nameOf(it))}</span><span>${fm(qOf(it))}</span>${which === 'yet' ? '<b>다시 하기 →</b>' : ''}</button></li>`).join('') : '';
+    const qOf = it => it.t.kind === 'bh' ? it.b.bh[it.r].q : it.t.src.q;
+    const subs = which ? await mySubs() : {};
+    if (NAV.cur && NAV.cur[0] !== 'record') return;               // 불러오는 사이 다른 화면으로 갔으면 그리지 않는다
+    const list = which ? bk[which].map(it => {
+      const o = subs[it.t.id] || {}, row = which === 'yet' ? o.last : (o.pass || o.last);
+      const go = which === 'yet' ? (it.s ? `data-go="small:${it.s.code}" data-r="${it.r}"` : `data-go="bh:${it.b.no}" data-r="${it.r}"`) : '';
+      return `<li class="rec"><span class="code">${esc(nameOf(it))}</span><span>${fm(qOf(it))}</span>
+        ${row && row.transcript ? `<details class="myd"><summary>내 대답 보기</summary><p>${ansHtml(row.transcript)}</p></details>` : ''}
+        ${which === 'yet' ? `<button class="ghost small redo" ${go}>다시 하기 →</button>` : ''}</li>`;
+    }).join('') : '';
     frame(`<section class="book">
+      <div class="starcards"><div class="scard"><span>⭐ 학기 별빛</span><b>${A.S.semPts().toLocaleString('ko-KR')}</b><small>${esc(sem.name)} · E4-2</small></div>
+        <div class="scard all"><span>🌌 전체 별빛</span><b>${A.S.totalPts().toLocaleString('ko-KR')}</b><small>지금까지 모은 별빛 전부</small></div></div>
       <div class="rankcard"><div class="ri">${rk.icon}</div><div><div class="rn">${rk.name} <small>(${rk.ko})</small></div>
-        <div class="sub">행성 ${rk.lit}/${rk.total}개를 밝혔어</div></div></div>
-      <details class="how"><summary>등급은 어떻게 올라가?</summary><p>스스로 한 번에 답하면 빛이 가장 크게 모여. 되묻기나 도움을 봐도 안 하는 것보다 훨씬 많이 모여!<br>
-        루나 → 테라 → 솔 → 갤럭시 → 코스모스. 갤럭시는 별계 탐사, 코스모스는 은하 탐사까지 해야 될 수 있어.</p></details>
+        <div class="sub">행성 ${rk.lit}/${rk.total}개를 밝혔어</div></div><button class="rkscore" id="rkS"><small>등급 점수</small><b>${rk.score != null ? Math.round(rk.score) : '—'}</b><small>등급표 ›</small></button></div>
+      <details class="how"><summary>별빛은 어떻게 모아?</summary><p>질문을 처음 통과하면 받은 점수만큼 별빛이 모여. 난이도 2는 1.5배, 난이도 3은 2배!<br>
+        mission 은 맞힌 문제마다 20(hard mission 은 30), 다시 빛내기를 통과하면 30.<br>
+        <b>학기 별빛</b>은 학기가 바뀌면 0부터 다시 모으고, <b>전체 별빛</b>은 계속 쌓여. 연습으로 다시 한 질문은 별빛이 더 생기지 않아.</p></details>
       <div class="stats">${Object.keys(LBL).map(k => `<button class="stat ${which === k ? 'on' : ''}" data-k="${k}"><b>${bk[k].length}</b><span>${LBL[k][0]}</span><small>${LBL[k][1]}</small></button>`).join('')}</div>
-      ${which ? `<ul class="reclist">${list || '<li class="sub">아직 없어요</li>'}</ul>` : '<p class="sub center">숫자를 누르면 그 질문들을 볼 수 있어.</p>'}
+      ${which ? `<ul class="reclist">${list || '<li class="sub">아직 없어요</li>'}</ul>` : '<p class="sub center">숫자를 누르면 그 질문들과 내 대답을 볼 수 있어.</p>'}
+      <p class="center"><button class="ghost small" id="sndT">${A.S.soundOn() ? '🔊 효과음 켜짐 · 끄기' : '🔇 효과음 꺼짐 · 켜기'}</button></p>
     </section>`, {back: 'home', backText: '은하', crumb: '나의 기록'});
     root().querySelectorAll('.stat').forEach(b => b.onclick = () => record(b.dataset.k === which ? null : b.dataset.k));
+    $('#rkS').onclick = () => tierPop(rk.score);
+    $('#sndT').onclick = () => { if (A.S.soundOn()) A.ls.set('app:sound', 0); else { A.ls.del('app:sound'); A.S.sound('gain'); } record(which); };
   }
 
   // ── mission (문제 풀기) ──
@@ -496,16 +540,18 @@
     };
     const done = async () => {
       NAV.quit = null;
+      const gain = first && ok ? A.S.add('mis:' + small.code + ':r' + r + ':' + (hard ? 'hard' : 'basic'), ok * A.S.MIS[hard ? 'hard' : 'basic'], hard ? 'hard' : 'mis', r) : 0;
       const saved = first ? await A.M.save(big, small, r, hard, ok, quiz.length) : false;
       const all = ok === quiz.length;
       if (all && first) A.buzz(BZ.big);
       frame(`<section class="center-msg stage">${all ? buddy('praise') : `<img class="mload" src="img/tunguri.webp" alt="">`}
         <h2>${all ? '별빛을 모두 되찾았어!' : ok ? '별빛을 조금 되찾았어!' : '퉁구리가 도망갔어…'}</h2>
-        <div class="score">${ok}<small> / ${quiz.length}</small></div>
+        <div class="score">${ok}<small> / ${quiz.length}</small></div>${A.S.chip(gain, r, 'mis')}
         <p class="sub">${esc(name)}${saved ? '' : ' · 연습(처음 결과는 그대로)'}</p>
         ${!hard && !A.M.done(small, r, true) ? `<button class="secondary mbtn" id="mHard"><b>${A.M.name(r, true)}</b> <small>도전해 볼래? (선택 · 틀려도 괜찮아)</small></button>` : ''}
         <button class="primary big" data-go="big:${big.no}">${big.code}로</button><button class="ghost" data-go="home">은하로</button></section>`);
       bindMission(big, small, r);
+      if (gain) A.S.gain(gain, $('#gainChip'), all);
     };
     one();
   }
@@ -763,12 +809,20 @@
         setBuddy('praise'); A.buzz(BZ.pass);
         const keysHtml = S.keys.map((k, j) => `<li class="${last && last.hits[j]?.hit ? 'hit' : ''}">${last && last.hits[j]?.hit ? '✓' : '·'} ${fm(k)}</li>`).join('');
         say(`<b>${esc(line('praise'))}</b>`, 'ok');
-        $('#ans').innerHTML = `<div class="result">${q != null ? `<div class="score">${q}<small>점</small></div>` : '<div class="score small">연습</div>'}
+        const rr = {st: 'pass', q, help: helpNow || (S.mode === 'again' || S.mode === 'nextday' ? (E.status(task.id)?.help || '') : ''), helpNow: !!helpNow, stage: helpNow === 'kw' ? 'kw' : reasks ? 'reask' : (S.mode === 'first' ? 'first' : S.mode), pass: true};
+        /* ⭐ 별빛(마스터 10/13): 점수가 나오면 바로 별빛이 위쪽 숫자에 더해진다. 처음 통과 때만 · 연습은 0 */
+        let gain = 0, why = '';
+        if (practice === 'review') { why = 'rv'; gain = A.S.add(task.id + ':rv', A.S.REVIEW, why, task.r); }
+        else if (!practice) { why = A.S.whyOf(rr.stage); gain = A.S.add(task.id, A.S.ptsFor(task.r, q), why, task.r); }
+        const saving = commit(rr, true);                         // 결과가 보이는 순간 저장(이 화면에서 나가도 통과가 남는다)
+        $('#ans').innerHTML = `<div class="result">${q != null ? `<div class="score">${q}<small>점</small></div>` : '<div class="score small">연습</div>'}${A.S.chip(gain, task.r, why)}
           <ul class="keys">${keysHtml}</ul><div class="model"><b>모범 답</b>${fm(S.ans)}</div>
           <div class="row"><button class="primary big" id="ok">${i < n - 1 ? '다음 질문' : '끝내기'}</button></div></div>`;
-        $('#ok').onclick = () => end({st: 'pass', q, help: helpNow || (S.mode === 'again' || S.mode === 'nextday' ? (E.status(task.id)?.help || '') : ''), helpNow: !!helpNow, stage: helpNow === 'kw' ? 'kw' : reasks ? 'reask' : (S.mode === 'first' ? 'first' : S.mode), pass: true});
+        if (gain) A.S.gain(gain, $('#gainChip'));
+        $('#ok').onclick = async () => { $('#ok').disabled = true; const opened = await saving; NAV.quit = null; resolve({pass: true, opened}); };
       }
-      async function end(r, already) {
+      async function end(r, already) { const opened = await commit(r, already); NAV.quit = null; resolve({pass: r.pass, opened}); }
+      async function commit(r, already) {
         if (!already) stop();
         let opened = 0;
         const score = r.pass ? Math.max(70, r.q || 70) : Math.round(60 * (last ? last.h / Math.max(1, last.n) : 0));
@@ -785,8 +839,7 @@
         } else {
           await E.submit({big, small, task, question: S.q, transcript: answers.join('\n'), score, pass: r.pass, stage: 'practice', help: r.help, quality: null, practice: true, attempt: answers.length, reasks});
         }
-        NAV.quit = null;
-        resolve({pass: r.pass, opened});
+        return opened;
       }
     });
   }
