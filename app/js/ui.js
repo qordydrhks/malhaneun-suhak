@@ -57,7 +57,7 @@
     const b = e.target.closest('[data-go]'); if (!b) return;
     const g = b.dataset.go;
     if (g === 'home') home(); else if (g === 'logout') { A.logout(); login(); }
-    else if (g === 'hall') hall(); else if (g === 'calc') calcHub();
+    else if (g === 'hall') hall(); else if (g === 'calc') calcHub(); else if (g === 'battle') battleHub();
     else if (g.startsWith('big:')) star(+g.slice(4)); else if (g.startsWith('small:')) planet(g.slice(6), +b.dataset.r); else if (g.startsWith('bh:')) blackhole(+g.slice(3), +b.dataset.r); else if (g === 'record') record(); else if (g === 'guide') guide();
   });
 
@@ -83,7 +83,7 @@
   }
   function navGo(rt) {
     NAV.restoring = true;
-    try { ({home, star, planet, record, guide, blackhole, note, hall, calc: calcHub, calcu: calcUnit})[rt[0]](...rt.slice(1)); } finally { NAV.restoring = false; }
+    try { ({home, star, planet, record, guide, blackhole, note, hall, calc: calcHub, calcu: calcUnit, battle: battleHub})[rt[0]](...rt.slice(1)); } finally { NAV.restoring = false; }
   }
   addEventListener('popstate', e => {
     const st = e.state && e.state.app ? e.state : null;
@@ -304,6 +304,9 @@
       <details><summary>🎯 mission · hard mission</summary><p>행성 질문을 다 마치면 열리는 문제 풀기예요. 보기에서 답을 골라요. <b>hard mission</b>은 더 어려운 문제로, 하고 싶은 친구만! 틀려도 깎이지 않아요. 처음 푼 결과만 기록돼요.</p></details>
       <details><summary>✨ 다시 빛내기</summary><p>도움을 받아 통과한 질문은 일주일 뒤에 다시 물어봐요. 이번에 스스로 답하면 별빛이 다시 환해져요.</p></details>
       <details><summary>🏅 탐험가 등급</summary><p>이해가 커질수록 더 큰 세상으로 가요.</p><ul class="g-tiers">${tiers}</ul><p>스스로 한 번에 답하면 빛이 더 크게 모여요. 힌트를 봐도 안 한 것보다 훨씬 나아요. 갤럭시는 난이도 2, 코스모스는 난이도 3까지 해야 될 수 있어요.</p></details>
+      <details><summary>⭐ 별빛 · 🏆 빛나는 탐험가</summary><p>질문을 <b>처음 통과</b>하면 점수만큼 별빛이 모여요(난이도 2는 1.5배, 난이도 3은 2배). <b>학기 별빛</b>은 학기마다 새로, <b>전체 별빛</b>은 계속 쌓여요.<br>학기 별빛이 가장 많은 세 친구는 <b>🌟 북극성 · ✨ 샛별 · 💫 혜성</b>! 이번 주 상도 다섯 가지가 있어요.</p></details>
+      <details><summary>✦ 별빛노트</summary><p>행성 질문을 다 마치면 친구들의 100점 대답을 볼 수 있어요. 질문마다 무작위로 하나씩 골라 보여 줘요. 네 대답도 오를 수 있어!</p></details>
+      <details><summary>⚡ 계산 연습 · ⚔ 친구와 대결</summary><p><b>계산 연습</b>은 퉁구리와 경주해요. 8문제 이상 맞히고 먼저 도착하면 이겨요(하루 3번까지 별빛 +10).<br><b>친구와 대결</b>은 대기실에서 친구에게 신청해요. 개념 대결은 정확하고 꼼꼼하게 설명한 쪽이, 계산 대결은 많이 맞힌 쪽이 이겨요. 이기면 배지가 자라요!</p></details>
       <details><summary>⏱ 오늘 공부 시간</summary><p>화면에 떠 있는 작은 시계는 <b>오늘 남은 공부 시간</b>이에요. 다 되면 지금 질문까지만 하고 쉬어요. 시계는 <b>꾹 눌러 끌면</b> 다른 곳으로 옮길 수 있어요.</p></details>
       <details><summary>🔒 잠긴 질문</summary><p>오늘 못 한 질문은 <b>다음 날 새벽 4시</b>에 다시 열려요.</p></details>
       <details><summary>👋 친구 · 이야기</summary><p>숫자 탐험대 다섯 친구 중 네가 고른 친구가 함께 다녀요.</p><button class="ghost small" id="gPick">친구 바꾸기 ›</button> <button class="ghost small" id="gStory">이야기 다시 보기 ›</button></details>
@@ -326,7 +329,7 @@
                ? `<button class="primary big go" data-go="bh:${nx.big.no}" data-r="${nx.r}"><span>오늘 갈 곳</span><small>${esc(nx.big.title)} · <span class="tm" data-term="블랙홀 관문">블랙홀 관문</span> · ${lv(nx.r)}</small></button>`
                : `<button class="primary big go" data-go="small:${nx.small.code}" data-r="${nx.r}"><span>오늘 갈 곳</span><small>${esc(nx.small.title)} · ${lv(nx.r)}${nx.why === 'again' ? ' · <span class="tm" data-term="다시 열린 질문">다시 열린 질문</span>' : nx.why === 'mission' ? ` · <span class="tm" data-term="mission">${A.M.name(nx.r)}</span>` : nx.why === 'review' ? ' · <span class="tm" data-term="다시 빛내기">다시 빛내기</span>' : ''}</small></button>`)
              : `<div class="done-all">지금 열린 곳은 모두 탐험했어요 ✦</div>`}
-      <div class="funrow"><button class="funbtn" data-go="calc"><span>⚡</span><b>계산 연습</b><small>퉁구리와 경주</small></button></div>
+      <div class="funrow"><button class="funbtn" data-go="calc"><span>⚡</span><b>계산 연습</b><small>퉁구리와 경주</small></button><button class="funbtn vs" data-go="battle"><span>⚔</span><b>친구와 대결</b><small>개념 대결 · 계산 대결</small></button></div>
       <button class="galbtn" data-go="guide"><b>E4-2 은하</b><span>4학년 2학기 · 탐험 안내 ›</span></button><div class="mapbox">${A.galaxyMap()}</div>`, {crumb: ''});
   }
 
@@ -471,7 +474,7 @@
     navMark(['q']); let alive = true; NAV.quit = () => { alive = false; clearInterval(tim); return false; };
     let k = 0, ok = 0, t0 = 0, tim = null, lock = false, inp = {};
     frame(`<div class="race"><div class="lane"><span class="tok me" id="rMe"><img src="${IMG}${myFriend() || 'exi'}/card.webp" alt=""></span></div>
-        <div class="lane"><span class="tok tg" id="rTg"><img src="img/tunguri.webp" alt=""></span></div><div class="goal">🏁</div></div>
+        <div class="lane">${opt.vs ? `<span class="tok tg vsn" id="rTg"><b>${esc(String(opt.vs.name || '?').slice(0, 1))}</b></span><span class="lname">${esc(opt.vs.name || '')}</span>` : '<span class="tok tg" id="rTg"><img src="img/tunguri.webp" alt=""></span>'}</div><div class="goal">🏁</div></div>
       <div class="cnum"><span><span id="cK">1</span> / ${list.length}</span><b id="cT">0초</b></div>
       <section class="ccard" id="cQ"></section><section id="cA"></section>`, {back: 'calc', backText: '그만하기', crumb: opt.crumb || '계산 연습', nostar: !!opt.vs});
     root().querySelector('[data-go="calc"]').onclick = e => { e.stopPropagation(); alive = false; clearInterval(tim); NAV.quit = null; opt.onQuit ? opt.onQuit() : calcUnit(key); };
@@ -560,6 +563,154 @@
   }
   A.UI = {frame, buddy, toast, navMark, esc, fm, calcPlay, NAV, root};
 
+  // ── ⚔ 친구와 대결(마스터 10/13) — 연결·규칙·배지는 js/battle.js ──
+  const BT = A.B;
+  const nmj = (n, j) => { n = String(n || ''); const c = n.charCodeAt(n.length - 1); return n + (c >= 0xAC00 && c <= 0xD7A3 && (c - 0xAC00) % 28 ? '이' : '') + j; };   // 린이와 · 지우와
+  const RULE = {
+    concept: '같은 행성의 질문 2~3개에 둘 다 내 말로 설명해. <b>정확하고 꼼꼼하게 설명한 쪽</b>이 이겨! 점수가 5점 넘게 차이 나면 점수가 높은 쪽, 5점 안쪽이면 더 빨리 답한 쪽이 이겨. 처음 보는 질문을 한 번에 통과하면 진짜 통과로 별빛도 모여(이미 통과한 질문은 별빛이 더 생기지 않아).',
+    calc: '같은 문제 10개를 동시에 풀어. <b>더 많이 맞힌 쪽</b>이 이기고, 맞힌 수가 같으면 더 빨리 끝낸 쪽이 이겨.'
+  };
+  let bKind = 'concept', bPoll = null;
+  const stopPoll = () => { clearInterval(bPoll); bPoll = null; };
+  const badgeChips = (top, size) => ['concept', 'calc'].map(k => top && top[k] >= 0 ? `<span class="bdg" data-bdg="${k}" data-t="${top[k]}">${BT.svg(k, top[k], size || 26)}</span>` : '').join('');
+  function badgePop(kind) {
+    document.querySelector('.tpop')?.remove();
+    const d = document.createElement('div'); d.className = 'tpop';
+    const info = BT.BADGE[kind], n = BT.wins(kind), t = BT.tier(n);
+    d.innerHTML = `<div class="tpop-in"><b>🏅 ${info.title} 배지</b><p>대결에서 이기면 배지가 자라요. 지금 <b>${n}승</b>${t >= 0 ? ' — ' + info.words[t][1] + '!' : ''}</p>
+      <ul class="bdglist">${info.words.map((w, i) => `<li class="${i === t ? 'me' : i > t ? 'off' : ''}">${BT.svg(kind, i, 34)}<span><b>${w[0]} = ${w[1]}</b><small>${esc(w[2])} · ${BT.STEPS[i]}승</small></span></li>`).join('')}</ul>
+      <button class="ghost small">알겠어</button></div>`;
+    d.onclick = () => d.remove(); document.body.appendChild(d); A.buzz(8);
+  }
+  document.addEventListener('click', e => { const b = e.target.closest('[data-bdg]'); if (b) { e.stopPropagation(); badgePop(b.dataset.bdg); } }, true);
+  A.UI.badgeChips = badgeChips;
+
+  async function battleHub(kind) {
+    bKind = kind || bKind; navMark(['battle', bKind]);
+    if (!A.isAcademyDevice()) return blocked();
+    BT.enter(bKind); stopPoll();
+    const draw = list => {
+      if (!NAV.cur || NAV.cur[0] !== 'battle') return;
+      const L = root().querySelector('#bList'); if (!L) return;
+      L.innerHTML = list.length ? list.map(f => `<li><span class="bf">${esc(f.name)}<small>${esc(f.grade || '')}</small></span><span class="bb">${badgeChips(f.badge, 22)}</span><button class="primary small" data-inv="${esc(f.sid)}" data-nm="${esc(f.name)}">대결 신청</button></li>`).join('')
+                              : '<li class="sub">지금 대기실에 친구가 없어. 친구도 「친구와 대결」을 열면 여기에 보여!</li>';
+      L.querySelectorAll('[data-inv]').forEach(b => b.onclick = () => pickContent({sid: b.dataset.inv, name: b.dataset.nm}));
+    };
+    frame(`<section class="battle"><h2>⚔ 친구와 대결</h2>
+      <div class="tabs two">${['concept', 'calc'].map(k => `<button class="tab ${k === bKind ? 'on' : ''}" data-k="${k}">${k === 'concept' ? '🎙 개념 대결' : '⚡ 계산 대결'}</button>`).join('')}</div>
+      <div class="brule">${RULE[bKind]}</div>
+      <div class="bme"><span>내 배지</span>${badgeChips(BT.top(), 30) || '<small>아직 없어 — 대결에서 이기면 생겨</small>'}<button class="ghost small" id="bWhy">배지 보기 ›</button></div>
+      <h3 class="hsec">대기실 <small>같이 들어와 있는 친구</small></h3><ul class="blist" id="bList"><li class="sub">찾는 중…</li></ul></section>`, {back: 'home', backText: '은하', crumb: '친구와 대결'});
+    root().querySelectorAll('[data-k]').forEach(b => b.onclick = () => battleHub(b.dataset.k));
+    $('#bWhy').onclick = () => badgePop(bKind);
+    root().querySelector('[data-go="home"]').addEventListener('click', () => { stopPoll(); BT.leave(); });
+    const tick = async () => {
+      if (!NAV.cur || NAV.cur[0] !== 'battle') { stopPoll(); BT.leave(); return; }
+      const inv = await BT.inbox(); if (inv && NAV.cur && NAV.cur[0] === 'battle' && !document.querySelector('.bpop')) invited(inv);
+      draw(await BT.list(bKind));
+    };
+    tick(); bPoll = setInterval(tick, 2500);
+  }
+  /* 대결 신청: 무엇으로 할지 고르기 */
+  function pickContent(to) {
+    const d = document.createElement('div'); d.className = 'kpop bpick';
+    const close = () => d.remove();
+    if (bKind === 'calc') {
+      d.innerHTML = `<div class="kpop-in"><b>⚡ ${esc(nmj(to.name, '와'))} 무엇으로 대결할까?</b>${C.GRADES.map(g => `<div class="bpg"><small>${g.name}</small>${g.units.map(u => `<button class="secondary small" data-u="${u.key}">${esc(u.title.replace(/^\d+\. /, ''))}</button>`).join('')}</div>`).join('')}<button class="ghost" id="bx">닫기</button></div>`;
+      document.body.appendChild(d); d.querySelector('#bx').onclick = close;
+      d.querySelectorAll('[data-u]').forEach(b => b.onclick = () => { close(); const {u} = C.unit(b.dataset.u); sendInvite(to, {kind: 'calc', key: b.dataset.u, title: u.title, list: C.round(b.dataset.u)}); });
+      return;
+    }
+    const opts = [];
+    for (const bg of E.bigs()) for (const sm of bg.smalls) for (const r of [1, 2]) { const t = E.tasks(sm, r).filter(x => x.kind === 'q'); if (t.length >= 2) opts.push({bg, sm, r, n: t.length}); }
+    d.innerHTML = `<div class="kpop-in"><b>🎙 ${esc(nmj(to.name, '와'))} 어느 행성으로 대결할까?</b><div class="bpscroll">${E.bigs().map(bg => `<div class="bpg"><small>${esc(bg.code + ' ' + bg.title)}</small>${opts.filter(o => o.bg === bg).map(o => `<button class="secondary small" data-c="${o.sm.code}" data-r="${o.r}">${esc(o.sm.title)} · 난이도 ${o.r}</button>`).join('')}</div>`).join('')}</div><button class="ghost" id="bx">닫기</button></div>`;
+    document.body.appendChild(d); d.querySelector('#bx').onclick = close;
+    d.querySelectorAll('[data-c]').forEach(b => b.onclick = () => {
+      close(); const {small} = E.small(b.dataset.c), r = +b.dataset.r;
+      const t = E.tasks(small, r).filter(x => x.kind === 'q').sort(() => Math.random() - .5).slice(0, 3).map(x => x.id);
+      sendInvite(to, {kind: 'concept', code: small.code, r, title: small.title + ' · 난이도 ' + r, ids: t});
+    });
+  }
+  async function sendInvite(to, room) {
+    stopPoll(); BT.busy(true);
+    let alive = true; navMark(['q']); NAV.quit = () => { alive = false; BT.leave(); return false; };
+    frame(`<section class="center-msg stage">${buddy('question')}<h2>${esc(to.name)}에게 대결을 신청했어!</h2><p class="sub">${esc(room.title)}<br>친구가 「좋아!」를 누르면 바로 시작해.</p><span class="spin"></span><button class="ghost" id="bCan">취소</button></section>`, {crumb: '대결 신청'});
+    $('#bCan').onclick = () => { alive = false; NAV.quit = null; battleHub(); };
+    room = await BT.invite(to, room);
+    const v = await BT.wait(room, x => x.acc === true || x.acc === false, BT.INV_LIFE, () => alive);
+    if (!alive) return;
+    NAV.quit = null;
+    if (!v || !v.acc) {
+      frame(`<section class="center-msg stage">${buddy('retry')}<h2>${v ? esc(nmj(to.name, '는')) + ' 다음에 하재' : '대답이 없어'}</h2><p class="sub">다른 친구에게 신청해 볼까?</p><button class="primary big" data-go="battle">대기실로</button></section>`, {crumb: '대결'});
+      return;
+    }
+    play(room);
+  }
+  function invited(inv) {
+    const d = document.createElement('div'); d.className = 'kpop bpop';
+    d.innerHTML = `<div class="kpop-in"><b>⚔ ${esc(nmj(inv.from.name, '가'))} ${inv.kind === 'calc' ? '계산' : '개념'} 대결을 신청했어!</b><p class="sub">${esc(inv.title || '')}</p>
+      <div class="krow"><button class="primary" id="bY">좋아!</button><button class="ghost" id="bN">다음에</button></div></div>`;
+    document.body.appendChild(d); A.buzz([20, 40, 20]); A.S.sound('gain');
+    d.querySelector('#bN').onclick = async () => { d.remove(); const room = await BT.room(inv.id); if (room) BT.answer(room, false); else BT.clearInbox(); };
+    d.querySelector('#bY').onclick = async () => {
+      d.remove(); const room = await BT.room(inv.id);
+      if (!room) { toast('대결이 사라졌어. 다시 신청해 줘'); BT.clearInbox(); return; }
+      stopPoll(); BT.busy(true); await BT.answer(room, true); play(room);
+    };
+  }
+  /* 둘 다 같은 방에서 시작 */
+  async function play(room) {
+    const other = BT.other(room), kind = room.kind;
+    let alive = true;
+    const finish = async mine => {
+      await BT.mine(room, Object.assign({done: true}, mine));
+      navMark(['q']); NAV.quit = () => { alive = false; return false; };
+      frame(`<section class="center-msg stage">${buddy('thinking')}<h2>${esc(nmj(other.name, '를'))} 기다리는 중…</h2><p class="sub">친구가 끝나면 바로 결과가 나와</p><span class="spin"></span></section>`, {crumb: '대결'});
+      const o = await BT.wait(room, x => x.done || x.quit, 6 * 60000, () => alive);
+      if (!alive) return;
+      NAV.quit = null; BT.leave();
+      const res = o ? BT.judge(kind, mine, o) : 1;
+      let up = false; if (res > 0) up = BT.win(kind);
+      await E.save();
+      if (res > 0) A.buzz(BZ.big);
+      const line2 = kind === 'calc' ? x => `${x.ok}/${room.list.length} 맞힘 · ${x.t}초` : x => `${x.score}점 · ${x.t}초`;
+      const t = BT.tier(BT.wins(kind));
+      frame(`<section class="center-msg stage">${res > 0 ? buddy('praise') : buddy(res < 0 ? 'retry' : 'idle')}
+        <h2>${res > 0 ? '이겼어!' : res < 0 ? '아쉽게 졌어' : '비겼어!'}</h2>
+        <div class="bres"><div class="${res > 0 ? 'win' : ''}"><small>나</small><b>${line2(mine)}</b></div><div class="${res < 0 ? 'win' : ''}"><small>${esc(other.name)}</small><b>${o ? (o.quit ? '중간에 나감' : line2(o)) : '대답 없음'}</b></div></div>
+        <p class="sub">${kind === 'calc' ? '더 많이 맞힌 쪽이 이기고, 같으면 빠른 쪽이 이겨.' : '점수가 5점 넘게 차이 나면 점수가 높은 쪽, 5점 안쪽이면 빠른 쪽이 이겨.'}${mine.gain ? ' · 별빛 +' + mine.gain : ''}</p>
+        ${res > 0 && t >= 0 ? `<div class="bnew">${BT.svg(kind, t, up ? 72 : 46)}<span>${up ? '새 배지! ' : ''}${BT.BADGE[kind].words[t][1]} · ${BT.wins(kind)}승</span></div>` : ''}
+        <button class="primary big" data-go="battle">대기실로</button><button class="ghost" data-go="home">은하로</button></section>`, {crumb: '대결 결과'});
+      if (mine.gain) A.S.gain(mine.gain, root().querySelector('.bres'));
+    };
+    if (kind === 'calc') {
+      let seen = 0;
+      return calcPlay(room.key, 'mid', {list: room.list, vs: other, crumb: '계산 대결 · ' + other.name,
+        onAnswer: (k, right) => BT.mine(room, {k: k + 1, ok: 0}),
+        tick: async el => { if (Date.now() - seen < 1500) return; seen = Date.now(); const o = await BT.theirs(room); const tg = $('#rTg'); if (o && tg) tg.style.left = Math.min(1, (o.k || 0) / room.list.length) * 88 + '%'; },
+        onEnd: r => finish({ok: r.ok, t: r.t}),
+        onQuit: () => { BT.mine(room, {quit: true, done: true}); BT.leave(); battleHub('calc'); }});
+    }
+    // 개념 대결: 질문을 차례로(되묻기 없이) — 상대가 몇 개 답했는지 위에 작게
+    const {big, small} = E.small(room.code);
+    const tasks = room.ids.map(id => E.tasks(small, room.r).find(x => x.id === id)).filter(Boolean);
+    const vs = setInterval(async () => {
+      if (!alive) return clearInterval(vs);
+      const o = await BT.theirs(room); let b = document.querySelector('.vsbar');
+      if (!b) { const q = document.querySelector('.qtop'); if (!q) return; b = document.createElement('div'); b.className = 'vsbar'; q.after(b); }
+      b.textContent = `⚔ ${other.name} · ${o ? (o.quit ? '나감' : (o.k || 0) + '/' + tasks.length + ' 답함') : '준비 중'}`;
+    }, 1500);
+    let sum = 0, tt = 0, gain = 0;
+    for (let i = 0; i < tasks.length; i++) {
+      const out = await ask(big, small, tasks[i], i, tasks.length, 'battle');
+      if (out === 'quit') { alive = false; clearInterval(vs); await BT.mine(room, {quit: true, done: true}); BT.leave(); return battleHub('concept'); }
+      sum += out.score; tt += out.t; gain += out.gain || 0;
+      await BT.mine(room, {k: i + 1, score: Math.round(sum / (i + 1))});
+    }
+    clearInterval(vs);
+    finish({score: Math.round(sum / Math.max(1, tasks.length)), t: tt, gain});
+  }
+
   // ── 🏆 빛나는 탐험가 ──
   async function hall() {
     navMark(['hall']);
@@ -630,6 +781,7 @@
         <div class="scard all"><span>🌌 전체 별빛</span><b>${A.S.totalPts().toLocaleString('ko-KR')}</b><small>지금까지 모은 별빛 전부</small></div></div>
       <div class="rankcard"><div class="ri">${rk.icon}</div><div><div class="rn">${rk.name} <small>(${rk.ko})</small></div>
         <div class="sub">행성 ${rk.lit}/${rk.total}개를 밝혔어</div></div><button class="rkscore" id="rkS"><small>등급 점수</small><b>${rk.score != null ? Math.round(rk.score) : '—'}</b><small>등급표 ›</small></button></div>
+      <div class="bme"><span>🏅 대결 배지</span>${badgeChips(A.B.top(), 34) || '<small>아직 없어 — 친구와 대결에서 이기면 생겨</small>'}</div>
       <details class="how"><summary>별빛은 어떻게 모아?</summary><p>질문을 처음 통과하면 받은 점수만큼 별빛이 모여. 난이도 2는 1.5배, 난이도 3은 2배!<br>
         mission 은 맞힌 문제마다 20(hard mission 은 30), 다시 빛내기를 통과하면 30.<br>
         <b>학기 별빛</b>은 학기가 바뀌면 0부터 다시 모으고, <b>전체 별빛</b>은 계속 쌓여. 연습으로 다시 한 질문은 별빛이 더 생기지 않아.</p></details>
@@ -931,7 +1083,25 @@
       answerThen('', step);
 
       let feel = '';
+      /* ⚔ 개념 대결: 되묻기 없이 한 번에 채점. 처음 보는 질문을 한 번에 통과하면 진짜 통과(100)로 기록, 아니면 연습으로만(잠그지 않음) */
+      async function battleDone(g) {
+        stop();
+        const pass = !!(g && g.miss < 0), score = g ? (pass ? 100 : Math.round(100 * g.h / Math.max(1, g.n))) : 0, used = Math.round(limit - left);
+        setBuddy(pass ? 'praise' : 'idle');
+        let gain = 0, real = false;
+        if (pass && E.state(task.id).k === 'new') {
+          E.record(big.no, task.id, {st: 'pass', q: 100, help: '', helpNow: false}); real = true;
+          gain = A.S.add(task.id, A.S.ptsFor(task.r, 100), 'one', task.r);
+          A.N.post({task, small, r: task.r, q: 100, answers: answers.slice(), keys: S.keys, question: S.q, ans: S.ans});
+        }
+        await E.submit({big, small, task, question: S.q, transcript: answers.join('\n'), score, pass, stage: 'battle', help: 'none', quality: real ? 100 : null,
+                        misconception: g?.misconception || '', ack: g?.ack || '', attempt: answers.length, reasks: 0, practice: !real});
+        await E.save();
+        NAV.quit = null;
+        resolve({battle: true, pass, score, t: used, gain, real});
+      }
       function step(g) {
+        if (practice === 'battle') return battleDone(g);
         if (g.miss < 0 && S.feel && !feel) {
           setBuddy('question'); say(`${esc(g.ack)}<br>${esc(S.feel)}`, 'hint');
           return input('', t => { feel = t; answers.push('느낀 점: ' + t); pass(); });
@@ -977,6 +1147,7 @@
         end({st: 'lock', help: 'none', stage: 'lock', pass: false, needTeacher: true});
       }
       function timeout() {
+        if (practice === 'battle') return battleDone(null);
         stop(); say('<b>시간이 다 됐어.</b> 내일 다시 열려요.', 'warn'); setBuddy('retry');
         $('#ans').innerHTML = `<div class="row"><button class="primary big" id="ok">다음</button></div>`;
         $('#ok').onclick = () => end({st: 'lock', help: helpNow || 'none', stage: 'timeout', pass: false}, true);

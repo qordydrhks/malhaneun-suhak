@@ -9,7 +9,7 @@
   const root = () => $('#app');
   const SK = 'app:teacher';
   const HELP = {kw: '키워드', short: '짧은 설명', long: '긴 설명', none: '', '': ''};
-  const ST = {first: '한 번에', reask: '되묻기 뒤', kw: '키워드 뒤', short: '짧은 설명', long: '긴 설명', lock: '막힘', timeout: '시간 초과', again: '다음 날', nextday: '다음 날', review: '다시 빛내기', practice: '연습'};
+  const ST = {first: '한 번에', reask: '되묻기 뒤', kw: '키워드 뒤', short: '짧은 설명', long: '긴 설명', lock: '막힘', timeout: '시간 초과', again: '다음 날', nextday: '다음 날', review: '다시 빛내기', practice: '연습', battle: '대결'};
 
   // ── 질문 번호 → 어디의 무슨 질문인지 ──
   const IDX = {};
@@ -205,6 +205,9 @@
         <div class="tcard"><b>${bk.h1.length}</b><span>되묻기 뒤</span></div>
         <div class="tcard"><b>${bk.h2.length}</b><span>도움 뒤</span></div>
         <div class="tcard ${bk.yet.length ? 'warn' : ''}"><b>${bk.yet.length}</b><span>아직</span></div>
+        <div class="tcard"><b>⭐ ${semStars(s.id).toLocaleString('ko-KR')}</b><span>학기 별빛</span><small>${esc(A.S.sem().name)}</small></div>
+        <div class="tcard"><b>${(v.p.badge || {}).concept || 0}승 · ${(v.p.badge || {}).calc || 0}승</b><span>대결</span><small>개념 · 계산</small></div>
+        <div class="tcard"><b>${Object.values(v.p.calc || {}).reduce((a, x) => a + (x.plays || 0), 0)}판</b><span>계산 연습</span><small>퉁구리 ${Object.values(v.p.calc || {}).reduce((a, x) => a + (x.wins || 0), 0)}승</small></div>
       </div>
       <h3 class="tsec">막힌 곳 <small>${v.stuck.length}</small></h3>
       <ul class="tli">${stuckHtml || '<li class="sub">없어요</li>'}</ul>
