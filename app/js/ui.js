@@ -1037,8 +1037,9 @@
         function startRec() {
           const R = window.SpeechRecognition || window.webkitSpeechRecognition;
           if (!R) { typed = true; toast('이 기기는 말하기가 안 돼서 글로 써 줘'); return input(prompt, onSubmit); }
+          try { A.S.quiet(); } catch (e) {}                              // 효과음 장치를 먼저 잠재운다(안드로이드에서 마이크를 뺏는 일) · 기다리지 않는다(아이폰은 누른 순간에 시작해야 함)
           const pieces = text ? [text] : [];
-          let manualStop = false, started = false;
+          let manualStop = false, started = false, restarts = 0, lastErr = '';
           const r = new R(); r.lang = 'ko-KR'; r.continuous = true; r.interimResults = false; r.maxAlternatives = 5;
           rec = r; r._stop = () => { manualStop = true; };
           const render = () => upd(A.fixSpeech(pieces.join(' ').replace(/\s+/g, ' ').trim()));
@@ -1055,16 +1056,20 @@
           };
           r.onerror = ev => {
             clearTimeout(watchdog);
+            lastErr = ev.error || '';
             if (ev.error === 'no-speech' || ev.error === 'aborted') return;
-            if (ev.error === 'not-allowed' || ev.error === 'service-not-allowed' || ev.error === 'network') {
+            if (ev.error === 'not-allowed' || ev.error === 'service-not-allowed' || ev.error === 'network' || ev.error === 'audio-capture') {
               manualStop = true; rec = null; typed = true;
-              toast(ev.error === 'network' ? '음성 인식 서버에 연결하지 못했어. 글로 써 줘' : '마이크가 막혀 있어. 글로 써 줘');
+              toast(ev.error === 'network' ? '음성 인식 서버에 연결하지 못했어. 글로 써 줘'
+                  : ev.error === 'audio-capture' ? '마이크를 다른 곳에서 쓰고 있어. 앱을 다시 열거나 글로 써 줘 (audio-capture)'
+                  : '마이크가 막혀 있어. 글로 써 줘 (' + ev.error + ')');
               input(prompt, onSubmit);
-            }
+            } else toast('말하기 오류: ' + ev.error);
           };
           r.onend = () => {
             clearTimeout(watchdog);
-            if (!manualStop && rec === r) { try { r.start(); return; } catch (e) {} }   // 안드로이드가 끊은 것 → 이어서 듣기
+            if (!manualStop && rec === r && restarts < 30) { restarts++; try { r.start(); return; } catch (e) {} }   // 안드로이드가 끊은 것 → 이어서 듣기(끝없이 되풀이하지 않게 30번까지)
+            if (!manualStop && rec === r && !text.trim()) toast('말소리를 못 들었어. 마이크를 다시 눌러 줘' + (lastErr ? ' (' + lastErr + ')' : ''));
             if (rec === r) rec = null;
             $('#mic')?.classList.remove('on'); setBuddy('question');
             if (!text.trim() && !typed) live.textContent = '';

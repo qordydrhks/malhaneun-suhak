@@ -99,6 +99,8 @@
   // ── 효과음(파일 없이 — WebAudio) · 끄기: 나의 기록 화면 ──
   let AC = null;
   S.soundOn = () => A.ls.raw('app:sound') !== '0';
+  /* 마이크를 켜기 전에 효과음 장치를 잠재운다 — 안드로이드 크롬은 WebAudio 가 깨어 있으면 음성 인식이 마이크를 못 잡는 일이 있다(옛 앱엔 효과음이 없었음) */
+  S.quiet = () => { try { if (AC && AC.state === 'running') return AC.suspend(); } catch (e) {} return Promise.resolve(); };
   S.sound = kind => {
     if (!S.soundOn()) return;
     try {
