@@ -88,6 +88,7 @@ button:disabled{opacity:.35;cursor:default}
 .entry,.center-msg{display:grid;justify-items:center;text-align:center;gap:10px;padding:26px 0}
 .entry h2,.center-msg h2{margin:0;font-size:24px}
 .entry .primary.big,.center-msg .primary.big{max-width:360px;margin-top:10px}
+.entry .prep{margin:0;font-size:14.5px;color:var(--gold);background:#f2c45f14;border:1px solid #f2c45f40;border-radius:12px;padding:7px 14px}
 .unlock{color:var(--gold);border:1px solid #f2c45f66;border-radius:12px;padding:10px 16px}
 
 /* 질문 */

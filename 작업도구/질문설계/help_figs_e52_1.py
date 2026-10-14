@@ -187,6 +187,18 @@ def f_lt16():
     return S(390, 130, b)
 
 @fig
+def f_lt20_max():   # 20 미만에서 20에 끝없이 가까워지는 수 — 확대해 보기
+    a = NL(40, 44, 19, 20, 300, labels=[19, 20], minor=0.1).rng(None, 20, None, 'o')
+    a.mark(19.9, '19.9')
+    b = NL(40, 132, 19.9, 20, 3000, labels=[19.9, 20], minor=0.01, step=0.1).rng(None, 20, None, 'o')
+    b.mark(19.99, '19.99')
+    o = a.o + b.o
+    o += L((a.X(19.9), 52), (b.X(19.9), 110), SUB, 1.2, '4 3') + L((a.X(20), 52), (b.X(20), 110), SUB, 1.2, '4 3')
+    o += T(372, 136, '확대', SUB, 11.5, 'start')
+    o += BOX(40, 170, 330, 26, '20에 더 가까운 수가 끝없이 → 가장 큰 수는 정할 수 없어', PALE, '#e7c27a', ORG, 12, True)
+    return S(410, 204, o)
+
+@fig
 def f_gt40():
     n = NL(30, 70, 40, 41.2, 280, labels=[40, 41], minor=0.1, step=0.1).rng(40, None, 'o', None)
     b = n.o
@@ -426,7 +438,7 @@ def f_summary():
 
 LFIG = {
     '1-01': ['f_ige125', 'f_ile160', 'f_ige12', 'f_ile16', 'f_height145'],
-    '1-02': ['f_cmp70', 'f_lt160', 'f_gt12_fix', 'f_lt16', 'f_gt40'],
+    '1-02': ['f_cmp70', 'f_lt160', 'f_gt12_fix', 'f_lt16', 'f_lt20_max', 'f_gt40'],
     '1-03': ['f_four', 'f_read64', 'f_same21', 'f_age6_13'],
     '1-04': ['f_up4718', 'f_up184', 'f_up2310', 'f_up_vs_down3002', 'f_up90'],
     '1-05': ['f_dn2795', 'f_updn763', 'f_dn4196', 'f_dn50', 'f_same830'],

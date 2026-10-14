@@ -178,7 +178,7 @@
   const SYSTEM = `너는 초등학생 수학 친구야. 학생이 질문 하나에 말로 답한 것(음성 인식 텍스트)을 보고 [꼭 말할 핵심]을 하나씩 짚었는지 판정해. 되묻기 질문은 앱이 따로 붙이니까 너는 만들지 마.
 [판정 규칙]
 - 핵심마다 hit(true/false). true면 학생 말에서 근거가 된 부분을 짧게 그대로 인용(evidence). 인용할 곳이 없으면 false.
-- 뜻이 같으면 표현이 달라도 인정. 수식·기호를 정확히 읽지 않아도 말로 설명했으면 인정. 음성 인식이 수학 말을 틀리게 적은 것은 소리가 비슷하고 문맥상 분명하면 맞게 말한 것으로 봐("오분의 삼"=3/5).
+- 뜻이 같으면 표현이 달라도 인정. 결론(본질)이 같으면 다른 방식으로 말해도 인정 — 예: "빈 점을 찍는다" = "색칠하지 않는다", "0으로 본다" = "버린다", "100으로 본다" = "백의 자리로 올린다". 계산 과정은 순서가 달라도(예: 약분을 먼저 하고 곱하기) 같은 답에 이르는 바른 방법이면 인정. 두 개념의 차이를 묻는 질문에서 "기준이 되는 수가 들어가는지 안 들어가는지가 달라"처럼 공통 기준으로 말해도 인정. 수식·기호를 정확히 읽지 않아도 말로 설명했으면 인정. 음성 인식이 수학 말을 틀리게 적은 것은 소리가 비슷하고 문맥상 분명하면 맞게 말한 것으로 봐("오분의 삼"=3/5).
 - 핵심에 숫자 답이 있으면 그 숫자(또는 같은 값)를 말해야 인정.
 - "네", "될 것 같아요"처럼 결론만 있고 내용이 없으면 인정하지 마. 핵심의 절반만 말했으면 인정하지 마.
 - 같은 답이면 언제 채점해도 같은 판정이 나오게, 애매하면 "핵심이 분명히 들어 있는가" 하나로만 판단.
@@ -218,7 +218,7 @@
       unit_id: task.kind === 'lad' ? '' : small.unitId, unit_label: (task.kind === 'lad' ? '🪜 ' + small.key.split('|')[2] : small.unitLabel),
       level: task.kind === 'lad' ? 'ladder' : ('r' + task.r + (practice === 'review' ? 'rv' : practice ? 're' : '')),
       question, question_id: task.id, transcript, score: Math.round(score),
-      praise: ack || '', hint: help && help !== 'none' ? ('도움: ' + ({kw: '키워드', short: '짧은 설명', long: '긴 설명'}[help] || help)) : '',
+      praise: ack || '', hint: help && help !== 'none' ? ('도움: ' + ({kw: '키워드', short: '간단한 설명', long: '자세한 설명'}[help] || help)) : '',
       retry_point: (E.status(task.id)?.by === 'teacher' ? '선생님이 다시 열어 줌' : ''), misconception: misconception || '', attempt: attempt || 1, need_teacher: !!needTeacher,
       hints_used: reasks || 0, review_due: pass ? new Date(Date.now() + 7 * 864e5).toISOString() : null
     };

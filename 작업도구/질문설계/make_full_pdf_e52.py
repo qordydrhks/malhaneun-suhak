@@ -8,11 +8,12 @@ import html, importlib, os, re, sys
 import e42_common as C, app_e52_data as D
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '새앱'))
 import pass_e52 as P
+import blackhole_e52 as BHM
 e = html.escape
 n = sys.argv[1] if len(sys.argv) > 1 else '1'
 M = importlib.import_module('e52_56' if n in ('5', '6') else 'e52_%s' % n)          # 그림 등록(K.register)도 여기서 된다
 U = getattr(M, 'U' + n) if n in ('5', '6') else [v for k, v in vars(M).items() if re.fullmatch(r'U\d*', k) and isinstance(v, dict)][0]
-H = importlib.import_module('help_e52_%s' % n).H
+H = D.apply_alt(importlib.import_module('help_e52_%s' % n).H)
 LF = importlib.import_module('help_figs_e52_%s' % n)
 RN = {0: '🌱 선수', 1: '1회차', 2: '2회차', 3: '3회차'}
 TOPIC_PAGE = {'①': 14, '②': 15, '③': 16, '④': 17, '⑤': 18, '⑥': 19, '⑦': 20, '⑧': 21, '⑨': 22, '⑩': 23}   # 최상위 5-2 1단원
@@ -21,7 +22,7 @@ TOPIC_PAGES = {'1': TOPIC_PAGE, '2': {'①': 42, '②': 43, '③': 44, '④': 45
                '4': {'①': 92, '②': 93, '③': 94, '④': 95, '⑤': 96, '⑥': 97, '⑦': 98, '⑧': 99, '⑨': 100},
                '5': {'①': 118, '②': 119, '③': 120, '④': 121, '⑤': 122, '⑥': 123, '⑦': 124, '⑧': 125, '⑨': 126, '⑩': 127},
                '6': {'①': 144, '②': 145, '③': 146, '④': 147, '⑤': 148, '⑥': 149, '⑦': 150, '⑧': 151, '⑨': 152}}
-INFO = {'1': ('8~20쪽', '①~⑩', 10), '2': ('40·42·44쪽', '①~⑦', 7), '3': ('62·64·66·68쪽', '①~⑨', 9), '4': ('88~94·102~106쪽', '①~⑨', 9), '5': ('126~132쪽', '①~⑩', 10), '6': ('154~158쪽', '①~⑨', 9)}
+INFO = {'1': ('8~20쪽', '①~⑩', 10), '2': ('40~46쪽', '①~⑦', 7), '3': ('66~72쪽', '①~⑨', 9), '4': ('94~106쪽', '①~⑨', 9), '5': ('128~134쪽', '①~⑩', 10), '6': ('156~160쪽', '①~⑨', 9)}  # 인쇄 쪽(10/14 바로잡음)
 
 CSS = '''@page{size:A4;margin:10mm 11mm}
 body{font:9.2pt/1.5 "Pretendard","Malgun Gothic",sans-serif;color:#1f2430;margin:0}
@@ -58,6 +59,32 @@ td.k{width:78px;color:#5b6270;font-size:8.3pt;font-weight:700;white-space:nowrap
 
 CIRC = '①②③④⑤'
 
+GEN_REV = ['10/14 마스터 검토 기준 적용(초5-2 1단원 손글씨 검토에서 나온 기준을 %s 전체에)',
+  '「짧은 설명 · 긴 설명」 → <b>간단한 설명 · 자세한 설명</b>(앱 이름도 같이 바꿈)',
+  '본질이 같은 대답은 통과 — 핵심 옆 <b>(= …)</b>에 같은 뜻의 다른 말을 적음(다시 묻기 핵심에도). 앱 채점 규칙에도 넣음',
+  '단원 공통 「가장 먼저 무엇을」 질문을 <b>쉽게 말할 수 있게</b> — "확인해야 해?"로, 핵심 2개를 짧게',
+  '맨 끝에 <b>블랙홀 관문</b> — 2회차 정리에 단원에서 가장 중요한 생각, 3회차는 그 단원을 언제 쓰는지 예로',
+  '앱: 3회차(은하 탐사) 출발 화면에 "연습장과 연필을 준비하고 출발해!"']
+# 마스터 검토를 반영한 단원 — 맨 위에 무엇을 고쳤는지 보여 준다
+REVISED = {'1': ['10/14 마스터 검토 반영',
+  '「짧은 설명 · 긴 설명」 → <b>간단한 설명 · 자세한 설명</b>(앱 이름도 같이 바꿈)',
+  '본질이 같은 대답은 통과 — 핵심 옆 (= …)에 같은 뜻의 말을 적고, 앱 채점 규칙에도 넣음(빈 점 = 색칠하지 않음 · 0으로 본다 = 버린다 · 100으로 본다 = 백의 자리로 올린다)',
+  '02 「45 초과와 45 이상」: "기준이 되는 수가 들어가는지가 달라"만 말해도 통과',
+  '02 <b>질문 추가</b> 「50 미만인 수 중 가장 큰 수는 몇이야?」 → 답 "알 수 없다", 까닭은 자세한 설명(그림)에서',
+  '03 "2와 같거나 크고" → "2보다 크거나 같고"',
+  '07 「가장 먼저 무엇을」: 쉽게 말할 수 있게 — 범위면 기준이 되는 수, 어림이면 어느 자리까지·어떤 어림인지',
+  '맨 끝에 <b>블랙홀 관문</b> 추가 — 2회차 정리에 "어느 자리까지 · 무엇으로 어림할지", 3회차에 "올림·버림을 쓰는 상황을 예로"',
+  '앱: 3회차(은하 탐사) 출발 화면에 "연습장과 연필을 준비하고 출발해!"'],
+ '2': ['10/14 마스터 2단원 손글씨 검토 반영',
+  '「약분을 먼저 하고 곱해도」 통과 — 분수 곱셈 과정 질문 핵심에 (= …) · 앱 채점 규칙에도("계산 순서가 달라도 같은 답이면")',
+  '01 「12 × 3/4은 무엇을 구하는 것인지」 → <b>「12 × 3/4의 의미를 말하고」</b>',
+  '03 「1/4 × 1/3 = 1/12인 까닭」: <b>12칸으로 나눈 정사각형 그림</b>을 질문에(다시 묻기도 14칸 그림)',
+  '04 「나누어 계산해도 되는 까닭」(분배법칙이라 설명이 어려움) → 교재 46쪽 방법 그대로 <b>「자연수 부분과 진분수 부분으로 나누어 계산하는 과정과 답」</b>',
+  '블랙홀 1회차 「배운 낱말 모두」(애매) → <b>「분수의 곱셈 하면 떠오르는 것 3가지」</b>(모든 학년 블랙홀 같이)',
+  '블랙홀 2회차 ①에 Claude 가 본 핵심 개념 — <b>분수를 곱하는 것은 "~의 몇 분의 몇"을 구하는 것</b>(그래서 진분수를 곱하면 작아진다) · 마스터 확인 부탁',
+  '교재 쪽수 바로잡음 — 교재 PDF 에 빠진 쪽(42~43)이 있어 PDF 쪽을 적었던 것을 <b>인쇄 쪽</b>으로(02 = 42 · 03 = 44 · 04 = 46쪽). 3~6단원도 같은 문제를 고침',
+  '그 밖에 1단원 기준(간단한·자세한 설명 · (= …) · 「가장 먼저」 쉽게)은 그대로']}
+
 def need_of(q):
     hits = [nd for sub, nd in P.NEED if sub in q]
     return hits[0] if len(hits) == 1 else None
@@ -89,8 +116,8 @@ def card12(q, h, keys, lsvg, asvg):
     ]
     items = [
         ('🔑 키워드', '<span class="kw">%s</span>' % ''.join('<span>%s</span>' % e(k) for k in h['kw'])),
-        ('짧은 설명', e(h['short'])),
-        ('긴 설명', e(h['long']) + ('<div class="lf">%s</div>' % lsvg if lsvg else '')),
+        ('간단한 설명', e(h['short'])),
+        ('자세한 설명', e(h['long']) + ('<div class="lf">%s</div>' % lsvg if lsvg else '')),
     ]
     tr = ''.join('<tr><td class="k">%s</td><td>%s</td></tr>' % r for r in rows)
     ti = ''.join('<tr class="it"><td class="k">%s</td><td>%s</td></tr>' % r for r in items)
@@ -101,7 +128,7 @@ def card12(q, h, keys, lsvg, asvg):
 def card3(q, lad, g):
     m = re.search('[①②③④⑤⑥⑦⑧⑨⑩]', q[1]); tp = TOPIC_PAGES.get(n, {})
     src = '최상위 수학 5-2 심화유형 %s(%s쪽)' % (m.group(0), tp.get(m.group(0), '?')) if m else ''
-    steps = ''.join('<tr><td class="no">%s</td><td><span class="n">되묻기</span> %s<br><span class="g"><b>짚을 아이디어</b> %s</span><br><span class="t"><b>짧은 설명</b> %s</span></td></tr>'
+    steps = ''.join('<tr><td class="no">%s</td><td><span class="n">되묻기</span> %s<br><span class="g"><b>짚을 아이디어</b> %s</span><br><span class="t"><b>간단한 설명</b> %s</span></td></tr>'
                     % (CIRC[j], e(q[4][j]), e(g[j]), e(lad['ideas'][j])) for j in range(len(q[4])))
     adult = ('<tr class="adult"><td class="k">다시 묻기</td><td>%s</td></tr>' % e(lad['again']) +
              '<tr class="adult"><td class="k">흔한 틀린 생각</td><td>%s <span style="color:#9ca3af">(예: "%s")</span></td></tr>' % (e(lad['miscon']), e(lad['wrong'])) +
@@ -118,11 +145,13 @@ def build():
          '<h1>초5-2 「%s」 — 완성본 검토</h1>' % e(big),
          '<div class="sub">2026-10-12 · 질문 %d개(1·2회차 %d · 3회차 %d) · 그림 %d장 · 설계규칙.md 「되묻기 · 도움」 표대로 Claude 가 씀 · 질문마다 ☐좋아요 ☐고침 ☐뺌</div>' % (c12 + c3, c12, c3, nf),
          '<div class="box"><b>1·2회차 흐름</b> 질문 → 핵심별 판정 → 다 짚으면 통과 + 모범 답 / 빠진 핵심이 있으면 <b>그 핵심만 되묻기</b>(방향만) → '
-         '그래도 모르면 아이가 도움을 고름(🔑 키워드 &lt; 짧은 설명(말로만) &lt; 긴 설명(그림과 함께)) → 설명을 봤으면 다음 날 <b>다시 묻기</b>(숫자·이름만 바꿈)로 통과. '
+         '그래도 모르면 아이가 도움을 고름(🔑 키워드 &lt; 간단한 설명(말로만) &lt; 자세한 설명(그림과 함께)) → 설명을 봤으면 다음 날 <b>다시 묻기</b>(숫자·이름만 바꿈)로 통과. '
          '키워드만 보고 맞히면 오늘 통과(점수 조금 낮게). 틀린 생각을 말하면 "살짝 부족해" + 🔑 키워드만.<br>'
-         '<b>3회차 흐름(계단)</b> 질문 → 아이디어마다 판정 → 빠진 아이디어는 <b>되묻기</b> → 그래도 막히면 그 아이디어의 <b>짧은 설명</b> → 숫자를 바꾼 <b>다시 묻기</b>(채점은 숫자 없는 "짚을 아이디어"로) → 세 번 막히면 모범 답 + 그날 잠금.</div>',
-         ('<div class="box ask"><b>봐 주실 것</b> ① 3회차를 <b>최상위 수학 5-2 심화유형 %s</b>으로 새로 맞춤(%d개 유형 모두, 소단원마다 2~3개, 숫자 새로·전부 검산) ② 되묻기가 답을 흘리지 않는지 ③ 짧은·긴 설명이 교재(디딤돌 5-2 %s) 문장과 맞는지 ④ 통과 기준(✔ 줄) — 질문마다 무엇을 말하면 통과인지<br>' % (INFO[n][1], INFO[n][2], INFO[n][0])) +
-         '<b>교재</b> 1·2회차 = 디딤돌 기본+응용 5-2(①권 인쇄 쪽 = PDF 쪽 · ②권 인쇄 = PDF + 100) · 3회차 = 디딤돌 최상위 수학 5-2(인쇄 쪽 = PDF 인덱스 + 1)</div>']
+         '<b>3회차 흐름(계단)</b> 질문 → 아이디어마다 판정 → 빠진 아이디어는 <b>되묻기</b> → 그래도 막히면 그 아이디어의 <b>간단한 설명</b> → 숫자를 바꾼 <b>다시 묻기</b>(채점은 숫자 없는 "짚을 아이디어"로) → 세 번 막히면 모범 답 + 그날 잠금.</div>',
+         ('<div class="box ask"><b>봐 주실 것</b> ① 3회차를 <b>최상위 수학 5-2 심화유형 %s</b>으로 새로 맞춤(%d개 유형 모두, 소단원마다 2~3개, 숫자 새로·전부 검산) ② 되묻기가 답을 흘리지 않는지 ③ 간단한·자세한 설명이 교재(디딤돌 5-2 %s) 문장과 맞는지 ④ 통과 기준(✔ 줄) — 질문마다 무엇을 말하면 통과인지<br>' % (INFO[n][1], INFO[n][2], INFO[n][0])) +
+         '<b>교재</b> 1·2회차 = 디딤돌 기본+응용 5-2(①권 인쇄 쪽 = PDF 쪽 · ②권 인쇄 = PDF + 100 · ①권 PDF 에 빠진 쪽이 있어 쪽수는 인쇄 쪽으로 적음) · 3회차 = 디딤돌 최상위 수학 5-2(인쇄 쪽 = PDF 인덱스 + 1)</div>']
+    rv = REVISED.get(n) or [GEN_REV[0] % '초5-2'] + GEN_REV[1:]
+    o.append('<div class="box ask"><b>%s</b><br>%s</div>' % (rv[0], '<br>'.join('· ' + x for x in rv[1:])))
     if U.get('idea'): o.append('<div class="box"><b>단원 큰 그림</b> %s</div>' % e(U['idea']))
     for s in U['smalls']:
         tag = '%s-%s' % (n, s['no'])
@@ -139,6 +168,15 @@ def build():
             o.append('<h3>3회차 — 계단</h3>')
             for j, q in enumerate(q3): o.append(card3(q, D.LAD[tag][j], D.G[tag][j]))
         o.append('</div>')
+    bh = BHM.BH.get(int(n))
+    if bh:
+        bk = '<span class="kw">%s</span> <span class="pass">✔ %d개 이상 말하면 통과</span>' % (''.join('<span>%s</span>' % e(w) for w in bh['words']), bh['need'])
+        k2 = '<br>'.join('<span class="n">%s</span> %s' % (CIRC[i], e(k)) for i, k in enumerate(bh['keys2']))
+        k3 = '<br>'.join('<span class="n">%s</span> %s' % (CIRC[i], e(k)) for i, k in enumerate(bh.get('keys3') or []))
+        o.append('<div class="sm"><h2>블랙홀 관문<span class="pg">별계 끝 — 그 탐사의 행성을 다 밝히면 열림</span></h2>')
+        o.append('<div class="card r3"><div class="hd"><span class="rn">1회차</span><div class="q">「%s」 하면 떠오르는 것을 3가지 말해 봐.</div></div><table><tr><td class="k">세는 낱말</td><td>%s</td></tr></table></div>' % (e(big), bk))
+        o.append('<div class="card r3"><div class="hd"><span class="rn r2">2회차</span><div class="q">「%s」에서 배운 내용을 친구에게 설명하듯이 정리해서 말해 봐.</div></div><table><tr><td class="k">꼭 말할 핵심</td><td>%s</td></tr></table></div>' % (e(big), k2))
+        o.append('<div class="card r3"><div class="hd"><span class="rn r3">3회차</span><div class="q">%s</div></div><table><tr><td class="k">꼭 말할 핵심</td><td>%s</td></tr><tr><td class="k">느낀 점</td><td>「%s」 별을 탐험하면서 느낀 점도 말해 줘. (정답은 없어! 채점 안 함 · 어른 화면에 그대로)</td></tr></table><div class="mk">☐ 좋아요 &nbsp; ☐ 고침 &nbsp; ☐ 뺌</div></div></div>' % (e(bh['q3']), k3, e(big)))
     o.append('</body></html>')
     return ''.join(o)
 

@@ -174,7 +174,7 @@
     '다시 열린 질문': '어제 못 했던 질문이 오늘 다시 열렸어요. 먼저 해 보자!',
     '연습': '지난 난이도는 언제든 다시 해 볼 수 있어요. 연습은 점수와 등급이 바뀌지 않아요(처음 통과한 점수 그대로).',
     'E4-2 은하': '4학년 2학기 수학이 하나의 은하예요. 별(큰 단원)을 누르면 행성(작은 단원)이 보이고, 행성의 질문에 내 말로 답하면 행성에 불이 켜져요. 퉁구리가 삼킨 별빛을 모두 되찾으면 클리어!',
-    '별지도': '우주 탐험가가 길을 잃었을 때 펼쳐 보는 밤하늘 지도예요. 옛날 뱃사람과 탐험가들은 별의 자리를 그린 지도를 보고 길을 찾았어요. 질문에서 막혔을 때 도움(🔑 키워드 · 💬 짧은 설명 · 📖 긴 설명)을 하나 펼쳐 볼 때 1장을 써요. 매일 2장이 생기고, 새벽 4시에 다시 2장으로 채워져요(남은 장은 모아 두지 않아요). 다 쓰면 그 질문은 내일 다시 도전해요. 선생님 열쇠로 더 받을 수도 있어요. 틀린 생각을 말했을 때 저절로 나오는 키워드와 되묻기는 별지도를 쓰지 않아요.',
+    '별지도': '우주 탐험가가 길을 잃었을 때 펼쳐 보는 밤하늘 지도예요. 옛날 뱃사람과 탐험가들은 별의 자리를 그린 지도를 보고 길을 찾았어요. 질문에서 막혔을 때 도움(🔑 키워드 · 💬 간단한 설명 · 📖 자세한 설명)을 하나 펼쳐 볼 때 1장을 써요. 매일 2장이 생기고, 새벽 4시에 다시 2장으로 채워져요(남은 장은 모아 두지 않아요). 다 쓰면 그 질문은 내일 다시 도전해요. 선생님 열쇠로 더 받을 수도 있어요. 틀린 생각을 말했을 때 저절로 나오는 키워드와 되묻기는 별지도를 쓰지 않아요.',
     '용어 맞히기': '대단원마다 한 판 12문제예요. 뜻을 보고 낱말을 말로 답하고, 낱말을 보고 바른 뜻이나 알맞은 예를 골라요. 예전에 배운 낱말도 섞여 나와요. 10문제 이상 맞히고 퉁구리보다 먼저 도착하면 이겨요(하루 3번까지 별빛 +10).',
     '별빛노트': '친구들의 별처럼 빛나는 대답 모음이에요. 질문마다 100점을 받은 친구 대답 중에서 무작위로 하나를 골라 보여 줘요(100점이 없으면 90점). 행성 질문을 다 마치면 볼 수 있어요. 네 대답도 오를 수 있어!'
   };
@@ -383,7 +383,7 @@
     const practice = !todo.length && !locked;
     const min = Math.round(E.limit(r) / 60 * 2) / 2;
     frame(`<section class="entry stage"><div class="orb big" style="--p:${PLANET[big.smalls.indexOf(small) % 8]}"></div>
-      <div class="code">${small.code}</div><h2>${esc(small.title)}</h2><div class="chip">${E.RL(r)}</div>
+      <div class="code">${small.code}</div><h2>${esc(small.title)}</h2><div class="chip">${E.RL(r)}</div>${r === 3 && todo.length ? '<p class="prep">📝 은하 탐사는 연습장과 연필을 준비하고 출발해!</p>' : ''}
       <p class="sub">${todo.length ? `질문 ${todo.length}개 · 하나에 약 ${min}분` : (locked ? `남은 질문 ${locked}개는 내일 다시 열려요` : '다 탐험했어요')}</p>${locked && !todo.length ? keyBtn() : ''}
       ${rv.length ? `<button class="primary big" id="rv"><span>다시 빛내기 ${rv.length}개</span><small>일주일 전에 도움을 받았던 질문이야</small></button>` : ''}
       ${todo.length ? `<button class="primary big" id="go">출발</button>` : ''}
@@ -1012,7 +1012,7 @@
     }
     if (task.kind === 'bh') {
       const base = mode === 'nextday' ? E.Q.nextday : E.Q.first;
-      if (task.r === 1) return {mode, q: x.q, words: x.words, need: x.need, keys: x.words, ans: '이 별의 낱말: ' + x.words.join(' · '), fig: '', asks: ['다른 행성들에서 배운 낱말도 떠올려 봐.'], help: {}, base};
+      if (task.r === 1) return {mode, q: x.q, words: x.words, need: x.need, keys: x.words, ans: '이 별에서 떠올릴 것: ' + x.words.join(' · '), fig: '', asks: ['이 별의 다른 행성들에서 배운 것도 떠올려 봐.'], help: {}, base};
       return {mode, q: x.q, keys: x.keys, ans: x.keys.join(' / '), fig: '', asks: x.keys.map(() => '이 별의 행성들을 하나씩 떠올려 봐. 빠진 내용은 없어?'), help: {}, base, feel: x.feel};
     }
     const keys = x.ideas.map(d => d.t), asks = x.ideas.map(d => d.ask);
@@ -1189,7 +1189,7 @@
         if (S.words) {
           const all = answers.join(' ').replace(/\s+/g, '');
           const hits = S.words.map(w => ({hit: all.includes(w.replace(/\s+/g, '')), evidence: ''})), h = hits.filter(x => x.hit).length;
-          return (last = {hits, h, n: hits.length, miss: h >= S.need ? -1 : 0, misconception: '', ack: h ? '낱말 ' + h + '개를 말했어!' : '좋아, 하나씩 떠올려 보자.'});
+          return (last = {hits, h, n: hits.length, miss: h >= S.need ? -1 : 0, misconception: '', ack: h ? h + '가지를 말했어!' : '좋아, 하나씩 떠올려 보자.'});
         }
         try { last = await E.grade({question: S.q, keys: S.keys, need: S.need, alt: altPieces.join(' | '), answer: t, prev: answers.length > 1 ? answers.slice(0, -1).join(' / ') : '', unitId: small.unitId}); }
         catch (e) { answers.pop(); setBuddy('retry'); say(esc(e.message), 'warn'); return null; }   // AI 실패 → 기록 없음, 다시 말하기
@@ -1248,8 +1248,8 @@
         const cost = free ? '' : ' · 🗺 1장';
         $('#ans').innerHTML = `${any && !free ? `<div class="mapct"><span class="tm" data-term="별지도">🗺 별지도</span> <b>${mp}장</b> 남음${none ? ' · 새벽 4시에 2장이 다시 생겨요' : ''}</div>` : ''}<div class="helps">
           ${H.kw && !kwShown ? `<button class="hbtn" data-h="kw" ${none ? 'disabled' : ''}><b>🔑 키워드</b><small>오늘 다시 답할 수 있어요${cost}</small></button>` : ''}
-          ${H.short ? `<button class="hbtn" data-h="short" ${none ? 'disabled' : ''}><b>💬 짧은 설명</b><small>내일 다시 묻기로 확인해요${cost}</small></button>` : ''}
-          ${H.long ? `<button class="hbtn" data-h="long" ${none ? 'disabled' : ''}><b>📖 긴 설명 · 그림</b><small>내일 다시 묻기로 확인해요${cost}</small></button>` : ''}
+          ${H.short ? `<button class="hbtn" data-h="short" ${none ? 'disabled' : ''}><b>💬 간단한 설명</b><small>내일 다시 묻기로 확인해요${cost}</small></button>` : ''}
+          ${H.long ? `<button class="hbtn" data-h="long" ${none ? 'disabled' : ''}><b>📖 자세한 설명 · 그림</b><small>내일 다시 묻기로 확인해요${cost}</small></button>` : ''}
           <button class="hbtn plain" data-h="none"><b>내일 다시 할게</b><small>내일 새벽 4시에 열려요</small></button></div>`;
         $('#ans').querySelectorAll('.hbtn').forEach(b => b.onclick = () => useHelp(b.dataset.h));
       }

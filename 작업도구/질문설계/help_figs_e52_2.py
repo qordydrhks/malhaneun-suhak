@@ -251,7 +251,14 @@ LFIG = {
     '2-03': ['f_sq45x23', 'f_sq15x13', 'f_cancel58x23', 'f_half34', 'f_times6'],
     '2-04': ['f_mix214', 'f_cancel94x43', 'f_three', 'f_mix125x4', 'f_area_split', 'f_flow'],
 }
-AFIG = {}
+def a3_grid27():   # 다시 묻기: 2 × 7 = 14칸으로 나눈 정사각형(칠하지 않음)
+    o = ''; s = 150
+    for c in range(1, 7):
+        x = 20 + s * c / 7; o += L((x, 20), (x, 20 + s), SUB, 1.2)
+    o += L((20, 20 + s / 2), (20 + s, 20 + s / 2), SUB, 1.2)
+    o += R(20, 20, s, s, 'none', LINE, 0, 2)
+    return S(190, 190, o)
+AFIG = {('2-03', 1): a3_grid27}
 def lfig(tag, i): return F[LFIG[tag][i]]()
 
 if __name__ == '__main__':

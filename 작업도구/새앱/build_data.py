@@ -47,7 +47,7 @@ out = {'grade': G, 'code': 'E4-2', 'name': '4학년 2학기', 'oldName': OLD['na
 n = {'q': 0, 'help': 0, 'lad': 0, 'fig': 0, 'lfig': 0, 'afig': 0, 'calc': 0}
 missing = []
 for ui, U in enumerate(UNITS, 1):
-    H = importlib.import_module('help_e42_%d' % ui).H
+    H = D.apply_alt(importlib.import_module('help_e42_%d' % ui).H)   # 같은 뜻의 다른 말(마스터 10/14) — 다시 묻기 핵심에도
     LF = importlib.import_module('help_figs_e42_%d' % ui)
     AF = getattr(LF, 'AFIG', {})
     bigname = U['big'] if 'big' in U else None

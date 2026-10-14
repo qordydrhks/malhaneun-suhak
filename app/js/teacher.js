@@ -8,8 +8,8 @@
   const A = window.APP, E = A.E, esc = A.esc, fm = A.fm, $ = s => document.querySelector(s);
   const root = () => $('#app');
   const SK = 'app:teacher';
-  const HELP = {kw: '키워드', short: '짧은 설명', long: '긴 설명', none: '', '': ''};
-  const ST = {first: '한 번에', reask: '되묻기 뒤', kw: '키워드 뒤', short: '짧은 설명', long: '긴 설명', lock: '막힘', timeout: '시간 초과', again: '다음 날', nextday: '다음 날', review: '다시 빛내기', practice: '연습', battle: '대결'};
+  const HELP = {kw: '키워드', short: '간단한 설명', long: '자세한 설명', none: '', '': ''};
+  const ST = {first: '한 번에', reask: '되묻기 뒤', kw: '키워드 뒤', short: '간단한 설명', long: '자세한 설명', lock: '막힘', timeout: '시간 초과', again: '다음 날', nextday: '다음 날', review: '다시 빛내기', practice: '연습', battle: '대결'};
 
   // ── 질문 번호 → 어디의 무슨 질문인지 ──
   const IDX = {};
