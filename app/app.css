@@ -594,3 +594,7 @@ details.brule{margin:8px 0}details.brule summary{cursor:pointer;color:var(--sub)
 .phowd{margin-top:6px}.phowd summary{cursor:pointer;font-size:14px;color:#3a6fb0;font-weight:700}
 details.tq2{display:inline}details.tq2 summary{display:inline-block;cursor:pointer;width:18px;height:18px;line-height:18px;text-align:center;border-radius:50%;border:1px solid currentColor;font-size:12px;list-style:none}details.tq2[open]{display:block;margin-top:4px}
 details.tq2 summary::-webkit-details-marker{display:none}
+.rec .myd summary{color:var(--ink);display:inline-block;cursor:pointer;margin-top:6px;padding:6px 12px;border-radius:999px;background:var(--sky2);border:1px solid var(--line);font-size:14px;font-weight:700;list-style:none}
+.rec .myd summary::-webkit-details-marker{display:none}
+.myd-in{margin-top:8px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.04);border:1px dashed var(--line)}
+.myd-in b{display:block;font-size:13px;color:var(--gold);margin-top:2px}.myd-in p{margin:4px 0 8px;line-height:1.6}.myd-in p.mod{color:var(--sub)}

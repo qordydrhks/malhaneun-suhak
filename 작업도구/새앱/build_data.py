@@ -42,7 +42,7 @@ def same_fig(key, rep):
     for x, y in rep.items(): h = h.replace('>%s</text>' % x, '>%s</text>' % y)
     return clean_svg(h)
 
-CALC = re.compile(r'\d+(?:\.\d+)?(?:/\d+)?\s*[+−\-×÷]\s*\d|몇 cm|몇 °|몇 도|얼마|구해')
+CALC = re.compile(r'\d+(?:\.\d+)?(?:/\d+)?\s*[+−\-×÷]\s*\d|몇 cm|몇 °|몇 도|얼마|구해|구하는')
 out = {'grade': G, 'code': 'E4-2', 'name': '4학년 2학기', 'oldName': OLD['name'], 'bigs': []}
 n = {'q': 0, 'help': 0, 'lad': 0, 'fig': 0, 'lfig': 0, 'afig': 0, 'calc': 0}
 missing = []

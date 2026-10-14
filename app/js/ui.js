@@ -523,16 +523,17 @@
         const R = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!R) return typeMode('이 기기는 말하기가 안 돼서 글로 써 줘');
         stopW(); try { A.S.quiet(); } catch (e) {}
-        const r = new R(); r.lang = 'ko-KR'; r.continuous = false; r.interimResults = false; r.maxAlternatives = 5; wrec = r; let got = false;
+        const r = new R(); r.lang = 'ko-KR'; r.continuous = false; r.interimResults = true; r.maxAlternatives = 5; wrec = r; let got = false, interim = [];   // 한 글자 낱말은 확정 결과가 안 오고 끝나는 일이 있어 중간 결과도 받아 둔다
         r.onstart = () => { $('#wMic')?.classList.add('on'); if (!tries) hint('듣고 있어… 낱말을 말해 줘'); };
         r.onresult = ev => {
-          got = true; const alts = [];
-          for (let i = ev.resultIndex; i < ev.results.length; i++) { const res = ev.results[i]; for (let a = 0; a < res.length; a++) { const t = ((res[a] && res[a].transcript) || '').trim(); if (t) alts.push(A.fixSpeech ? A.fixSpeech(t) : t); } }
-          if (wrec === r) wrec = null; $('#wMic')?.classList.remove('on');
-          if (alts.length) judge(alts);
+          const alts = []; let fin = false;
+          for (let i = ev.resultIndex; i < ev.results.length; i++) { const res = ev.results[i]; if (res.isFinal) fin = true; for (let a = 0; a < res.length; a++) { const t = ((res[a] && res[a].transcript) || '').trim(); if (t) alts.push(A.fixSpeech ? A.fixSpeech(t) : t); } }
+          if (!fin) { if (alts.length) { interim = alts; hint(esc(alts[0]) + ' …'); } return; }
+          got = true; if (wrec === r) wrec = null; $('#wMic')?.classList.remove('on');
+          if (alts.length) judge(alts.concat(interim));
         };
         r.onerror = ev => { if (['not-allowed', 'service-not-allowed', 'audio-capture', 'network'].includes(ev.error)) { if (wrec === r) wrec = null; typeMode(ev.error === 'network' ? '음성 인식 서버에 연결하지 못했어. 글로 써 줘' : '마이크가 막혀 있어. 글로 써 줘 (' + ev.error + ')'); } };
-        r.onend = () => { $('#wMic')?.classList.remove('on'); if (wrec === r) { wrec = null; if (!got && !lock && k === myK) hint('마이크를 누르고 말해 줘'); } };
+        r.onend = () => { $('#wMic')?.classList.remove('on'); if (wrec === r) { wrec = null; if (!got && !lock && k === myK) { if (interim.length) { got = true; judge(interim); } else hint('마이크를 누르고 말해 줘'); } } };
         try { r.start(); } catch (e) { wrec = null; hint('마이크를 누르고 말해 줘'); }
       }
       $('#wMic').onclick = () => (wrec ? stopW() : listen());
@@ -646,7 +647,7 @@
     navMark(['wordu', key]);
     let sp = A.ls.get('app:calcSpeed', 'mid'); if (!C.SPEED[sp]) sp = 'mid';
     const g = C.GRADES.find(x => x.id === u.gid) || {};
-    const tips = [['🎙 뜻을 보고 낱말을 말해요', ['마이크가 저절로 켜져. 낱말만 또박또박 말해 봐!', '잘 못 들으면 한 번 더 말할 수 있어. 「글로 쓰기」로 써도 돼.']],
+    const tips = [['🎙 뜻을 보고 낱말을 말해요', ['마이크가 저절로 켜져. 낱말만 또박또박 말해 봐!', '「구」·「몫」처럼 한 글자 낱말은 「구예요」처럼 끝을 붙여 말하면 더 잘 알아들어.', '잘 못 들으면 한 번 더 말할 수 있어. 「글로 쓰기」로 써도 돼.']],
                   ['👆 낱말을 보고 바른 뜻을 골라요', ['보기가 한두 낱말만 달라. 끝까지 꼼꼼히 읽고 골라!']],
                   ['🤔 예를 보고 골라요', ['뜻을 떠올려서 그 예에 맞는지 따져 봐.']]];
     frame(`<section class="calc"><h2>📖 ${esc(u.title)}</h2><p class="sub">${esc(g.name || '')} · 12문제</p>
@@ -873,7 +874,7 @@
       const o = subs[it.t.id] || {}, row = which === 'yet' ? o.last : (o.pass || o.last);
       const go = which === 'yet' ? (it.s ? `data-go="small:${it.s.code}" data-r="${it.r}"` : `data-go="bh:${it.b.no}" data-r="${it.r}"`) : '';
       return `<li class="rec"><span class="code">${esc(nameOf(it))}</span><span>${fm(qOf(it))}</span>
-        ${row && row.transcript ? `<details class="myd"><summary>내 대답 보기</summary><p>${ansHtml(row.transcript)}</p></details>` : ''}
+        ${row && row.transcript ? `<details class="myd"><summary>🗣 내가 한 말 보기</summary><div class="myd-in"><b>내가 한 말</b><p>${ansHtml(row.transcript)}</p>${which !== 'yet' && it.t.src && it.t.src.ans ? `<b>모범 답</b><p class="mod">${fm(it.t.src.ans)}</p>` : ''}</div></details>` : '<small class="sub">남아 있는 대답이 없어요</small>'}
         ${which === 'yet' ? `<button class="ghost small redo" ${go}>다시 하기 →</button>` : ''}</li>`;
     }).join('') : '';
     frame(`<section class="book">

@@ -3,7 +3,7 @@
 (() => {
   'use strict';
   const A = window.APP = window.APP || {};
-  A.VERSION = 'app 0.16 (2026-10-14)';
+  A.VERSION = 'app 0.17 (2026-10-14)';
   const URL = 'https://cnyrbxsmxwajhlrvcdml.supabase.co';
   const KEY = 'sb_publishable_e2iVXV5K1sl7-kJ-d3v1Ow_VEzNUJGv';
   A.esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
