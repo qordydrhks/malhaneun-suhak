@@ -836,10 +836,11 @@
   let MYSUBS = null, MYSUBS_AT = 0;
   async function mySubs() {
     if (MYSUBS && Date.now() - MYSUBS_AT < 60000) return MYSUBS;
-    const sid = encodeURIComponent(A.session.student.id), base = 'student_id=eq.' + sid + '&course_id=eq.e4-2&order=created_at.desc&limit=1000&select=question_id,transcript,pass,score,created_at,level';
+    const sid = encodeURIComponent(A.session.student.id), base = 'student_id=eq.' + sid + '&course_id=eq.e4-2&order=created_at.desc&limit=1000&select=question_id,transcript,score,created_at,level';   // ⚠️ 서버 표에 pass 칸은 없다(있다고 쓰면 읽기 전체가 실패)
     let rows = null;
     try { rows = await A.sbSelect('submissions', base + ',stage'); } catch (e) { try { rows = await A.sbSelect('submissions', base); } catch (e2) {} }
     if (!rows) return MYSUBS || {};
+    rows.forEach(r => { r.pass = (r.score || 0) >= 70; });
     const m = {};
     for (const r of rows) {
       if (!r.question_id) continue;

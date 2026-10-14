@@ -20,7 +20,8 @@
       map = await A.store.get('app:parent:' + t);
       if (!map || !map.sid) return fail('주소가 맞지 않아요. 선생님께 다시 받아 주세요.');
       [studs, prog, open, comment] = await Promise.all([A.loadStudents(), A.store.get('app:prog:' + map.sid + ':e4-2'), A.store.get('app:open:' + map.sid + ':e4-2'), A.store.get('app:comment:' + map.sid + ':e4-2')]);
-      subs = await A.sbSelect('submissions', 'student_id=eq.' + encodeURIComponent(map.sid) + '&course_id=eq.e4-2&select=question_id,question,transcript,pass,stage,quality,created_at,level&order=created_at.desc&limit=300') || [];
+      subs = await A.sbSelect('submissions', 'student_id=eq.' + encodeURIComponent(map.sid) + '&course_id=eq.e4-2&select=question_id,question,transcript,score,stage,quality,created_at,level&order=created_at.desc&limit=300') || [];
+      subs.forEach(r => { r.pass = (r.score || 0) >= 70; });   // 서버 표에 pass 칸은 없다 — 점수 70 이상이 통과
     } catch (e) { return fail('서버에 연결하지 못했어요. 잠시 뒤 다시 열어 주세요.'); }
     const s = (studs || []).find(x => x.id === map.sid);
     if (!s) return fail('학생 정보를 찾지 못했어요.');
