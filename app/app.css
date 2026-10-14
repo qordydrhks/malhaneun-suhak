@@ -598,3 +598,16 @@ details.tq2 summary::-webkit-details-marker{display:none}
 .rec .myd summary::-webkit-details-marker{display:none}
 .myd-in{margin-top:8px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.04);border:1px dashed var(--line)}
 .myd-in b{display:block;font-size:13px;color:var(--gold);margin-top:2px}.myd-in p{margin:4px 0 8px;line-height:1.6}.myd-in p.mod{color:var(--sub)}
+/* 나의 기록 — 대단원·소단원별로 묶기 (10/14) */
+.recgroups{display:grid;gap:8px}
+.recbig{background:var(--sky2);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.recbig>summary{display:flex;align-items:center;gap:8px;padding:12px 14px;cursor:pointer;list-style:none;font-weight:700}
+.recbig>summary::-webkit-details-marker{display:none}
+.recbig>summary::after{content:'›';margin-left:4px;color:var(--sub);transition:transform .2s}
+.recbig[open]>summary::after{transform:rotate(90deg)}
+.recbig .rbc{font-size:12px;color:var(--sub);font-weight:600;white-space:nowrap}
+.recbig .rbt{flex:1;min-width:0}
+.recbig .rbn{min-width:26px;text-align:center;padding:2px 8px;border-radius:999px;background:#0004;color:var(--gold);font-size:13px}
+.recsm{padding:0 10px 10px}
+.recsm .rst{font-size:13px;color:var(--sub);margin:4px 2px 6px;font-weight:600}
+.recsm .rec{background:#0003}

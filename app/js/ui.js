@@ -867,17 +867,27 @@
     navMark(['record', which || null]);
     const rk = E.rank(), bk = E.book(), sem = A.S.sem();
     const LBL = {one: ['한 번에', 'one pass'], h1: ['되묻기 뒤', 'hint 1'], h2: ['도움 뒤', 'hint 2'], yet: ['아직', '다시 하면 빛나요']};
-    const nameOf = it => it.t.kind === 'bh' ? it.b.title + ' 블랙홀 · ' + E.RT(it.r) : it.s.title + ' · ' + E.RT(it.r);
     const qOf = it => it.t.kind === 'bh' ? it.b.bh[it.r].q : it.t.src.q;
     const subs = which ? await mySubs() : {};
     if (NAV.cur && NAV.cur[0] !== 'record') return;               // 불러오는 사이 다른 화면으로 갔으면 그리지 않는다
-    const list = which ? bk[which].map(it => {
+    /* 마스터 10/14: 쭉 나열하지 말고 대단원(별) → 소단원(행성)별로 묶어 보여 준다. 대단원은 눌러야 펼쳐짐 */
+    const liOf = it => {
       const o = subs[it.t.id] || {}, row = which === 'yet' ? o.last : (o.pass || o.last);
       const go = which === 'yet' ? (it.s ? `data-go="small:${it.s.code}" data-r="${it.r}"` : `data-go="bh:${it.b.no}" data-r="${it.r}"`) : '';
-      return `<li class="rec"><span class="code">${esc(nameOf(it))}</span><span>${fm(qOf(it))}</span>
+      return `<li class="rec"><span class="code">${it.t.kind === 'bh' ? '블랙홀 · ' : ''}${E.RL(it.r)}</span><span>${fm(qOf(it))}</span>
         ${row && row.transcript ? `<details class="myd"><summary>🗣 내가 한 말 보기</summary><div class="myd-in"><b>내가 한 말</b><p>${ansHtml(row.transcript)}</p>${which !== 'yet' && it.t.src && it.t.src.ans ? `<b>모범 답</b><p class="mod">${fm(it.t.src.ans)}</p>` : ''}</div></details>` : '<small class="sub">남아 있는 대답이 없어요</small>'}
         ${which === 'yet' ? `<button class="ghost small redo" ${go}>다시 하기 →</button>` : ''}</li>`;
-    }).join('') : '';
+    };
+    let list = '';
+    if (which) {
+      const groups = E.bigs().map(b => {
+        const mine = bk[which].filter(it => it.b === b); if (!mine.length) return null;
+        const subs2 = b.smalls.map(s => [s.code + ' ' + s.title, mine.filter(it => it.s === s)]).concat([['🕳 블랙홀 관문', mine.filter(it => !it.s)]]).filter(x => x[1].length);
+        return {b, n: mine.length, subs2};
+      }).filter(Boolean);
+      list = groups.map(g => `<details class="recbig"${groups.length === 1 ? ' open' : ''}><summary><span class="rbc">${esc(g.b.code)}</span><span class="rbt">${esc(g.b.title)}</span><b class="rbn">${g.n}</b></summary>
+        ${g.subs2.map(([t, its]) => `<div class="recsm"><div class="rst">${esc(t)}</div><ul class="reclist">${its.map(liOf).join('')}</ul></div>`).join('')}</details>`).join('');
+    }
     frame(`<section class="book">
       <div class="starcards"><div class="scard"><span>⭐ 학기 별빛</span><b>${A.S.semPts().toLocaleString('ko-KR')}</b><small>${esc(sem.name)} · E4-2</small></div>
         <div class="scard all"><span>🌌 전체 별빛</span><b>${A.S.totalPts().toLocaleString('ko-KR')}</b></div></div>
@@ -888,7 +898,7 @@
         mission 은 맞힌 문제마다 20(hard mission 은 30), 다시 빛내기를 통과하면 30.<br>
         <b>학기 별빛</b>은 학기가 바뀌면 0부터 다시 모으고, <b>전체 별빛</b>은 계속 쌓여. 연습으로 다시 한 질문은 별빛이 더 생기지 않아.</p></details>
       <div class="stats">${Object.keys(LBL).map(k => `<button class="stat ${which === k ? 'on' : ''}" data-k="${k}"><b>${bk[k].length}</b><span>${LBL[k][0]}</span><small>${LBL[k][1]}</small></button>`).join('')}</div>
-      ${which ? `<ul class="reclist">${list || '<li class="sub">아직 없어요</li>'}</ul>` : ''}
+      ${which ? (list ? `<div class="recgroups">${list}</div>` : '<p class="sub center">아직 없어요</p>') : ''}
       <p class="center"><button class="ghost small" id="sndT">${A.S.soundOn() ? '🔊 효과음 켜짐 · 끄기' : '🔇 효과음 꺼짐 · 켜기'}</button></p>
     </section>`, {back: 'home', backText: '은하', crumb: '나의 기록'});
     root().querySelectorAll('.stat').forEach(b => b.onclick = () => record(b.dataset.k === which ? null : b.dataset.k));
