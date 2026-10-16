@@ -96,6 +96,7 @@ button:disabled{opacity:.35;cursor:default}
 .dots{display:flex;gap:5px}.dots i{width:8px;height:8px;border-radius:50%;background:var(--line)}.dots i.d{background:var(--gold)}.dots i.c{background:var(--blue)}
 .timer{flex:1;height:6px;border-radius:99px;background:var(--line);overflow:hidden}.timer b{display:block;height:100%;width:100%;background:var(--blue);transition:width .25s linear}
 .timer.low b{background:var(--warn)}
+.timer.off{visibility:hidden}
 .qstage{display:flex;align-items:flex-start;gap:10px}
 .qcard{flex:1;min-width:0;background:var(--paper);color:#1d2233;border-radius:var(--r);padding:18px 18px 14px;box-shadow:0 10px 40px #0007}
 .qcard .q{font-size:19px;font-weight:600;line-height:1.6}

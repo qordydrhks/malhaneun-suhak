@@ -334,7 +334,7 @@ def to_arrow(x, y, text='자르면'):
     f.add(_txt(x + 15, y - 9, text, 11.5, SOFT, 600), [(x - 8, y - 20), (x + 38, y - 20)])
     return f
 
-def ang(corner, p1, p2, text=None, r=22, color='#B55B45', size=12.5):
+def ang(corner, p1, p2, text=None, r=22, color='#B55B45', size=12.5, lab_d=15):
     """각 표시 — corner 에서 p1 쪽부터 p2 쪽까지 호를 그리고 가운데에 글자.
     text 를 '?' 로 두면 구해야 하는 각. **답이 되는 값은 적지 말 것**(대전제 세부 원칙)."""
     import math
@@ -350,7 +350,7 @@ def ang(corner, p1, p2, text=None, r=22, color='#B55B45', size=12.5):
           % (pa[0], pa[1], r, r, pb[0], pb[1], color), [pa, pb, corner])
     if text:
         am = a1 + d / 2
-        tx, ty = corner[0] + math.cos(am) * (r + 15), corner[1] + math.sin(am) * (r + 15)
+        tx, ty = corner[0] + math.cos(am) * (r + lab_d), corner[1] + math.sin(am) * (r + lab_d)
         w = _textw(text, size)
         f.add(_txt(tx, ty + 4, text, size, color, 800),
               [(tx - w / 2, ty - size), (tx + w / 2, ty + 6)])

@@ -81,7 +81,7 @@ for ui, U in enumerate(UNITS, 1):
             calc = bool(CALC.search(q[2])) and q[0] > 0
             it = {'id': it0['id'], 'r': max(1, q[0]), 'pre': (D.PRE_FROM[tag] if q[0] == 0 else ''), 'q': q[2], 'ans': q[3],
                   'keys': D.KEYS[tag][i], 'fig': qfig(q[5] if len(q) > 5 else None), 'calc': calc,
-                  'help': {'ask': h['ask'], 'again': ag, 'kw': h['kw'], 'short': h['short'], 'long': h['long'], 'lfig': lf, 'src': h.get('src', '')}}
+                  'help': {'ask': h['ask'], 'again': ag, 'kw': h['kw'], 'short': h['short'], 'long': h['long'], 'lfig': lf, 'src': h.get('src', ''), **({'word': list(h['word'])} if h.get('word') else {})}}
             assert len(h['ask']) == len(it['keys']), (tag, i, '되묻기 수 ≠ 핵심 수')
             if it['fig']: n['fig'] += 1
             n['calc'] += calc; n['q'] += 1; n['help'] += 1
@@ -94,6 +94,8 @@ for ui, U in enumerate(UNITS, 1):
                           'ideas': [{'t': g[j], 'ask': q[4][j]} for j in range(len(g))],
                           'teach': ' '.join(L['ideas']), 'again': L['again'], 'record': L['record'], 'miscon': L['miscon'],
                           'fig': qfig(q[5] if len(q) > 5 else None)})
+            pt = getattr(D, 'LADPATH', {}).get((tag, i))   # 다른 풀이 길(마스터 10/16) — 어느 길이든 다 짚으면 통과
+            if pt: steps[-1]['paths'] = [{'name': p['name'], 'ideas': [{'t': p['g'][j], 'ask': p['ask'][j]} for j in range(len(p['g']))]} for p in ([pt] if isinstance(pt, dict) else pt)]
             n['lad'] += 1
         big['smalls'].append({'no': s['no'], 'code': 'E4-2-%d-%d' % (ui, si), 'title': old['small'].split('. ', 1)[1], 'page': s.get('page', ''),
                               'key': rkey, 'unitId': old['id'], 'unitLabel': old['label'], 'quiz': ROUNDS[rkey].get('quiz', {'1': 3, '2': 2}), 'items': items, 'ladder': steps})

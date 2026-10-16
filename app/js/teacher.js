@@ -84,7 +84,7 @@
     }
     stuck.sort((a, b) => (b.x.at || 0) - (a.x.at || 0)); helped.sort((a, b) => (b.x.at || 0) - (a.x.at || 0));
     const nx = E.nextPlace();
-    return {rk, bk, p, stuck, helped, nx, at: p.at || 0, any: !!PROG[s.id], ses: E.sessionMin(), qmin: E.qmin()};
+    return {rk, bk, p, stuck, helped, nx, at: p.at || 0, any: !!PROG[s.id], ses: E.sessionMin(), qmin: E.qmin(), noT: E.timerOff()};
   }
 
   // ── 학생 목록 (마스터 10/13: 한 화면에 다 보여 주지 말고, 누르면 보이게) ──
@@ -183,7 +183,7 @@
         ['stars', '🪐', '행성 ' + v.rk.lit + '/' + v.rk.total + ' · 난이도 열기'],
         ['rec', '📝', '말한 내용까지'],
         ['open', '🔓', todayLocked ? '잠긴 질문 ' + todayLocked + '개' : '시간 더 주기', todayLocked > 0],
-        ['time', '⏱', v.ses + '분' + (v.qmin ? ' · 질문당 ' + v.qmin + '분' : ' · 질문당 기본')],
+        ['time', '⏱', v.noT ? '시간 제한 꺼짐(보강)' : v.ses + '분' + (v.qmin ? ' · 질문당 ' + v.qmin + '분' : ' · 질문당 기본'), v.noT],
         ['parent', '📨', '한마디 · 링크 복사'],
         ['fun', '🏅', '⭐ ' + semStars(s.id).toLocaleString('ko-KR')]];
       frame(`<div class="thead"><h2>${esc(s.name)} <small>${esc(s.grade)}</small></h2><span class="sub">마지막 ${ago(v.at)}</span></div>
@@ -236,7 +236,8 @@
         <div class="tbox"><h3>🔓 오늘 잠긴 질문 다시 열기</h3><p class="sub">지금 잠긴 질문 ${todayLocked}개 · 다시 연 질문은 '다음 날' 점수로 남아요.</p><div class="row"><button class="secondary" data-cmd="u" ${todayLocked ? '' : 'disabled'}>다시 열기</button></div></div>
         <p class="sub" id="tCmdM">학생 태블릿이 30초 안에 받아요.</p>`;
     } else if (sec === 'time') {
-      body = `<div class="tbox"><h3>한 번 앉는 시간</h3><select id="tSes" class="tin">${E.SESSIONS.map(m => `<option value="${m}" ${m === E.sessionMin() ? 'selected' : ''}>${m}분</option>`).join('')}</select></div>
+      body = `<div class="tbox"><h3>시간 제한</h3><label class="tchk"><input type="checkbox" id="tNoT" ${E.timerOff() ? 'checked' : ''}> 시간 제한 끄기 (보강)</label><p class="sub">끄면 질문 시간과 한 번 앉는 시간이 모두 멈춰요. 제대로 말할 때까지 남겨서 보강할 때 쓰세요. 친구와 대결은 그대로예요.</p></div>
+        <div class="tbox"><h3>한 번 앉는 시간</h3><select id="tSes" class="tin">${E.SESSIONS.map(m => `<option value="${m}" ${m === E.sessionMin() ? 'selected' : ''}>${m}분</option>`).join('')}</select></div>
         <div class="tbox"><h3>질문 하나에 주는 시간</h3><select id="tPace" class="tin"><option value="0" ${!E.qmin() ? 'selected' : ''}>기본 (난이도 1 2분 · 2 3분 · 3 4분)</option>${E.QMINS.map(m => `<option value="${m}" ${m === E.qmin() ? 'selected' : ''}>${m}분</option>`).join('')}</select><p class="sub">계산이 필요한 질문은 1분 더</p></div>
         <p class="sub" id="tSetMsg">바꾸면 바로 저장돼요 · 다음 행성부터 적용</p>`;
     } else if (sec === 'parent') {
@@ -265,8 +266,8 @@
       await A.store.set(k, {cmds}); $('#tCmdM').textContent = '✓ 보냈어요 · 학생 태블릿이 30초 안에 받아요'; if (b.dataset.cmd === 'u') b.disabled = true;
     });
     if ($('#tSes')) {
-      const saveSet = async () => { const nv = {session: +$('#tSes').value, qmin: +$('#tPace').value, at: Date.now()}; await A.store.set(E.skey(s.id), nv); SETS[s.id] = nv; $('#tSetMsg').textContent = '✓ 저장했어요 · 다음 행성부터 적용'; };
-      $('#tSes').onchange = saveSet; $('#tPace').onchange = saveSet;
+      const saveSet = async () => { const nv = {session: +$('#tSes').value, qmin: +$('#tPace').value, notimer: $('#tNoT').checked, at: Date.now()}; await A.store.set(E.skey(s.id), nv); SETS[s.id] = nv; $('#tSetMsg').textContent = '✓ 저장했어요 · 다음 행성부터 적용'; };
+      $('#tSes').onchange = saveSet; $('#tPace').onchange = saveSet; $('#tNoT').onchange = saveSet;
     }
     if ($('#tCmS')) $('#tCmS').onclick = async () => { await A.store.set('app:comment:' + s.id + ':e4-2', {text: $('#tCm').value.trim(), at: Date.now()}); $('#tMsg').textContent = '✓ 한마디를 저장했어요'; };
     if ($('#tLink')) $('#tLink').onclick = async () => {

@@ -17,7 +17,7 @@
   E.LIMIT = {1: 120, 2: 180, 3: 240};               // 질문당 초(채점 시간 빼고) · 계산 필요하면 1·2회차 +60
   E.Q = {first: 100, reask: 90, kw: 85, short: 75, long: 60, nextday: 60, review: 80};
   E.SESSION_MIN = 10;                                // 한 번 앉는 시간(마스터 10/8: 처음엔 10분) — 학생마다 선생님이 바꿀 수 있다
-  /* 학생마다 시간 설정(마스터 10/12) — 선생님 화면에서 정한다. 공유 저장소 app:set:<학생>:e4-2 = {session: 분, qmin: 질문당 분(1~5, 없으면 기본 2·3·4분)} */
+  /* 학생마다 시간 설정(마스터 10/12) — 선생님 화면에서 정한다. 공유 저장소 app:set:<학생>:e4-2 = {session: 분, qmin: 질문당 분(1~5, 없으면 기본 2·3·4분), notimer: 시간 제한 끄기} */
   E.QMINS = [1, 2, 3, 4, 5];
   E.SESSIONS = [5, 10, 15, 20, 25, 30];
   let SET = {};
@@ -26,6 +26,7 @@
   E.useSettings = s => { SET = s || {}; };
   E.sessionMin = () => (E.SESSIONS.includes(+SET.session) ? +SET.session : E.SESSION_MIN);
   E.qmin = () => (E.QMINS.includes(+SET.qmin) ? +SET.qmin : 0);                     // 0 = 기본(탐사마다 2·3·4분)
+  E.timerOff = () => !!SET.notimer;                 // 마스터 10/15: 시간 제한 끄기(보강) — 질문 시간·앉는 시간 모두 멈춤(대결은 그대로)
   E.limit = (r, calc) => (E.qmin() ? E.qmin() * 60 : E.LIMIT[r]) + (calc && r < 3 ? 60 : 0);   // 질문당 초 · 계산 질문은 1분 더
 
   // ── 데이터 ──
@@ -178,7 +179,7 @@
   const SYSTEM = `너는 초등학생 수학 친구야. 학생이 질문 하나에 말로 답한 것(음성 인식 텍스트)을 보고 [꼭 말할 핵심]을 하나씩 짚었는지 판정해. 되묻기 질문은 앱이 따로 붙이니까 너는 만들지 마.
 [판정 규칙]
 - 핵심마다 hit(true/false). true면 학생 말에서 근거가 된 부분을 짧게 그대로 인용(evidence). 인용할 곳이 없으면 false.
-- 뜻이 같으면 표현이 달라도 인정. 결론(본질)이 같으면 다른 방식으로 말해도 인정 — 예: "빈 점을 찍는다" = "색칠하지 않는다", "0으로 본다" = "버린다", "100으로 본다" = "백의 자리로 올린다". 계산 과정은 순서가 달라도(예: 약분을 먼저 하고 곱하기) 같은 답에 이르는 바른 방법이면 인정. 두 개념의 차이를 묻는 질문에서 "기준이 되는 수가 들어가는지 안 들어가는지가 달라"처럼 공통 기준으로 말해도 인정. 수식·기호를 정확히 읽지 않아도 말로 설명했으면 인정. 음성 인식이 수학 말을 틀리게 적은 것은 소리가 비슷하고 문맥상 분명하면 맞게 말한 것으로 봐("오분의 삼"=3/5).
+- 뜻이 같으면 표현이 달라도 인정. 결론(본질)이 같으면 다른 방식으로 말해도 인정 — 예: "빈 점을 찍는다" = "색칠하지 않는다", "0으로 본다" = "버린다", "100으로 본다" = "백의 자리로 올린다". 계산 과정은 순서가 달라도(예: 약분을 먼저 하고 곱하기) 같은 답에 이르는 바른 방법이면 인정. 두 개념의 차이를 묻는 질문에서 "기준이 되는 수가 들어가는지 안 들어가는지가 달라"처럼 공통 기준으로 말해도 인정. 수식·기호를 정확히 읽지 않아도 말로 설명했으면 인정. 각·변·점의 이름(예: 각 ㄹㄱㅁ)을 정확히 부르지 못해도 "왼쪽 위의 각", "40°인 각 옆에 있는 각"처럼 어느 것을 가리키는지 분명하면 인정. 음성 인식이 수학 말을 틀리게 적은 것은 소리가 비슷하고 문맥상 분명하면 맞게 말한 것으로 봐("오분의 삼"=3/5).
 - 핵심에 숫자 답이 있으면 그 숫자(또는 같은 값)를 말해야 인정.
 - "네", "될 것 같아요"처럼 결론만 있고 내용이 없으면 인정하지 마. 핵심의 절반만 말했으면 인정하지 마.
 - 같은 답이면 언제 채점해도 같은 판정이 나오게, 애매하면 "핵심이 분명히 들어 있는가" 하나로만 판단.
@@ -190,12 +191,22 @@
 반드시 JSON만: {"hits":[{"id":"a","hit":true,"evidence":"..."}],"misconception":"","focus":"b","ack":"..."}`;
   /* need = 통과에 필요한 핵심 묶음(질문마다, 마스터 10/12). 없으면 핵심을 모두. [[0,1]] = 둘 중 하나, [[0]] = ①만 꼭.
      돌려주는 miss = 되물을 핵심, cand = 그 묶음에서 아직 못 짚은 핵심들(되묻기를 이미 쓴 것은 화면이 건너뛴다) */
-  E.grade = async ({question, keys, answer, prev, unitId, need, alt}) => {
+  /* paths = 다른 풀이 길(마스터 10/16, 3회차 계단). [[0,1,2],[3,4,5]] — 길마다 그 핵심을 다 짚으면 통과(어느 길이든).
+     되묻기는 아이가 더 많이 짚은 길에서 고른다. h·n 도 그 길로 센다 */
+  E.grade = async ({question, keys, answer, prev, unitId, need, alt, paths}) => {
     const user = `[질문] ${question}\n[꼭 말할 핵심]\n${keys.map((k, i) => IDS[i] + ') ' + k).join('\n')}\n` + (prev ? `[이전 답] ${prev}\n` : '') + `[학생의 답(음성 인식)] ${answer}` + (alt && alt.trim() ? `\n[대안 후보(같은 말의 다른 인식 결과 — 참고용)] ${alt}` : '');
     const raw = await A.ai({task: 'grade', system: SYSTEM, messages: [{role: 'user', content: user}], max_tokens: 700, grade_id: 'e4-2', unit_id: unitId});
     let o = null; try { o = JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1)); } catch (e) {}
     if (!o) throw new Error('친구가 답을 잘 못 알아들었어. 한 번 더 말해 줄래?');
     const hits = keys.map((k, i) => { const f = (o.hits || []).find(h => h && h.id === IDS[i]); return {hit: !!(f && f.hit), evidence: (f && f.hit && f.evidence) || ''}; });
+    if (Array.isArray(paths) && paths.length > 1 && paths.every(p => p.length && p.every(i => i >= 0 && i < hits.length))) {
+      const cnt = p => p.filter(i => hits[i].hit).length;
+      const full = paths.find(p => cnt(p) === p.length);
+      const best = full || paths.reduce((a, p) => (cnt(p) / p.length > cnt(a) / a.length ? p : a), paths[0]);
+      const fi0 = typeof o.focus === 'string' ? o.focus.trim().charCodeAt(0) - 97 : -1;
+      let cand = full ? [] : best.filter(i => !hits[i].hit); if (cand.includes(fi0)) cand = [fi0].concat(cand.filter(i => i !== fi0));
+      return {hits, h: cnt(best), n: best.length, miss: cand.length ? cand[0] : -1, cand, path: paths.indexOf(best), misconception: String(o.misconception || '').trim(), ack: String(o.ack || '').trim()};
+    }
     const groups = (Array.isArray(need) && need.length && need.every(g => g.every(i => i >= 0 && i < hits.length))) ? need : keys.map((_, i) => [i]);
     const fi = typeof o.focus === 'string' ? o.focus.trim().charCodeAt(0) - 97 : -1;
     const open = groups.filter(g => !g.some(i => hits[i].hit));

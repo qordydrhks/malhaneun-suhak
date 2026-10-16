@@ -44,6 +44,7 @@
   function tickClock() {
     if (!A.session.student || document.body.classList.contains('intro-on')) { document.getElementById('sclock')?.remove(); return; }
     const el = clockEl();
+    if (E.timerOff()) { el.querySelector('b').textContent = '보강'; el.dataset.say = '선생님이 시간 제한을 꺼 두셨어. 천천히 제대로 말해 보자!'; el.classList.remove('idle', 'low', 'end'); return; }
     const o = sess(), st = o.start, left = o.done ? 0 : sessLeft(o);
     el.querySelector('b').textContent = String(Math.floor(left / 60)).padStart(2, '0') + ':' + String(left % 60).padStart(2, '0');
     el.dataset.say = !st ? `오늘 공부 시간은 ${E.sessionMin() + (o.extra || 0)}분이야. 질문을 시작하면 줄어들어!` : left ? `오늘 공부 시간이 ${Math.ceil(left / 60)}분 남았어` : '오늘 시간이 다 됐어!';
@@ -103,7 +104,7 @@
   const sessSave = o => A.ls.set(SKEY(), o);
   const sessTotal = o => (E.sessionMin() + (o.extra || 0)) * 60;
   const sessLeft = o => (o.start ? Math.max(0, Math.ceil(sessTotal(o) - (Date.now() - o.start) / 1000)) : sessTotal(o));
-  const sessOver = o => !!(o.done || (o.start && sessLeft(o) === 0));
+  const sessOver = o => !E.timerOff() && !!(o.done || (o.start && sessLeft(o) === 0));   // 시간 제한 끄면(보강) 끝나지 않음
   const addTime = min => {                                         // 이미 끝났으면 '지금부터 min 분'
     const o = sess();
     if (sessOver(o) && o.start) o.extra = Math.ceil((Date.now() - o.start) / 60000) - E.sessionMin() + min; else o.extra = (o.extra || 0) + min;
@@ -119,7 +120,8 @@
       <label>선생님 PIN<input id="kp" type="password" inputmode="numeric" autocomplete="off"></label><div class="kmsg" id="km"></div>
       <div class="krow" id="kact" hidden><button type="button" class="secondary" data-a="5">⏱ 5분 더</button><button type="button" class="secondary" data-a="10">⏱ 10분 더</button>
         <button type="button" class="secondary" data-a="u" ${locked ? '' : 'disabled'}>🔓 오늘 잠긴 질문 다시 열기 (${locked}개)</button>
-        <button type="button" class="secondary" data-a="m">🗺 별지도 2장 더 (지금 ${E.maps()}장)</button></div>
+        <button type="button" class="secondary" data-a="m">🗺 별지도 2장 더 (지금 ${E.maps()}장)</button>
+        <button type="button" class="secondary" data-a="t">${E.timerOff() ? '⏱ 시간 제한 다시 켜기' : '⏸ 시간 제한 끄기 (보강)'}</button></div>
       <div class="krow"><button type="submit" class="primary" id="kok">확인</button><button type="button" class="ghost" id="kx">닫기</button></div></form>`;
     document.body.appendChild(d);
     const close = () => d.remove(); let okPin = false;
@@ -139,6 +141,11 @@
       if (!okPin) return;   // PIN 확인 전에는 아무것도 안 함(10/13 마스터: PIN 없이 시간 연장되던 것)
       const a = b.dataset.a, p = E.prog(); p.log = p.log || [];
       if (a === 'u') { const n = E.unlockToday(); p.log.push({at: Date.now(), teacher: 'unlock', n}); await E.save(); toast(`선생님이 잠긴 질문 ${n}개를 다시 열어 주셨어!`); }
+      else if (a === 't') {
+        const sid = A.session.student.id, cur = (await A.store.get(E.skey(sid))) || {}, nv = {...cur, notimer: !E.timerOff(), at: Date.now()};
+        await A.store.set(E.skey(sid), nv); E.useSettings(nv); p.log.push({at: Date.now(), teacher: 'timer', off: nv.notimer}); await E.save(); tickClock();
+        toast(nv.notimer ? '선생님이 시간 제한을 껐어. 천천히 제대로 말해 보자!' : '시간 제한이 다시 켜졌어.');
+      }
       else if (a === 'm') { E.giveMap(2); p.log.push({at: Date.now(), teacher: 'map', add: 2}); await E.save(); toast('선생님이 별지도 2장을 더 주셨어!'); }
       else { addTime(+a); p.log.push({at: Date.now(), teacher: 'time', add: +a}); await E.save(); toast(`선생님이 ${a}분을 더 주셨어!`); }
       A.buzz([20, 40, 20]); close(); if (after) after();
@@ -1016,9 +1023,14 @@
       return {mode, q: x.q, keys: x.keys, ans: x.keys.join(' / '), fig: '', asks: x.keys.map(() => '이 별의 행성들을 하나씩 떠올려 봐. 빠진 내용은 없어?'), help: {}, base, feel: x.feel};
     }
     const keys = x.ideas.map(d => d.t), asks = x.ideas.map(d => d.ask);
+    let paths = null;   // 다른 풀이 길(마스터 10/16): 길마다 아이디어를 뒤에 덧붙이고, 어느 길이든 다 짚으면 통과
+    if (Array.isArray(x.paths) && x.paths.length) {
+      paths = [keys.map((_, i) => i)];
+      x.paths.forEach(p => { const s0 = keys.length; p.ideas.forEach(d => { keys.push(d.t); asks.push(d.ask); }); paths.push(p.ideas.map((_, i) => s0 + i)); });
+    }
     const help = {kw: null, short: x.teach, long: null, lfig: ''};
-    if (mode === 'again' || mode === 'review') return {mode, q: x.again, keys, ans: x.teach, fig: '', asks, help, base: mode === 'review' ? E.Q.review : E.Q.short};
-    return {mode, q: x.q, keys, ans: x.teach, fig: x.fig, asks, help, base: mode === 'nextday' ? E.Q.nextday : E.Q.first};
+    if (mode === 'again' || mode === 'review') return {mode, q: x.again, keys, paths, ans: x.teach, fig: '', asks, help, base: mode === 'review' ? E.Q.review : E.Q.short};
+    return {mode, q: x.q, keys, paths, ans: x.teach, fig: x.fig, asks, help, base: mode === 'nextday' ? E.Q.nextday : E.Q.first};
   }
 
   /* ── 글로 쓰기: 수식 넣기(마스터 10/12 — 매쓰홀릭처럼) ──
@@ -1108,7 +1120,9 @@
       const stop = () => { done = true; clearInterval(tim); try { rec && rec.stop(); } catch (e) {} };
       // 타이머 — 채점하는 동안은 멈춘다. 다 되면 떨어진 것과 같다(내일 다시)
       const drawT = () => { const b = $('.timer b'); if (b) { b.style.width = Math.max(0, left / limit * 100) + '%'; b.parentNode.classList.toggle('low', left < 30); } };
-      tim = setInterval(() => { if (!ticking || done) return; left -= 0.25; drawT(); if (left <= 0) { ticking = false; timeout(); } }, 250);
+      const noT = E.timerOff() && practice !== 'battle';
+      if (noT) { const t = root().querySelector('.qtop .timer'); if (t) t.classList.add('off'); }
+      tim = setInterval(() => { if (!ticking || done || noT) return; left -= 0.25; drawT(); if (left <= 0) { ticking = false; timeout(); } }, 250);
 
       // 답 입력(말하기 기본 · 글 입력 대안)
       let rec = null, recFails = 0, typed = false; const altPieces = [];
@@ -1191,7 +1205,7 @@
           const hits = S.words.map(w => ({hit: all.includes(w.replace(/\s+/g, '')), evidence: ''})), h = hits.filter(x => x.hit).length;
           return (last = {hits, h, n: hits.length, miss: h >= S.need ? -1 : 0, misconception: '', ack: h ? h + '가지를 말했어!' : '좋아, 하나씩 떠올려 보자.'});
         }
-        try { last = await E.grade({question: S.q, keys: S.keys, need: S.need, alt: altPieces.join(' | '), answer: t, prev: answers.length > 1 ? answers.slice(0, -1).join(' / ') : '', unitId: small.unitId}); }
+        try { last = await E.grade({question: S.q, keys: S.keys, need: S.need, paths: S.paths, alt: altPieces.join(' | '), answer: t, prev: answers.length > 1 ? answers.slice(0, -1).join(' / ') : '', unitId: small.unitId}); }
         catch (e) { answers.pop(); setBuddy('retry'); say(esc(e.message), 'warn'); return null; }   // AI 실패 → 기록 없음, 다시 말하기
         return last;
       }

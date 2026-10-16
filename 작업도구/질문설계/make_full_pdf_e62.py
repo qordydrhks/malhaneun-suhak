@@ -106,11 +106,15 @@ def card12(q, h, keys, lsvg, asvg):
             '<div class="ans"><b>모범 답</b> %s</div><div class="src">교재 디딤돌 기본+응용 6-2 %s</div></div>%s</div>%s'
             '<table>%s%s</table><div class="mk">☐ 좋아요 &nbsp; ☐ 고침 &nbsp; ☐ 뺌</div></div>') % ((q[0], RN[q[0]], e(q[2]), e(q[3]), e(h.get('src', ''))) + qfig(q) + (tr, ti))
 
-def card3(q, lad, g):
+def card3(q, lad, g, key=None):
     m = re.search('[①②③④⑤⑥⑦⑧⑨⑩]', q[1]); tp = TOPIC_PAGES.get(n, {})
     src = '최상위 수학 6-2 심화유형 %s(%s쪽)' % (m.group(0), tp.get(m.group(0), '?')) if m else ''
     steps = ''.join('<tr><td class="no">%s</td><td><span class="n">되묻기</span> %s<br><span class="g"><b>짚을 아이디어</b> %s</span><br><span class="t"><b>간단한 설명</b> %s</span></td></tr>'
                     % (CIRC[j], e(q[4][j]), e(g[j]), e(lad['ideas'][j])) for j in range(len(q[4])))
+    pv = getattr(D, 'LADPATH', {}).get(key) if key else None
+    for pi, pth in enumerate(([pv] if isinstance(pv, dict) else pv) or []):   # 다른 풀이 길(마스터 10/16) — 어느 길이든 그 길의 아이디어를 다 짚으면 통과
+        steps += '<tr><td class="no" style="color:#7c3aed">길%d</td><td><b style="color:#7c3aed">다른 풀이 길도 통과 — %s</b><br>%s</td></tr>' % (pi + 2, e(pth['name']), '<br>'.join(
+            '<span class="n">%s</span> 되묻기 %s<br><span class="g"><b>짚을 아이디어</b> %s</span><br><span class="t"><b>간단한 설명</b> %s</span>' % (CIRC[j], e(pth['ask'][j]), e(pth['g'][j]), e(pth['ideas'][j])) for j in range(len(pth['g']))))
     adult = ('<tr class="adult"><td class="k">다시 묻기</td><td>%s</td></tr>' % e(lad['again']) +
              '<tr class="adult"><td class="k">흔한 틀린 생각</td><td>%s <span style="color:#9ca3af">(예: "%s")</span></td></tr>' % (e(lad['miscon']), e(lad['wrong'])) +
              '<tr class="adult"><td class="k">어른 기록</td><td>%s</td></tr>' % e(lad['record']))
@@ -133,6 +137,9 @@ def build():
          '<b>교재</b> 1·2회차 = 디딤돌 기본+응용 6-2(인쇄 쪽 = PDF 인덱스 + 1) · 3회차 = 최상위 수학 6-2(인쇄 쪽 = PDF 인덱스 + 1)</div>']
     rv = [GEN_REV[0] % '초6-2'] + GEN_REV[1:]
     o.append('<div class="box ask"><b>%s</b><br>%s</div>' % (rv[0], '<br>'.join('· ' + x for x in rv[1:])))
+    npath = sum(1 for k in getattr(D, 'LADPATH', {}) if k[0].startswith(n + '-'))
+    if npath:
+        o.append('<div class="box ask"><b>10/16 새 기준 — 3회차 다른 풀이 길</b><br>· 교재 풀이와 다르지만 맞는 풀이로 말해도 통과 — 3회차 카드의 보라색 「길2」 줄(이 단원 %d문제). 앱도 어느 길이든 그 길의 아이디어를 다 짚으면 통과, 되묻기는 아이가 더 많이 짚은 길에서</div>' % npath)
     if U.get('idea'): o.append('<div class="box"><b>단원 큰 그림</b> %s</div>' % e(U['idea']))
     for s in U['smalls']:
         tag = '%s-%s' % (n, s['no'])
@@ -147,7 +154,7 @@ def build():
         q3 = [q for q in s['qs'] if q[0] == 3]
         if q3:
             o.append('<h3>3회차 — 계단</h3>')
-            for j, q in enumerate(q3): o.append(card3(q, D.LAD[tag][j], D.G[tag][j]))
+            for j, q in enumerate(q3): o.append(card3(q, D.LAD[tag][j], D.G[tag][j], (tag, j)))
         o.append('</div>')
     bh = BHM.BH.get(int(n))
     if bh:

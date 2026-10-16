@@ -66,7 +66,18 @@ GEN_REV = ['10/14 마스터 검토 기준 적용(초5-2 1단원 손글씨 검토
   '맨 끝에 <b>블랙홀 관문</b> — 2회차 정리에 단원에서 가장 중요한 생각, 3회차는 그 단원을 언제 쓰는지 예로',
   '앱: 3회차(은하 탐사) 출발 화면에 "연습장과 연필을 준비하고 출발해!"']
 # 마스터 검토를 반영한 단원 — 맨 위에 무엇을 고쳤는지 보여 준다
-REVISED = {'1': ['10/14 마스터 검토 반영',
+REVISED = {'3': ['10/16 마스터 3단원 손글씨 검토 반영',
+  '02 「대응점, 대응변, 대응각」 → <b>「합동인 도형에서</b> 대응점, …」(무엇의 대응인지 먼저)',
+  '02 「변 ㄹㅂ은 몇 cm」 = 대응변만 말해도 통과 · 「각 ㄹㅁㅂ과 같은 각」 = 대응각만 말해도 통과 · 「위에 있는 점끼리 짝지음」 = ②만 말해도 통과(①은 모범 답으로)',
+  '02 3회차 평행사변형 ㉠: <b>다른 풀이 길도 통과</b>(이웃한 두 각의 합 180° → 삼각형 → 곧은 선 180°) — 3회차 카드 「길2」 줄. 앱도 어느 길이든 그 길을 다 짚으면 통과',
+  '02 3회차 접은 모양: 접혀 나간 자리(선분 ㄱㅁ·ㄱㄴ)를 <b>점선</b>으로',
+  '03 평행사변형 오류 질문에 <b>그림</b>(대각선 점선) · 다시 묻기도 새 그림',
+  '03 <b>질문 추가</b> 「선대칭도형을 완성하는 순서」(2회차, 교재 70쪽) · 04 <b>질문 추가</b> 「점대칭도형을 완성하는 순서」(2회차, 72쪽) — 자세한 설명에 그리기 그림',
+  '03 3회차 사각형 ㉠: 각 이름 글자를 호 가까이 · 반쪽 선대칭도형에 <b>대칭축 위 선분 5 cm</b>도 적음(둘레에 안 들어감을 분명히)',
+  '04 3회차 평행사변형 넓이: 9 cm²를 삼각형 ㄱㅇㄹ 가운데로',
+  '「대응」 <b>낱말 뜻</b>(한자 뜻 — 아이들이 잘 모르는 낱말) — 통과한 뒤 보여 줌(📖 낱말 뜻 줄)',
+  '각 이름(각 ㄹㄱㅁ 등)을 정확히 못 불러도 "왼쪽 위 각"처럼 어느 각인지 알 수 있게 말하면 인정 — 앱 채점 규칙'],
+ '1': ['10/14 마스터 검토 반영',
   '「짧은 설명 · 긴 설명」 → <b>간단한 설명 · 자세한 설명</b>(앱 이름도 같이 바꿈)',
   '본질이 같은 대답은 통과 — 핵심 옆 (= …)에 같은 뜻의 말을 적고, 앱 채점 규칙에도 넣음(빈 점 = 색칠하지 않음 · 0으로 본다 = 버린다 · 100으로 본다 = 백의 자리로 올린다)',
   '02 「45 초과와 45 이상」: "기준이 되는 수가 들어가는지가 달라"만 말해도 통과',
@@ -91,6 +102,10 @@ def need_of(q):
 
 def need_note(nd, k):
     if not nd: return '핵심을 모두 말해야 통과'
+    if len(nd) > 1:   # 여러 묶음 = 묶음마다 하나씩은 꼭(마스터 10/16)
+        parts = [('(%s 중 하나)' % '·'.join(CIRC[j] for j in g)) if len(g) > 1 else CIRC[g[0]] for g in nd]
+        rest = [CIRC[j] for j in range(len(k)) if all(j not in g for g in nd)]
+        return '%s 꼭 말하면 통과%s' % (' · '.join(parts), ('(%s은 덧붙이면 좋은 것)' % '·'.join(rest)) if rest else '')
     g = nd[0]
     if len(g) > 1: return '%s 중 하나만 말해도 통과(같은 것을 다르게 말한 핵심)' % '·'.join(CIRC[j] for j in g)
     return '%s만 꼭 말하면 통과(나머지는 덧붙이면 좋은 것)' % CIRC[g[0]]
@@ -119,17 +134,23 @@ def card12(q, h, keys, lsvg, asvg):
         ('간단한 설명', e(h['short'])),
         ('자세한 설명', e(h['long']) + ('<div class="lf">%s</div>' % lsvg if lsvg else '')),
     ]
+    if h.get('word'):   # 통과한 뒤 보여 주는 「낱말 뜻」(마스터 10/16 — 한자어 이름의 뜻)
+        items.append(('📖 낱말 뜻', '<b>%s</b> %s <span style="color:#9ca3af">(통과한 뒤 보여 줌)</span>' % (e(h['word'][0]), e(h['word'][1]))))
     tr = ''.join('<tr><td class="k">%s</td><td>%s</td></tr>' % r for r in rows)
     ti = ''.join('<tr class="it"><td class="k">%s</td><td>%s</td></tr>' % r for r in items)
     return ('<div class="card"><div class="hd"><span class="rn r%d">%s</span><div style="flex:1"><div class="q">%s</div>'
             '<div class="ans"><b>모범 답</b> %s</div><div class="src">교재 디딤돌 기본+응용 5-2 %s</div></div>%s</div>%s'
             '<table>%s%s</table><div class="mk">☐ 좋아요 &nbsp; ☐ 고침 &nbsp; ☐ 뺌</div></div>') % ((q[0], RN[q[0]], e(q[2]), e(q[3]), e(h.get('src', ''))) + qfig(q) + (tr, ti))
 
-def card3(q, lad, g):
+def card3(q, lad, g, key=None):
     m = re.search('[①②③④⑤⑥⑦⑧⑨⑩]', q[1]); tp = TOPIC_PAGES.get(n, {})
     src = '최상위 수학 5-2 심화유형 %s(%s쪽)' % (m.group(0), tp.get(m.group(0), '?')) if m else ''
     steps = ''.join('<tr><td class="no">%s</td><td><span class="n">되묻기</span> %s<br><span class="g"><b>짚을 아이디어</b> %s</span><br><span class="t"><b>간단한 설명</b> %s</span></td></tr>'
                     % (CIRC[j], e(q[4][j]), e(g[j]), e(lad['ideas'][j])) for j in range(len(q[4])))
+    pv = getattr(D, 'LADPATH', {}).get(key) if key else None
+    for pi, pth in enumerate(([pv] if isinstance(pv, dict) else pv) or []):   # 다른 풀이 길(마스터 10/16) — 어느 길이든 그 길의 아이디어를 다 짚으면 통과
+        steps += '<tr><td class="no" style="color:#7c3aed">길%d</td><td><b style="color:#7c3aed">다른 풀이 길도 통과 — %s</b><br>%s</td></tr>' % (pi + 2, e(pth['name']), '<br>'.join(
+            '<span class="n">%s</span> 되묻기 %s<br><span class="g"><b>짚을 아이디어</b> %s</span><br><span class="t"><b>간단한 설명</b> %s</span>' % (CIRC[j], e(pth['ask'][j]), e(pth['g'][j]), e(pth['ideas'][j])) for j in range(len(pth['g']))))
     adult = ('<tr class="adult"><td class="k">다시 묻기</td><td>%s</td></tr>' % e(lad['again']) +
              '<tr class="adult"><td class="k">흔한 틀린 생각</td><td>%s <span style="color:#9ca3af">(예: "%s")</span></td></tr>' % (e(lad['miscon']), e(lad['wrong'])) +
              '<tr class="adult"><td class="k">어른 기록</td><td>%s</td></tr>' % e(lad['record']))
@@ -152,6 +173,9 @@ def build():
          '<b>교재</b> 1·2회차 = 디딤돌 기본+응용 5-2(①권 인쇄 쪽 = PDF 쪽 · ②권 인쇄 = PDF + 100 · ①권 PDF 에 빠진 쪽이 있어 쪽수는 인쇄 쪽으로 적음) · 3회차 = 디딤돌 최상위 수학 5-2(인쇄 쪽 = PDF 인덱스 + 1)</div>']
     rv = REVISED.get(n) or [GEN_REV[0] % '초5-2'] + GEN_REV[1:]
     o.append('<div class="box ask"><b>%s</b><br>%s</div>' % (rv[0], '<br>'.join('· ' + x for x in rv[1:])))
+    npath = sum(1 for k in getattr(D, 'LADPATH', {}) if k[0].startswith(n + '-'))
+    if npath and n != '3':
+        o.append('<div class="box ask"><b>10/16 새 기준 — 3회차 다른 풀이 길</b><br>· 교재 풀이와 다르지만 맞는 풀이로 말해도 통과 — 3회차 카드의 보라색 「길2·길3」 줄(이 단원 %d문제). 앱도 어느 길이든 그 길의 아이디어를 다 짚으면 통과, 되묻기는 아이가 더 많이 짚은 길에서</div>' % npath)
     if U.get('idea'): o.append('<div class="box"><b>단원 큰 그림</b> %s</div>' % e(U['idea']))
     for s in U['smalls']:
         tag = '%s-%s' % (n, s['no'])
@@ -166,7 +190,7 @@ def build():
         q3 = [q for q in s['qs'] if q[0] == 3]
         if q3:
             o.append('<h3>3회차 — 계단</h3>')
-            for j, q in enumerate(q3): o.append(card3(q, D.LAD[tag][j], D.G[tag][j]))
+            for j, q in enumerate(q3): o.append(card3(q, D.LAD[tag][j], D.G[tag][j], (tag, j)))
         o.append('</div>')
     bh = BHM.BH.get(int(n))
     if bh:

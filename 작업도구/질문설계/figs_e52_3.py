@@ -109,6 +109,7 @@ def pt_by_lengths(a, b, c, y1=-30.0):
 
 AFIG = {('3-02', 1): a_tri0, ('3-02', 2): a_tri1, ('3-02', 3): a_tri2,
         ('3-03', 1): a_sym0, ('3-03', 2): a_sym1, ('3-04', 1): a_pt0, ('3-04', 2): a_pt1}
+AFIG[('3-03', 4)] = lambda: a_para_mid()   # 마스터 10/16: 평행사변형 오류 질문에 그림 — 다시 묻기도 새 그림
 
 # ───────── 3회차 그림 (조건만) ─────────
 def r_row5():    # 합동인 정삼각형 5개를 이어 붙임(한 변 4 cm)
@@ -149,7 +150,8 @@ def r_para():    # 평행사변형 ㄱㄴㄷㄹ(위 변 ㄱㄹ 가로) · 대각
 def r_fold():    # 직사각형 ㄱㄴㄷㄹ 을 선분 ㄴㅁ 으로 접음 · 각 ㅂㄴㄷ 40° · ㉠ = 각 ㅂㅁㄹ
     H, W = 100.0, 180.0; A, B, Cc, Rr = (0, 0), (0, H), (W, H), (W, 0)
     Mm = (H * math.tan(math.radians(25)), 0); Bp = (H * math.sin(math.radians(50)), H - H * math.cos(math.radians(50)))
-    f = M(D.poly([A, B, Cc, Rr], 'blue', fill=False), D.poly([B, Mm, A], 'blue', fill=False, style='dashed'), D.poly([B, Mm, Bp], 'amber'),
+    f = M(D.seg(Mm, Rr, 'solid', BLU, 1.6), D.seg(Rr, Cc, 'solid', BLU, 1.6), D.seg(Cc, B, 'solid', BLU, 1.6),      # 남은 직사각형 테두리
+          D.seg(A, Mm, 'dashed', BLU, 1.3), D.seg(A, B, 'dashed', BLU, 1.3), D.poly([B, Mm, Bp], 'amber'),           # 접혀 나간 자리 = 점선(마스터 10/16)
           D.dot(A, 'ㄱ', BLU, 'left'), D.dot(B, 'ㄴ', BLU, 'left'), D.dot(Cc, 'ㄷ', BLU, 'right'), D.dot(Rr, 'ㄹ', BLU, 'right'), D.dot(Mm, 'ㅁ', BLU, 'above'), D.dot(Bp, 'ㅂ', BLU, 'right'),
           D.ang(B, Bp, Cc, '40°', 30), D.ang(Mm, Bp, Rr, '㉠', 18))
     return D.svg(f)
@@ -176,7 +178,7 @@ def r_kite():    # 사각형 ㄱㄴㄷㄹ 은 선분 ㄱㄷ 을 대칭축으로 
     Rr, B = (x, y), (-x, y)
     f = M(D.poly([A, B, Cc, Rr], 'green'), D.seg((0, -16), (0, Lh + 16), 'dashed', RED, 1.4),
           D.dot(A, 'ㄱ', BLU, 'above'), D.dot(B, 'ㄴ', BLU, 'left'), D.dot(Cc, 'ㄷ', BLU, 'below'), D.dot(Rr, 'ㄹ', BLU, 'right'),
-          D.ang(A, B, Cc, '35°', 30), D.ang(Cc, A, Rr, '25°', 36), D.ang(B, A, Cc, '㉠', 18))
+          D.ang(A, B, Cc, '35°', 30), D.ang(Cc, A, Rr, '25°', 36), D.ang(B, A, Cc, '㉠', 20, lab_d=7))
     return D.svg(f)
 def r_pt_part():  # 점 ㅇ 을 대칭의 중심으로 하는 점대칭도형의 일부분 · ㄴㄷ 6 · ㄷㄹ 5 cm · 변 ㄱㄴ = ?
     s = 10.0; A, Rr = (0, -70), (0, 70)
@@ -196,7 +198,7 @@ def r_para_area():   # 평행사변형(점대칭) ㄱㄴㄷㄹ · 대칭의 중�
     A, B, Cc, Rr = (-40, -50), (-100, 50), (40, 50), (100, -50); O = (0, 0)
     f = M(D.poly([A, B, Cc, Rr], 'blue', fill=False), D.poly([A, O, Rr], 'amber'), D.seg(A, Cc, 'solid', '#6E6A86', 1.2), D.seg(B, Rr, 'solid', '#6E6A86', 1.2),
           D.dot(A, 'ㄱ', BLU, 'above'), D.dot(B, 'ㄴ', BLU, 'below'), D.dot(Cc, 'ㄷ', BLU, 'below'), D.dot(Rr, 'ㄹ', BLU, 'above'), D.dot(O, 'ㅇ', RED, 'below'),
-          D.tag(30, -24, '9 cm²', '#A97C22', 12))
+          D.tag(20, -28, '9 cm²', '#A97C22', 12))
     return D.svg(f)
 SEG7 = {'2': 'abged', '3': 'abgcd', '5': 'afgcd', '7': 'abc', '8': 'abcdefg'}
 def seven(x, y, d, w=22, h=40, c='#B55B45'):
@@ -210,9 +212,20 @@ def r_digits():
     for k, dch in enumerate('23578'): f = M(f, seven(k * 50, 0, dch))
     return D.svg(f)
 
+def q_para_diag():   # 03 2회차: 평행사변형 + 친구가 말한 대각선(접는 선, 점선) — 조건만
+    P = [(-30, -32), (-66, 32), (30, 32), (66, -32)]
+    f = M(D.poly(P, 'amber'), D.seg(P[1], P[3], 'dashed', RED, 1.4),
+          D.dot(P[0], 'ㄱ', BLU, 'above'), D.dot(P[1], 'ㄴ', BLU, 'left'), D.dot(P[2], 'ㄷ', BLU, 'right'), D.dot(P[3], 'ㄹ', BLU, 'above'))
+    return D.svg(f)
+def a_para_mid():    # 다시 묻기: 다른 평행사변형 + 가운데 가로선(점선)
+    P = [(-20, -36), (-54, 36), (44, 36), (78, -36)]
+    f = M(D.poly(P, 'green'), D.seg((-37 - 8, 0), (61 + 8, 0), 'dashed', RED, 1.4),
+          D.dot(P[0], 'ㄱ', BLU, 'above'), D.dot(P[1], 'ㄴ', BLU, 'left'), D.dot(P[2], 'ㄷ', BLU, 'right'), D.dot(P[3], 'ㄹ', BLU, 'above'))
+    return D.svg(f)
+
 R3 = {'r53row5': (r_row5, 300), 'r53right': (r_two_right, 300), 'r53cross': (r_cross, 260), 'r53para': (r_para, 260), 'r53fold': (r_fold, 260),
       'r53shapes': (r_shapes, 320), 'r53kite': (r_kite, 250), 'r53ptpart': (r_pt_part, 250), 'r53parea': (r_para_area, 240), 'r53digits': (r_digits, 260)}
-Q2 = {'q53trib': (q_tri_b, 330), 'q53tric': (q_tri_c, 330), 'q53symb': (q_sym_b, 200), 'q53ptb': (q_pt_b, 220)}
+Q2 = {'q53trib': (q_tri_b, 330), 'q53tric': (q_tri_c, 330), 'q53symb': (q_sym_b, 200), 'q53ptb': (q_pt_b, 220), 'q53paraf': (q_para_diag, 200)}
 
 # ───────── 긴 설명 그림 (LFIG) ─────────
 def l_congruent():   # 포개면 완전히 겹침
@@ -329,11 +342,32 @@ def l_flow3():
           D.tag(150, 34, '③ 대칭이면: 축·중심이 대응점을 이은 선분을 둘로 똑같이', RED, 12))
     return D.svg(f)
 
+def _tick(p, q, n=1):   # 같은 길이 표시(빗금)
+    mx, my = (p[0] + q[0]) / 2, (p[1] + q[1]) / 2; dx, dy = q[0] - p[0], q[1] - p[1]; L = math.hypot(dx, dy); ux, uy = -dy / L * 5, dx / L * 5
+    return M(*[D.seg((mx + ux + k * dx / L * 4, my + uy + k * dy / L * 4), (mx - ux + k * dx / L * 4, my - uy + k * dy / L * 4), 'solid', RED, 1.3) for k in range(n)])
+def l_symdraw():     # 선대칭도형 그리기(교재 70쪽): 수선 → 같은 거리에 대응점 → 차례로 잇기
+    G = [(-24, -46), (-62, -6), (-30, 42)]; Mr = [(-x, y) for x, y in G]
+    f = M(D.seg((0, -62), (0, 60), 'dashed', RED, 1.4), D.seg(G[0], G[1], 'solid', BLU, 1.8), D.seg(G[1], G[2], 'solid', BLU, 1.8),
+          D.seg(Mr[0], Mr[1], 'solid', '#A97C22', 1.8), D.seg(Mr[1], Mr[2], 'solid', '#A97C22', 1.8), D.seg(G[0], Mr[0], 'solid', '#A97C22', 1.8), D.seg(G[2], Mr[2], 'solid', '#A97C22', 1.8))
+    for p, q in zip(G, Mr): f = M(f, D.seg(p, q, 'dashed', '#6E6A86', 1.0), _tick(p, (0, p[1])), _tick((0, p[1]), q))
+    f = M(f, D.seg((0, -6), (7, -6), 'solid', '#6E6A86', 1), D.seg((7, -6), (7, -13), 'solid', '#6E6A86', 1), D.seg((7, -13), (0, -13), 'solid', '#6E6A86', 1),
+          D.dot(G[1], 'ㄴ', BLU, 'left'), D.dot(Mr[1], 'ㅁ', '#A97C22', 'right'), D.dot((0, -6), 'ㅅ', INK, 'below'),
+          D.tag(0, 82, '수선 → 대칭축까지 같은 거리에 대응점 → 차례로 잇기', SOFT, 11.5, 400))
+    return D.svg(f)
+def l_ptdraw():      # 점대칭도형 그리기(교재 72쪽): 대칭의 중심을 지나는 직선 → 같은 거리에 대응점 → 차례로 잇기
+    G = [(-88, -12), (-44, 48), (34, 48)]; Mr = [(-x, -y) for x, y in G]
+    f = M(D.seg(G[0], G[1], 'solid', BLU, 2), D.seg(G[1], G[2], 'solid', BLU, 2),
+          D.seg(G[2], Mr[0], 'solid', '#A97C22', 2), D.seg(Mr[0], Mr[1], 'solid', '#A97C22', 2), D.seg(Mr[1], Mr[2], 'solid', '#A97C22', 2), D.seg(Mr[2], G[0], 'solid', '#A97C22', 2))
+    for k, (p, q) in enumerate(zip(G, Mr)): f = M(f, D.seg(p, q, 'dashed', '#6E6A86', 1.0), _tick(p, (0, 0), k + 1), _tick((0, 0), q, k + 1))
+    f = M(f, D.dot((0, 0), 'ㅇ', RED, 'above'), D.dot(G[1], 'ㄴ', BLU, 'below'), D.dot(Mr[1], 'ㅁ', '#A97C22', 'above'),
+          D.tag(0, 82, '대칭의 중심을 지나는 직선 → 같은 거리에 대응점 → 차례로 잇기', SOFT, 11.5, 400))
+    return D.svg(f)
+
 LFIG = {
     '3-01': ['l_congruent', 'l_size', 'l_turn', 'l_cut', 'l_perim'],
     '3-02': ['l_corr', 'l_table', 'l_angles', 'l_back', 'l_perim2'],
-    '3-03': ['l_symdef', 'l_symprop', 'l_symhalf', 'l_axes', 'l_para_fold'],
-    '3-04': ['l_ptdef', 'l_ptprop', 'l_pthalf', 'l_compare', 'l_tri180', 'l_flow3'],
+    '3-03': ['l_symdef', 'l_symprop', 'l_symhalf', 'l_axes', 'l_para_fold', 'l_symdraw'],
+    '3-04': ['l_ptdef', 'l_ptprop', 'l_pthalf', 'l_compare', 'l_tri180', 'l_ptdraw', 'l_flow3'],
 }
 F = {k: v for k, v in globals().items() if k.startswith('l_')}
 def lfig(tag, i): return F[LFIG[tag][i]]()
