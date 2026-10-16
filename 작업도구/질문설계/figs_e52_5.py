@@ -108,12 +108,24 @@ NET_I = [(0, 0), (1, 0), (1, 1), (2, 1), (3, 1)]
 NET_I_C = [((-1, 0), '㉠'), ((0, 1), '㉡'), ((2, 0), '㉢'), ((4, 1), '㉣'), ((2, 2), '㉤'), ((3, 2), '㉥')]   # 가능: ㉠ ㉤ ㉥ (cube_fold 로 확인)
 def r_i():
     s = 34; f = D.Fig()
-    f = M(f, D.net([(c + 1, r) for c, r in NET_I], [s] * 5, [s] * 3, None, 'blue'))
+    f = M(f, D.net([(c + 1, r) for c, r in NET_I], [s] * 5, [s] * 3, dict(zip([(c + 1, r) for c, r in NET_I], '가나다라마')), 'blue'))   # 면 이름(누르기 단계에서 부름)
     for (c, r), t in NET_I_C:
         x0, y0 = (c + 1) * s, r * s
         f = M(f, P([(x0 + 3, y0 + 3), (x0 + s - 3, y0 + 3), (x0 + s - 3, y0 + s - 3), (x0 + 3, y0 + s - 3)], '#FFFFFF', '#9AA3B2', 1, 1, True), T(x0 + s / 2, y0 + s / 2 + 5, t, RED, 13))
     return D.svg(f)
-R3 = {'r55a': (r_a, 220), 'r55b': (r_b, 300), 'r55c': (r_c, 330), 'r55d': (r_d, 230), 'r55e': (r_e, 180), 'r55f': (r_f, 260),
+NET_J = [(1, 1), (1, 0), (0, 1), (2, 1), (3, 1), (1, 2)]   # 십자 전개도 · 앞면이 (1,1) — cube_fold.corners 로 꼭짓점 이름 계산(ㄱ 앞 위 왼 … ㅇ 뒤 아래 왼)
+NET_J_V = {(1, 0): 'ㄹ', (2, 0): 'ㄷ', (0, 1): 'ㄹ', (1, 1): 'ㄱ', (2, 1): 'ㄴ', (3, 1): 'ㄷ', (4, 1): 'ㄹ', (0, 2): 'ㅇ', (1, 2): 'ㅁ', (2, 2): 'ㅂ', (3, 2): 'ㅅ', (4, 2): 'ㅇ', (1, 3): 'ㅇ', (2, 3): 'ㅅ'}
+def r_j():   # 전개도(선분 ㄱㄷ = 윗면 대각선 · 선분 ㄷㅇ = 뒷면 대각선) + 겨냥도(이름 같음, 선분은 아이가)
+    s = 30; f = net_fig(NET_J, None, s, 'green')
+    for (x, y), t in NET_J_V.items():
+        touch = [(c + .5, r + .5) for c, r in NET_J if c <= x <= c + 1 and r <= y <= r + 1]
+        mx = sum(a for a, b in touch) / len(touch); my = sum(b for a, b in touch) / len(touch)
+        dx, dy = x - mx, y - my; L = math.hypot(dx, dy) or 1
+        f = M(f, D.dot((x * s, y * s), None, '#3C8B64'), T(x * s + dx / L * 12, y * s + dy / L * 12 + 4.5, t, INK, 11.5))
+    f = M(f, D.seg((1 * s, 1 * s), (2 * s, 0), 'solid', RED, 2.2), D.seg((3 * s, 1 * s), (4 * s, 2 * s), 'solid', RED, 2.2))
+    f = M(f, D.box(3.2, 3.2, 3.2, origin=(4 * s + 70, 1.4 * s), color='blue', verts=True))
+    return D.svg(f)
+R3 = {'r55j': (r_j, 330), 'r55a': (r_a, 220), 'r55b': (r_b, 300), 'r55c': (r_c, 330), 'r55d': (r_d, 230), 'r55e': (r_e, 180), 'r55f': (r_f, 260),
       'r55g': (r_g, 320), 'r55h': (r_h, 300), 'r55i': (r_i, 300)}
 
 # ───────── 다시 묻기 그림 (AFIG) ─────────

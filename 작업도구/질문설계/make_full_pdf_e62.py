@@ -59,6 +59,15 @@ td.k{width:78px;color:#5b6270;font-size:8.3pt;font-weight:700;white-space:nowrap
 
 CIRC = '①②③④⑤'
 
+ALL1016_HEAD = '10/16 초5-2 4·5단원 검토 기준을 이 단원에도 — ① 방법을 정하지 않은 계산 질문은 답만 맞으면 통과(방법은 덧붙이면 좋은 것) ② 「무엇이 틀렸어?」·고르기는 묻는 것만 ③ 그림 속 이름을 여러 개 대는 질문은 누르기 ④ 블랙홀 3회차는 생활 예 대신 여러 성질을 잇는 문제'
+ALL1016 = {
+ '1': ['통과 기준: 계산 4문제(어떤 분수 ÷ 1/8 · 2/5 ÷ 3/4 · 4/5는 2/15의 몇 배 · 밀가루 8 kg)는 방법을 정하지 않았으니 답만 맞으면 통과', '블랙홀 3회차: 「끈 4와 1/2 m를 3/4 m씩 — 몇 도막, 무엇을 구하는 나눗셈, 몫이 더 큰 까닭」'],
+ '2': ['통과 기준: 계산 8문제(주스 5.4 L · 2.38 ÷ 0.07 · 철사 · 7.56 ÷ 2.1 · 통나무 · 수도 · 반올림 2개)는 답만 맞으면 통과', '블랙홀 3회차: 「쌀 25.6 kg을 3 kg씩 — 8봉지와 1.6 kg, 반올림하면 안 되는 까닭」'],
+ '3': ['통과 기준: 「보이지 않는 기둥은 몇 번?」·「몇 번째 줄이 틀렸어?」는 묻는 것(번호·줄과 층)만 말하면 통과', '블랙홀 3회차: 「위·앞·옆 그림만으로 개수를 모를 때가 있는 까닭과 정확히 알려 주는 법」'],
+ '4': ['통과 기준: 계산 6문제(후항이 15인 비 · 간단한 자연수의 비 2개 · 비례식 □ · 공책 · 원액)는 답만 맞으면 통과', '블랙홀 3회차: 「빵 6개에 밀가루 450 g — 900 g이면 몇 개(비례식), 형과 동생이 2 : 1로」'],
+ '5': ['통과 기준: 계산 5문제(원주의 범위 · 원주로 지름 · 반지름 · 넓이 2개)는 답만 맞으면 통과', '블랙홀 3회차: 「반지름 50 cm 바퀴가 굴러간 거리와 매트 넓이 — 각각 무엇을 구하는 것인지」', '조사: 분수 뒤 조사 3곳'],
+ '6': ['통과 기준: 「원기둥 옆면의 넓이」는 답만 · 「반원을 돌린 구」는 어떤 구인지만 말하면 통과', '블랙홀 3회차: 「직사각형을 돌린 원기둥 — 반지름·높이와 전개도 옆면의 가로·세로」'],
+}
 GEN_REV = ['10/14 마스터 검토 기준 적용(초5-2 1단원 손글씨 검토에서 나온 기준을 %s 전체에)',
   '「짧은 설명 · 긴 설명」 → <b>간단한 설명 · 자세한 설명</b>(앱 이름도 같이 바꿈)',
   '본질이 같은 대답은 통과 — 핵심 옆 <b>(= …)</b>에 같은 뜻의 다른 말을 적음(다시 묻기 핵심에도). 앱 채점 규칙에도 넣음',
@@ -86,11 +95,18 @@ def qfig(q):
         return '<div class="fig">%s</div>' % h, ''
     return '', ''
 
-def card12(q, h, keys, lsvg, asvg):
+TAPMODE = {'fig': '👆 그림에서 누르기', 'card': '🃏 이름 카드 고르기', 'say': '🗣 짧은 말'}
+def tap_html(steps):
+    """누르기 질문(마스터 10/16 5단원) — 단계마다 방식 · 묻는 말 · 누를 것 · 막히면"""
+    return '<br>'.join('<span class="n">%s</span> <b style="color:#0f766e">%s</b> %s<br><span class="g"><b>누를 것(정답)</b> %s%s</span><br><span class="t"><b>막히면</b> %s</span>'
+                       % (CIRC[j], TAPMODE[st[0]], e(st[1]), e(st[2]), (' <span style="color:#9ca3af">(카드: %s)</span>' % e(' · '.join(st[4]))) if len(st) > 4 else '', e(st[3])) for j, st in enumerate(steps))
+
+def card12(q, h, keys, lsvg, asvg, tap=None):
     a = h['again']; nd = need_of(q[2])
     rows = [
         ('꼭 말할 핵심', ''.join('<span class="key"><span class="n">%s</span> %s</span>' % (CIRC[j], e(k)) for j, k in enumerate(keys))
                        + '<br><span class="pass">✔ %s</span>' % e(need_note(nd, keys))),
+        *([('👆 누르기 단계', tap_html(tap))] if tap else []),
         ('되묻기', '<br>'.join('<span class="n">%s 빠지면</span> %s' % (CIRC[j], e(x)) for j, x in enumerate(h['ask']))),
         ('다시 묻기', e(a['q']) + ('<div class="lf af">%s</div>' % asvg if asvg else '') +
                      '<br><span style="color:#5b6270">모범 답: %s</span><br><span style="color:#5b6270">핵심: %s</span>' % (e(a['ans']), ' · '.join(e(k) for k in a['keys']))),
@@ -111,6 +127,9 @@ def card3(q, lad, g, key=None):
     src = '최상위 수학 6-2 심화유형 %s(%s쪽)' % (m.group(0), tp.get(m.group(0), '?')) if m else ''
     steps = ''.join('<tr><td class="no">%s</td><td><span class="n">되묻기</span> %s<br><span class="g"><b>짚을 아이디어</b> %s</span><br><span class="t"><b>간단한 설명</b> %s</span></td></tr>'
                     % (CIRC[j], e(q[4][j]), e(g[j]), e(lad['ideas'][j])) for j in range(len(q[4])))
+    tp = getattr(D, 'TAP', {}).get((key[0], '3', key[1])) if key else None
+    if tp:   # 누르기 3회차 — 단계별 누르기가 되묻기를 대신, 짚을 아이디어(기록)는 그대로
+        steps = '<tr><td class="no">👆</td><td>%s<br><span class="g" style="color:#5b6270"><b>짚을 아이디어(기록)</b> %s</span></td></tr>' % (tap_html(tp), e(' · '.join(g)))
     pv = getattr(D, 'LADPATH', {}).get(key) if key else None
     for pi, pth in enumerate(([pv] if isinstance(pv, dict) else pv) or []):   # 다른 풀이 길(마스터 10/16) — 어느 길이든 그 길의 아이디어를 다 짚으면 통과
         steps += '<tr><td class="no" style="color:#7c3aed">길%d</td><td><b style="color:#7c3aed">다른 풀이 길도 통과 — %s</b><br>%s</td></tr>' % (pi + 2, e(pth['name']), '<br>'.join(
@@ -137,6 +156,7 @@ def build():
          '<b>교재</b> 1·2회차 = 디딤돌 기본+응용 6-2(인쇄 쪽 = PDF 인덱스 + 1) · 3회차 = 최상위 수학 6-2(인쇄 쪽 = PDF 인덱스 + 1)</div>']
     rv = [GEN_REV[0] % '초6-2'] + GEN_REV[1:]
     o.append('<div class="box ask"><b>%s</b><br>%s</div>' % (rv[0], '<br>'.join('· ' + x for x in rv[1:])))
+    if n in ALL1016: o.append('<div class="box ask"><b>%s</b><br>%s</div>' % (ALL1016_HEAD, '<br>'.join('· ' + x for x in ALL1016[n])))
     npath = sum(1 for k in getattr(D, 'LADPATH', {}) if k[0].startswith(n + '-'))
     if npath:
         o.append('<div class="box ask"><b>10/16 새 기준 — 3회차 다른 풀이 길</b><br>· 교재 풀이와 다르지만 맞는 풀이로 말해도 통과 — 3회차 카드의 보라색 「길2」 줄(이 단원 %d문제). 앱도 어느 길이든 그 길의 아이디어를 다 짚으면 통과, 되묻기는 아이가 더 많이 짚은 길에서</div>' % npath)
@@ -150,7 +170,7 @@ def build():
         o.append('<h3>1·2회차</h3>')
         for i, q in enumerate(qs):
             af = getattr(LF, 'AFIG', {}).get((tag, i))
-            o.append(card12(q, H[tag][i], D.KEYS[tag][i], LF.lfig(tag, i), af() if af else ''))
+            o.append(card12(q, H[tag][i], D.KEYS[tag][i], LF.lfig(tag, i), af() if af else '', getattr(D, 'TAP', {}).get((tag, '12', i))))
         q3 = [q for q in s['qs'] if q[0] == 3]
         if q3:
             o.append('<h3>3회차 — 계단</h3>')
