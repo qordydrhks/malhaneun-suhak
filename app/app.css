@@ -305,6 +305,7 @@ body.tpage #app{max-width:1000px}
 .pcard blockquote{margin:8px 0 0;padding:10px 14px;border-left:3px solid var(--gold);background:var(--sky);border-radius:0 10px 10px 0;line-height:1.7}
 .pcm{white-space:pre-wrap;line-height:1.7}
 .pfail{text-align:center;display:grid;gap:10px;justify-items:center;padding:20px}
+.lg-links{position:relative;z-index:2;display:flex;justify-content:center;gap:6px}.lg-links .lg-teacher{margin:14px 0 0}
 .lg-teacher{position:relative;z-index:2;display:block;width:max-content;margin:14px auto 0;color:#6f7899;font-size:13px;text-decoration:none;padding:6px 12px}
 .center-msg a.ghost{text-decoration:none;color:var(--sub)}
 .syms{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}

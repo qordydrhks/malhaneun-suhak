@@ -310,7 +310,11 @@ LFIG = {
     '4-06': ['u06_est', 'u06_frac', 'u06_wrong', 'u06_bigsmall', 'u06_vert'],
     '4-07': ['u07_x10', 'u07_x01', 'u07_fill0', 'u07_find', 'u07_same', 'u07_flow'],
 }
-AFIG = {}
+def q_grid46():   # 4-05 질문: 0.4 × 0.6 (교재 102쪽 모양 — 칸 0.1, 칠한 부분만, 답은 아이가)
+    return S(230, 210, areagrid(4, 6))
+def a_grid57():   # 다시 묻기: 0.5 × 0.7
+    return S(230, 210, areagrid(5, 7))
+AFIG = {('4-05', 2): a_grid57}
 def lfig(tag, i): return F[LFIG[tag][i]]()
 
 if __name__ == '__main__':
