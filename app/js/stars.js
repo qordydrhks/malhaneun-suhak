@@ -10,7 +10,7 @@
   'use strict';
   const A = window.APP, E = A.E;
   const S = A.S = {};
-  S.COURSE = 'e4-2';
+  Object.defineProperty(S, 'COURSE', {get: () => A.cid()});
   S.W = {1: 1, 2: 1.5, 3: 2};
   S.MIS = {basic: 20, hard: 30};
   S.REVIEW = 30;

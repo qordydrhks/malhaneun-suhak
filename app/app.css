@@ -614,3 +614,14 @@ details.tq2 summary::-webkit-details-marker{display:none}
 .recsm{padding:0 10px 10px}
 .recsm .rst{font-size:13px;color:var(--sub);margin:4px 2px 6px;font-weight:600}
 .recsm .rec{background:#0003}
+
+/* 👆 누르기 질문(10/19) — 그림 이름 누르기 · 이름 카드 */
+.thit{fill:rgba(224,123,57,.08);stroke:rgba(224,123,57,.35);stroke-width:1.2;cursor:pointer}
+.thit.on{fill:rgba(243,140,60,.55);stroke:#e07b39;stroke-width:2.6}
+.tord{font:800 12px sans-serif;fill:#c2410c}
+.tapsteps{display:flex;gap:5px;justify-content:center;margin:2px 0 6px}.tapsteps i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25)}
+.tapsteps i.d{background:#8fd6b4}.tapsteps i.c{background:#f3c969}
+.tapsub{margin:4px 0 8px}
+.tcards{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0}
+.tcard{min-height:44px;padding:8px 14px;border-radius:12px;border:1.5px solid rgba(255,255,255,.35);background:rgba(255,255,255,.08);color:inherit;font-size:16px}
+.tcard.on{border-color:#f3c969;background:rgba(243,201,105,.25);font-weight:700}

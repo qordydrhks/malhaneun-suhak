@@ -3,7 +3,7 @@
 (() => {
   'use strict';
   const A = window.APP = window.APP || {};
-  A.VERSION = 'app 0.17.8 (2026-10-16)';
+  A.VERSION = 'app 0.18.1 (2026-10-19)';
   const URL = 'https://cnyrbxsmxwajhlrvcdml.supabase.co';
   const KEY = 'sb_publishable_e2iVXV5K1sl7-kJ-d3v1Ow_VEzNUJGv';
   A.esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -70,6 +70,18 @@
     return s.replace(/\s+/g, ' ').trim();
   };
   A.isTester = () => /테스트/.test(A.session.student?.name || '');
+  /* 과정(학기) — 마스터 10/19 「5학년도 앱에서 테스트」. 데이터 파일이 들어온 과정(window.APP_DATA)만.
+     학생의 학년(초5 → e5-2)으로 정하고, 시험 학생('테스트')은 홈에서 바꿀 수 있다(고른 것은 이 기기에 기억). */
+  A.courses = () => Object.keys(window.APP_DATA || {}).sort();
+  A.cid = () => A.session.cid || 'e4-2';
+  A.courseFor = st => {
+    const L = A.courses(), saved = st && A.ls.raw('app:course:' + st.id);
+    if (saved && L.includes(saved) && A.isTester()) return saved;
+    const m = /(\d)/.exec((st && st.grade) || ''), g = m ? 'e' + m[1] + '-2' : '';
+    return L.includes(g) ? g : (L.includes('e4-2') ? 'e4-2' : L[0]);
+  };
+  A.setCourse = id => { A.session.cid = id; try { localStorage.setItem('app:course:' + A.session.student.id, id); } catch (e) {} };
+  A.gradeNo = () => (/e(\d)/.exec(A.cid()) || [0, 4])[1];
   A.isAcademyDevice = () => A.ls.raw('dd:academyDevice') === '1';
 
   // ── AI (서버 중계만 — 키는 서버에) ──

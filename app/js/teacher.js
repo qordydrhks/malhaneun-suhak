@@ -8,6 +8,8 @@
   const A = window.APP, E = A.E, esc = A.esc, fm = A.fm, $ = s => document.querySelector(s);
   const root = () => $('#app');
   const SK = 'app:teacher';
+  /* 과정(학기) — 마스터 10/19 5-2 넣기. 선생님이 고른 과정은 이 탭에 기억 */
+  try { const c = sessionStorage.getItem('app:tcid'); if (c && (window.APP_DATA || {})[c]) A.session.cid = c; } catch (e) {}
   const HELP = {kw: '키워드', short: '간단한 설명', long: '자세한 설명', none: '', '': ''};
   const ST = {first: '한 번에', reask: '되묻기 뒤', kw: '키워드 뒤', short: '간단한 설명', long: '자세한 설명', lock: '막힘', timeout: '시간 초과', again: '다음 날', nextday: '다음 날', review: '다시 빛내기', practice: '연습', battle: '대결'};
 
@@ -31,7 +33,7 @@
   function frame(inner, opt) {
     opt = opt || {};
     root().innerHTML = `<header class="bar">${opt.back ? `<button class="ghost" id="tBack">‹ ${esc(opt.backText || '뒤로')}</button>` : '<span class="logo">선생님</span>'}
-      <span class="crumb">${esc(opt.crumb || 'E4-2 은하')}</span><span class="who"><button class="ghost small" id="tOut">나가기</button></span></header><main class="tmain">${inner}</main>`;
+      <span class="crumb">${esc(opt.crumb || E.course().code + ' 은하')}</span><span class="who"><button class="ghost small" id="tOut">나가기</button></span></header><main class="tmain">${inner}</main>`;
     $('#tOut').onclick = () => { try { sessionStorage.removeItem(SK); } catch (e) {} pin(); };
     if (opt.back) $('#tBack').onclick = opt.back;
     window.scrollTo(0, 0);
@@ -40,7 +42,7 @@
   // ── PIN ──
   function pin(msg) {
     root().innerHTML = `<main class="center"><form class="login" id="pf" autocomplete="off">
-      <div class="title"><div class="mark">✦</div><h1>선생님</h1><p>말하는 수학 · E4-2</p></div>
+      <div class="title"><div class="mark">✦</div><h1>선생님</h1><p>말하는 수학</p></div>
       <label>PIN<input id="pv" type="password" inputmode="numeric" autocomplete="current-password"></label>
       <button class="primary big" type="submit">들어가기</button><div class="msg" id="pm">${esc(msg || '')}</div></form></main>`;
     $('#pv').focus();
@@ -61,7 +63,7 @@
   let STU = [], PROG = {}, OPEN = {}, SETS = {}, STAR = {}, ACAD = '', NB = {n: 0, fresh: 0};
   async function loadAll() {
     const like = p => 'key=like.' + encodeURIComponent(p) + '&select=key,value&limit=1000';
-    const [studs, progs, opens, sets, stars] = await Promise.all([A.loadStudents(), A.sbSelect('ai_cache', like('app:prog:*:e4-2')), A.sbSelect('ai_cache', like('app:open:*:e4-2')), A.sbSelect('ai_cache', like('app:set:*:e4-2')), A.sbSelect('ai_cache', like('app:star:*:e4-2')), A.S.loadSems()]);
+    const [studs, progs, opens, sets, stars] = await Promise.all([A.loadStudents(), A.sbSelect('ai_cache', like('app:prog:*:' + A.cid())), A.sbSelect('ai_cache', like('app:open:*:' + A.cid())), A.sbSelect('ai_cache', like('app:set:*:' + A.cid())), A.sbSelect('ai_cache', like('app:star:*:' + A.cid())), A.S.loadSems()]);
     PROG = {}; OPEN = {}; SETS = {}; STAR = {};
     for (const r of stars || []) STAR[r.key.split(':')[2]] = r.value;
     try { const v = await A.N.all(); NB = {n: v.rows.filter(x => x.mod !== 'hide').length, fresh: v.rows.filter(x => !x.mod).length}; } catch (e) {}
@@ -69,7 +71,8 @@
     for (const r of sets || []) SETS[r.key.split(':')[2]] = r.value;
     for (const r of progs || []) PROG[r.key.split(':')[2]] = r.value;
     for (const r of opens || []) OPEN[r.key.split(':')[2]] = r.value;
-    STU = (studs || []).filter(s => /초\s*4|4학년/.test(s.grade || '') || PROG[s.id]).map(s => ({id: s.id, name: s.name, grade: s.grade || ''}));
+    const gno = (/e(\d)/.exec(A.cid()) || [0, 4])[1], gre = new RegExp('초\\s*' + gno + '|' + gno + '학년');
+    STU = (studs || []).filter(s => gre.test(s.grade || '') || PROG[s.id]).map(s => ({id: s.id, name: s.name, grade: s.grade || ''}));
   }
   /* 학생 한 명의 진도를 엔진에 올려 계산한다 */
   function look(s) {
@@ -94,7 +97,8 @@
     const rows = STU.map(s => ({s, v: look(s)}));
     rows.sort((a, b) => (b.v.stuck.length - a.v.stuck.length) || (b.v.at - a.v.at) || a.s.name.localeCompare(b.s.name, 'ko'));
     A.session.student = null;
-    frame(`<div class="thead"><h2>학생 ${rows.length}명</h2><button class="ghost small" id="tRe">↻ 새로고침</button></div>
+    frame(`${A.courses().length > 1 ? `<div class="krow ctabs">${A.courses().map(id => `<button class="${id === A.cid() ? 'primary' : 'secondary'} small" data-c="${id}">${esc(window.APP_DATA[id].code)} · ${esc(window.APP_DATA[id].name)}</button>`).join('')}</div>` : ''}
+      <div class="thead"><h2>학생 ${rows.length}명</h2><button class="ghost small" id="tRe">↻ 새로고침</button></div>
       <div class="tmenu two">
         <button class="tmbtn ${NB.fresh ? 'hot' : ''}" id="tNb"><i>✦</i><b>별빛노트</b><small>${NB.fresh ? '새 대답 ' + NB.fresh + '개 확인' : '새 대답 없음'}</small></button>
         <button class="tmbtn" id="tSet"><i>⚙</i><b>설정</b><small>학원 이름 · 학기 · 기기</small></button>
@@ -104,6 +108,7 @@
         <span class="tsr">${v.any && v.rk.score != null ? `${v.rk.icon} ${v.rk.name}` : '<i>시작 전</i>'}</span>
         <span class="tsx">${v.stuck.length ? `<em>막힘 ${v.stuck.length}</em>` : ''}<small>${ago(v.at)}</small></span><span class="tsgo">›</span></button>`).join('') || '<p class="sub">초4 학생이 없어요.</p>'}</div>`);
     $('#tRe').onclick = list;
+    root().querySelectorAll('.ctabs [data-c]').forEach(b => b.onclick = () => { A.session.cid = b.dataset.c; try { sessionStorage.setItem('app:tcid', b.dataset.c); } catch (e) {} list(); });
     $('#tNb').onclick = () => noteAdmin(false);
     $('#tSet').onclick = settings;
     root().querySelectorAll('.tstu').forEach(b => b.onclick = () => detail(STU.find(s => s.id === b.dataset.id)));
@@ -203,7 +208,7 @@
     let subs = [];
     if (['stuck', 'rec'].includes(sec)) {
       frame('<div class="loading">불러오는 중…</div>', opt);
-      try { subs = await A.sbSelect('submissions', 'student_id=eq.' + encodeURIComponent(s.id) + '&course_id=eq.e4-2&select=*&order=created_at.desc&limit=80') || []; } catch (e) {}
+      try { subs = await A.sbSelect('submissions', 'student_id=eq.' + encodeURIComponent(s.id) + '&course_id=eq.' + A.cid() + '&select=*&order=created_at.desc&limit=80') || []; } catch (e) {}
     }
     const lastSub = {}; for (const r of subs) if (r.question_id && !lastSub[r.question_id]) lastSub[r.question_id] = r;
     const helpTxt = x => HELP[x.help] ? '도움: ' + HELP[x.help] : '';
@@ -241,7 +246,7 @@
         <div class="tbox"><h3>질문 하나에 주는 시간</h3><select id="tPace" class="tin"><option value="0" ${!E.qmin() ? 'selected' : ''}>기본 (난이도 1 2분 · 2 3분 · 3 4분)</option>${E.QMINS.map(m => `<option value="${m}" ${m === E.qmin() ? 'selected' : ''}>${m}분</option>`).join('')}</select><p class="sub">계산이 필요한 질문은 1분 더</p></div>
         <p class="sub" id="tSetMsg">바꾸면 바로 저장돼요 · 다음 행성부터 적용</p>`;
     } else if (sec === 'parent') {
-      const comment = (await A.store.get('app:comment:' + s.id + ':e4-2')) || {};
+      const comment = (await A.store.get('app:comment:' + s.id + ':' + A.cid())) || {};
       body = `<div class="tbox"><h3>선생님 한마디</h3><p class="sub">리포트에 그대로 보여요.</p><textarea id="tCm" class="tin" rows="4">${esc(comment.text || '')}</textarea><div class="row"><button class="secondary small" id="tCmS">한마디 저장</button></div></div>
         <div class="tbox"><h3>리포트 링크</h3><p class="sub">학부모님께 보낼 주소예요. 한 번 만들면 늘 같은 주소예요.</p><div class="row"><button class="primary" id="tLink">링크 복사</button></div><input id="tUrl" class="turl" readonly hidden></div>
         <p class="sub" id="tMsg"></p>`;
@@ -269,7 +274,7 @@
       const saveSet = async () => { const nv = {session: +$('#tSes').value, qmin: +$('#tPace').value, notimer: $('#tNoT').checked, at: Date.now()}; await A.store.set(E.skey(s.id), nv); SETS[s.id] = nv; $('#tSetMsg').textContent = '✓ 저장했어요 · 다음 행성부터 적용'; };
       $('#tSes').onchange = saveSet; $('#tPace').onchange = saveSet; $('#tNoT').onchange = saveSet;
     }
-    if ($('#tCmS')) $('#tCmS').onclick = async () => { await A.store.set('app:comment:' + s.id + ':e4-2', {text: $('#tCm').value.trim(), at: Date.now()}); $('#tMsg').textContent = '✓ 한마디를 저장했어요'; };
+    if ($('#tCmS')) $('#tCmS').onclick = async () => { await A.store.set('app:comment:' + s.id + ':' + A.cid(), {text: $('#tCm').value.trim(), at: Date.now()}); $('#tMsg').textContent = '✓ 한마디를 저장했어요'; };
     if ($('#tLink')) $('#tLink').onclick = async () => {
       const url = await parentLink(s.id);
       const box = $('#tUrl'); box.value = url; box.hidden = false;

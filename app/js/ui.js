@@ -57,7 +57,7 @@
   document.addEventListener('click', e => {
     const b = e.target.closest('[data-go]'); if (!b) return;
     const g = b.dataset.go;
-    if (g === 'home') home(); else if (g === 'logout') { A.logout(); login(); }
+    if (g === 'home') home(); else if (g === 'logout') { whereClear(); A.logout(); login(); }
     else if (g === 'hall') hall(); else if (g === 'play') playHub(); else if (g === 'calc') calcHub(); else if (g === 'battle') battleHub(); else if (g === 'words') wordHub();
     else if (g.startsWith('big:')) star(+g.slice(4)); else if (g.startsWith('small:')) planet(g.slice(6), +b.dataset.r); else if (g.startsWith('bh:')) blackhole(+g.slice(3), +b.dataset.r); else if (g === 'record') record(); else if (g === 'guide') guide();
   });
@@ -67,9 +67,15 @@
      ⚠️ popstate 안에서는 pushState 를 하지 않는다(크롬이 조작 없이 넣은 칸을 건너뛰어 앱이 나가 버림 — 옛 앱 v81.5 에서 겪음).
      질문·mission 화면은 칸 하나('q')로 치고, 그 안에서 뒤로 가면 그만두고 앞 화면(행성 입구)으로. */
   const NAV = {cur: null, stack: [], restoring: false, silent: false, quit: null, backQuit: false};
+  /* 새로고침해도 보던 화면에 머물기(마스터 10/19) — 이 탭에만(sessionStorage) 마지막 화면과 mission 진행을 기억한다.
+     질문(말하기) 도중이면 그 행성 입구로, mission 이면 풀던 문제 번호·맞힌 수 그대로 이어서. */
+  const WKEY = 'app:where';
+  const whereGet = () => { try { return JSON.parse(sessionStorage.getItem(WKEY) || 'null'); } catch (e) { return null; } };
+  const whereSet = o => { try { const sid = A.session.student && A.session.student.id; if (!sid) return; const w = whereGet(); sessionStorage.setItem(WKEY, JSON.stringify(Object.assign(w && w.sid === sid ? w : {sid}, o))); } catch (e) {} };
+  const whereClear = () => { try { sessionStorage.removeItem(WKEY); } catch (e) {} };
   function navMark(route) {
     const key = JSON.stringify(route);
-    if (route[0] !== 'q') NAV.quit = null;           // 질문 화면을 떠나면 그만두기 연결도 끊는다
+    if (route[0] !== 'q') { NAV.quit = null; whereSet({route, mis: null}); }   // 질문 화면을 떠나면 그만두기 연결도 끊는다
     if (NAV.restoring) { NAV.cur = route; return; }
     const c = NAV.cur;
     if (c && JSON.stringify(c) === key) return;
@@ -180,7 +186,7 @@
     '다시 빛내기': '도움을 받아 통과한 질문을 일주일 뒤에 다시 물어봐요. 스스로 답하면 별빛이 다시 환해져요.',
     '다시 열린 질문': '어제 못 했던 질문이 오늘 다시 열렸어요. 먼저 해 보자!',
     '연습': '지난 난이도는 언제든 다시 해 볼 수 있어요. 연습은 점수와 등급이 바뀌지 않아요(처음 통과한 점수 그대로).',
-    'E4-2 은하': '4학년 2학기 수학이 하나의 은하예요. 별(큰 단원)을 누르면 행성(작은 단원)이 보이고, 행성의 질문에 내 말로 답하면 행성에 불이 켜져요. 퉁구리가 삼킨 별빛을 모두 되찾으면 클리어!',
+    '은하': '한 학기 수학이 하나의 은하예요. 별(큰 단원)을 누르면 행성(작은 단원)이 보이고, 행성의 질문에 내 말로 답하면 행성에 불이 켜져요. 퉁구리가 삼킨 별빛을 모두 되찾으면 클리어!',
     '별지도': '우주 탐험가가 길을 잃었을 때 펼쳐 보는 밤하늘 지도예요. 옛날 뱃사람과 탐험가들은 별의 자리를 그린 지도를 보고 길을 찾았어요. 질문에서 막혔을 때 도움(🔑 키워드 · 💬 간단한 설명 · 📖 자세한 설명)을 하나 펼쳐 볼 때 1장을 써요. 매일 2장이 생기고, 새벽 4시에 다시 2장으로 채워져요(남은 장은 모아 두지 않아요). 다 쓰면 그 질문은 내일 다시 도전해요. 선생님 열쇠로 더 받을 수도 있어요. 틀린 생각을 말했을 때 저절로 나오는 키워드와 되묻기는 별지도를 쓰지 않아요.',
     '용어 맞히기': '대단원마다 한 판 12문제예요. 뜻을 보고 낱말을 말로 답하고, 낱말을 보고 바른 뜻이나 알맞은 예를 골라요. 예전에 배운 낱말도 섞여 나와요. 10문제 이상 맞히고 퉁구리보다 먼저 도착하면 이겨요(하루 3번까지 별빛 +10).',
     '별빛노트': '친구들의 별처럼 빛나는 대답 모음이에요. 질문마다 100점을 받은 친구 대답 중에서 무작위로 하나를 골라 보여 줘요(100점이 없으면 90점). 행성 질문을 다 마치면 볼 수 있어요. 네 대답도 오를 수 있어!'
@@ -243,6 +249,8 @@
   function login(msg) { A.intro(enter, msg); }
   async function enter() {
     root().innerHTML = '<div class="loading">불러오는 중…</div>';
+    A.session.cid = A.courseFor(A.session.student);
+    if (window.APP_DATA[A.cid()]) calcGrade = wordGrade = A.cid();
     await E.load();
     try { A.academy = ((await A.store.get('app:academy')) || {}).name || ''; } catch (e) {}
     await applyCmds();
@@ -251,7 +259,32 @@
     if (!friend) { const v = await A.store.get('char:' + A.session.student.id); if (v && FR[v.id]) { friend = v.id; try { localStorage.setItem('dd:char:' + A.session.student.id, v.id); } catch (e) {} } }
     if (!friend) return pick();
     if (!(await storySeen())) return story(home);
-    home();
+    if (!resume()) home();
+  }
+  /* 새로고침 뒤 — 브라우저 기록(history.state, 새로고침해도 남음)과 이 탭의 기억으로 보던 화면을 다시 연다 */
+  function resume() {
+    const w = whereGet(), hs = history.state;
+    if (!w || w.sid !== A.session.student.id || !hs || !hs.app || !w.route) return false;
+    NAV.stack = Array.from({length: hs.i + 1}, () => '');
+    try {
+      if (w.mis && hs.app[0] === 'q') {
+        const m = w.mis, big = E.big(m.no), sm = big && E.small(m.code);
+        if (!sm || !sm.small) return false;
+        NAV.stack[hs.i] = JSON.stringify(['q']); NAV.cur = ['q'];
+        mission(big, sm.small, m.r, m.hard, m);
+        return true;
+      }
+      if (hs.app[0] === 'q' && hs.i > 0) {         // 질문 칸 → 그 질문을 연 화면(바로 앞 칸)으로 돌아가며 다시 그린다
+        NAV.stack.length = hs.i; NAV.stack[hs.i - 1] = JSON.stringify(w.route);
+        navGo(w.route); NAV.silent = true; history.back();
+        return true;
+      }
+      const rt = hs.app[0] === 'q' ? w.route : hs.app;
+      if (hs.app[0] === 'q') history.replaceState({app: rt, i: hs.i}, '');
+      NAV.stack[hs.i] = JSON.stringify(rt);
+      navGo(rt);
+      return true;
+    } catch (e) { console.warn('화면 되살리기 실패', e); NAV.stack = []; NAV.cur = null; return false; }
   }
   async function storySeen() {
     if (A.ls.raw('app:story:' + A.session.student.id)) return true;
@@ -272,7 +305,7 @@
   // ── 2-1. 처음 안내(이야기 4장) — 처음 한 번만, 우주 안내서에서 다시 보기 ──
   const storyKey = () => 'app:story:' + A.session.student.id;
   const SLIDES = [
-    {who: 'tung', t: '큰일 났어!', b: '우주 몬스터 <b>퉁구리</b>가 E4-2 은하의 별빛을 몽땅 삼키고 어딘가에 숨어 버렸어.'},
+    {who: 'tung', t: '큰일 났어!', b: '우주 몬스터 <b>퉁구리</b>가 수학 은하의 별빛을 몽땅 삼키고 어딘가에 숨어 버렸어.'},
     {who: 'me', st: 'question', t: '퉁구리의 약점은 수학!', b: '수학을 <b>네 말로 설명</b>하면 행성에 별빛이 다시 켜져.'},
     {who: 'me', st: 'hint', t: '막히면 내가 도와줄게', b: '막히면 생각할 방향을 알려 줄게. <b>스스로 한 번에 답하면 빛이 더 크게 모여!</b>'},
     {who: 'me', st: 'praise', t: '블랙홀까지 가자!', b: '행성을 다 밝히면 <b>블랙홀 관문</b>이 열려. 퉁구리 은신처야!'},
@@ -344,7 +377,23 @@
                : `<button class="primary big go" data-go="small:${nx.small.code}" data-r="${nx.r}"><span>오늘 갈 곳</span><small>${esc(nx.small.title)} · ${lv(nx.r)}${nx.why === 'again' ? ' · <span class="tm" data-term="다시 열린 질문">다시 열린 질문</span>' : nx.why === 'mission' ? ` · <span class="tm" data-term="mission">${A.M.name(nx.r)}</span>` : nx.why === 'review' ? ' · <span class="tm" data-term="다시 빛내기">다시 빛내기</span>' : ''}</small></button>`)
              : `<div class="done-all">지금 열린 곳은 모두 탐험했어요 ✦</div>`}
       <nav class="homenav"><button data-go="play"><span>🎮</span>놀이터</button><button data-go="record"><span>${rk.icon}</span>나의 기록</button><button data-go="guide"><span>📖</span>안내서</button></nav>
-      <h3 class="galttl">E4-2 은하 <i class="tq" data-term="E4-2 은하">?</i></h3><div class="mapbox">${A.galaxyMap()}</div>`, {crumb: ''});
+      <h3 class="galttl">${E.course().code} 은하 <i class="tq" data-term="은하">?</i>${A.isTester() && A.courses().length > 1 ? ' <button class="ghost small" id="cSwap">과정 바꾸기</button>' : ''}</h3><div class="mapbox">${A.galaxyMap()}</div>`, {crumb: ''});
+    if ($('#cSwap')) $('#cSwap').onclick = courseSwap;
+  }
+  /* 과정 바꾸기(시험 학생만) — 과정마다 진도·기록·별빛이 따로 */
+  function courseSwap() {
+    document.querySelector('.kpop')?.remove();
+    const d = document.createElement('div'); d.className = 'kpop';
+    d.innerHTML = `<div class="kpop-in"><b>어느 은하로 갈까?</b><div class="krow">${A.courses().map(id => `<button class="${id === A.cid() ? 'primary' : 'secondary'}" data-c="${id}">${esc(window.APP_DATA[id].code)} · ${esc(window.APP_DATA[id].name)}</button>`).join('')}</div><div class="krow"><button class="ghost" id="cx">닫기</button></div></div>`;
+    document.body.appendChild(d);
+    d.querySelector('#cx').onclick = () => d.remove();
+    d.onclick = e => { if (e.target === d) d.remove(); };
+    d.querySelectorAll('[data-c]').forEach(b => b.onclick = async () => {
+      d.remove(); if (b.dataset.c === A.cid()) return;
+      A.setCourse(b.dataset.c); calcGrade = wordGrade = A.cid();
+      root().innerHTML = '<div class="loading">불러오는 중…</div>';
+      await E.load(); await applyCmds(); home();
+    });
   }
 
 
@@ -470,7 +519,7 @@
 
   // ── ⚡ 계산 연습(마스터 10/13) — 퉁구리와 경주. 데이터·문제 생성은 js/calc.js ──
   const C = A.C;
-  let calcGrade = 'e4-2';
+  let calcGrade = 'e4-2';                       // 들어올 때(enter) 지금 과정으로
   function calcHub(gid) {
     calcGrade = gid || calcGrade; navMark(['calc', calcGrade]);
     const g = C.GRADES.find(x => x.id === calcGrade) || C.GRADES[0], rec = E.prog().calc || {};
@@ -843,7 +892,7 @@
   let MYSUBS = null, MYSUBS_AT = 0;
   async function mySubs() {
     if (MYSUBS && Date.now() - MYSUBS_AT < 60000) return MYSUBS;
-    const sid = encodeURIComponent(A.session.student.id), base = 'student_id=eq.' + sid + '&course_id=eq.e4-2&order=created_at.desc&limit=1000&select=question_id,transcript,score,created_at,level';   // ⚠️ 서버 표에 pass 칸은 없다(있다고 쓰면 읽기 전체가 실패)
+    const sid = encodeURIComponent(A.session.student.id), base = 'student_id=eq.' + sid + '&course_id=eq.' + A.cid() + '&order=created_at.desc&limit=1000&select=question_id,transcript,score,created_at,level';   // ⚠️ 서버 표에 pass 칸은 없다(있다고 쓰면 읽기 전체가 실패)
     let rows = null;
     try { rows = await A.sbSelect('submissions', base + ',stage'); } catch (e) { try { rows = await A.sbSelect('submissions', base); } catch (e2) {} }
     if (!rows) return MYSUBS || {};
@@ -896,7 +945,7 @@
         ${g.subs2.map(([t, its]) => `<div class="recsm"><div class="rst">${esc(t)}</div><ul class="reclist">${its.map(liOf).join('')}</ul></div>`).join('')}</details>`).join('');
     }
     frame(`<section class="book">
-      <div class="starcards"><div class="scard"><span>⭐ 학기 별빛</span><b>${A.S.semPts().toLocaleString('ko-KR')}</b><small>${esc(sem.name)} · E4-2</small></div>
+      <div class="starcards"><div class="scard"><span>⭐ 학기 별빛</span><b>${A.S.semPts().toLocaleString('ko-KR')}</b><small>${esc(sem.name)} · ${E.course().code}</small></div>
         <div class="scard all"><span>🌌 전체 별빛</span><b>${A.S.totalPts().toLocaleString('ko-KR')}</b></div></div>
       <div class="rankcard"><div class="ri">${rk.icon}</div><div><div class="rn">${rk.name} <small>(${rk.ko})</small></div>
         <div class="sub">행성 ${rk.lit}/${rk.total}개를 밝혔어</div></div><button class="rkscore" id="rkS"><small>등급 점수</small><b>${rk.score != null ? Math.round(rk.score) : '—'}</b><small>등급표 ›</small></button></div>
@@ -955,11 +1004,13 @@
   }
   /* AI 문제의 대분수 "1 2/9"(띄어 씀) → "1과 2/9" 로 바꿔 교재처럼 자연수 바로 옆에 분수가 붙게 (mfmt 가 와/과 꼴을 대분수로 그린다) */
   const mx = t => String(t ?? '').replace(/(^|[^\d.\/])(\d+) (\d+\/\d+)/g, (m, p, w, f) => p + w + ({0: '과', 1: '과', 3: '과', 6: '과', 7: '과', 8: '과'}[w.slice(-1)] || '와') + ' ' + f);
-  async function mission(big, small, r, hard) {
+  async function mission(big, small, r, hard, res) {
     if (!A.isAcademyDevice()) return blocked();
     if (studyOver()) return;
     const name = A.M.name(r, hard);
-    navMark(['q']); let alive = true; NAV.quit = () => { alive = false; };
+    navMark(['q']); let alive = true; NAV.quit = () => { alive = false; whereSet({mis: null}); };
+    const misSave = (k, ok) => whereSet({mis: {no: big.no, code: small.code, r, hard: !!hard, k, ok}});
+    misSave(res ? res.k : 0, res ? res.ok : 0);
     frame(`<section class="center-msg stage"><img class="mload" src="img/tunguri.webp" alt=""><h2>${esc(name)}</h2><p class="sub"><span class="spin"></span> 퉁구리가 숨겨 둔 문제를 찾는 중…</p></section>`, {crumb: small.code + ' · ' + name});
     let quiz;
     try { quiz = await A.M.get(small, r, hard); if (!alive) return; }
@@ -971,7 +1022,7 @@
       return;
     }
     const first = !A.M.done(small, r, hard);
-    let k = 0, ok = 0;
+    let k = res ? Math.min(res.k, quiz.length) : 0, ok = res ? res.ok : 0;
     const one = () => {
       const it = quiz[k];
       const dots = quiz.map((_, j) => `<i class="${j < k ? 'd' : j === k ? 'c' : ''}"></i>`).join('');
@@ -981,6 +1032,7 @@
         <div class="say" id="say"></div></section><div class="row" id="nx"></div>`, {back: 'big:' + big.no, backText: '그만하기', crumb: small.code});
       root().querySelectorAll('.ch').forEach(b => b.onclick = () => {
         const j = +b.dataset.j, right = j === it.answer; if (right) ok++;
+        misSave(k + 1, ok);                       // 답을 고른 뒤 새로고침하면 다음 문제부터(같은 문제를 다시 풀지 않게)
         root().querySelectorAll('.ch').forEach(x => { x.disabled = true; if (+x.dataset.j === it.answer) x.classList.add('right'); });
         if (!right) b.classList.add('wrong');
         $('#say').innerHTML = `<div class="sbubble ${right ? 'ok' : 'warn'}"><b>${right ? '정답!' : '아쉬워!'}</b> ${fm(mx(it.explain))}</div>`;
@@ -989,7 +1041,7 @@
       });
     };
     const done = async () => {
-      NAV.quit = null;
+      NAV.quit = null; whereSet({mis: null});
       const gain = first && ok ? A.S.add('mis:' + small.code + ':r' + r + ':' + (hard ? 'hard' : 'basic'), ok * A.S.MIS[hard ? 'hard' : 'basic'], hard ? 'hard' : 'mis', r) : 0;
       const saved = first ? await A.M.save(big, small, r, hard, ok, quiz.length) : false;
       const all = ok === quiz.length;
@@ -1003,7 +1055,7 @@
       bindMission(big, small, r);
       if (gain) A.S.gain(gain, $('#gainChip'), all);
     };
-    one();
+    k < quiz.length ? one() : done();
   }
 
   // ── 7. 질문 하나 (상태 흐름) ──
@@ -1015,7 +1067,7 @@
       const h = x.help, ag = h.again;
       if (mode === 'review') return {mode, q: ag.q, keys: ag.keys, ans: ag.ans, fig: ag.fig || '', asks: (ag.keys.length === h.ask.length ? h.ask : []), help: h, base: E.Q.review, need: ag.need};
       if (mode === 'again') return {mode, q: ag.q, keys: ag.keys, ans: ag.ans, fig: ag.fig || '', asks: (ag.keys.length === h.ask.length ? h.ask : []), help: h, base: E.Q[st.help], need: ag.need};
-      return {mode, q: x.q, keys: x.keys, ans: x.ans, fig: x.fig, asks: h.ask, help: h, base: mode === 'nextday' ? E.Q.nextday : E.Q.first, pre: x.pre, need: x.need};
+      return {mode, q: x.q, keys: x.keys, ans: x.ans, fig: x.fig, asks: h.ask, help: h, base: mode === 'nextday' ? E.Q.nextday : E.Q.first, pre: x.pre, need: x.need, tap: x.tap};
     }
     if (task.kind === 'bh') {
       const base = mode === 'nextday' ? E.Q.nextday : E.Q.first;
@@ -1030,7 +1082,7 @@
     }
     const help = {kw: null, short: x.teach, long: null, lfig: ''};
     if (mode === 'again' || mode === 'review') return {mode, q: x.again, keys, paths, ans: x.teach, fig: '', asks, help, base: mode === 'review' ? E.Q.review : E.Q.short};
-    return {mode, q: x.q, keys, paths, ans: x.teach, fig: x.fig, asks, help, base: mode === 'nextday' ? E.Q.nextday : E.Q.first};
+    return {mode, q: x.q, keys, paths, ans: x.teach, fig: x.fig, asks, help, base: mode === 'nextday' ? E.Q.nextday : E.Q.first, tap: x.tap};
   }
 
   /* ── 글로 쓰기: 수식 넣기(마스터 10/12 — 매쓰홀릭처럼) ──
@@ -1211,8 +1263,103 @@
       }
       // 답 받기 → 채점 → 다음 단계 (AI 가 실패하면 기록 없이 같은 자리에서 다시 말하기)
       const answerThen = (prompt, cb) => input(prompt, async t => { const g = await judge(t); if (!g) return answerThen('다시 말해 줄래?', cb); cb(g); });
-      say(esc(line('question')));
-      answerThen('', step);
+      if (S.tap && S.tap.length && practice !== 'battle') tapRun();
+      else { say(esc(line('question'))); answerThen('', step); }
+
+      /* 👆 누르기 질문(마스터 10/16 5-2 5단원 「말하기 힘든 질문 = 누르기」) — 단계마다 그림에서 누르기 · 이름 카드 · 짧은 말.
+         한 번 틀리면 「막히면」 힌트, 두 번 틀리면 답을 보여 주고 다음 단계로. 답을 본 단계가 있으면 내일 다시 묻기(간단한 설명과 같게),
+         힌트만 봤으면 되묻기 뒤 통과(90), 모두 한 번에 맞히면 한 번에 통과(100). 누른 것은 기록(transcript)에 남는다. */
+      function tapRun() {
+        const steps = S.tap; let si = 0, shown = 0;
+        const norm = x => String(x).replace(/\s+/g, '');
+        const want = s => {
+          const raw = s.ans.replace(/\([^)]*\)/g, '').trim(), ordered = raw.includes('→');
+          let parts = raw.split(/\s*(?:→|·)\s*/).map(x => x.replace(/^(면|점|선분)\s*/, '').replace(/\s*\d+\s*개$/, '').trim()).filter(Boolean);
+          if (s.mode === 'fig' && /^선분\s/.test(raw)) parts = [...parts.join('').replace(/\s/g, '')];   // 선분 ㅅㅂ → 두 끝점
+          return {parts, ordered};
+        };
+        const fin = () => {
+          last = {hits: S.keys.map(() => ({hit: !shown, evidence: ''})), h: shown ? 0 : S.keys.length, n: S.keys.length, miss: shown ? 0 : -1, misconception: '', ack: ''};
+          if (!shown) return pass();
+          stop(); setBuddy('hint');
+          say(`<b>답을 함께 봤어.</b> 내일 비슷한 질문으로 다시 물어볼게.`, 'hint');
+          $('#ans').innerHTML = `<div class="row"><button class="primary big" id="ok">알겠어</button></div>`;
+          $('#ok').onclick = () => end({st: 'wait', help: 'short', stage: 'short', pass: false});
+        };
+        const next = () => { si++; si < steps.length ? one() : fin(); };
+        const result = (ok, got, tries, s, w) => {
+          answers.push(`${si + 1}단계 ${s.mode === 'say' ? '말' : '누름'}: ${got}${ok ? '' : ' ✗'}`);
+          if (ok) { setBuddy('praise'); say(`<b>좋아!</b>`, 'ok'); return setTimeout(next, 650); }
+          if (tries === 1) { reasks++; setBuddy('hint'); say(`<b>다시 생각해 봐.</b> ${fm(s.hint)}`, 'hint'); return one(2); }
+          shown++; setBuddy('retry'); say(`<b>답은 이거야</b> — ${fm(s._show || s.ans)}`, 'warn');
+          $('#ans').innerHTML = `<div class="row"><button class="primary" id="nx">다음</button></div>`; $('#nx').onclick = next;
+        };
+        function one(tries) {
+          tries = tries || 1; ticking = true;
+          const s = steps[si], w = want(s), dots = steps.map((_, k) => `<i class="${k < si ? 'd' : k === si ? 'c' : ''}"></i>`).join('');
+          const head = `<div class="tapsteps">${dots}</div><div class="prompt">${fm(s.q)}</div>`;
+          if (tries === 1) say('');
+          if (s.mode === 'say') {
+            return input(`${head}`, async t => {
+              $('#ans').innerHTML = `<div class="thinking"><span class="spin"></span> ${esc(line('thinking'))}</div>`; setBuddy('thinking');
+              let g = null;
+              try { g = await E.grade({question: s.q, keys: [s.ans], answer: t, prev: '', alt: altPieces.join(' | '), unitId: small.unitId}); }
+              catch (e) { setBuddy('retry'); say(esc(e.message), 'warn'); return one(tries); }
+              result(!!(g && g.miss < 0), t, tries, s, w);
+            });
+          }
+          if (s.mode === 'card') {
+            const multi = w.parts.length > 1, pick = new Set();
+            const key = x => [...norm(String(x).replace(/^(면|점|선분)\s*/, ''))].sort().join('');   // 면 이름은 글자 차례와 상관없이(면 ㄹㄷㅅㅇ = 면 ㄷㄹㅇㅅ)
+            const cardOk = c => w.parts.some(p => key(c) === key(p));
+            s._show = s.cards.filter(cardOk).join(' · ') || s.ans;
+            $('#ans').innerHTML = `${head}<div class="tcards">${s.cards.map((c, k) => `<button class="tcard" data-k="${k}">${fm(c)}</button>`).join('')}</div>
+              <div class="row"><button class="primary" id="tok" disabled>${multi ? '다 골랐어' : '골랐어'}</button></div>`;
+            $('#ans').querySelectorAll('.tcard').forEach(b => b.onclick = () => {
+              const k = +b.dataset.k;
+              if (!multi) { pick.clear(); $('#ans').querySelectorAll('.tcard').forEach(x => x.classList.remove('on')); }
+              pick.has(k) ? pick.delete(k) : pick.add(k); b.classList.toggle('on', pick.has(k)); $('#tok').disabled = !pick.size;
+            });
+            $('#tok').onclick = () => {
+              ticking = false; const got = [...pick].map(k => s.cards[k]);
+              const ok = got.length === w.parts.length && got.every(cardOk) && new Set(got.map(key)).size === got.length;
+              result(ok, got.join(' · '), tries, s, w);
+            };
+            return;
+          }
+          // 그림에서 누르기 — 그림 속 이름 글자(가 · ㄱ · ㉠ …)에 손가락 자리를 겹친다
+          const svg = root().querySelector('.qcard .figbox svg');
+          if (!svg) { $('#ans').innerHTML = `${head}<p class="sub">그림이 없어서 이 단계는 건너뛸게.</p>`; return setTimeout(next, 900); }
+          svg.querySelectorAll('.thit,.tord').forEach(x => x.remove());
+          const NS = 'http://www.w3.org/2000/svg', picked = [];
+          const labs = [...svg.querySelectorAll('text')].filter(tx => { const v = tx.textContent.trim(); return v && v.length <= 2 && !/\d|cm|°/.test(v); });
+          const mark = () => {
+            svg.querySelectorAll('.tord').forEach(x => x.remove());
+            labs.forEach(tx => tx._hit.classList.toggle('on', picked.includes(tx)));
+            if (w.ordered) picked.forEach((tx, k) => { const b = tx.getBBox(), o = document.createElementNS(NS, 'text'); o.setAttribute('class', 'tord'); o.setAttribute('x', b.x + b.width + 6); o.setAttribute('y', b.y + 2); o.textContent = k + 1; svg.appendChild(o); });
+            $('#tok').disabled = !picked.length;
+          };
+          labs.forEach(tx => {
+            const b = tx.getBBox(), c = document.createElementNS(NS, 'circle');
+            c.setAttribute('class', 'thit'); c.setAttribute('cx', b.x + b.width / 2); c.setAttribute('cy', b.y + b.height / 2); c.setAttribute('r', Math.max(15, b.width * 0.9));
+            tx.parentNode.insertBefore(c, tx); tx._hit = c;
+            const tap = () => { const k = picked.indexOf(tx); if (k >= 0) picked.splice(k, 1); else picked.push(tx); mark(); };
+            c.addEventListener('click', tap); tx.style.cursor = 'pointer'; tx.onclick = tap;
+          });
+          $('#ans').innerHTML = `${head}<div class="sub tapsub">그림에서 이름을 눌러 골라 줘${w.ordered ? ' (누른 차례대로 번호가 붙어)' : ''}. 다시 누르면 취소돼.</div>
+            <div class="row"><button class="ghost small" id="tclr">다 지우기</button><button class="primary" id="tok" disabled>다 골랐어</button></div>`;
+          $('#tclr').onclick = () => { picked.length = 0; mark(); };
+          $('#tok').onclick = () => {
+            ticking = false; const got = picked.map(tx => tx.textContent.trim());
+            const uniq = [...new Set(got)], ok = w.ordered ? (got.length === w.parts.length && got.every((v, k) => norm(v) === norm(w.parts[k])))
+              : (uniq.length === w.parts.length && w.parts.every(p => uniq.some(v => norm(v) === norm(p))));
+            picked.length = 0; mark();
+            result(ok, got.join(w.ordered ? ' → ' : ' · '), tries, s, w);
+          };
+        }
+        say(esc(line('question')));
+        one();
+      }
 
       let feel = '';
       /* ⚔ 개념 대결: 되묻기 없이 한 번에 채점. 처음 보는 질문을 한 번에 통과하면 진짜 통과(100)로 기록, 아니면 연습으로만(잠그지 않음) */

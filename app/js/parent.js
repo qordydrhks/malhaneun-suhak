@@ -19,8 +19,12 @@
     try {
       map = await A.store.get('app:parent:' + t);
       if (!map || !map.sid) return fail('주소가 맞지 않아요. 선생님께 다시 받아 주세요.');
-      [studs, prog, open, comment] = await Promise.all([A.loadStudents(), A.store.get('app:prog:' + map.sid + ':e4-2'), A.store.get('app:open:' + map.sid + ':e4-2'), A.store.get('app:comment:' + map.sid + ':e4-2')]);
-      subs = await A.sbSelect('submissions', 'student_id=eq.' + encodeURIComponent(map.sid) + '&course_id=eq.e4-2&select=question_id,question,transcript,score,stage,quality,created_at,level&order=created_at.desc&limit=300') || [];
+      studs = await A.loadStudents();
+      { const s0 = (studs || []).find(x => x.id === map.sid);          // 과정(마스터 10/19): 학생 학년의 과정 — 없으면 4-2
+        A.session.student = s0 ? {id: s0.id, name: s0.name, grade: s0.grade || ''} : null; A.session.cid = A.courseFor(A.session.student); }
+      const C = A.cid();
+      [prog, open, comment] = await Promise.all([A.store.get('app:prog:' + map.sid + ':' + C), A.store.get('app:open:' + map.sid + ':' + C), A.store.get('app:comment:' + map.sid + ':' + C)]);
+      subs = await A.sbSelect('submissions', 'student_id=eq.' + encodeURIComponent(map.sid) + '&course_id=eq.' + C + '&select=question_id,question,transcript,score,stage,quality,created_at,level&order=created_at.desc&limit=300') || [];
       subs.forEach(r => { r.pass = (r.score || 0) >= 70; });   // 서버 표에 pass 칸은 없다 — 점수 70 이상이 통과
     } catch (e) { return fail('서버에 연결하지 못했어요. 잠시 뒤 다시 열어 주세요.'); }
     const s = (studs || []).find(x => x.id === map.sid);
@@ -71,7 +75,7 @@
     const good = subs.find(r => r.pass && r.stage === 'first' && r.transcript && r.transcript.length > 12);
     const goodIx = good && IDX[good.question_id];
     root().innerHTML = `<main class="preport">
-      <header class="phead"><div class="sub">말하는 수학 · 4학년 2학기</div><h1>${esc(name)}의 우주 탐험</h1><div class="sub">${now.getMonth() + 1}월 ${now.getDate()}일 기준</div></header>
+      <header class="phead"><div class="sub">말하는 수학 · ${esc(E.course().name)}</div><h1>${esc(name)}의 우주 탐험</h1><div class="sub">${now.getMonth() + 1}월 ${now.getDate()}일 기준</div></header>
       <section class="pcard prank"><div class="pri">${rk.icon}</div><div><div class="prn">${rk.name} <small>${rk.ko}</small></div>
         <div class="sub">밝힌 행성 ${rk.lit} / ${rk.total}</div></div></section>
       <section class="pcard"><h2>이번 주</h2>

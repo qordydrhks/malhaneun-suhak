@@ -13,7 +13,7 @@
   'use strict';
   const A = window.APP, E = A.E;
   const B = A.B = {};
-  const C = 'e4-2';
+  const C = () => A.cid();
   const me = () => A.session.student;
   const lk = p => 'key=like.' + encodeURIComponent(p) + '&select=key,value&limit=200';
   const get = k => A.store.get(k), set = (k, v) => A.store.set(k, v);
@@ -22,13 +22,13 @@
 
   // ── 대기실 ──
   let hb = null, here = null;
-  B.enter = kind => { here = kind; const beat = () => { const s = me(); if (s && here) set('app:bw:' + s.id, {sid: s.id, name: s.name, grade: s.grade || '', kind: here, course: C, at: Date.now(), badge: B.top()}); }; beat(); clearInterval(hb); hb = setInterval(beat, 4000); };
+  B.enter = kind => { here = kind; const beat = () => { const s = me(); if (s && here) set('app:bw:' + s.id, {sid: s.id, name: s.name, grade: s.grade || '', kind: here, course: C(), at: Date.now(), badge: B.top()}); }; beat(); clearInterval(hb); hb = setInterval(beat, 4000); };
   B.leave = () => { clearInterval(hb); hb = null; const s = me(); if (s && here) set('app:bw:' + s.id, {sid: s.id, kind: '', at: 0}); here = null; };
-  B.busy = on => { const s = me(); if (s) set('app:bw:' + s.id, {sid: s.id, name: s.name, kind: on ? 'busy' : here || '', course: C, at: on ? 0 : Date.now()}); };
+  B.busy = on => { const s = me(); if (s) set('app:bw:' + s.id, {sid: s.id, name: s.name, kind: on ? 'busy' : here || '', course: C(), at: on ? 0 : Date.now()}); };
   B.list = async kind => {
     let rows = []; try { rows = await A.sbSelect('ai_cache', lk('app:bw:*')) || []; } catch (e) {}
     const s = me(), now = Date.now();
-    return rows.map(r => r.value).filter(v => v && v.sid !== (s && s.id) && v.kind === kind && v.course === C && now - (v.at || 0) < B.FRESH);
+    return rows.map(r => r.value).filter(v => v && v.sid !== (s && s.id) && v.kind === kind && v.course === C() && now - (v.at || 0) < B.FRESH);
   };
 
   // ── 초대 · 방 ──

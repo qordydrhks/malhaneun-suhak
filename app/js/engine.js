@@ -21,7 +21,7 @@
   E.QMINS = [1, 2, 3, 4, 5];
   E.SESSIONS = [5, 10, 15, 20, 25, 30];
   let SET = {};
-  E.skey = sid => 'app:set:' + sid + ':e4-2';
+  E.skey = sid => 'app:set:' + sid + ':' + A.cid();
   E.loadSettings = async () => { SET = (await A.store.get(E.skey(A.session.student.id))) || {}; return SET; };
   E.useSettings = s => { SET = s || {}; };
   E.sessionMin = () => (E.SESSIONS.includes(+SET.session) ? +SET.session : E.SESSION_MIN);
@@ -30,7 +30,7 @@
   E.limit = (r, calc) => (E.qmin() ? E.qmin() * 60 : E.LIMIT[r]) + (calc && r < 3 ? 60 : 0);   // 질문당 초 · 계산 질문은 1분 더
 
   // ── 데이터 ──
-  E.course = () => window.APP_DATA['e4-2'];
+  E.course = () => window.APP_DATA[A.cid()];
   E.bigs = () => E.course().bigs;
   E.big = no => E.bigs().find(b => b.no === no);
   E.small = code => { for (const b of E.bigs()) for (const s of b.smalls) if (s.code === code) return {big: b, small: s}; return null; };
@@ -41,8 +41,8 @@
 
   // ── 진도(공유 저장소 app:prog:<학생>:<과정>) ──
   let P = null, T = {};                             // T = 선생님이 연 회차(따로 저장 — 학생 기기가 저장하다 덮어쓰지 않게)
-  const pkey = () => 'app:prog:' + A.session.student.id + ':e4-2';
-  E.okey = sid => 'app:open:' + sid + ':e4-2';
+  const pkey = () => 'app:prog:' + A.session.student.id + ':' + A.cid();
+  E.okey = sid => 'app:open:' + sid + ':' + A.cid();
   E.blank = () => ({v: 1, st: {}, open: {}, resume: null, log: []});
   E.load = async () => {
     P = (await A.store.get(pkey())) || E.blank();
@@ -79,7 +79,7 @@
   E.useMap = () => { if (E.maps() <= 0) return false; smap().used++; return true; };
   E.giveMap = n => { if (P) smap().extra = (smap().extra || 0) + n; };
   E.unlockToday = () => { let n = 0; for (const x of Object.values(P.st)) if (x.st !== 'pass' && x.day === A.today()) { x.day = ''; x.by = 'teacher'; n++; } return n; };
-  E.ckey = sid => 'app:cmd:' + sid + ':e4-2';                 // 선생님 화면 → 학생 태블릿 명령 {cmds:[{id, add(분), unlock}]}
+  E.ckey = sid => 'app:cmd:' + sid + ':' + A.cid();                 // 선생님 화면 → 학생 태블릿 명령 {cmds:[{id, add(분), unlock}]}
   /* 결과 반영 → 대단원 회차가 다 끝났으면 다음 회차 열기(돌려준 값 = 새로 열린 회차) */
   E.record = (bigNo, id, rec) => {
     const prev = P.st[id];
@@ -195,7 +195,7 @@
      되묻기는 아이가 더 많이 짚은 길에서 고른다. h·n 도 그 길로 센다 */
   E.grade = async ({question, keys, answer, prev, unitId, need, alt, paths}) => {
     const user = `[질문] ${question}\n[꼭 말할 핵심]\n${keys.map((k, i) => IDS[i] + ') ' + k).join('\n')}\n` + (prev ? `[이전 답] ${prev}\n` : '') + `[학생의 답(음성 인식)] ${answer}` + (alt && alt.trim() ? `\n[대안 후보(같은 말의 다른 인식 결과 — 참고용)] ${alt}` : '');
-    const raw = await A.ai({task: 'grade', system: SYSTEM, messages: [{role: 'user', content: user}], max_tokens: 700, grade_id: 'e4-2', unit_id: unitId});
+    const raw = await A.ai({task: 'grade', system: SYSTEM, messages: [{role: 'user', content: user}], max_tokens: 700, grade_id: A.cid(), unit_id: unitId});
     let o = null; try { o = JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1)); } catch (e) {}
     if (!o) throw new Error('친구가 답을 잘 못 알아들었어. 한 번 더 말해 줄래?');
     const hits = keys.map((k, i) => { const f = (o.hits || []).find(h => h && h.id === IDS[i]); return {hit: !!(f && f.hit), evidence: (f && f.hit && f.evidence) || ''}; });
@@ -225,7 +225,7 @@
     const s = A.session.student; if (!s) return;
     const row = {
       student_id: s.id, name: s.name, student_grade: s.grade || '',
-      course_id: 'e4-2', course_name: E.course().oldName || '초4-2학기',
+      course_id: A.cid(), course_name: E.course().oldName || '',
       unit_id: task.kind === 'lad' ? '' : small.unitId, unit_label: (task.kind === 'lad' ? '🪜 ' + small.key.split('|')[2] : small.unitLabel),
       level: task.kind === 'lad' ? 'ladder' : ('r' + task.r + (practice === 'review' ? 'rv' : practice ? 're' : '')),
       question, question_id: task.id, transcript, score: Math.round(score),

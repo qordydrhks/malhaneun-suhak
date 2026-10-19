@@ -8,9 +8,9 @@
   'use strict';
   const A = window.APP, E = A.E;
   const N = A.N = {};
-  const C = 'e4-2';
-  N.key = (code, r, qid, sid) => 'app:nb:' + C + ':' + code + ':r' + r + ':' + qid + ':' + sid;
-  N.MOD = 'app:nbmod:' + C;
+  const C = () => A.cid();
+  N.key = (code, r, qid, sid) => 'app:nb:' + C() + ':' + code + ':r' + r + ':' + qid + ':' + sid;
+  Object.defineProperty(N, 'MOD', {get: () => 'app:nbmod:' + C()});
   const like = p => 'key=like.' + encodeURIComponent(p) + '&select=key,value&limit=1000';
 
   const CHECK = `너는 초등 수학 선생님이야. 아래 학생 대답을 다른 친구들에게 '잘한 대답'으로 보여 줘도 되는지 엄격하게 판단해.
@@ -29,7 +29,7 @@
       if (text.replace(/\s/g, '').length < 6) return;
       let ok = false, why = '';
       try {
-        const raw = await A.ai({task: 'grade', system: CHECK, max_tokens: 300, grade_id: C, unit_id: small.unitId || null,
+        const raw = await A.ai({task: 'grade', system: CHECK, max_tokens: 300, grade_id: C(), unit_id: small.unitId || null,
           messages: [{role: 'user', content: `[질문] ${question}\n[모범 답] ${ans}\n[꼭 말할 핵심]\n${keys.map((k, i) => (i + 1) + ') ' + k).join('\n')}\n[학생 대답] ${text}`}]});
         const o = JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1));
         ok = o.ok === true; why = String(o.why || '').slice(0, 80);
@@ -41,7 +41,7 @@
   /* 행성 한 난이도의 별빛노트: [{task, pick:{name, ans, q, mine, fresh} | null, level: 100|90|0}] */
   N.load = async (small, r) => {
     let rows = [], mod = {};
-    try { [rows, mod] = await Promise.all([A.sbSelect('ai_cache', like('app:nb:' + C + ':' + small.code + ':r' + r + ':*')), A.store.get(N.MOD)]); } catch (e) {}
+    try { [rows, mod] = await Promise.all([A.sbSelect('ai_cache', like('app:nb:' + C() + ':' + small.code + ':r' + r + ':*')), A.store.get(N.MOD)]); } catch (e) {}
     mod = mod || {};
     const me = A.session.student && A.session.student.id;
     const byQ = {};
@@ -58,7 +58,7 @@
   /* 선생님 화면 — 전부 */
   N.all = async () => {
     let rows = [], mod = {};
-    try { [rows, mod] = await Promise.all([A.sbSelect('ai_cache', like('app:nb:' + C + ':*')), A.store.get(N.MOD)]); } catch (e) {}
+    try { [rows, mod] = await Promise.all([A.sbSelect('ai_cache', like('app:nb:' + C() + ':*')), A.store.get(N.MOD)]); } catch (e) {}
     mod = mod || {};
     return {rows: (rows || []).filter(x => x.value && x.value.ok).map(x => Object.assign({key: x.key, mod: mod[x.key] || ''}, x.value)).sort((a, b) => b.at - a.at), mod};
   };
