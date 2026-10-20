@@ -91,3 +91,18 @@ button{font:inherit;cursor:pointer}
 .t-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1c2230;color:#fff;padding:10px 16px;border-radius:10px;font-size:14px;z-index:9;max-width:90vw}
 @media (max-width:520px){.t-q{font-size:16.5px}.t-expr{font-size:19px}.t-cd{font-size:17px}.t-card{padding:15px 14px}}
 .t-done{font-size:13.5px;color:var(--sub);padding:7px 2px;border-bottom:1px dashed var(--line)}.t-done .t-ck{color:var(--ok);font-weight:800}.t-done .t-pill{margin-left:4px}
+
+/* 도형 「조건 풀기」 시안 — 그림 층(data-h 지금 조건 · data-m 떠올린 표시 · data-r 누르는 칸) */
+.cf [data-m],.cf [data-h]{opacity:0;transition:opacity .45s}
+.cf [data-m].on,.cf [data-h].on{opacity:1}
+.cf [data-m].blink{opacity:1;animation:cfBlink .6s 4}
+@keyframes cfBlink{50%{opacity:.12}}
+.cf [data-r]{fill:#ffd66b;fill-opacity:0;stroke:none;transition:fill-opacity .2s}
+.cf.tap [data-r]{cursor:pointer}
+.cf [data-r].sel{fill-opacity:.55}
+.cf [data-r].hint{stroke:#e07b39;stroke-width:3;stroke-dasharray:7 5}
+.cf [data-r].got{fill:#9fd8b2;fill-opacity:.45}
+.cq{transition:background .3s;border-radius:4px}
+.cq.on{background:#fff0bf;box-shadow:0 0 0 2px #ffcf5a}
+.cq.done{background:#e6f4ea}
+.t-sub{font-size:13.5px;color:var(--sub)}

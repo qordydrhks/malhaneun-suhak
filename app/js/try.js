@@ -392,6 +392,136 @@
   HM2.forEach((h, i) => HSL.push({hs: h, st: ST_M2[h.id], path: {A: PATH_M2[h.id], B: PATH_M2[h.id]}, start: START_M2[h.id], fig: FIG_M2[h.id], gid: 'm2-2',
     sec: '중2-2 · 닮음 (심화 5문제)', band: '중2', tag: `심화 ${i + 1}`, bIds: []}));
 
+  // ── 도형 「조건 풀기」 시안(마스터 10/20) — 앱이 조건을 하나씩 짚고 → 아이가 떠올린 것이 그림에 쌓이고 → 그림에서 닮은 삼각형을 눌러 찾고 → 구한다 ──
+  // 그림 층: data-h = 지금 짚는 조건(밝게) · data-m = 아이가 떠올리면 생기는 표시 · data-r = 눌러 고르는 칸(삼각형·사각형)
+  const ARC = (p, a, b, r, sym, col) => {
+    const t1 = Math.atan2(a[1] - p[1], a[0] - p[0]); let d = Math.atan2(b[1] - p[1], b[0] - p[0]) - t1;
+    while (d <= -Math.PI) d += 2 * Math.PI; while (d > Math.PI) d -= 2 * Math.PI;
+    const s = [p[0] + r * Math.cos(t1), p[1] + r * Math.sin(t1)].map(v => v.toFixed(1)), e = [p[0] + r * Math.cos(t1 + d), p[1] + r * Math.sin(t1 + d)].map(v => v.toFixed(1)), m = t1 + d / 2;
+    return `<path d="M${s} A${r} ${r} 0 0 ${d > 0 ? 1 : 0} ${e}" fill="none" stroke="${col}" stroke-width="1.5"/><text x="${(p[0] + (r + 8) * Math.cos(m)).toFixed(1)}" y="${(p[1] + (r + 8) * Math.sin(m)).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-size="11" fill="${col}">${sym}</text>`;
+  };
+  function figC2a() {
+    const P = T(112, 190, 12), A = P(0, 12), B = P(0, 0), C = P(20, 0), D = P(20, 12), E = P(12, 0), F = P(0, 8), H = P(-6, 12), K = '#1f6fb5', HL = 'stroke="#ffb02e" stroke-width="8" stroke-opacity=".55" stroke-linecap="round" fill="none"';
+    const RAc = (p, q, r) => RA(p, q, r, 9).replace('stroke="#1c2230"', `stroke="${K}"`);
+    const chev = p => `<polyline points="${p[0] - 4},${p[1] - 5} ${p[0] + 3},${p[1]} ${p[0] - 4},${p[1] + 5}" fill="none" stroke="${K}" stroke-width="1.6"/>`;
+    const lab = (p, t, dx, dy) => LB(p, t, dx, dy, `font-size="12.5" fill="${K}" font-weight="700"`);
+    const reg = (id, ps) => `<polygon data-r="${id}" points="${ps.map(p => p.join(',')).join(' ')}"/>`;
+    return `<svg viewBox="0 0 400 236" width="400" xmlns="http://www.w3.org/2000/svg" font-family="Cambria Math,Malgun Gothic,serif" font-size="13" fill="#1c2230">
+      ${reg('FBE', [F, B, E])}${reg('ECD', [E, C, D])}${reg('AFED', [A, F, E, D])}${reg('HAF', [H, A, F])}
+      <g pointer-events="none">
+      <g data-h="1">${PG([A, B, C, D], 'none', HL)}</g><g data-h="2">${LN(B, C, HL)}</g><g data-h="3">${LN(E, D, HL)}${LN(E, F, HL)}</g><g data-h="4">${LN(H, A, HL)}${LN(H, F, HL)}</g>
+      ${PG([A, B, C, D])}${LN(D, E)}${LN(H, E)}${LN(H, A, 'stroke-width="1.2"')}${RA(E, D, F)}
+      <g data-m="right">${RAc(A, B, D)}${RAc(B, A, C)}${RAc(C, B, D)}${RAc(D, C, A)}</g>
+      <g data-m="par">${chev(P(9.6, 12))}${chev(P(5, 0))}</g>
+      <g data-m="cd">${lab(P(20, 6), '12', 14, 0)}</g>
+      <g data-m="len">${lab(P(6, 0), '12', 0, -11)}${lab(P(16, 0), '8', 0, -11)}</g>
+      <g data-m="ang">${ARC(E, C, D, 17, '●', K)}${ARC(F, B, E, 17, '●', K)}${ARC(E, B, F, 24, '×', K)}${ARC(D, C, E, 20, '×', K)}</g>
+      <g data-m="ah">${RAc(A, H, F)}${ARC(F, A, H, 15, '●', K)}${ARC(H, A, F, 24, '×', K)}</g>
+      ${LB(A, 'A', 0, -11)}${LB(B, 'B', -10, 9)}${LB(C, 'C', 10, 9)}${LB(D, 'D', 9, -10)}${LB(E, 'E', 0, 13)}${LB(F, 'F', -11, 2)}${LB(H, 'H', -4, -11)}
+      ${DIM(B, C, '20 cm', -22)}${DIM(B, A, '12 cm', 22)}</g></svg>`;
+  }
+  const CL = [{id: 'c2a', fig: figC2a, gid: 'm2-2', sec: '중2-2 · 닮음 — 「조건 풀기」 시안 (1번을 새 방식으로)',
+    kind: '조건 풀기 · 시안', how: '앱이 조건을 하나씩 짚어 줌 → 떠올린 것이 그림에 표시됨 → 같은 표시의 삼각형을 그림에서 눌러 찾기 → 구하기',
+    qParts: ['가로 BC = 20 cm, 세로 AB = 12 cm인 ', {c: 1, t: '직사각형 ABCD'}, '에서 BC 위에 ', {c: 2, t: 'BE : EC = 3 : 2'}, '가 되도록 점 E를 잡고, AB 위에 ', {c: 3, t: '∠DEF = 90°'},
+      '가 되도록 점 F를 잡았다. ', {c: 4, t: 'AD의 연장선과 EF의 연장선의 교점을 H'}, '라 할 때, AF와 AH의 길이를 각각 구하시오.'],
+    src: '블랙라벨 중2-2 64쪽 「도형의 닮음」 종합 사고력 01 (숫자 바꿈)',
+    ans: 'AF = 4 cm, AH = 6 cm — 직사각형이라 네 각이 직각, CD = 12. BE = 12, EC = 8. ∠DEF = 90°에서 ∠BFE = ∠CED라서 △FBE ∽ △ECD, FB : 8 = 12 : 12에서 FB = 8, AF = 4. AH ∥ BE라서 △HAF ∽ △EBF, AH : 12 = 4 : 8에서 AH = 6.',
+    names: {FBE: '△FBE', ECD: '△ECD', AFED: '사각형 AFED', HAF: '△HAF'},
+    steps: [
+      {k: 'cond', c: 1, label: '조건 ① 직사각형', q: '「<b>직사각형 ABCD</b>」라는 조건이 있어. 이 조건에서 무엇을 떠올릴 수 있어?',
+        keys: ['네 각이 모두 직각이다', '마주 보는 두 변은 평행하고 길이가 같다(AD ∥ BC, CD = AB)'], ask: '직사각형의 네 각은 어때? 마주 보는 두 변은 서로 어떤 관계야?',
+        teach: '직사각형은 <b>네 각이 모두 직각</b>이고, <b>마주 보는 두 변이 평행하고 길이가 같아</b>. 그래서 AD ∥ BC이고 CD = AB = 12 cm야.', show: ['right', 'par', 'cd'],
+        note: '∠A = ∠B = ∠C = ∠D = 90°,  AD ∥ BC,  CD = AB = 12 cm'},
+      {k: 'input', c: 2, label: '조건 ② BE : EC = 3 : 2', p: '「<b>BE : EC = 3 : 2</b>」라는 조건이 있어. BE와 EC의 길이를 써 봐. <small>(쉼표로)</small>', want: ['12,8'], pre: 'BE, EC = ',
+        hint: 'BC = 20 cm를 3 : 2로 나눠 봐. 전체를 3 + 2 = 5로 나눈 것 중 3과 2야.', teach: 'BE = 20 × 3/5 = <b>12 cm</b>, EC = 20 × 2/5 = <b>8 cm</b>.', show: ['len'], note: 'BE = 12 cm,  EC = 8 cm'},
+      {k: 'cond', c: 3, label: '조건 ③ ∠DEF = 90°', q: '「<b>∠DEF = 90°</b>」라는 조건이 있어. 점 E에 모인 각들을 보면 무엇을 알 수 있어?',
+        keys: ['∠BEF + ∠CED = 90°이다(직선 BC 위의 각은 180°)', '그래서 ∠BFE = ∠CED이다(직각삼각형 FBE에서도 ∠BFE + ∠BEF = 90°)'],
+        ask: '직선 BC 위에서 점 E에 모인 세 각의 합은 몇 도야? 그럼 ∠BEF + ∠CED는? 직각삼각형 FBE의 나머지 두 각의 합과 비교해 봐.',
+        teach: '직선 위의 각은 180°라 ∠BEF + ∠CED = 90°야. 직각삼각형 FBE에서도 ∠BFE + ∠BEF = 90°라서 <b>∠BFE = ∠CED(●)</b>. 같은 방법으로 ∠BEF = ∠CDE(×)야.', show: ['ang'],
+        note: '∠BFE = ∠CED (●),  ∠BEF = ∠CDE (×)'},
+      {k: 'find', label: '닮은 두 삼각형 찾기', p: '그림에 생긴 표시(직각, ●, ×)를 봐. <b>표시가 같은 삼각형 두 개</b>를 그림에서 눌러 봐.', want: ['FBE', 'ECD'], blink: ['ang', 'right'],
+        hint1: '반짝이는 표시를 봐. 직각과 ●, ×가 <b>모두</b> 들어 있는 삼각형은 어느 것과 어느 것이야?', hint2: '점선으로 둘러싼 두 칸을 봐. 각 표시가 어떻게 같아?',
+        teach: '△FBE와 △ECD는 직각과 ●가 같아서 <b>AA 닮음(△FBE ∽ △ECD)</b>이야.', note: '△FBE ∽ △ECD (AA 닮음)'},
+      {k: 'cond', label: 'AF를 구하려면', q: '이제 <b>AF</b>를 구해 보자. AF를 구하려면 무엇을 먼저 알아야 하고, 닮음에서 어떤 변끼리 비를 세워?',
+        keys: ['AF = AB − FB라서 FB를 먼저 구한다', '대응하는 변끼리 FB : EC = BE : CD로 비를 세운다'], ask: 'AF는 AB에서 무엇을 뺀 길이야? FB는 △FBE의 변이야. △ECD에서 FB와 짝이 되는 변은?',
+        teach: 'AF = 12 − FB야. FB의 짝은 EC라서 <b>FB : EC = BE : CD</b>로 세우면 돼.', note: 'FB : 8 = 12 : 12', noteBy: '비례식은 앱이'},
+      {k: 'input', label: 'AF의 길이', p: 'AF는 몇 cm야?', want: ['4', '4cm'], pre: 'AF = ', hint: 'FB : 8 = 12 : 12에서 FB를 먼저 구하고 12에서 빼 봐.', teach: 'FB = 8이라 AF = 12 − 8 = <b>4 cm</b>.', note: 'FB = 8 cm,  AF = 4 cm'},
+      {k: 'cond', c: 4, label: '조건 ④ 교점 H', q: '「<b>AD의 연장선과 EF의 연장선의 교점 H</b>」라는 조건이 있어. 이 조건으로 무엇을 떠올릴 수 있어?',
+        keys: ['AH ∥ BE이다(AD ∥ BC이므로)', '그래서 ∠HAF = ∠FBE(= 90°)이고 맞꼭지각 ∠AFH = ∠BFE이다'], ask: 'AH는 AD를 늘인 선이야. AH와 BE는 어떤 관계야? 점 F에서 마주 보는 두 각은 어때?',
+        teach: 'AH ∥ BE라서 <b>∠HAF = ∠FBE = 90°</b>, 맞꼭지각이라 <b>∠AFH = ∠BFE(●)</b>야.', show: ['ah'], note: 'AH ∥ BE,  ∠HAF = ∠FBE = 90°,  ∠AFH = ∠BFE (●)'},
+      {k: 'find', label: '또 닮은 두 삼각형', p: '이번에도 표시가 같은 <b>삼각형 두 개</b>를 그림에서 눌러 봐. <small>(한 삼각형은 다시 골라도 돼)</small>', want: ['HAF', 'FBE'], blink: ['ah', 'ang'],
+        hint1: '점 F를 사이에 두고 마주 보는 두 삼각형을 봐. 직각과 ●가 같은 것은?', hint2: '점선으로 둘러싼 두 칸을 봐. 각 표시가 어떻게 같아?',
+        teach: '△HAF와 △EBF는 직각과 ●가 같아서 <b>AA 닮음(△HAF ∽ △EBF)</b>이야.', note: '△HAF ∽ △EBF  →  AH : BE = AF : BF'},
+      {k: 'input', label: 'AH의 길이', p: 'AH는 몇 cm야?', want: ['6', '6cm'], pre: 'AH = ', hint: 'AH : BE = AF : BF, 곧 AH : 12 = 4 : 8을 풀어 봐.', teach: 'AH : 12 = 1 : 2라서 <b>AH = 6 cm</b>.', note: 'AH = 6 cm'}]}];
+
+  const nextBtn = (t = '다음') => new Promise(res => { const r = document.createElement('div'); r.className = 't-row'; r.innerHTML = `<span class="t-sp"></span><button class="t-btn pri">${t} ›</button>`; $('#stp').appendChild(r); r.querySelector('button').onclick = () => { r.remove(); res(); }; r.scrollIntoView({block: 'nearest', behavior: 'smooth'}); });
+  // 말로 떠올리기 — 되묻기 한 번, 그래도 빠지면 짧은 설명
+  async function askSay(s, gid) {
+    const st = s.keys.map(() => false); let tries = 0; const said = [];
+    while (true) {
+      const q = tries ? s.ask : s.q;
+      const t = await new Promise(res => { const p = document.createElement('div'); p.className = 't-step'; p.innerHTML = `<div class="t-prompt"><span class="t-pk">${esc(s.label)}</span>${FH(q)}</div>`; const b = document.createElement('div'); p.appendChild(b); $('#stp').appendChild(p);
+        voice(b, t => { b.outerHTML = `<div class="t-ans"><b>내 답</b> ${esc(t)}</div><div class="t-think">채점하는 중…</div>`; res(t); }); });
+      said.push(t);
+      let r = null; try { r = await grade(q.replace(/<[^>]+>/g, ''), s.keys, t, said.slice(0, -1).join(' / '), gid); } catch (e) { toast(e.message); said.pop(); }
+      $('#stp').querySelectorAll('.t-think').forEach(x => x.remove());
+      if (!r) continue;
+      r.hits.forEach((h, i) => { if (h) st[i] = true; });
+      if (st.every(Boolean)) { say(`<b>${esc(r.ack || '맞아.')}</b>`, 'ok'); return {st: tries ? 'ask' : 'solo', memo: ''}; }
+      tries++;
+      if (tries >= 2) { say(`<b>설명</b> ${FH(s.teach)}`, 'warn'); return {st: 'tea', memo: '말한 것: ' + said.join(' / ')}; }
+      if (r.mis) say(`살짝 다른 생각: ${esc(r.mis)}`);
+    }
+  }
+  // 그림에서 눌러 찾기 — 틀리면 ① 표시 반짝 ② 후보 칸 점선 ③ 정답 보여 주기
+  function findTri(s, svg, names) {
+    return new Promise(resolve => {
+      const w = document.createElement('div'); w.className = 't-step';
+      w.innerHTML = `<div class="t-prompt"><span class="t-pk">${esc(s.label)}</span>${FH(s.p)}</div><div class="t-row"><span class="t-sub" id="fsel">아직 안 골랐어</span><span class="t-sp"></span><button class="t-btn pri" id="fok" disabled>다 골랐어</button></div><div id="fmsg"></div>`;
+      $('#stp').appendChild(w); w.scrollIntoView({block: 'nearest', behavior: 'smooth'});
+      const regs = [...svg.querySelectorAll('[data-r]')]; regs.forEach(r => r.classList.remove('sel', 'hint', 'got')); svg.classList.add('tap');
+      const sel = new Set(); let tries = 0; const memo = [];
+      const upd = () => { w.querySelector('#fsel').innerHTML = sel.size ? '고른 것: ' + [...sel].map(k => F(names[k])).join(', ') : '아직 안 골랐어'; w.querySelector('#fok').disabled = !sel.size; };
+      const msg = (h, c) => { w.querySelector('#fmsg').innerHTML = `<div class="t-msg ${c || 'hint'}">${h}</div>`; };
+      regs.forEach(r => r.onclick = () => { if (!svg.classList.contains('tap')) return; const k = r.dataset.r; sel.has(k) ? sel.delete(k) : sel.add(k); r.classList.toggle('sel'); upd(); });
+      const end = st => { svg.classList.remove('tap'); regs.forEach(r => { r.onclick = null; r.classList.remove('sel', 'hint'); r.classList.toggle('got', s.want.includes(r.dataset.r)); }); w.querySelector('#fok').remove(); resolve({st, memo: memo.join(' · ')}); };
+      w.querySelector('#fok').onclick = () => {
+        if (sel.size === s.want.length && s.want.every(k => sel.has(k))) { msg('맞아. ' + FH(s.teach), 'ok'); return end(tries ? 'ask' : 'solo'); }
+        tries++; memo.push('고른 것: ' + [...sel].map(k => names[k]).join(', '));
+        sel.clear(); regs.forEach(r => r.classList.remove('sel')); upd();
+        if (tries === 1) { msg(FH(s.hint1)); (s.blink || []).forEach(m => svg.querySelectorAll(`[data-m="${m}"]`).forEach(g => { g.classList.remove('blink'); void g.getBBox(); g.classList.add('blink'); })); }
+        else if (tries === 2) { msg(FH(s.hint2)); regs.filter(r => s.want.includes(r.dataset.r)).forEach(r => r.classList.add('hint')); }
+        else { msg(`<b>설명</b> ${FH(s.teach)}`, 'warn'); end('tea'); }
+      };
+    });
+  }
+  async function runCond(P) {
+    VARA = false;
+    frame({q: '', src: P.src, fig: P.fig()}, `<span class="t-tag r3">중2</span><span class="t-tag">${esc(P.kind)}</span>`);
+    root().querySelector('.t-q').innerHTML = P.qParts.map(x => typeof x === 'string' ? F(x) : `<span class="cq" data-c="${x.c}">${F(x.t)}</span>`).join('');
+    if (!canAI()) { $('#stp').innerHTML = lockBox(); bindLock(() => runCond(P)); return; }
+    const svg = root().querySelector('.t-fig svg'); svg.classList.add('cf');
+    const hl = c => { root().querySelectorAll('.cq').forEach(x => x.classList.toggle('on', +x.dataset.c === c)); svg.querySelectorAll('[data-h]').forEach(g => g.classList.toggle('on', +g.dataset.h === c)); };
+    const clear = () => $('#stp').querySelectorAll('.t-msg,.t-step,.t-row').forEach(x => { if (!x.classList.contains('t-done')) x.remove(); });
+    const log = [];
+    say('조건을 <b>하나씩</b> 짚어 볼게. 문제에서 밝게 표시된 조건을 보고, 그 조건으로 떠올린 것을 말해 줘. 떠올린 것은 <b>그림에 표시</b>로 생겨.');
+    await nextBtn('시작');
+    for (const s of P.steps) {
+      clear(); hl(s.c || 0);
+      const r = s.k === 'cond' ? await askSay(s, P.gid) : s.k === 'find' ? await findTri(s, svg, P.names) : await step(s, P.gid);
+      (s.show || []).forEach(m => svg.querySelectorAll(`[data-m="${m}"]`).forEach(g => g.classList.add('on')));
+      if (s.c) root().querySelector(`.cq[data-c="${s.c}"]`)?.classList.add('done');
+      log.push({what: s.label, st: r.st, memo: r.st === 'solo' ? '' : r.memo});
+      if (s.note) noteAdd(s.note, r.st === 'tea' ? 'app' : 'kid', r.st === 'tea' ? '설명 보고 · 앱이 씀' : (s.noteBy || ''));
+      if (r.st === 'tea' || s.k === 'find' || (s.show && s.k === 'cond')) await nextBtn(); else await sleep(900);
+      hl(0);
+      if (s.k !== 'input') { clear(); const d = document.createElement('div'); $('#stp').appendChild(d); fold(d, s.label, r.st); }
+    }
+    clear(); markDone(P.id);
+    showLog(log, P.ans, '<div class="t-src" style="margin-top:8px">조건마다 혼자 떠올렸는지 · 되묻기 뒤인지 · 설명을 봤는지가 남아요 → 어느 조건에서 생각이 끊겼는지 보여요.</div>');
+    $('#again').onclick = () => runCond(P);
+  }
+
   // ════════ 화면 ════════
   const RT = {1: '1회차', 2: '2회차', 3: '3회차'};
   function home() {
@@ -405,7 +535,9 @@
       ${(VARA = true, '')}${M3.map(it => `<button class="t-item${d.has(it.id) ? ' done' : ''}" data-id="${it.id}"><span class="t-tag r${it.r}">${RT[it.r]}</span><span class="t-tag">${esc(it.kind)}</span><div class="t-iq">${F(it.q)}</div><div class="t-how">${esc(it.how)}</div></button>`).join('')}
       ${(VARA = false, '')}${HSL.map((m, i) => `${i && HSL[i - 1].sec === m.sec ? '' : `<div class="t-sec">${esc(m.sec)}</div>`}
       <button class="t-item${d.has(m.hs.id) ? ' done' : ''}" data-id="${m.hs.id}"><span class="t-tag r3">${esc(m.tag || '1문제')}</span><span class="t-tag">${esc(m.hs.kind)}</span><div class="t-iq">${F(m.hs.q)}</div><div class="t-how">${esc(m.hs.how)}</div></button>`).join('')}
-      <div class="t-src" style="margin-top:26px;text-align:center">체험판 0.3 · ${esc(A.VERSION)}</div>
+      ${CL.map(c => `<div class="t-sec">${esc(c.sec)}</div>
+      <button class="t-item${d.has(c.id) ? ' done' : ''}" data-id="${c.id}"><span class="t-tag r3">시안</span><span class="t-tag">${esc(c.kind)}</span><div class="t-iq">${F(c.qParts.map(x => typeof x === 'string' ? x : x.t).join(''))}</div><div class="t-how">${esc(c.how)}</div></button>`).join('')}
+      <div class="t-src" style="margin-top:26px;text-align:center">체험판 0.4 · ${esc(A.VERSION)}</div>
     </div>`;
     root().querySelectorAll('.t-item').forEach(b => b.onclick = () => open(b.dataset.id));
     bindLock(home);
@@ -421,6 +553,7 @@
     const hm = HSL.find(m => m.hs.id === id);
     window.scrollTo(0, 0); VARA = !hm;
     if (hm) return runMap(hm);
+    const cm = CL.find(c => c.id === id); if (cm) return runCond(cm);
     const it = M3.find(x => x.id === id); if (!it) return home();
     if (it.type === 'say') return runSay(it);
     return runSteps(it);
