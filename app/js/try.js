@@ -522,6 +522,173 @@
     $('#again').onclick = () => runCond(P);
   }
 
+  // ── 도형 「사실 판」 시안 2(마스터 10/20) — 먼저 스스로 → 막히면 쪼개기. 아이가 알아낸 것(각의 관계·닮은 삼각형)을 순서 없이 판에 넣고,
+  //    참·거짓은 그림 좌표로 앱이 직접 계산한다. 문제마다 적는 것은 「열쇠 사실」과 도움 사다리뿐 ──
+  const SECT = (p, a, b, r) => {
+    const t1 = Math.atan2(a[1] - p[1], a[0] - p[0]); let d = Math.atan2(b[1] - p[1], b[0] - p[0]) - t1;
+    while (d <= -Math.PI) d += 2 * Math.PI; while (d > Math.PI) d -= 2 * Math.PI;
+    const s = [p[0] + r * Math.cos(t1), p[1] + r * Math.sin(t1)].map(v => v.toFixed(1)), e = [p[0] + r * Math.cos(t1 + d), p[1] + r * Math.sin(t1 + d)].map(v => v.toFixed(1));
+    return `M${p[0]},${p[1]} L${s} A${r} ${r} 0 0 ${d > 0 ? 1 : 0} ${e} Z`;
+  };
+  const B2 = {id: 'c2b', gid: 'm2-2', sec: '중2-2 · 닮음 — 「사실 판」 시안 2 (먼저 스스로 → 막히면 쪼개기)', kind: '사실 판 · 시안 2',
+    how: '각·삼각형을 그림에서 눌러 알아낸 것을 판에 넣기(순서 자유) · 참거짓은 앱이 계산 · 막히면 「도움」에서만 조건을 쪼갬',
+    qParts: ['가로 BC = 20 cm, 세로 AB = 12 cm인 ', {c: 1, t: '직사각형 ABCD'}, '에서 BC 위에 ', {c: 2, t: 'BE : EC = 3 : 2'}, '가 되도록 점 E를 잡고, AB 위에 ', {c: 3, t: '∠DEF = 90°'},
+      '가 되도록 점 F를 잡았다. ', {c: 4, t: 'AD의 연장선과 EF의 연장선의 교점을 H'}, '라 할 때, AF와 AH의 길이를 각각 구하시오.'],
+    src: '블랙라벨 중2-2 64쪽 「도형의 닮음」 종합 사고력 01 (숫자 바꿈)', ans: CL[0].ans,
+    pts: {A: [0, 12], B: [0, 0], C: [20, 0], D: [20, 12], E: [12, 0], F: [0, 8], H: [-6, 12]},
+    angs: ['FBE', 'ECD', 'CDE', 'ADE', 'HAF', 'FAD', 'BEF', 'FED', 'CED', 'BFE', 'AFH', 'AFE', 'AHF'],
+    angR: {E: 27, F: 25},
+    regs: {FBE: ['F', 'B', 'E'], ECD: ['E', 'C', 'D'], AFED: ['A', 'F', 'E', 'D'], HAF: ['H', 'A', 'F']},
+    // 쓰이는 사실(그림에 표시가 생김) — 이 밖의 참인 사실은 「맞아」 하고 회색으로만 남긴다
+    useful: ['eq:BFE,CED', 'eq:BEF,CDE', 'eq:ECD,FBE', 'eq:AFH,BFE', 'eq:AHF,BEF', 'eq:FBE,HAF', 's90:BEF,CED', 's90:BEF,BFE', 's90:CDE,CED', 's180:BEF,CED,FED'],
+    why: {'eq:BFE,CED': 'w1', 'eq:BEF,CDE': 'w1', 'eq:AFH,BFE': 'w2', 'eq:AHF,BEF': 'w3'},
+    whys: {
+      w1: {label: '왜 같을까', q: '두 각의 크기가 왜 같아? <small>(짧게 말해 봐)</small>', keys: ['둘 다 90°에서 같은 각을 뺀 크기다(일직선 180°에서 90°를 빼거나, 직각삼각형의 나머지 두 각의 합이 90°라서)'],
+        ask: '점 E에 모인 세 각은 일직선 위에 있어. 그리고 직각삼각형에서 직각이 아닌 두 각을 더하면 몇 도야?', teach: '∠BEF + ∠CED = 90°이고 직각삼각형 FBE에서 ∠BEF + ∠BFE = 90°라서, 둘 다 90°에서 ∠BEF를 뺀 크기야. 그래서 ∠BFE = ∠CED.'},
+      w2: {label: '왜 같을까', q: '두 각의 크기가 왜 같아? <small>(짧게 말해 봐)</small>', keys: ['맞꼭지각이라서'], ask: '두 직선이 점 F에서 만날 때 마주 보는 두 각을 뭐라고 해?', teach: '두 직선이 만나서 마주 보는 각, <b>맞꼭지각</b>이라 같아.'},
+      w3: {label: '왜 같을까', q: '두 각의 크기가 왜 같아? <small>(짧게 말해 봐)</small>', keys: ['AH ∥ BE라서 엇각이 같다'], ask: 'AH와 BE는 어떤 관계야? 평행한 두 직선과 한 직선이 만나서 생기는 각 중 크기가 같은 것은?', teach: 'AD ∥ BC라서 AH ∥ BE이고, 두 각은 <b>엇각</b>이라 같아.'}},
+    goals: [
+      {label: '열쇠 ① 닮은 두 삼각형', p: '먼저 <b>AF</b>를 구하려고 해. 그림에서 알아낸 것을 판에 넣어 봐. <small>각을 눌러 관계를 고르거나, 삼각형을 눌러 닮음을 골라. 순서는 마음대로야.</small>',
+        key: 'sim:ECD,FBE', need: ['eq:BFE,CED', 'eq:BEF,CDE'],
+        help: [{t: 'AF는 AB에서 FB를 뺀 길이야. <b>FB가 들어 있는 삼각형</b>을 생각해 봐. 그 삼각형과 각의 크기가 같은 삼각형은 어디 있을까?'},
+               {t: '문제의 이 조건을 봐. 이 조건 때문에 점 E에 모인 각들 사이에 어떤 관계가 생길까? 각을 눌러 판에 넣어 봐.', c: 3},
+               {t: '그림에 표시를 그렸어. 표시가 같은 각을 찾아 봐.', marks: ['BFE', 'CED', 'BEF', 'CDE', 'FBE', 'ECD']},
+               {t: '설명: ∠BFE = ∠CED, ∠B = ∠C = 90°라서 <b>△FBE ∽ △ECD</b>(AA 닮음)야.', add: ['eq:BFE,CED', 'eq:ECD,FBE', 'sim:ECD,FBE']}],
+        after: [{k: 'input', label: 'BE와 EC', p: 'BE : EC = 3 : 2야. BE와 EC는 몇 cm야? <small>(쉼표로)</small>', want: ['12,8'], pre: 'BE, EC = ', hint: 'BC = 20을 3 : 2로 나눠 봐.', teach: 'BE = <b>12</b>, EC = <b>8</b>', note: 'BE = 12 cm,  EC = 8 cm'},
+                {k: 'input', label: 'AF의 길이', p: '판의 닮음을 보고 AF를 구해 봐. AF는 몇 cm야?', want: ['4', '4cm'], pre: 'AF = ', hint: '대응하는 변끼리: FB : EC = BE : CD야. FB를 구해서 AB = 12에서 빼 봐.', teach: 'FB : 8 = 12 : 12라 FB = 8, AF = 12 − 8 = <b>4 cm</b>.', note: 'FB : 8 = 12 : 12  →  FB = 8 cm,  AF = 4 cm'}]},
+      {label: '열쇠 ② 닮은 두 삼각형', p: '이제 <b>AH</b>를 구해 보자. 같은 방법으로 알아낸 것을 판에 넣어 봐.',
+        key: 'sim:FBE,HAF', need: ['eq:AFH,BFE', 'eq:AHF,BEF'],
+        help: [{t: '<b>AH가 들어 있는 삼각형</b>을 생각해 봐. 그 삼각형과 각의 크기가 같은 삼각형은 어디 있을까?'},
+               {t: '문제의 이 조건을 봐. AH와 BE는 어떤 관계야? 그때 크기가 같아지는 각을 눌러 판에 넣어 봐.', c: 4},
+               {t: '그림에 표시를 그렸어. 표시가 같은 각을 찾아 봐.', marks: ['AFH', 'BFE', 'AHF', 'BEF', 'HAF', 'FBE']},
+               {t: '설명: 맞꼭지각 ∠AFH = ∠BFE, ∠HAF = ∠FBE = 90°라서 <b>△HAF ∽ △EBF</b>(AA 닮음)야.', add: ['eq:AFH,BFE', 'eq:FBE,HAF', 'sim:FBE,HAF']}],
+        after: [{k: 'input', label: 'AH의 길이', p: '판의 닮음을 보고 AH를 구해 봐. AH는 몇 cm야?', want: ['6', '6cm'], pre: 'AH = ', hint: 'AH : BE = AF : FB, 곧 AH : 12 = 4 : 8이야.', teach: 'AH : 12 = 1 : 2라서 <b>AH = 6 cm</b>.', note: 'AH : 12 = 4 : 8  →  AH = 6 cm'}]}]};
+
+  function figC2b(P) {
+    const M = T(112, 190, 12), Q = {}; for (const k in P.pts) Q[k] = M(...P.pts[k]);
+    const {A, B, C, D, E, F, H} = Q, K = '#1f6fb5', HL = 'stroke="#ffb02e" stroke-width="8" stroke-opacity=".55" stroke-linecap="round" fill="none"';
+    const RAc = (p, q, r) => RA(p, q, r, 9).replace('stroke="#1c2230"', `stroke="${K}"`);
+    const mk = {BFE: ARC(F, B, E, 17, '●', K), CED: ARC(E, C, D, 17, '●', K), AFH: ARC(F, A, H, 15, '●', K), BEF: ARC(E, B, F, 23, '×', K), CDE: ARC(D, C, E, 20, '×', K), AHF: ARC(H, A, F, 24, '×', K),
+      FBE: RAc(B, A, C), ECD: RAc(C, B, D), HAF: RAc(A, H, F), FAD: RAc(A, B, D)};
+    const wedge = id => `<path data-a="${id}" d="${SECT(Q[id[1]], Q[id[0]], Q[id[2]], P.angR[id[1]] || 28)}"/>`;
+    return `<svg viewBox="0 0 400 236" width="470" xmlns="http://www.w3.org/2000/svg" font-family="Cambria Math,Malgun Gothic,serif" font-size="13" fill="#1c2230">
+      ${Object.entries(P.regs).map(([id, vs]) => `<polygon data-r="${id}" points="${vs.map(v => Q[v].join(',')).join(' ')}"/>`).join('')}
+      ${P.angs.map(wedge).join('')}
+      <g pointer-events="none">
+      <g data-h="3">${LN(E, D, HL)}${LN(E, F, HL)}</g><g data-h="4">${LN(H, A, HL)}${LN(H, F, HL)}</g>
+      ${PG([A, B, C, D])}${LN(D, E)}${LN(H, E)}${LN(H, A, 'stroke-width="1.2"')}${RA(E, D, F)}
+      ${Object.entries(mk).map(([id, s]) => `<g data-m="${id}">${s}</g>`).join('')}
+      ${LB(A, 'A', 0, -11)}${LB(B, 'B', -10, 9)}${LB(C, 'C', 10, 9)}${LB(D, 'D', 9, -10)}${LB(E, 'E', 0, 13)}${LB(F, 'F', -11, 2)}${LB(H, 'H', -4, -11)}
+      ${DIM(B, C, '20 cm', -22)}${DIM(B, A, '12 cm', 22)}</g></svg>`;
+  }
+
+  async function runBoard(P) {
+    VARA = false;
+    frame({q: '', src: P.src, fig: figC2b(P)}, `<span class="t-tag r3">중2</span><span class="t-tag">${esc(P.kind)}</span>`);
+    root().querySelector('.t-q').innerHTML = P.qParts.map(x => typeof x === 'string' ? F(x) : `<span class="cq" data-c="${x.c}">${F(x.t)}</span>`).join('');
+    if (!canAI()) { $('#stp').innerHTML = lockBox(); bindLock(() => runBoard(P)); return; }
+    const svg = root().querySelector('.t-fig svg'); svg.classList.add('cf', 'bdm');
+    // ── 좌표로 계산 ──
+    const ang = id => { const [a, v, b] = id.split('').map(k => P.pts[k]); const t = Math.atan2(a[1] - v[1], a[0] - v[0]) - Math.atan2(b[1] - v[1], b[0] - v[0]); let d = Math.abs(t * 180 / Math.PI) % 360; return d > 180 ? 360 - d : d; };
+    const near = (x, y) => Math.abs(x - y) < 0.6;
+    const triAngs = id => { const v = P.regs[id]; return v.map((_, i) => ang(v[(i + 2) % 3] + v[i] + v[(i + 1) % 3])); };
+    const simOrder = (a, b) => {   // b의 꼭짓점을 a에 맞게 — 「△FBE ∽ △ECD」처럼 대응 순서대로 써 준다
+      const A1 = triAngs(a), vb = P.regs[b], B1 = triAngs(b); const perms = [[0, 1, 2], [0, 2, 1], [1, 0, 2], [1, 2, 0], [2, 0, 1], [2, 1, 0]];
+      const pm = perms.find(p => p.every((j, i) => near(A1[i], B1[j]))); return pm ? pm.map(j => vb[j]).join('') : null; };
+    const kid = (type, items) => type + ':' + items.slice().sort().join(',');
+    const show = (f, ord) => { const [type, rest] = f.split(':'), it = ord || rest.split(',');
+      if (type === 'eq') return `∠${it[0]} = ∠${it[1]}`; if (type === 's90') return it.map(x => '∠' + x).join(' + ') + ' = 90°'; if (type === 's180') return it.map(x => '∠' + x).join(' + ') + ' = 180°';
+      const o = simOrder(it[0], it[1]); return type === 'sim' ? `△${it[0]} ∽ △${o || it[1]}` : `△${it[0]} ≡ △${it[1]}`; };
+    // ── 판 화면 ──
+    const bd = document.createElement('div'); bd.className = 'bd'; root().querySelector('#mapc').after(bd);
+    bd.innerHTML = `<div class="bd-h">알아낸 것 <small>판</small></div><div class="bd-facts" id="bdf"><span class="t-sub">아직 없어</span></div>
+      <div class="bd-tool"><div class="bd-mode"><button class="t-btn small on" data-md="a">각 고르기</button><button class="t-btn small" data-md="t">삼각형 고르기</button></div>
+      <div class="bd-sel" id="bds">그림에서 각을 눌러 봐</div><div class="bd-rel" id="bdr"></div>
+      <div class="t-row"><button class="t-btn small" id="bdc">지우고 다시</button><span class="t-sp"></span><button class="t-btn small" id="bdh">막혔어 · 도움</button></div><div id="bdm"></div></div>`;
+    let mode = 'a'; const sel = []; const facts = []; let onAdd = null, onHelp = null;
+    const REL = {a: [['eq', '크기가 같다'], ['s90', '더하면 90°'], ['s180', '더하면 180°']], t: [['sim', '닮음'], ['cong', '합동']]};
+    const bmsg = (h, c) => { bd.querySelector('#bdm').innerHTML = h ? `<div class="t-msg ${c || 'hint'}">${h}</div>` : ''; };
+    const drawSel = () => {
+      svg.querySelectorAll('[data-a],[data-r]').forEach(x => x.classList.toggle('sel', sel.includes(x.dataset.a || x.dataset.r)));
+      bd.querySelector('#bds').innerHTML = sel.length ? '고른 것: ' + sel.map(x => F(mode === 'a' ? '∠' + x : (P.regs[x].length === 3 ? '△' : '사각형 ') + x)).join(', ') : (mode === 'a' ? '그림에서 각을 눌러 봐' : '그림에서 삼각형을 눌러 봐');
+      bd.querySelector('#bdr').innerHTML = REL[mode].map(([k, t]) => `<button class="t-key" data-rel="${k}"${sel.length >= 2 ? '' : ' disabled'}>${t}</button>`).join('');
+      bd.querySelectorAll('[data-rel]').forEach(b => b.onclick = () => submit(b.dataset.rel));
+    };
+    const setMode = m => { mode = m; sel.length = 0; svg.classList.toggle('amode', m === 'a'); svg.classList.toggle('tmode', m === 't'); bd.querySelectorAll('[data-md]').forEach(b => b.classList.toggle('on', b.dataset.md === m)); drawSel(); };
+    bd.querySelectorAll('[data-md]').forEach(b => b.onclick = () => setMode(b.dataset.md));
+    svg.querySelectorAll('[data-a],[data-r]').forEach(x => x.onclick = () => { const id = x.dataset.a || x.dataset.r; const i = sel.indexOf(id); i >= 0 ? sel.splice(i, 1) : sel.push(id); drawSel(); bmsg(''); });
+    bd.querySelector('#bdc').onclick = () => { sel.length = 0; drawSel(); bmsg(''); };
+    bd.querySelector('#bdh').onclick = () => onHelp && onHelp();
+    const drawFacts = () => { bd.querySelector('#bdf').innerHTML = facts.length ? facts.map(f => `<span class="bd-f ${f.cls}">${F(show(f.id, f.ord))}${f.by === 'app' ? '<small> 앱</small>' : ''}</span>`).join('') : '<span class="t-sub">아직 없어</span>'; };
+    const marksFor = f => { const [type, rest] = f.split(':'); if (type === 'sim' || type === 'cong') return; rest.split(',').forEach(a => svg.querySelector(`[data-m="${a}"]`)?.classList.add('on')); };
+    const addFact = (id, by, ord) => { if (facts.find(f => f.id === id)) return; const cls = P.useful.includes(id) || id.startsWith('sim') ? 'use' : 'off'; facts.push({id, by, cls, ord}); if (cls === 'use') marksFor(id); drawFacts(); };
+    // 참·거짓 판정
+    function judge(type, items) {
+      if (type === 'sim' || type === 'cong') {
+        if (items.length !== 2 || items.some(x => P.regs[x].length !== 3)) return {ok: false, why: '닮음·합동은 <b>삼각형 두 개</b>를 골라 줘.'};
+        const o = simOrder(items[0], items[1]); if (!o) return {ok: false, why: '두 삼각형의 각을 다시 봐. 크기가 같은 각이 두 쌍 있어?'};
+        if (type === 'cong') return {ok: false, why: '각은 같아도 변의 길이가 달라. 크기가 다른 같은 모양이면 뭐라고 해?'};
+        return {ok: true};
+      }
+      const v = items.map(ang), s = v.reduce((x, y) => x + y, 0);
+      if (type === 'eq') return items.length === 2 && near(v[0], v[1]) ? {ok: true} : {ok: false, why: items.length !== 2 ? '「크기가 같다」는 <b>각 두 개</b>를 골라 줘.' : '두 각을 다시 봐. 정말 크기가 같아?'};
+      return near(s, type === 's90' ? 90 : 180) ? {ok: true} : {ok: false, why: `고른 각들을 더하면 정말 ${type === 's90' ? 90 : 180}°가 될까? 다시 봐.`};
+    }
+    function submit(type) {
+      const items = sel.slice(); const r = judge(type, items); const id = kid(type, items);
+      sel.length = 0; drawSel();
+      if (!r.ok) { bmsg(r.why, 'warn'); return onAdd && onAdd({id, ok: false, txt: items.join(',') + ' ' + type}); }
+      if (facts.find(f => f.id === id)) { bmsg('이미 판에 있어.'); return; }
+      onAdd && onAdd({id, ok: true, ord: items});
+    }
+    setMode('a');
+    const log = [];
+    const clear = () => $('#stp').querySelectorAll('.t-msg,.t-step,.t-row').forEach(x => { if (!x.classList.contains('t-done')) x.remove(); });
+    const hl = c => { root().querySelectorAll('.cq').forEach(x => x.classList.toggle('on', +x.dataset.c === c)); svg.querySelectorAll('[data-h]').forEach(g => g.classList.toggle('on', +g.dataset.h === c)); };
+    const asked = new Set();
+    for (const G of P.goals) {
+      clear(); say(G.p);
+      let lvl = 0, wrong = 0, off = 0; const memo = [];
+      const st = await new Promise(resolve => {
+        const giveHelp = auto => {
+          if (lvl >= G.help.length) return; const h = G.help[lvl++];
+          hl(h.c || 0); (h.marks || []).forEach(a => svg.querySelector(`[data-m="${a}"]`)?.classList.add('on'));
+          bmsg((auto ? '<b>힌트</b> ' : '') + FH(h.t), h.add ? 'warn' : 'hint');
+          memo.push('도움 ' + lvl + '단계');
+          if (h.add) { h.add.forEach(f => addFact(f, 'app')); setTimeout(() => resolve('tea'), 300); }
+        };
+        onHelp = () => giveHelp(false);
+        onAdd = async ({id, ok, ord}) => {
+          if (!ok) { wrong++; memo.push('틀린 사실: ' + show(id)); if (wrong + off >= 2 && lvl === 0) giveHelp(true); return; }
+          if (id.startsWith('sim') && id === G.key) {
+            if (!G.need.some(n => facts.find(f => f.id === n))) { bmsg('닮았다고 하려면 크기가 같은 각이 두 쌍 필요해. <b>직각 말고 같은 각 한 쌍</b>을 먼저 판에 넣어 봐.', 'hint'); memo.push('닮음을 먼저 고름(같은 각 근거 없이)'); return; }
+            addFact(id, 'kid', ord); bmsg('맞아. ' + F(show(id, ord)) + ' — 열쇠를 찾았어!', 'ok'); G.ord = ord; return resolve(lvl ? 'ask' : 'solo');
+          }
+          addFact(id, 'kid', ord);
+          const f = facts.find(x => x.id === id);
+          if (f.cls === 'off') { off++; memo.push('안 쓰인 사실: ' + show(id)); bmsg('맞아. 판에 적어 둘게. <small>(이번 문제의 열쇠와는 조금 거리가 있어)</small>'); if (wrong + off >= 2 && lvl === 0) giveHelp(true); return; }
+          bmsg('맞아. 그림에 표시했어.', 'ok');
+          const w = P.why[id];
+          if (w && !asked.has(w) && !id.startsWith('sim')) {
+            asked.add(w); const W = P.whys[w]; bd.style.pointerEvents = 'none';
+            const r = await askSay(W, P.gid); log.push({what: W.label + ' — ' + show(id), st: r.st, memo: r.memo}); bd.style.pointerEvents = '';
+            if (r.st !== 'tea') await sleep(700); else await nextBtn('계속');
+            $('#stp').querySelectorAll('.t-step,.t-msg').forEach(x => x.remove()); say(G.p);
+          }
+        };
+      });
+      onAdd = onHelp = null; hl(0);
+      log.push({what: G.label, st, memo: st === 'solo' && !memo.length ? '' : memo.join(' · ')});
+      noteAdd(show(G.key, G.ord), st === 'tea' ? 'app' : 'kid', st === 'tea' ? '설명 보고 · 앱이 씀' : '');
+      bd.style.pointerEvents = 'none'; await nextBtn('다음'); bmsg('');
+      for (const s of G.after) { clear(); const r = await step(s, P.gid); log.push({what: s.label, st: r.st, memo: r.st === 'solo' ? '' : r.memo}); if (s.note) noteAdd(s.note, r.st === 'tea' ? 'app' : 'kid', r.st === 'tea' ? '설명 보고' : ''); }
+      bd.style.pointerEvents = '';
+    }
+    clear(); bd.style.pointerEvents = 'none'; markDone(P.id);
+    showLog(log, P.ans, `<div class="t-src" style="margin-top:8px">판에 넣은 순서: ${facts.map(f => F(show(f.id, f.ord)) + (f.by === 'app' ? '(앱)' : f.cls === 'off' ? '(안 쓰임)' : '')).join(' → ')}</div>`);
+    $('#again').onclick = () => runBoard(P);
+  }
+
   // ════════ 화면 ════════
   const RT = {1: '1회차', 2: '2회차', 3: '3회차'};
   function home() {
@@ -537,7 +704,9 @@
       <button class="t-item${d.has(m.hs.id) ? ' done' : ''}" data-id="${m.hs.id}"><span class="t-tag r3">${esc(m.tag || '1문제')}</span><span class="t-tag">${esc(m.hs.kind)}</span><div class="t-iq">${F(m.hs.q)}</div><div class="t-how">${esc(m.hs.how)}</div></button>`).join('')}
       ${CL.map(c => `<div class="t-sec">${esc(c.sec)}</div>
       <button class="t-item${d.has(c.id) ? ' done' : ''}" data-id="${c.id}"><span class="t-tag r3">시안</span><span class="t-tag">${esc(c.kind)}</span><div class="t-iq">${F(c.qParts.map(x => typeof x === 'string' ? x : x.t).join(''))}</div><div class="t-how">${esc(c.how)}</div></button>`).join('')}
-      <div class="t-src" style="margin-top:26px;text-align:center">체험판 0.4 · ${esc(A.VERSION)}</div>
+      <div class="t-sec">${esc(B2.sec)}</div>
+      <button class="t-item${d.has(B2.id) ? ' done' : ''}" data-id="${B2.id}"><span class="t-tag r3">시안 2</span><span class="t-tag">${esc(B2.kind)}</span><div class="t-iq">${F(B2.qParts.map(x => typeof x === 'string' ? x : x.t).join(''))}</div><div class="t-how">${esc(B2.how)}</div></button>
+      <div class="t-src" style="margin-top:26px;text-align:center">체험판 0.5 · ${esc(A.VERSION)}</div>
     </div>`;
     root().querySelectorAll('.t-item').forEach(b => b.onclick = () => open(b.dataset.id));
     bindLock(home);
@@ -554,6 +723,7 @@
     window.scrollTo(0, 0); VARA = !hm;
     if (hm) return runMap(hm);
     const cm = CL.find(c => c.id === id); if (cm) return runCond(cm);
+    if (id === B2.id) return runBoard(B2);
     const it = M3.find(x => x.id === id); if (!it) return home();
     if (it.type === 'say') return runSay(it);
     return runSteps(it);

@@ -106,3 +106,17 @@ button{font:inherit;cursor:pointer}
 .cq.on{background:#fff0bf;box-shadow:0 0 0 2px #ffcf5a}
 .cq.done{background:#e6f4ea}
 .t-sub{font-size:13.5px;color:var(--sub)}
+
+/* 「사실 판」 시안 2 — 각 부채꼴(data-a)·삼각형 칸(data-r) 누르기 + 판 */
+.cf [data-a]{fill:#ffd66b;fill-opacity:0;stroke:none}
+.cf.bdm:not(.amode) [data-a]{pointer-events:none}.cf.bdm:not(.tmode) [data-r]{pointer-events:none}
+.cf.amode [data-a],.cf.tmode [data-r]{cursor:pointer}
+.cf.amode [data-a]{fill-opacity:.13}.cf.tmode [data-r]{fill-opacity:.07}
+.cf [data-a].sel,.cf [data-r].sel{fill-opacity:.7}
+.bd{border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin:10px 0 4px;background:#fbfcfe}
+.bd-h{font-weight:800;font-size:14px;margin-bottom:6px}.bd-h small{font-weight:500;color:var(--sub)}
+.bd-facts{display:flex;flex-wrap:wrap;gap:6px;min-height:28px;margin-bottom:8px}
+.bd-f{padding:4px 10px;border-radius:999px;font-size:14.5px;background:#e3eefb;color:#174a86}.bd-f.off{background:#eef0f3;color:#7a8190}.bd-f small{font-size:11px;color:#b0650c}
+.bd-mode{display:flex;gap:6px;margin-bottom:4px}.bd-mode .t-btn.on{background:#1f4fa8;color:#fff;border-color:#1f4fa8}
+.bd-sel{font-size:14px;margin:6px 0}
+.bd-rel{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 6px}.bd-rel .t-key{font-size:15px;padding:7px 12px;min-width:0}
