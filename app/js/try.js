@@ -173,6 +173,39 @@
   const PATH = {A: ['M1', 'A2', 'A3', 'A4', 'A5', 'A6'], B: ['M1', 'B2', 'B3', 'B4', 'B5', 'A6']};
   const START_KEYS = ['M1', 'A2', 'A3', 'A4', 'A5', 'B2', 'B3', 'B4'];
 
+  // 고1 공통수학2 — 역함수 그래프와의 교점(심화) · 같은 지점 지도 틀, 길이 둘(y = x 위 / 역함수를 직접 구해서)
+  const HS2 = {id: 'h2', kind: '대화형 · 지점 지도', how: '할 일을 말하면 앱이 풀이 노트에 식을 써 줌 · 결정적인 칸만 직접 · 길이 둘(y = x 위의 교점 / 역함수를 직접 구해서)',
+    q: '함수 f(x) = x² − 4x + 6 (x ≥ 2)의 역함수를 g(x)라 할 때, 두 함수 y = f(x), y = g(x)의 그래프의 교점의 좌표를 모두 구하시오.',
+    src: '숨마쿰 공통수학2 312쪽 「역함수의 그래프」 · 교점 문제(숫자 바꿈)', ans: '(2, 2), (3, 3) — f(x)가 x ≥ 2에서 증가하므로 교점은 직선 y = x 위에 있고, f(x) = x를 풀면 x = 2, 3'};
+  const ST2 = {
+    M1: {name: '역함수 그래프의 성질', sum: '함수의 그래프와 그 역함수의 그래프는 직선 y = x에 대하여 대칭이다', q: '어떤 함수의 그래프와 그 역함수의 그래프는 어떤 관계에 있어?',
+      keys: ['직선 y = x에 대하여 대칭이다'], ask: '역함수는 x와 y를 바꾼 함수야. x와 y를 바꾸면 그래프는 어느 직선에 대하여 뒤집혀?',
+      teach: '역함수는 x와 y를 바꾼 것이라, 두 그래프는 직선 y = x에 대하여 대칭이야.', note: 'y = f(x)와 y = g(x)는 직선 y = x에 대하여 대칭'},
+    A2: {name: '교점은 y = x 위', sum: 'f(x)가 증가하는 함수라서 두 그래프의 교점은 직선 y = x 위에 있다(f(x) = x를 푼다)', q: '그럼 두 그래프의 교점은 어디에 있을까? 그렇게 말할 수 있는 까닭도 말해 봐.',
+      keys: ['f(x)가 x ≥ 2에서 증가하는 함수이다', '그래서 두 그래프의 교점은 직선 y = x 위에 있다(f(x) = x를 푼다)'], ask: 'x ≥ 2에서 x가 커지면 f(x)는 어떻게 변해? 그런 함수와 그 역함수의 그래프는 어디에서 만나?',
+      teach: 'f(x) = (x − 2)² + 2는 x ≥ 2에서 증가해. 증가하는 함수와 그 역함수의 그래프의 교점은 직선 y = x 위에 있어서 f(x) = x만 풀면 돼. (감소하는 함수면 y = x 밖에서도 만날 수 있어.)'},
+    A3: {name: 'f(x) = x 풀기', sum: 'f(x) = x로 놓고 방정식을 푼다', q: '교점의 x좌표를 구하려면 어떤 방정식을 세워?',
+      keys: ['f(x) = x(또는 x² − 4x + 6 = x)로 놓는다'], ask: '직선 y = x 위의 점은 x좌표와 y좌표가 어때? 그럼 y = f(x)와 y = x를 같게 놓으면?',
+      teach: '교점이 y = x 위에 있으니 f(x) = x로 놓으면 돼.', note: 'x² − 4x + 6 = x  →  x² − 5x + 6 = 0  →  (x − 2)(x − 3) = 0', noteBy: '정리·인수분해는 앱이',
+      extra: [{k: 'input', label: '교점의 x좌표', p: '교점의 x좌표를 모두 써 봐. <small>(쉼표로)</small>', want: ['2,3', '3,2'], pre: 'x = ', hint: '(x − 2)(x − 3) = 0의 근은?', teach: '<b>x = 2, 3</b>', note: 'x = 2, 3'},
+              {k: 'say', label: '두 근을 다 쓰는 까닭', p: 'x = 2, 3을 둘 다 답으로 써도 될까? 왜?', re: /(2 ?이상|정의역|범위|둘 ?다|모두).*(돼|되|들어|맞|포함|만족)/, key: '두 근이 모두 정의역 x ≥ 2에 들어간다', ask: '이 함수는 x가 어떤 범위일 때만 정의돼 있어?', teach: '두 근 모두 <b>정의역 x ≥ 2</b> 안에 있어서 둘 다 써.'}]},
+    B2: {name: '역함수 직접 구하기', sum: 'y = f(x)를 x에 대하여 풀고 x와 y를 바꾸어 g(x)를 구한다', q: '역함수 g(x)를 직접 구해 볼래? 어떤 차례로 구해?',
+      keys: ['y = f(x)를 x에 대하여 풀고 x와 y를 바꾼다'], ask: '역함수를 구할 때는 y = f(x)를 무엇에 대하여 풀고, 그다음 무엇을 바꿔?',
+      teach: 'y = f(x)를 x에 대하여 풀고 x와 y를 바꾸면 역함수야.', note: 'y = (x − 2)² + 2  →  (x − 2)² = y − 2', noteBy: '완전제곱식은 앱이',
+      extra: [{k: 'choice', label: '제곱근의 부호', p: 'x ≥ 2라서 x − 2 = ±√(y − 2) 중 어느 쪽을 골라?', opts: ['+', '−'], want: '+', hint: 'x ≥ 2이면 x − 2는 0보다 커, 작아?', note: 'x = 2 + √(y − 2)  →  g(x) = 2 + √(x − 2) (x ≥ 2)'}]},
+    B3: {name: 'f(x) = g(x) 풀기', sum: 'f(x) = g(x)로 놓고 방정식을 푼다', q: '두 그래프의 교점을 구하려면 어떤 방정식을 세워?',
+      keys: ['f(x) = g(x)로 놓는다'], ask: '두 그래프가 만나는 점에서는 두 함숫값이 어때?',
+      teach: '두 그래프의 교점에서는 함숫값이 같으니 f(x) = g(x)로 놓아.', note: '(x − 2)² + 2 = 2 + √(x − 2)  →  x − 2 = t (t ≥ 0)로 놓으면 t² = √t  →  t⁴ = t  →  t(t − 1)(t² + t + 1) = 0  →  t = 0, 1', noteBy: '치환·정리는 앱이',
+      extra: [{k: 'input', label: '교점의 x좌표', p: 't = 0, 1일 때 교점의 x좌표를 모두 써 봐. <small>(쉼표로)</small>', want: ['2,3', '3,2'], pre: 'x = ', hint: 'x − 2 = t였어.', teach: '<b>x = 2, 3</b>', note: 'x = 2, 3'}]},
+    B5: {name: '교점이 모두 y = x 위', sum: '', q: '구한 x좌표로 두 교점의 좌표를 떠올려 봐. 두 교점은 어떤 직선 위에 있고, 왜 그럴까?',
+      keys: ['두 교점이 모두 직선 y = x 위에 있다', 'f(x)가 증가하는 함수라서 그 역함수와의 교점은 y = x 위에 있다'], ask: 'x ≥ 2에서 f(x)는 증가해, 감소해? 그런 함수와 그 역함수의 그래프는 어디에서 만나?',
+      teach: '두 교점 모두 y = x 위에 있어. f(x)가 증가하는 함수라서 그래. 그래서 처음부터 f(x) = x만 풀어도 같은 답이 나와(더 쉬운 길).'},
+    A6: {name: '답 되돌리기', sum: '', q: '', keys: [],
+      extra: [{k: 'input', label: '교점의 좌표', p: '교점의 좌표를 모두 써 봐.', want: ['(2,2),(3,3)', '(3,3),(2,2)', '(2,2)(3,3)', '(3,3)(2,2)'], keys: ['(', ')', ','], hint: '교점은 y = x 위에 있으니 y좌표는 x좌표와 같아.', teach: '<b>(2, 2), (3, 3)</b>', note: '교점 (2, 2), (3, 3)'}]}
+  };
+  const PATH2 = {A: ['M1', 'A2', 'A3', 'A6'], B: ['B2', 'B3', 'B5', 'A6']};
+  const START2 = ['M1', 'A2', 'A3', 'B2', 'B3'];
+
   function figProblem() {
     const X = x => 26 + (x + 1.6) * 23.5, Y = y => 228 - (y + 1) * 15.5, p = [];
     for (let k = -32; k < 72; k++) p.push(X(k / 20).toFixed(1) + ',' + Y((k / 20) ** 2).toFixed(1));
@@ -187,6 +220,21 @@
       <circle cx="${X(10)}" cy="${Y(2)}" r="3.6" fill="#1c2230"/><text x="${X(10) - 30}" y="${Y(2) - 9}" font-size="13">A(10, 2)</text></svg>`;
   }
 
+  function figProblem2() {   // 조건만 — y = f(x) (x ≥ 2) 곡선. 직선 y = x·역함수 그래프·교점은 그리지 않는다(= 답)
+    const X = x => 30 + x * 34, Y = y => 220 - y * 34, p = [];
+    for (let k = 0; k <= 60; k++) { const x = 2 + k * 0.05; p.push(X(x).toFixed(1) + ',' + Y(x * x - 4 * x + 6).toFixed(1)); }
+    return `<svg viewBox="0 0 260 240" width="230" xmlns="http://www.w3.org/2000/svg" font-family="Cambria Math,Malgun Gothic,serif">
+      <line x1="${X(-0.4)}" y1="${Y(0)}" x2="${X(6.6)}" y2="${Y(0)}" stroke="#555" stroke-width="1.2"/><line x1="${X(0)}" y1="${Y(-0.4)}" x2="${X(0)}" y2="${Y(6.2)}" stroke="#555" stroke-width="1.2"/>
+      <text x="${X(6.6) - 2}" y="${Y(0) + 15}" font-size="13" font-style="italic">x</text><text x="${X(0) + 5}" y="${Y(6.2) + 4}" font-size="13" font-style="italic">y</text><text x="${X(0) - 13}" y="${Y(0) + 14}" font-size="12">O</text>
+      <polyline points="${p.join(' ')}" fill="none" stroke="#1f4fa8" stroke-width="2.2"/><circle cx="${X(2)}" cy="${Y(2)}" r="3.4" fill="#1f4fa8"/>
+      <text x="${X(4.05)}" y="${Y(5.6)}" font-size="13" fill="#1f4fa8"><tspan font-style="italic">y</tspan>=<tspan font-style="italic">f</tspan>(<tspan font-style="italic">x</tspan>)</text></svg>`;
+  }
+  // 고등 문제 묶음 — 같은 지점 지도 엔진(runMap)으로 돈다
+  const HSL = [
+    {hs: HS, st: ST, path: PATH, start: START_KEYS, fig: figProblem, gid: 'h-mijeok', sec: '고등 미적분Ⅰ · 최댓값과 최솟값의 활용', bIds: ['B2', 'B3', 'B4'], bMsg: '<b>수직 조건</b>으로 가는 길이구나. 그 생각으로 가 보자.'},
+    {hs: HS2, st: ST2, path: PATH2, start: START2, fig: figProblem2, gid: 'h1-2', sec: '고1 공통수학2 · 합성함수와 역함수 (심화)', bIds: ['B2', 'B3'], bOnlyIfNot: 'A2', bMsg: '<b>역함수를 직접 구하는</b> 길이구나. 그 생각으로 가 보자.'}
+  ];
+
   // ════════ 화면 ════════
   const RT = {1: '1회차', 2: '2회차', 3: '3회차'};
   function home() {
@@ -198,9 +246,9 @@
       ${canAI() ? '' : lockBox()}
       <div class="t-sec">중3-1 · 03 인수분해 공식의 활용</div>
       ${(VARA = true, '')}${M3.map(it => `<button class="t-item${d.has(it.id) ? ' done' : ''}" data-id="${it.id}"><span class="t-tag r${it.r}">${RT[it.r]}</span><span class="t-tag">${esc(it.kind)}</span><div class="t-iq">${F(it.q)}</div><div class="t-how">${esc(it.how)}</div></button>`).join('')}
-      ${(VARA = false, '')}<div class="t-sec">고등 미적분Ⅰ · 최댓값과 최솟값의 활용</div>
-      <button class="t-item${d.has(HS.id) ? ' done' : ''}" data-id="${HS.id}"><span class="t-tag r3">1문제</span><span class="t-tag">${esc(HS.kind)}</span><div class="t-iq">${F(HS.q)}</div><div class="t-how">${esc(HS.how)}</div></button>
-      <div class="t-src" style="margin-top:26px;text-align:center">체험판 0.1 · ${esc(A.VERSION)}</div>
+      ${(VARA = false, '')}${HSL.map(m => `<div class="t-sec">${esc(m.sec)}</div>
+      <button class="t-item${d.has(m.hs.id) ? ' done' : ''}" data-id="${m.hs.id}"><span class="t-tag r3">1문제</span><span class="t-tag">${esc(m.hs.kind)}</span><div class="t-iq">${F(m.hs.q)}</div><div class="t-how">${esc(m.hs.how)}</div></button>`).join('')}
+      <div class="t-src" style="margin-top:26px;text-align:center">체험판 0.2 · ${esc(A.VERSION)}</div>
     </div>`;
     root().querySelectorAll('.t-item').forEach(b => b.onclick = () => open(b.dataset.id));
     bindLock(home);
@@ -213,8 +261,9 @@
     go.onclick = async () => { if (await A.checkPin($('#lockPin').value)) { sessionStorage.setItem('try:unlock', '1'); toast('이 창에서 AI 채점이 열렸어요'); after(); } else toast('PIN이 맞지 않아요'); };
   }
   function open(id) {
-    window.scrollTo(0, 0); VARA = id !== HS.id;
-    if (id === HS.id) return runMap();
+    const hm = HSL.find(m => m.hs.id === id);
+    window.scrollTo(0, 0); VARA = !hm;
+    if (hm) return runMap(hm);
     const it = M3.find(x => x.id === id); if (!it) return home();
     if (it.type === 'say') return runSay(it);
     return runSteps(it);
@@ -378,19 +427,21 @@
   }
 
   // ── ③ 고등 — 지점 지도 ──
-  async function runMap() {
-    const it = Object.assign({fig: figProblem()}, HS);
+  async function runMap(M) {
+    const HS = M.hs, ST = M.st, PATH = M.path, START_KEYS = M.start, GID = M.gid;
+    const it = Object.assign({fig: M.fig()}, HS);
     frame(it, `<span class="t-tag r3">고등</span><span class="t-tag">${esc(HS.kind)}</span>`);
-    if (!canAI()) { $('#stp').innerHTML = lockBox(); bindLock(runMap); return; }
+    if (!canAI()) { $('#stp').innerHTML = lockBox(); bindLock(() => runMap(M)); return; }
     const status = {}; let path = PATH.A; const log = [];
-    const drawMap = cur => { $('#mapc').innerHTML = `<div class="t-map">${path.map(id => `<span class="t-st ${status[id] || ''}${id === cur ? ' cur' : ''}">${esc(ST[id].name)}</span>`).join('')}</div>`; };
+    // 아직 안 간 지점은 이름을 가린다 — 지점 이름이 곧 풀이 길이라 미리 보이면 답을 알려 주는 셈(대전제: 질문이 답을 미리 말하지 않는다)
+    const drawMap = cur => { $('#mapc').innerHTML = `<div class="t-map">${path.map(id => `<span class="t-st ${status[id] || ''}${id === cur ? ' cur' : ''}">${status[id] ? esc(ST[id].name) : id === cur ? '지금' : '?'}</span>`).join('')}</div>`; };
     drawMap();
     // 첫마디 — 할 일을 생각나는 만큼
     const first = await new Promise(res => { const p = document.createElement('div'); p.className = 't-step'; p.innerHTML = '<div class="t-prompt">어떻게 풀지, <b>처음에 할 일</b>을 말해 봐. 생각나는 만큼 이어서 말해도 돼. <small>(식은 안 읽어도 돼 — 무엇을 할지만)</small></div>'; const b = document.createElement('div'); p.appendChild(b); $('#stp').appendChild(p); voice(b, t => { p.innerHTML = `<div class="t-ans"><b>내 답</b> ${esc(t)}</div>`; res(t); }); });
     let g = null;
-    for (let i = 0; i < 2 && !g; i++) { try { g = await grade(HS.q, START_KEYS.map(id => ST[id].sum), first, '', 'h-mijeok'); } catch (e) { toast(e.message); } }
+    for (let i = 0; i < 2 && !g; i++) { try { g = await grade(HS.q, START_KEYS.map(id => ST[id].sum), first, '', GID); } catch (e) { toast(e.message); } }
     const hit = {}; if (g) START_KEYS.forEach((id, i) => { if (g.hits[i]) hit[id] = true; });
-    if (hit.B2 || hit.B3 || hit.B4) { path = PATH.B; say('<b>수직 조건</b>으로 가는 길이구나. 그 생각으로 가 보자.', 'ok'); }
+    if (M.bIds.some(id => hit[id]) && !(M.bOnlyIfNot && hit[M.bOnlyIfNot])) { path = PATH.B; say(M.bMsg, 'ok'); }
     else if (Object.keys(hit).length) say(`${esc(g.ack || '좋아.')} 그 생각으로 이어 가 보자.`, 'ok');
     else say('좋아, 하나씩 짚어 보자.');
     for (const id of path) if (hit[id]) status[id] = 'solo';
@@ -401,21 +452,21 @@
       if (!status[id] && s.keys.length && s.q) {
         const st = s.keys.map(() => false); let tries = 0; const said = [];
         while (true) {
-          const t = await new Promise(res => { const p = document.createElement('div'); p.className = 't-step'; p.innerHTML = `<div class="t-prompt"><span class="t-pk">${esc(s.name)}</span>${F(tries ? s.ask : s.q)}</div>`; const b = document.createElement('div'); p.appendChild(b); $('#stp').appendChild(p); voice(b, t => { p.innerHTML = `<div class="t-prompt"><span class="t-pk">${esc(s.name)}</span>${F(tries ? s.ask : s.q)}</div><div class="t-ans"><b>내 답</b> ${esc(t)}</div>`; res(t); }); });
+          const t = await new Promise(res => { const p = document.createElement('div'); p.className = 't-step'; p.innerHTML = `<div class="t-prompt"><span class="t-pk">지점 ${path.indexOf(id) + 1}</span>${F(tries ? s.ask : s.q)}</div>`; const b = document.createElement('div'); p.appendChild(b); $('#stp').appendChild(p); voice(b, t => { p.innerHTML = `<div class="t-prompt"><span class="t-pk">지점 ${path.indexOf(id) + 1}</span>${F(tries ? s.ask : s.q)}</div><div class="t-ans"><b>내 답</b> ${esc(t)}</div>`; res(t); }); });
           said.push(t);
-          let r = null; try { r = await grade(tries ? s.ask : s.q, s.keys, t, said.slice(0, -1).join(' / '), 'h-mijeok'); } catch (e) { toast(e.message); continue; }
+          let r = null; try { r = await grade(tries ? s.ask : s.q, s.keys, t, said.slice(0, -1).join(' / '), GID); } catch (e) { toast(e.message); continue; }
           r.hits.forEach((h, i) => { if (h) st[i] = true; });
           if (st.every(Boolean)) { status[id] = tries ? 'ask' : 'solo'; say(`<b>${esc(r.ack || '맞아.')}</b>`, 'ok'); break; }
           tries++;
           if (tries >= 2) { status[id] = 'tea'; say(`<b>설명</b> ${F(s.teach)}`, 'warn'); log.push({what: s.name, st: 'tea', memo: '말한 것: ' + said.join(' / ')}); break; }
           if (r.mis) say(`살짝 다른 생각: ${esc(r.mis)}`);
         }
-      } else if (!status[id] && id === 'B2') status[id] = 'solo';
+      } else if (!status[id] && !s.q && s.keys.length) status[id] = 'solo';
       if (status[id] && !log.find(x => x.what === s.name)) log.push({what: s.name, st: status[id]});
       if (status[id] && s.q) { await sleep(700); $('#stp').querySelectorAll('.t-msg,.t-step').forEach(x => { if (!x.classList.contains('t-done')) x.remove(); }); const d = document.createElement('div'); $('#stp').appendChild(d); fold(d, s.name, status[id]); }
       if (s.note) noteAdd(s.note, status[id] === 'tea' ? 'app' : 'kid', s.noteBy || (status[id] === 'tea' ? '설명 보고 · 앱이 씀' : ''));
       for (const x of (s.extra || [])) {
-        const r = await step(x, 'h-mijeok');
+        const r = await step(x, GID);
         log.push({what: x.label, st: r.st, memo: r.st === 'solo' ? '' : r.memo});
         if (x.note) noteAdd(x.note, r.st === 'tea' ? 'app' : 'kid', r.st === 'tea' ? '설명 보고' : '');
       }
@@ -426,7 +477,7 @@
     drawMap();
     markDone(HS.id);
     showLog(log, HS.ans, `<div class="t-src" style="margin-top:8px">지점 지도: ${path.map(id => `${ST[id].name}(${PILL[status[id]] || '-'})`).join(' → ')}</div>`);
-    $('#again').onclick = runMap;
+    $('#again').onclick = () => runMap(M);
   }
 
   A.tryStart = home; A.tryGrade = grade;   // 시험용
