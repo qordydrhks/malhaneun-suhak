@@ -120,3 +120,8 @@ button{font:inherit;cursor:pointer}
 .bd-mode{display:flex;gap:6px;margin-bottom:4px}.bd-mode .t-btn.on{background:#1f4fa8;color:#fff;border-color:#1f4fa8}
 .bd-sel{font-size:14px;margin:6px 0}
 .bd-rel{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 6px}.bd-rel .t-key{font-size:15px;padding:7px 12px;min-width:0}
+
+/* 「번호로 말하기」 시안 3 — 그 단계에 필요한 번호만 켠다 */
+.nf [data-n]{opacity:0;transition:opacity .35s}
+.nf [data-n].on{opacity:1;animation:nfPop .45s ease-out}
+@keyframes nfPop{0%{opacity:0}60%{opacity:1}}

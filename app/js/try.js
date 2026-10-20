@@ -689,6 +689,72 @@
     $('#again').onclick = () => runBoard(P);
   }
 
+  // ── 도형 「번호로 말하기」 시안 3(마스터 10/20 아이디어) — 그림의 각·변·삼각형에 번호를 붙여 「1번 각과 2번 각」처럼 말하게 한다.
+  //    번호는 생각하는 차례에 맞춰 그 단계에 필요한 것만 켜진다(화면은 질문 하나 + 그림 + 마이크). 번호는 문제 안에서 겹치지 않는다 ──
+  function figC2c() {
+    const M = T(112, 190, 12), A = M(0, 12), B = M(0, 0), C = M(20, 0), D = M(20, 12), E = M(12, 0), F = M(0, 8), H = M(-6, 12);
+    const AK = '#1f6fb5', SK = '#1f8a4c', TK = '#c45f0e';
+    const badge = (p, n, col, sq) => sq ? `<rect x="${p[0] - 10}" y="${p[1] - 10}" width="20" height="20" rx="5" fill="${col}"/><text x="${p[0]}" y="${p[1] + 0.5}" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="700" fill="#fff" font-family="Malgun Gothic,sans-serif">${n}</text>`
+      : `<circle cx="${p[0]}" cy="${p[1]}" r="10" fill="${col}"/><text x="${p[0]}" y="${p[1] + 0.5}" text-anchor="middle" dominant-baseline="central" font-size="12.5" font-weight="700" fill="#fff" font-family="Malgun Gothic,sans-serif">${n}</text>`;
+    const angN = (n, v, a, b, r) => { const t1 = Math.atan2(a[1] - v[1], a[0] - v[0]); let d = Math.atan2(b[1] - v[1], b[0] - v[0]) - t1; while (d <= -Math.PI) d += 2 * Math.PI; while (d > Math.PI) d -= 2 * Math.PI; const m = t1 + d / 2;
+      return `<g data-n="${n}"><path d="${SECT(v, a, b, r)}" fill="${AK}" fill-opacity=".18" stroke="${AK}" stroke-width="1.4"/>${badge([v[0] + (r + 13) * Math.cos(m), v[1] + (r + 13) * Math.sin(m)], n, AK)}</g>`; };
+    const sideN = (n, a, b, dx, dy) => `<g data-n="${n}">${LN(a, b, `stroke="${SK}" stroke-width="5" stroke-opacity=".55"`)}${badge([(a[0] + b[0]) / 2 + dx, (a[1] + b[1]) / 2 + dy], n, SK, true)}</g>`;
+    const triN = (n, ps, dx = 0, dy = 0) => { const c = [ps.reduce((s, p) => s + p[0], 0) / 3 + dx, ps.reduce((s, p) => s + p[1], 0) / 3 + dy]; return `<g data-n="${n}">${PG(ps, '#f7c896', `stroke="${TK}" stroke-width="2" fill-opacity=".55"`)}${badge(c, n, TK, true)}</g>`; };
+    return `<svg viewBox="0 0 400 250" width="470" xmlns="http://www.w3.org/2000/svg" font-family="Cambria Math,Malgun Gothic,serif" font-size="13" fill="#1c2230">
+      ${triN(4, [F, B, E], 0, 4)}${triN(5, [E, C, D], 8, 6)}${triN(10, [H, A, F], -12, -32)}
+      ${PG([A, B, C, D])}${LN(D, E)}${LN(H, E)}${LN(H, A, 'stroke-width="1.2"')}${RA(E, D, F)}
+      ${angN(1, E, B, F, 22)}${angN(2, E, C, D, 22)}${angN(3, F, B, E, 22)}${angN(11, F, A, H, 18)}
+      ${sideN(6, F, B, 13, 0)}${sideN(7, E, C, 0, 13)}${sideN(8, B, E, 0, 13)}${sideN(9, C, D, 14, 0)}${sideN(12, A, F, 13, 0)}${sideN(13, H, A, 0, -13)}
+      ${LB(A, 'A', 0, -11)}${LB(B, 'B', -10, 9)}${LB(C, 'C', 10, 9)}${LB(D, 'D', 9, -10)}${LB(E, 'E', 0, 13)}${LB(F, 'F', -11, 2)}${LB(H, 'H', -4, -11)}
+      ${DIM(B, C, '20 cm', -26)}${DIM(B, A, '12 cm', 26)}</svg>`;
+  }
+  const N3 = {id: 'c2c', gid: 'm2-2', sec: '중2-2 · 닮음 — 「번호로 말하기」 시안 3', kind: '번호로 말하기 · 시안 3', how: '그 단계에 필요한 각·변·삼각형에만 번호가 켜짐 → 「1번 각과 2번 각은…」처럼 번호로 말하기',
+    q: CL[0].qParts.map(x => typeof x === 'string' ? x : x.t).join(''), src: CL[0].src, ans: CL[0].ans,
+    steps: [
+      {k: 'say', on: [1, 2], label: '1번 · 2번 각', q: '1번 각과 2번 각은 어떤 관계야?',
+        keys: ['1번 각과 2번 각을 더하면 90°이다(일직선 180°에서 ∠DEF 90°를 뺀다)'], ask: '점 E에서 1번 각, 직각, 2번 각이 한 직선 위에 있어. 세 각을 다 더하면 몇 도야?',
+        teach: '한 직선 위의 세 각을 더하면 180°야. 가운데가 90°라서 <b>1번 + 2번 = 90°</b>.', note: '1번 + 2번 = 90°'},
+      {k: 'say', on: [1, 2, 3], label: '3번 각', q: '그럼 3번 각은 어느 각과 크기가 같아? 왜?',
+        keys: ['3번 각은 2번 각과 크기가 같다', '1번 + 3번도 90°이기 때문이다(직각삼각형에서 직각이 아닌 두 각의 합이 90°)'], ask: '3번 각과 1번 각이 들어 있는 삼각형은 직각삼각형이야. 1번 + 3번은 몇 도야? 1번 + 2번과 비교해 봐.',
+        teach: '직각삼각형이라 1번 + 3번 = 90°, 그리고 1번 + 2번 = 90°라서 <b>3번 = 2번</b>이야.', note: '3번 = 2번'},
+      {k: 'say', on: [4, 5], label: '4번 · 5번 삼각형', q: '4번 삼각형과 5번 삼각형은 어떤 관계야? 왜?',
+        keys: ['두 삼각형은 닮음이다', '직각이 같고 2번 각과 3번 각이 같아서 두 각이 같다(AA 닮음)'], ask: '두 삼각형에서 크기가 같은 각을 두 쌍 찾아 봐. 그럼 두 삼각형은 어떤 관계야?',
+        teach: '직각이 같고 2번 = 3번이라 두 각이 같아. 그래서 <b>4번 ∽ 5번(AA 닮음)</b>이야.', note: '4번 삼각형 ∽ 5번 삼각형 (△FBE ∽ △ECD)'},
+      {k: 'input', on: [7, 8], label: '7번 · 8번 변', p: 'BE : EC = 3 : 2야. 8번 변과 7번 변의 길이를 차례대로 써 봐. <small>(쉼표로)</small>', want: ['12,8'], pre: '8번, 7번 = ',
+        hint: 'BC = 20을 3 : 2로 나눠 봐.', teach: '8번(BE) = <b>12</b>, 7번(EC) = <b>8</b>', note: '8번 = 12 cm,  7번 = 8 cm'},
+      {k: 'say', on: [6, 7, 8, 9], label: '6번 변 구하기', q: '6번 변의 길이를 구하려면 7번, 8번, 9번 변으로 어떤 비례식을 세워?',
+        keys: ['6번 : 7번 = 8번 : 9번(대응하는 변끼리 비가 같다)'], ask: '4번 삼각형의 6번 변과 짝이 되는 5번 삼각형의 변은 몇 번이야? 8번 변의 짝은?',
+        teach: '대응하는 변끼리 비가 같아서 <b>6번 : 7번 = 8번 : 9번</b>, 곧 6번 : 8 = 12 : 12야.', note: '6번 : 8 = 12 : 12  →  6번 = 8 cm'},
+      {k: 'input', on: [12], label: 'AF의 길이', p: '12번 변(AF)은 몇 cm야?', want: ['4', '4cm'], pre: 'AF = ', hint: 'AB = 12에서 6번 변을 빼 봐.', teach: 'AF = 12 − 8 = <b>4 cm</b>', note: 'AF = 4 cm'},
+      {k: 'say', on: [10, 4, 11, 3], label: '10번 · 4번 삼각형', q: '10번 삼각형과 4번 삼각형은 어떤 관계야? 왜?',
+        keys: ['두 삼각형은 닮음이다', '11번 각과 3번 각이 맞꼭지각으로 같고, 직각(또는 AH ∥ BE의 엇각)이 같아서 두 각이 같다'], ask: '11번 각과 3번 각은 어떤 사이야? A의 각과 B의 각은 몇 도야?',
+        teach: '11번과 3번은 맞꼭지각이라 같고, A와 B의 각이 모두 직각이야. 그래서 <b>10번 ∽ 4번(AA 닮음)</b>.', note: '10번 삼각형 ∽ 4번 삼각형 (△HAF ∽ △EBF)'},
+      {k: 'say', on: [12, 6], label: '닮음비', q: '10번 삼각형과 4번 삼각형의 닮음비는 얼마야? 몇 번 변을 보고 알았어?',
+        keys: ['12번 변(4 cm)과 6번 변(8 cm)을 보고 닮음비가 1 : 2임을 안다'], ask: '12번 변과 6번 변은 서로 짝이 되는 변이야. 각각 몇 cm였어?',
+        teach: '짝이 되는 변 12번(4 cm)과 6번(8 cm)을 보면 닮음비는 <b>1 : 2</b>야.', note: '닮음비 = 12번 : 6번 = 4 : 8 = 1 : 2'},
+      {k: 'input', on: [13, 8], label: 'AH의 길이', p: '13번 변(AH)은 몇 cm야?', want: ['6', '6cm'], pre: 'AH = ', hint: '13번의 짝은 8번(12 cm)이고 닮음비는 1 : 2야.', teach: 'AH = 12 × 1/2 = <b>6 cm</b>', note: 'AH = 6 cm'}]};
+
+  async function runNum(P) {
+    VARA = false;
+    frame({q: P.q, src: P.src, fig: figC2c()}, `<span class="t-tag r3">중2</span><span class="t-tag">${esc(P.kind)}</span>`);
+    if (!canAI()) { $('#stp').innerHTML = lockBox(); bindLock(() => runNum(P)); return; }
+    const svg = root().querySelector('.t-fig svg'); svg.classList.add('nf');
+    const light = ns => svg.querySelectorAll('[data-n]').forEach(g => g.classList.toggle('on', ns.includes(+g.dataset.n)));
+    const clear = () => $('#stp').querySelectorAll('.t-msg,.t-step,.t-row').forEach(x => { if (!x.classList.contains('t-done')) x.remove(); });
+    const log = [];
+    for (const s of P.steps) {
+      clear(); light(s.on);
+      const r = s.k === 'say' ? await askSay(Object.assign({}, s, {q: s.q, keys: s.keys}), P.gid) : await step(s, P.gid);
+      log.push({what: s.label, st: r.st, memo: r.st === 'solo' ? '' : r.memo});
+      if (s.note) noteAdd(s.note, r.st === 'tea' ? 'app' : 'kid', r.st === 'tea' ? '설명 보고' : '');
+      if (r.st === 'tea') await nextBtn(); else await sleep(800);
+      if (s.k !== 'input') { clear(); const d = document.createElement('div'); $('#stp').appendChild(d); fold(d, s.label, r.st); }
+    }
+    clear(); light([]); markDone(P.id);
+    showLog(log, P.ans);
+    $('#again').onclick = () => runNum(P);
+  }
+
   // ════════ 화면 ════════
   const RT = {1: '1회차', 2: '2회차', 3: '3회차'};
   function home() {
@@ -704,9 +770,9 @@
       <button class="t-item${d.has(m.hs.id) ? ' done' : ''}" data-id="${m.hs.id}"><span class="t-tag r3">${esc(m.tag || '1문제')}</span><span class="t-tag">${esc(m.hs.kind)}</span><div class="t-iq">${F(m.hs.q)}</div><div class="t-how">${esc(m.hs.how)}</div></button>`).join('')}
       ${CL.map(c => `<div class="t-sec">${esc(c.sec)}</div>
       <button class="t-item${d.has(c.id) ? ' done' : ''}" data-id="${c.id}"><span class="t-tag r3">시안</span><span class="t-tag">${esc(c.kind)}</span><div class="t-iq">${F(c.qParts.map(x => typeof x === 'string' ? x : x.t).join(''))}</div><div class="t-how">${esc(c.how)}</div></button>`).join('')}
-      <div class="t-sec">${esc(B2.sec)}</div>
-      <button class="t-item${d.has(B2.id) ? ' done' : ''}" data-id="${B2.id}"><span class="t-tag r3">시안 2</span><span class="t-tag">${esc(B2.kind)}</span><div class="t-iq">${F(B2.qParts.map(x => typeof x === 'string' ? x : x.t).join(''))}</div><div class="t-how">${esc(B2.how)}</div></button>
-      <div class="t-src" style="margin-top:26px;text-align:center">체험판 0.5 · ${esc(A.VERSION)}</div>
+      <div class="t-sec">${esc(N3.sec)}</div>
+      <button class="t-item${d.has(N3.id) ? ' done' : ''}" data-id="${N3.id}"><span class="t-tag r3">시안 3</span><span class="t-tag">${esc(N3.kind)}</span><div class="t-iq">${F(N3.q)}</div><div class="t-how">${esc(N3.how)}</div></button>
+      <div class="t-src" style="margin-top:26px;text-align:center">체험판 0.6 · ${esc(A.VERSION)}</div>
     </div>`;
     root().querySelectorAll('.t-item').forEach(b => b.onclick = () => open(b.dataset.id));
     bindLock(home);
@@ -723,7 +789,8 @@
     window.scrollTo(0, 0); VARA = !hm;
     if (hm) return runMap(hm);
     const cm = CL.find(c => c.id === id); if (cm) return runCond(cm);
-    if (id === B2.id) return runBoard(B2);
+    if (id === B2.id) return runBoard(B2);   // 시안 2 — 마스터 10/20 기각, 목록에서 뺌(코드만 남김)
+    if (id === N3.id) return runNum(N3);
     const it = M3.find(x => x.id === id); if (!it) return home();
     if (it.type === 'say') return runSay(it);
     return runSteps(it);
