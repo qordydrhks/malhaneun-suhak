@@ -3,7 +3,7 @@
 (() => {
   'use strict';
   const A = window.APP = window.APP || {};
-  A.VERSION = 'app 0.18.1 (2026-10-19)';
+  A.VERSION = 'app 0.18.2 (2026-10-20)';
   const URL = 'https://cnyrbxsmxwajhlrvcdml.supabase.co';
   const KEY = 'sb_publishable_e2iVXV5K1sl7-kJ-d3v1Ow_VEzNUJGv';
   A.esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -24,6 +24,7 @@
   }
   A.sbSelect = (t, q) => sb(t + (q ? '?' + q : ''), {headers: H()});
   A.sbInsert = (t, row) => sb(t, {method: 'POST', headers: H({Prefer: 'return=minimal'}), body: JSON.stringify(row)});
+  A.sbDelete = (t, q) => sb(t + '?' + q, {method: 'DELETE', headers: H({Prefer: 'return=minimal'})});
   A.sbUpsert = (t, row) => sb(t, {method: 'POST', headers: H({Prefer: 'resolution=merge-duplicates,return=minimal'}), body: JSON.stringify(row)});
 
   // 공유 저장소(ai_cache) — 다른 기기에서도 이어지게. 서버가 안 되면 이 기기에만.

@@ -625,3 +625,13 @@ details.tq2 summary::-webkit-details-marker{display:none}
 .tcards{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0}
 .tcard{min-height:44px;padding:8px 14px;border-radius:12px;border:1.5px solid rgba(255,255,255,.35);background:rgba(255,255,255,.08);color:inherit;font-size:16px}
 .tcard.on{border-color:#f3c969;background:rgba(243,201,105,.25);font-weight:700}
+
+/* 👥 선생님 화면 학생 관리(10/20) */
+.tmenu.three{grid-template-columns:repeat(3,1fr)}
+@media (max-width:620px){.tmenu.three{grid-template-columns:1fr 1fr}}
+.mlist{display:flex;flex-wrap:wrap;gap:8px}
+.mstu{display:flex;gap:10px;align-items:center;min-height:44px;padding:8px 14px;border-radius:12px;border:1px solid var(--line);background:var(--sky);color:var(--ink);font:inherit;cursor:pointer}
+.mstu span{font-size:12.5px;color:var(--sub)}
+.tmsg{background:var(--sky2);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:6px 0 10px}
+.danger{color:#c2410c!important;border-color:#f2b8a0!important}
+#mName,#mGrade,#mPw{flex:1 1 140px;min-width:0}

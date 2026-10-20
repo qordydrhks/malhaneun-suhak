@@ -99,17 +99,19 @@
     A.session.student = null;
     frame(`${A.courses().length > 1 ? `<div class="krow ctabs">${A.courses().map(id => `<button class="${id === A.cid() ? 'primary' : 'secondary'} small" data-c="${id}">${esc(window.APP_DATA[id].code)} · ${esc(window.APP_DATA[id].name)}</button>`).join('')}</div>` : ''}
       <div class="thead"><h2>학생 ${rows.length}명</h2><button class="ghost small" id="tRe">↻ 새로고침</button></div>
-      <div class="tmenu two">
+      <div class="tmenu three">
+        <button class="tmbtn" id="tMg"><i>👥</i><b>학생 관리</b><small>등록 · 수정 · 비밀번호</small></button>
         <button class="tmbtn ${NB.fresh ? 'hot' : ''}" id="tNb"><i>✦</i><b>별빛노트</b><small>${NB.fresh ? '새 대답 ' + NB.fresh + '개 확인' : '새 대답 없음'}</small></button>
         <button class="tmbtn" id="tSet"><i>⚙</i><b>설정</b><small>학원 이름 · 학기 · 기기</small></button>
       </div>
       <div class="tlist">${rows.map(({s, v}) => `<button class="tstu" data-id="${esc(s.id)}">
         <span class="tsn"><b>${esc(s.name)}</b><small>${esc(s.grade)}</small></span>
         <span class="tsr">${v.any && v.rk.score != null ? `${v.rk.icon} ${v.rk.name}` : '<i>시작 전</i>'}</span>
-        <span class="tsx">${v.stuck.length ? `<em>막힘 ${v.stuck.length}</em>` : ''}<small>${ago(v.at)}</small></span><span class="tsgo">›</span></button>`).join('') || '<p class="sub">초4 학생이 없어요.</p>'}</div>`);
+        <span class="tsx">${v.stuck.length ? `<em>막힘 ${v.stuck.length}</em>` : ''}<small>${ago(v.at)}</small></span><span class="tsgo">›</span></button>`).join('') || `<p class="sub">${esc(E.course().name)} 학생이 없어요. 「학생 관리」에서 등록해 주세요.</p>`}</div>`);
     $('#tRe').onclick = list;
     root().querySelectorAll('.ctabs [data-c]').forEach(b => b.onclick = () => { A.session.cid = b.dataset.c; try { sessionStorage.setItem('app:tcid', b.dataset.c); } catch (e) {} list(); });
     $('#tNb').onclick = () => noteAdmin(false);
+    $('#tMg').onclick = () => manage();
     $('#tSet').onclick = settings;
     root().querySelectorAll('.tstu').forEach(b => b.onclick = () => detail(STU.find(s => s.id === b.dataset.id)));
   }
@@ -122,12 +124,85 @@
       <div class="tbox"><h3>이 기기</h3>
         <div class="row"><button class="secondary small" id="tDev">${dev ? '✅ 학원 기기로 등록됨 · 해제' : '이 기기를 학원 기기로 등록'}</button>
         <button class="secondary small" id="tBuzz">${buzz ? '📳 진동 켜짐 · 끄기' : '📳 진동 꺼짐 · 켜기'}</button></div></div>
-      <div class="tbox"><h3>다른 화면</h3><div class="row"><a class="secondary small" href="index.html">학생 화면 ›</a><a class="secondary small" href="../dodream.html">학생 등록 · 비밀번호 · AI 연결 (옛 선생님 화면) ›</a></div></div>`,
+      <div class="tbox"><h3>선생님 PIN 바꾸기</h3><p class="sub">선생님 화면에 들어올 때 쓰는 번호예요(옛 선생님 화면과 같은 번호).</p>
+        <div class="row"><input id="pOld" class="tin" type="password" inputmode="numeric" placeholder="지금 PIN" autocomplete="off">
+        <input id="pNew" class="tin" type="password" inputmode="numeric" placeholder="새 PIN" autocomplete="off">
+        <input id="pNew2" class="tin" type="password" inputmode="numeric" placeholder="새 PIN 한 번 더" autocomplete="off">
+        <button class="secondary small" id="pSave">바꾸기</button><span class="sub" id="pMsg"></span></div></div>
+      <div class="tbox"><h3>다른 화면</h3><div class="row"><a class="secondary small" href="index.html">학생 화면 ›</a><a class="secondary small" href="../dodream.html">고급 — 문제 미리 만들기 · AI 비용 (옛 선생님 화면) ›</a></div></div>`,
       {back: list, backText: '학생', crumb: '설정'});
     bindSem();
     $('#tAcadS').onclick = async () => { ACAD = $('#tAcad').value.trim(); await A.store.set('app:academy', {name: ACAD, at: Date.now()}); $('#tAcadM').textContent = '저장했어요'; };
     $('#tBuzz').onclick = () => { try { if (!buzz) { localStorage.removeItem('app:buzz'); navigator.vibrate && navigator.vibrate(30); } else localStorage.setItem('app:buzz', '0'); } catch (e) {} settings(); };
+    $('#pSave').onclick = async () => {
+      const o = $('#pOld').value, n = $('#pNew').value, n2 = $('#pNew2').value;
+      if (!o || !n) { $('#pMsg').textContent = '지금 PIN과 새 PIN을 넣어 주세요.'; return; }
+      if (n.length < 4) { $('#pMsg').textContent = '새 PIN은 4자리 이상으로 해 주세요.'; return; }
+      if (n !== n2) { $('#pMsg').textContent = '새 PIN 두 번이 서로 달라요.'; return; }
+      let ok = false; try { ok = await A.checkPin(o); } catch (e) {}
+      if (!ok) { $('#pMsg').textContent = '지금 PIN이 맞지 않아요.'; return; }
+      try { await A.store.set('config:teacherPin', {hash: await A.sha256(n)}); } catch (e) { $('#pMsg').textContent = '저장하지 못했어요.'; return; }
+      ['#pOld', '#pNew', '#pNew2'].forEach(s => { $(s).value = ''; }); $('#pMsg').textContent = '✅ 바꿨어요. 다음부터 새 PIN으로 들어와요.';
+    };
     $('#tDev').onclick = () => { try { if (dev) localStorage.removeItem('dd:academyDevice'); else localStorage.setItem('dd:academyDevice', '1'); } catch (e) {} settings(); };
+  }
+
+  // ── 👥 학생 관리(마스터 10/20) — 옛 선생님 화면과 같은 서버 표(students: id·name·grade·pin_hash)를 쓴다 ──
+  const GRADES_OPT = ['초1', '초2', '초3', '초4', '초5', '초6', '중1', '중2', '중3', '고1', '고2', '고3'];
+  const gradeSel = (id, v) => `<select id="${id}" class="tin"><option value="">학년 고르기</option>${GRADES_OPT.map(g => `<option ${g === v ? 'selected' : ''}>${g}</option>`).join('')}${v && !GRADES_OPT.includes(v) ? `<option selected>${esc(v)}</option>` : ''}</select>`;
+  async function manage(msg) {
+    frame('<div class="loading">불러오는 중…</div>', {back: list, backText: '학생', crumb: '학생 관리'});
+    let all = [];
+    try { all = await A.loadStudents(); } catch (e) { frame(`<p class="sub center">서버에서 불러오지 못했어요. (${esc(e.message)})</p>`, {back: list, backText: '학생'}); return; }
+    const by = {};
+    for (const s of all) (by[s.grade || '학년 없음'] = by[s.grade || '학년 없음'] || []).push(s);
+    const order = Object.keys(by).sort((a, b) => (GRADES_OPT.indexOf(a) + 1 || 99) - (GRADES_OPT.indexOf(b) + 1 || 99));
+    frame(`<div class="thead"><h2>👥 학생 관리 <small class="sub">${all.length}명</small></h2></div>
+      ${msg ? `<p class="tmsg">${esc(msg)}</p>` : ''}
+      <div class="tbox"><h3>새 학생 등록</h3>
+        <div class="row"><input id="mName" class="tin" maxlength="20" placeholder="이름" autocomplete="off">${gradeSel('mGrade', '')}
+        <input id="mPw" class="tin" type="text" maxlength="20" placeholder="비밀번호" autocomplete="off">
+        <button class="primary small" id="mAdd">등록</button></div><span class="sub" id="mMsg">같은 이름이 있으면 이름 뒤에 구분자를 붙여 주세요(예: 김민준B)</span></div>
+      ${order.map(g => `<div class="tbox"><h3>${esc(g)} <small>${by[g].length}명</small></h3>
+        <div class="mlist">${by[g].map(s => `<button class="mstu" data-id="${esc(s.id)}"><b>${esc(s.name)}</b><span>수정 ›</span></button>`).join('')}</div></div>`).join('')}`,
+      {back: list, backText: '학생', crumb: '학생 관리'});
+    $('#mAdd').onclick = async () => {
+      const name = $('#mName').value.trim(), grade = $('#mGrade').value, pw = $('#mPw').value;
+      if (!name || !grade || !pw) { $('#mMsg').textContent = '이름, 학년, 비밀번호를 모두 넣어 주세요.'; return; }
+      if (all.some(s => s.name === name)) { $('#mMsg').textContent = '같은 이름의 학생이 이미 있어요. 이름 뒤에 구분자를 붙여 주세요.'; return; }
+      $('#mMsg').textContent = '등록 중…';
+      try { await A.sbUpsert('students', {id: 's' + Date.now(), name, grade, pin_hash: await A.sha256(pw)}); }
+      catch (e) { $('#mMsg').textContent = '저장하지 못했어요. 인터넷을 확인해 주세요.'; return; }
+      manage(`✅ ${name} 학생을 등록했어요. 첫 화면에서 이름과 비밀번호로 들어갈 수 있어요.`);
+    };
+    root().querySelectorAll('.mstu').forEach(b => b.onclick = () => editStu(all.find(s => s.id === b.dataset.id), all));
+  }
+  function editStu(s, all) {
+    frame(`<div class="thead"><h2>✏️ ${esc(s.name)} <small class="sub">${esc(s.grade || '')}</small></h2></div>
+      <div class="tbox"><h3>정보 수정</h3>
+        <label class="sub">이름</label><input id="eName" class="tin" maxlength="20" value="${esc(s.name)}">
+        <label class="sub">학년</label>${gradeSel('eGrade', s.grade || '')}
+        <label class="sub">새 비밀번호 <small>(바꿀 때만 — 아이가 잊었으면 새로 정해서 알려 주세요. 예전 비밀번호는 볼 수 없어요)</small></label>
+        <input id="ePw" class="tin" type="text" maxlength="20" placeholder="비워 두면 그대로" autocomplete="off">
+        <div class="row"><button class="primary small" id="eSave">저장</button><span class="sub" id="eMsg"></span></div></div>
+      <div class="tbox"><h3>학생 지우기</h3><p class="sub">학생 계정만 지워요. 지금까지의 공부 기록은 서버에 남아요. 되돌릴 수 없어요.</p>
+        <div class="row"><button class="ghost small danger" id="eDel">${esc(s.name)} 지우기</button></div></div>`,
+      {back: () => manage(), backText: '학생 관리', crumb: s.name});
+    $('#eSave').onclick = async () => {
+      const name = $('#eName').value.trim(), grade = $('#eGrade').value, pw = $('#ePw').value;
+      if (!name || !grade) { $('#eMsg').textContent = '이름과 학년을 넣어 주세요.'; return; }
+      if (name !== s.name && all.some(x => x.name === name)) { $('#eMsg').textContent = '같은 이름의 학생이 이미 있어요.'; return; }
+      $('#eMsg').textContent = '저장 중…';
+      try { await A.sbUpsert('students', {id: s.id, name, grade, pin_hash: pw ? await A.sha256(pw) : s.pin_hash}); }
+      catch (e) { $('#eMsg').textContent = '저장하지 못했어요. 인터넷을 확인해 주세요.'; return; }
+      manage(pw ? `✅ ${name} 저장했어요. 새 비밀번호를 학생에게 알려 주세요.` : `✅ ${name} 저장했어요.`);
+    };
+    $('#eDel').onclick = async () => {
+      if (!confirm(`${s.name} 학생을 지울까요? 되돌릴 수 없어요.`)) return;
+      try { await A.sbDelete('students', 'id=eq.' + encodeURIComponent(s.id)); }
+      catch (e) { alert('지우지 못했어요. 인터넷을 확인해 주세요.'); return; }
+      manage(`${s.name} 학생을 지웠어요.`);
+    };
   }
 
   /* 학기 별빛 = 학생 요약의 날짜별 별빛을 지금 학기 날짜로 더한 것(마스터가 학기 날짜를 바꾸면 바로 다시 계산) */
