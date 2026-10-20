@@ -43,6 +43,18 @@
     return {hits: keys.map((_, i) => !!((o.hits || []).find(h => h && h.id === IDS[i]) || {}).hit), mis: String(o.misconception || '').trim(), ack: String(o.ack || '').trim()};
   }
 
+  // ── 질문 읽어 주기(마스터 10/20 시험 — 체험판 한 문제만) · 기기 목소리(speechSynthesis) · 수식은 읽는 글(speak)을 따로 둔다 ──
+  const hush = () => { try { speechSynthesis.cancel(); } catch (e) {} document.querySelectorAll('.t-say.on').forEach(b => b.classList.remove('on')); };
+  function sayQ(text, btn) {
+    if (!('speechSynthesis' in window)) return toast('이 기기는 읽어 주기가 안 돼요');
+    if (btn.classList.contains('on')) return hush();
+    hush(); stopRec();
+    const u = new SpeechSynthesisUtterance(text); u.lang = 'ko-KR'; u.rate = 0.95;
+    const v = speechSynthesis.getVoices().find(x => /^ko/i.test(x.lang)); if (v) u.voice = v;
+    u.onend = u.onerror = () => btn.classList.remove('on');
+    btn.classList.add('on'); speechSynthesis.speak(u);
+  }
+
   // ── 말하기 칸(말 기본 · 글 대안) — 새 앱 ui.js 마이크와 같은 방식(확정 문장만 · 끊기면 다시 켬) ──
   let REC = null;
   const stopRec = () => { if (REC) { const r = REC; REC = null; try { r._stop && r._stop(); r.stop(); } catch (e) {} } };
@@ -61,6 +73,7 @@
       const mic = box.querySelector('#vmic');
       if (mic) mic.onclick = () => {
         if (REC) { stopRec(); mic.classList.remove('on'); return; }
+        hush();   // 읽어 주는 소리를 아이 말로 받아 적지 않게
         const R = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!R) { toast('이 기기는 말하기가 안 돼서 글로 써 줘'); typed = true; return draw(); }
         const pieces = text ? [text] : []; let manual = false, started = false, restarts = 0;
@@ -288,6 +301,7 @@
 
   const HM2 = [
     {id: 'm2a', q: '가로 BC = 20 cm, 세로 AB = 12 cm인 직사각형 ABCD에서 BC 위에 BE : EC = 3 : 2가 되도록 점 E를 잡고, AB 위에 ∠DEF = 90°가 되도록 점 F를 잡았다. AD의 연장선과 EF의 연장선의 교점을 H라 할 때, AF와 AH의 길이를 각각 구하시오.',
+      speak: '가로 비씨가 20센티미터, 세로 에이비가 12센티미터인 직사각형 에이비씨디에서, 비씨 위에 비이 대 이씨가 3 대 2가 되도록 점 이를 잡고, 에이비 위에 각 디이에프가 90도가 되도록 점 에프를 잡았다. 에이디의 연장선과 이에프의 연장선의 교점을 에이치라 할 때, 에이에프와 에이에이치의 길이를 각각 구하시오.',
       src: '블랙라벨 중2-2 64쪽 「도형의 닮음」 종합 사고력 01 (숫자 바꿈)', how: '닮은 두 삼각형은 눌러서 고르고, 까닭과 할 일은 말로 · 길이는 직접',
       ans: 'AF = 4 cm, AH = 6 cm — ∠B = ∠C = 90°, ∠BFE = ∠CED라서 △FBE ∽ △ECD(AA 닮음). FB : EC = BE : CD에서 FB : 8 = 12 : 12, FB = 8이라 AF = 4. AH ∥ BE라서 △FAH ∽ △FBE, AH : BE = AF : FB = 1 : 2라 AH = 6.'},
     {id: 'm2b', q: '키가 1.6 m인 학생의 그림자 길이가 2 m인 시각에, 피라미드의 그림자 끝이 이 학생이 선 곳과 일치하였다. 학생이 선 곳에서 피라미드 밑변의 끝 B까지의 거리는 12 m이고, 피라미드를 옆에서 보면 높이 AH와 밑변 BC의 길이의 비가 2 : 1인 이등변삼각형일 때, 피라미드의 높이 AH를 구하시오.',
@@ -414,10 +428,11 @@
   function frame(it, tags) {
     root().innerHTML = `<div class="t-wrap">
       <div class="t-top"><button class="t-back" id="back">‹ 목록</button><span class="t-sp"></span>${tags}</div>
-      <div class="t-card"><div class="t-q">${F(it.q)}</div><div class="t-src">${esc(it.src || '')}</div>${it.fig ? `<div class="t-fig">${it.fig}</div>` : ''}<div id="mapc"></div>
+      <div class="t-card"><div class="t-q">${F(it.q)}</div>${it.speak ? '<button class="t-say" id="sayQ">🔊 질문 듣기</button>' : ''}<div class="t-src">${esc(it.src || '')}</div>${it.fig ? `<div class="t-fig">${it.fig}</div>` : ''}<div id="mapc"></div>
         <div id="stp"></div><div class="t-note" id="note" hidden><h3>풀이 노트</h3><div id="nl"></div></div></div>
       <div id="after"></div></div>`;
-    $('#back').onclick = home;
+    $('#back').onclick = () => { hush(); home(); };
+    if (it.speak) $('#sayQ').onclick = () => sayQ(it.speak, $('#sayQ'));
   }
   const noteAdd = (t, cls, by) => { $('#note').hidden = false; const d = document.createElement('div'); d.className = 't-nl ' + (cls || ''); d.innerHTML = F(t) + (by ? `<small>${esc(by)}</small>` : ''); $('#nl').appendChild(d); };
   const say = (html, cls) => { const d = document.createElement('div'); d.className = 't-msg ' + (cls || 'hint'); d.innerHTML = html; $('#stp').appendChild(d); d.scrollIntoView({block: 'nearest', behavior: 'smooth'}); return d; };
