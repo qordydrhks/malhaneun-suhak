@@ -174,7 +174,7 @@ body.dd-ui #viewTeacherAuth .primary-btn{background:#3d65ed;color:#fff;border-ra
 .dd-ui-menu-card>div{flex:1;min-width:0}.dd-ui-menu-card strong{display:block;font-size:1.07rem;font-weight:730;margin:4px 0 8px;line-height:1.5}
 .dd-ui-menu-card small{font-size:.875rem;color:#637b99;line-height:1.7;display:block}
 body.dd-ui #viewTeacher #teacherShell{display:block}
-body.dd-ui #viewTeacher #teacherRail{position:static;width:100%;max-width:none;height:auto;max-height:none;overflow:visible;margin:0;border:0;border-radius:0;box-shadow:none;padding:0;background:transparent;transform:none}
+body.dd-ui #viewTeacher #teacherRail{display:block;position:static;width:100%;max-width:none;height:auto;max-height:none;overflow:visible;margin:0;border:0;border-radius:0;box-shadow:none;padding:0;background:transparent;transform:none}
 body.dd-ui #viewTeacher #ddUiTeacherList{background:#fff;border:1px solid #dee7f5;border-radius:23px;padding:25px;box-shadow:0 3px 0 #e7edf7}
 body.dd-ui #viewTeacher #railSearch{width:100%;max-width:350px;display:block;font-size:1rem;border-radius:11px;padding:13px 16px;border:1px solid #dde6f4;margin:18px 0;box-sizing:border-box;background:#fafcff}
 body.dd-ui #viewTeacher .rail-head{padding:0;margin:0}
