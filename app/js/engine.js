@@ -59,7 +59,11 @@
   E.loadOpen = async () => { const t = (await A.store.get(E.okey(A.session.student.id))) || {}; const ch = JSON.stringify(t) !== JSON.stringify(T); T = t; return ch; };
   E.use = (p, t) => { P = p || E.blank(); P.st = P.st || {}; P.open = P.open || {}; T = t || {}; return P; };
   E.teacherOpen = () => T;
-  E.save = async () => { if (P) { P.at = Date.now(); await A.store.set(pkey(), P); } };
+  E.save = async () => {
+    if (!P) return;
+    if (A.loginValid && !(await A.loginValid())) { A.onKicked && A.onKicked(); return; }   // 다른 기기에서 로그인했으면 저장하지 않는다(덮어쓰기 방지)
+    P.at = Date.now(); await A.store.set(pkey(), P);
+  };
   E.prog = () => P;
   E.status = id => P.st[id] || null;
   /* 지금 이 할 일을 할 수 있나: done(통과) · today(오늘 잠김) · next(다음 날 다시 — 어떤 모양으로) · new */

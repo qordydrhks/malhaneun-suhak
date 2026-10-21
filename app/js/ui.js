@@ -181,8 +181,15 @@
   document.addEventListener('click', e => { if (e.target.closest('[data-key]')) { const f = NAV.cur; keyModal(() => f && f[0] !== 'q' ? navGo(f) : home()); } });
 
   // ── 선생님 화면에서 보낸 명령 받기(30초마다) ──
+  /* 다른 기기에서 같은 학생으로 로그인 → 이 기기는 로그아웃(마스터 10/21) */
+  const KICK_MSG = '다른 기기에서 로그인해서 여기서는 로그아웃됐어요.';
+  A.onKicked = () => {
+    if (!A.session.student) return;
+    NAV.quit = null; whereClear(); A.logout(); login(KICK_MSG);
+  };
   async function applyCmds() {
     if (!A.session.student || !E.prog()) return;
+    if (!(await A.loginValid())) return A.onKicked();
     let oc = false; try { oc = await E.loadOpen(); } catch (e) {}       // 선생님이 회차를 바꿨으면 지도·목록을 다시 그린다
     const redraw = () => { const f = NAV.cur; if (f && !NAV.quit && ['home', 'star', 'planet'].includes(f[0])) navGo(f); };
     let v = null; try { v = await A.store.get(E.ckey(A.session.student.id)); } catch (e) { if (oc) redraw(); return; }
@@ -1534,6 +1541,6 @@
   // ── 시작 ──
   A.start = async () => {
     try { if (await A.autoLogin()) return enter(); } catch (e) {}
-    login();
+    login(A.kicked ? KICK_MSG : '');
   };
 })();

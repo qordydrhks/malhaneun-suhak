@@ -3,7 +3,7 @@
 (() => {
   'use strict';
   const A = window.APP = window.APP || {};
-  A.VERSION = 'app 0.20.1 (2026-10-21)';
+  A.VERSION = 'app 0.20.2 (2026-10-21)';
   const URL = 'https://cnyrbxsmxwajhlrvcdml.supabase.co';
   const KEY = 'sb_publishable_e2iVXV5K1sl7-kJ-d3v1Ow_VEzNUJGv';
   A.esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -51,12 +51,32 @@
     if ((await A.sha256(pw)) !== s.pin_hash) throw new Error('비밀번호가 맞지 않아요.');
     A.session.student = {id: s.id, name: s.name, grade: s.grade || ''};
     A.ls.set('dd:autoLogin', {id: s.id, name: s.name});
+    await A.claimLogin(s.id);
     return A.session.student;
+  };
+  /* 한 학생은 한 기기에서만(마스터 10/21 — 두 기기가 같이 저장하면 진도가 서로 덮어써진다).
+     로그인할 때 이 기기의 표(tok)를 공유 저장소 app:login:<학생> 에 적는다. 나중에 다른 기기가 로그인하면 표가 바뀌고,
+     먼저 있던 기기는 표가 다른 것을 보고(30초마다 · 저장하기 전) 스스로 로그아웃한다 */
+  const tokKey = sid => 'app:ltok:' + sid;
+  A.claimLogin = async sid => {
+    const a = new Uint8Array(9); crypto.getRandomValues(a);
+    const tok = Array.from(a, x => x.toString(36)).join('');
+    A.ls.set(tokKey(sid), tok);
+    await A.store.set('app:login:' + sid, {tok, at: Date.now()});
+  };
+  /* 지금 이 기기가 그 학생의 마지막 로그인인가(서버를 못 읽으면 그대로 둔다) */
+  A.loginValid = async () => {
+    const st = A.session.student; if (!st) return true;
+    let v = null; try { const r = await A.sbSelect('ai_cache', 'key=eq.' + encodeURIComponent('app:login:' + st.id) + '&select=value&limit=1'); v = r && r[0] ? r[0].value : null; } catch (e) { return true; }
+    return !v || !v.tok || v.tok === A.ls.get(tokKey(st.id), null);
   };
   A.autoLogin = async () => {
     const saved = A.ls.get('dd:autoLogin', null); if (!saved || !saved.id) return null;
     const all = await A.loadStudents(); const s = all.find(x => x.id === saved.id); if (!s) return null;
-    return (A.session.student = {id: s.id, name: s.name, grade: s.grade || ''});
+    A.session.student = {id: s.id, name: s.name, grade: s.grade || ''};
+    if (!A.ls.get(tokKey(s.id), null)) await A.claimLogin(s.id);          // 표가 없던 기기(이 기능 전에 로그인) → 지금 이 기기로
+    else if (!(await A.loginValid())) { A.kicked = true; A.logout(); return null; }   // 다른 기기에서 나중에 로그인함
+    return A.session.student;
   };
   A.logout = () => { A.ls.del('dd:autoLogin'); A.session.student = null; document.getElementById('sclock')?.remove(); try { sessionStorage.removeItem('app:sessionStart'); } catch (e) {} };
   A.checkPin = async v => { const saved = await A.store.get('config:teacherPin'); const want = saved && saved.hash ? saved.hash : await A.sha256('0000'); return (await A.sha256(String(v || ''))) === want; };
