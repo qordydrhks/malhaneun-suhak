@@ -183,9 +183,11 @@
   // ── 선생님 화면에서 보낸 명령 받기(30초마다) ──
   async function applyCmds() {
     if (!A.session.student || !E.prog()) return;
-    let v = null; try { v = await A.store.get(E.ckey(A.session.student.id)); } catch (e) { return; }
+    let oc = false; try { oc = await E.loadOpen(); } catch (e) {}       // 선생님이 회차를 바꿨으면 지도·목록을 다시 그린다
+    const redraw = () => { const f = NAV.cur; if (f && !NAV.quit && ['home', 'star', 'planet'].includes(f[0])) navGo(f); };
+    let v = null; try { v = await A.store.get(E.ckey(A.session.student.id)); } catch (e) { if (oc) redraw(); return; }
     const p = E.prog(), seen = p.cmdSeen || 0, nw = ((v && v.cmds) || []).filter(c => c.id > seen);
-    if (!nw.length) return;
+    if (!nw.length) { if (oc) redraw(); return; }
     let add = 0, n = 0, rs = 0;
     for (const c of nw) { if (c.add) { addTime(+c.add); add += +c.add; } if (c.unlock) n += E.unlockToday(); if (c.reset) rs += E.wipe(p, c.reset) || 1; }
     p.cmdSeen = Math.max(...nw.map(c => c.id)); p.log = p.log || []; p.log.push({at: Date.now(), teacher: 'remote', add, n, reset: rs});
@@ -199,13 +201,13 @@
 
   // ── 용어 설명(마스터 10/12: 우리끼리 정한 이름은 가볍게 쓰되, 누르면 뜻이 나오게) ──
   const TERMS = {
-    '난이도': '같은 별(큰 단원)을 세 번 공부해요. 난이도 1은 기본 뜻과 방법, 난이도 2는 조금 더 깊게, 난이도 3은 여러 개념을 이어서 생각해요. 앞 난이도를 다 하면 다음이 열려요.',
+    'LEVEL': '같은 별(큰 단원)을 세 번 공부해요. LEVEL Ⅰ은 기본 뜻과 방법, LEVEL Ⅱ는 조금 더 깊게, LEVEL Ⅲ은 여러 개념을 이어서 생각해요. 앞 LEVEL의 질문을 모두 통과해야 다음 LEVEL이 열려요.',
     '탐험가 등급': '얼마나 잘 이해했는지 보여 주는 등급이에요. 루나(달) → 테라(지구) → 솔(태양) → 갤럭시(은하) → 코스모스(우주) 순서로 올라가요. 스스로 한 번에 설명할수록 빨리 올라가요.',
     'mission': '행성 질문을 다 마치면 열리는 문제 풀기예요. 보기에서 답을 골라요.',
     '블랙홀 관문': '별의 행성을 모두 밝히면 열리는 마무리 질문이에요. 퉁구리가 숨어 있는 곳!',
     '다시 빛내기': '도움을 받아 통과한 질문을 일주일 뒤에 다시 물어봐요. 스스로 답하면 별빛이 다시 환해져요.',
     '다시 열린 질문': '어제 못 했던 질문이 오늘 다시 열렸어요. 먼저 해 보자!',
-    '연습': '지난 난이도는 언제든 다시 해 볼 수 있어요. 연습은 점수와 등급이 바뀌지 않아요(처음 통과한 점수 그대로).',
+    '연습': '지난 LEVEL은 언제든 다시 해 볼 수 있어요. 연습은 점수와 등급이 바뀌지 않아요(처음 통과한 점수 그대로).',
     '은하': '한 학기 수학이 하나의 은하예요. 별(큰 단원)을 누르면 행성(작은 단원)이 보이고, 행성의 질문에 내 말로 답하면 행성에 불이 켜져요. 퉁구리가 삼킨 별빛을 모두 되찾으면 클리어!',
     '별지도': '우주 탐험가가 길을 잃었을 때 펼쳐 보는 밤하늘 지도예요. 옛날 뱃사람과 탐험가들은 별의 자리를 그린 지도를 보고 길을 찾았어요. 질문에서 막혔을 때 도움(🔑 키워드 · 💬 간단한 설명 · 📖 자세한 설명)을 하나 펼쳐 볼 때 1장을 써요. 매일 2장이 생기고, 새벽 4시에 다시 2장으로 채워져요(남은 장은 모아 두지 않아요). 다 쓰면 그 질문은 내일 다시 도전해요. 선생님 열쇠로 더 받을 수도 있어요. 틀린 생각을 말했을 때 저절로 나오는 키워드와 되묻기는 별지도를 쓰지 않아요.',
     '용어 맞히기': '대단원마다 한 판 12문제예요. 뜻을 보고 낱말을 말로 답하고, 낱말을 보고 바른 뜻이나 알맞은 예를 골라요. 예전에 배운 낱말도 섞여 나와요. 10문제 이상 맞히고 퉁구리보다 먼저 도착하면 이겨요(하루 3번까지 별빛 +10).',
@@ -363,15 +365,15 @@
         <li>행성을 골라 <b>질문에 내 말로 설명</b>해요. 질문을 다 통과하면 행성이 밝아져요.</li>
         <li>행성을 다 밝히면 <b>mission</b>(문제 풀기)이 열려요.</li>
         <li>별의 행성을 모두 밝히면 별 옆의 <b>블랙홀 관문</b>이 열려요. 퉁구리가 숨은 곳이에요!</li>
-        <li>별 하나를 다 하면 그 별의 <b>다음 난이도</b>가 열려요. 난이도 3까지 다 하면 그 별은 완전히 빛나요.</li></ol></details>
-      <details><summary>🎚 난이도 1 · 2 · 3</summary><p>같은 별을 세 번 탐험해요.<br><b>난이도 1</b>(행성 탐사) 기본 뜻과 방법 · <b>난이도 2</b>(별계 탐사) 조금 더 깊게 · <b>난이도 3</b>(은하 탐사) 여러 개념을 이어서 생각하기. 지난 난이도는 언제든 연습할 수 있어요(점수는 그대로).</p></details>
+        <li>별 하나를 다 하면 그 별의 <b>다음 LEVEL</b>이 열려요. LEVEL Ⅲ까지 다 하면 그 별은 완전히 빛나요.</li></ol></details>
+      <details><summary>🎚 LEVEL Ⅰ · Ⅱ · Ⅲ</summary><p>같은 별을 세 번 탐험해요.<br><b>LEVEL Ⅰ</b>(행성 탐사) 기본 뜻과 방법 · <b>LEVEL Ⅱ</b>(별계 탐사) 조금 더 깊게 · <b>LEVEL Ⅲ</b>(은하 탐사) 여러 개념을 이어서 생각하기. 지난 LEVEL은 언제든 연습할 수 있어요(점수는 그대로).</p></details>
       <details><summary>🎙 질문에 답하는 법</summary><p>마이크를 누르고 말하거나, <b>글로 쓰기</b>를 눌러 써도 돼요. 분수는 <b>분수·대분수 버튼</b>을 누르면 네모칸이 생겨요.<br>질문마다 <b>시간</b>이 있어요(위쪽 막대). 시간이 다 되면 그 질문은 내일 다시 열려요.</p></details>
       <details><summary>🤔 막히면?</summary><p>친구가 먼저 생각할 방향을 물어봐 줘요(<b>되묻기</b>). 그래도 어려우면 <b>도움</b>을 열어요. 키워드를 보면 오늘 다시 도전하고, 설명을 보면 <b>내일</b> 비슷한 질문으로 다시 물어봐요.</p></details>
       <details><summary>🗺 별지도</summary><p>도움을 하나 펼쳐 볼 때 <b>별지도 1장</b>을 써요. 매일 <b>2장</b>이 생기고 새벽 4시에 다시 2장으로 채워져요(모아 두지 않아요). 다 쓰면 그 질문은 내일 다시 도전해요. 지금 <b>${E.maps()}장</b> 있어요. <span class="tm" data-term="별지도">더 알아보기</span></p></details>
       <details><summary>🎯 mission · hard mission</summary><p>행성 질문을 다 마치면 열리는 문제 풀기예요. 보기에서 답을 골라요. <b>hard mission</b>은 더 어려운 문제로, 하고 싶은 친구만! 틀려도 깎이지 않아요. 처음 푼 결과만 기록돼요.</p></details>
       <details><summary>✨ 다시 빛내기</summary><p>도움을 받아 통과한 질문은 일주일 뒤에 다시 물어봐요. 이번에 스스로 답하면 별빛이 다시 환해져요.</p></details>
-      <details><summary>🏅 탐험가 등급</summary><p>이해가 커질수록 더 큰 세상으로 가요.</p><ul class="g-tiers">${tiers}</ul><p>스스로 한 번에 답하면 빛이 더 크게 모여요. 힌트를 봐도 안 한 것보다 훨씬 나아요. 갤럭시는 난이도 2, 코스모스는 난이도 3까지 해야 될 수 있어요.</p></details>
-      <details><summary>⭐ 별빛 · 🏆 빛나는 탐험가</summary><p>질문을 <b>처음 통과</b>하면 점수만큼 별빛이 모여요(난이도 2는 1.5배, 난이도 3은 2배). <b>학기 별빛</b>은 학기마다 새로, <b>전체 별빛</b>은 계속 쌓여요.<br>학기 별빛이 가장 많은 세 친구는 <b>🌟 북극성 · ✨ 샛별 · 💫 혜성</b>! 이번 주 상도 다섯 가지가 있어요.</p></details>
+      <details><summary>🏅 탐험가 등급</summary><p>이해가 커질수록 더 큰 세상으로 가요.</p><ul class="g-tiers">${tiers}</ul><p>스스로 한 번에 답하면 빛이 더 크게 모여요. 힌트를 봐도 안 한 것보다 훨씬 나아요. 갤럭시는 LEVEL Ⅱ, 코스모스는 LEVEL Ⅲ까지 해야 될 수 있어요.</p></details>
+      <details><summary>⭐ 별빛 · 🏆 빛나는 탐험가</summary><p>질문을 <b>처음 통과</b>하면 점수만큼 별빛이 모여요(LEVEL Ⅱ는 1.5배, LEVEL Ⅲ은 2배). <b>학기 별빛</b>은 학기마다 새로, <b>전체 별빛</b>은 계속 쌓여요.<br>학기 별빛이 가장 많은 세 친구는 <b>🌟 북극성 · ✨ 샛별 · 💫 혜성</b>! 이번 주 상도 다섯 가지가 있어요.</p></details>
       <details><summary>✦ 별빛노트</summary><p>행성 질문을 다 마치면 친구들의 100점 대답을 볼 수 있어요. 질문마다 무작위로 하나씩 골라 보여 줘요. 네 대답도 오를 수 있어!</p></details>
       <details><summary>📖 용어 맞히기</summary><p>대단원마다 12문제. 뜻을 보고 낱말을 <b>말로</b> 답하고, 낱말을 보고 바른 뜻이나 알맞은 예를 골라요. 보기는 대충 보면 헷갈리게 나와요. 예전에 배운 낱말도 섞여 있어요.</p></details>
       <details><summary>⚡ 계산 연습 · ⚔ 친구와 대결</summary><p><b>계산 연습</b>은 퉁구리와 경주해요. 8문제 이상 맞히고 먼저 도착하면 이겨요(하루 3번까지 별빛 +10).<br><b>친구와 대결</b>은 대기실에서 친구에게 신청해요. 개념 대결은 정확하고 꼼꼼하게 설명한 쪽이, 계산 대결은 많이 맞힌 쪽이 이겨요. 이기면 배지가 자라요!</p></details>
@@ -390,17 +392,16 @@
     navMark(['home']);
     const nx = E.nextPlace();
     const rk = E.rank();
-    const lv = r => `${E.ROUND[r]}<span class="lvt tm" data-term="난이도">난이도 ${r}</span>`;
     frame(`<section class="hero stage">${buddy('idle')}<div class="bubble">${esc(line('hello'))}</div></section>
       ${nx ? (nx.why === 'bh'
-               ? `<button class="primary big go" data-go="bh:${nx.big.no}" data-r="${nx.r}"><span>오늘 갈 곳</span><small>${esc(nx.big.title)} · <span class="tm" data-term="블랙홀 관문">블랙홀 관문</span> · ${lv(nx.r)}</small></button>`
-               : `<button class="primary big go" data-go="small:${nx.small.code}" data-r="${nx.r}"><span>오늘 갈 곳</span><small>${esc(nx.small.title)} · ${lv(nx.r)}${nx.why === 'again' ? ' · <span class="tm" data-term="다시 열린 질문">다시 열린 질문</span>' : nx.why === 'mission' ? ` · <span class="tm" data-term="mission">${A.M.name(nx.r)}</span>` : nx.why === 'review' ? ' · <span class="tm" data-term="다시 빛내기">다시 빛내기</span>' : ''}</small></button>`)
+               ? `<button class="primary big go" data-go="bh:${nx.big.no}" data-r="${nx.r}"><span>오늘 갈 곳</span><small>${esc(nx.big.title)} · <span class="tm" data-term="블랙홀 관문">블랙홀 관문</span></small></button>`
+               : `<button class="primary big go" data-go="small:${nx.small.code}" data-r="${nx.r}"><span>오늘 갈 곳</span><small>${esc(nx.small.title)}${nx.why === 'again' ? ' · <span class="tm" data-term="다시 열린 질문">다시 열린 질문</span>' : nx.why === 'mission' ? ` · <span class="tm" data-term="mission">${A.M.name(nx.r)}</span>` : nx.why === 'review' ? ' · <span class="tm" data-term="다시 빛내기">다시 빛내기</span>' : ''}</small></button>`)
              : `<div class="done-all">지금 열린 곳은 모두 탐험했어요 ✦</div>`}
       <nav class="homenav"><button data-go="play"><span>🎮</span>놀이터</button><button data-go="record"><span>${rk.icon}</span>나의 기록</button><button data-go="guide"><span>📖</span>안내서</button></nav>
-      <h3 class="galttl">${E.course().code} 은하 <i class="tq" data-term="은하">?</i>${A.isTester() && A.courses().length > 1 ? ' <button class="ghost small" id="cSwap">과정 바꾸기</button>' : ''}</h3><div class="mapbox">${A.galaxyMap()}</div>`, {crumb: ''});
+      <h3 class="galttl">${E.course().code} 은하 <i class="tq" data-term="은하">?</i>${A.isTester() && A.courses().length > 1 ? ' <button class="ghost small" id="cSwap">학년 바꾸기</button>' : ''}</h3><div class="mapbox">${A.galaxyMap()}</div>`, {crumb: ''});
     if ($('#cSwap')) $('#cSwap').onclick = courseSwap;
   }
-  /* 과정 바꾸기(시험 학생만) — 과정마다 진도·기록·별빛이 따로 */
+  /* 학년(과정) 바꾸기(시험 학생만) — 과정마다 진도·기록·별빛이 따로 */
   function courseSwap() {
     document.querySelector('.kpop')?.remove();
     const d = document.createElement('div'); d.className = 'kpop';
@@ -437,12 +438,12 @@
     const c = E.bigCount(b, r);
     frame(`<h2 class="ttl"><span class="code">${b.code}</span>${esc(b.title)}</h2><div class="tabs">${tabs}</div>
       <div class="mapbox">${A.starMap(b, r)}</div>
-      <p class="sub center">${E.RL(r)} — 밝힌 행성 ${b.smalls.filter(s => { const k = E.count(s, r); return k.n && k.done === k.n; }).length}/${b.smalls.length}${r < open ? ' · <span class="tm" data-term="연습">연습</span>' : ''}</p>
+      <p class="lvline center"><span class="tm" data-term="LEVEL">${E.LVL(r)}</span>${r < open ? ' · <span class="tm" data-term="연습">연습</span>' : ''}</p>
       <ul class="plist">${b.smalls.map((s, i) => {                   // 행성 이름은 지도 아래 목록으로(마스터 10/12: 지도 글씨가 너무 작다)
         const c = E.count(s, r), t = E.tasks(s, r), k = t.map(x => E.state(x.id).k);
         const done = c.n && c.done === c.n;
-        const st = done ? '✦ 밝힘' : k.includes('next') ? '다시 열림' : (k.includes('today') && !k.includes('new')) ? '내일 열림' : c.done ? c.done + '/' + c.n : '';
-        return `<li><button class="prow ${done ? 'lit' : ''}" data-go="small:${s.code}" data-r="${r}"><i style="--p:${A.planetColor(i)}">${i + 1}</i><span>${esc(s.title)}</span><b>${st}</b></button></li>`;
+        const note = done ? '' : k.includes('next') ? '다시 열림' : (k.includes('today') && !k.includes('new')) ? '내일 열림' : '';
+        return `<li><button class="prow ${done ? 'lit' : ''}" data-go="small:${s.code}" data-r="${r}"><i style="--p:${A.planetColor(i)}">${i + 1}</i><span>${esc(s.title)}</span><b>${note ? `<small>${note}</small> ` : ''}${c.done}/${c.n}</b></button></li>`;
       }).join('')}</ul>`, {back: 'home', backText: '은하', crumb: b.code});
     root().querySelectorAll('.tab').forEach(t => t.onclick = () => star(no, +t.dataset.r));
     const bh = document.getElementById('bhBtn');
@@ -798,12 +799,12 @@
     }
     const opts = [];
     for (const bg of E.bigs()) for (const sm of bg.smalls) for (const r of [1, 2]) { const t = E.tasks(sm, r).filter(x => x.kind === 'q'); if (t.length >= 2) opts.push({bg, sm, r, n: t.length}); }
-    d.innerHTML = `<div class="kpop-in"><b>🎙 ${esc(nmj(to.name, '와'))} 어느 행성으로 대결할까?</b><div class="bpscroll">${E.bigs().map(bg => `<div class="bpg"><small>${esc(bg.code + ' ' + bg.title)}</small>${opts.filter(o => o.bg === bg).map(o => `<button class="secondary small" data-c="${o.sm.code}" data-r="${o.r}">${esc(o.sm.title)} · 난이도 ${o.r}</button>`).join('')}</div>`).join('')}</div><button class="ghost" id="bx">닫기</button></div>`;
+    d.innerHTML = `<div class="kpop-in"><b>🎙 ${esc(nmj(to.name, '와'))} 어느 행성으로 대결할까?</b><div class="bpscroll">${E.bigs().map(bg => `<div class="bpg"><small>${esc(bg.code + ' ' + bg.title)}</small>${opts.filter(o => o.bg === bg).map(o => `<button class="secondary small" data-c="${o.sm.code}" data-r="${o.r}">${esc(o.sm.title)} · ${E.LVL(o.r)}</button>`).join('')}</div>`).join('')}</div><button class="ghost" id="bx">닫기</button></div>`;
     document.body.appendChild(d); d.querySelector('#bx').onclick = close;
     d.querySelectorAll('[data-c]').forEach(b => b.onclick = () => {
       close(); const {small} = E.small(b.dataset.c), r = +b.dataset.r;
       const t = E.tasks(small, r).filter(x => x.kind === 'q').sort(() => Math.random() - .5).slice(0, 3).map(x => x.id);
-      sendInvite(to, {kind: 'concept', code: small.code, r, title: small.title + ' · 난이도 ' + r, ids: t});
+      sendInvite(to, {kind: 'concept', code: small.code, r, title: small.title + ' · ' + E.LVL(r), ids: t});
     });
   }
   async function sendInvite(to, room) {
@@ -970,7 +971,7 @@
       <div class="rankcard"><div class="ri">${rk.icon}</div><div><div class="rn">${rk.name} <small>(${rk.ko})</small></div>
         <div class="sub">행성 ${rk.lit}/${rk.total}개를 밝혔어</div></div><button class="rkscore" id="rkS"><small>등급 점수</small><b>${rk.score != null ? Math.round(rk.score) : '—'}</b><small>등급표 ›</small></button></div>
       ${badgeChips(A.B.top(), 34) ? `<div class="bme"><span>🏅 대결 배지</span>${badgeChips(A.B.top(), 34)}</div>` : ''}
-      <details class="how"><summary>별빛은 어떻게 모아?</summary><p>질문을 처음 통과하면 받은 점수만큼 별빛이 모여. 난이도 2는 1.5배, 난이도 3은 2배!<br>
+      <details class="how"><summary>별빛은 어떻게 모아?</summary><p>질문을 처음 통과하면 받은 점수만큼 별빛이 모여. LEVEL Ⅱ는 1.5배, LEVEL Ⅲ은 2배!<br>
         mission 은 맞힌 문제마다 20(hard mission 은 30), 다시 빛내기를 통과하면 30.<br>
         <b>학기 별빛</b>은 학기가 바뀌면 0부터 다시 모으고, <b>전체 별빛</b>은 계속 쌓여. 연습으로 다시 한 질문은 별빛이 더 생기지 않아.</p></details>
       <div class="stats">${Object.keys(LBL).map(k => `<button class="stat ${which === k ? 'on' : ''}" data-k="${k}"><b>${bk[k].length}</b><span>${LBL[k][0]}</span><small>${LBL[k][1]}</small></button>`).join('')}</div>
@@ -1051,12 +1052,13 @@
         <section class="qcard mq"><div class="q">${fm(mx(it.stem))}</div>
         ${it.fig ? `<div class="mfig${tap ? ' tapme' : ''}" id="mfig">${it.fig}</div>` : ''}
         ${tap ? `<div class="tapbar"><span class="sub" id="tsel">그림에서 눌러 골라 봐</span><button class="primary" id="tok" disabled>다 골랐어</button></div>`
-              : `<div class="chs">${it.choices.map((c, j) => `<button class="ch" data-j="${j}"><span class="cn">${'①②③④⑤'[j]}</span><span class="ct">${fm(mx(c))}</span></button>`).join('')}</div>`}
+              : `<div class="chs">${it.choices.map((c, j) => `<button class="ch" data-j="${j}"><span class="cn">${'①②③④⑤'[j]}</span><span class="ct">${fm(mx(c))}</span></button>`).join('')}</div>
+                 <div class="subbar"><button class="primary" id="msub" disabled>제출</button></div>`}
         <div class="say" id="say"></div></section><div class="row" id="nx"></div>`, {back: 'big:' + big.no, backText: '그만하기', crumb: small.code});
       const after = right => {
         if (right) ok++;
         misSave(k + 1, ok);                       // 답을 고른 뒤 새로고침하면 다음 문제부터(같은 문제를 다시 풀지 않게)
-        $('#say').innerHTML = `<div class="sbubble ${right ? 'ok' : 'warn'}"><b>${right ? '정답!' : '아쉬워!'}</b> ${fm(mx(it.explain))}</div>`;
+        $('#say').innerHTML = `<div class="sbubble ${right ? 'mok' : 'warn'}"><b>${right ? '꼭 확인!' : '아쉬워!'}</b> ${fm(mx(it.explain))}</div>`;
         $('#nx').innerHTML = `<button class="primary big" id="nb">${k < quiz.length - 1 ? '다음 문제' : '결과 보기'}</button>`;
         $('#nb').onclick = () => { k++; k < quiz.length ? one() : done(); };
       };
@@ -1074,12 +1076,19 @@
           $('#tsel').textContent = right ? '' : '주황색으로 칠한 것이 맞는 답이야';
           after(right);
         };
-      } else root().querySelectorAll('.ch').forEach(b => b.onclick = () => {
-        const j = +b.dataset.j, right = j === it.answer;
-        root().querySelectorAll('.ch').forEach(x => { x.disabled = true; if (+x.dataset.j === it.answer) x.classList.add('right'); });
-        if (!right) b.classList.add('wrong');
-        after(right);
-      });
+      } else {
+        /* 마스터 10/21: 보기를 누르면 고르기만 하고, 「제출」을 눌러야 채점(고른 뒤 바꿀 수 있게) */
+        let pick = -1;
+        const chs = root().querySelectorAll('.mq .ch');
+        chs.forEach(b => b.onclick = () => { pick = +b.dataset.j; chs.forEach(x => x.classList.toggle('sel', x === b)); $('#msub').disabled = false; });
+        $('#msub').onclick = () => {
+          if (pick < 0) return;
+          const right = pick === it.answer;
+          chs.forEach(x => { x.disabled = true; x.classList.remove('sel'); if (+x.dataset.j === it.answer) x.classList.add('right'); else if (+x.dataset.j === pick) x.classList.add('wrong'); });
+          $('#msub').closest('.subbar').remove();
+          after(right);
+        };
+      }
     };
     const done = async () => {
       NAV.quit = null; whereSet({mis: null});

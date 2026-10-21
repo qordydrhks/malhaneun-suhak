@@ -22,6 +22,7 @@
     const bi = big.no - 1, sc = STARC[bi % 6];
     const litN = big.smalls.filter(s => full(s, r)).length, f = n ? litN / n : 0;
     let defs = `<defs><radialGradient id="sg${bi}"><stop offset="0" stop-color="#fff"/><stop offset=".22" stop-color="${sc}"/><stop offset="1" stop-color="${sc}" stop-opacity="0"/></radialGradient>
+      <radialGradient id="nv"><stop offset="0" stop-color="#fff"/><stop offset=".18" stop-color="#ffe6a8"/><stop offset=".45" stop-color="#ff9a6b" stop-opacity=".55"/><stop offset=".75" stop-color="#b48cff" stop-opacity=".25"/><stop offset="1" stop-color="#7c4dff" stop-opacity="0"/></radialGradient>
       <radialGradient id="bh"><stop offset="0" stop-color="#000"/><stop offset=".55" stop-color="#05040c"/><stop offset=".72" stop-color="#7c4dff" stop-opacity=".55"/><stop offset="1" stop-color="#7c4dff" stop-opacity="0"/></radialGradient>`;
     const orbits = [], links = [], pls = [], pos = [], st3 = [];
     for (let i = 0; i < n; i++) {
@@ -31,7 +32,7 @@
       const s = big.smalls[i], c = COL[i % 8];
       const done2 = full(s, 2), done3 = full(s, 3), lit = full(s, r);
       const cur = E.count(s, r), part = cur.done > 0 && cur.done < cur.n;
-      orbits.push(`<ellipse cx="${cx}" cy="${cy}" rx="${rx.toFixed(1)}" ry="${ry.toFixed(1)}" fill="none" stroke="${done2 ? '#f2c45f' : '#2a3460'}" stroke-width="${done2 ? 1.8 : 1}" ${done2 ? '' : 'stroke-dasharray="3 5"'} opacity="${done2 ? .85 : .7}"/>`);
+      orbits.push(`<ellipse cx="${cx}" cy="${cy}" rx="${rx.toFixed(1)}" ry="${ry.toFixed(1)}" fill="none" stroke="${done2 ? '#f2c45f' : c}" stroke-width="${done2 ? 2 : lit ? 1.6 : 1.3}" opacity="${done2 ? .9 : lit ? .7 : .42}"/>`);
       if (lit) defs += `<radialGradient id="p${bi}_${i}" cx=".36" cy=".3"><stop offset="0" stop-color="#fff"/><stop offset=".35" stop-color="${c}"/><stop offset="1" stop-color="${c}"/></radialGradient>
         <radialGradient id="h${bi}_${i}"><stop offset="0" stop-color="${c}" stop-opacity=".75"/><stop offset=".45" stop-color="${c}" stop-opacity=".28"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></radialGradient>`;
       pls.push(`<g class="pl ${lit ? 'lit' : ''}" data-go="small:${s.code}" data-r="${r}" style="cursor:pointer">
@@ -48,7 +49,16 @@
     // 블랙홀(퉁구리 은신처) — 이 탐사의 행성을 모두 밝히면 열린다
     const bhOpen = A.bhOpen(big, r), bhDone = A.bhDone(big, r);
     const bx = W - 44, by = 44;
-    const bh = `<g id="bhBtn" class="bh ${bhOpen ? 'open' : ''}" style="cursor:${bhOpen ? 'pointer' : 'default'}">
+    const rays = Array.from({length: 12}, (_, i) => { const a = i * 30 * Math.PI / 180, l = i % 2 ? 26 : 40;
+      return `<line x1="${(bx + 9 * Math.cos(a)).toFixed(1)}" y1="${(by + 9 * Math.sin(a)).toFixed(1)}" x2="${(bx + l * Math.cos(a)).toFixed(1)}" y2="${(by + l * Math.sin(a)).toFixed(1)}" stroke="${i % 2 ? '#ffd27a' : '#fff4d6'}" stroke-width="${i % 2 ? 1.6 : 2.4}" stroke-linecap="round"/>`; }).join('');
+    const nova = `<g id="bhBtn" class="bh nova" style="cursor:pointer">
+      <circle cx="${bx}" cy="${by}" r="46" fill="url(#nv)"/>
+      <circle cx="${bx}" cy="${by}" r="20" fill="none" stroke="#ffcf7a" stroke-width="2" opacity=".8"><animate attributeName="r" values="14;44" dur="2.6s" repeatCount="indefinite"/><animate attributeName="opacity" values=".9;0" dur="2.6s" repeatCount="indefinite"/></circle>
+      <circle cx="${bx}" cy="${by}" r="20" fill="none" stroke="#ff8fd0" stroke-width="1.6" opacity=".6"><animate attributeName="r" values="14;44" dur="2.6s" begin="1.3s" repeatCount="indefinite"/><animate attributeName="opacity" values=".8;0" dur="2.6s" begin="1.3s" repeatCount="indefinite"/></circle>
+      <g>${rays}<animateTransform attributeName="transform" type="rotate" from="0 ${bx} ${by}" to="360 ${bx} ${by}" dur="40s" repeatCount="indefinite"/></g>
+      <circle cx="${bx}" cy="${by}" r="9" fill="#fff"><animate attributeName="r" values="8;11;8" dur="1.6s" repeatCount="indefinite"/></circle>
+      <text x="${bx}" y="${by + 60}" text-anchor="middle" font-size="${NAR ? 13 : 12}" fill="#ffd98a" font-weight="700">✦ 초신성</text></g>`;
+    const bh = bhDone ? nova : `<g id="bhBtn" class="bh ${bhOpen ? 'open' : ''}" style="cursor:${bhOpen ? 'pointer' : 'default'}">
       <circle cx="${bx}" cy="${by}" r="40" fill="url(#bh)"/>
       <ellipse cx="${bx}" cy="${by}" rx="36" ry="10" fill="none" stroke="#b79cff" stroke-width="2" opacity="${bhOpen ? .9 : .3}" transform="rotate(-18 ${bx} ${by})"><animateTransform attributeName="transform" type="rotate" from="-18 ${bx} ${by}" to="342 ${bx} ${by}" dur="14s" repeatCount="indefinite"/></ellipse>
       <circle cx="${bx}" cy="${by}" r="13" fill="#000"/>
@@ -82,7 +92,7 @@
         <circle cx="${x}" cy="${y}" r="${R.toFixed(1)}" fill="${f ? `url(#gc${i})` : '#39406a'}" opacity="${f ? 1 : .85}"/>
         <text x="${x}" y="${ty.toFixed(1)}" text-anchor="middle" font-size="${FS.code}" fill="${col}" font-weight="700" letter-spacing="1">${b.code}</text>
         <text x="${x}" y="${(ty + FS.title + 3).toFixed(1)}" text-anchor="middle" font-size="${FS.title}" fill="#eef1f8" font-weight="700">${esc(b.title)}</text>
-        <text x="${x}" y="${(ty + FS.title + FS.sub + 7).toFixed(1)}" text-anchor="middle" font-size="${FS.sub}" fill="#9aa3c0">난이도 ${open} · ${c.done}/${c.n}</text></g>`;
+        <text x="${x}" y="${(ty + FS.title + FS.sub + 7).toFixed(1)}" text-anchor="middle" font-size="${FS.sub}" fill="#9aa3c0">${c.done}/${c.n}</text></g>`;
     }).join('');
     defs += '</defs>';
     return `<svg class="galmap" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${defs}

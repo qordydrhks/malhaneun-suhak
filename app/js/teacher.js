@@ -100,7 +100,8 @@
     A.session.student = null;
     frame(`${A.courses().length > 1 ? `<div class="krow ctabs">${A.courses().map(id => `<button class="${id === A.cid() ? 'primary' : 'secondary'} small" data-c="${id}">${esc(window.APP_DATA[id].code)} · ${esc(window.APP_DATA[id].name)}</button>`).join('')}</div>` : ''}
       <div class="thead"><h2>학생 ${rows.length}명</h2><button class="ghost small" id="tRe">↻ 새로고침</button></div>
-      <div class="tmenu three">
+      <div class="tmenu four">
+        <button class="tmbtn" id="tRd"><i>🪐</i><b>회차 열기</b><small>학생별 · 한꺼번에</small></button>
         <button class="tmbtn" id="tMg"><i>👥</i><b>학생 관리</b><small>등록 · 수정 · 비밀번호</small></button>
         <button class="tmbtn ${NB.fresh ? 'hot' : ''}" id="tNb"><i>✦</i><b>별빛노트</b><small>${NB.fresh ? '새 대답 ' + NB.fresh + '개 확인' : '새 대답 없음'}</small></button>
         <button class="tmbtn" id="tSet"><i>⚙</i><b>설정</b><small>학원 이름 · 학기 · 기기</small></button>
@@ -113,8 +114,49 @@
     root().querySelectorAll('.ctabs [data-c]').forEach(b => b.onclick = () => { A.session.cid = b.dataset.c; try { sessionStorage.setItem('app:tcid', b.dataset.c); } catch (e) {} list(); });
     $('#tNb').onclick = () => noteAdmin(false);
     $('#tMg').onclick = () => manage();
+    $('#tRd').onclick = () => roundsAll();
     $('#tSet').onclick = settings;
     root().querySelectorAll('.tstu').forEach(b => b.onclick = () => detail(STU.find(s => s.id === b.dataset.id)));
+  }
+  /* ── 🪐 회차 열기(마스터 10/21 — 옛 선생님 화면에 있던 것) ──
+     선생님이 「n회차까지」 열어 주면 학생은 그 회차까지 할 수 있다. 그보다 높은 회차는 앞 회차의 질문을 다 통과해야 저절로 열린다.
+     저장 = app:open:<학생>:<과정> {대단원 번호: 회차} (학생 기기 진도와 따로 — 서로 덮어쓰지 않게). 학생 태블릿은 30초 안에 받는다 */
+  async function setOpen(sids, bigNos, r) {
+    for (const sid of sids) {
+      const t = Object.assign({}, OPEN[sid] || {});
+      for (const b of bigNos) { if (r <= 1) delete t[b]; else t[b] = r; }
+      await A.store.set(E.okey(sid), t); OPEN[sid] = t;
+    }
+  }
+  function roundsAll(msg) {
+    const bigs = E.bigs();
+    const rows = STU.map(s => {
+      A.session.student = {id: s.id, name: s.name, grade: s.grade};
+      E.use(PROG[s.id] ? JSON.parse(JSON.stringify(PROG[s.id])) : null, OPEN[s.id] || {});
+      const cells = bigs.map(b => { const t = +(OPEN[s.id] || {})[b.no] || 1, now = E.openRound(b.no), earned = E.earned(b.no);
+        return `<label class="trc"><span class="code">${b.code}</span><select class="tin trsel" data-sid="${esc(s.id)}" data-big="${b.no}">${[1, 2, 3].map(r => `<option value="${r}" ${r === t ? 'selected' : ''}>${r}회차까지</option>`).join('')}</select>${earned > t ? `<small>지금 ${now}회차 (다 마쳐서)</small>` : ''}</label>`; }).join('');
+      return `<div class="tbox"><h3>${esc(s.name)} <small>${esc(s.grade)}</small></h3><div class="trgrid">${cells}</div></div>`;
+    }).join('');
+    A.session.student = null;
+    frame(`<div class="thead"><h2>🪐 회차 열기</h2></div>
+      <p class="sub">학생이 할 수 있는 회차를 정해요. 열어 준 회차까지만 들어갈 수 있고, 한 회차의 질문을 모두 통과하면 다음 회차가 저절로 열려요. 처음은 모두 1회차예요.</p>
+      <div class="tbox"><h3>모든 학생 한꺼번에</h3><div class="row">
+        <select id="raB" class="tin"><option value="0">모든 대단원</option>${bigs.map(b => `<option value="${b.no}">${b.code} ${esc(b.title)}</option>`).join('')}</select>
+        <select id="raR" class="tin">${[1, 2, 3].map(r => `<option value="${r}">${r}회차까지</option>`).join('')}</select>
+        <button class="secondary small" id="raGo">적용</button></div></div>
+      <p class="sub" id="raM">${msg ? esc(msg) : ''}</p>
+      ${rows || `<p class="sub">${esc(E.course().name)} 학생이 없어요.</p>`}`, {back: list, backText: '학생', crumb: '회차 열기'});
+    $('#raGo').onclick = async () => {
+      const bn = +$('#raB').value, r = +$('#raR').value, bigNos = bn ? [bn] : bigs.map(b => b.no);
+      if (!confirm(`학생 ${STU.length}명 — ${bn ? E.big(bn).code : '모든 대단원'}을 ${r}회차까지 열까요?`)) return;
+      $('#raGo').disabled = true; $('#raM').textContent = '저장하는 중…';
+      try { await setOpen(STU.map(s => s.id), bigNos, r); roundsAll(`✓ 저장했어요 · 학생 태블릿이 30초 안에 받아요`); }
+      catch (e) { $('#raGo').disabled = false; $('#raM').textContent = '저장하지 못했어요 (' + (e.message || e) + ')'; }
+    };
+    root().querySelectorAll('.trsel').forEach(sel => sel.onchange = async () => {
+      try { await setOpen([sel.dataset.sid], [+sel.dataset.big], +sel.value); roundsAll('✓ 저장했어요 · 학생 태블릿이 30초 안에 받아요'); }
+      catch (e) { $('#raM').textContent = '저장하지 못했어요 (' + (e.message || e) + ')'; }
+    });
   }
   function settings() {
     const dev = A.isAcademyDevice(), buzz = localStorage.getItem('app:buzz') !== '0';
@@ -261,7 +303,7 @@
       const items = [
         ['stuck', '🚧', v.stuck.length ? v.stuck.length + '개' : '없음', v.stuck.length > 0],
         ['helped', '💡', v.helped.length + '개'],
-        ['stars', '🪐', '행성 ' + v.rk.lit + '/' + v.rk.total + ' · 난이도 열기'],
+        ['stars', '🪐', '행성 ' + v.rk.lit + '/' + v.rk.total + ' · 회차 열기'],
         ['rec', '📝', '말한 내용까지'],
         ['open', '🔓', todayLocked ? '잠긴 질문 ' + todayLocked + '개' : '시간 더 주기', todayLocked > 0],
         ['time', '⏱', v.noT ? '시간 제한 꺼짐(보강)' : v.ses + '분' + (v.qmin ? ' · 질문당 ' + v.qmin + '분' : ' · 질문당 기본'), v.noT],
@@ -300,12 +342,12 @@
       body = `<p class="sub">되묻기·키워드·설명을 본 뒤에 통과한 질문이에요.</p><ul class="tli">${v.helped.map(({x, ix}) => qItem(ix, ix.q,
         `${x.qFirst ?? x.q}점 · ${esc(helpTxt(x) || '다음 날 통과')}${x.rv ? ' · 다시 빛내기 통과(' + x.q + ')' : ''}${x.by === 'teacher' ? ' · 선생님이 다시 열어 줌' : ''}`)).join('') || '<li class="sub">없어요</li>'}</ul>`;
     } else if (sec === 'stars') {
-      body = `<p class="sub">「열린 난이도」를 바꾸면 학생이 그 난이도까지 바로 할 수 있어요.</p><div class="tbigs">${E.bigs().map(b => {
-        const open = E.openRound(b.no), tOpen = +(OPEN[s.id] || {})[b.no] || 0;
+      body = `<p class="sub">「열어 줄 회차」까지 학생이 할 수 있어요. 한 회차의 질문을 모두 통과하면 다음 회차는 저절로 열려요.</p><div class="tbigs">${E.bigs().map(b => {
+        const open = E.openRound(b.no), tOpen = +(OPEN[s.id] || {})[b.no] || 0, earned = E.earned(b.no);
         return `<div class="tbigc"><div class="tbh"><span class="code">${b.code}</span><b>${esc(b.title)}</b></div>
           <div class="tbr">${[1, 2, 3].map(r => { const c = E.bigCount(b, r), mis = b.smalls.filter(sm => A.M.done(sm, r)).length, bh = E.state(b.bh.id + ':r' + r).k === 'done';
-            return `<div class="tbcell ${r > open ? 'off' : c.n && c.done === c.n ? 'full' : ''}"><small>난이도 ${r}</small><b>${r > open ? '🔒' : c.done + '/' + c.n}</b><i>${r <= open ? 'mission ' + mis + '/' + b.smalls.length + (bh ? ' · 블랙홀 ✓' : '') : '닫힘'}</i></div>`; }).join('')}</div>
-          <label class="tbo">열린 난이도 <select data-big="${b.no}" class="topen">${[1, 2, 3].map(r => `<option value="${r}" ${r === open ? 'selected' : ''}>난이도 ${r}까지</option>`).join('')}</select>${tOpen ? '<small>선생님이 엶</small>' : ''}</label></div>`;
+            return `<div class="tbcell ${r > open ? 'off' : c.n && c.done === c.n ? 'full' : ''}"><small>${r}회차 · ${E.LVL(r)}</small><b>${r > open ? '🔒' : c.done + '/' + c.n}</b><i>${r <= open ? 'mission ' + mis + '/' + b.smalls.length + (bh ? ' · 블랙홀 ✓' : '') : '닫힘'}</i></div>`; }).join('')}</div>
+          <label class="tbo">열어 줄 회차 <select data-big="${b.no}" class="topen">${[1, 2, 3].map(r => `<option value="${r}" ${r === (tOpen || 1) ? 'selected' : ''}>${r}회차까지</option>`).join('')}</select>${earned > (tOpen || 1) ? `<small>${earned}회차까지 다 마쳐서 열림</small>` : ''}</label></div>`;
       }).join('')}</div>`;
     } else if (sec === 'rec') {
       body = `<p class="sub">최근 40개</p><ul class="tli">${subs.slice(0, 40).map(r => {
@@ -320,7 +362,7 @@
     } else if (sec === 'time') {
       body = `<div class="tbox"><h3>시간 제한</h3><label class="tchk"><input type="checkbox" id="tNoT" ${E.timerOff() ? 'checked' : ''}> 시간 제한 끄기 (보강)</label><p class="sub">끄면 질문 시간과 한 번 앉는 시간이 모두 멈춰요. 제대로 말할 때까지 남겨서 보강할 때 쓰세요. 친구와 대결은 그대로예요.</p></div>
         <div class="tbox"><h3>한 번 앉는 시간</h3><select id="tSes" class="tin">${E.SESSIONS.map(m => `<option value="${m}" ${m === E.sessionMin() ? 'selected' : ''}>${m}분</option>`).join('')}</select></div>
-        <div class="tbox"><h3>질문 하나에 주는 시간</h3><select id="tPace" class="tin"><option value="0" ${!E.qmin() ? 'selected' : ''}>기본 (난이도 1 2분 · 2 3분 · 3 4분)</option>${E.QMINS.map(m => `<option value="${m}" ${m === E.qmin() ? 'selected' : ''}>${m}분</option>`).join('')}</select><p class="sub">계산이 필요한 질문은 1분 더</p></div>
+        <div class="tbox"><h3>질문 하나에 주는 시간</h3><select id="tPace" class="tin"><option value="0" ${!E.qmin() ? 'selected' : ''}>기본 (1회차 2분 · 2회차 3분 · 3회차 4분)</option>${E.QMINS.map(m => `<option value="${m}" ${m === E.qmin() ? 'selected' : ''}>${m}분</option>`).join('')}</select><p class="sub">계산이 필요한 질문은 1분 더</p></div>
         <p class="sub" id="tSetMsg">바꾸면 바로 저장돼요 · 다음 행성부터 적용</p>`;
     } else if (sec === 'parent') {
       const comment = (await A.store.get('app:comment:' + s.id + ':' + A.cid())) || {};
@@ -334,7 +376,7 @@
           <div class="row"><button class="secondary small" data-rs="s" data-k="${sml.code}" ${w.n ? '' : 'disabled'}>이 행성 전체 다시</button></div>
           <ul class="tli">${rounds.flatMap(r => E.tasks(sml, r).filter(t => P.st[t.id]).map(t => `<li><div class="tqq"><span class="code">${E.RT(r)}</span><div class="tqt">${fm(t.src.q.length > 70 ? t.src.q.slice(0, 70) + '…' : t.src.q)}</div></div><div class="tmeta">${tag(t.id)} <button class="ghost small" data-rs="q" data-k="${esc(t.id)}">다시</button></div></li>`)).join('') || '<li class="sub">아직 한 질문이 없어요</li>'}</ul></details>`; };
       body = `<p class="sub">아이가 보고 답했거나 성의 없이 통과한 것을 지우고 처음부터 다시 하게 해요. 그 질문의 점수·별빛·mission 결과가 지워지고, 말한 내용은 「최근 기록」에 남아요.</p>
-        <label class="tbo">난이도 <select id="tRr" class="tin">${[0, 1, 2, 3].map(r => `<option value="${r}" ${r === rr ? 'selected' : ''}>${r ? '난이도 ' + r + '만' : '모든 난이도'}</option>`).join('')}</select></label>
+        <label class="tbo">회차 <select id="tRr" class="tin">${[0, 1, 2, 3].map(r => `<option value="${r}" ${r === rr ? 'selected' : ''}>${r ? r + '회차만' : '모든 회차'}</option>`).join('')}</select></label>
         ${E.bigs().map(b => { const w = wipeOf(P, b, null, rounds); return `<div class="tbox"><div class="tbh"><span class="code">${b.code}</span><b>${esc(b.title)}</b></div>
           <p class="sub">${w.n ? `질문 ${w.nq}개 · mission ${w.nm}개 · 블랙홀 ${w.nb}개를 했어요` : '아직 한 것이 없어요'}</p>
           <div class="row"><button class="secondary small" data-rs="b" data-k="${b.no}" ${w.n ? '' : 'disabled'}>이 대단원 전체 다시</button></div>
@@ -352,8 +394,7 @@
     }
     frame(head + body, opt);
     root().querySelectorAll('.topen').forEach(sel => sel.onchange = async () => {
-      const t = Object.assign({}, OPEN[s.id] || {}); t[sel.dataset.big] = +sel.value;
-      await A.store.set(E.okey(s.id), t); OPEN[s.id] = t; detail(s, 'stars');
+      await setOpen([s.id], [+sel.dataset.big], +sel.value); detail(s, 'stars');
     });
     root().querySelectorAll('[data-cmd]').forEach(b => b.onclick = async () => {
       const k = E.ckey(s.id), cur = (await A.store.get(k)) || {}, cmds = (cur.cmds || []).slice(-9);
@@ -372,7 +413,7 @@
       else if (bt.dataset.rs === 's') { const f = E.small(k); w = wipeOf(P, f.big, f.small, rounds); what = f.small.code + ' ' + f.small.title; }
       else { const ix = IDX[k]; w = {ids: [k], mis: [], n: 1, nq: 1, nm: 0, nb: 0}; what = '질문 하나 — ' + (ix ? ix.q : k); }
       const parts = [w.nq && '질문 ' + w.nq + '개', w.nm && 'mission ' + w.nm + '개', w.nb && '블랙홀 ' + w.nb + '개'].filter(Boolean).join(' · ');
-      if (!confirm(`${s.name} — ${what}${RR ? ' (난이도 ' + RR + ')' : ''}
+      if (!confirm(`${s.name} — ${what}${RR ? ' (' + RR + '회차)' : ''}
 
 ${parts}의 결과(점수·별빛)를 지우고 다시 하게 할까요?
 말한 내용은 「최근 기록」에 남아요.`)) return;
@@ -407,6 +448,7 @@ ${parts}의 결과(점수·별빛)를 지우고 다시 하게 할까요?
       E.wipe(cur, w); await A.store.set(pk, cur); PROG[s.id] = cur;
       try { A.session.student = {id: s.id, name: s.name, grade: s.grade}; E.use(JSON.parse(JSON.stringify(cur)), OPEN[s.id] || {}); A.S.push(); } finally { A.session.student = null; }
     }
+    if ((w.open || []).length) await setOpen([s.id], w.open, 1);
     const k = E.ckey(s.id), c = (await A.store.get(k)) || {}, cmds = (c.cmds || []).slice(-9);
     cmds.push({id: Date.now(), reset: w});
     await A.store.set(k, {cmds});

@@ -12,8 +12,11 @@
   const E = A.E = {};
   E.ROUND = {1: '행성 탐사', 2: '별계 탐사', 3: '은하 탐사'};
   /* 마스터 10/12: 탐사 이름만으로는 뜻을 몰라서 '난이도'를 같이 — 화면은 이름 + 작은 꼬리표, 글은 '행성 탐사(난이도 1)' */
-  E.RL = r => E.ROUND[r] + '<span class="lvt">난이도 ' + r + '</span>';
-  E.RT = r => E.ROUND[r] + '(난이도 ' + r + ')';
+  /* 마스터 10/21: '난이도' 대신 LEVEL Ⅰ·Ⅱ·Ⅲ */
+  E.LV = {1: 'Ⅰ', 2: 'Ⅱ', 3: 'Ⅲ'};
+  E.LVL = r => 'LEVEL ' + E.LV[r];
+  E.RL = r => E.ROUND[r] + '<span class="lvt">' + E.LVL(r) + '</span>';
+  E.RT = r => E.ROUND[r] + '(' + E.LVL(r) + ')';
   E.LIMIT = {1: 120, 2: 180, 3: 240};               // 질문당 초(채점 시간 빼고) · 계산 필요하면 1·2회차 +60
   E.Q = {first: 100, reask: 90, kw: 85, short: 75, long: 60, nextday: 60, review: 80};
   E.SESSION_MIN = 10;                                // 한 번 앉는 시간(마스터 10/8: 처음엔 10분) — 학생마다 선생님이 바꿀 수 있다
@@ -52,6 +55,8 @@
     return P;
   };
   /* 선생님·학부모 화면: 다른 학생의 진도를 잠깐 들여다볼 때 */
+  /* 선생님이 연 회차를 다시 읽기(30초마다) — 바뀌었으면 true */
+  E.loadOpen = async () => { const t = (await A.store.get(E.okey(A.session.student.id))) || {}; const ch = JSON.stringify(t) !== JSON.stringify(T); T = t; return ch; };
   E.use = (p, t) => { P = p || E.blank(); P.st = P.st || {}; P.open = P.open || {}; T = t || {}; return P; };
   E.teacherOpen = () => T;
   E.save = async () => { if (P) { P.at = Date.now(); await A.store.set(pkey(), P); } };
@@ -65,7 +70,14 @@
     if (x.day === A.today()) return {k: 'today', help: x.help};
     return {k: 'next', help: x.help};
   };
-  E.openRound = bigNo => (A.isTester() ? 3 : Math.min(3, Math.max(1, P.open[bigNo] || 1, +T[bigNo] || 1)));
+  /* 열린 회차(마스터 10/21 — 시험 학생도 똑같이): 선생님이 연 회차(T) 와, 1회차부터 다 마친 만큼 저절로 열린 회차 중 큰 쪽.
+     한 회차를 다 통과해야 다음 회차가 열린다(진도에서 바로 셈 — 다시 하기로 지우면 저절로 닫힌다) */
+  E.earned = bigNo => {
+    const b = E.big(bigNo); let r = 1;
+    if (b) while (r < 3) { const c = E.bigCount(b, r); if (c.n && c.done === c.n) r++; else break; }
+    return r;
+  };
+  E.openRound = bigNo => Math.min(3, Math.max(1, +T[bigNo] || 1, E.earned(bigNo)));
   /* 소단원·회차 진행: 통과 수 / 전체 */
   E.count = (s, r) => { const t = E.tasks(s, r); return {done: t.filter(x => E.state(x.id).k === 'done').length, n: t.length}; };
   E.bigCount = (b, r) => b.smalls.reduce((a, s) => { const c = E.count(s, r); return {done: a.done + c.done, n: a.n + c.n}; }, {done: 0, n: 0});
@@ -99,14 +111,12 @@
   E.record = (bigNo, id, rec) => {
     const prev = P.st[id];
     if (prev && prev.st === 'pass') return 0;      // 처음 통과만 센다(연습은 바뀌지 않음)
+    const before = E.openRound(bigNo);
     const tries = (prev?.tries || 0) + 1;
     P.st[id] = Object.assign({}, rec, {day: A.today(), tries, at: Date.now(), help: rec.help || prev?.help || ''});
     if (rec.st === 'pass' && prev && prev.help && !rec.helpNow) P.st[id].help = prev.help;
-    const b = E.big(bigNo), cur = Math.max(1, P.open[bigNo] || 1);
-    if (cur < 3) {
-      const c = E.bigCount(b, cur);
-      if (c.n && c.done === c.n) { P.open[bigNo] = cur + 1; return cur + 1; }
-    }
+    const after = E.openRound(bigNo);
+    if (after > before) { P.open[bigNo] = after; return after; }
     return 0;
   };
   /* 「오늘 갈 곳」(마스터 10/8 확정): ① 다시 열린 질문(어제 잠긴 것) ② 열린 회차에서 아직 안 한 다음 행성 */

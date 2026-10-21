@@ -647,3 +647,15 @@ details.tq2 summary::-webkit-details-marker{display:none}
 .trs summary{display:flex;justify-content:space-between;align-items:center;gap:8px;cursor:pointer;font-size:14px}
 .trs summary em{color:var(--sub);font-style:normal;font-size:12.5px;white-space:nowrap}
 .trs .row{margin:8px 0 4px}.trs .tli{margin:4px 0 0}
+
+/* mission(마스터 10/21): 고르고 「제출」 · 맞는 답은 파랑 · 설명 머리 「꼭 확인!」 */
+.mq .ch.sel{border-color:#4f7cff;background:#eef3ff;box-shadow:0 0 0 2px #4f7cff33}
+.mq .ch.right{border-color:#3b6fe0;background:#e8f0ff}.mq .ch.right .cn{color:#3b6fe0}
+.mq .subbar{display:flex;justify-content:flex-end;margin-top:12px}.mq .subbar .primary{min-width:120px}
+.sbubble.mok{background:#e8f0ff;color:#1d3f8f}
+.tmenu.four{grid-template-columns:repeat(4,1fr)}
+@media (max-width:620px){.tmenu.four{grid-template-columns:1fr 1fr}}
+.trgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.trc{display:grid;gap:3px;font-size:13px}.trc .code{font-size:12px}.trc small{color:var(--gold);font-size:11.5px}
+.lvline{margin:6px 0 2px;font-size:14px;font-weight:800;letter-spacing:1px;color:var(--gold)}
+.prow b small{font-size:11.5px;font-weight:600;color:var(--sub);margin-right:4px}
