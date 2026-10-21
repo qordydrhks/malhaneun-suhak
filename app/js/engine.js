@@ -79,7 +79,22 @@
   E.useMap = () => { if (E.maps() <= 0) return false; smap().used++; return true; };
   E.giveMap = n => { if (P) smap().extra = (smap().extra || 0) + n; };
   E.unlockToday = () => { let n = 0; for (const x of Object.values(P.st)) if (x.st !== 'pass' && x.day === A.today()) { x.day = ''; x.by = 'teacher'; n++; } return n; };
-  E.ckey = sid => 'app:cmd:' + sid + ':' + A.cid();                 // 선생님 화면 → 학생 태블릿 명령 {cmds:[{id, add(분), unlock}]}
+  E.ckey = sid => 'app:cmd:' + sid + ':' + A.cid();                 // 선생님 화면 → 학생 태블릿 명령 {cmds:[{id, add(분), unlock, reset}]}
+  /* 학습 결과 다시 하기(마스터 10/21 — 보고 했거나 성의 없이 통과한 것을 선생님이 지움).
+     w = {ids:[질문·계단·블랙홀 번호], mis:['<소단원 코드>:r<회차>'], open:[처음 난이도로 되돌릴 대단원 번호]}
+     진도·mission 결과·그 별빛만 지운다. 말한 기록(submissions·quiz_logs)은 선생님이 볼 수 있게 남긴다. 돌려준 값 = 지운 칸 수 */
+  E.wipe = (p, w) => {
+    if (!p || !w) return 0;
+    const ids = new Set(w.ids || []), mis = new Set(w.mis || []);
+    let n = 0;
+    p.st = p.st || {};
+    for (const id of ids) if (p.st[id]) { delete p.st[id]; n++; }
+    if (p.mis) for (const k of mis) if (p.mis[k]) { delete p.mis[k]; n++; }
+    if (p.pts) p.pts = p.pts.filter(x => !(ids.has(x.id) || (x.id.endsWith(':rv') && ids.has(x.id.slice(0, -3))) || (x.id.startsWith('mis:') && mis.has(x.id.slice(4).replace(/:(basic|hard)$/, '')))));
+    p.open = p.open || {};
+    for (const b of w.open || []) if (p.open[b]) p.open[b] = 1;
+    return n;
+  };
   /* 결과 반영 → 대단원 회차가 다 끝났으면 다음 회차 열기(돌려준 값 = 새로 열린 회차) */
   E.record = (bigNo, id, rec) => {
     const prev = P.st[id];

@@ -2,7 +2,8 @@
    · PIN = 옛 앱과 같은 것(공유 저장소 config:teacherPin, 처음은 0000). 이 탭에서만 기억(sessionStorage).
    · 학생 목록: 등급·이해 점수(선생님만)·밝힌 행성·지금 위치·막힌 질문 수·마지막 활동
    · 학생 한 명: 막힌 곳 / 도움 받고 통과한 곳 / 별(대단원)마다 탐사 진도 + 회차 열기 / 최근 기록(말한 내용) / 학부모 리포트 링크·선생님 한마디
-   · 진도는 학생 기기가 쓴 공유 저장소(app:prog:<학생>:e4-2)를 읽기만 한다. 선생님이 바꾸는 것(회차 열기)은 따로(app:open:…) 둔다. */
+   · 진도는 학생 기기가 쓴 공유 저장소(app:prog:<학생>:e4-2)를 읽기만 한다. 선생님이 바꾸는 것(회차 열기)은 따로(app:open:…) 둔다.
+     단, 「다시 하기」(마스터 10/21)는 진도를 직접 지우고 같은 내용을 학생 태블릿에 명령으로도 보낸다(태블릿이 옛 진도로 덮어써도 명령을 받으면 다시 지워지게). */
 (() => {
   'use strict';
   const A = window.APP, E = A.E, esc = A.esc, fm = A.fm, $ = s => document.querySelector(s);
@@ -248,7 +249,7 @@
 
   // ── 학생 한 명 (마스터 10/13: 요약 + 메뉴 버튼 → 누르면 그 내용만) ──
   const PASS_ST = ['first', 'reask', 'kw', 'again', 'nextday', 'review'];
-  const SEC = {stuck: '막힌 곳', helped: '도움 받고 통과', stars: '단원별 진도', rec: '최근 기록', open: '시간 · 잠금 풀기', time: '시간 설정', parent: '학부모 리포트', fun: '별빛 · 대결 · 계산'};
+  const SEC = {stuck: '막힌 곳', helped: '도움 받고 통과', stars: '단원별 진도', rec: '최근 기록', open: '시간 · 잠금 풀기', time: '시간 설정', parent: '학부모 리포트', fun: '별빛 · 대결 · 계산', reset: '다시 하기'};
   const qItem = (ixOrNull, q, meta, extra) => `<li><div class="tqq">${ixOrNull ? `<span class="code">${esc(where(ixOrNull))}</span>` : ''}<div class="tqt">${fm(q || '')}</div></div><div class="tmeta">${meta}</div>${extra || ''}</li>`;
   const said = t => t ? `<details><summary>말한 내용 보기</summary><p>${esc(t)}</p></details>` : '';
   async function detail(s, sec) {
@@ -265,7 +266,8 @@
         ['open', '🔓', todayLocked ? '잠긴 질문 ' + todayLocked + '개' : '시간 더 주기', todayLocked > 0],
         ['time', '⏱', v.noT ? '시간 제한 꺼짐(보강)' : v.ses + '분' + (v.qmin ? ' · 질문당 ' + v.qmin + '분' : ' · 질문당 기본'), v.noT],
         ['parent', '📨', '한마디 · 링크 복사'],
-        ['fun', '🏅', '⭐ ' + semStars(s.id).toLocaleString('ko-KR')]];
+        ['fun', '🏅', '⭐ ' + semStars(s.id).toLocaleString('ko-KR')],
+        ['reset', '🔄', '통과한 것 지우고 다시']];
       frame(`<div class="thead"><h2>${esc(s.name)} <small>${esc(s.grade)}</small></h2><span class="sub">마지막 ${ago(v.at)}</span></div>
         <div class="tcards four">
           <div class="tcard"><b>${v.rk.score != null ? Math.round(v.rk.score) : '—'}</b><span>이해 점수</span><small>선생님만</small></div>
@@ -325,6 +327,19 @@
       body = `<div class="tbox"><h3>선생님 한마디</h3><p class="sub">리포트에 그대로 보여요.</p><textarea id="tCm" class="tin" rows="4">${esc(comment.text || '')}</textarea><div class="row"><button class="secondary small" id="tCmS">한마디 저장</button></div></div>
         <div class="tbox"><h3>리포트 링크</h3><p class="sub">학부모님께 보낼 주소예요. 한 번 만들면 늘 같은 주소예요.</p><div class="row"><button class="primary" id="tLink">링크 복사</button></div><input id="tUrl" class="turl" readonly hidden></div>
         <p class="sub" id="tMsg"></p>`;
+    } else if (sec === 'reset') {
+      const rr = RR, rounds = rr ? [rr] : [1, 2, 3], P = v.p;
+      const tag = id => { const x = P.st[id]; return x ? (x.st === 'pass' ? '통과 ' + (x.qFirst ?? x.q ?? 100) + '점' : '아직') : ''; };
+      const sm = (b, sml) => { const w = wipeOf(P, b, sml, rounds); return `<details class="trs"><summary><span><span class="code">${sml.code}</span> ${esc(sml.title)}</span><em>${w.nq ? '질문 ' + w.nq : ''}${w.nm ? ' · mission ' + w.nm : ''}</em></summary>
+          <div class="row"><button class="secondary small" data-rs="s" data-k="${sml.code}" ${w.n ? '' : 'disabled'}>이 행성 전체 다시</button></div>
+          <ul class="tli">${rounds.flatMap(r => E.tasks(sml, r).filter(t => P.st[t.id]).map(t => `<li><div class="tqq"><span class="code">${E.RT(r)}</span><div class="tqt">${fm(t.src.q.length > 70 ? t.src.q.slice(0, 70) + '…' : t.src.q)}</div></div><div class="tmeta">${tag(t.id)} <button class="ghost small" data-rs="q" data-k="${esc(t.id)}">다시</button></div></li>`)).join('') || '<li class="sub">아직 한 질문이 없어요</li>'}</ul></details>`; };
+      body = `<p class="sub">아이가 보고 답했거나 성의 없이 통과한 것을 지우고 처음부터 다시 하게 해요. 그 질문의 점수·별빛·mission 결과가 지워지고, 말한 내용은 「최근 기록」에 남아요.</p>
+        <label class="tbo">난이도 <select id="tRr" class="tin">${[0, 1, 2, 3].map(r => `<option value="${r}" ${r === rr ? 'selected' : ''}>${r ? '난이도 ' + r + '만' : '모든 난이도'}</option>`).join('')}</select></label>
+        ${E.bigs().map(b => { const w = wipeOf(P, b, null, rounds); return `<div class="tbox"><div class="tbh"><span class="code">${b.code}</span><b>${esc(b.title)}</b></div>
+          <p class="sub">${w.n ? `질문 ${w.nq}개 · mission ${w.nm}개 · 블랙홀 ${w.nb}개를 했어요` : '아직 한 것이 없어요'}</p>
+          <div class="row"><button class="secondary small" data-rs="b" data-k="${b.no}" ${w.n ? '' : 'disabled'}>이 대단원 전체 다시</button></div>
+          ${b.smalls.map(x => sm(b, x)).join('')}</div>`; }).join('')}
+        <p class="sub" id="tRsM"></p>`;
     } else if (sec === 'fun') {
       const st = STAR[s.id] || {}, calc = v.p.calc || {}, bd = v.p.badge || {};
       const units = Object.entries(calc).map(([k, r]) => { const u = A.C && A.C.unit ? A.C.unit(k) : null; return `<li><b>${esc(u ? u.g.name + ' ' + u.u.title : A.C && A.C.wunit && A.C.wunit(k) ? '📖 용어 ' + A.C.wunit(k).gid.replace('e', '초') + ' ' + A.C.wunit(k).title : k.startsWith('w:') ? '용어 맞히기' : k)}</b><span>${r.plays}판 · 퉁구리 ${r.wins}승 · 최고 ${r.best.c}/${r.best.n || 10} ${r.best.t}초</span></li>`; }).join('');
@@ -349,6 +364,22 @@
       const saveSet = async () => { const nv = {session: +$('#tSes').value, qmin: +$('#tPace').value, notimer: $('#tNoT').checked, at: Date.now()}; await A.store.set(E.skey(s.id), nv); SETS[s.id] = nv; $('#tSetMsg').textContent = '✓ 저장했어요 · 다음 행성부터 적용'; };
       $('#tSes').onchange = saveSet; $('#tPace').onchange = saveSet; $('#tNoT').onchange = saveSet;
     }
+    if ($('#tRr')) $('#tRr').onchange = () => { RR = +$('#tRr').value; detail(s, 'reset'); };
+    root().querySelectorAll('[data-rs]').forEach(bt => bt.onclick = async () => {
+      const rounds = RR ? [RR] : [1, 2, 3], k = bt.dataset.k, P = v.p;
+      let w, what;
+      if (bt.dataset.rs === 'b') { const b = E.big(+k); w = wipeOf(P, b, null, rounds); what = b.code + ' ' + b.title + ' 전체'; if (!RR) w.open = [b.no]; }
+      else if (bt.dataset.rs === 's') { const f = E.small(k); w = wipeOf(P, f.big, f.small, rounds); what = f.small.code + ' ' + f.small.title; }
+      else { const ix = IDX[k]; w = {ids: [k], mis: [], n: 1, nq: 1, nm: 0, nb: 0}; what = '질문 하나 — ' + (ix ? ix.q : k); }
+      const parts = [w.nq && '질문 ' + w.nq + '개', w.nm && 'mission ' + w.nm + '개', w.nb && '블랙홀 ' + w.nb + '개'].filter(Boolean).join(' · ');
+      if (!confirm(`${s.name} — ${what}${RR ? ' (난이도 ' + RR + ')' : ''}
+
+${parts}의 결과(점수·별빛)를 지우고 다시 하게 할까요?
+말한 내용은 「최근 기록」에 남아요.`)) return;
+      bt.disabled = true; $('#tRsM').textContent = '지우는 중…';
+      try { await resetApply(s, {ids: w.ids, mis: w.mis, open: w.open || []}); $('#tRsM').textContent = '✓ 지웠어요 · 학생 태블릿이 30초 안에 받아요'; setTimeout(() => detail(s, 'reset'), 900); }
+      catch (e) { bt.disabled = false; $('#tRsM').textContent = '지우지 못했어요 (' + (e.message || e) + ')'; }
+    });
     if ($('#tCmS')) $('#tCmS').onclick = async () => { await A.store.set('app:comment:' + s.id + ':' + A.cid(), {text: $('#tCm').value.trim(), at: Date.now()}); $('#tMsg').textContent = '✓ 한마디를 저장했어요'; };
     if ($('#tLink')) $('#tLink').onclick = async () => {
       const url = await parentLink(s.id);
@@ -356,6 +387,29 @@
       try { await navigator.clipboard.writeText(url); $('#tMsg').textContent = '✓ 복사했어요'; }
       catch (e) { box.select(); $('#tMsg').textContent = '위 주소를 길게 눌러 복사하세요'; }
     };
+  }
+
+  /* ── 다시 하기 ── 한 대단원(sml 없음)·한 소단원에서 지울 것 모으기(rounds 의 난이도만). 결과가 있는 것만 */
+  let RR = 0;
+  function wipeOf(P, b, sml, rounds) {
+    const ids = [], mis = []; let nq = 0, nm = 0, nb = 0;
+    for (const x of (sml ? [sml] : b.smalls)) for (const r of rounds) {
+      for (const t of E.tasks(x, r)) if (P.st[t.id]) { ids.push(t.id); nq++; }
+      const mk = x.code + ':r' + r; if (P.mis && P.mis[mk]) { mis.push(mk); nm++; }
+    }
+    if (!sml && b.bh) for (const r of rounds) { const id = b.bh.id + ':r' + r; if (P.st[id]) { ids.push(id); nb++; } }
+    return {ids, mis, nq, nm, nb, n: nq + nm + nb};
+  }
+  /* 서버 진도에서 바로 지우고(선생님 화면·리포트가 곧바로 바뀌게) + 학생 태블릿에 같은 명령(그 기기가 옛 진도를 갖고 있어도 받으면 지워지게) */
+  async function resetApply(s, w) {
+    const pk = 'app:prog:' + s.id + ':' + A.cid(), cur = await A.store.get(pk);
+    if (cur) {
+      E.wipe(cur, w); await A.store.set(pk, cur); PROG[s.id] = cur;
+      try { A.session.student = {id: s.id, name: s.name, grade: s.grade}; E.use(JSON.parse(JSON.stringify(cur)), OPEN[s.id] || {}); A.S.push(); } finally { A.session.student = null; }
+    }
+    const k = E.ckey(s.id), c = (await A.store.get(k)) || {}, cmds = (c.cmds || []).slice(-9);
+    cmds.push({id: Date.now(), reset: w});
+    await A.store.set(k, {cmds});
   }
 
   /* 학부모 링크 = 학생마다 긴 무작위 글자(학생 번호만으로는 열리지 않게). 한 번 만들면 계속 같은 주소 */

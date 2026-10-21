@@ -642,3 +642,8 @@ details.tq2 summary::-webkit-details-marker{display:none}
 .mq .mfig [data-t].sel :is(rect,circle,ellipse,polygon,path,line,polyline):not([stroke="transparent"]){stroke:#E07B39 !important;stroke-width:3px !important}
 .mq .mfig [data-t].sel :is(rect,circle,ellipse,polygon){fill:#FDE6D3 !important}
 .mq .tapbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}.mq .tapbar .sub{font-size:14px}
+/* 선생님 「다시 하기」(10/21) */
+.trs{border-top:1px solid var(--line);padding-top:8px}
+.trs summary{display:flex;justify-content:space-between;align-items:center;gap:8px;cursor:pointer;font-size:14px}
+.trs summary em{color:var(--sub);font-style:normal;font-size:12.5px;white-space:nowrap}
+.trs .row{margin:8px 0 4px}.trs .tli{margin:4px 0 0}

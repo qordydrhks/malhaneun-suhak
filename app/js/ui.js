@@ -186,11 +186,11 @@
     let v = null; try { v = await A.store.get(E.ckey(A.session.student.id)); } catch (e) { return; }
     const p = E.prog(), seen = p.cmdSeen || 0, nw = ((v && v.cmds) || []).filter(c => c.id > seen);
     if (!nw.length) return;
-    let add = 0, n = 0;
-    for (const c of nw) { if (c.add) { addTime(+c.add); add += +c.add; } if (c.unlock) n += E.unlockToday(); }
-    p.cmdSeen = Math.max(...nw.map(c => c.id)); p.log = p.log || []; p.log.push({at: Date.now(), teacher: 'remote', add, n});
+    let add = 0, n = 0, rs = 0;
+    for (const c of nw) { if (c.add) { addTime(+c.add); add += +c.add; } if (c.unlock) n += E.unlockToday(); if (c.reset) rs += E.wipe(p, c.reset) || 1; }
+    p.cmdSeen = Math.max(...nw.map(c => c.id)); p.log = p.log || []; p.log.push({at: Date.now(), teacher: 'remote', add, n, reset: rs});
     await E.save(); A.buzz([20, 40, 20]);
-    toast(add && n ? `선생님이 ${add}분을 더 주고 잠긴 질문 ${n}개를 열어 주셨어!` : add ? `선생님이 ${add}분을 더 주셨어!` : `선생님이 잠긴 질문 ${n}개를 다시 열어 주셨어!`);
+    toast(rs ? '선생님이 몇 개를 다시 해 보게 하셨어. 다시 설명해 보자!' : add && n ? `선생님이 ${add}분을 더 주고 잠긴 질문 ${n}개를 열어 주셨어!` : add ? `선생님이 ${add}분을 더 주셨어!` : `선생님이 잠긴 질문 ${n}개를 다시 열어 주셨어!`);
     const f = NAV.cur; if (f && !NAV.quit && ['home', 'star', 'planet'].includes(f[0])) navGo(f);
   }
   setInterval(() => { if (document.visibilityState === 'visible') applyCmds(); }, 30000);
