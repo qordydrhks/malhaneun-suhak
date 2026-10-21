@@ -122,7 +122,7 @@ class Unit:
         css = B.CSS + '''.chs{display:flex;flex-wrap:wrap;gap:4px 18px;margin:4px 0 2px 6px}.ch{margin:0}
 h3{font-size:12.5px;margin:10px 0 2px;color:#5B4E8C}.card{padding:8px 11px;margin:6px 0}'''
         o = ['<!doctype html><html lang="ko"><head><meta charset="utf-8"><title>%s</title><style>%s</style></head><body>' % (self.fname, css)]
-        o.append('<h1>mission 문제 · %s %d. %s</h1>' % ({'e4-2': '초4-2', 'e5-2': '초5-2'}[self.grade], self.no, self.title))
+        o.append('<h1>mission 문제 · %s %d. %s</h1>' % ({'e4-2': '초4-2', 'e5-2': '초5-2', 'e6-2': '초6-2'}[self.grade], self.no, self.title))
         nb = sum(p['lv'] == 'basic' for p in self.Q); nt = sum(p['kind'] == 'tap' for p in self.Q)
         o.append('<div class="note">견본 2판 수준(기본 = 두세 단계 · 응용 = 여러 성질 잇기) · 행성마다 1·2·3회차 × mission + hard mission · '
                  '모두 %d문제(기본 %d · 응용 %d · 누르기 %d) · 정답 위치 ①~⑤ 고르게 · 모든 답 계산 검산.%s</div>'
