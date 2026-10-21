@@ -185,7 +185,7 @@
   const KICK_MSG = '다른 기기에서 로그인해서 여기서는 로그아웃됐어요.';
   A.onKicked = () => {
     if (!A.session.student) return;
-    NAV.quit = null; whereClear(); A.logout(); login(KICK_MSG);
+    A.visitEnd('kicked'); NAV.quit = null; whereClear(); A.logout(); login(KICK_MSG);
   };
   async function applyCmds() {
     if (!A.session.student || !E.prog()) return;
@@ -202,8 +202,8 @@
     toast(rs ? '선생님이 몇 개를 다시 해 보게 하셨어. 다시 설명해 보자!' : add && n ? `선생님이 ${add}분을 더 주고 잠긴 질문 ${n}개를 열어 주셨어!` : add ? `선생님이 ${add}분을 더 주셨어!` : `선생님이 잠긴 질문 ${n}개를 다시 열어 주셨어!`);
     const f = NAV.cur; if (f && !NAV.quit && ['home', 'star', 'planet'].includes(f[0])) navGo(f);
   }
-  setInterval(() => { if (document.visibilityState === 'visible') applyCmds(); }, 30000);
-  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') applyCmds(); });   // 화면이 다시 켜지면 바로
+  setInterval(() => { if (document.visibilityState === 'visible') { applyCmds(); A.visitBeat(); } }, 30000);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { applyCmds(); A.visitBeat(); } });   // 화면이 다시 켜지면 바로
   A.applyCmds = applyCmds;
 
   // ── 용어 설명(마스터 10/12: 우리끼리 정한 이름은 가볍게 쓰되, 누르면 뜻이 나오게) ──
@@ -281,6 +281,7 @@
     A.session.cid = A.courseFor(A.session.student);
     if (window.APP_DATA[A.cid()]) calcGrade = wordGrade = A.cid();
     await E.load();
+    A.visitStart(A.loginHow || 'auto'); A.loginHow = '';
     try { A.academy = ((await A.store.get('app:academy')) || {}).name || ''; } catch (e) {}
     await applyCmds();
     friend = (A.ls.raw('dd:char:' + A.session.student.id) || '').replace(/"/g, '');

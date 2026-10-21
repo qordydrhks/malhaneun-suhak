@@ -61,11 +61,12 @@
   }
 
   // ── 데이터 ──
-  let STU = [], PROG = {}, OPEN = {}, SETS = {}, STAR = {}, ACAD = '', NB = {n: 0, fresh: 0};
+  let STU = [], PROG = {}, OPEN = {}, SETS = {}, STAR = {}, VISIT = {}, ACAD = '', NB = {n: 0, fresh: 0};
   async function loadAll() {
     const like = p => 'key=like.' + encodeURIComponent(p) + '&select=key,value&limit=1000';
     const [studs, progs, opens, sets, stars] = await Promise.all([A.loadStudents(), A.sbSelect('ai_cache', like('app:prog:*:' + A.cid())), A.sbSelect('ai_cache', like('app:open:*:' + A.cid())), A.sbSelect('ai_cache', like('app:set:*:' + A.cid())), A.sbSelect('ai_cache', like('app:star:*:' + A.cid())), A.S.loadSems()]);
-    PROG = {}; OPEN = {}; SETS = {}; STAR = {};
+    PROG = {}; OPEN = {}; SETS = {}; STAR = {}; VISIT = {};
+    try { for (const r of (await A.sbSelect('ai_cache', like('app:visit:*'))) || []) VISIT[r.key.split(':')[2]] = (r.value && r.value.v) || []; } catch (e) {}
     for (const r of stars || []) STAR[r.key.split(':')[2]] = r.value;
     try { const v = await A.N.all(); NB = {n: v.rows.filter(x => x.mod !== 'hide').length, fresh: v.rows.filter(x => !x.mod).length}; } catch (e) {}
     try { ACAD = ((await A.store.get('app:academy')) || {}).name || ''; } catch (e) {}
@@ -100,8 +101,9 @@
     A.session.student = null;
     frame(`${A.courses().length > 1 ? `<div class="krow ctabs">${A.courses().map(id => `<button class="${id === A.cid() ? 'primary' : 'secondary'} small" data-c="${id}">${esc(window.APP_DATA[id].code)} · ${esc(window.APP_DATA[id].name)}</button>`).join('')}</div>` : ''}
       <div class="thead"><h2>학생 ${rows.length}명</h2><button class="ghost small" id="tRe">↻ 새로고침</button></div>
-      <div class="tmenu four">
+      <div class="tmenu five">
         <button class="tmbtn" id="tRd"><i>🪐</i><b>회차 열기</b><small>학생별 · 한꺼번에</small></button>
+        <button class="tmbtn" id="tVs"><i>🕒</i><b>접속 기록</b><small>날짜 · 시간별</small></button>
         <button class="tmbtn" id="tMg"><i>👥</i><b>학생 관리</b><small>등록 · 수정 · 비밀번호</small></button>
         <button class="tmbtn ${NB.fresh ? 'hot' : ''}" id="tNb"><i>✦</i><b>별빛노트</b><small>${NB.fresh ? '새 대답 ' + NB.fresh + '개 확인' : '새 대답 없음'}</small></button>
         <button class="tmbtn" id="tSet"><i>⚙</i><b>설정</b><small>학원 이름 · 학기 · 기기</small></button>
@@ -115,6 +117,7 @@
     $('#tNb').onclick = () => noteAdmin(false);
     $('#tMg').onclick = () => manage();
     $('#tRd').onclick = () => roundsAll();
+    $('#tVs').onclick = () => visitsDay(A.today());
     $('#tSet').onclick = settings;
     root().querySelectorAll('.tstu').forEach(b => b.onclick = () => detail(STU.find(s => s.id === b.dataset.id)));
   }
@@ -127,6 +130,27 @@
       for (const b of bigNos) { if (r <= 1) delete t[b]; else t[b] = r; }
       await A.store.set(E.okey(sid), t); OPEN[sid] = t;
     }
+  }
+  /* ── 🕒 접속 기록(마스터 10/21) — 학생 기기가 적은 app:visit:<학생>. 하루는 새벽 4시에 바뀐다 ── */
+  const HOW = {login: '로그인', auto: '자동 로그인', back: '다시 켬'}, OUT = {logout: '나가기', kicked: '다른 기기에서 로그인해 끊김'};
+  const hm = t => new Date(t).toTimeString().slice(0, 5);
+  const mins = x => Math.max(1, Math.round(((x.e || x.s) - x.s) / 60e3));
+  const dayName = dk => { const [y, m, d] = dk.split('-').map(Number), w = '일월화수목금토'[new Date(y, m - 1, d).getDay()]; return `${m}월 ${d}일 (${w})`; };
+  const shiftDay = (dk, n) => { const [y, m, d] = dk.split('-').map(Number), t = new Date(y, m - 1, d + n, 12); return t.getFullYear() + '-' + String(t.getMonth() + 1).padStart(2, '0') + '-' + String(t.getDate()).padStart(2, '0'); };
+  const visRow = x => `<li><b>${hm(x.s)} ~ ${hm(x.e || x.s)}</b> <span>${mins(x)}분</span><small>${esc([x.dev, HOW[x.how] || '', OUT[x.out] || ''].filter(Boolean).join(' · '))}</small></li>`;
+  const visOf = (sid, dk) => (VISIT[sid] || []).filter(x => A.dayKey(x.s) === dk).sort((a, b) => a.s - b.s);
+  function visitsDay(dk) {
+    const on = STU.map(s => ({s, v: visOf(s.id, dk)})).filter(o => o.v.length).sort((a, b) => a.v[0].s - b.v[0].s);
+    const off = STU.filter(s => !visOf(s.id, dk).length);
+    frame(`<div class="thead"><h2>🕒 접속 기록</h2></div>
+      <div class="tbox"><div class="row vsnav"><button class="secondary small" id="vPrev">‹ 전날</button><b>${dayName(dk)}${dk === A.today() ? ' · 오늘' : ''}</b>
+        <button class="secondary small" id="vNext" ${dk >= A.today() ? 'disabled' : ''}>다음 날 ›</button><input type="date" id="vDate" class="tin" value="${dk}" max="${A.today()}"></div></div>
+      ${on.map(({s, v}) => `<div class="tbox"><h3>${esc(s.name)} <small>${esc(s.grade)} · ${v.length}번 · 모두 ${v.reduce((a, x) => a + mins(x), 0)}분</small></h3><ul class="tvis">${v.map(visRow).join('')}</ul></div>`).join('') || '<p class="sub">이날 들어온 학생이 없어요.</p>'}
+      ${on.length && off.length ? `<p class="sub">안 들어온 학생: ${off.map(s => esc(s.name)).join(', ')}</p>` : ''}
+      <p class="sub">학생 기기가 켜져 있는 동안 1분마다 시간을 적어요. 10분 넘게 꺼져 있다가 다시 켜면 새 줄로 적어요.</p>`, {back: list, backText: '학생', crumb: '접속 기록'});
+    $('#vPrev').onclick = () => visitsDay(shiftDay(dk, -1));
+    $('#vNext').onclick = () => visitsDay(shiftDay(dk, 1));
+    $('#vDate').onchange = () => { if ($('#vDate').value) visitsDay($('#vDate').value); };
   }
   function roundsAll(msg) {
     const bigs = E.bigs();
@@ -291,7 +315,7 @@
 
   // ── 학생 한 명 (마스터 10/13: 요약 + 메뉴 버튼 → 누르면 그 내용만) ──
   const PASS_ST = ['first', 'reask', 'kw', 'again', 'nextday', 'review'];
-  const SEC = {stuck: '막힌 곳', helped: '도움 받고 통과', stars: '단원별 진도', rec: '최근 기록', open: '시간 · 잠금 풀기', time: '시간 설정', parent: '학부모 리포트', fun: '별빛 · 대결 · 계산', reset: '다시 하기'};
+  const SEC = {stuck: '막힌 곳', helped: '도움 받고 통과', stars: '단원별 진도', rec: '최근 기록', open: '시간 · 잠금 풀기', visit: '접속 기록', time: '시간 설정', parent: '학부모 리포트', fun: '별빛 · 대결 · 계산', reset: '다시 하기'};
   const qItem = (ixOrNull, q, meta, extra) => `<li><div class="tqq">${ixOrNull ? `<span class="code">${esc(where(ixOrNull))}</span>` : ''}<div class="tqt">${fm(q || '')}</div></div><div class="tmeta">${meta}</div>${extra || ''}</li>`;
   const said = t => t ? `<details><summary>말한 내용 보기</summary><p>${esc(t)}</p></details>` : '';
   async function detail(s, sec) {
@@ -307,6 +331,7 @@
         ['rec', '📝', '말한 내용까지'],
         ['open', '🔓', todayLocked ? '잠긴 질문 ' + todayLocked + '개' : '시간 더 주기', todayLocked > 0],
         ['time', '⏱', v.noT ? '시간 제한 꺼짐(보강)' : v.ses + '분' + (v.qmin ? ' · 질문당 ' + v.qmin + '분' : ' · 질문당 기본'), v.noT],
+        ['visit', '🕒', (VISIT[s.id] || []).length ? '마지막 ' + ago(Math.max(...VISIT[s.id].map(x => x.e || x.s))) : '기록 없음'],
         ['parent', '📨', '한마디 · 링크 복사'],
         ['fun', '🏅', '⭐ ' + semStars(s.id).toLocaleString('ko-KR')],
         ['reset', '🔄', '통과한 것 지우고 다시']];
@@ -349,6 +374,11 @@
             return `<div class="tbcell ${r > open ? 'off' : c.n && c.done === c.n ? 'full' : ''}"><small>${r}회차 · ${E.LVL(r)}</small><b>${r > open ? '🔒' : c.done + '/' + c.n}</b><i>${r <= open ? 'mission ' + mis + '/' + b.smalls.length + (bh ? ' · 블랙홀 ✓' : '') : '닫힘'}</i></div>`; }).join('')}</div>
           <label class="tbo">열어 줄 회차 <select data-big="${b.no}" class="topen">${[1, 2, 3].map(r => `<option value="${r}" ${r === (tOpen || 1) ? 'selected' : ''}>${r}회차까지</option>`).join('')}</select>${earned > (tOpen || 1) ? `<small>${earned}회차까지 다 마쳐서 열림</small>` : ''}</label></div>`;
       }).join('')}</div>`;
+    } else if (sec === 'visit') {
+      const days = [...new Set((VISIT[s.id] || []).map(x => A.dayKey(x.s)))].sort().reverse().slice(0, 30);
+      body = days.map(dk => { const v = visOf(s.id, dk); return `<div class="tbox"><h3>${dayName(dk)}${dk === A.today() ? ' · 오늘' : ''} <small>${v.length}번 · 모두 ${v.reduce((a, x) => a + mins(x), 0)}분</small></h3><ul class="tvis">${v.map(visRow).join('')}</ul></div>`; }).join('')
+        || '<p class="sub">아직 접속 기록이 없어요. (이 기능이 생긴 뒤부터 적혀요)</p>';
+      body += '<p class="sub">최근 30일까지 보여요.</p>';
     } else if (sec === 'rec') {
       body = `<p class="sub">최근 40개</p><ul class="tli">${subs.slice(0, 40).map(r => {
         const ix = IDX[r.question_id], ok = r.quality != null || PASS_ST.includes(r.stage), old = !r.stage;

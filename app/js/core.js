@@ -3,7 +3,7 @@
 (() => {
   'use strict';
   const A = window.APP = window.APP || {};
-  A.VERSION = 'app 0.20.2 (2026-10-21)';
+  A.VERSION = 'app 0.20.3 (2026-10-21)';
   const URL = 'https://cnyrbxsmxwajhlrvcdml.supabase.co';
   const KEY = 'sb_publishable_e2iVXV5K1sl7-kJ-d3v1Ow_VEzNUJGv';
   A.esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -52,6 +52,7 @@
     A.session.student = {id: s.id, name: s.name, grade: s.grade || ''};
     A.ls.set('dd:autoLogin', {id: s.id, name: s.name});
     await A.claimLogin(s.id);
+    A.loginHow = 'login';
     return A.session.student;
   };
   /* 한 학생은 한 기기에서만(마스터 10/21 — 두 기기가 같이 저장하면 진도가 서로 덮어써진다).
@@ -76,9 +77,35 @@
     A.session.student = {id: s.id, name: s.name, grade: s.grade || ''};
     if (!A.ls.get(tokKey(s.id), null)) await A.claimLogin(s.id);          // 표가 없던 기기(이 기능 전에 로그인) → 지금 이 기기로
     else if (!(await A.loginValid())) { A.kicked = true; A.logout(); return null; }   // 다른 기기에서 나중에 로그인함
+    A.loginHow = 'auto';
     return A.session.student;
   };
-  A.logout = () => { A.ls.del('dd:autoLogin'); A.session.student = null; document.getElementById('sclock')?.remove(); try { sessionStorage.removeItem('app:sessionStart'); } catch (e) {} };
+  /* 🕒 접속 기록(마스터 10/21 — 선생님이 날짜·시간별로 봄). 공유 저장소 app:visit:<학생> = {v:[{s 시작, e 마지막으로 있던 때, how, dev, out}]}
+     들어오면 한 줄 · 화면이 켜져 있는 동안 1분마다 e 를 늘림 · 10분 넘게 꺼져 있다 돌아오면 새 줄 · 나가기 누르면 out. 최근 400줄만 */
+  const vkey = sid => 'app:visit:' + sid;
+  A.device = () => { const u = navigator.userAgent || '', tab = /iPad|Tablet/.test(u) || (/Android/.test(u) && !/Mobile/.test(u)) || (/Macintosh/.test(u) && navigator.maxTouchPoints > 1);
+    return (A.isAcademyDevice() ? '학원 ' : '') + (tab ? '태블릿' : /Mobi|iPhone|Android/.test(u) ? '폰' : '컴퓨터'); };
+  let VIS = null;                                                // 지금 이 기기의 줄 {sid, s}
+  const visEdit = async (sid, fn) => { const cur = (await A.store.get(vkey(sid))) || {v: []}; cur.v = cur.v || []; fn(cur.v); cur.v = cur.v.slice(-400); await A.store.set(vkey(sid), cur); };
+  A.visitStart = async how => {
+    const st = A.session.student; if (!st) return;
+    const now = Date.now(); VIS = {sid: st.id, s: now};
+    try { await visEdit(st.id, v => v.push({s: now, e: now, how: how || 'auto', dev: A.device()})); } catch (e) {}
+  };
+  A.visitBeat = async () => {
+    const st = A.session.student; if (!st || !VIS || VIS.sid !== st.id) return;
+    const now = Date.now();
+    if (now - (VIS.last || VIS.s) > 10 * 60e3) return A.visitStart('back');   // 한참 꺼져 있다 돌아옴 → 새 줄
+    if (VIS.last && now - VIS.last < 55e3) return;
+    VIS.last = now;
+    try { await visEdit(st.id, v => { const x = v.find(y => y.s === VIS.s); if (x) x.e = now; }); } catch (e) {}
+  };
+  A.visitEnd = out => {
+    const st = A.session.student; if (!st || !VIS || VIS.sid !== st.id) return;
+    const s0 = VIS.s, now = Date.now(); VIS = null;
+    visEdit(st.id, v => { const x = v.find(y => y.s === s0); if (x) { x.e = now; x.out = out; } }).catch(() => {});
+  };
+  A.logout = () => { A.visitEnd('logout'); A.ls.del('dd:autoLogin'); A.session.student = null; document.getElementById('sclock')?.remove(); try { sessionStorage.removeItem('app:sessionStart'); } catch (e) {} };
   A.checkPin = async v => { const saved = await A.store.get('config:teacherPin'); const want = saved && saved.hash ? saved.hash : await A.sha256('0000'); return (await A.sha256(String(v || ''))) === want; };
   /* 음성 인식 자동 교정 — 옛 앱 window.fixMathSpeech 와 같은 표(실제 단어가 아닌 오인식만). 필요하면 여기에 추가 */
   A.fixSpeech = text => {
