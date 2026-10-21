@@ -16,7 +16,7 @@ import mis_e42_4 as B
 
 UNITS = {'e4-2': ['mis_e42_1', 'mis_e42_2', 'mis_e42_3', 'mis_e42_u4', 'mis_e42_5', 'mis_e42_6'],
          'e5-2': ['mis_e52_1', 'mis_e52_2', 'mis_e52_3', 'mis_e52_4', 'mis_e52_5', 'mis_e52_6'],
-         'e6-2': ['mis_e62_1', 'mis_e62_2', 'mis_e62_3', 'mis_e62_4', 'mis_e62_5']}   # 6-2 는 단원마다 만들어지는 대로 덧붙인다(없는 행성은 AI 즉석 출제)
+         'e6-2': ['mis_e62_1', 'mis_e62_2', 'mis_e62_3', 'mis_e62_4', 'mis_e62_5', 'mis_e62_6']}
 
 def pic(f, w=520, h=330):
     return B.fsvg(f, w, h)[0]
