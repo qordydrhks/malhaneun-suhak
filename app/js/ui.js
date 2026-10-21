@@ -92,9 +92,29 @@
     NAV.restoring = true;
     try { ({home, star, planet, record, guide, blackhole, note, hall, calc: calcHub, calcu: calcUnit, battle: battleHub, words: wordHub, wordu: wordUnit, play: playHub})[rt[0]](...rt.slice(1)); } finally { NAV.restoring = false; }
   }
+  /* 맨 아래 칸 = 로그인 화면(마스터 10/20 「뒤로 가면 마지막은 로그인 화면, 그다음 앱이 나가게」).
+     처음 그린 화면(홈)은 기록 맨 첫 칸을 덮어쓰므로, 아이가 처음 화면을 누를 때(사용자 조작 순간) 그 밑에 로그인 칸을 깐다.
+     ⚠️ 페이지가 뜰 때 바로 pushState 하면 크롬이 조작 없이 넣은 칸으로 보고 뒤로 가기에서 건너뛴다 → 꼭 누를 때 한다. */
+  const LOGIN_KEY = JSON.stringify(['login']);
+  addEventListener('click', e => {
+    try {
+      const hs = history.state;
+      if (!A.session.student || !hs || !hs.app || hs.i !== 0 || hs.app[0] === 'login') return;
+      if (e.target.closest && e.target.closest('[data-go="logout"]')) return;
+      history.replaceState({app: ['login'], i: 0}, '');
+      history.pushState({app: hs.app, i: 1}, '');
+      NAV.stack = [LOGIN_KEY, NAV.stack[0] || JSON.stringify(hs.app)];
+    } catch (err) {}
+  }, true);
   addEventListener('popstate', e => {
     const st = e.state && e.state.app ? e.state : null;
     if (!st || !A.session.student) return;
+    if (st.app[0] === 'login') {                                    // 로그인 칸까지 뒤로 왔으면 = 로그아웃(앱 안 「로그아웃」과 같음)
+      if (NAV.quit) { const q = NAV.quit; NAV.quit = null; try { q(); } catch (err) {} }
+      NAV.stack = []; NAV.cur = null; NAV.silent = false;
+      whereClear(); A.logout(); login();
+      return;
+    }
     NAV.stack.length = Math.min(NAV.stack.length, st.i + 1);
     if (NAV.silent) { NAV.silent = false; NAV.cur = st.app; return; }
     if (NAV.quit) { const q = NAV.quit; NAV.quit = null; NAV.backQuit = !!q(); }   // 질문·mission 중 → 그만두기(기록 없음)
