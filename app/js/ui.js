@@ -1044,20 +1044,41 @@
     const first = !A.M.done(small, r, hard);
     let k = res ? Math.min(res.k, quiz.length) : 0, ok = res ? res.ok : 0;
     const one = () => {
-      const it = quiz[k];
+      const it = quiz[k], tap = it.kind === 'tap';
       const dots = quiz.map((_, j) => `<i class="${j < k ? 'd' : j === k ? 'c' : ''}"></i>`).join('');
+      /* 미리 만든 문제(5지선다 · 그림 · 누르기, 마스터 10/20)와 예전 AI 문제(4지선다) 둘 다 그린다 */
       frame(`<div class="qtop"><div class="dots">${dots}</div><span class="mtag">${esc(name)}${first ? '' : ' · 연습'}</span></div>
         <section class="qcard mq"><div class="q">${fm(mx(it.stem))}</div>
-        <div class="chs">${it.choices.map((c, j) => `<button class="ch" data-j="${j}"><span class="cn">${'①②③④'[j]}</span><span class="ct">${fm(mx(c))}</span></button>`).join('')}</div>
+        ${it.fig ? `<div class="mfig${tap ? ' tapme' : ''}" id="mfig">${it.fig}</div>` : ''}
+        ${tap ? `<div class="tapbar"><span class="sub" id="tsel">그림에서 눌러 골라 봐</span><button class="primary" id="tok" disabled>다 골랐어</button></div>`
+              : `<div class="chs">${it.choices.map((c, j) => `<button class="ch" data-j="${j}"><span class="cn">${'①②③④⑤'[j]}</span><span class="ct">${fm(mx(c))}</span></button>`).join('')}</div>`}
         <div class="say" id="say"></div></section><div class="row" id="nx"></div>`, {back: 'big:' + big.no, backText: '그만하기', crumb: small.code});
-      root().querySelectorAll('.ch').forEach(b => b.onclick = () => {
-        const j = +b.dataset.j, right = j === it.answer; if (right) ok++;
+      const after = right => {
+        if (right) ok++;
         misSave(k + 1, ok);                       // 답을 고른 뒤 새로고침하면 다음 문제부터(같은 문제를 다시 풀지 않게)
-        root().querySelectorAll('.ch').forEach(x => { x.disabled = true; if (+x.dataset.j === it.answer) x.classList.add('right'); });
-        if (!right) b.classList.add('wrong');
         $('#say').innerHTML = `<div class="sbubble ${right ? 'ok' : 'warn'}"><b>${right ? '정답!' : '아쉬워!'}</b> ${fm(mx(it.explain))}</div>`;
         $('#nx').innerHTML = `<button class="primary big" id="nb">${k < quiz.length - 1 ? '다음 문제' : '결과 보기'}</button>`;
         $('#nb').onclick = () => { k++; k < quiz.length ? one() : done(); };
+      };
+      if (tap) {
+        const fig = $('#mfig'), sel = new Set();
+        fig.querySelectorAll('[data-t]').forEach(g => g.onclick = () => {
+          if (!fig.classList.contains('tapme')) return;
+          const id = g.dataset.t; sel.has(id) ? sel.delete(id) : sel.add(id);
+          fig.querySelectorAll('[data-t]').forEach(x => x.classList.toggle('sel', sel.has(x.dataset.t)));
+          $('#tok').disabled = !sel.size;
+        });
+        $('#tok').onclick = () => {
+          const want = new Set(it.tap), right = sel.size === want.size && [...sel].every(id => want.has(id));
+          fig.classList.remove('tapme'); fig.innerHTML = it.figAns; $('#tok').remove();
+          $('#tsel').textContent = right ? '' : '주황색으로 칠한 것이 맞는 답이야';
+          after(right);
+        };
+      } else root().querySelectorAll('.ch').forEach(b => b.onclick = () => {
+        const j = +b.dataset.j, right = j === it.answer;
+        root().querySelectorAll('.ch').forEach(x => { x.disabled = true; if (+x.dataset.j === it.answer) x.classList.add('right'); });
+        if (!right) b.classList.add('wrong');
+        after(right);
       });
     };
     const done = async () => {

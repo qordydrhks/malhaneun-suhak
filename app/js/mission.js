@@ -9,7 +9,9 @@
   const A = window.APP, E = A.E;
   const M = A.M = {};
   M.name = (r, hard) => (hard ? 'hard mission ' : 'mission ') + r;
-  M.count = (s, r) => r === 3 ? Math.min(5, Math.max(2, s.ladder.length)) : (+s.quiz[String(r)] || 2);
+  /* 미리 만든 세트(마스터 10/20 — Claude 가 만들고 검산한 5지선다·누르기, data/mis_<학년>.js). 있으면 AI 대신 이것을 쓴다 */
+  const preset = (s, r, hard) => { const g = (window.APP_MIS || {})[A.cid()]; const q = g && g[s.code + ':r' + r + ':' + (hard ? 'hard' : 'basic')]; return q && q.length ? q : null; };
+  M.count = (s, r) => { const p = preset(s, r, false); return p ? p.length : r === 3 ? Math.min(5, Math.max(2, s.ladder.length)) : (+s.quiz[String(r)] || 2); };
   const key = (s, r, hard) => 'appquiz:' + A.cid() + ':' + s.code + ':r' + r + ':' + (hard ? 'hard' : 'basic');
   // 진도: P.mis[코드:r회차] = {basic:{c,n,at}, hard:{c,n,at}}
   M.done = (s, r, hard) => { const m = (E.prog().mis || {})[s.code + ':r' + r]; return !!(m && m[hard ? 'hard' : 'basic']); };
@@ -42,6 +44,7 @@
   }
   const inflight = {};
   M.get = (s, r, hard) => {
+    const pre = preset(s, r, hard); if (pre) return Promise.resolve(pre);
     const k = key(s, r, hard);
     if (!inflight[k]) inflight[k] = (async () => {
       const cached = await A.store.get(k);

@@ -635,3 +635,10 @@ details.tq2 summary::-webkit-details-marker{display:none}
 .tmsg{background:var(--sky2);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:6px 0 10px}
 .danger{color:#c2410c!important;border-color:#f2b8a0!important}
 #mName,#mGrade,#mPw{flex:1 1 140px;min-width:0}
+
+/* mission 미리 만든 문제 — 그림 · 누르기(0.19) */
+.mq .mfig{margin:12px 0 2px;text-align:center;background:#fff;border-radius:12px;padding:8px}.mq .mfig svg{max-width:100%;height:auto}
+.mq .mfig.tapme [data-t]{cursor:pointer}
+.mq .mfig [data-t].sel :is(rect,circle,ellipse,polygon,path,line,polyline):not([stroke="transparent"]){stroke:#E07B39 !important;stroke-width:3px !important}
+.mq .mfig [data-t].sel :is(rect,circle,ellipse,polygon){fill:#FDE6D3 !important}
+.mq .tapbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}.mq .tapbar .sub{font-size:14px}
