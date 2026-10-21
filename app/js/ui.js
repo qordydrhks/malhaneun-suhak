@@ -1510,7 +1510,7 @@
         else if (!practice) { why = A.S.whyOf(rr.stage); gain = A.S.add(task.id, A.S.ptsFor(task.r, q), why, task.r); }
         const saving = commit(rr, true);                         // 결과가 보이는 순간 저장(이 화면에서 나가도 통과가 남는다)
         $('#ans').innerHTML = `<div class="result">${q != null ? `<div class="score">${q}<small>점</small></div>` : '<div class="score small">연습</div>'}${A.S.chip(gain, task.r, why)}
-          <ul class="keys">${keysHtml}</ul><div class="model"><b>모범 답</b>${fm(S.ans)}</div>
+          <ul class="keys">${keysHtml}</ul><div class="model"><b>모범답 꼭! 확인</b>${fm(S.ans)}</div>
           <div class="row"><button class="primary big" id="ok">${i < n - 1 ? '다음 질문' : '끝내기'}</button></div></div>`;
         if (gain) A.S.gain(gain, $('#gainChip'));
         if (!practice && q >= 90) A.N.post({task, small, r: task.r, q, answers: answers.slice(), keys: S.keys, question: S.q, ans: S.ans});   // ✦ 별빛노트 후보(AI 가 한 번 더 보고 올린다)
