@@ -75,7 +75,7 @@
      ansh: '', tip: '작은 삼각형(△AEF 등)도 그려 보세요.'},
   ].concat([
     {id: 'm2a', q: '가로 BC = 20 cm, 세로 AB = 12 cm인 직사각형 ABCD에서 BC 위에 BE : EC = 3 : 2가 되도록 점 E를 잡고, AB 위에 ∠DEF = 90°가 되도록 점 F를 잡았다. AD의 연장선과 EF의 연장선의 교점을 H라 할 때, AF와 AH의 길이를 각각 구하시오.',
-     keys: ['∠B = ∠C = 90°이고 ∠BFE = ∠CED라서 △FBE ∽ △ECD (AA 닮음)', '대응변의 비(FB : EC = BE : CD)로 FB = 8, AF = 4 cm', 'AH ∥ BE라서 △FAH ∽ △FBE', 'AH : BE = AF : FB = 1 : 2라서 AH = 6 cm'],
+     keys: ['△FBE와 △ECD가 닮음(∠B = ∠C = 90°, ∠BFE = ∠CED → AA 닮음)임을 보인다 — 이 문제는 BE = CD = 12라서 합동(∠BEF = ∠CDE로 ASA 합동)으로 보여도 된다', '대응변의 비(FB : EC = BE : CD)로 FB = 8, AF = 4 cm', 'AH ∥ BE라서 △FAH ∽ △FBE', 'AH : BE = AF : FB = 1 : 2라서 AH = 6 cm'],
      ans: 'AF = 4 cm, AH = 6 cm — ∠B = ∠C = 90°, ∠BFE = ∠CED라서 △FBE ∽ △ECD(AA 닮음). FB : EC = BE : CD에서 FB : 8 = 12 : 12, FB = 8이라 AF = 4. AH ∥ BE라서 △FAH ∽ △FBE, AH : BE = AF : FB = 1 : 2라 AH = 6.', src: '블랙라벨 중2-2 64쪽 종합 사고력 01 (숫자 바꿈)'},
     {id: 'm2b', q: '키가 1.6 m인 학생(PQ)의 그림자 QR의 길이가 2 m인 시각에, 피라미드의 그림자 끝이 이 학생이 선 곳 Q와 일치하였다. QB = 12 m이고, 피라미드를 옆에서 보면 높이 AH와 밑변 BC의 길이의 비가 2 : 1인 이등변삼각형일 때, 피라미드의 높이 AH를 구하시오.',
      keys: ['같은 시각에는 햇빛이 평행해서 (높이) : (그림자 길이)의 비가 같다(닮음)', '피라미드의 그림자는 꼭짓점 바로 아래 H부터 재야 한다(QH = 12 + BC/2)', 'BC = x로 두고 1.6 : 2 = 2x : (12 + x/2)를 풀어 AH = 12 m'],
@@ -397,7 +397,7 @@
       <p class="t-lead">말하면서 도형의 그 부분을 손가락으로 <b>대강 따라 그리면</b> 이름이 입력칸에 들어가요. <button class="tc-how" id="how">어떻게 그려?</button></p>
       <div id="howBox"></div>
       ${PROBS.map((p, i) => `${i && PROBS[i - 1].sec === p.sec ? '' : `<div class="t-sec">${esc(p.sec)}</div>`}<button class="t-item" data-id="${p.id}"><div class="t-iq">${p.qh}</div></button>`).join('')}
-      <div class="t-src" style="margin-top:26px;text-align:center">따라 그리기 시안 0.5 (10/22)</div>
+      <div class="t-src" style="margin-top:26px;text-align:center">따라 그리기 시안 0.5.1 (10/22)</div>
     </div>`;
     $('#back').onclick = () => { location.href = 'try.html'; };
     $('#how').onclick = () => { const b = $('#howBox'); b.innerHTML = b.innerHTML ? '' : HOW; };
@@ -588,6 +588,8 @@
 - 뜻이 같으면 표현이 달라도 인정. 음성 인식이 수학 말을 틀리게 적은 것은 소리가 비슷하고 문맥상 분명하면 맞게 말한 것으로 봐(예: "어깍" = 엇각, "합 동" = 합동).
 - 결과 수만 말하고 그 까닭이 핵심인 항목은 까닭을 말해야 인정.
 - 질문이 방법을 정해 주지 않았으면 다른 바른 방법으로 같은 것을 보였어도 인정.
+- 합동이면 닮음이기도 하다. 닮음을 쓸 자리에 합동을 보였어도 그 판단이 맞으면 인정해. 합동 조건 이름(SAS·ASA·SSS)이나 근거가 틀렸으면 그 점만 misconception 에 짚어 — 합동이라는 판단 자체를 틀렸다고 하지 마.
+- 아직 모르는 길이(구해야 하는 값)를 근거로 쓴 합동·닮음은 근거가 틀린 것이다. 대응하는 꼭짓점 순서가 틀렸으면 misconception 에 짚어.
 - 각 핵심마다 근거(quote): 학생 글에서 그 핵심에 해당하는 부분을 짧게 그대로 따와. 인정하지 않으면 "".
 - 틀린 내용을 말했으면 misconception 에 한 줄, 없으면 "".
 - ack: 20자 안팎 한 문장, 맞게 말한 부분만 구체적으로 인정(정답·빠진 핵심은 넣지 마).
