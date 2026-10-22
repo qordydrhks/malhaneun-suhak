@@ -764,6 +764,8 @@
       <div class="t-top"><h1>말하는 수학 · 중등·고등 체험</h1><span class="t-sp"></span><a href="index.html">초등 앱 ›</a></div>
       <p class="t-lead">견본 문제를 직접 해 보는 체험 화면이에요. <b>말은 생각만, 식은 손으로</b> — 무엇을 할지는 짧게 말하고, 식은 누르거나 카드로 골라요. 기록은 진도에 남지 않아요.</p>
       ${canAI() ? '' : lockBox()}
+      <div class="t-sec">도형 · 말하면서 따라 그리기 (10/22 시안)</div>
+      <a class="t-item" href="trace.html" style="text-decoration:none"><span class="t-tag r3">시안 4</span><span class="t-tag">말 + 따라 그리기</span><div class="t-iq">말하면서 도형의 그 부분을 손가락으로 대강 따라 그리면 △ABD · ∠BAD · 선분 AB 가 입력칸에 들어가요.</div></a>
       <div class="t-sec">중3-1 · 03 인수분해 공식의 활용</div>
       ${(VARA = true, '')}${M3.map(it => `<button class="t-item${d.has(it.id) ? ' done' : ''}" data-id="${it.id}"><span class="t-tag r${it.r}">${RT[it.r]}</span><span class="t-tag">${esc(it.kind)}</span><div class="t-iq">${F(it.q)}</div><div class="t-how">${esc(it.how)}</div></button>`).join('')}
       ${(VARA = false, '')}${HSL.map((m, i) => `${i && HSL[i - 1].sec === m.sec ? '' : `<div class="t-sec">${esc(m.sec)}</div>`}
@@ -772,7 +774,7 @@
       <button class="t-item${d.has(c.id) ? ' done' : ''}" data-id="${c.id}"><span class="t-tag r3">시안</span><span class="t-tag">${esc(c.kind)}</span><div class="t-iq">${F(c.qParts.map(x => typeof x === 'string' ? x : x.t).join(''))}</div><div class="t-how">${esc(c.how)}</div></button>`).join('')}
       <div class="t-sec">${esc(N3.sec)}</div>
       <button class="t-item${d.has(N3.id) ? ' done' : ''}" data-id="${N3.id}"><span class="t-tag r3">시안 3</span><span class="t-tag">${esc(N3.kind)}</span><div class="t-iq">${F(N3.q)}</div><div class="t-how">${esc(N3.how)}</div></button>
-      <div class="t-src" style="margin-top:26px;text-align:center">체험판 0.6 · ${esc(A.VERSION)}</div>
+      <div class="t-src" style="margin-top:26px;text-align:center">체험판 0.7 · ${esc(A.VERSION)}</div>
     </div>`;
     root().querySelectorAll('.t-item').forEach(b => b.onclick = () => open(b.dataset.id));
     bindLock(home);

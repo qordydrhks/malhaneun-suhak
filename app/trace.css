@@ -1,0 +1,30 @@
+/* 도형 따라 그리기 시안 (마스터 10/22) — try.css 위에 얹음 */
+.tc-h{font-size:20px;margin:4px 0 6px;font-weight:800}
+.tc-how{border:0;background:none;color:var(--acc2);font:inherit;font-weight:700;text-decoration:underline;padding:0}
+.tc-help{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.75;margin-bottom:6px}
+.ov{text-decoration:overline;text-decoration-thickness:1.5px;text-underline-offset:0}
+.tc-q{font-size:17px}
+.tc-fig{position:relative;margin:12px 0 4px;background:#fbfcfe;border:1px solid var(--line);border-radius:14px;touch-action:none;user-select:none;-webkit-user-select:none}
+.tc-fig svg{display:block;width:100%;height:auto;max-height:52vh;touch-action:none}
+.tc-fig .tl line{stroke:#1c2230;stroke-width:2.2;stroke-linecap:round}
+.tc-fig .tp{fill:#1c2230}
+.tc-fig text{font-family:'Times New Roman',serif;font-size:20px;fill:#1c2230;pointer-events:none}
+.tc-fig .ink{fill:none;stroke:#2f5aa8;stroke-width:5;stroke-opacity:.55;stroke-linecap:round;stroke-linejoin:round;transition:opacity .5s;pointer-events:none}
+.tc-fig .ink.bad{stroke:#c0392b}
+.tc-fig .ink.fade{opacity:0}
+.tc-fig .hk{transition:opacity .7s;pointer-events:none}
+.tc-fig .hk.fade{opacity:0}
+.tc-fig .hk line{stroke:#f2a516;stroke-width:9;stroke-linecap:round;stroke-opacity:.75}
+.tc-fig .hk polygon{fill:#f2a516;fill-opacity:.28;stroke:#e08e00;stroke-width:3}
+.tc-fig .hk path{fill:#f2a516;fill-opacity:.55;stroke:#e08e00;stroke-width:1.5}
+.tc-fig .hk circle{fill:none;stroke:#e08e00;stroke-width:3.5}
+.tc-got{position:absolute;top:8px;left:10px;background:#1e7a46;color:#fff;border-radius:999px;padding:3px 11px;font-size:15px;font-weight:700;opacity:0;pointer-events:none}
+.tc-got.on{animation:tcGot 1.6s}
+@keyframes tcGot{0%{opacity:0;transform:translateY(4px)}15%{opacity:1;transform:none}75%{opacity:1}100%{opacity:0}}
+.tc-tip{margin:2px 2px 8px}
+.tc-live{min-height:58px;line-height:2}
+.tc-int{color:#9aa1ad}
+.chip{display:inline-block;background:#fff4d6;border:1px solid #f0c75e;border-radius:8px;padding:0 7px;line-height:1.7;font-weight:700;color:#5a3c00;cursor:pointer}
+.chip i{font-style:normal;color:#b07a00;margin-left:4px;font-weight:500;font-size:12px}
+.tc-mine{font-size:15.5px;line-height:1.9}
+.tc-mine .chip{cursor:default}
