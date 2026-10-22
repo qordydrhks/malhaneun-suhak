@@ -130,7 +130,17 @@
       const [a, b, c] = [names[i], names[j], names[k]];
       if (onLine(a, b) && onLine(b, c) && onLine(a, c) && !collinear(a, b, c)) polys.push([a, b, c]);
     }
-    (f.quads || []).forEach(q => polys.push(q));
+    const segX = (a, b, c, d) => { const o = (p, q, r) => Math.sign((q[0] - p[0]) * (r[1] - p[1]) - (q[1] - p[1]) * (r[0] - p[0])); return o(P[a], P[b], P[c]) * o(P[a], P[b], P[d]) < 0 && o(P[c], P[d], P[a]) * o(P[c], P[d], P[b]) < 0; };
+    const qseen = new Set();
+    const addQ = q => { const k = [...q].sort().join(''); if (!qseen.has(k + q.join(''))) { qseen.add(k + q.join('')); polys.push(q); } };
+    for (let i = 0; i < names.length; i++) for (let j = i + 1; j < names.length; j++) for (let k = j + 1; k < names.length; k++) for (let l = k + 1; l < names.length; l++) {
+      const [a, b, c, d] = [names[i], names[j], names[k], names[l]];
+      for (const q of [[a, b, c, d], [a, b, d, c], [a, c, b, d]]) {
+        const ok = q.every((v, t) => onLine(v, q[(t + 1) % 4]) && !collinear(q[(t + 3) % 4], v, q[(t + 1) % 4]));
+        if (ok && !segX(q[0], q[1], q[2], q[3]) && !segX(q[1], q[2], q[3], q[0])) addQ(q);
+      }
+    }
+    (f.quads || []).forEach(q => { const k = [...q].sort().join(''); if (!polys.some(x => x.length === 4 && [...x].sort().join('') === k)) addQ(q); });
     // 꼭짓점마다 반직선(이름은 가장 가까운 점) → 두 반직선 사이의 각(180° 미만)
     const angles = [], RAYS = {};
     names.forEach(v => {
@@ -333,7 +343,7 @@
     const labs = nm.map(n => { const [x, y] = P[n]; let dx, dy;
       if (f.lab && f.lab[n]) [dx, dy] = f.lab[n]; else { const L = Math.hypot(x - cx, y - cy) || 1; dx = (x - cx) / L * 15; dy = (y - cy) / L * 15; }
       return `<circle cx="${x}" cy="${y}" r="3" class="tp${f.made && f.made.includes(n) ? ' new' : ''}"/><text class="pl${f.made && f.made.includes(n) ? ' new' : ''}" x="${x + dx}" y="${y + dy}">${n}</text>`; }).join('');
-    return `<svg id="fg" viewBox="0 0 ${f.w} ${f.h}" style="--fs:${f.fs || 20}px" xmlns="http://www.w3.org/2000/svg">${fills}${f.extra ? f.extra(P) : ''}<g class="tl">${lines}</g>${ras}${dims}<g id="hl"></g>${labs}<g id="cand"></g><path id="ink" class="ink" d=""/></svg>`;
+    return `<svg id="fg" viewBox="0 0 ${f.w} ${f.h}" style="--fs:${f.fs || 20}px" xmlns="http://www.w3.org/2000/svg">${fills}${f.extra ? f.extra(P) : ''}<g id="factLo"></g><g class="tl">${lines}</g>${ras}${dims}<g id="factHi"></g><g id="hl"></g>${labs}<g id="cand"></g><path id="ink" class="ink" d=""/></svg>`;
   }
   const rayOf = (G, v, p) => (G.rays[v] || []).find(r => r.side.includes(p));
   function akey(G, ids) { const [p, v, q] = ids, r1 = rayOf(G, v, p), r2 = rayOf(G, v, q); return r1 && r2 ? '∠' + v + ':' + [r1.p, r2.p].sort().join('') : null; }
@@ -352,6 +362,38 @@
     if (x.kind === 'ang' && x.g) { const a = x.g, V = P[a.v], r = Math.min(26, .3 * Math.min(dist(V, P[a.r1.p]), dist(V, P[a.r2.p]))), p1 = [V[0] + r * Math.cos(a.r1.a), V[1] + r * Math.sin(a.r1.a)], p2 = [V[0] + r * Math.cos(a.r1.a + a.th), V[1] + r * Math.sin(a.r1.a + a.th)];
       return `<path d="M${V[0]},${V[1]} L${p1[0]},${p1[1]} A${r},${r} 0 ${a.th > Math.PI ? 1 : 0} 1 ${p2[0]},${p2[1]} Z"/>`; }
     return '';
+  }
+  // 말과 그림에서 알아낸 사실: 「선분 FB는 8」 → 값 · 「∠BFE랑 ∠CED가 같아」 → 같은 것 · 「△FAH와 △FBE는 닮음」 → 닮음·합동
+  const FC = ['#e0a030', '#4f86e0', '#3aa864', '#d6574f', '#9466d0', '#25a8a8'];
+  function factsOf(seq) {
+    const out = [], items = []; seq.forEach((z, i) => { if (z.g) items.push(i); });
+    const after = (i, n) => { const ws = []; for (let k = i + 1; k < seq.length && ws.length < n; k++) { if (seq[k].g) break; ws.push(seq[k].w); } return ws; };
+    const sufw = i => (seq[i].suf || '');
+    for (let t = 0; t < items.length; t++) {
+      const i = items[t], x = seq[i].g.x, j = items[t + 1], y = j != null ? seq[j].g.x : null;
+      const between = j != null ? seq.slice(i + 1, j).filter(z => z.w).map(z => z.w) : [];
+      const tail = j != null ? sufw(j) + ' ' + after(j, 3).join(' ') : '';
+      if (y && j - i - 1 <= 2 && x.kind === y.kind && (x.kind === 'seg' || x.kind === 'ang') && /같|=/.test(tail + ' ' + between.join(' '))) { out.push({type: 'eq', a: x, b: y}); t++; continue; }
+      if (y && j - i - 1 <= 2 && x.kind === 'tri' && y.kind === 'tri') { const m = (tail + ' ' + between.join(' ')).match(/합동|닮음|닮았|닮은/); if (m) { out.push({type: 'rel', a: x, b: y, rel: /합동/.test(m[0]) ? '≡' : '∽'}); t++; continue; } }
+      if (x.kind === 'seg' || x.kind === 'ang') { const ws = (sufw(i) + ' ' + after(i, 3).join(' ')).match(/(\d+(?:\.\d+)?)\s*(센티미터|센티|cm|도|°)?/);
+        if (ws) out.push({type: 'val', a: x, v: ws[1] + (x.kind === 'ang' ? '°' : /센티|cm/.test(ws[2] || '') ? ' cm' : '')}); }
+    }
+    return out;
+  }
+  function factSvg(G, facts, extra) {   // 아래층(연한 칠) + 위층(값 글자)
+    const P = G.P; let lo = '', hi = '';
+    const nm = Object.keys(P), cx = nm.reduce((s, n) => s + P[n][0], 0) / nm.length, cy = nm.reduce((s, n) => s + P[n][1], 0) / nm.length;
+    const lab = (x, txt, c) => { if (x.kind === 'seg') { const a = P[x.ids[0]], b = P[x.ids[1]], L = dist(a, b) || 1, mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
+        let nx = -(b[1] - a[1]) / L * 11, ny = (b[0] - a[0]) / L * 11; if (nx * (cx - mx) + ny * (cy - my) < 0) { nx = -nx; ny = -ny; }   // 도형 안쪽으로(바깥 치수 글자와 안 겹치게)
+        return `<text class="fv" style="fill:${c}" x="${(a[0] + b[0]) / 2 + nx}" y="${(a[1] + b[1]) / 2 + ny}">${esc(txt)}</text>`; }
+      if (x.kind === 'ang' && x.g) { const g = x.g, V = P[g.v], m = g.r1.a + g.th / 2, r = Math.min(26, .3 * Math.min(dist(V, P[g.r1.p]), dist(V, P[g.r2.p]))) + 11;
+        return `<text class="fv" style="fill:${c}" x="${V[0] + r * Math.cos(m)}" y="${V[1] + r * Math.sin(m)}">${esc(txt)}</text>`; } return ''; };
+    const soft = (x, c) => x.kind === 'tri' || x.kind === 'quad' ? `<polygon class="fs" style="fill:${c}" points="${x.ids.map(n => P[n].join(',')).join(' ')}"/>` : `<g class="fs ${x.kind}" style="--fc:${c}">${shapeOf(G, x)}</g>`;
+    facts.concat(extra || []).forEach((f, i) => { const c = FC[i % FC.length];
+      if (f.type === 'val') { lo += soft(f.a, c); hi += lab(f.a, f.v, c); }
+      else if (f.type === 'eq') { lo += soft(f.a, c) + soft(f.b, c); hi += lab(f.a, '●', c) + lab(f.b, '●', c); }
+      else if (f.type === 'rel') { lo += soft(f.a, c) + soft(f.b, c); } });
+    return {lo, hi};
   }
   function highlight(G, x) {
     const P = G.P, g = document.getElementById('hl'); if (!g) return;
@@ -424,19 +466,19 @@
       <p class="t-lead">말하면서 도형의 그 부분을 손가락으로 <b>대강 따라 그리면</b> 이름이 입력칸에 들어가요. <button class="tc-how" id="how">어떻게 그려?</button></p>
       <div id="howBox"></div>
       ${PROBS.map((p, i) => `${i && PROBS[i - 1].sec === p.sec ? '' : `<div class="t-sec">${esc(p.sec)}</div>`}<button class="t-item" data-id="${p.id}"><div class="t-iq">${p.qh}</div></button>`).join('')}
-      <div class="t-src" style="margin-top:26px;text-align:center">따라 그리기 시안 0.6.1 (10/22)</div>
+      <div class="t-src" style="margin-top:26px;text-align:center">따라 그리기 시안 0.7 (10/22)</div>
     </div>`;
     $('#back').onclick = () => { location.href = 'try.html'; };
     $('#how').onclick = () => { const b = $('#howBox'); b.innerHTML = b.innerHTML ? '' : HOW; };
     root().querySelectorAll('.t-item').forEach(b => b.onclick = () => run(PROBS.find(p => p.id === b.dataset.id)));
   }
-  const HOW = `<div class="tc-help"><div><b>삼각형 · 사각형</b> 변을 따라 한 바퀴 빙 — 시작한 꼭짓점부터 그린 차례로 이름이 붙어요</div><div><b>선분</b> 그 변을 따라 슥</div><div><b>각</b> 한 변을 따라 와서 꼭짓점을 지나 다른 변으로 ㄱ자처럼 (꼭짓점 근처 작은 호도 돼요)</div><div><b>평각 · 큰 각 · 360°</b> 일직선 가운데 점 둘레에 반원 = 평각 · 반대쪽으로 크게 돈 호 = 180°보다 큰 쪽(부채꼴의 큰 중심각) · 점 둘레에 작은 원 한 바퀴 = 그 점 주위의 각(360°)</div><div><b>점</b> 톡</div><div><b>보조선</b> 「보조선」을 누르고 시작할 곳 → 끝낼 곳을 눌러요. 변 위를 누르면 후보 점 3개 중에서 골라요</div><div><b>말과 잇기</b> 말하는 글자가 회색으로 바로 보여요. 그 순간 그리면 그 자리에 이름이 들어가요. 「이 삼각형」「이 각」「이 변」「이거」처럼 말하면서 그리면 더 정확해요</div><div class="t-sub">잘못 들어간 이름은 눌러서 빼요.</div></div>`;
+  const HOW = `<div class="tc-help"><div><b>삼각형 · 사각형</b> 변을 따라 한 바퀴 빙 — 시작한 꼭짓점부터 그린 차례로 이름이 붙어요</div><div><b>선분</b> 그 변을 따라 슥</div><div><b>각</b> 한 변을 따라 와서 꼭짓점을 지나 다른 변으로 ㄱ자처럼 (꼭짓점 근처 작은 호도 돼요)</div><div><b>평각 · 큰 각 · 360°</b> 일직선 가운데 점 둘레에 반원 = 평각 · 반대쪽으로 크게 돈 호 = 180°보다 큰 쪽(부채꼴의 큰 중심각) · 점 둘레에 작은 원 한 바퀴 = 그 점 주위의 각(360°)</div><div><b>점</b> 톡</div><div><b>알아낸 것 표시</b> 「선분 FB는 8」「∠BFE랑 ∠CED가 같아」「△FAH와 △FBE는 닮음」처럼 말하면 도형에 같은 색으로 연하게 남아요</div><div><b>보조선</b> 「보조선」을 누르고 시작할 곳 → 끝낼 곳을 눌러요. 변 위를 누르면 후보 점 3개 중에서 골라요</div><div><b>말과 잇기</b> 말하는 글자가 회색으로 바로 보여요. 그 순간 그리면 그 자리에 이름이 들어가요. 「이 삼각형」「이 각」「이 변」「이거」처럼 말하면서 그리면 더 정확해요</div><div class="t-sub">잘못 들어간 이름은 눌러서 빼요.</div></div>`;
 
   function run(p) {
     stopRec(); window.scrollTo(0, 0);
     const base = FIGS[p.fig]; if (base.init && !base._ok) { base.init(base); base._ok = true; }
     let f = base, G = build(f);
-    const S = {speech: [], marks: [], typed: false, nid: 0, aux: [], am: null};
+    const S = {speech: [], marks: [], typed: false, nid: 0, aux: [], am: null, whyFacts: []};
     root().innerHTML = `<div class="t-wrap">
       <div class="t-top"><button class="t-back" id="back">‹ 목록</button><span class="t-sp"></span><span class="t-tag r3">시안</span></div>
       <div class="t-card"><div class="t-q tc-q">${p.qh}</div>
@@ -452,8 +494,13 @@
       const seq = compose(S), has = seq.length > 0;
       if (S.typed) { sub.disabled = !$('#ta')?.value.trim(); return; }
       live.innerHTML = has ? html(seq, true) : '<span class="t-ph">마이크를 누르고 말하면서, 도형의 그 부분을 따라 그려 봐</span>';
-      sub.disabled = !has;
+      sub.disabled = !has; paintFacts(seq);
     };
+    function paintFacts(seq) {   // 알아낸 사실을 도형에 연하게 — 다른 조건을 가리지 않게 칠은 옅게, 값 글자만 같은 색으로
+      const lo = document.getElementById('factLo'), hi = document.getElementById('factHi'); if (!lo || !hi) return;
+      const fs = factsOf(seq || compose(S)), r = factSvg(G, fs, S.whyFacts);
+      lo.innerHTML = r.lo; hi.innerHTML = r.hi;
+    }
     const dropMark = m => {   // 보조선을 빼면 그 뒤에 그은 보조선도 같이 뺀다(그 점을 쓸 수 있어서)
       if (m.x.kind === 'aux') { const k = S.aux.indexOf(m.x.rec); const gone = S.aux.splice(k); S.marks = S.marks.filter(z => !(z.x.kind === 'aux' && gone.includes(z.x.rec))); remount(); }
       else S.marks = S.marks.filter(z => z !== m);
@@ -489,7 +536,7 @@
         gotBadge(HTM[x.kind](x)); put(x, (c.t0 + Date.now()) / 2);
       });
       svg.addEventListener('pointercancel', () => { cur = null; ink.setAttribute('d', ''); });
-      paintPairs();
+      paintPairs(); paintFacts();
     }
 
     // ── 까닭 되묻기: 「어느 변과 어느 각이 같아서 합동일까? 같은 것끼리 둘씩 그려 봐」 — 짝이 맞는지는 앱이 바로 확인(AI 안 씀) ──
@@ -529,6 +576,7 @@
       if (done && !wrong.length) {
         const r = ks.map(x => HTM[x.a.kind](x.a) + ' = ' + HTM[x.b.kind](x.b)).join(', ') + ' → ' + esc(done.g.name);
         W.msgOk = true; W.msg = '✓ 맞아! ' + r + (W.tries > 1 ? ` <small>(${W.tries}번째에)</small>` : ''); whyPaint();
+        S.whyFacts = (S.whyFacts || []).concat(ks.filter(x => x.k.split('=')[0] !== x.k.split('=')[1]).map(x => ({type: 'eq', a: x.a, b: x.b})));
         const cb = W.done; setTimeout(() => { endWhy(); cb(r + (W.tries > 1 ? ` · ${W.tries}번째` : '') + (W.showed ? ' · 설명 본 뒤' : '')); }, 1400);
         return;
       }
@@ -651,7 +699,7 @@
       draw();
     };
     $('#undo').onclick = () => { if (S.typed) return toast('글로 쓸 때는 글자를 지워 주세요'); const m = S.marks.slice().sort((a, b) => b.t - a.t)[0]; if (m) dropMark(m); };
-    $('#clr').onclick = () => { killRec(); S.speech = []; S.marks = []; S.aux = []; if (S.am) endAux(); remount(); if (S.typed) $('#ta').value = ''; draw(); $('#res').innerHTML = ''; };
+    $('#clr').onclick = () => { killRec(); S.whyFacts = []; S.speech = []; S.marks = []; S.aux = []; if (S.am) endAux(); remount(); if (S.typed) $('#ta').value = ''; draw(); $('#res').innerHTML = ''; };
     sub.onclick = () => {
       killRec(); endWhy();
       const seq = S.typed ? null : compose(S), mine = S.typed ? esc($('#ta').value.trim()) : html(seq, false), said = S.typed ? $('#ta').value.trim() : plain(seq);
