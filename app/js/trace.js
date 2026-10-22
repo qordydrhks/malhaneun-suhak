@@ -64,32 +64,41 @@
      qh: `△ABC에서 ${ov('AB')}=${ov('AC')}이고, ${ov('AD')}는 ∠A의 이등분선이야. △ABD와 △ACD가 합동인 까닭을 말해 봐.`,
      ansh: `△ABD와 △ACD에서 ${ov('AB')}=${ov('AC')}, ∠BAD=∠CAD, ${ov('AD')}는 공통이므로 △ABD≡△ACD (SAS 합동)`,
      tip: '예) 「(삼각형 하나 그리기)와 (다른 삼각형 그리기)에서 …」처럼 말하면서 그려요.',
-     keys: ['AB = AC (주어진 조건)', '∠BAD = ∠CAD (AD가 ∠A의 이등분선)', 'AD는 두 삼각형의 공통인 변', '두 변과 그 끼인각이 같아 SAS 합동']},
+     keys: ['AB = AC (주어진 조건)', '∠BAD = ∠CAD (AD가 ∠A의 이등분선)', 'AD는 두 삼각형의 공통인 변', '두 변과 그 끼인각이 같아 SAS 합동'],
+     why: [{key: 3, claim: '△ABD와 △ACD', what: '합동', groups: [{name: 'SAS 합동', need: 3, pairs: [['AB', 'AC'], ['∠BAD', '∠CAD'], ['AD', 'AD']]}]}]},
     {id: 'p2', fig: 'para', sec: '중2-2 · 평행사변형의 성질',
      qh: `평행사변형 ABCD에 대각선 ${ov('AC')}를 그었어. △ABC와 △CDA가 합동인 까닭을 말해 봐.`,
      ansh: `${ov('AB')}∥${ov('DC')}이므로 ∠BAC=∠DCA (엇각), ${ov('AD')}∥${ov('BC')}이므로 ∠BCA=∠DAC (엇각), ${ov('AC')}는 공통이므로 △ABC≡△CDA (ASA 합동)`,
      tip: '각은 한 변을 따라 와서 꼭짓점을 지나 다른 변으로 그려요.',
-     keys: ['AB ∥ DC라서 ∠BAC = ∠DCA (엇각)', 'AD ∥ BC라서 ∠BCA = ∠DAC (엇각)', 'AC는 두 삼각형의 공통인 변', '한 변과 그 양 끝 각이 같아 ASA 합동']},
+     keys: ['AB ∥ DC라서 ∠BAC = ∠DCA (엇각)', 'AD ∥ BC라서 ∠BCA = ∠DAC (엇각)', 'AC는 두 삼각형의 공통인 변', '한 변과 그 양 끝 각이 같아 ASA 합동'],
+     why: [{key: 3, claim: '△ABC와 △CDA', what: '합동', groups: [{name: 'ASA 합동', need: 3, pairs: [['∠BAC', '∠DCA'], ['∠BCA', '∠DAC'], ['AC', 'AC']]},
+       {name: 'SSS 합동', need: 3, pairs: [['AB', 'CD'], ['BC', 'DA'], ['AC', 'AC']]}]}]},
     {id: 'free', fig: 'free', sec: '연습 · 아무 부분이나 그려 보기',
      qh: '선분 여러 개가 겹친 그림이에요. 삼각형·각·선분·점을 하나씩 그려 보고, 앱이 맞게 알아맞히는지 봐 주세요.',
      ansh: '', tip: '작은 삼각형(△AEF 등)도 그려 보세요.'},
   ].concat([
     {id: 'm2a', q: '가로 BC = 20 cm, 세로 AB = 12 cm인 직사각형 ABCD에서 BC 위에 BE : EC = 3 : 2가 되도록 점 E를 잡고, AB 위에 ∠DEF = 90°가 되도록 점 F를 잡았다. AD의 연장선과 EF의 연장선의 교점을 H라 할 때, AF와 AH의 길이를 각각 구하시오.',
+     why: [{key: 0, claim: '△FBE와 △ECD', what: '닮음(또는 합동)', groups: [{name: 'AA 닮음', need: 2, pairs: [['∠FBE', '∠ECD'], ['∠BFE', '∠CED'], ['∠BEF', '∠CDE']]},
+       {name: 'ASA 합동', need: 3, pairs: [['∠FBE', '∠ECD'], ['BE', 'CD'], ['∠BEF', '∠CDE']]}]},
+       {key: 2, claim: '△FAH와 △FBE', what: '닮음', groups: [{name: 'AA 닮음', need: 2, pairs: [['∠AFH', '∠BFE'], ['∠FAH', '∠FBE'], ['∠AHF', '∠BEF']]}]}],
      keys: ['△FBE와 △ECD가 닮음(∠B = ∠C = 90°, ∠BFE = ∠CED → AA 닮음)임을 보인다 — 이 문제는 BE = CD = 12라서 합동(∠BEF = ∠CDE로 ASA 합동)으로 보여도 된다', '대응변의 비(FB : EC = BE : CD)로 FB = 8, AF = 4 cm', 'AH ∥ BE라서 △FAH ∽ △FBE', 'AH : BE = AF : FB = 1 : 2라서 AH = 6 cm'],
      ans: 'AF = 4 cm, AH = 6 cm — ∠B = ∠C = 90°, ∠BFE = ∠CED라서 △FBE ∽ △ECD(AA 닮음). FB : EC = BE : CD에서 FB : 8 = 12 : 12, FB = 8이라 AF = 4. AH ∥ BE라서 △FAH ∽ △FBE, AH : BE = AF : FB = 1 : 2라 AH = 6.', src: '블랙라벨 중2-2 64쪽 종합 사고력 01 (숫자 바꿈)'},
     {id: 'm2b', q: '키가 1.6 m인 학생(PQ)의 그림자 QR의 길이가 2 m인 시각에, 피라미드의 그림자 끝이 이 학생이 선 곳 Q와 일치하였다. QB = 12 m이고, 피라미드를 옆에서 보면 높이 AH와 밑변 BC의 길이의 비가 2 : 1인 이등변삼각형일 때, 피라미드의 높이 AH를 구하시오.',
      keys: ['같은 시각에는 햇빛이 평행해서 (높이) : (그림자 길이)의 비가 같다(닮음)', '피라미드의 그림자는 꼭짓점 바로 아래 H부터 재야 한다(QH = 12 + BC/2)', 'BC = x로 두고 1.6 : 2 = 2x : (12 + x/2)를 풀어 AH = 12 m'],
      ans: '12 m — 같은 시각에는 (높이) : (그림자 길이)가 같다. 피라미드의 그림자는 꼭짓점 바로 아래 H부터 재야 하므로 BC = x m라 하면 그림자 길이 QH는 12 + x/2, 높이는 2x. 1.6 : 2 = 2x : (12 + x/2)에서 x = 6, AH = 12 m.', src: '블랙라벨 중2-2 64쪽 종합 사고력 03 (숫자 바꿈)', tip: '햇빛의 방향은 「보조선」으로 그어 봐.'},
     {id: 'm2c', q: '∠B = 90°인 직각삼각형 ABC의 무게중심을 G라 하자. 점 G에서 BC에 내린 수선의 발을 H라 하고, BG의 연장선 위의 점 D에서 BC의 연장선에 내린 수선의 발을 E라 하자. DE = 16 cm, HC : CE = 2 : 1일 때, GH의 길이를 구하시오.',
+     why: [{key: 2, claim: '△BGH와 △BDE', what: '닮음', groups: [{name: 'AA 닮음', need: 2, pairs: [['∠GBH', '∠DBE'], ['∠BHG', '∠BED'], ['∠BGH', '∠BDE']]}]}],
      keys: ['무게중심 G는 중선을 꼭짓점에서 2 : 1로 나눈다(중선을 그어 씀)', 'GH ∥ AB라서 BH : HC = 1 : 2', 'GH ∥ DE라서 △BGH ∽ △BDE이고 BH : BE = 1 : 4', 'GH = 16 × 1/4 = 4 cm'],
      ans: '4 cm — 무게중심 G는 중선 CM(M은 AB의 중점)을 2 : 1로 나누고 GH ∥ AB라서 BH : HC = 1 : 2. HC : CE = 2 : 1이니 BH = CE = k라 하면 BE = 4k. GH ∥ DE라서 △BGH ∽ △BDE, GH : 16 = 1 : 4에서 GH = 4 cm.', src: '블랙라벨 중2-2 74쪽 A등급 29 (숫자 바꿈)', tip: '무게중심을 쓰려면 「보조선」으로 중선을 그어 봐.'},
     {id: 'm2d', q: 'AB = 3 cm인 마름모 ABCD가 있다. AB의 연장선 위에 BE = 1 cm가 되도록 점 E를 잡고, ED가 BC, AC와 만나는 점을 각각 F, G라 할 때, (1) BF : AD (2) FG : GD (3) △GFC : △ACD를 각각 가장 간단한 자연수의 비로 나타내시오.',
+     why: [{key: 0, claim: '△EBF와 △EAD', what: '닮음', groups: [{name: 'AA 닮음', need: 2, pairs: [['∠BEF', '∠AED'], ['∠EBF', '∠EAD'], ['∠EFB', '∠EDA']]}]},
+       {key: 1, claim: '△GFC와 △GDA', what: '닮음', groups: [{name: 'AA 닮음', need: 2, pairs: [['∠FGC', '∠DGA'], ['∠GFC', '∠GDA'], ['∠GCF', '∠GAD']]}]}],
      keys: ['BF ∥ AD라서 △EBF ∽ △EAD, BF : AD = 1 : 4', 'FC ∥ AD라서 △GFC ∽ △GDA, FG : GD = 3 : 4', '높이가 같은 삼각형은 넓이의 비가 밑변의 비라서 △GFC : △ACD = 9 : 28'],
      ans: '(1) 1 : 4 (2) 3 : 4 (3) 9 : 28 — BF ∥ AD라서 △EBF ∽ △EAD(닮음비 1 : 4), BF = 3/4, FC = 9/4. FC ∥ AD라서 △GFC ∽ △GDA(닮음비 3 : 4). △GFC = 9a, △GDA = 16a이고 △GDC는 △GFC와 높이가 같아 12a, △ACD = 28a.', src: '블랙라벨 중2-2 75쪽 종합 사고력 03 (숫자 바꿈)'},
     {id: 'm2e', q: '한 변의 길이가 18 cm인 정사각형 ABCD가 있다. BC 위의 한 점 H에 대하여 세 삼각형 ABH, AHD, DHC의 무게중심을 각각 E, F, G라 할 때, △EFG의 넓이를 구하시오.',
      keys: ['중선 HM, HN, HP를 긋는다 (M, N, P는 AB, AD, DC의 중점)', '무게중심은 중선을 H에서 2 : 1로 나누므로 △EFG ∽ △MNP (닮음비 2 : 3)', '△MNP = 81 cm²라서 △EFG = 81 × 4/9 = 36 cm²'],
      ans: '36 cm² — AB, AD, DC의 중점을 M, N, P라 하면 E, F, G는 HM, HN, HP를 H로부터 2 : 1로 나누는 점이라 △EFG ∽ △MNP(닮음비 2 : 3). △MNP = 18 × 9 ÷ 2 = 81이니 △EFG = 81 × 4/9 = 36 cm². H가 BC 위 어디에 있어도 같다.', src: '블랙라벨 중2-2 74쪽 A등급 28 (숫자 바꿈)', tip: '무게중심을 쓰려면 「보조선」으로 중선을 그어 봐.'},
-  ].map(m => ({id: m.id, fig: m.id, sec: '블랙라벨 중2-2 심화 · 닮음', q: m.q, qh: esc(m.q), ansh: esc(m.ans), keys: m.keys, src: m.src, black: true,
+  ].map(m => ({id: m.id, fig: m.id, sec: '블랙라벨 중2-2 심화 · 닮음', q: m.q, qh: esc(m.q), ansh: esc(m.ans), keys: m.keys, why: m.why, src: m.src, black: true,
     tip: m.tip || '풀이를 말로 설명해 봐. 삼각형·각·선분은 그려서 넣고, 필요하면 「보조선」으로 선을 그어.'})));
 
   // ════════ 기하 도우미 ════════
@@ -326,6 +335,24 @@
       return `<circle cx="${x}" cy="${y}" r="3" class="tp${f.made && f.made.includes(n) ? ' new' : ''}"/><text class="pl${f.made && f.made.includes(n) ? ' new' : ''}" x="${x + dx}" y="${y + dy}">${n}</text>`; }).join('');
     return `<svg id="fg" viewBox="0 0 ${f.w} ${f.h}" style="--fs:${f.fs || 20}px" xmlns="http://www.w3.org/2000/svg">${fills}${f.extra ? f.extra(P) : ''}<g class="tl">${lines}</g>${ras}${dims}<g id="hl"></g>${labs}<g id="cand"></g><path id="ink" class="ink" d=""/></svg>`;
   }
+  const rayOf = (G, v, p) => (G.rays[v] || []).find(r => r.side.includes(p));
+  function akey(G, ids) { const [p, v, q] = ids, r1 = rayOf(G, v, p), r2 = rayOf(G, v, q); return r1 && r2 ? '∠' + v + ':' + [r1.p, r2.p].sort().join('') : null; }
+  const ikey = (G, x) => x.kind === 'seg' ? 'S:' + [...x.ids].sort().join('') : x.kind === 'ang' ? akey(G, x.ids) : null;
+  const skey = (G, t) => t[0] === '∠' ? akey(G, [...t.slice(1)]) : 'S:' + [...t].sort().join('');
+  const pkey = (a, b) => [a, b].sort().join('=');
+  function specItem(G, t) {   // '∠FBE' / 'BE' → 그림에 그릴 수 있는 것
+    if (t[0] !== '∠') return {kind: 'seg', ids: [...t]};
+    const [p, v, q] = [...t.slice(1)], r1 = rayOf(G, v, p), r2 = rayOf(G, v, q);
+    const g = G.angles.find(a => a.v === v && [a.r1.p, a.r2.p].sort().join() === [r1.p, r2.p].sort().join());
+    return {kind: 'ang', ids: [p, v, q], g};
+  }
+  function shapeOf(G, x) {
+    const P = G.P;
+    if (x.kind === 'seg') return `<line x1="${P[x.ids[0]][0]}" y1="${P[x.ids[0]][1]}" x2="${P[x.ids[1]][0]}" y2="${P[x.ids[1]][1]}"/>`;
+    if (x.kind === 'ang' && x.g) { const a = x.g, V = P[a.v], r = Math.min(26, .3 * Math.min(dist(V, P[a.r1.p]), dist(V, P[a.r2.p]))), p1 = [V[0] + r * Math.cos(a.r1.a), V[1] + r * Math.sin(a.r1.a)], p2 = [V[0] + r * Math.cos(a.r1.a + a.th), V[1] + r * Math.sin(a.r1.a + a.th)];
+      return `<path d="M${V[0]},${V[1]} L${p1[0]},${p1[1]} A${r},${r} 0 ${a.th > Math.PI ? 1 : 0} 1 ${p2[0]},${p2[1]} Z"/>`; }
+    return '';
+  }
   function highlight(G, x) {
     const P = G.P, g = document.getElementById('hl'); if (!g) return;
     let s = '';
@@ -397,7 +424,7 @@
       <p class="t-lead">말하면서 도형의 그 부분을 손가락으로 <b>대강 따라 그리면</b> 이름이 입력칸에 들어가요. <button class="tc-how" id="how">어떻게 그려?</button></p>
       <div id="howBox"></div>
       ${PROBS.map((p, i) => `${i && PROBS[i - 1].sec === p.sec ? '' : `<div class="t-sec">${esc(p.sec)}</div>`}<button class="t-item" data-id="${p.id}"><div class="t-iq">${p.qh}</div></button>`).join('')}
-      <div class="t-src" style="margin-top:26px;text-align:center">따라 그리기 시안 0.5.1 (10/22)</div>
+      <div class="t-src" style="margin-top:26px;text-align:center">따라 그리기 시안 0.6.1 (10/22)</div>
     </div>`;
     $('#back').onclick = () => { location.href = 'try.html'; };
     $('#how').onclick = () => { const b = $('#howBox'); b.innerHTML = b.innerHTML ? '' : HOW; };
@@ -440,6 +467,7 @@
     const tipEl = $('#tip'), auxb = $('#auxb');
     const setTip = t => { tipEl.textContent = t || p.tip; tipEl.classList.toggle('on', !!t); };
     const put = (x, t) => {   // 알아맞힌 것을 입력칸(또는 글 칸)에
+      if (S.why) return whyAdd(x);
       if (S.typed) { const ta = $('#ta'), w = TXT[x.kind](x), i = ta.selectionStart ?? ta.value.length; const pre = ta.value.slice(0, i), post = ta.value.slice(i);
         ta.value = pre + (pre && !/\s$/.test(pre) ? ' ' : '') + w + (post && !/^\s/.test(post) ? ' ' : '') + post; draw(); return; }
       S.marks.push({id: ++S.nid, x, t, at: words(S).length}); draw();
@@ -461,7 +489,65 @@
         gotBadge(HTM[x.kind](x)); put(x, (c.t0 + Date.now()) / 2);
       });
       svg.addEventListener('pointercancel', () => { cur = null; ink.setAttribute('d', ''); });
+      paintPairs();
     }
+
+    // ── 까닭 되묻기: 「어느 변과 어느 각이 같아서 합동일까? 같은 것끼리 둘씩 그려 봐」 — 짝이 맞는지는 앱이 바로 확인(AI 안 씀) ──
+    const PC = ['#e08e00', '#2f5aa8', '#1e7a46', '#b3261e', '#6d3fd0'];
+    function paintPairs() {
+      const svg = $('#fg'); if (!svg) return; svg.querySelector('#pairs')?.remove();
+      const W = S.why; if (!W) return;
+      const g = document.createElementNS('http://www.w3.org/2000/svg', 'g'); g.id = 'pairs';
+      g.innerHTML = W.items.map((x, i) => `<g class="pr ${x.kind}" style="--pc:${W.show ? '#1e7a46' : PC[Math.floor(i / 2) % PC.length]}">${shapeOf(G, x)}</g>`).join('');
+      svg.insertBefore(g, svg.querySelector('#hl'));
+    }
+    function whyAdd(x) {
+      if (x.kind !== 'seg' && x.kind !== 'ang') return toast('변이나 각만 그려 줘');
+      if (S.why.show) S.why.show = false, S.why.items = [];
+      S.why.items.push(x); paintPairs(); whyPaint();
+    }
+    function whyPaint() {
+      const W = S.why, box = document.getElementById('whyBox'); if (!W || !box) return;
+      const pairs = []; for (let i = 0; i < W.items.length; i += 2) pairs.push(W.items.slice(i, i + 2));
+      const nm = x => HTM[x.kind](x);
+      box.innerHTML = `<div class="tc-why"><div class="tc-why-q"><b>되묻기</b> ${esc(W.spec.claim)}는 왜 ${esc(W.spec.what)}일까? <b>같은 것끼리 둘씩</b> 도형에 따라 그려 봐. <small>(변이나 각만 · 공통인 변은 같은 변을 두 번)</small></div>
+        <div class="tc-pairs">${pairs.length ? pairs.map((pr, i) => `<span class="tc-pair" style="--pc:${PC[i % PC.length]}">${nm(pr[0])}${pr[1] ? ' = ' + nm(pr[1]) : ' = <i>?</i>'}</span>`).join('') : '<span class="t-sub">아직 그린 것이 없어요</span>'}</div>
+        ${W.msg ? `<div class="t-msg ${W.msgOk ? 'ok' : 'hint'}">${W.msg}</div>` : ''}
+        <div class="t-row"><button class="t-btn small" id="wUndo">하나 지우기</button><button class="t-btn small" id="wStop">그만두기</button><span class="t-sp"></span><button class="t-btn pri" id="wChk" ${pairs.length && pairs[pairs.length - 1].length === 2 ? '' : 'disabled'}>다 그렸어</button></div></div>`;
+      document.getElementById('wUndo').onclick = () => { W.items.pop(); W.show = false; W.msg = ''; paintPairs(); whyPaint(); };
+      document.getElementById('wStop').onclick = () => endWhy();
+      document.getElementById('wChk').onclick = whyCheck;
+    }
+    function whyCheck() {
+      const W = S.why, ks = []; for (let i = 0; i + 1 < W.items.length; i += 2) ks.push({k: pkey(ikey(G, W.items[i]), ikey(G, W.items[i + 1])), a: W.items[i], b: W.items[i + 1]});
+      const all = new Set(), gs = W.spec.groups.map(g => ({g, keys: g.pairs.map(pr => pkey(skey(G, pr[0]), skey(G, pr[1])))}));
+      gs.forEach(x => x.keys.forEach(k => all.add(k)));
+      const wrong = ks.filter(x => !all.has(x.k));
+      const have = x => x.keys.filter(k => ks.some(y => y.k === k)).length;
+      const done = gs.filter(x => have(x) >= x.g.need).sort((a, b) => have(b) - have(a))[0];   // 그린 짝을 가장 많이 담은 조건 이름으로
+      W.tries++;
+      if (done && !wrong.length) {
+        const r = ks.map(x => HTM[x.a.kind](x.a) + ' = ' + HTM[x.b.kind](x.b)).join(', ') + ' → ' + esc(done.g.name);
+        W.msgOk = true; W.msg = '✓ 맞아! ' + r + (W.tries > 1 ? ` <small>(${W.tries}번째에)</small>` : ''); whyPaint();
+        const cb = W.done; setTimeout(() => { endWhy(); cb(r + (W.tries > 1 ? ` · ${W.tries}번째` : '') + (W.showed ? ' · 설명 본 뒤' : '')); }, 1400);
+        return;
+      }
+      W.msgOk = false;
+      const best = gs.map(x => ({x, have: x.keys.filter(k => ks.some(y => y.k === k)).length})).sort((a, b) => b.have - a.have)[0];
+      let m = wrong.length ? `${wrong.map(x => HTM[x.a.kind](x.a) + ' = ' + HTM[x.b.kind](x.b)).join(', ')} — 이 짝은 까닭으로 쓸 수 없어(같지 않거나, 아직 모르는 것). 문제에서 주어졌거나 이미 아는 것만 써.` : '';
+      if (!done) m += ` 같은 것이 ${best.x.g.need - best.have}쌍 더 필요해.`;
+      if (W.tries >= 2) {   // 두 번 막히면 짧은 설명: 맞는 짝을 그림에 보여 준다
+        const g0 = best.x.g; W.show = true; W.showed = true;
+        W.items = g0.pairs.flatMap(pr => [specItem(G, pr[0]), specItem(G, pr[1])]);
+        m += ` <br><b>짧은 설명</b> ${g0.pairs.map(pr => esc(pr[0]) + ' = ' + esc(pr[1])).join(', ')} → ${esc(g0.name)}. 그림에서 확인하고, 지우고 다시 그려 봐.`;
+      }
+      W.msg = m; paintPairs(); whyPaint();
+    }
+    function askWhy(spec, done) {
+      S.why = {spec, items: [], tries: 0, done, msg: ''}; setTip('같은 것끼리 둘씩 그려 봐 (변이나 각)'); paintPairs(); whyPaint();
+      $('#figbox').scrollIntoView({block: 'start', behavior: 'smooth'});
+    }
+    function endWhy() { if (!S.why) return; S.why = null; setTip(''); paintPairs(); const b = document.getElementById('whyBox'); if (b) b.innerHTML = ''; }
     remount();
 
     // 보조선: 시작 → 끝. 꼭짓점이면 그 점, 변 위면 후보 점 3개(투명) 중에서 고른다
@@ -567,7 +653,7 @@
     $('#undo').onclick = () => { if (S.typed) return toast('글로 쓸 때는 글자를 지워 주세요'); const m = S.marks.slice().sort((a, b) => b.t - a.t)[0]; if (m) dropMark(m); };
     $('#clr').onclick = () => { killRec(); S.speech = []; S.marks = []; S.aux = []; if (S.am) endAux(); remount(); if (S.typed) $('#ta').value = ''; draw(); $('#res').innerHTML = ''; };
     sub.onclick = () => {
-      killRec();
+      killRec(); endWhy();
       const seq = S.typed ? null : compose(S), mine = S.typed ? esc($('#ta').value.trim()) : html(seq, false), said = S.typed ? $('#ta').value.trim() : plain(seq);
       const drawn = S.typed ? '' : S.marks.slice().sort((a, b) => a.id - b.id).map(m => HTM[m.x.kind](m.x)).join(' · ');
       const auxRec = S.marks.filter(m => m.x.kind === 'aux').map(m => `${HTM.aux(m.x)}${m.x.made.map(d => ` — ${esc(d.n)}: ${esc(d.desc)}${d.ok === true ? ' <b style="color:var(--ok)">(이 문제에 쓰는 점)</b>' : d.ok === false ? ' <b style="color:var(--warn)">(다른 점을 고름)</b>' : ''}`).join('')}`).join('<br>');
@@ -576,7 +662,7 @@
         ${auxRec ? `<div class="t-sub" style="margin-top:6px">어른 기록 · 그은 보조선<br>${auxRec}</div>` : ''}
         <div id="gradeBox"></div>
         ${p.ansh ? `<h3 style="margin-top:12px">모범 답</h3><div class="tc-mine">${p.ansh}</div>` : ''}</div>`;
-      if (p.keys) runGrade(p, said);
+      if (p.keys) runGrade(p, said, {askWhy});
     };
   }
 
@@ -586,35 +672,51 @@
 규칙:
 - 학생은 말하면서 도형의 부분을 손으로 그려 가리켰고, 그 부분은 △ABD · ∠BAD · 선분 AB · 점 A · 보조선 HM(M: AB의 중점) 같은 이름으로 글에 들어가 있어. 이 이름은 정확하니 그대로 믿어.
 - 뜻이 같으면 표현이 달라도 인정. 음성 인식이 수학 말을 틀리게 적은 것은 소리가 비슷하고 문맥상 분명하면 맞게 말한 것으로 봐(예: "어깍" = 엇각, "합 동" = 합동).
-- 결과 수만 말하고 그 까닭이 핵심인 항목은 까닭을 말해야 인정.
+- 까닭이 들어 있는 핵심은 까닭까지 말해야 인정한다. 결론(합동이다·닮음이다·평행이다·길이가 얼마다)만 말하고 그 까닭(어느 변·각이 같은지, 왜 같은지)을 빼면 st 를 "noreason" 으로.
+  예) "△FBE와 △ECD는 합동이야"만 말함 → noreason. "∠B와 ∠C가 90°, BE와 CD가 12, ∠BEF와 ∠CDE가 같아서 합동" → hit.
 - 질문이 방법을 정해 주지 않았으면 다른 바른 방법으로 같은 것을 보였어도 인정.
 - 합동이면 닮음이기도 하다. 닮음을 쓸 자리에 합동을 보였어도 그 판단이 맞으면 인정해. 합동 조건 이름(SAS·ASA·SSS)이나 근거가 틀렸으면 그 점만 misconception 에 짚어 — 합동이라는 판단 자체를 틀렸다고 하지 마.
 - 아직 모르는 길이(구해야 하는 값)를 근거로 쓴 합동·닮음은 근거가 틀린 것이다. 대응하는 꼭짓점 순서가 틀렸으면 misconception 에 짚어.
-- 각 핵심마다 근거(quote): 학생 글에서 그 핵심에 해당하는 부분을 짧게 그대로 따와. 인정하지 않으면 "".
+- 각 핵심마다 st: "hit"(까닭까지 맞게) · "noreason"(결론은 말했지만 까닭이 빠짐) · "miss"(말하지 않았거나 틀림).
+- 각 핵심마다 근거(quote): 학생 글에서 그 핵심에 해당하는 부분을 짧게 그대로 따와. 말하지 않았으면 "".
 - 틀린 내용을 말했으면 misconception 에 한 줄, 없으면 "".
 - ack: 20자 안팎 한 문장, 맞게 말한 부분만 구체적으로 인정(정답·빠진 핵심은 넣지 마).
-반드시 JSON만: {"hits":[{"id":"a","hit":true,"quote":"..."}],"misconception":"","ack":"..."}`;
+반드시 JSON만: {"hits":[{"id":"a","st":"hit","quote":"..."}],"misconception":"","ack":"..."}`;
   const canAI = () => A.isAcademyDevice() || sessionStorage.getItem('try:unlock') === '1';
-  async function runGrade(p, said) {
+  async function runGrade(p, said, ctx) {
     const box = document.getElementById('gradeBox'); if (!box) return;
     if (!canAI()) {
       box.innerHTML = `<div class="t-lock" style="margin-top:12px">AI 채점은 <b>학원 태블릿</b>에서만 돼요. 여기서 보려면 선생님 PIN을 넣어 주세요. <span style="white-space:nowrap"><input id="lockPin" type="password" inputmode="numeric" placeholder="PIN"><button class="t-btn small" id="lockGo">채점하기</button></span></div>`;
-      document.getElementById('lockGo').onclick = async () => { if (await A.checkPin(document.getElementById('lockPin').value)) { sessionStorage.setItem('try:unlock', '1'); runGrade(p, said); } else toast('PIN이 맞지 않아요'); };
+      document.getElementById('lockGo').onclick = async () => { if (await A.checkPin(document.getElementById('lockPin').value)) { sessionStorage.setItem('try:unlock', '1'); runGrade(p, said, ctx); } else toast('PIN이 맞지 않아요'); };
       return;
     }
     box.innerHTML = '<div class="t-think" style="margin-top:10px">AI 가 채점하는 중…</div>';
-    const user = `[문제] ${p.q || p.qh.replace(/<[^>]+>/g, '')}\n[꼭 말할 핵심]\n${p.keys.map((k, i) => IDS[i] + ') ' + k).join('\n')}\n[학생의 답(음성 인식 + 그려서 넣은 이름)] ${said}`;
+    const user = `[문제] ${p.q || p.qh.replace(/<[^>]+>/g, '')}\n[꼭 말할 핵심]\n${p.keys.map((k, i) => IDS[i] + ') ' + k + ((p.why || []).some(w => w.key === i) ? ' [까닭 필수: 어느 변·각이 같은지 말해야 hit. 「SAS 합동」「AA 닮음」처럼 조건 이름만 말하면 noreason]' : '')).join('\n')}\n[학생의 답(음성 인식 + 그려서 넣은 이름)] ${said}`;
     const t0 = Date.now(); let o = null, err = '';
     try { const raw = await A.ai({task: 'grade', system: SYS, messages: [{role: 'user', content: user}], max_tokens: 900, grade_id: 'trace'}); o = JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1)); }
     catch (e) { err = e.message || '채점이 잘 안 됐어요'; }
     const ms = Date.now() - t0;
-    if (!o) { box.innerHTML = `<div class="t-msg bad" style="margin-top:10px">${esc(err || '채점 결과를 읽지 못했어요')} <button class="t-btn small" id="regr">다시 채점</button></div>`; document.getElementById('regr').onclick = () => runGrade(p, said); return; }
-    const hits = p.keys.map((k, i) => (o.hits || []).find(h => h && h.id === IDS[i]) || {}), n = hits.filter(h => h.hit).length;
-    box.innerHTML = `<h3 style="margin-top:12px">AI 채점 <small style="font-weight:500;color:var(--sub)">· ${(ms / 1000).toFixed(1)}초 · 핵심 ${n}/${p.keys.length}</small></h3>
+    if (!o) { box.innerHTML = `<div class="t-msg bad" style="margin-top:10px">${esc(err || '채점 결과를 읽지 못했어요')} <button class="t-btn small" id="regr">다시 채점</button></div>`; document.getElementById('regr').onclick = () => runGrade(p, said, ctx); return; }
+    const hits = p.keys.map((k, i) => { const h = (o.hits || []).find(h => h && h.id === IDS[i]) || {}; h.st = h.st || (h.hit ? 'hit' : 'miss');
+      if (h.st === 'miss' && h.quote && (p.why || []).some(w => w.key === i)) h.st = 'noreason';   // 말은 했는데 까닭이 틀리거나 빠진 것 → 그려서 되묻기
+      return h; });
+    const paint = () => {
+      const n = hits.filter(h => h.st === 'hit').length;
+      box.innerHTML = `<h3 style="margin-top:12px">AI 채점 <small style="font-weight:500;color:var(--sub)">· ${(ms / 1000).toFixed(1)}초 · 핵심 ${n}/${p.keys.length}</small></h3>
       ${o.ack ? `<div class="t-msg ok">${esc(o.ack)}</div>` : ''}
-      <div class="t-log"><table>${p.keys.map((k, i) => `<tr><td>${hits[i].hit ? '<b style="color:var(--ok)">✓</b>' : '<b style="color:var(--bad)">✗</b>'} ${esc(k)}${hits[i].quote ? `<br><small style="color:var(--sub)">근거: 「${esc(hits[i].quote)}」</small>` : ''}</td></tr>`).join('')}</table></div>
+      <div class="t-log"><table>${p.keys.map((k, i) => { const h = hits[i];
+        const mk = h.st === 'hit' ? '<b style="color:var(--ok)">✓</b>' : h.st === 'noreason' ? '<b style="color:var(--warn)">△</b>' : '<b style="color:var(--bad)">✗</b>';
+        const why = (p.why || []).find(w => w.key === i);
+        return `<tr><td>${mk} ${esc(k)}${h.quote ? `<br><small style="color:var(--sub)">근거: 「${esc(h.quote)}」</small>` : ''}${h.st === 'noreason' ? `<br><small style="color:var(--warn)">까닭이 빠졌어요${why ? '' : ' — 말로 다시 해 봐'}</small>` : ''}${h.drew ? `<br><small style="color:var(--ok)">되묻기 뒤 그려서 보임: ${h.drew}</small>` : ''}${h.st === 'noreason' && why ? `<br><button class="t-btn small tc-ask" data-k="${i}">까닭 그려서 보이기</button>` : ''}</td></tr>`; }).join('')}</table></div>
       ${o.misconception ? `<div class="t-msg warn">틀린 생각: ${esc(o.misconception)}</div>` : ''}
+      <div id="whyBox"></div>
       <details class="t-sub" style="margin-top:8px"><summary>AI 에게 보낸 글 보기</summary><div style="white-space:pre-wrap;margin-top:6px">${esc(user)}</div></details>`;
+      box.querySelectorAll('.tc-ask').forEach(b => b.onclick = () => ctx.askWhy(p.why.find(w => w.key === +b.dataset.k), r => { hits[+b.dataset.k].st = 'hit'; hits[+b.dataset.k].drew = r; paint(); }));
+    };
+    paint();
+    // 까닭이 빠진 첫 핵심은 바로 되묻는다
+    const first = hits.findIndex((h, i) => h.st === 'noreason' && (p.why || []).some(w => w.key === i));
+    if (first >= 0) ctx.askWhy(p.why.find(w => w.key === first), r => { hits[first].st = 'hit'; hits[first].drew = r; paint(); });
   }
 
   window.TRACE_TEST = {FIGS, build, recog, compose, plain, applyAux, candsAt, PROBS};   // 시험용

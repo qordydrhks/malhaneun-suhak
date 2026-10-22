@@ -41,3 +41,12 @@
 .tc-tip.on{color:#2f5aa8;font-weight:700}
 .chip small{font-weight:600;color:#7a5a10;font-size:11px}
 .tc-fig .hk circle.fl{fill:#f2a516;fill-opacity:.45;stroke:#e08e00;stroke-width:2}
+/* 0.6 — 까닭 되묻기(같은 것끼리 짝지어 그리기) */
+.tc-fig #pairs .pr line{stroke:var(--pc);stroke-width:7;stroke-linecap:round;stroke-opacity:.7}
+.tc-fig #pairs .pr path{fill:var(--pc);fill-opacity:.45;stroke:var(--pc);stroke-width:1.5}
+.tc-why{margin-top:12px;border:2px solid #f0c75e;background:#fffaf0;border-radius:14px;padding:12px}
+.tc-why-q{font-size:15.5px;line-height:1.6}
+.tc-why-q small{color:var(--sub)}
+.tc-pairs{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}
+.tc-pair{border:2px solid var(--pc);border-radius:10px;padding:3px 10px;font-weight:700;background:#fff}
+.tc-ask{margin-top:6px}
