@@ -209,7 +209,7 @@
       <p class="t-lead">말하면서 도형의 그 부분을 손가락으로 <b>대강 따라 그리면</b> 이름이 입력칸에 들어가요. <button class="tc-how" id="how">어떻게 그려?</button></p>
       <div id="howBox"></div>
       ${PROBS.map(p => `<div class="t-sec">${esc(p.sec)}</div><button class="t-item" data-id="${p.id}"><div class="t-iq">${p.qh}</div></button>`).join('')}
-      <div class="t-src" style="margin-top:26px;text-align:center">따라 그리기 시안 0.1 (10/22)</div>
+      <div class="t-src" style="margin-top:26px;text-align:center">따라 그리기 시안 0.2 (10/22)</div>
     </div>`;
     $('#back').onclick = () => { location.href = 'try.html'; };
     $('#how').onclick = () => { const b = $('#howBox'); b.innerHTML = b.innerHTML ? '' : HOW; };
@@ -220,7 +220,7 @@
   function run(p) {
     stopRec(); window.scrollTo(0, 0);
     const f = FIGS[p.fig], G = build(f);
-    const S = {speech: [], marks: [], typed: false, interim: '', nid: 0};
+    const S = {speech: [], marks: [], typed: false, nid: 0};
     root().innerHTML = `<div class="t-wrap">
       <div class="t-top"><button class="t-back" id="back">‹ 목록</button><span class="t-sp"></span><span class="t-tag r3">시안</span></div>
       <div class="t-card"><div class="t-q tc-q">${p.qh}</div>
@@ -234,7 +234,7 @@
     const draw = () => {
       const seq = compose(S), has = seq.length > 0;
       if (S.typed) { sub.disabled = !$('#ta')?.value.trim(); return; }
-      live.innerHTML = has || S.interim ? html(seq, true) + (S.interim ? ` <span class="tc-int">${esc(S.interim)}</span>` : '') : '<span class="t-ph">마이크를 누르고 말하면서, 도형의 그 부분을 따라 그려 봐</span>';
+      live.innerHTML = has ? html(seq, true) : '<span class="t-ph">마이크를 누르고 말하면서, 도형의 그 부분을 따라 그려 봐</span>';
       sub.disabled = !has;
     };
     live.onclick = e => { const d = e.target.closest('[data-del]'); if (!d) return; S.marks = S.marks.filter(m => String(m.id) !== d.dataset.del); draw(); };
@@ -258,31 +258,48 @@
     };
     svg.addEventListener('pointerup', end); svg.addEventListener('pointercancel', () => { cur = null; ink.setAttribute('d', ''); });
 
-    // ── 말하기(확정 문장 + 시작 시각 추정) ──
+    // ── 말하기 — 새 앱 ui.js startRec 과 똑같은 방식(마스터 10/22 「마이크는 항상 앱과 동일하게」)
+    //    · interimResults=false: 확정된 문장만(중간 결과가 겹쳐 같은 말이 되풀이되는 안드로이드 문제 차단)
+    //    · 새로 확정된 조각만 resultIndex 부터 · 안드로이드가 끊으면 같은 인식기로 다시 켬(30번까지) · 4초 안에 안 켜지면 글로 쓰기
+    //    · 그린 것을 끼울 자리만 추가: 확정 조각이 온 시각으로 그 조각의 말한 시간(t0~t1)을 어림
     mic.onclick = () => {
-      if (REC) { stopRec(); mic.classList.remove('on'); S.interim = ''; draw(); return; }
+      if (REC) { stopRec(); mic.classList.remove('on'); return; }
       const R = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!R) { toast('이 기기는 말하기가 안 돼서 글로 써 줘'); return $('#tw').click(); }
-      let manual = false, restarts = 0, last = Date.now();
-      const start = () => {
-        const r = new R(); r.lang = 'ko-KR'; r.continuous = true; r.interimResults = true; r.maxAlternatives = 1;
-        const t0s = {}; REC = r; r._stop = () => { manual = true; };
-        r.onstart = () => { mic.classList.add('on'); last = Date.now(); };
-        r.onresult = ev => {
-          let it = '';
-          for (let k = ev.resultIndex; k < ev.results.length; k++) {
-            const res = ev.results[k], tx = (res[0].transcript || '').trim();
-            if (!(k in t0s)) t0s[k] = Math.min(Date.now() - 500, Math.max(last, Date.now() - 4000));
-            if (res.isFinal) { if (tx) { const now = Date.now(); S.speech.push({text: A.fixSpeech(tx), t0: t0s[k], t1: Math.max(t0s[k] + 300, now - 500)}); last = now; } }
-            else it += tx + ' ';
-          }
-          S.interim = it.trim(); draw();
-        };
-        r.onerror = ev => { if (['not-allowed', 'service-not-allowed', 'audio-capture'].includes(ev.error)) { manual = true; toast('마이크를 쓸 수 없어 글로 써 줘 (' + ev.error + ')'); } };
-        r.onend = () => { if (!manual && REC === r && restarts < 30) { restarts++; try { start(); return; } catch (e) {} } if (REC === r) REC = null; mic.classList.remove('on'); S.interim = ''; draw(); };
-        try { r.start(); } catch (e) { REC = null; toast('말하기를 시작하지 못했어요'); }
+      let manualStop = false, started = false, restarts = 0, lastErr = '', last = Date.now();
+      const r = new R(); r.lang = 'ko-KR'; r.continuous = true; r.interimResults = false; r.maxAlternatives = 5;
+      REC = r; r._stop = () => { manualStop = true; };
+      const watchdog = setTimeout(() => { if (!started) { try { r.abort(); } catch (e) {} REC = null; toast('이 기기에서 말하기가 시작되지 않아요. 글로 써 줘'); $('#tw').click(); } }, 4000);
+      r.onstart = () => { started = true; clearTimeout(watchdog); mic.classList.add('on'); last = Math.max(last, Date.now());
+        if (!S.speech.length && !S.marks.length) live.innerHTML = '<span class="t-ph">듣고 있어… 말하면서 도형을 따라 그려 봐. 다 말하면 마이크를 다시 눌러 줘</span>'; };
+      r.onresult = ev => {
+        for (let k = ev.resultIndex; k < ev.results.length; k++) {
+          const res = ev.results[k]; if (!res.isFinal) continue;
+          const t = (res[0].transcript || '').trim(); if (!t) continue;
+          const now = Date.now(), t1 = Math.max(last + 200, now - 600), t0 = Math.max(last, t1 - 400 - t.replace(/\s/g, '').length * 180);
+          S.speech.push({text: A.fixSpeech(t), t0, t1}); last = now;
+        }
+        draw();
       };
-      start();
+      r.onerror = ev => {
+        clearTimeout(watchdog); lastErr = ev.error || '';
+        if (ev.error === 'no-speech' || ev.error === 'aborted') return;
+        if (ev.error === 'not-allowed' || ev.error === 'service-not-allowed' || ev.error === 'network' || ev.error === 'audio-capture') {
+          manualStop = true; REC = null;
+          toast(ev.error === 'network' ? '음성 인식 서버에 연결하지 못했어. 글로 써 줘'
+              : ev.error === 'audio-capture' ? '마이크를 다른 곳에서 쓰고 있어. 앱을 다시 열거나 글로 써 줘 (audio-capture)'
+              : '마이크가 막혀 있어. 글로 써 줘 (' + ev.error + ')');
+          $('#tw').click();
+        } else toast('말하기 오류: ' + ev.error);
+      };
+      r.onend = () => {
+        clearTimeout(watchdog);
+        if (!manualStop && REC === r && restarts < 30) { restarts++; try { r.start(); return; } catch (e) {} }   // 안드로이드가 끊은 것 → 이어서 듣기
+        if (!manualStop && REC === r && !S.speech.length) toast('말소리를 못 들었어. 마이크를 다시 눌러 줘' + (lastErr ? ' (' + lastErr + ')' : ''));
+        if (REC === r) REC = null;
+        mic.classList.remove('on'); draw();
+      };
+      try { r.start(); } catch (e) { clearTimeout(watchdog); REC = null; toast('마이크를 시작할 수 없어. 글로 써 줘'); $('#tw').click(); }
     };
     $('#tw').onclick = () => {
       stopRec(); S.typed = !S.typed;
@@ -291,9 +308,9 @@
       draw();
     };
     $('#undo').onclick = () => { if (S.typed) return toast('글로 쓸 때는 글자를 지워 주세요'); const m = S.marks.slice().sort((a, b) => b.t - a.t)[0]; if (m) { S.marks = S.marks.filter(z => z !== m); draw(); } };
-    $('#clr').onclick = () => { stopRec(); S.speech = []; S.marks = []; S.interim = ''; if (S.typed) $('#ta').value = ''; draw(); $('#res').innerHTML = ''; };
+    $('#clr').onclick = () => { stopRec(); mic.classList.remove('on'); S.speech = []; S.marks = []; if (S.typed) $('#ta').value = ''; draw(); $('#res').innerHTML = ''; };
     sub.onclick = () => {
-      stopRec(); mic.classList.remove('on'); S.interim = '';
+      stopRec(); mic.classList.remove('on');
       const seq = S.typed ? null : compose(S), mine = S.typed ? esc($('#ta').value.trim()) : html(seq, false);
       const drawn = S.typed ? '' : S.marks.slice().sort((a, b) => a.t - b.t).map(m => HTM[m.x.kind](m.x)).join(' · ');
       $('#res').innerHTML = `<div class="t-note"><h3>내가 한 말</h3><div class="tc-mine">${mine}</div>
