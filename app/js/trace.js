@@ -63,26 +63,33 @@
     {id: 'p1', fig: 'iso', sec: '중2-2 · 이등변삼각형의 성질',
      qh: `△ABC에서 ${ov('AB')}=${ov('AC')}이고, ${ov('AD')}는 ∠A의 이등분선이야. △ABD와 △ACD가 합동인 까닭을 말해 봐.`,
      ansh: `△ABD와 △ACD에서 ${ov('AB')}=${ov('AC')}, ∠BAD=∠CAD, ${ov('AD')}는 공통이므로 △ABD≡△ACD (SAS 합동)`,
-     tip: '예) 「(삼각형 하나 그리기)와 (다른 삼각형 그리기)에서 …」처럼 말하면서 그려요.'},
+     tip: '예) 「(삼각형 하나 그리기)와 (다른 삼각형 그리기)에서 …」처럼 말하면서 그려요.',
+     keys: ['AB = AC (주어진 조건)', '∠BAD = ∠CAD (AD가 ∠A의 이등분선)', 'AD는 두 삼각형의 공통인 변', '두 변과 그 끼인각이 같아 SAS 합동']},
     {id: 'p2', fig: 'para', sec: '중2-2 · 평행사변형의 성질',
      qh: `평행사변형 ABCD에 대각선 ${ov('AC')}를 그었어. △ABC와 △CDA가 합동인 까닭을 말해 봐.`,
      ansh: `${ov('AB')}∥${ov('DC')}이므로 ∠BAC=∠DCA (엇각), ${ov('AD')}∥${ov('BC')}이므로 ∠BCA=∠DAC (엇각), ${ov('AC')}는 공통이므로 △ABC≡△CDA (ASA 합동)`,
-     tip: '각은 꼭짓점 근처에 작은 호를 그려요.'},
+     tip: '각은 한 변을 따라 와서 꼭짓점을 지나 다른 변으로 그려요.',
+     keys: ['AB ∥ DC라서 ∠BAC = ∠DCA (엇각)', 'AD ∥ BC라서 ∠BCA = ∠DAC (엇각)', 'AC는 두 삼각형의 공통인 변', '한 변과 그 양 끝 각이 같아 ASA 합동']},
     {id: 'free', fig: 'free', sec: '연습 · 아무 부분이나 그려 보기',
      qh: '선분 여러 개가 겹친 그림이에요. 삼각형·각·선분·점을 하나씩 그려 보고, 앱이 맞게 알아맞히는지 봐 주세요.',
      ansh: '', tip: '작은 삼각형(△AEF 등)도 그려 보세요.'},
   ].concat([
     {id: 'm2a', q: '가로 BC = 20 cm, 세로 AB = 12 cm인 직사각형 ABCD에서 BC 위에 BE : EC = 3 : 2가 되도록 점 E를 잡고, AB 위에 ∠DEF = 90°가 되도록 점 F를 잡았다. AD의 연장선과 EF의 연장선의 교점을 H라 할 때, AF와 AH의 길이를 각각 구하시오.',
+     keys: ['∠B = ∠C = 90°이고 ∠BFE = ∠CED라서 △FBE ∽ △ECD (AA 닮음)', '대응변의 비(FB : EC = BE : CD)로 FB = 8, AF = 4 cm', 'AH ∥ BE라서 △FAH ∽ △FBE', 'AH : BE = AF : FB = 1 : 2라서 AH = 6 cm'],
      ans: 'AF = 4 cm, AH = 6 cm — ∠B = ∠C = 90°, ∠BFE = ∠CED라서 △FBE ∽ △ECD(AA 닮음). FB : EC = BE : CD에서 FB : 8 = 12 : 12, FB = 8이라 AF = 4. AH ∥ BE라서 △FAH ∽ △FBE, AH : BE = AF : FB = 1 : 2라 AH = 6.', src: '블랙라벨 중2-2 64쪽 종합 사고력 01 (숫자 바꿈)'},
     {id: 'm2b', q: '키가 1.6 m인 학생(PQ)의 그림자 QR의 길이가 2 m인 시각에, 피라미드의 그림자 끝이 이 학생이 선 곳 Q와 일치하였다. QB = 12 m이고, 피라미드를 옆에서 보면 높이 AH와 밑변 BC의 길이의 비가 2 : 1인 이등변삼각형일 때, 피라미드의 높이 AH를 구하시오.',
+     keys: ['같은 시각에는 햇빛이 평행해서 (높이) : (그림자 길이)의 비가 같다(닮음)', '피라미드의 그림자는 꼭짓점 바로 아래 H부터 재야 한다(QH = 12 + BC/2)', 'BC = x로 두고 1.6 : 2 = 2x : (12 + x/2)를 풀어 AH = 12 m'],
      ans: '12 m — 같은 시각에는 (높이) : (그림자 길이)가 같다. 피라미드의 그림자는 꼭짓점 바로 아래 H부터 재야 하므로 BC = x m라 하면 그림자 길이 QH는 12 + x/2, 높이는 2x. 1.6 : 2 = 2x : (12 + x/2)에서 x = 6, AH = 12 m.', src: '블랙라벨 중2-2 64쪽 종합 사고력 03 (숫자 바꿈)', tip: '햇빛의 방향은 「보조선」으로 그어 봐.'},
     {id: 'm2c', q: '∠B = 90°인 직각삼각형 ABC의 무게중심을 G라 하자. 점 G에서 BC에 내린 수선의 발을 H라 하고, BG의 연장선 위의 점 D에서 BC의 연장선에 내린 수선의 발을 E라 하자. DE = 16 cm, HC : CE = 2 : 1일 때, GH의 길이를 구하시오.',
+     keys: ['무게중심 G는 중선을 꼭짓점에서 2 : 1로 나눈다(중선을 그어 씀)', 'GH ∥ AB라서 BH : HC = 1 : 2', 'GH ∥ DE라서 △BGH ∽ △BDE이고 BH : BE = 1 : 4', 'GH = 16 × 1/4 = 4 cm'],
      ans: '4 cm — 무게중심 G는 중선 CM(M은 AB의 중점)을 2 : 1로 나누고 GH ∥ AB라서 BH : HC = 1 : 2. HC : CE = 2 : 1이니 BH = CE = k라 하면 BE = 4k. GH ∥ DE라서 △BGH ∽ △BDE, GH : 16 = 1 : 4에서 GH = 4 cm.', src: '블랙라벨 중2-2 74쪽 A등급 29 (숫자 바꿈)', tip: '무게중심을 쓰려면 「보조선」으로 중선을 그어 봐.'},
     {id: 'm2d', q: 'AB = 3 cm인 마름모 ABCD가 있다. AB의 연장선 위에 BE = 1 cm가 되도록 점 E를 잡고, ED가 BC, AC와 만나는 점을 각각 F, G라 할 때, (1) BF : AD (2) FG : GD (3) △GFC : △ACD를 각각 가장 간단한 자연수의 비로 나타내시오.',
+     keys: ['BF ∥ AD라서 △EBF ∽ △EAD, BF : AD = 1 : 4', 'FC ∥ AD라서 △GFC ∽ △GDA, FG : GD = 3 : 4', '높이가 같은 삼각형은 넓이의 비가 밑변의 비라서 △GFC : △ACD = 9 : 28'],
      ans: '(1) 1 : 4 (2) 3 : 4 (3) 9 : 28 — BF ∥ AD라서 △EBF ∽ △EAD(닮음비 1 : 4), BF = 3/4, FC = 9/4. FC ∥ AD라서 △GFC ∽ △GDA(닮음비 3 : 4). △GFC = 9a, △GDA = 16a이고 △GDC는 △GFC와 높이가 같아 12a, △ACD = 28a.', src: '블랙라벨 중2-2 75쪽 종합 사고력 03 (숫자 바꿈)'},
     {id: 'm2e', q: '한 변의 길이가 18 cm인 정사각형 ABCD가 있다. BC 위의 한 점 H에 대하여 세 삼각형 ABH, AHD, DHC의 무게중심을 각각 E, F, G라 할 때, △EFG의 넓이를 구하시오.',
+     keys: ['중선 HM, HN, HP를 긋는다 (M, N, P는 AB, AD, DC의 중점)', '무게중심은 중선을 H에서 2 : 1로 나누므로 △EFG ∽ △MNP (닮음비 2 : 3)', '△MNP = 81 cm²라서 △EFG = 81 × 4/9 = 36 cm²'],
      ans: '36 cm² — AB, AD, DC의 중점을 M, N, P라 하면 E, F, G는 HM, HN, HP를 H로부터 2 : 1로 나누는 점이라 △EFG ∽ △MNP(닮음비 2 : 3). △MNP = 18 × 9 ÷ 2 = 81이니 △EFG = 81 × 4/9 = 36 cm². H가 BC 위 어디에 있어도 같다.', src: '블랙라벨 중2-2 74쪽 A등급 28 (숫자 바꿈)', tip: '무게중심을 쓰려면 「보조선」으로 중선을 그어 봐.'},
-  ].map(m => ({id: m.id, fig: m.id, sec: '블랙라벨 중2-2 심화 · 닮음', qh: esc(m.q), ansh: esc(m.ans), src: m.src, black: true,
+  ].map(m => ({id: m.id, fig: m.id, sec: '블랙라벨 중2-2 심화 · 닮음', q: m.q, qh: esc(m.q), ansh: esc(m.ans), keys: m.keys, src: m.src, black: true,
     tip: m.tip || '풀이를 말로 설명해 봐. 삼각형·각·선분은 그려서 넣고, 필요하면 「보조선」으로 선을 그어.'})));
 
   // ════════ 기하 도우미 ════════
@@ -333,29 +340,33 @@
   }
 
   // ════════ 말 + 그린 것 합치기 ════════
-  // ① 「이 삼각형」「이 각」「이 변」「이거」「여기」 같은 가리키는 말이 있으면, 그린 차례대로 그 자리에 이름을 넣는다
-  //    (음성 글자가 1~2초 늦게 와도 자리가 맞는다 — 기다릴 필요 없음). 종류가 맞는 가리키는 말만 쓴다.
-  // ② 가리키는 말이 없으면 말한 시간(t0~t1) 비율로 낱말 사이에 끼운다(어림).
+  // 말하는 도중의 글자(중간 결과)를 회색으로 바로 보여 주고, 그린 순간 화면에 있던 낱말 수(at)를 그 이름의 자리로 삼는다.
+  // ① 「이 삼각형」「이 각」「이 변」「이거」「여기」 같은 가리키는 말이 있으면 그린 차례대로 그 자리에 이름을 넣는다(가장 정확).
+  // ② 없으면 그린 순간의 자리(at)에 끼운다. 중간 글자가 확정되며 조금 바뀌면 자리도 낱말 한두 개 움직일 수 있다.
   const DEI_N = {삼각형: ['tri'], 사각형: ['quad'], 각: ['ang', 'full'], 변: ['seg', 'aux'], 선분: ['seg', 'aux'], 보조선: ['aux'], 선: ['seg', 'aux'], 점: ['pt']};
   const NOUN = /^(삼각형|사각형|보조선|선분|각(?!각)|변|선|점)(.*)$/, GEN = /^(이거|이것|여기|요기|이게|이걸|얘)(.*)$/, ANY = ['tri', 'quad', 'ang', 'full', 'seg', 'aux', 'pt'];
+  function words(S) {   // 확정된 말 + 지금 듣는 묶음의 확정 글자 + 중간 글자(회색)
+    const W = [], add = (t, i) => String(t || '').split(' ').filter(Boolean).forEach(w => W.push({w, i}));
+    S.speech.forEach(sp => add(sp.text));
+    const c = S.cur; if (c) { Object.keys(c.fin).sort((a, b) => a - b).forEach(k => add(c.fin[k])); add(c.interim, true); }
+    return W;
+  }
   function compose(S) {
-    const W = []; S.speech.forEach(sp => { const ws = sp.text.split(' ').filter(Boolean); ws.forEach((w, k) => W.push({w, t: sp.t0 + (k + .5) / ws.length * (sp.t1 - sp.t0), sp})); });
-    const D = [];   // 가리키는 말: {i(첫 낱말), n(낱말 수), kinds, suf}
+    const W = words(S), D = [];   // 가리키는 말: {i(첫 낱말), n(낱말 수), kinds, suf}
     for (let i = 0; i < W.length; i++) {
       const w = W[i].w, nx = W[i + 1] && W[i + 1].w; let m;
       if (/^(이|요|그|저)$/.test(w) && nx && (m = nx.match(NOUN))) { D.push({i, n: 2, kinds: DEI_N[m[1]], suf: m[2]}); i++; }
       else if ((m = w.match(/^(이|요|그)(삼각형|사각형|보조선|선분|각(?!각)|변|선|점)(.*)$/))) D.push({i, n: 1, kinds: DEI_N[m[2]], suf: m[3]});
       else if ((m = w.match(GEN))) D.push({i, n: 1, kinds: ANY, suf: m[2]});
     }
-    const gs = S.marks.slice().sort((a, b) => a.t - b.t), at = {}, loose = []; let last = -1;
+    const gs = S.marks.slice().sort((a, b) => a.id - b.id), at = {}, loose = []; let last = -1;
     gs.forEach(g => { const d = D.find(d => d.i > last && !d.g && d.kinds.includes(g.x.kind)); if (d) { d.g = g; last = d.i; at[d.i] = d; } else loose.push(g); });
+    loose.sort((a, b) => (a.at ?? 1e9) - (b.at ?? 1e9) || a.id - b.id);
     const out = []; let li = 0;
     for (let i = 0; i < W.length; i++) {
-      const sp = W[i].sp, t0 = sp.t0;
-      if (i === 0 || W[i - 1].sp !== sp) while (li < loose.length && loose[li].t < t0) out.push({g: loose[li++]});
-      while (li < loose.length && loose[li].t >= t0 && loose[li].t <= sp.t1 && loose[li].t < W[i].t) out.push({g: loose[li++]});
+      while (li < loose.length && (loose[li].at ?? 1e9) <= i) out.push({g: loose[li++]});
       const d = at[i]; if (d) { out.push({g: d.g, suf: d.suf}); i += d.n - 1; continue; }
-      out.push({w: W[i].w});
+      out.push({w: W[i].w, i: W[i].i});
     }
     while (li < loose.length) out.push({g: loose[li++]});
     return out;
@@ -372,7 +383,7 @@
     return suf;
   }
   const plain = seq => seq.map(z => z.w ?? TXT[z.g.x.kind](z.g.x) + josa(z.g.x, z.suf)).join(' ').replace(/\s+/g, ' ').trim();
-  const html = (seq, del) => seq.map(z => z.w != null ? esc(z.w) : `<span class="chip" ${del ? `data-del="${z.g.id}"` : ''}>${HTM[z.g.x.kind](z.g.x)}${del ? '<i>×</i>' : ''}</span>${esc(josa(z.g.x, z.suf))}`).join(' ');
+  const html = (seq, del) => seq.map(z => z.w != null ? (z.i ? `<span class="tc-int">${esc(z.w)}</span>` : esc(z.w)) : `<span class="chip" ${del ? `data-del="${z.g.id}"` : ''}>${HTM[z.g.x.kind](z.g.x)}${del ? '<i>×</i>' : ''}</span>${esc(josa(z.g.x, z.suf))}`).join(' ');
 
   // ════════ 화면 ════════
   let REC = null; const stopRec = () => { if (REC) { const r = REC; REC = null; try { r._stop(); r.stop(); } catch (e) {} } };
@@ -386,13 +397,13 @@
       <p class="t-lead">말하면서 도형의 그 부분을 손가락으로 <b>대강 따라 그리면</b> 이름이 입력칸에 들어가요. <button class="tc-how" id="how">어떻게 그려?</button></p>
       <div id="howBox"></div>
       ${PROBS.map((p, i) => `${i && PROBS[i - 1].sec === p.sec ? '' : `<div class="t-sec">${esc(p.sec)}</div>`}<button class="t-item" data-id="${p.id}"><div class="t-iq">${p.qh}</div></button>`).join('')}
-      <div class="t-src" style="margin-top:26px;text-align:center">따라 그리기 시안 0.4 (10/22)</div>
+      <div class="t-src" style="margin-top:26px;text-align:center">따라 그리기 시안 0.5 (10/22)</div>
     </div>`;
     $('#back').onclick = () => { location.href = 'try.html'; };
     $('#how').onclick = () => { const b = $('#howBox'); b.innerHTML = b.innerHTML ? '' : HOW; };
     root().querySelectorAll('.t-item').forEach(b => b.onclick = () => run(PROBS.find(p => p.id === b.dataset.id)));
   }
-  const HOW = `<div class="tc-help"><div><b>삼각형 · 사각형</b> 변을 따라 한 바퀴 빙 — 시작한 꼭짓점부터 그린 차례로 이름이 붙어요</div><div><b>선분</b> 그 변을 따라 슥</div><div><b>각</b> 한 변을 따라 와서 꼭짓점을 지나 다른 변으로 ㄱ자처럼 (꼭짓점 근처 작은 호도 돼요)</div><div><b>평각 · 큰 각 · 360°</b> 일직선 가운데 점 둘레에 반원 = 평각 · 반대쪽으로 크게 돈 호 = 180°보다 큰 쪽(부채꼴의 큰 중심각) · 점 둘레에 작은 원 한 바퀴 = 그 점 주위의 각(360°)</div><div><b>점</b> 톡</div><div><b>보조선</b> 「보조선」을 누르고 시작할 곳 → 끝낼 곳을 눌러요. 변 위를 누르면 후보 점 3개 중에서 골라요</div><div><b>말과 잇기</b> 「이 삼각형」「이 각」「이 변」「이거」처럼 말하면서 그리면 그 말 자리에 이름이 들어가요 — 말이 늦게 나타나도 기다리지 않아도 돼요</div><div class="t-sub">잘못 들어간 이름은 눌러서 빼요.</div></div>`;
+  const HOW = `<div class="tc-help"><div><b>삼각형 · 사각형</b> 변을 따라 한 바퀴 빙 — 시작한 꼭짓점부터 그린 차례로 이름이 붙어요</div><div><b>선분</b> 그 변을 따라 슥</div><div><b>각</b> 한 변을 따라 와서 꼭짓점을 지나 다른 변으로 ㄱ자처럼 (꼭짓점 근처 작은 호도 돼요)</div><div><b>평각 · 큰 각 · 360°</b> 일직선 가운데 점 둘레에 반원 = 평각 · 반대쪽으로 크게 돈 호 = 180°보다 큰 쪽(부채꼴의 큰 중심각) · 점 둘레에 작은 원 한 바퀴 = 그 점 주위의 각(360°)</div><div><b>점</b> 톡</div><div><b>보조선</b> 「보조선」을 누르고 시작할 곳 → 끝낼 곳을 눌러요. 변 위를 누르면 후보 점 3개 중에서 골라요</div><div><b>말과 잇기</b> 말하는 글자가 회색으로 바로 보여요. 그 순간 그리면 그 자리에 이름이 들어가요. 「이 삼각형」「이 각」「이 변」「이거」처럼 말하면서 그리면 더 정확해요</div><div class="t-sub">잘못 들어간 이름은 눌러서 빼요.</div></div>`;
 
   function run(p) {
     stopRec(); window.scrollTo(0, 0);
@@ -431,7 +442,7 @@
     const put = (x, t) => {   // 알아맞힌 것을 입력칸(또는 글 칸)에
       if (S.typed) { const ta = $('#ta'), w = TXT[x.kind](x), i = ta.selectionStart ?? ta.value.length; const pre = ta.value.slice(0, i), post = ta.value.slice(i);
         ta.value = pre + (pre && !/\s$/.test(pre) ? ' ' : '') + w + (post && !/^\s/.test(post) ? ' ' : '') + post; draw(); return; }
-      S.marks.push({id: ++S.nid, x, t}); draw();
+      S.marks.push({id: ++S.nid, x, t, at: words(S).length}); draw();
     };
     const gotBadge = h => { const got = $('#got'); got.innerHTML = '✓ ' + h; got.classList.remove('on'); void got.offsetWidth; got.classList.add('on'); };
     function remount() {
@@ -488,28 +499,42 @@
       endAux(); gotBadge(HTM.aux(x)); put(x, (am.t + Date.now()) / 2);
     }
 
-    // ── 말하기 — 새 앱 ui.js startRec 과 똑같은 방식(마스터 10/22 「마이크는 항상 앱과 동일하게」)
-    //    · interimResults=false: 확정된 문장만(중간 결과가 겹쳐 같은 말이 되풀이되는 안드로이드 문제 차단)
-    //    · 새로 확정된 조각만 resultIndex 부터 · 안드로이드가 끊으면 같은 인식기로 다시 켬(30번까지) · 4초 안에 안 켜지면 글로 쓰기
-    //    · 그린 것을 끼울 자리만 추가: 확정 조각이 온 시각으로 그 조각의 말한 시간(t0~t1)을 어림
+    // ── 말하기 — 새 앱 ui.js startRec 틀(같은 인식기로 다시 켜기 30번 · 4초 워치독 · 같은 오류 처리) + 중간 결과 바로 보이기(마스터 10/22 방법 1)
+    //    · 중간 글자는 회색으로 바로 보여 주고, 확정되면 바꿔 끼운다.
+    //    · 같은 말 되풀이 막기: 확정 글자는 결과 번호마다 「덮어쓰기」(쌓지 않음). 안드로이드가 앞 글자를 포함해 다시 보내면 앞 것을 지운다.
+    //      번호가 처음부터 다시 시작하면(새 말) 앞 것을 확정 목록으로 옮긴다. 중간 글자가 마지막 확정 글자로 시작하면 그 부분은 뗀다.
+    const commitCur = withInterim => {
+      const c = S.cur; if (!c) return;
+      Object.keys(c.fin).sort((a, b) => a - b).forEach(k => c.fin[k] && S.speech.push({text: c.fin[k]}));
+      if (withInterim && c.interim) S.speech.push({text: c.interim});
+      c.fin = {}; c.interim = '';
+    };
     mic.onclick = () => {
-      if (REC) { stopRec(); mic.classList.remove('on'); return; }
+      if (REC) { stopRec(); return; }   // 마지막 확정 글자는 끝나기 전에 들어온다(onend 에서 정리)
       const R = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!R) { toast('이 기기는 말하기가 안 돼서 글로 써 줘'); return $('#tw').click(); }
-      let manualStop = false, started = false, restarts = 0, lastErr = '', last = Date.now();
-      const r = new R(); r.lang = 'ko-KR'; r.continuous = true; r.interimResults = false; r.maxAlternatives = 5;
+      let manualStop = false, started = false, restarts = 0, lastErr = '';
+      const r = new R(); r.lang = 'ko-KR'; r.continuous = true; r.interimResults = true; r.maxAlternatives = 5;
       REC = r; r._stop = () => { manualStop = true; };
+      S.cur = {fin: {}, interim: ''};
       const watchdog = setTimeout(() => { if (!started) { try { r.abort(); } catch (e) {} REC = null; toast('이 기기에서 말하기가 시작되지 않아요. 글로 써 줘'); $('#tw').click(); } }, 4000);
-      r.onstart = () => { started = true; clearTimeout(watchdog); mic.classList.add('on'); last = Math.max(last, Date.now());
+      r.onstart = () => { started = true; clearTimeout(watchdog); mic.classList.add('on');
         if (!S.speech.length && !S.marks.length) live.innerHTML = '<span class="t-ph">듣고 있어… 말하면서 도형을 따라 그려 봐. 다 말하면 마이크를 다시 눌러 줘</span>'; };
       r.onresult = ev => {
+        if (r._dead || !S.cur) return;
+        const c = S.cur, its = [];
         for (let k = ev.resultIndex; k < ev.results.length; k++) {
-          const res = ev.results[k]; if (!res.isFinal) continue;
-          const t = (res[0].transcript || '').trim(); if (!t) continue;
-          const now = Date.now(), t1 = Math.max(last + 200, now - 600), t0 = Math.max(last, t1 - 400 - t.replace(/\s/g, '').length * 180);
-          S.speech.push({text: A.fixSpeech(t), t0, t1}); last = now;
+          const res = ev.results[k], t = A.fixSpeech((res[0].transcript || '').trim()); if (!t) continue;
+          if (res.isFinal) {
+            if (k > 0 && c.fin[k - 1] && t !== c.fin[k - 1] && t.startsWith(c.fin[k - 1])) delete c.fin[k - 1];   // 앞 글자를 포함해 다시 보냄
+            const old = c.fin[k];
+            if (old && old !== t && !t.startsWith(old) && !old.startsWith(t)) S.speech.push({text: old});   // 번호가 다시 시작된 새 말
+            c.fin[k] = t;
+          } else its.push(t);
         }
-        draw();
+        let it = its.join(' ').trim(); const ks = Object.keys(c.fin).sort((a, b) => a - b), lf = ks.length ? c.fin[ks[ks.length - 1]] : '';
+        if (lf && it.startsWith(lf)) it = it.slice(lf.length).trim();
+        c.interim = it; draw();
       };
       r.onerror = ev => {
         clearTimeout(watchdog); lastErr = ev.error || '';
@@ -524,32 +549,70 @@
       };
       r.onend = () => {
         clearTimeout(watchdog);
-        if (!manualStop && REC === r && restarts < 30) { restarts++; try { r.start(); return; } catch (e) {} }   // 안드로이드가 끊은 것 → 이어서 듣기
+        if (!r._dead) commitCur(true);   // 안드로이드가 끊으면 번호가 처음부터 다시 시작하므로 여기서 확정 목록으로
+        if (!manualStop && REC === r && restarts < 30) { restarts++; S.cur = {fin: {}, interim: ''}; try { r.start(); return; } catch (e) {} }   // 이어서 듣기
         if (!manualStop && REC === r && !S.speech.length) toast('말소리를 못 들었어. 마이크를 다시 눌러 줘' + (lastErr ? ' (' + lastErr + ')' : ''));
         if (REC === r) REC = null;
-        mic.classList.remove('on'); draw();
+        S.cur = null; mic.classList.remove('on'); draw();
       };
-      try { r.start(); } catch (e) { clearTimeout(watchdog); REC = null; toast('마이크를 시작할 수 없어. 글로 써 줘'); $('#tw').click(); }
+      try { r.start(); } catch (e) { clearTimeout(watchdog); REC = null; S.cur = null; toast('마이크를 시작할 수 없어. 글로 써 줘'); $('#tw').click(); }
     };
+    const killRec = () => { if (REC) REC._dead = true; commitCur(true); S.cur = null; stopRec(); mic.classList.remove('on'); };   // 제출: 지금 보이는 글자 그대로
     $('#tw').onclick = () => {
-      stopRec(); S.typed = !S.typed;
+      killRec(); S.typed = !S.typed;
       if (S.typed) { const cur0 = plain(compose(S)); live.innerHTML = `<textarea id="ta" placeholder="여기에 써도 돼. 도형을 그리면 커서 자리에 이름이 들어가요"></textarea>`; const ta = $('#ta'); ta.value = cur0; ta.oninput = draw; mic.style.display = 'none'; $('#tw').textContent = '말로 하기'; }
       else { const v = $('#ta').value.trim(); S.speech = v ? [{text: v, t0: 0, t1: 1}] : []; S.marks = []; mic.style.display = ''; $('#tw').textContent = '글로 쓰기'; }
       draw();
     };
     $('#undo').onclick = () => { if (S.typed) return toast('글로 쓸 때는 글자를 지워 주세요'); const m = S.marks.slice().sort((a, b) => b.t - a.t)[0]; if (m) dropMark(m); };
-    $('#clr').onclick = () => { stopRec(); mic.classList.remove('on'); S.speech = []; S.marks = []; S.aux = []; if (S.am) endAux(); remount(); if (S.typed) $('#ta').value = ''; draw(); $('#res').innerHTML = ''; };
+    $('#clr').onclick = () => { killRec(); S.speech = []; S.marks = []; S.aux = []; if (S.am) endAux(); remount(); if (S.typed) $('#ta').value = ''; draw(); $('#res').innerHTML = ''; };
     sub.onclick = () => {
-      stopRec(); mic.classList.remove('on');
-      const seq = S.typed ? null : compose(S), mine = S.typed ? esc($('#ta').value.trim()) : html(seq, false);
-      const drawn = S.typed ? '' : S.marks.slice().sort((a, b) => a.t - b.t).map(m => HTM[m.x.kind](m.x)).join(' · ');
+      killRec();
+      const seq = S.typed ? null : compose(S), mine = S.typed ? esc($('#ta').value.trim()) : html(seq, false), said = S.typed ? $('#ta').value.trim() : plain(seq);
+      const drawn = S.typed ? '' : S.marks.slice().sort((a, b) => a.id - b.id).map(m => HTM[m.x.kind](m.x)).join(' · ');
       const auxRec = S.marks.filter(m => m.x.kind === 'aux').map(m => `${HTM.aux(m.x)}${m.x.made.map(d => ` — ${esc(d.n)}: ${esc(d.desc)}${d.ok === true ? ' <b style="color:var(--ok)">(이 문제에 쓰는 점)</b>' : d.ok === false ? ' <b style="color:var(--warn)">(다른 점을 고름)</b>' : ''}`).join('')}`).join('<br>');
       $('#res').innerHTML = `<div class="t-note"><h3>내가 한 말</h3><div class="tc-mine">${mine}</div>
         ${drawn ? `<div class="t-sub" style="margin-top:6px">그려서 넣은 것: ${drawn}</div>` : ''}
         ${auxRec ? `<div class="t-sub" style="margin-top:6px">어른 기록 · 그은 보조선<br>${auxRec}</div>` : ''}
-        ${p.ansh ? `<h3 style="margin-top:12px">모범 답</h3><div class="tc-mine">${p.ansh}</div>` : ''}
-        <div class="t-sub" style="margin-top:10px">시안이라 채점은 하지 않아요. AI 에게는 「${esc(S.typed ? $('#ta').value.trim().slice(0, 40) : plain(seq).slice(0, 40))}…」처럼 글자로 넘어가요.</div></div>`;
+        <div id="gradeBox"></div>
+        ${p.ansh ? `<h3 style="margin-top:12px">모범 답</h3><div class="tc-mine">${p.ansh}</div>` : ''}</div>`;
+      if (p.keys) runGrade(p, said);
     };
+  }
+
+  // ════════ AI 채점 — 체험판(try.js)과 같은 서버 중계 · 학원 태블릿 또는 선생님 PIN ════════
+  const IDS = 'abcdefghijkl';
+  const SYS = `너는 중학생 수학 선생님이야. 학생이 도형 문제의 풀이를 말로 설명한 것(음성 인식 글)을 보고 [꼭 말할 핵심]을 하나씩 짚었는지 판정해.
+규칙:
+- 학생은 말하면서 도형의 부분을 손으로 그려 가리켰고, 그 부분은 △ABD · ∠BAD · 선분 AB · 점 A · 보조선 HM(M: AB의 중점) 같은 이름으로 글에 들어가 있어. 이 이름은 정확하니 그대로 믿어.
+- 뜻이 같으면 표현이 달라도 인정. 음성 인식이 수학 말을 틀리게 적은 것은 소리가 비슷하고 문맥상 분명하면 맞게 말한 것으로 봐(예: "어깍" = 엇각, "합 동" = 합동).
+- 결과 수만 말하고 그 까닭이 핵심인 항목은 까닭을 말해야 인정.
+- 질문이 방법을 정해 주지 않았으면 다른 바른 방법으로 같은 것을 보였어도 인정.
+- 각 핵심마다 근거(quote): 학생 글에서 그 핵심에 해당하는 부분을 짧게 그대로 따와. 인정하지 않으면 "".
+- 틀린 내용을 말했으면 misconception 에 한 줄, 없으면 "".
+- ack: 20자 안팎 한 문장, 맞게 말한 부분만 구체적으로 인정(정답·빠진 핵심은 넣지 마).
+반드시 JSON만: {"hits":[{"id":"a","hit":true,"quote":"..."}],"misconception":"","ack":"..."}`;
+  const canAI = () => A.isAcademyDevice() || sessionStorage.getItem('try:unlock') === '1';
+  async function runGrade(p, said) {
+    const box = document.getElementById('gradeBox'); if (!box) return;
+    if (!canAI()) {
+      box.innerHTML = `<div class="t-lock" style="margin-top:12px">AI 채점은 <b>학원 태블릿</b>에서만 돼요. 여기서 보려면 선생님 PIN을 넣어 주세요. <span style="white-space:nowrap"><input id="lockPin" type="password" inputmode="numeric" placeholder="PIN"><button class="t-btn small" id="lockGo">채점하기</button></span></div>`;
+      document.getElementById('lockGo').onclick = async () => { if (await A.checkPin(document.getElementById('lockPin').value)) { sessionStorage.setItem('try:unlock', '1'); runGrade(p, said); } else toast('PIN이 맞지 않아요'); };
+      return;
+    }
+    box.innerHTML = '<div class="t-think" style="margin-top:10px">AI 가 채점하는 중…</div>';
+    const user = `[문제] ${p.q || p.qh.replace(/<[^>]+>/g, '')}\n[꼭 말할 핵심]\n${p.keys.map((k, i) => IDS[i] + ') ' + k).join('\n')}\n[학생의 답(음성 인식 + 그려서 넣은 이름)] ${said}`;
+    const t0 = Date.now(); let o = null, err = '';
+    try { const raw = await A.ai({task: 'grade', system: SYS, messages: [{role: 'user', content: user}], max_tokens: 900, grade_id: 'trace'}); o = JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1)); }
+    catch (e) { err = e.message || '채점이 잘 안 됐어요'; }
+    const ms = Date.now() - t0;
+    if (!o) { box.innerHTML = `<div class="t-msg bad" style="margin-top:10px">${esc(err || '채점 결과를 읽지 못했어요')} <button class="t-btn small" id="regr">다시 채점</button></div>`; document.getElementById('regr').onclick = () => runGrade(p, said); return; }
+    const hits = p.keys.map((k, i) => (o.hits || []).find(h => h && h.id === IDS[i]) || {}), n = hits.filter(h => h.hit).length;
+    box.innerHTML = `<h3 style="margin-top:12px">AI 채점 <small style="font-weight:500;color:var(--sub)">· ${(ms / 1000).toFixed(1)}초 · 핵심 ${n}/${p.keys.length}</small></h3>
+      ${o.ack ? `<div class="t-msg ok">${esc(o.ack)}</div>` : ''}
+      <div class="t-log"><table>${p.keys.map((k, i) => `<tr><td>${hits[i].hit ? '<b style="color:var(--ok)">✓</b>' : '<b style="color:var(--bad)">✗</b>'} ${esc(k)}${hits[i].quote ? `<br><small style="color:var(--sub)">근거: 「${esc(hits[i].quote)}」</small>` : ''}</td></tr>`).join('')}</table></div>
+      ${o.misconception ? `<div class="t-msg warn">틀린 생각: ${esc(o.misconception)}</div>` : ''}
+      <details class="t-sub" style="margin-top:8px"><summary>AI 에게 보낸 글 보기</summary><div style="white-space:pre-wrap;margin-top:6px">${esc(user)}</div></details>`;
   }
 
   window.TRACE_TEST = {FIGS, build, recog, compose, plain, applyAux, candsAt, PROBS};   // 시험용
