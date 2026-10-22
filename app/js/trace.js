@@ -116,9 +116,9 @@
     }
     (f.quads || []).forEach(q => polys.push(q));
     // 꼭짓점마다 반직선(이름은 가장 가까운 점) → 두 반직선 사이의 각(180° 미만)
-    const angles = [];
+    const angles = [], RAYS = {};
     names.forEach(v => {
-      const rays = [];
+      const rays = RAYS[v] = [];
       f.lines.forEach(l => { const i = l.indexOf(v); if (i < 0) return;
         if (i > 0) rays.push({p: l[i - 1], a: ang(P[v], P[l[i - 1]]), side: l.slice(0, i).reverse()});
         if (i < l.length - 1) rays.push({p: l[i + 1], a: ang(P[v], P[l[i + 1]]), side: l.slice(i + 1)}); });
@@ -128,7 +128,7 @@
         else if (TAU - d < Math.PI - .03) angles.push({v, r1: rays[j], r2: rays[i], th: TAU - d});
       }
     });
-    return {P, segs, polys, angles, xp: f.xp || []};
+    return {P, segs, polys, angles, rays: RAYS, xp: f.xp || []};
   }
 
   // ════════ 따라 그린 선 → 어느 부분? (s = 화면 1px 이 그림 몇 칸인지의 역수) ════════
@@ -142,6 +142,7 @@
       let best = null, bd = Infinity; for (const n in P) { const d = dist(pts[0], P[n]); if (d < bd) { bd = d; best = n; } }
       return bd < px(36) ? {kind: 'pt', ids: [best]} : null;
     }
+    { const fx = fullTurn(G, pts, s); if (fx) return fx; }
     const closed = diag * s > 60 && dist(pts[0], pts[pts.length - 1]) < Math.max(px(48), .32 * diag);
     // 삼각형·사각형: 둘레를 얼마나 덮었나
     let poly = null;
@@ -180,28 +181,48 @@
         if (dm < T && (!seg || sc > seg.sc)) seg = {ab: [a, b], sc, cov, dm};
       } }
     const segX = () => { const [a, b] = seg.ab; return {kind: 'seg', ids: dist(pts[0], P[a]) <= dist(pts[0], P[b]) ? [a, b] : [b, a]}; };
-    // 각: 꼭짓점 근처 작은 호(또는 꺾은 선) — 꼭짓점을 비켜 그린다. 둔각의 호는 변과 거의 나란해서, 변 위를 바로 따라갔는지(dm)로 가른다
-    let angX = null;
-    if (diag * s < 130) {
-      let best = null;
-      for (const g of G.angles) {
-        const V = P[g.v]; if (Math.max(...pts.map(q => dist(q, V))) > px(95)) continue;
-        const dirs = pts.filter(q => dist(q, V) > px(6)).map(q => nrm(ang(V, q) - g.r1.a)).map(r => r > TAU - .25 ? r - TAU : r);
-        if (dirs.length < 3) continue;
-        const tol = .08, inside = dirs.filter(r => r >= -tol && r <= g.th + tol);
-        const fin = inside.length / dirs.length; if (fin < .8) continue;
-        const cover = Math.min(1, (Math.max(...inside) - Math.min(...inside)) / g.th);
-        const sc = .65 * fin + .35 * cover - .002 * pts.reduce((a, q) => a + dist(q, V), 0) / pts.length * s;
-        if (!best || sc > best.sc) best = {g, sc, first: dirs[0]};
-      }
-      if (best && Math.min(...pts.map(q => dist(q, P[best.g.v]))) * s > 10) { const g = best.g, startNear1 = Math.abs(best.first) < Math.abs(best.first - g.th);
-        angX = {kind: 'ang', ids: startNear1 ? [g.r1.p, g.v, g.r2.p] : [g.r2.p, g.v, g.r1.p], g}; }
-    }
+    // 각: 꼭짓점 근처 호 — 호가 덮은 방향 범위와 두 반직선 사이 범위가 얼마나 겹치는지(겹침 ÷ 합침)로 고른다.
+    //     작은 각·둔각·평각(반원)·180°보다 큰 각(부채꼴의 큰 쪽 중심각)을 모두 같은 방법으로. 둔각의 호는 변과 거의 나란해서, 변 위를 바로 따라갔는지(dm)로 가른다
+    let angX = diag * s < 170 ? arcAngle(G, pts, s) : null;
     if (!closed && seg && seg.cov >= .55 && (!angX || seg.dm * s < 9)) return segX();
     if (angX) return angX;
     if (closed && poly && poly.cov >= .45 && poly.edge >= .3) return {kind: poly.pg.length === 3 ? 'tri' : 'quad', ids: orderLoop(poly.pg, pts, P)};
     if (seg && seg.cov >= .45 && !closed) { const [a, b] = seg.ab; return {kind: 'seg', ids: dist(pts[0], P[a]) <= dist(pts[0], P[b]) ? [a, b] : [b, a]}; }
     return null;
+  }
+  // 호가 꼭짓점 V 둘레를 돈 방향: 처음 방향에서 잰 누적 각(범위 lo~hi)
+  function sweep(V, pts, minR) {
+    const qs = pts.filter(q => dist(q, V) > minR); if (qs.length < 4) return null;
+    let a0 = ang(V, qs[0]), acc = 0, lo = 0, hi = 0, prev = a0;
+    for (const q of qs.slice(1)) { const a = ang(V, q); let d = a - prev; if (d > Math.PI) d -= TAU; if (d < -Math.PI) d += TAU; acc += d; prev = a; lo = Math.min(lo, acc); hi = Math.max(hi, acc); }
+    return {a0, lo, hi, acc};
+  }
+  function fullTurn(G, pts, s) {   // 점 둘레에 작은 원 한 바퀴 → 「점 D 주위의 각(360°)」
+    const P = G.P; let best = null;
+    for (const v in P) { const V = P[v], ds = pts.map(q => dist(q, V));
+      if (Math.max(...ds) * s > 75 || Math.min(...ds) * s < 8 || Math.max(...ds) > 3 * Math.min(...ds)) continue;   // 꼭짓점을 지나가는 ㄱ자·삼각형은 빼고, 점을 감싸 도는 것만
+      if (dist(pts[0], pts[pts.length - 1]) > Math.max(30 / s, 1.2 * ds.reduce((x, y) => x + y, 0) / ds.length)) continue;
+      const w = sweep(V, pts, 0); if (!w || Math.abs(w.acc) < TAU * .82) continue;
+      const m = ds.reduce((a, b) => a + b, 0) / ds.length; if (!best || m < best.m) best = {m, v}; }
+    return best && {kind: 'full', ids: [best.v]};
+  }
+  function arcAngle(G, pts, s) {
+    const P = G.P, ovl = (a0, a1, b0, b1) => Math.max(0, Math.min(a1, b1) - Math.max(a0, b0)); let best = null;
+    for (const v in P) {
+      const V = P[v], ds = pts.map(q => dist(q, V)); if (Math.max(...ds) * s > 110 || Math.min(...ds) * s < 9) continue;
+      const w = sweep(V, pts, 0); if (!w || w.hi - w.lo < .2) continue;
+      const S0 = nrm(w.a0 + w.lo), SL = w.hi - w.lo, rays = G.rays[v] || [];
+      for (const r1 of rays) for (const r2 of rays) { if (r1 === r2) continue;
+        const L = nrm(r2.a - r1.a); if (L < .05) continue;   // r1 에서 시계 반대(화면에서는 시계) 방향으로 r2 까지
+        const off = nrm(r1.a - S0), ov = ovl(0, SL, off, off + L) + ovl(0, SL, off - TAU, off - TAU + L), iou = ov / (SL + L - ov);
+        const m = ds.reduce((a, b) => a + b, 0) / ds.length;
+        if (iou > .45 && (!best || iou - .001 * m * s > best.sc)) best = {sc: iou - .001 * m * s, v, r1, r2, L, cw: w.acc > 0};
+      }
+    }
+    if (!best) return null;
+    const {v, r1, r2, L} = best, g = {v, r1, r2, th: L}, kind = Math.abs(L - Math.PI) < .06 ? 'straight' : L > Math.PI ? 'big' : '';
+    const ids = best.cw ? [r1.p, v, r2.p] : [r2.p, v, r1.p];   // 그린 방향대로
+    return {kind: 'ang', ids, g, sub: kind};
   }
   function vAngle(G, pts, s) {
     const P = G.P, px = v => v / s; let best = null;
@@ -230,9 +251,9 @@
     const idx = pg.filter(n => n !== first).map(n => { let m = Infinity, at = 0; pts.forEach((q, i) => { if (i < cut) return; const d = dist(q, P[n]); if (d < m) { m = d; at = i; } }); return {n, at}; });
     return [first, ...idx.sort((a, b) => a.at - b.at).map(x => x.n)];
   }
-  const TXT = {pt: x => '점 ' + x.ids[0], seg: x => '선분 ' + x.ids.join(''), tri: x => '△' + x.ids.join(''), quad: x => '사각형 ' + x.ids.join(''), ang: x => '∠' + x.ids.join(''),
+  const TXT = {pt: x => '점 ' + x.ids[0], seg: x => '선분 ' + x.ids.join(''), tri: x => '△' + x.ids.join(''), quad: x => '사각형 ' + x.ids.join(''), ang: x => '∠' + x.ids.join('') + (x.sub === 'straight' ? '(평각)' : x.sub === 'big' ? '(180°보다 큰 쪽)' : ''), full: x => '점 ' + x.ids[0] + ' 주위의 각',
     aux: x => '보조선 ' + x.ids.join('') + (x.made.length ? '(' + x.made.map(m => m.n + ': ' + m.desc).join(', ') + ')' : '')};
-  const HTM = {pt: x => '점 ' + esc(x.ids[0]), seg: x => ov(x.ids.join('')), tri: x => '△' + esc(x.ids.join('')), quad: x => '□' + esc(x.ids.join('')), ang: x => '∠' + esc(x.ids.join('')),
+  const HTM = {pt: x => '점 ' + esc(x.ids[0]), seg: x => ov(x.ids.join('')), tri: x => '△' + esc(x.ids.join('')), quad: x => '□' + esc(x.ids.join('')), ang: x => '∠' + esc(x.ids.join('')) + (x.sub === 'straight' ? ' <small>평각</small>' : x.sub === 'big' ? ' <small>큰 쪽</small>' : ''), full: x => '<small>점 ' + esc(x.ids[0]) + ' 주위의 각</small>',
     aux: x => '<small>보조선</small> ' + ov(x.ids.join(''))};
 
   // ════════ 보조선 — 그림에 선을 더하고, 지나는 점·만나는 점을 이어 붙인다 ════════
@@ -305,7 +326,8 @@
     else if (x.kind === 'seg') s = `<line x1="${P[x.ids[0]][0]}" y1="${P[x.ids[0]][1]}" x2="${P[x.ids[1]][0]}" y2="${P[x.ids[1]][1]}"/>`;
     else if (x.kind === 'tri' || x.kind === 'quad') s = `<polygon points="${x.ids.map(n => P[n].join(',')).join(' ')}"/>`;
     else if (x.kind === 'ang') { const a = x.g, V = P[a.v], r = Math.min(30, .3 * Math.min(dist(V, P[a.r1.p]), dist(V, P[a.r2.p]))), p1 = [V[0] + r * Math.cos(a.r1.a), V[1] + r * Math.sin(a.r1.a)], p2 = [V[0] + r * Math.cos(a.r1.a + a.th), V[1] + r * Math.sin(a.r1.a + a.th)];
-      s = `<path d="M${V[0]},${V[1]} L${p1[0]},${p1[1]} A${r},${r} 0 0 1 ${p2[0]},${p2[1]} Z"/>`; }
+      s = `<path d="M${V[0]},${V[1]} L${p1[0]},${p1[1]} A${r},${r} 0 ${a.th > Math.PI ? 1 : 0} 1 ${p2[0]},${p2[1]} Z"/>`; }
+    else if (x.kind === 'full') s = `<circle class="fl" cx="${P[x.ids[0]][0]}" cy="${P[x.ids[0]][1]}" r="20"/>`;
     const el = document.createElementNS('http://www.w3.org/2000/svg', 'g'); el.setAttribute('class', 'hk ' + x.kind); el.innerHTML = s; g.appendChild(el);
     setTimeout(() => el.classList.add('fade'), 1300); setTimeout(() => el.remove(), 2100);
   }
@@ -314,8 +336,8 @@
   // ① 「이 삼각형」「이 각」「이 변」「이거」「여기」 같은 가리키는 말이 있으면, 그린 차례대로 그 자리에 이름을 넣는다
   //    (음성 글자가 1~2초 늦게 와도 자리가 맞는다 — 기다릴 필요 없음). 종류가 맞는 가리키는 말만 쓴다.
   // ② 가리키는 말이 없으면 말한 시간(t0~t1) 비율로 낱말 사이에 끼운다(어림).
-  const DEI_N = {삼각형: ['tri'], 사각형: ['quad'], 각: ['ang'], 변: ['seg', 'aux'], 선분: ['seg', 'aux'], 보조선: ['aux'], 선: ['seg', 'aux'], 점: ['pt']};
-  const NOUN = /^(삼각형|사각형|보조선|선분|각(?!각)|변|선|점)(.*)$/, GEN = /^(이거|이것|여기|요기|이게|이걸|얘)(.*)$/, ANY = ['tri', 'quad', 'ang', 'seg', 'aux', 'pt'];
+  const DEI_N = {삼각형: ['tri'], 사각형: ['quad'], 각: ['ang', 'full'], 변: ['seg', 'aux'], 선분: ['seg', 'aux'], 보조선: ['aux'], 선: ['seg', 'aux'], 점: ['pt']};
+  const NOUN = /^(삼각형|사각형|보조선|선분|각(?!각)|변|선|점)(.*)$/, GEN = /^(이거|이것|여기|요기|이게|이걸|얘)(.*)$/, ANY = ['tri', 'quad', 'ang', 'full', 'seg', 'aux', 'pt'];
   function compose(S) {
     const W = []; S.speech.forEach(sp => { const ws = sp.text.split(' ').filter(Boolean); ws.forEach((w, k) => W.push({w, t: sp.t0 + (k + .5) / ws.length * (sp.t1 - sp.t0), sp})); });
     const D = [];   // 가리키는 말: {i(첫 낱말), n(낱말 수), kinds, suf}
@@ -341,7 +363,7 @@
   // 조사를 이름 끝소리에 맞춘다 — 「이 삼각형과」 → △ABD와(디: 받침 없음) · 받침 있는 글자 이름은 L(엘)·M(엠)·N(엔)·R(알)뿐
   function josa(x, suf) {
     if (!suf) return '';
-    const last = x.ids[x.ids.length - 1], b = /[LMNR]$/.test(last), rieul = /[LR]$/.test(last);
+    const last = x.ids[x.ids.length - 1], tail = x.kind === 'full' || x.sub, b = tail || /[LMNR]$/.test(last), rieul = !tail && /[LR]$/.test(last);   // 「…주위의 각」「(평각)」「(…큰 쪽)」은 받침으로 끝남
     if (/^(으로|로)/.test(suf)) return (b && !rieul ? '으로' : '로') + suf.replace(/^(으로|로)/, '');
     const one = {과: ['과', '와'], 와: ['과', '와'], 은: ['은', '는'], 는: ['은', '는'], 을: ['을', '를'], 를: ['을', '를'], 가: ['이', '가']}[suf[0]];
     if (one) return (b ? one[0] : one[1]) + suf.slice(1);
@@ -364,13 +386,13 @@
       <p class="t-lead">말하면서 도형의 그 부분을 손가락으로 <b>대강 따라 그리면</b> 이름이 입력칸에 들어가요. <button class="tc-how" id="how">어떻게 그려?</button></p>
       <div id="howBox"></div>
       ${PROBS.map((p, i) => `${i && PROBS[i - 1].sec === p.sec ? '' : `<div class="t-sec">${esc(p.sec)}</div>`}<button class="t-item" data-id="${p.id}"><div class="t-iq">${p.qh}</div></button>`).join('')}
-      <div class="t-src" style="margin-top:26px;text-align:center">따라 그리기 시안 0.3 (10/22)</div>
+      <div class="t-src" style="margin-top:26px;text-align:center">따라 그리기 시안 0.4 (10/22)</div>
     </div>`;
     $('#back').onclick = () => { location.href = 'try.html'; };
     $('#how').onclick = () => { const b = $('#howBox'); b.innerHTML = b.innerHTML ? '' : HOW; };
     root().querySelectorAll('.t-item').forEach(b => b.onclick = () => run(PROBS.find(p => p.id === b.dataset.id)));
   }
-  const HOW = `<div class="tc-help"><div><b>삼각형 · 사각형</b> 변을 따라 한 바퀴 빙 — 시작한 꼭짓점부터 그린 차례로 이름이 붙어요</div><div><b>선분</b> 그 변을 따라 슥</div><div><b>각</b> 한 변을 따라 와서 꼭짓점을 지나 다른 변으로 ㄱ자처럼 (꼭짓점 근처 작은 호도 돼요)</div><div><b>점</b> 톡</div><div><b>보조선</b> 「보조선」을 누르고 시작할 곳 → 끝낼 곳을 눌러요. 변 위를 누르면 후보 점 3개 중에서 골라요</div><div><b>말과 잇기</b> 「이 삼각형」「이 각」「이 변」「이거」처럼 말하면서 그리면 그 말 자리에 이름이 들어가요 — 말이 늦게 나타나도 기다리지 않아도 돼요</div><div class="t-sub">잘못 들어간 이름은 눌러서 빼요.</div></div>`;
+  const HOW = `<div class="tc-help"><div><b>삼각형 · 사각형</b> 변을 따라 한 바퀴 빙 — 시작한 꼭짓점부터 그린 차례로 이름이 붙어요</div><div><b>선분</b> 그 변을 따라 슥</div><div><b>각</b> 한 변을 따라 와서 꼭짓점을 지나 다른 변으로 ㄱ자처럼 (꼭짓점 근처 작은 호도 돼요)</div><div><b>평각 · 큰 각 · 360°</b> 일직선 가운데 점 둘레에 반원 = 평각 · 반대쪽으로 크게 돈 호 = 180°보다 큰 쪽(부채꼴의 큰 중심각) · 점 둘레에 작은 원 한 바퀴 = 그 점 주위의 각(360°)</div><div><b>점</b> 톡</div><div><b>보조선</b> 「보조선」을 누르고 시작할 곳 → 끝낼 곳을 눌러요. 변 위를 누르면 후보 점 3개 중에서 골라요</div><div><b>말과 잇기</b> 「이 삼각형」「이 각」「이 변」「이거」처럼 말하면서 그리면 그 말 자리에 이름이 들어가요 — 말이 늦게 나타나도 기다리지 않아도 돼요</div><div class="t-sub">잘못 들어간 이름은 눌러서 빼요.</div></div>`;
 
   function run(p) {
     stopRec(); window.scrollTo(0, 0);
