@@ -8,7 +8,7 @@
 .tc-fig svg{display:block;width:100%;height:auto;max-height:52vh;touch-action:none}
 .tc-fig .tl line{stroke:#1c2230;stroke-width:2.2;stroke-linecap:round}
 .tc-fig .tp{fill:#1c2230}
-.tc-fig text{font-family:'Times New Roman',serif;font-size:20px;fill:#1c2230;pointer-events:none}
+.tc-fig text{font-family:'Times New Roman',serif;fill:#1c2230;pointer-events:none}
 .tc-fig .ink{fill:none;stroke:#2f5aa8;stroke-width:5;stroke-opacity:.55;stroke-linecap:round;stroke-linejoin:round;transition:opacity .5s;pointer-events:none}
 .tc-fig .ink.bad{stroke:#c0392b}
 .tc-fig .ink.fade{opacity:0}
@@ -28,3 +28,15 @@
 .chip i{font-style:normal;color:#b07a00;margin-left:4px;font-weight:500;font-size:12px}
 .tc-mine{font-size:15.5px;line-height:1.9}
 .tc-mine .chip{cursor:default}
+/* 0.3 — 글자 크기 변수 · 치수 · 보조선 · 후보 점 */
+.tc-fig text.pl{font-size:var(--fs,20px);text-anchor:middle;dominant-baseline:central}
+.tc-fig text.pl.new,.tc-fig .tp.new{fill:#2f5aa8}
+.tc-fig text.dim{font-family:Pretendard,sans-serif;font-size:12px;fill:#4a5160;text-anchor:middle;dominant-baseline:central}
+.tc-fig .tl line.aux{stroke:#2f5aa8;stroke-dasharray:6 4;stroke-width:2}
+.tc-fig circle.cd{fill:#2f5aa8;fill-opacity:.28;stroke:#2f5aa8;stroke-width:1.5;stroke-opacity:.6;animation:tcCd 1.2s infinite}
+@keyframes tcCd{50%{fill-opacity:.12}}
+.tc-fig circle.pk{fill:#2f5aa8;fill-opacity:.55;stroke:#fff;stroke-width:2}
+.tc-tools{display:flex;align-items:center;gap:10px;margin:2px 0 8px;flex-wrap:wrap}
+.tc-tools .t-btn.on{background:#2f5aa8;color:#fff;border-color:#2f5aa8}
+.tc-tip.on{color:#2f5aa8;font-weight:700}
+.chip small{font-weight:600;color:#7a5a10;font-size:11px}
