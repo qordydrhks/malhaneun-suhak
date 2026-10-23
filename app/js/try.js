@@ -793,6 +793,7 @@
       ${canAI() ? '' : lockBox()}
       <div class="t-sec">도형 · 말하면서 따라 그리기 (10/22 시안)</div>
       <a class="t-item" href="trace.html" style="text-decoration:none"><span class="t-tag r3">시안 4</span><span class="t-tag">말 + 따라 그리기</span><div class="t-iq">말하면서 도형의 그 부분을 손가락으로 대강 따라 그리면 △ABD · ∠BAD · 선분 AB 가 입력칸에 들어가요.</div></a>
+      ${(VARA = false, '')}${window.TRY_GRAPH ? TRY_GRAPH.list(d) : ''}
       <div class="t-sec">중3-1 · 03 인수분해 공식의 활용</div>
       ${(VARA = true, '')}${M3.map(it => `<button class="t-item${d.has(it.id) ? ' done' : ''}" data-id="${it.id}"><span class="t-tag r${it.r}">${RT[it.r]}</span><span class="t-tag">${esc(it.kind)}</span><div class="t-iq">${F(it.q)}</div><div class="t-how">${esc(it.how)}</div></button>`).join('')}
       ${(VARA = false, '')}${HSL.map((m, i) => `${i && HSL[i - 1].sec === m.sec ? '' : `<div class="t-sec">${esc(m.sec)}</div>`}
@@ -801,7 +802,7 @@
       <button class="t-item${d.has(c.id) ? ' done' : ''}" data-id="${c.id}"><span class="t-tag r3">시안</span><span class="t-tag">${esc(c.kind)}</span><div class="t-iq">${F(c.qParts.map(x => typeof x === 'string' ? x : x.t).join(''))}</div><div class="t-how">${esc(c.how)}</div></button>`).join('')}
       <div class="t-sec">${esc(N3.sec)}</div>
       <button class="t-item${d.has(N3.id) ? ' done' : ''}" data-id="${N3.id}"><span class="t-tag r3">시안 3</span><span class="t-tag">${esc(N3.kind)}</span><div class="t-iq">${F(N3.q)}</div><div class="t-how">${esc(N3.how)}</div></button>
-      <div class="t-src" style="margin-top:26px;text-align:center">체험판 0.8 (10/23 · 학원 기기는 네이버 음성 인식) · ${esc(A.VERSION)}</div>
+      <div class="t-src" style="margin-top:26px;text-align:center">체험판 0.9 (10/23 · 이차함수 그래프 누르기·카드·대강 그리기 · 학원 기기는 네이버 음성 인식) · ${esc(A.VERSION)}</div>
     </div>`;
     root().querySelectorAll('.t-item').forEach(b => b.onclick = () => open(b.dataset.id));
     bindLock(home);
@@ -814,6 +815,7 @@
     go.onclick = async () => { if (await A.checkPin($('#lockPin').value)) { sessionStorage.setItem('try:unlock', '1'); toast('이 창에서 AI 채점이 열렸어요'); after(); } else toast('PIN이 맞지 않아요'); };
   }
   function open(id) {
+    if (window.TRY_GRAPH && TRY_GRAPH.has(id)) { window.scrollTo(0, 0); VARA = false; return TRY_GRAPH.open(id); }   // 이차함수 그래프 견본(graph.js)
     const hm = HSL.find(m => m.hs.id === id);
     window.scrollTo(0, 0); VARA = !hm;
     if (hm) return runMap(hm);
@@ -1039,5 +1041,6 @@
   }
 
   A.tryStart = home; A.tryGrade = grade;   // 시험용
+  A.tryKit = {frame, step, noteAdd, showLog, markDone, fold, F, FH, sleep};   // graph.js(이차함수 그래프 조작 견본)가 쓰는 도구
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', home); else home();
 })();
