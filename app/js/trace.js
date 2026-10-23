@@ -414,9 +414,9 @@
   // ② 없으면 그린 순간의 자리(at)에 끼운다. 중간 글자가 확정되며 조금 바뀌면 자리도 낱말 한두 개 움직일 수 있다.
   const DEI_N = {삼각형: ['tri'], 사각형: ['quad'], 각: ['ang', 'full'], 변: ['seg', 'aux'], 선분: ['seg', 'aux'], 보조선: ['aux'], 선: ['seg', 'aux'], 점: ['pt']};
   const NOUN = /^(삼각형|사각형|보조선|선분|각(?!각)|변|선|점)(.*)$/, GEN = /^(이거|이것|여기|요기|이게|이걸|얘)(.*)$/, ANY = ['tri', 'quad', 'ang', 'full', 'seg', 'aux', 'pt'];
-  function words(S) {   // 확정된 말 + 지금 듣는 묶음의 확정 글자 + 중간 글자(회색)
+  function words(S) {   // 확정된 말 + 지금 듣는 묶음의 확정 글자 + 중간 글자(회색). CLOVA 로 들은 말은 낱말마다 말한 시각(s)도
     const W = [], add = (t, i) => String(t || '').split(' ').filter(Boolean).forEach(w => W.push({w, i}));
-    S.speech.forEach(sp => add(sp.text));
+    S.speech.forEach(sp => sp.ws ? sp.ws.forEach(x => W.push({w: x.w, s: x.s})) : add(sp.text));
     const c = S.cur; if (c) { Object.keys(c.fin).sort((a, b) => a - b).forEach(k => add(c.fin[k])); add(c.interim, true); }
     return W;
   }
@@ -430,6 +430,8 @@
     }
     const gs = S.marks.slice().sort((a, b) => a.id - b.id), at = {}, loose = []; let last = -1;
     gs.forEach(g => { const d = D.find(d => d.i > last && !d.g && d.kinds.includes(g.x.kind)); if (d) { d.g = g; last = d.i; at[d.i] = d; } else loose.push(g); });
+    // CLOVA 는 낱말마다 말한 시각을 준다 → 그린 시각(t)보다 늦게 말한 첫 낱말 앞에 끼운다(글자가 0.5~1초 늦게 와도 자리가 맞음)
+    if (W.some(w => w.s != null)) loose.forEach(g => { if (g.t == null) return; const k = W.findIndex(w => w.s != null && w.s > g.t); g.at = k < 0 ? W.length : k; });
     loose.sort((a, b) => (a.at ?? 1e9) - (b.at ?? 1e9) || a.id - b.id);
     const out = []; let li = 0;
     for (let i = 0; i < W.length; i++) {
@@ -440,6 +442,33 @@
     while (li < loose.length) out.push({g: loose[li++]});
     return out;
   }
+  // CLOVA 글자 다듬기 — 「a b d와」→ABD와 · 「acd에서」→ACD에서 · 「a 씨가」→AC가 · 「sAS」→SAS. 도형에 있는 점 이름일 때만 대문자로(x·y 같은 문자는 그대로)
+  const LET = {에이치: 'H', 에이: 'A', 에프: 'F', 비: 'B', 씨: 'C', 디: 'D', 지: 'G'};   // 「이」(E)는 우리말과 헷갈려 뺌
+  function tidyLatin(ws, pts) {
+    const isPt = s => s.length > 0 && [...s.toUpperCase()].every(ch => pts.includes(ch)), out = [];
+    for (const x of ws) {
+      let w = x.w, m = w.match(/^([A-Za-z]+)(.*)$/);
+      if (m && /^(sas|asa|sss|aa|rhs|rha)$/i.test(m[1])) w = m[1].toUpperCase() + m[2];
+      else if (m && isPt(m[1])) w = m[1].toUpperCase() + m[2];
+      const prev = out[out.length - 1], pl = prev && /^[A-Z]+$/.test(prev.w);
+      const k = w.match(/^(에이치|에이|에프|비|씨|디|지)(.*)$/);
+      if (pl && k && pts.includes(LET[k[1]])) { prev.w += LET[k[1]] + k[2]; continue; }   // 앞이 점 이름이면 「씨가」→ C가
+      const lead = (w.match(/^[A-Z]+/) || [''])[0];
+      if (pl && lead && isPt(lead) && (prev.w.length === 1 || lead.length === 1)) { prev.w += w; continue; }   // 「A B D와」 → ABD와 (「AB AC」처럼 둘 다 긴 것은 안 붙임)
+      out.push({w, s: x.s});
+    }
+    return out;
+  }
+  function clovaWords(chars, pts) {   // 글자별 시각 → 낱말별 시각
+    const ws = []; let cur = null;
+    chars.forEach(c => {
+      if (/^\s*$/.test(c.c)) { cur = null; return; }
+      if (cur && /^[A-Za-z]/.test(c.c) && /[가-힣]$/.test(cur.w)) cur = null;   // 「삼각형a」처럼 붙여 오면 한글 뒤 알파벳에서 띄운다(알파벳 뒤 한글은 조사라 붙임)
+      if (!cur) { cur = {w: '', s: c.t}; ws.push(cur); } cur.w += c.c.trim();
+    });
+    return tidyLatin(ws, pts);
+  }
+
   // 조사를 이름 끝소리에 맞춘다 — 「이 삼각형과」 → △ABD와(디: 받침 없음) · 받침 있는 글자 이름은 L(엘)·M(엠)·N(엔)·R(알)뿐
   function josa(x, suf) {
     if (!suf) return '';
@@ -455,6 +484,8 @@
   const html = (seq, del) => seq.map(z => z.w != null ? (z.i ? `<span class="tc-int">${esc(z.w)}</span>` : esc(z.w)) : `<span class="chip" ${del ? `data-del="${z.g.id}"` : ''}>${HTM[z.g.x.kind](z.g.x)}${del ? '<i>×</i>' : ''}</span>${esc(josa(z.g.x, z.suf))}`).join(' ');
 
   // ════════ 화면 ════════
+  // CLOVA 중계 서버 함수(supabase/functions/clova-stt) — 공개 키는 core.js 와 같은 것(누구나 보는 키, 진짜 비밀 키는 서버에만)
+  const STT_URL = 'wss://cnyrbxsmxwajhlrvcdml.supabase.co/functions/v1/clova-stt', STT_KEY = 'sb_publishable_e2iVXV5K1sl7-kJ-d3v1Ow_VEzNUJGv';
   let REC = null; const stopRec = () => { if (REC) { const r = REC; REC = null; try { r._stop(); r.stop(); } catch (e) {} } };
   const MIC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
 
@@ -466,7 +497,7 @@
       <p class="t-lead">말하면서 도형의 그 부분을 손가락으로 <b>대강 따라 그리면</b> 이름이 입력칸에 들어가요. <button class="tc-how" id="how">어떻게 그려?</button></p>
       <div id="howBox"></div>
       ${PROBS.map((p, i) => `${i && PROBS[i - 1].sec === p.sec ? '' : `<div class="t-sec">${esc(p.sec)}</div>`}<button class="t-item" data-id="${p.id}"><div class="t-iq">${p.qh}</div></button>`).join('')}
-      <div class="t-src" style="margin-top:26px;text-align:center">따라 그리기 시안 0.7 (10/22)</div>
+      <div class="t-src" style="margin-top:26px;text-align:center">따라 그리기 시안 0.8 (10/23 · 학원 기기는 네이버 음성 인식)</div>
     </div>`;
     $('#back').onclick = () => { location.href = 'try.html'; };
     $('#how').onclick = () => { const b = $('#howBox'); b.innerHTML = b.innerHTML ? '' : HOW; };
@@ -645,6 +676,82 @@
     };
     mic.onclick = () => {
       if (REC) { stopRec(); return; }   // 마지막 확정 글자는 끝나기 전에 들어온다(onend 에서 정리)
+      if (canAI() && navigator.mediaDevices && window.AudioWorkletNode && window.WebSocket) clovaRec(); else browserRec();
+    };
+
+    // ── 말하기 ② — 네이버 CLOVA 실시간(10/23). 학원 태블릿·선생님 PIN 일 때만(돈이 드는 길). 키는 서버 함수 clova-stt 안에만.
+    //    소리: 마이크 → 16kHz·16bit 로 바꿔 0.1초씩 웹소켓으로 → 서버가 네이버로. 글자: 0.4초 안팎 조각(바뀌지 않는 확정 글자) + 글자별 시각.
+    //    연결이 안 되면 브라우저 음성 인식(①)으로 바꿔 계속한다.
+    const clovaRec = async () => {
+      const R = {clova: true, dead: false, ended: false}; REC = R;
+      let ws = null, ctx = null, stream = null, base = null;
+      const q = [], chars = [], entry = {text: '', ws: []};
+      let doneRes; R.done = new Promise(r => { doneRes = r; });
+      const cleanup = () => { try { stream && stream.getTracks().forEach(t => t.stop()); } catch (e) {} try { ctx && ctx.close(); } catch (e) {} stream = ctx = null; };
+      const close = (msg) => {   // 끝(정상·오류 모두)
+        if (R.closed) return; R.closed = true; cleanup();
+        try { ws && ws.readyState <= 1 && ws.close(); } catch (e) {}
+        if (msg) toast(msg, 3200);
+        if (REC === R) REC = null;
+        if (!REC) mic.classList.remove('on', 'wait'); mic.title = ''; draw(); doneRes();
+      };
+      R.finish = () => {   // 「다 말함」 — 남은 글자가 다 올 때까지 기다린다(최대 6초)
+        if (!R.ended) { R.ended = true; cleanup(); mic.classList.add('wait');
+          if (ws && ws.readyState === 1) ws.send(JSON.stringify({type: 'end'})); else close(); }
+        setTimeout(() => close(), 6000);
+        return R.done;
+      };
+      R._stop = () => {}; R.stop = () => { if (R._dead) close(); else R.finish(); };   // killRec(지우기·글로 쓰기)는 _dead → 바로 끊음
+      const pts = () => Object.keys(f.P);
+      const onTr = m => {
+        if (base == null) return;
+        const al = (m.al || []).filter(a => a[0] !== '');
+        if (al.length) al.forEach(a => chars.push({c: a[0], t: base + a[1]}));
+        else if (m.text) [...m.text].forEach(c => chars.push({c, t: base + (m.s || 0)}));
+        entry.ws = clovaWords(chars, pts()); entry.text = entry.ws.map(x => x.w).join(' ');
+        if (!S.speech.includes(entry)) S.speech.push(entry);
+        draw();
+      };
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({audio: {channelCount: 1, echoCancellation: true, noiseSuppression: true, autoGainControl: true}});
+      } catch (e) { REC = null; toast('마이크가 막혀 있어. 글로 써 줘 (' + (e.name || e) + ')'); return $('#tw').click(); }
+      if (R._dead || REC !== R) return cleanup();
+      try {
+        try { ctx = new AudioContext({sampleRate: 16000}); } catch (e) { ctx = new AudioContext(); }
+        const code = `class P extends AudioWorkletProcessor{constructor(){super();this.r=sampleRate/16000;this.p=0;this.b=new Int16Array(1600);this.n=0}
+          process(i){const c=i[0]&&i[0][0];if(!c)return true;for(;this.p<c.length;this.p+=this.r){const k=Math.floor(this.p),f=this.p-k,v0=c[k],v1=k+1<c.length?c[k+1]:v0;let v=v0+(v1-v0)*f;v=v<-1?-1:v>1?1:v;
+          this.b[this.n++]=v<0?v*32768:v*32767;if(this.n===1600){this.port.postMessage(this.b.buffer,[this.b.buffer]);this.b=new Int16Array(1600);this.n=0}}this.p-=c.length;return true}}
+          registerProcessor('pcm16',P)`;
+        await ctx.audioWorklet.addModule(URL.createObjectURL(new Blob([code], {type: 'application/javascript'})));
+        const src = ctx.createMediaStreamSource(stream), node = new AudioWorkletNode(ctx, 'pcm16');
+        node.port.onmessage = e => {   // 0.1초(3200바이트)마다
+          if (R.ended || R.closed) return;
+          if (base == null) base = Date.now() - 100;   // 첫 조각의 처음 = 네이버가 세는 0초
+          if (ws && ws.readyState === 1) ws.send(e.data); else q.push(e.data);
+        };
+        src.connect(node); node.connect(ctx.destination);   // 출력은 무음(마이크 소리를 스피커로 내지 않음)
+        if (ctx.state === 'suspended') await ctx.resume();
+      } catch (e) { cleanup(); REC = null; toast('이 기기는 소리를 바꾸지 못해서 기본 음성 인식으로 들을게'); return browserRec(); }
+      mic.classList.add('on'); mic.title = '네이버 음성 인식으로 듣는 중';
+      if (!S.speech.length && !S.marks.length) live.innerHTML = '<span class="t-ph">듣고 있어… 말하면서 도형을 따라 그려 봐. 다 말하면 마이크를 다시 눌러 줘</span>';
+      const st = A.session && A.session.student;
+      ws = new WebSocket(STT_URL + '?apikey=' + STT_KEY + (st ? '&student=' + encodeURIComponent(st.id) : ''));
+      ws.binaryType = 'arraybuffer';
+      const opened = setTimeout(() => { if (ws.readyState !== 1) { ws.onclose = null; try { ws.close(); } catch (e) {} fallback('네이버 음성 인식에 연결하지 못했어. 기본 음성 인식으로 들을게'); } }, 8000);
+      const fallback = msg => { if (R.closed) return; const had = chars.length; close(); if (!had && !R.ended && !R._dead) { toast(msg, 3200); browserRec(); } };
+      ws.onopen = () => { clearTimeout(opened); while (q.length) ws.send(q.shift()); if (R.ended) ws.send(JSON.stringify({type: 'end'})); };
+      ws.onmessage = e => {
+        let m; try { m = JSON.parse(e.data); } catch (x) { return; }
+        if (m.type === 'tr') onTr(m);
+        else if (m.type === 'limit') { toast('110초가 지나 듣기를 멈췄어. 마이크를 다시 누르면 이어서 들어', 3200); R.finish(); }
+        else if (m.type === 'error') close(m.msg || '음성 인식 오류');
+        else if (m.type === 'done') close();
+      };
+      ws.onclose = () => { clearTimeout(opened); if (!R.closed) { if (!R.ended && !chars.length) fallback('네이버 음성 인식 연결이 끊겼어. 기본 음성 인식으로 들을게'); else close(R.ended ? '' : '음성 인식 연결이 끊겼어. 마이크를 다시 눌러 줘'); } };
+    };
+
+    // ── 말하기 ① — 브라우저 음성 인식(학원 기기가 아니거나 CLOVA 연결이 안 될 때)
+    const browserRec = () => {
       const R = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!R) { toast('이 기기는 말하기가 안 돼서 글로 써 줘'); return $('#tw').click(); }
       let manualStop = false, started = false, restarts = 0, lastErr = '';
@@ -701,6 +808,10 @@
     $('#undo').onclick = () => { if (S.typed) return toast('글로 쓸 때는 글자를 지워 주세요'); const m = S.marks.slice().sort((a, b) => b.t - a.t)[0]; if (m) dropMark(m); };
     $('#clr').onclick = () => { killRec(); S.whyFacts = []; S.speech = []; S.marks = []; S.aux = []; if (S.am) endAux(); remount(); if (S.typed) $('#ta').value = ''; draw(); $('#res').innerHTML = ''; };
     sub.onclick = () => {
+      if (REC && REC.clova && !REC._dead) {   // CLOVA: 마지막 말 조각이 다 올 때까지 기다렸다 채점(0.5~2초)
+        const r = REC; REC = null; sub.disabled = true; sub.textContent = '마지막 말 받는 중…';
+        r.finish().then(() => { sub.textContent = '다 말했어'; sub.disabled = false; sub.onclick(); }); return;
+      }
       killRec(); endWhy();
       const seq = S.typed ? null : compose(S), mine = S.typed ? esc($('#ta').value.trim()) : html(seq, false), said = S.typed ? $('#ta').value.trim() : plain(seq);
       const drawn = S.typed ? '' : S.marks.slice().sort((a, b) => a.id - b.id).map(m => HTM[m.x.kind](m.x)).join(' · ');
@@ -767,6 +878,6 @@
     if (first >= 0) ctx.askWhy(p.why.find(w => w.key === first), r => { hits[first].st = 'hit'; hits[first].drew = r; paint(); });
   }
 
-  window.TRACE_TEST = {FIGS, build, recog, compose, plain, applyAux, candsAt, PROBS};   // 시험용
+  window.TRACE_TEST = {FIGS, build, recog, compose, plain, applyAux, candsAt, PROBS, clovaWords, tidyLatin};   // 시험용
   home();
 })();
