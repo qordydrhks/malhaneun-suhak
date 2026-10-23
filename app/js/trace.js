@@ -71,8 +71,10 @@
      ansh: `${ov('AB')}∥${ov('DC')}이므로 ∠BAC=∠DCA (엇각), ${ov('AD')}∥${ov('BC')}이므로 ∠BCA=∠DAC (엇각), ${ov('AC')}는 공통이므로 △ABC≡△CDA (ASA 합동)`,
      tip: '각은 한 변을 따라 와서 꼭짓점을 지나 다른 변으로 그려요.',
      keys: ['AB ∥ DC라서 ∠BAC = ∠DCA (엇각)', 'AD ∥ BC라서 ∠BCA = ∠DAC (엇각)', 'AC는 두 삼각형의 공통인 변', '한 변과 그 양 끝 각이 같아 ASA 합동'],
-     why: [{key: 3, claim: '△ABC와 △CDA', what: '합동', groups: [{name: 'ASA 합동', need: 3, pairs: [['∠BAC', '∠DCA'], ['∠BCA', '∠DAC'], ['AC', 'AC']]},
-       {name: 'SSS 합동', need: 3, pairs: [['AB', 'CD'], ['BC', 'DA'], ['AC', 'AC']]}]}]},
+     // 마스터 10/23(나): 「대변의 길이가 같다」는 바로 이 합동으로 증명하는 성질 → 그것으로 SSS 합동을 말하면 돌려 말하기. 평행(엇각)만으로 보이게 되묻는다
+     note: '이 문제는 평행사변형의 성질(두 쌍의 대변의 길이가 각각 같다)을 증명하는 문제다. 학생이 「평행사변형이라서 AB=DC, AD=BC」처럼 그 성질을 근거로 SSS 합동이라고 하면, 아직 증명하지 않은 성질을 쓴 것이다 → 1·2번 핵심은 miss, 4번은 noreason, misconception 은 정확히 "대변의 길이가 같다는 성질은 지금 이 합동으로 증명하는 중이야. 평행하다는 것(엇각)만으로 보여 봐." 로 써.',
+     why: [{key: 3, claim: '△ABC와 △CDA', what: '합동', groups: [{name: 'ASA 합동', need: 3, pairs: [['∠BAC', '∠DCA'], ['∠BCA', '∠DAC'], ['AC', 'AC']]}],
+       circ: {pairs: [['AB', 'CD'], ['BC', 'DA']], msg: '대변의 길이가 같다는 성질은 지금 이 합동으로 <b>증명하는 중</b>이야. 평행하다는 것만으로 같은 것을 찾아 봐 — 평행선이 만드는 각을 봐.'}}]},
     {id: 'free', fig: 'free', sec: '연습 · 아무 부분이나 그려 보기',
      qh: '선분 여러 개가 겹친 그림이에요. 삼각형·각·선분·점을 하나씩 그려 보고, 앱이 맞게 알아맞히는지 봐 주세요.',
      ansh: '', tip: '작은 삼각형(△AEF 등)도 그려 보세요.'},
@@ -468,7 +470,7 @@
       <p class="t-lead">말하면서 도형의 그 부분을 손가락으로 <b>대강 따라 그리면</b> 이름이 입력칸에 들어가요. <button class="tc-how" id="how">어떻게 그려?</button></p>
       <div id="howBox"></div>
       ${PROBS.map((p, i) => `${i && PROBS[i - 1].sec === p.sec ? '' : `<div class="t-sec">${esc(p.sec)}</div>`}<button class="t-item" data-id="${p.id}"><div class="t-iq">${p.qh}</div></button>`).join('')}
-      <div class="t-src" style="margin-top:26px;text-align:center">따라 그리기 시안 0.8.1 (10/23 · 학원 기기는 네이버 음성 인식)</div>
+      <div class="t-src" style="margin-top:26px;text-align:center">따라 그리기 시안 0.8.2 (10/23 · 학원 기기는 네이버 음성 인식)</div>
     </div>`;
     $('#back').onclick = () => { location.href = 'try.html'; };
     $('#how').onclick = () => { const b = $('#howBox'); b.innerHTML = b.innerHTML ? '' : HOW; };
@@ -572,6 +574,7 @@
       const all = new Set(), gs = W.spec.groups.map(g => ({g, keys: g.pairs.map(pr => pkey(skey(G, pr[0]), skey(G, pr[1])))}));
       gs.forEach(x => x.keys.forEach(k => all.add(k)));
       const wrong = ks.filter(x => !all.has(x.k));
+      const circ = W.spec.circ && wrong.filter(x => W.spec.circ.pairs.some(pr => pkey(skey(G, pr[0]), skey(G, pr[1])) === x.k));   // 지금 증명하는 성질로 짝지음
       const have = x => x.keys.filter(k => ks.some(y => y.k === k)).length;
       const done = gs.filter(x => have(x) >= x.g.need).sort((a, b) => have(b) - have(a))[0];   // 그린 짝을 가장 많이 담은 조건 이름으로
       W.tries++;
@@ -584,7 +587,7 @@
       }
       W.msgOk = false;
       const best = gs.map(x => ({x, have: x.keys.filter(k => ks.some(y => y.k === k)).length})).sort((a, b) => b.have - a.have)[0];
-      let m = wrong.length ? `${wrong.map(x => HTM[x.a.kind](x.a) + ' = ' + HTM[x.b.kind](x.b)).join(', ')} — 이 짝은 까닭으로 쓸 수 없어(같지 않거나, 아직 모르는 것). 문제에서 주어졌거나 이미 아는 것만 써.` : '';
+      let m = circ && circ.length ? `${circ.map(x => HTM[x.a.kind](x.a) + ' = ' + HTM[x.b.kind](x.b)).join(', ')} — ${W.spec.circ.msg}` : wrong.length ? `${wrong.map(x => HTM[x.a.kind](x.a) + ' = ' + HTM[x.b.kind](x.b)).join(', ')} — 이 짝은 까닭으로 쓸 수 없어(같지 않거나, 아직 모르는 것). 문제에서 주어졌거나 이미 아는 것만 써.` : '';
       if (!done) m += ` 같은 것이 ${best.x.g.need - best.have}쌍 더 필요해.`;
       if (W.tries >= 2) {   // 두 번 막히면 짧은 설명: 맞는 짝을 그림에 보여 준다
         const g0 = best.x.g; W.show = true; W.showed = true;
@@ -771,7 +774,8 @@
       return;
     }
     box.innerHTML = '<div class="t-think" style="margin-top:10px">AI 가 채점하는 중…</div>';
-    const user = `[문제] ${p.q || p.qh.replace(/<[^>]+>/g, '')}\n[꼭 말할 핵심]\n${p.keys.map((k, i) => IDS[i] + ') ' + k + ((p.why || []).some(w => w.key === i) ? ' [까닭 필수: 어느 변·각이 같은지 말해야 hit. 「SAS 합동」「AA 닮음」처럼 조건 이름만 말하면 noreason]' : '')).join('\n')}\n[학생의 답(음성 인식 + 그려서 넣은 이름)] ${said}`;
+    const user = `[문제] ${p.q || p.qh.replace(/<[^>]+>/g, '')}\n[꼭 말할 핵심]\n${p.keys.map((k, i) => IDS[i] + ') ' + k + ((p.why || []).some(w => w.key === i) ? ' [까닭 필수: 어느 변·각이 같은지 말해야 hit. 「SAS 합동」「AA 닮음」처럼 조건 이름만 말하면 noreason]' : '')).join('\n')}\n${p.note ? `[주의] ${p.note}
+` : ''}[학생의 답(음성 인식 + 그려서 넣은 이름)] ${said}`;
     const t0 = Date.now(); let o = null, err = '';
     try { const raw = await A.ai({task: 'grade', system: SYS, messages: [{role: 'user', content: user}], max_tokens: 900, grade_id: 'trace'}); o = JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1)); }
     catch (e) { err = e.message || '채점이 잘 안 됐어요'; }

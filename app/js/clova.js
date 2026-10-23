@@ -20,7 +20,17 @@
   const LET = {에이치: 'H', 에이: 'A', 에프: 'F', 비: 'B', 씨: 'C', 디: 'D', 지: 'G'};   // 「이」(E)는 우리말과 헷갈려 뺌
   function tidyLatin(ws, pts) {
     const isPt = s => s.length > 0 && [...s.toUpperCase()].every(ch => pts.includes(ch)), out = [];
+    const NM = '(?:에이치|에이|에프|비|씨|디|지)', ok = n => pts.includes(LET[n]);
+    const pre = [];   // 한 낱말 안에 붙은 글자 이름 풀기: 「변에이」→ 변 + A · 「D씨도」→ DC도
     for (const x of ws) {
+      let w = x.w, m = w.match(new RegExp('^(변|선분|각|점|삼각형|사각형)(' + NM + '+)(.*)$'));
+      if (m && m[2].match(new RegExp(NM, 'g')).every(ok)) { pre.push({w: m[1], s: x.s}); w = m[2].match(new RegExp(NM, 'g')).map(n => LET[n]).join('') + m[3]; }
+      const nm = w.match(new RegExp('^(' + NM + '+)(.*)$')), last = pre[pre.length - 1];   // 「각 디씨에이와」처럼 이름 말 뒤에 띄워 말한 글자 이름
+      if (nm && last && /^(변|선분|각|점|삼각형|사각형)$/.test(last.w) && nm[1].match(new RegExp(NM, 'g')).every(ok)) w = nm[1].match(new RegExp(NM, 'g')).map(n => LET[n]).join('') + nm[2];
+      let k; while ((k = w.match(new RegExp('^([A-Za-z]+)(' + NM + ')(.*)$'))) && ok(k[2]) && isPt(k[1])) w = k[1] + LET[k[2]] + k[3];
+      pre.push({w, s: x.s});
+    }
+    for (const x of pre) {
       let w = x.w; const m = w.match(/^([A-Za-z]+)(.*)$/);
       if (m && /^(sas|asa|sss|aa|rhs|rha)$/i.test(m[1])) w = m[1].toUpperCase() + m[2];
       else if (m && isPt(m[1])) w = m[1].toUpperCase() + m[2];
