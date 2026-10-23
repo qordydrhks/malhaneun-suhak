@@ -67,13 +67,40 @@
       const sub = box.querySelector('#vsub'), live = box.querySelector('#vlive');
       const upd = t => { text = t; sub.disabled = !text.trim(); if (!typed) live.innerHTML = t ? esc(t) : `<span class="t-ph">${esc(ph || '마이크를 누르고 말해 봐')}</span>`; };
       if (typed) { const ta = box.querySelector('#vta'); ta.value = text; ta.oninput = () => upd(ta.value); setTimeout(() => ta.focus(), 30); }
-      box.querySelector('#vtw').onclick = () => { stopRec(); typed = !typed; draw(); };
-      box.querySelector('#vclr').onclick = () => { stopRec(); text = ''; if (typed) box.querySelector('#vta').value = ''; upd(''); };
-      sub.onclick = () => { stopRec(); const t = (typed ? box.querySelector('#vta').value : text).trim(); if (t) onSubmit(fix(t)); };
+      const cut = () => { if (REC && REC.clova) { const r = REC; REC = null; r.abort(); } else stopRec(); };   // 글로 쓰기·지우기: CLOVA 는 남은 글자를 기다리지 않고 바로 끊음
+      box.querySelector('#vtw').onclick = () => { cut(); typed = !typed; draw(); };
+      box.querySelector('#vclr').onclick = () => { cut(); text = ''; if (typed) box.querySelector('#vta').value = ''; upd(''); };
+      sub.onclick = () => {
+        if (REC && REC.clova) {   // CLOVA: 마지막 말 조각이 다 올 때까지 기다렸다 채점(0.5~2초)
+          const r = REC; REC = null; sub.disabled = true; sub.textContent = '마지막 말 받는 중…';
+          r.finish().then(() => { sub.textContent = '다 말했어'; sub.onclick(); }); return;
+        }
+        stopRec(); const t = (typed ? box.querySelector('#vta').value : text).trim(); if (t) onSubmit(fix(t));
+      };
       const mic = box.querySelector('#vmic');
+      // 말하기 ② — 학원 기기·선생님 PIN 이면 네이버 CLOVA 실시간(js/clova.js · 서버 함수 clova-stt). 연결이 안 되면 브라우저 음성 인식(①)
+      const clova = () => {
+        const pre = text;   // 앞서 말한 것 뒤에 이어 붙인다
+        const R = CLOVA.start({
+          pts: () => [],    // 중고등은 x·a 같은 문자가 많아 대문자로 바꾸지 않는다(SAS 같은 이름만)
+          onWords: ws => upd(fix(((pre ? pre + ' ' : '') + ws.map(x => x.w).join(' ')).trim())),
+          onState: st => {
+            if (st === 'on') { mic.classList.add('on'); mic.title = '네이버 음성 인식으로 듣는 중'; if (!text) live.innerHTML = '<span class="t-ph">듣고 있어… 다 말하면 마이크를 다시 눌러 줘</span>'; }
+            else if (st === 'wait') mic.classList.add('wait');
+            else { if (REC === R) REC = null; if (!REC) mic.classList.remove('on', 'wait'); mic.title = ''; }
+          },
+          onFail: msg => { toast(msg, 3200); if (REC === R) REC = null; if (!REC) browser(); },
+          onError: msg => toast(msg, 3200)
+        });
+        R._stop = () => {}; R.stop = () => R.finish(); REC = R;
+      };
       if (mic) mic.onclick = () => {
-        if (REC) { stopRec(); mic.classList.remove('on'); return; }
+        if (REC) { stopRec(); if (!REC) mic.classList.remove('on'); return; }
         hush();   // 읽어 주는 소리를 아이 말로 받아 적지 않게
+        if (canAI() && window.CLOVA && CLOVA.ok()) clova(); else browser();
+      };
+      // 말하기 ① — 브라우저 음성 인식
+      const browser = () => {
         const R = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!R) { toast('이 기기는 말하기가 안 돼서 글로 써 줘'); typed = true; return draw(); }
         const pieces = text ? [text] : []; let manual = false, started = false, restarts = 0;
@@ -774,7 +801,7 @@
       <button class="t-item${d.has(c.id) ? ' done' : ''}" data-id="${c.id}"><span class="t-tag r3">시안</span><span class="t-tag">${esc(c.kind)}</span><div class="t-iq">${F(c.qParts.map(x => typeof x === 'string' ? x : x.t).join(''))}</div><div class="t-how">${esc(c.how)}</div></button>`).join('')}
       <div class="t-sec">${esc(N3.sec)}</div>
       <button class="t-item${d.has(N3.id) ? ' done' : ''}" data-id="${N3.id}"><span class="t-tag r3">시안 3</span><span class="t-tag">${esc(N3.kind)}</span><div class="t-iq">${F(N3.q)}</div><div class="t-how">${esc(N3.how)}</div></button>
-      <div class="t-src" style="margin-top:26px;text-align:center">체험판 0.7 · ${esc(A.VERSION)}</div>
+      <div class="t-src" style="margin-top:26px;text-align:center">체험판 0.8 (10/23 · 학원 기기는 네이버 음성 인식) · ${esc(A.VERSION)}</div>
     </div>`;
     root().querySelectorAll('.t-item').forEach(b => b.onclick = () => open(b.dataset.id));
     bindLock(home);

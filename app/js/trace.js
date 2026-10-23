@@ -442,33 +442,6 @@
     while (li < loose.length) out.push({g: loose[li++]});
     return out;
   }
-  // CLOVA 글자 다듬기 — 「a b d와」→ABD와 · 「acd에서」→ACD에서 · 「a 씨가」→AC가 · 「sAS」→SAS. 도형에 있는 점 이름일 때만 대문자로(x·y 같은 문자는 그대로)
-  const LET = {에이치: 'H', 에이: 'A', 에프: 'F', 비: 'B', 씨: 'C', 디: 'D', 지: 'G'};   // 「이」(E)는 우리말과 헷갈려 뺌
-  function tidyLatin(ws, pts) {
-    const isPt = s => s.length > 0 && [...s.toUpperCase()].every(ch => pts.includes(ch)), out = [];
-    for (const x of ws) {
-      let w = x.w, m = w.match(/^([A-Za-z]+)(.*)$/);
-      if (m && /^(sas|asa|sss|aa|rhs|rha)$/i.test(m[1])) w = m[1].toUpperCase() + m[2];
-      else if (m && isPt(m[1])) w = m[1].toUpperCase() + m[2];
-      const prev = out[out.length - 1], pl = prev && /^[A-Z]+$/.test(prev.w);
-      const k = w.match(/^(에이치|에이|에프|비|씨|디|지)(.*)$/);
-      if (pl && k && pts.includes(LET[k[1]])) { prev.w += LET[k[1]] + k[2]; continue; }   // 앞이 점 이름이면 「씨가」→ C가
-      const lead = (w.match(/^[A-Z]+/) || [''])[0];
-      if (pl && lead && isPt(lead) && (prev.w.length === 1 || lead.length === 1)) { prev.w += w; continue; }   // 「A B D와」 → ABD와 (「AB AC」처럼 둘 다 긴 것은 안 붙임)
-      out.push({w, s: x.s});
-    }
-    return out;
-  }
-  function clovaWords(chars, pts) {   // 글자별 시각 → 낱말별 시각
-    const ws = []; let cur = null;
-    chars.forEach(c => {
-      if (/^\s*$/.test(c.c)) { cur = null; return; }
-      if (cur && /^[A-Za-z]/.test(c.c) && /[가-힣]$/.test(cur.w)) cur = null;   // 「삼각형a」처럼 붙여 오면 한글 뒤 알파벳에서 띄운다(알파벳 뒤 한글은 조사라 붙임)
-      if (!cur) { cur = {w: '', s: c.t}; ws.push(cur); } cur.w += c.c.trim();
-    });
-    return tidyLatin(ws, pts);
-  }
-
   // 조사를 이름 끝소리에 맞춘다 — 「이 삼각형과」 → △ABD와(디: 받침 없음) · 받침 있는 글자 이름은 L(엘)·M(엠)·N(엔)·R(알)뿐
   function josa(x, suf) {
     if (!suf) return '';
@@ -484,8 +457,6 @@
   const html = (seq, del) => seq.map(z => z.w != null ? (z.i ? `<span class="tc-int">${esc(z.w)}</span>` : esc(z.w)) : `<span class="chip" ${del ? `data-del="${z.g.id}"` : ''}>${HTM[z.g.x.kind](z.g.x)}${del ? '<i>×</i>' : ''}</span>${esc(josa(z.g.x, z.suf))}`).join(' ');
 
   // ════════ 화면 ════════
-  // CLOVA 중계 서버 함수(supabase/functions/clova-stt) — 공개 키는 core.js 와 같은 것(누구나 보는 키, 진짜 비밀 키는 서버에만)
-  const STT_URL = 'wss://cnyrbxsmxwajhlrvcdml.supabase.co/functions/v1/clova-stt', STT_KEY = 'sb_publishable_e2iVXV5K1sl7-kJ-d3v1Ow_VEzNUJGv';
   let REC = null; const stopRec = () => { if (REC) { const r = REC; REC = null; try { r._stop(); r.stop(); } catch (e) {} } };
   const MIC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
 
@@ -497,7 +468,7 @@
       <p class="t-lead">말하면서 도형의 그 부분을 손가락으로 <b>대강 따라 그리면</b> 이름이 입력칸에 들어가요. <button class="tc-how" id="how">어떻게 그려?</button></p>
       <div id="howBox"></div>
       ${PROBS.map((p, i) => `${i && PROBS[i - 1].sec === p.sec ? '' : `<div class="t-sec">${esc(p.sec)}</div>`}<button class="t-item" data-id="${p.id}"><div class="t-iq">${p.qh}</div></button>`).join('')}
-      <div class="t-src" style="margin-top:26px;text-align:center">따라 그리기 시안 0.8 (10/23 · 학원 기기는 네이버 음성 인식)</div>
+      <div class="t-src" style="margin-top:26px;text-align:center">따라 그리기 시안 0.8.1 (10/23 · 학원 기기는 네이버 음성 인식)</div>
     </div>`;
     $('#back').onclick = () => { location.href = 'try.html'; };
     $('#how').onclick = () => { const b = $('#howBox'); b.innerHTML = b.innerHTML ? '' : HOW; };
@@ -676,78 +647,28 @@
     };
     mic.onclick = () => {
       if (REC) { stopRec(); return; }   // 마지막 확정 글자는 끝나기 전에 들어온다(onend 에서 정리)
-      if (canAI() && navigator.mediaDevices && window.AudioWorkletNode && window.WebSocket) clovaRec(); else browserRec();
+      if (canAI() && window.CLOVA && CLOVA.ok()) clovaRec(); else browserRec();
     };
 
     // ── 말하기 ② — 네이버 CLOVA 실시간(10/23). 학원 태블릿·선생님 PIN 일 때만(돈이 드는 길). 키는 서버 함수 clova-stt 안에만.
     //    소리: 마이크 → 16kHz·16bit 로 바꿔 0.1초씩 웹소켓으로 → 서버가 네이버로. 글자: 0.4초 안팎 조각(바뀌지 않는 확정 글자) + 글자별 시각.
     //    연결이 안 되면 브라우저 음성 인식(①)으로 바꿔 계속한다.
-    const clovaRec = async () => {
-      const R = {clova: true, dead: false, ended: false}; REC = R;
-      let ws = null, ctx = null, stream = null, base = null;
-      const q = [], chars = [], entry = {text: '', ws: []};
-      let doneRes; R.done = new Promise(r => { doneRes = r; });
-      const cleanup = () => { try { stream && stream.getTracks().forEach(t => t.stop()); } catch (e) {} try { ctx && ctx.close(); } catch (e) {} stream = ctx = null; };
-      const close = (msg) => {   // 끝(정상·오류 모두)
-        if (R.closed) return; R.closed = true; cleanup();
-        try { ws && ws.readyState <= 1 && ws.close(); } catch (e) {}
-        if (msg) toast(msg, 3200);
-        if (REC === R) REC = null;
-        if (!REC) mic.classList.remove('on', 'wait'); mic.title = ''; draw(); doneRes();
-      };
-      R.finish = () => {   // 「다 말함」 — 남은 글자가 다 올 때까지 기다린다(최대 6초)
-        if (!R.ended) { R.ended = true; cleanup(); mic.classList.add('wait');
-          if (ws && ws.readyState === 1) ws.send(JSON.stringify({type: 'end'})); else close(); }
-        setTimeout(() => close(), 6000);
-        return R.done;
-      };
-      R._stop = () => {}; R.stop = () => { if (R._dead) close(); else R.finish(); };   // killRec(지우기·글로 쓰기)는 _dead → 바로 끊음
-      const pts = () => Object.keys(f.P);
-      const onTr = m => {
-        if (base == null) return;
-        const al = (m.al || []).filter(a => a[0] !== '');
-        if (al.length) al.forEach(a => chars.push({c: a[0], t: base + a[1]}));
-        else if (m.text) [...m.text].forEach(c => chars.push({c, t: base + (m.s || 0)}));
-        entry.ws = clovaWords(chars, pts()); entry.text = entry.ws.map(x => x.w).join(' ');
-        if (!S.speech.includes(entry)) S.speech.push(entry);
-        draw();
-      };
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({audio: {channelCount: 1, echoCancellation: true, noiseSuppression: true, autoGainControl: true}});
-      } catch (e) { REC = null; toast('마이크가 막혀 있어. 글로 써 줘 (' + (e.name || e) + ')'); return $('#tw').click(); }
-      if (R._dead || REC !== R) return cleanup();
-      try {
-        try { ctx = new AudioContext({sampleRate: 16000}); } catch (e) { ctx = new AudioContext(); }
-        const code = `class P extends AudioWorkletProcessor{constructor(){super();this.r=sampleRate/16000;this.p=0;this.b=new Int16Array(1600);this.n=0}
-          process(i){const c=i[0]&&i[0][0];if(!c)return true;for(;this.p<c.length;this.p+=this.r){const k=Math.floor(this.p),f=this.p-k,v0=c[k],v1=k+1<c.length?c[k+1]:v0;let v=v0+(v1-v0)*f;v=v<-1?-1:v>1?1:v;
-          this.b[this.n++]=v<0?v*32768:v*32767;if(this.n===1600){this.port.postMessage(this.b.buffer,[this.b.buffer]);this.b=new Int16Array(1600);this.n=0}}this.p-=c.length;return true}}
-          registerProcessor('pcm16',P)`;
-        await ctx.audioWorklet.addModule(URL.createObjectURL(new Blob([code], {type: 'application/javascript'})));
-        const src = ctx.createMediaStreamSource(stream), node = new AudioWorkletNode(ctx, 'pcm16');
-        node.port.onmessage = e => {   // 0.1초(3200바이트)마다
-          if (R.ended || R.closed) return;
-          if (base == null) base = Date.now() - 100;   // 첫 조각의 처음 = 네이버가 세는 0초
-          if (ws && ws.readyState === 1) ws.send(e.data); else q.push(e.data);
-        };
-        src.connect(node); node.connect(ctx.destination);   // 출력은 무음(마이크 소리를 스피커로 내지 않음)
-        if (ctx.state === 'suspended') await ctx.resume();
-      } catch (e) { cleanup(); REC = null; toast('이 기기는 소리를 바꾸지 못해서 기본 음성 인식으로 들을게'); return browserRec(); }
-      mic.classList.add('on'); mic.title = '네이버 음성 인식으로 듣는 중';
-      if (!S.speech.length && !S.marks.length) live.innerHTML = '<span class="t-ph">듣고 있어… 말하면서 도형을 따라 그려 봐. 다 말하면 마이크를 다시 눌러 줘</span>';
-      const st = A.session && A.session.student;
-      ws = new WebSocket(STT_URL + '?apikey=' + STT_KEY + (st ? '&student=' + encodeURIComponent(st.id) : ''));
-      ws.binaryType = 'arraybuffer';
-      const opened = setTimeout(() => { if (ws.readyState !== 1) { ws.onclose = null; try { ws.close(); } catch (e) {} fallback('네이버 음성 인식에 연결하지 못했어. 기본 음성 인식으로 들을게'); } }, 8000);
-      const fallback = msg => { if (R.closed) return; const had = chars.length; close(); if (!had && !R.ended && !R._dead) { toast(msg, 3200); browserRec(); } };
-      ws.onopen = () => { clearTimeout(opened); while (q.length) ws.send(q.shift()); if (R.ended) ws.send(JSON.stringify({type: 'end'})); };
-      ws.onmessage = e => {
-        let m; try { m = JSON.parse(e.data); } catch (x) { return; }
-        if (m.type === 'tr') onTr(m);
-        else if (m.type === 'limit') { toast('110초가 지나 듣기를 멈췄어. 마이크를 다시 누르면 이어서 들어', 3200); R.finish(); }
-        else if (m.type === 'error') close(m.msg || '음성 인식 오류');
-        else if (m.type === 'done') close();
-      };
-      ws.onclose = () => { clearTimeout(opened); if (!R.closed) { if (!R.ended && !chars.length) fallback('네이버 음성 인식 연결이 끊겼어. 기본 음성 인식으로 들을게'); else close(R.ended ? '' : '음성 인식 연결이 끊겼어. 마이크를 다시 눌러 줘'); } };
+    const clovaRec = () => {
+      const entry = {text: '', ws: []};
+      const R = CLOVA.start({
+        pts: () => Object.keys(f.P),
+        onWords: ws => { entry.ws = ws; entry.text = ws.map(x => x.w).join(' '); if (!S.speech.includes(entry)) S.speech.push(entry); draw(); },
+        onState: st => {
+          if (st === 'on') { mic.classList.add('on'); mic.title = '네이버 음성 인식으로 듣는 중';
+            if (!S.speech.length && !S.marks.length) live.innerHTML = '<span class="t-ph">듣고 있어… 말하면서 도형을 따라 그려 봐. 다 말하면 마이크를 다시 눌러 줘</span>'; }
+          else if (st === 'wait') mic.classList.add('wait');
+          else { if (REC === R) REC = null; if (!REC) mic.classList.remove('on', 'wait'); mic.title = ''; draw(); }
+        },
+        onFail: msg => { toast(msg, 3200); if (REC === R) REC = null; if (!REC) browserRec(); },
+        onError: msg => toast(msg, 3200)
+      });
+      R._stop = () => {}; R.stop = () => { if (R._dead) R.abort(); else R.finish(); };   // killRec(지우기·글로 쓰기)는 _dead → 바로 끊음
+      REC = R;
     };
 
     // ── 말하기 ① — 브라우저 음성 인식(학원 기기가 아니거나 CLOVA 연결이 안 될 때)
@@ -878,6 +799,6 @@
     if (first >= 0) ctx.askWhy(p.why.find(w => w.key === first), r => { hits[first].st = 'hit'; hits[first].drew = r; paint(); });
   }
 
-  window.TRACE_TEST = {FIGS, build, recog, compose, plain, applyAux, candsAt, PROBS, clovaWords, tidyLatin};   // 시험용
+  window.TRACE_TEST = {FIGS, build, recog, compose, plain, applyAux, candsAt, PROBS};   // 시험용
   home();
 })();

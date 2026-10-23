@@ -125,3 +125,5 @@ button{font:inherit;cursor:pointer}
 .nf [data-n]{opacity:0;transition:opacity .35s}
 .nf [data-n].on{opacity:1;animation:nfPop .45s ease-out}
 @keyframes nfPop{0%{opacity:0}60%{opacity:1}}
+/* CLOVA 마지막 말 조각을 기다리는 동안(10/23) */
+.t-mic.wait{background:#94a3b8;animation:none}
