@@ -5,3 +5,7 @@ __pycache__/
 docs/character-design/**/*.png
 # 새 앱 시험용 페이지(서버·AI 흉내) — 배포하지 않는다
 app/_*test*.html
+
+# 음성 인식 비교 — CLOVA 키(마스터가 적음)와 결과(녹음 내용 포함)는 올리지 않는다
+작업도구/음성인식비교/clova_key.txt
+작업도구/음성인식비교/비교결과_*.html

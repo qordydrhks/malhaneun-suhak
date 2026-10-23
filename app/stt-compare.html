@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>음성 인식 비교 녹음</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="try.css?v=0.6">
+<style>
+.s-row{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:10px 0}
+.s-ref{font-size:16px;line-height:1.6;font-weight:700}
+.s-got{font-size:14px;color:var(--sub);margin-top:6px;min-height:20px}
+.s-got b{color:var(--ink)}
+.s-row.done{border-color:#9bd3b1;background:#f6fbf8}
+.s-row .t-row{margin-top:8px}
+.t-mic.small{width:46px;height:46px}
+</style>
+</head>
+<body>
+<div class="t-wrap">
+  <div class="t-top"><h1>음성 인식 비교 녹음</h1><span class="t-sp"></span><span class="t-tag r3">시험</span></div>
+  <p class="t-lead">문장마다 마이크를 누르고 <b>아이에게 설명하듯 자연스럽게</b> 읽은 뒤 다시 누르세요. 지금 앱의 음성 인식 결과와 녹음 파일이 같이 저장됩니다. 다 하면 맨 아래 「결과 내려받기」.<br><small>녹음은 이 기기 안에만 있다가, 내려받은 파일로만 나갑니다(서버에 올리지 않음).</small></p>
+  <div id="list"></div>
+  <div class="t-row" style="margin-top:16px"><span class="t-sub" id="sum"></span><span class="t-sp"></span><button class="t-btn pri" id="dl" disabled>결과 내려받기</button></div>
+</div>
+<script>
+/* 음성 인식 비교(마스터 10/23) — 같은 녹음을 ① 지금 앱의 브라우저 음성 인식 ② 네이버 CLOVA Speech 에 넣어 비교한다.
+   이 페이지: 녹음(MediaRecorder) + 브라우저 인식(새 앱 ui.js startRec 과 같은 설정)을 동시에 → 16 kHz WAV 로 바꿔 한 파일로 내려받기.
+   CLOVA 쪽은 PC에서 작업도구/음성인식비교/clova_compare.py 가 그 파일을 읽어 보낸다(키는 PC 파일에만). */
+(() => {
+  const S = [
+    '삼각형 ABD와 삼각형 ACD에서 AB와 AC가 같고 AD는 공통이니까 SAS 합동이야',
+    'AB와 DC가 평행하니까 엇각인 각 BAC와 각 DCA가 같아',
+    '맞꼭지각은 크기가 같으니까 각 AFH와 각 BFE가 같아',
+    '무게중심은 중선을 꼭짓점으로부터 2 대 1로 나눠',
+    '이차방정식에서 판별식이 0보다 크면 서로 다른 두 근을 가져',
+    'x 제곱 더하기 5x 더하기 6을 인수분해하면 x 더하기 2 곱하기 x 더하기 3이야',
+    '닮음비가 2 대 3이면 넓이의 비는 4 대 9야',
+    '이등변삼각형의 두 밑각의 크기는 같아',
+    '평행사변형은 두 쌍의 대변의 길이가 각각 같아',
+    '동위각이 같으면 두 직선은 평행해',
+  ];
+  const R = S.map(() => ({browser: '', alts: [], wav: null, sec: 0}));
+  const MIC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
+  const esc = s => String(s).replace(/[&<>]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;'}[c]));
+  const list = document.getElementById('list');
+  const paint = () => {
+    list.innerHTML = S.map((s, i) => `<div class="s-row${R[i].wav ? ' done' : ''}" id="r${i}"><div class="s-ref">${i + 1}. ${esc(s)}</div>
+      <div class="s-got">${R[i].wav ? `앱 인식: <b>${esc(R[i].browser || '(못 알아들음)')}</b> · ${R[i].sec.toFixed(1)}초` : ''}</div>
+      <div class="t-row"><button class="t-mic small" data-i="${i}">${MIC}</button><span class="t-sub" id="st${i}"></span></div></div>`).join('');
+    list.querySelectorAll('.t-mic').forEach(b => b.onclick = () => toggle(+b.dataset.i, b));
+    const n = R.filter(r => r.wav).length;
+    document.getElementById('sum').textContent = `녹음 ${n} / ${S.length}`;
+    document.getElementById('dl').disabled = !n;
+  };
+  let cur = null;
+  async function toggle(i, btn) {
+    if (cur) { if (cur.i === i) return cur.stop(); return; }
+    const st = document.getElementById('st' + i);
+    let stream; try { stream = await navigator.mediaDevices.getUserMedia({audio: true}); } catch (e) { st.textContent = '마이크를 쓸 수 없어요: ' + e.name; return; }
+    const chunks = [], rec = new MediaRecorder(stream); rec.ondataavailable = e => e.data.size && chunks.push(e.data);
+    const pieces = [], alts = []; let sr = null, srErr = '';
+    const Rc = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (Rc) {   // 새 앱 마이크와 같은 설정: 확정 문장만 · 2순위 후보도 모음 · 끊기면 다시 켬
+      sr = new Rc(); sr.lang = 'ko-KR'; sr.continuous = true; sr.interimResults = false; sr.maxAlternatives = 5;
+      sr.onresult = ev => { for (let k = ev.resultIndex; k < ev.results.length; k++) { const res = ev.results[k]; if (!res.isFinal) continue; const t = (res[0].transcript || '').trim(); if (t) pieces.push(t); for (let a = 1; a < res.length; a++) { const at = (res[a].transcript || '').trim(); if (at && at !== t) alts.push(at); } } st.textContent = '듣는 중… ' + pieces.join(' '); };
+      sr.onerror = ev => { if (ev.error !== 'no-speech' && ev.error !== 'aborted') srErr = ev.error; };
+      sr.onend = () => { if (cur && cur.i === i && !cur.stopping) { try { sr.start(); } catch (e) {} } };
+    }
+    const t0 = Date.now();
+    rec.start(); try { sr && sr.start(); } catch (e) { srErr = e.message; }
+    btn.classList.add('on'); st.textContent = '녹음 중… 다 읽으면 마이크를 다시 눌러 주세요';
+    cur = {i, stopping: false, stop: () => {
+      cur.stopping = true; st.textContent = '마무리하는 중…';
+      const finish = async () => {
+        rec.onstop = async () => {
+          stream.getTracks().forEach(t => t.stop());
+          try { R[i].wav = await toWav16k(new Blob(chunks, {type: rec.mimeType})); } catch (e) { st.textContent = '녹음을 바꾸지 못했어요: ' + e.message; cur = null; btn.classList.remove('on'); return; }
+          R[i].browser = pieces.join(' '); R[i].alts = alts; R[i].sec = (Date.now() - t0) / 1000; R[i].err = srErr;
+          cur = null; paint();
+          if (srErr) document.getElementById('st' + i).textContent = '앱 인식 오류: ' + srErr + (srErr === 'audio-capture' ? ' — 이 기기는 녹음과 인식을 같이 못 해요. PC 크롬에서 해 주세요' : '');
+        };
+        rec.stop();
+      };
+      if (sr) { sr.onend = () => finish(); try { sr.stop(); } catch (e) { finish(); } setTimeout(() => { if (rec.state !== 'inactive') finish(); }, 2500); } else finish();
+    }};
+  }
+  async function toWav16k(blob) {   // 크롬 녹음(webm)은 CLOVA 가 못 받는다 → 16 kHz 모노 WAV
+    const ac = new (window.AudioContext || window.webkitAudioContext)(), buf = await ac.decodeAudioData(await blob.arrayBuffer()); ac.close();
+    const n = Math.ceil(buf.duration * 16000), oc = new OfflineAudioContext(1, n, 16000), src = oc.createBufferSource(); src.buffer = buf; src.connect(oc.destination); src.start();
+    const pcm = (await oc.startRendering()).getChannelData(0), dv = new DataView(new ArrayBuffer(44 + pcm.length * 2));
+    const w = (o, s) => [...s].forEach((c, k) => dv.setUint8(o + k, c.charCodeAt(0)));
+    w(0, 'RIFF'); dv.setUint32(4, 36 + pcm.length * 2, true); w(8, 'WAVE'); w(12, 'fmt '); dv.setUint32(16, 16, true); dv.setUint16(20, 1, true); dv.setUint16(22, 1, true);
+    dv.setUint32(24, 16000, true); dv.setUint32(28, 32000, true); dv.setUint16(32, 2, true); dv.setUint16(34, 16, true); w(36, 'data'); dv.setUint32(40, pcm.length * 2, true);
+    for (let k = 0; k < pcm.length; k++) dv.setInt16(44 + k * 2, Math.max(-1, Math.min(1, pcm[k])) * 0x7fff, true);
+    const b = new Uint8Array(dv.buffer); let s = ''; for (let k = 0; k < b.length; k += 0x8000) s += String.fromCharCode.apply(null, b.subarray(k, k + 0x8000));
+    return btoa(s);
+  }
+  document.getElementById('dl').onclick = () => {
+    const out = {made: new Date().toISOString(), ua: navigator.userAgent, items: S.map((s, i) => ({ref: s, browser: R[i].browser, alts: R[i].alts, err: R[i].err || '', sec: R[i].sec, wav: R[i].wav})).filter(x => x.wav)};
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(out)], {type: 'application/json'}));
+    a.download = '음성인식비교_' + new Date().toISOString().slice(0, 16).replace(/[-:T]/g, '') + '.json'; a.click();
+  };
+  paint();
+})();
+</script>
+</body>
+</html>
