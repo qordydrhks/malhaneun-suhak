@@ -131,6 +131,7 @@ def qcard(qd):
     rows.append(('간단한 설명', mf(qd['short'])))
     rows.append(('자세한 설명', '<div class="lf"><div class="tx">%s</div>%s%s%s</div>' % (mf(qd['long']), qd.get('lfig', ''), qd.get('lhtml', ''), lbox(qd['lbox']) if qd.get('lbox') else '')))
     if qd.get('paths'): rows.append(('다른 풀이 길', mf(qd['paths'])))
+    if qd.get('word'): rows.append(('📖 통과 뒤', mf(qd['word'])))
     if qd.get('note'): rows.append(('채점 주의', mf(qd['note'])))
     o.append('<table>' + ''.join('<tr><td class="k">%s</td><td class="v%s">%s</td></tr>' % (k_, ' note' if k_ == '채점 주의' else '', v_) for k_, v_ in rows) + '</table>')
     o.append('<div class="mk">☐ 좋아요 ☐ 고침 ☐ 뺌<span class="ln"></span></div></div>')
@@ -151,6 +152,7 @@ def lcard(ld):
                                      + '<div style="font-size:8pt;color:#5b6270">어느 길이든 그 길의 아이디어를 다 짚으면 통과(앱 paths)</div>'))
     rows += [('다시 묻기', '<div class="af"><b>%s</b><div>→ %s</div></div>' % (mf(ld['again']['q']), mf(ld['again']['ans']))),
              ('흔한 오해', mf(ld['miscon'])), ('어른 기록', mf(ld['record']))]
+    if ld.get('word'): rows.append(('📖 통과 뒤', mf(ld['word'])))
     if ld.get('note'): rows.append(('채점 주의', mf(ld['note'])))
     o.append('<table>' + ''.join('<tr><td class="k">%s</td><td class="v%s">%s</td></tr>' % (k_, ' note' if k_ == '채점 주의' else '', v_) for k_, v_ in rows) + '</table>')
     o.append('<div class="mk">☐ 좋아요 ☐ 고침 ☐ 뺌<span class="ln"></span></div></div>')
