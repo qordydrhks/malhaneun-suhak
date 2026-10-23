@@ -18,7 +18,7 @@
 </head>
 <body>
 <div class="t-wrap">
-  <div class="t-top"><h1>음성 인식 비교 녹음</h1><span class="t-sp"></span><span class="t-tag r3">시험</span></div>
+  <div class="t-top"><h1>음성 인식 비교 녹음 <span id="setTag"></span></h1><span class="t-sp"></span><span class="t-tag r3">시험</span></div>
   <p class="t-lead">문장마다 마이크를 누르고 <b>아이에게 설명하듯 자연스럽게</b> 읽은 뒤 다시 누르세요. 지금 앱의 음성 인식 결과와 녹음 파일이 같이 저장됩니다. 다 하면 맨 아래 「결과 내려받기」.<br><small>녹음은 이 기기 안에만 있다가, 내려받은 파일로만 나갑니다(서버에 올리지 않음).</small></p>
   <div id="list"></div>
   <div class="t-row" style="margin-top:16px"><span class="t-sub" id="sum"></span><span class="t-sp"></span><button class="t-btn pri" id="dl" disabled>결과 내려받기</button></div>
@@ -28,24 +28,32 @@
    이 페이지: 녹음(MediaRecorder) + 브라우저 인식(새 앱 ui.js startRec 과 같은 설정)을 동시에 → 16 kHz WAV 로 바꿔 한 파일로 내려받기.
    CLOVA 쪽은 PC에서 작업도구/음성인식비교/clova_compare.py 가 그 파일을 읽어 보낸다(키는 PC 파일에만). */
 (() => {
-  const S = [
-    '삼각형 ABD와 삼각형 ACD에서 AB와 AC가 같고 AD는 공통이니까 SAS 합동이야',
-    'AB와 DC가 평행하니까 엇각인 각 BAC와 각 DCA가 같아',
-    '맞꼭지각은 크기가 같으니까 각 AFH와 각 BFE가 같아',
-    '무게중심은 중선을 꼭짓점으로부터 2 대 1로 나눠',
-    '이차방정식에서 판별식이 0보다 크면 서로 다른 두 근을 가져',
-    'x 제곱 더하기 5x 더하기 6을 인수분해하면 x 더하기 2 곱하기 x 더하기 3이야',
-    '닮음비가 2 대 3이면 넓이의 비는 4 대 9야',
-    '이등변삼각형의 두 밑각의 크기는 같아',
-    '평행사변형은 두 쌍의 대변의 길이가 각각 같아',
-    '동위각이 같으면 두 직선은 평행해',
-  ];
+  // 묶음 1 = 한글 위주 · 묶음 2(?set=2) = 식·분수·문자·기호가 많은 문장. read = 소리 내어 읽는 법(매번 같은 방식으로)
+  const SETS = {
+    1: [
+      ['삼각형 ABD와 삼각형 ACD에서 AB와 AC가 같고 AD는 공통이니까 SAS 합동이야'], ['AB와 DC가 평행하니까 엇각인 각 BAC와 각 DCA가 같아'],
+      ['맞꼭지각은 크기가 같으니까 각 AFH와 각 BFE가 같아'], ['무게중심은 중선을 꼭짓점으로부터 2 대 1로 나눠'], ['이차방정식에서 판별식이 0보다 크면 서로 다른 두 근을 가져'],
+      ['x 제곱 더하기 5x 더하기 6을 인수분해하면 x 더하기 2 곱하기 x 더하기 3이야'], ['닮음비가 2 대 3이면 넓이의 비는 4 대 9야'], ['이등변삼각형의 두 밑각의 크기는 같아'],
+      ['평행사변형은 두 쌍의 대변의 길이가 각각 같아'], ['동위각이 같으면 두 직선은 평행해']],
+    2: [
+      ['√2 × √8 = √16 이니까 4야', '루트 2 곱하기 루트 8은 루트 16이니까 4야'],
+      ['3/4 + 1/6을 통분하면 9/12 + 2/12니까 11/12야', '사분의 삼 더하기 육분의 일을 통분하면 십이분의 구 더하기 십이분의 이니까 십이분의 십일이야'],
+      ['선분 AB의 길이는 선분 CD의 길이의 2/3배야', '선분 에이비의 길이는 선분 씨디의 길이의 삼분의 이 배야'],
+      ['∠ABC = 35°이면 ∠ACB는 180°에서 ∠A와 ∠B를 뺀 값이야', '각 에이비씨가 35도이면 각 에이씨비는 180도에서 각 에이와 각 비를 뺀 값이야'],
+      ['△ABC ∽ △DEF이고 닮음비가 3 : 5니까 넓이의 비는 9 : 25야', '삼각형 에이비씨와 삼각형 디이에프가 닮음이고 닮음비가 3 대 5니까 넓이의 비는 9 대 25야'],
+      ['y = 2x² − 4x + 1을 표준형으로 바꾸면 y = 2(x − 1)² − 1이니까 꼭짓점은 (1, −1)이야', '와이는 2엑스 제곱 빼기 4엑스 더하기 1을 표준형으로 바꾸면 와이는 2 곱하기 엑스 빼기 1의 제곱 빼기 1이니까 꼭짓점은 1, 마이너스 1이야'],
+      ['x ≥ 3이고 y < −2이면 xy는 항상 음수야', '엑스가 3 이상이고 와이가 마이너스 2 미만이면 엑스와이는 항상 음수야'],
+      ['AB ∥ CD이면 ∠BAE와 ∠AEC는 엇각이라서 같아', '에이비와 씨디가 평행하면 각 비에이이와 각 에이이씨는 엇각이라서 같아'],
+      ['a² − b²은 (a + b)(a − b)로 인수분해돼', '에이 제곱 빼기 비 제곱은 에이 더하기 비 곱하기 에이 빼기 비로 인수분해돼'],
+      ['원주각 ∠APB는 중심각 ∠AOB의 1/2이야', '원주각 에이피비는 중심각 에이오비의 이분의 일이야']],
+  };
+  const SET = /set=2/.test(location.search) ? 2 : 1, S = SETS[SET].map(x => x[0]), READ = SETS[SET].map(x => x[1] || '');
   const R = S.map(() => ({browser: '', alts: [], wav: null, sec: 0}));
   const MIC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
   const esc = s => String(s).replace(/[&<>]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;'}[c]));
   const list = document.getElementById('list');
   const paint = () => {
-    list.innerHTML = S.map((s, i) => `<div class="s-row${R[i].wav ? ' done' : ''}" id="r${i}"><div class="s-ref">${i + 1}. ${esc(s)}</div>
+    list.innerHTML = S.map((s, i) => `<div class="s-row${R[i].wav ? ' done' : ''}" id="r${i}"><div class="s-ref">${i + 1}. ${esc(s)}</div>${READ[i] ? `<div class="t-sub" style="margin-top:4px">읽는 법: ${esc(READ[i])}</div>` : ''}
       <div class="s-got">${R[i].wav ? `앱 인식: <b>${esc(R[i].browser || '(못 알아들음)')}</b> · ${R[i].sec.toFixed(1)}초` : ''}</div>
       <div class="t-row"><button class="t-mic small" data-i="${i}">${MIC}</button><span class="t-sub" id="st${i}"></span></div></div>`).join('');
     list.querySelectorAll('.t-mic').forEach(b => b.onclick = () => toggle(+b.dataset.i, b));
@@ -97,10 +105,11 @@
     return btoa(s);
   }
   document.getElementById('dl').onclick = () => {
-    const out = {made: new Date().toISOString(), ua: navigator.userAgent, items: S.map((s, i) => ({ref: s, browser: R[i].browser, alts: R[i].alts, err: R[i].err || '', sec: R[i].sec, wav: R[i].wav})).filter(x => x.wav)};
+    const out = {set: SET, made: new Date().toISOString(), ua: navigator.userAgent, items: S.map((s, i) => ({ref: s, browser: R[i].browser, alts: R[i].alts, err: R[i].err || '', sec: R[i].sec, wav: R[i].wav})).filter(x => x.wav)};
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(out)], {type: 'application/json'}));
-    a.download = '음성인식비교_' + new Date().toISOString().slice(0, 16).replace(/[-:T]/g, '') + '.json'; a.click();
+    a.download = '음성인식비교' + (SET > 1 ? SET : '') + '_' + new Date().toISOString().slice(0, 16).replace(/[-:T]/g, '') + '.json'; a.click();
   };
+  document.getElementById('setTag').textContent = SET > 1 ? '· 묶음 ' + SET : '';
   paint();
 })();
 </script>
