@@ -1,0 +1,859 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>말하는 수학 중·고등 화면</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@500;600;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* [v75.1] 수식 표시 — mfmt() 가 만든 조각들 */
+.mf{font-family:"Cambria Math","STIX Two Math","STIX Two Text","Latin Modern Math","Times New Roman",Georgia,"Noto Serif KR",serif;}
+.mf-v{font-style:italic;}
+.mf-mi{font-family:"Cambria Math","STIX Two Math","Latin Modern Math","Noto Sans Math","Times New Roman",serif;font-style:normal;}
+.mf-frac{display:inline-flex;flex-direction:column;text-align:center;margin:0 .18em;
+  font-size:.9em;line-height:1.15;vertical-align:middle;position:relative;top:-.08em;}
+.mf-num{border-bottom:1px solid currentColor;padding:0 .32em;}
+.mf-den{padding:1px .32em 0;}
+.mf-rad{white-space:nowrap;}
+/* [0.21.2] 근호: 기호를 직접 그려 지붕(윗줄)과 이어 붙인다 — 안의 식이 높아지면(분수) 기호도 같이 늘어난다 */
+.mf-rcd{display:inline-block;position:relative;border-top:max(1px,.07em) solid currentColor;
+  padding:.08em .1em 0 .06em;margin-left:.58em;line-height:1.15;}
+.mf-rs{position:absolute;right:100%;top:calc(-.5 * max(1px,.07em));bottom:-.04em;width:.52em;}
+.mf-rs svg{display:block;width:100%;height:100%;overflow:visible;fill:none;stroke:currentColor;stroke-linejoin:round;}
+.mf-rs path{vector-effect:non-scaling-stroke;}
+.mf-rs1{stroke-width:max(1px,.065em);}
+.mf-rs2{stroke-width:max(1px,.07em);}
+.mf-rs3{stroke-width:max(1.6px,.12em);stroke-linecap:round;}
+.mf-rt{position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;}
+sup.mf-sup{font-size:.68em;vertical-align:.55em;line-height:0;}
+sub.mf-sub{font-size:.68em;vertical-align:-.2em;line-height:0;}
+
+/* 배치: 한 화면에 할 일 하나(대전제 3). 폰 = 한 줄, 태블릿 가로(≥900px) = 질문·답을 두 칸으로.
+   세 안은 같은 화면 틀에 색·글씨·모서리만 다르다. 안마다 한 가지 모습으로 고정(보는 기기의 밝기 설정을 따르지 않음). */
+:root{
+  /* 중등 A — 밝은 공책: 차가운 흰 종이 · 청록 한 색 · 형광 노랑은 '오늘 할 것'에만 */
+  --bg:#f4f6f8; --surf:#ffffff; --surf2:#eef2f4; --ink:#16202a; --sub:#5a6672; --line:#dde3e8;
+  --acc:#0b7a72; --acc-ink:#ffffff; --acc-soft:#e1f2ef; --mark:#ffe36b;
+  --ok:#1d7a47; --okbg:#e3f3ea; --mid:#2b5fb4; --midbg:#e5edfa; --help:#a65c00; --helpbg:#fdf0dd; --bad:#b4271e; --badbg:#fbe8e6;
+  --curve:#0b7a72; --axis:#6c7782; --grid:#e3e8ec;
+  --f-disp:"IBM Plex Sans KR","Noto Sans KR","Malgun Gothic",sans-serif;
+  --f-body:"IBM Plex Sans KR","Noto Sans KR","Malgun Gothic",sans-serif;
+  --r-card:18px; --r-btn:14px; --fs-q:20px;
+  color-scheme:light;
+}
+body.th-mb{ /* 중등 B — 어두운 화면: 짙은 회색 · 산호색 한 색 · 글씨 조금 크게 */
+  --bg:#14161b; --surf:#1d2027; --surf2:#252932; --ink:#eceef3; --sub:#9aa1b0; --line:#30343e;
+  --acc:#ff8466; --acc-ink:#2a0f08; --acc-soft:#3a2622; --mark:#ff8466;
+  --ok:#5cc98f; --okbg:#1c3327; --mid:#86a8ff; --midbg:#1f2944; --help:#f0b660; --helpbg:#3a2e1a; --bad:#ff7a70; --badbg:#3d1f1d;
+  --curve:#ff9b80; --axis:#8b93a3; --grid:#262a33;
+  --r-card:14px; --r-btn:12px; --fs-q:21px;
+  color-scheme:dark;
+}
+body.th-h{ /* 고등 — 흰 종이·검은 글씨, 제목만 명조, 색은 진한 자주 한 색만 아껴 씀 */
+  --bg:#f2f2f0; --surf:#ffffff; --surf2:#f2f2f0; --ink:#121212; --sub:#5f5f5c; --line:#dcdcd8;
+  --acc:#7d2533; --acc-ink:#ffffff; --acc-soft:#f6e9eb; --mark:#7d2533;
+  --ok:#22603d; --okbg:#e7f0ea; --mid:#2c4a86; --midbg:#e8edf6; --help:#8a5a12; --helpbg:#f6efe2; --bad:#9e2a20; --badbg:#f7e7e5;
+  --curve:#121212; --axis:#76766f; --grid:#ececea;
+  --f-disp:"Hahmlet","Noto Serif KR",Georgia,serif;
+  --f-body:"Noto Sans KR","Malgun Gothic",sans-serif;
+  --r-card:6px; --r-btn:6px; --fs-q:19px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 var(--f-body);-webkit-text-size-adjust:100%;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 40px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:#24272d}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible,input:focus-visible,.ch:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.mf{font-size:1.04em}
+
+/* ── 시안 고르기 띠(마스터용, 앱 화면이 아님) ── */
+.rv{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px))) calc(-1 * max(16px,env(safe-area-inset-right,0px)));
+  background:#24272d;color:#f1f2f4;padding:8px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px));font:13px/1.4 "Noto Sans KR",sans-serif}
+.rv-in{max-width:1080px;margin:0 auto;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
+.rv b{font-weight:700;color:#aeb4bf;font-size:12px;letter-spacing:.06em}
+.seg{display:flex;background:#33373f;border-radius:9px;padding:2px}
+.seg button{padding:5px 11px;border-radius:7px;color:#c9cdd4;font-size:13px;white-space:nowrap}
+.seg button[aria-pressed=true]{background:#f1f2f4;color:#1b1d22;font-weight:700}
+.scrs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;min-width:0;order:3;flex:1 1 100%}
+.scrs button{padding:5px 9px;border-radius:7px;color:#c9cdd4;white-space:nowrap;font-size:12.5px}
+.scrs button[aria-pressed=true]{background:#454a54;color:#fff}
+.rv-why{color:#c9cdd4;text-decoration:underline;text-underline-offset:3px;font-size:12.5px}
+.rv-note{max-width:1080px;margin:8px auto 0;color:#dfe2e6;font-size:13px;line-height:1.6}
+.rv-note ul{margin:4px 0 2px;padding-left:18px}
+
+/* ── 앱 틀 ── */
+.app{max-width:760px;margin:0 auto;padding-top:6px}
+.app.wide{max-width:1080px}
+.bar{display:flex;align-items:center;gap:10px;min-height:56px}
+.brand{display:flex;align-items:center;gap:8px;font:700 16px/1 var(--f-disp);letter-spacing:-.01em}
+.brand .lv{font:600 11.5px/1 var(--f-body);color:var(--acc);border:1px solid currentColor;border-radius:999px;padding:3px 7px;letter-spacing:.04em}
+body.th-h .brand .lv{border-radius:3px}
+.glyph{width:28px;height:28px;border-radius:8px;background:var(--acc);display:grid;place-items:center;flex:none}
+.glyph svg{width:18px;height:18px}
+body.th-h .glyph{background:none;border:1.5px solid var(--ink);border-radius:4px}
+.sp{flex:1}
+.who{font-size:13.5px;color:var(--sub);display:flex;gap:4px;align-items:center;white-space:nowrap}
+.who button{padding:6px 8px;border-radius:8px;color:var(--sub)}
+.back{color:var(--sub);font-size:14.5px;padding:8px 6px 8px 0;white-space:nowrap}
+.crumb{font-size:13px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+
+.card{background:var(--surf);border:1px solid var(--line);border-radius:var(--r-card)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:var(--r-btn);padding:12px 18px;font-weight:600;font-size:15.5px;border:1px solid var(--line);background:var(--surf)}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+.btn.big{width:100%;padding:16px 18px;font-size:17px}
+.btn:disabled{opacity:.4;cursor:default}
+.lnk{color:var(--sub);font-size:14px;padding:8px 6px;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line)}
+.lbl{font-size:12.5px;font-weight:700;letter-spacing:.08em;color:var(--sub)}
+body.th-h .lbl{letter-spacing:.14em}
+h1,h2,h3{font-family:var(--f-disp);text-wrap:balance;margin:0;letter-spacing:-.015em}
+.tag{display:inline-block;font-size:12px;font-weight:600;border-radius:999px;padding:2px 9px;background:var(--surf2);color:var(--sub)}
+body.th-h .tag{border-radius:3px}
+.tag.acc{background:var(--acc-soft);color:var(--acc)}
+
+/* ① 로그인 */
+.login{min-height:calc(100vh - 60px);display:grid;place-items:center;padding-block:28px}
+.lg{width:100%;max-width:400px;display:grid;gap:22px}
+.lg-art{height:150px;border-radius:var(--r-card);overflow:hidden;position:relative;background:var(--surf);border:1px solid var(--line);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:18px 18px;background-position:-1px -1px}
+.lg-art svg{position:absolute;inset:0;width:100%;height:100%}
+body.th-h .lg-art{background-image:none;height:120px;border:0;border-top:1px solid var(--ink);border-bottom:1px solid var(--line);border-radius:0;background:transparent}
+.lg h1{font-size:28px;line-height:1.3}
+.lg h1 em{font-style:normal;background:linear-gradient(transparent 58%,var(--mark) 58% 92%,transparent 92%);padding:0 2px}
+body.th-mb .lg h1 em{background:none;color:var(--acc)}
+body.th-h .lg h1{font-size:27px;font-weight:600}
+body.th-h .lg h1 em{background:none;border-bottom:2px solid var(--acc)}
+.lg p{margin:6px 0 0;color:var(--sub);font-size:14.5px}
+.fld{display:grid;gap:6px;font-size:13.5px;color:var(--sub);font-weight:500}
+.fld input{font:inherit;font-size:16px;color:var(--ink);background:var(--surf);border:1.5px solid var(--line);border-radius:var(--r-btn);padding:13px 14px;width:100%}
+.fld input:focus{outline:none;border-color:var(--acc)}
+.lg-foot{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--sub)}
+
+/* ② 홈 */
+.home{display:grid;gap:18px;padding-top:6px}
+.date{font-size:14px;color:var(--sub)}
+.today{padding:22px 20px 20px;display:grid;gap:14px;position:relative;overflow:hidden}
+.today .lbl{color:var(--acc)}
+.today h2{font-size:25px;line-height:1.35}
+body.th-mb .today{border-color:#3a3f4b}
+body.th-h .today{border-top:3px solid var(--ink)}
+.today .meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px;color:var(--sub)}
+.today .mark{background:linear-gradient(transparent 60%,var(--mark) 60% 94%,transparent 94%)}
+body.th-mb .today .mark,body.th-h .today .mark{background:none}
+.minis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.mini{display:grid;justify-items:center;gap:6px;padding:14px 6px;font-size:14px;font-weight:600}
+.mini svg{width:22px;height:22px;stroke:var(--acc);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+body.th-h .mini svg{stroke:var(--ink)}
+.prog{padding:16px 18px;display:grid;gap:12px}
+.prog-h{display:flex;align-items:baseline;gap:8px}
+.prow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;font-size:14px}
+.prow .nm{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prow .n{color:var(--sub);font-variant-numeric:tabular-nums;font-size:13px}
+.track{grid-column:1/-1;height:6px;border-radius:99px;background:var(--surf2);overflow:hidden;display:flex}
+body.th-h .track{border-radius:0;height:4px}
+.track i{display:block;height:100%;background:var(--acc)}
+.track i.r2{background:var(--mid);opacity:.85}
+.clock{font-size:13px;color:var(--sub);display:flex;align-items:center;gap:8px}
+.clock .track{grid-column:auto;flex:1;max-width:160px}
+
+/* ③ 단원 */
+.units{display:grid;gap:16px}
+.uhead{display:grid;gap:4px}
+.uhead h2{font-size:23px}
+.bigs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.bigs button{white-space:nowrap;padding:8px 13px;border-radius:999px;border:1px solid var(--line);background:var(--surf);font-size:14px;color:var(--sub)}
+body.th-h .bigs button{border-radius:4px}
+.bigs button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:var(--bg);font-weight:600}
+.mid{display:grid;gap:8px}
+.mid h3{font:600 14px/1.4 var(--f-body);color:var(--sub);margin:4px 2px 0}
+.topic{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;padding:14px 16px;text-align:left;width:100%}
+.topic .tn{min-width:0;font-weight:600;font-size:15.5px;line-height:1.45}
+.topic .tn small{display:block;font-weight:500;font-size:12.5px;color:var(--sub);margin-bottom:1px;font-variant-numeric:tabular-nums}
+.topic.now{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc) inset}
+.topic.lock{opacity:.55}
+.rds{display:flex;gap:4px}
+.rd{width:26px;height:26px;border-radius:7px;display:grid;place-items:center;font-size:12px;font-weight:700;background:var(--surf2);color:var(--sub);font-variant-numeric:tabular-nums}
+body.th-h .rd{border-radius:3px}
+.rd.done{background:var(--acc);color:var(--acc-ink)}
+.rd.cur{background:var(--surf);box-shadow:0 0 0 1.5px var(--acc) inset;color:var(--acc)}
+.rd.lk{background:transparent;box-shadow:0 0 0 1px var(--line) inset;color:var(--line)}
+.legend{font-size:13px;color:var(--sub);display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.legend .rd{width:18px;height:18px;font-size:10px;display:inline-grid;vertical-align:-4px;margin-right:4px}
+.qbtn{width:22px;height:22px;border-radius:50%;border:1px solid var(--line);font-size:12px;color:var(--sub);display:inline-grid;place-items:center}
+.pop{background:var(--surf2);border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.65}
+
+/* ④ 질문 */
+.qtop{display:flex;align-items:center;gap:12px}
+.steps{display:flex;gap:4px}
+.steps i{width:22px;height:5px;border-radius:99px;background:var(--line)}
+.steps i.d{background:var(--acc)}.steps i.c{background:var(--ink)}
+body.th-h .steps i{border-radius:0}
+.timer{flex:1;max-width:140px;height:5px;border-radius:99px;background:var(--surf2);overflow:hidden}
+.timer b{display:block;height:100%;width:72%;background:var(--sub)}
+.qgrid{display:grid;gap:14px}
+.qcard{padding:20px 20px 18px;display:grid;gap:12px}
+.qcard .q{font:600 var(--fs-q)/1.6 var(--f-body);letter-spacing:-.01em}
+body.th-h .qcard .q{font-weight:500}
+.qcard .src{font-size:12px;color:var(--sub)}
+.fig{display:flex;justify-content:center}
+.fig svg{width:100%;max-width:300px;height:auto}
+@media (max-width:520px){.fig svg{max-width:240px}.qcard{padding:16px 16px 14px;gap:10px}.answer{padding:14px}.mic{width:64px;height:64px}.live{min-height:72px}}
+.answer{padding:18px;display:grid;gap:12px;align-content:start}
+.live{min-height:88px;border-radius:12px;background:var(--surf2);padding:12px 14px;font-size:16px;line-height:1.65}
+.live .ph{color:var(--sub)}
+.live .cur{display:inline-block;width:2px;height:1.1em;background:var(--acc);vertical-align:-3px;animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.microw{display:flex;align-items:center;justify-content:center;gap:14px}
+.mic{width:72px;height:72px;border-radius:50%;background:var(--acc);color:var(--acc-ink);display:grid;place-items:center;box-shadow:0 6px 18px -6px color-mix(in srgb,var(--acc) 70%,transparent)}
+body.th-h .mic{box-shadow:none}
+.mic svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.mic.on{animation:ring 1.3s infinite}
+@keyframes ring{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--acc) 50%,transparent)}80%{box-shadow:0 0 0 16px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.mic-cap{font-size:13px;color:var(--sub);text-align:center}
+.arow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.arow .btn.pri{margin-left:auto}
+.help{display:flex;justify-content:space-between;align-items:center;font-size:13.5px;color:var(--sub);border-top:1px dashed var(--line);padding-top:10px}
+.help button{color:var(--acc);font-weight:600;padding:6px 2px}
+body.th-h .help button{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+
+/* 고등 — 문제 · 지점 · 풀이 노트 */
+.prob{padding:18px 20px;display:grid;gap:12px}
+.prob .pt{font:500 17px/1.7 var(--f-body)}
+.pts{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:12.5px;color:var(--sub)}
+.pts i{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--sub);display:inline-block}
+.pts i.d{background:var(--ink);border-color:var(--ink)}.pts i.c{border-color:var(--acc);background:var(--acc)}
+.note{padding:16px 20px;display:grid;gap:6px}
+.figd summary{cursor:pointer;color:var(--sub);font-size:13.5px;text-decoration:underline;text-underline-offset:3px;width:max-content}
+.figd[open] summary{margin-bottom:6px}
+.nl{font-size:16px;line-height:1.7;padding-left:12px;border-left:2px solid var(--line);display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.nl small{font-size:11.5px;color:var(--sub)}
+.nl.new{border-left-color:var(--acc)}
+.ask{font:600 17.5px/1.6 var(--f-body)}
+
+/* 도움 */
+.sheet-bg{position:fixed;inset:0;background:rgba(10,12,16,.45);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--surf);color:var(--ink);width:100%;max-width:560px;border-radius:18px 18px 0 0;padding:20px max(18px,env(safe-area-inset-right,0px)) calc(22px + env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px));display:grid;gap:12px;max-height:85vh;overflow:auto}
+body.th-h .sheet{border-radius:6px 6px 0 0}
+.sheet h3{font-size:18px}
+.hopt{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;text-align:left;padding:13px 14px;border:1px solid var(--line);border-radius:12px;width:100%}
+.hopt b{font-size:15.5px}.hopt small{grid-column:1;color:var(--sub);font-size:13px}.hopt span{grid-row:1/3;grid-column:2;align-self:center;color:var(--sub)}
+.hopen{background:var(--surf2);border-radius:12px;padding:12px 14px;font-size:15px;line-height:1.7}
+
+/* ⑤ 통과 */
+.res{padding:22px 20px;display:grid;gap:16px}
+.score{display:flex;align-items:baseline;gap:10px}
+.score b{font:700 52px/1 var(--f-disp);font-variant-numeric:tabular-nums;color:var(--acc)}
+body.th-h .score b{font-weight:600;color:var(--ink)}
+.score span{font-size:15px;color:var(--sub)}
+.how{font-size:12.5px;font-weight:700;border-radius:999px;padding:3px 10px}
+body.th-h .how{border-radius:3px}
+.how.solo{background:var(--okbg);color:var(--ok)}.how.ask{background:var(--midbg);color:var(--mid)}.how.tea{background:var(--helpbg);color:var(--help)}
+.keys{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.keys li{display:grid;grid-template-columns:24px minmax(0,1fr);gap:8px;font-size:15px;line-height:1.6;align-items:start}
+.keys .k{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700;margin-top:2px}
+.keys .hit .k{background:var(--okbg);color:var(--ok)}
+.keys .late .k{background:var(--midbg);color:var(--mid)}
+.keys li small{display:block;color:var(--sub);font-size:12.5px}
+.model{border-radius:12px;padding:14px 16px;background:var(--acc-soft);font-size:15.5px;line-height:1.75}
+.model b{display:block;color:var(--acc);font-size:13px;letter-spacing:.04em;margin-bottom:4px}
+body.th-h .model{background:var(--surf2);border-left:3px solid var(--acc);border-radius:0}
+
+/* ⑥ 문제 풀기 */
+.stem{font:600 18px/1.65 var(--f-body)}
+body.th-h .stem{font-weight:500}
+.chs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.chs:not(.num) .ch:last-child:nth-child(odd){grid-column:1/-1;width:calc(50% - 5px);justify-self:center}
+.chs.num{grid-template-columns:1fr;gap:8px}
+@media (min-width:640px){.chs{grid-template-columns:repeat(5,minmax(0,1fr))}.chs:not(.num) .ch:last-child:nth-child(odd){grid-column:auto;width:auto}.chs.num{grid-template-columns:repeat(5,minmax(0,1fr))}}
+.ch{border:1.5px solid var(--line);border-radius:12px;background:var(--surf);padding:8px 6px 6px;display:grid;gap:2px;justify-items:center;text-align:center;position:relative}
+.ch .no{font-size:13px;font-weight:700;color:var(--sub)}
+.ch svg{width:100%;height:auto;display:block}
+.chs.num .ch{grid-template-columns:auto 1fr;justify-items:start;align-items:center;gap:12px;padding:12px 14px;font-size:18px}
+@media (min-width:640px){.chs.num .ch{grid-template-columns:1fr;justify-items:center;gap:4px}}
+.ch[aria-pressed=true]{border-color:var(--ink);box-shadow:0 0 0 1.5px var(--ink) inset}
+.ch.right{border-color:var(--mid);box-shadow:0 0 0 2px var(--mid) inset;background:var(--midbg)}
+.ch.wrong{border-color:var(--bad);background:var(--badbg)}
+.ch .badge{position:absolute;top:-9px;right:-4px;font-size:11px;font-weight:700;padding:1px 7px;border-radius:99px;background:var(--mid);color:#fff}
+.ch.wrong .badge{background:var(--bad)}
+.check{border-radius:12px;padding:14px 16px;background:var(--surf2);font-size:15px;line-height:1.75}
+.check b{display:block;margin-bottom:2px}
+.check .why{color:var(--bad);font-size:14px}
+
+/* ⑦ 기록 */
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.tile{padding:12px 8px;text-align:center;display:grid;gap:2px}
+.tile b{font:700 24px/1.1 var(--f-disp);font-variant-numeric:tabular-nums}
+.tile small{font-size:12px;color:var(--sub);line-height:1.3}
+.tile.solo b{color:var(--ok)}.tile.ask b{color:var(--mid)}.tile.tea b{color:var(--help)}.tile.yet b{color:var(--sub)}
+.rlist{padding:6px 16px}
+.rrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;padding:12px 0;border-bottom:1px solid var(--line);align-items:center;font-size:14.5px}
+.rrow:last-child{border-bottom:0}
+.rrow .nm{min-width:0}
+.rrow .nm small{display:block;color:var(--sub);font-size:12px}
+.stack{grid-column:1/-1;display:flex;height:7px;border-radius:99px;overflow:hidden;gap:2px}
+body.th-h .stack{border-radius:0;height:5px}
+.stack i{display:block;height:100%}
+.stack .s1{background:var(--ok)}.stack .s2{background:var(--mid)}.stack .s3{background:var(--help)}.stack .s4{background:var(--line)}
+.pill{font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px;white-space:nowrap}
+body.th-h .pill{border-radius:3px}
+.pill.solo{background:var(--okbg);color:var(--ok)}.pill.ask{background:var(--midbg);color:var(--mid)}.pill.tea{background:var(--helpbg);color:var(--help)}
+
+.stage{display:grid;gap:14px;padding-top:4px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:14px;z-index:30;max-width:calc(100vw - 32px)}
+
+/* 태블릿 가로 — 질문은 왼쪽, 답은 오른쪽 */
+@media (min-width:900px){
+  .home.two{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);align-items:start}
+  .home.two .col{display:grid;gap:18px}
+  .qgrid{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);align-items:start}
+  .qgrid .left{display:grid;gap:14px}
+  .resgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+  .today h2{font-size:28px}
+}
+@media (max-width:420px){
+  .lg h1{font-size:24px}.today h2{font-size:22px}.score b{font-size:44px}
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .topic{padding:12px 13px}.rd{width:24px;height:24px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<header class="rv" aria-label="시안 고르기">
+  <div class="rv-in">
+    <b>시안</b>
+    <div class="seg" role="group" aria-label="학교급과 안">
+      <button id="t-ma" data-th="ma">중등 A</button><button id="t-mb" data-th="mb">중등 B</button><button id="t-h" data-th="h">고등</button>
+    </div>
+    <div class="scrs" role="group" aria-label="화면" id="scrs"></div>
+    <button class="rv-why" id="rvWhy">이 안은?</button>
+  </div>
+  <div class="rv-note" id="rvNote" hidden></div>
+</header>
+<div class="app" id="app"></div>
+
+<script>
+/* 수식 표시기 mfmt — dodream.html(v92) 에서 그대로 옮김. 표시 전용(채점·저장에 쓰지 말 것). */
+(function(){
+  function esc(s){ return String(s==null?'':s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  var OPS = /[=+\-*\/^√∪∩⊂⊄∈∉≤≥≠×÷²³⁻]/;
+  // 수식 덩어리 후보: 영문/숫자/여는괄호/√ 로 시작
+  var GREEK = 'πθαβγλμφωΔΣΩ';
+  var RUN = /[A-Za-z0-9(√πθ∠][A-Za-z0-9 +\-*\/^=<>≤≥≠()\[\]{}∪∩⊂⊄∈∉∅√|,.×÷·²³⁻¹⁰′°_πθαβγλμφωΔΣΩ∠∽≡∥⊥½⅓¼⅔¾]*/g;
+
+  // 균형 잡힌 괄호 덩어리를 s[i]부터 읽는다. 여는 괄호가 아니면 null.
+  function group(s,i){
+    if(s[i]!=='(') return null;
+    var d=0;
+    for(var j=i;j<s.length;j++){
+      if(s[j]==='(') d++;
+      else if(s[j]===')'){ d--; if(!d) return s.slice(i,j+1); }
+    }
+    return null;
+  }
+  // 분수의 한쪽 피연산자를 뒤/앞에서 읽는다
+  var TOKEN = /[A-Za-z0-9²³ⁿ_.]+$/;
+  function leftOperand(s,i){            // s[0..i-1] 의 끝에서
+    if(s[i-1]===')'){ var d=0; for(var j=i-1;j>=0;j--){ if(s[j]===')')d++; else if(s[j]==='('){d--; if(!d){ if(s[j-1]==='√') j--; return [j,s.slice(j,i)]; }} } return null; }
+    var m=TOKEN.exec(s.slice(0,i)); if(!m||!m[0]) return null;
+    var b=i-m[0].length; if(s[b-1]==='√') b--;      // [0.21.2] √2/2 · √(x-1)/2 는 √까지 분자로
+    return [b, s.slice(b,i)];
+  }
+  function rightOperand(s,i){           // s[i..] 의 앞에서
+    var gp=group(s,i); if(gp) return gp;
+    var m=/^[A-Za-z0-9²³ⁿ_.]+/.exec(s.slice(i)); return m?m[0]:null;
+  }
+
+  function strip(t){ return (t.length>1 && t[0]==='(' && group(t,0)===t) ? t.slice(1,-1) : t; }
+
+  // 한 덩어리 안을 재귀적으로 꾸민다
+  function inner(t){
+    var out='', i=0;
+    while(i<t.length){
+      var ch=t[i];
+      // 근호
+      if(ch==='√'){
+        var gp=group(t,i+1), body;
+        if(gp){ body=gp.slice(1,-1); i+=1+gp.length; }
+        else { var m=/^[A-Za-z0-9²³_.]+/.exec(t.slice(i+1)); if(m){ body=m[0]; i+=1+m[0].length;
+          var fg=/^[fgh]$/.test(body)?group(t,i):null; if(fg){ body+=fg; i+=fg.length; }   // [0.21.2] √f(2) 는 f(2) 전체에 지붕
+        } else { out+='√'; i++; continue; } }
+        out+='<span class="mf-rad"><span class="mf-rcd"><span class="mf-rs" aria-hidden="true">'+RSIGN+'</span><span class="mf-rt">√</span>'+expr(body)+'</span></span>';
+        continue;
+      }
+      // 위첨자
+      if(ch==='^'){
+        var gp2=group(t,i+1), sup;
+        if(gp2){ sup=gp2.slice(1,-1); i+=1+gp2.length; }
+        else { var m2=/^-?[A-Za-z0-9]+/.exec(t.slice(i+1)); if(m2){ sup=m2[0]; i+=1+m2[0].length; } else { out+='^'; i++; continue; } }
+        out+='<sup class="mf-sup">'+inner(sup)+'</sup>';
+        continue;
+      }
+      // [v82.7] 영문 낱말은 교재 규칙대로: 변수는 기울임, 점·도형 이름·단위·함수 이름은 세움
+      if(/[A-Za-z]/.test(ch)){
+        var w=/^[A-Za-z]+/.exec(t.slice(i))[0];
+        if(isRoman(w,t,i)){ out+=esc(w); i+=w.length; continue; }
+        i+=w.length;
+        var md=/^\d+/.exec(t.slice(i)), body='';
+        for(var q=0;q<w.length;q++) body+=mvar(w[q]);
+        if(md){ body+='<sub class="mf-sub">'+md[0]+'</sub>'; i+=md[0].length; }
+        out+=body; continue;
+      }
+      out+=esc(ch); i++;
+    }
+    return out;
+  }
+
+  // [v82.6] 문자는 교재와 같은 "수학 기울임체"(유니코드 math italic)로 그린다.
+  //   보통 글자에 기울임만 주면 x 가 대문자처럼 보여서 마스터가 지적함.
+  //   글꼴이 이 글자를 못 그리는 기기에서는 예전처럼 <i> 기울임으로 돌아간다.
+  var MI_OK = null, MI_FONT = '"Cambria Math","STIX Two Math","Latin Modern Math","Noto Sans Math","Times New Roman",serif';
+  function mathItalicOk(){
+    if(MI_OK !== null) return MI_OK;
+    try{
+      var c = document.createElement('canvas').getContext('2d');
+      c.font = '20px ' + MI_FONT;
+      var w1 = c.measureText(String.fromCodePoint(0x1D465)).width;   // 수학 기울임 x
+      var w2 = c.measureText(String.fromCodePoint(0x10FFFF)).width;  // 없는 글자(네모)
+      MI_OK = w1 > 0 && Math.abs(w1 - w2) > 0.5;
+    }catch(e){ MI_OK = false; }
+    return MI_OK;
+  }
+  // [v82.7] 교재(숨마쿰 라우데)에서 세워서 쓰는 것들
+  //   · 점·선분·도형 이름: AB, ABC, ∠A, A(-3)   · 단위: cm, L, mL   · 함수 이름: sin, tan, log
+  //   기울여 쓰는 것: 변수 a x p k, 집합 A B U, 판별식 D, 넓이 S …
+  var UNITS = {mm:1,cm:1,m:1,km:1,mg:1,g:1,kg:1,t:1,mL:1,ml:1,L:1,kL:1,cc:1,mol:1,s:1};
+  var FUNCS = {sin:1,cos:1,tan:1,sec:1,csc:1,cot:1,log:1,ln:1,lim:1,max:1,min:1,gcd:1,lcm:1,mod:1};
+  var MF_CTX = '';                                    // 이 수식 덩어리 바로 앞의 우리말
+  var POINT_WORD = /(점|각|원|호|선분|중심|꼭짓점|지점|삼각형|사각형|다각형|평행사변형|마름모|사다리꼴|정점|둘레)\s*$/;
+  function isRoman(w,t,i){
+    if(w.length>1 && FUNCS[w.toLowerCase()]) return true;              // sin, tan, log
+    if(UNITS[w] && w.length>1 && /\d\s*$/.test(t.slice(0,i))) return true;  // 10cm, 1000 mL
+    if(UNITS[w] && MF_UNIT) return true;                               // 단위 이야기 속의 한 글자 단위 (1 L, 3 g)
+    if(UNITS[w] && t[i-1]==='(' && t[i+w.length]===')') return true;   // 홀로 괄호 안의 단위 — (m), (cm)
+    if(w.length>1 && /^[A-Z]+$/.test(w)) return true;                  // AB, ABC — 점·선분·도형
+    if(w.length>3 && /^[a-z]+$/.test(w)) return true;                  // 영어 낱말
+    if(w.length===1 && /[A-Z]/.test(w)){
+      var pch=t.slice(0,i).replace(/\s+$/,'').slice(-1);
+      if(pch && '\u2220\u25B3\u25B1\u223D\u2261'.indexOf(pch)>=0) return true;  // ∠A △A
+      if(/^\(\s*[-\u2212+]?[\d.]+\s*(,\s*[-\u2212+]?[\d.]+\s*)*\)/.test(t.slice(i+1))) return true;  // A(-3), B(5, 2)
+      if(i===0 && POINT_WORD.test(MF_CTX)) return true;                // 점 A, 원 O
+    }
+    return false;
+  }
+  function mvar(ch){
+    if(mathItalicOk()){
+      if(ch === 'h') return '<span class="mf-mi">\u210E</span>';   // ℎ 는 따로 있는 글자
+      var code = ch.charCodeAt(0);
+      var base = (code >= 97) ? 0x1D44E + (code - 97) : 0x1D434 + (code - 65);
+      return '<span class="mf-mi">' + String.fromCodePoint(base) + '</span>';
+    }
+    return '<i class="mf-v">' + ch + '</i>';
+  }
+
+  // [0.21.2] 근호 — 글꼴 √ 대신 직접 그린 기호. 지붕(.mf-rcd 윗줄)과 끊기지 않고 안의 식 높이만큼 늘어난다.
+  var RSIGN='<svg viewBox="0 0 10 20" preserveAspectRatio="none"><path d="M0.5 12.4 2.6 10.8" class="mf-rs1"/><path d="M2.6 10.8 5.4 19.4" class="mf-rs3"/><path d="M5.4 19.4 9.5 0 11 0" class="mf-rs2"/></svg>';
+  // t[k] 가 √( … ) 괄호 안이면 true
+  function inRad(t,k){ var st=[]; for(var j=0;j<k;j++){ if(t[j]==='(') st.push(t[j-1]==='√'); else if(t[j]===')') st.pop(); } return st.indexOf(true)>=0; }
+
+  // 분수 처리 후 inner()
+  function expr(t){
+    var k=t.indexOf('/');
+    while(k>0){
+      if(t[k-1]!=='/' && t[k+1]!=='/' && !inRad(t,k)){
+        var L=leftOperand(t,k), R=L?rightOperand(t,k+1):null;
+        if(L && R){
+          return expr(t.slice(0,L[0]))
+            + '<span class="mf-frac"><span class="mf-num">'+expr(strip(L[1]))+'</span>'
+            + '<span class="mf-den">'+expr(strip(R))+'</span></span>'
+            + expr(t.slice(k+1+R.length));
+        }
+      }
+      k=t.indexOf('/',k+1);
+    }
+    return inner(t);
+  }
+
+  // [v82.7] 수식 덩어리 밖에 홀로 있는 변수 한 글자도 교재처럼 기울인다.
+  //   "x의 값", "y축", "꼭짓점 (p, q)", "n각형" … 숫자 뒤의 단위(500 g)와 영어 낱말은 건드리지 않는다.
+  var LONE = /(^|[^A-Za-z0-9])([a-z])(?![A-Za-z0-9])/g;
+  // 단위로도 쓰이는 글자(m 미터·g 그램·t 톤·l 리터·s 초·h 시간)는, 그 글에 단위 이야기가 있으면 변수로 보지 않는다.
+  //   "2 km는 몇 m일까요?" 의 m 은 변수가 아니라 단위다.
+  var UNIT_CH = 'mgtlsh';
+  var UNIT_CTX = /(mm|cm|km|kg|mg|mL|kL|㎜|㎝|㎞|㎏|㎖|㎠|㎤|단위|그램|킬로|리터|미터|센티|밀리|톤|무게|들이|길이는|시간의)/;
+  var MF_UNIT = false;
+  var SET_UP = /(집합)(\s*)([A-Z](?:\s*,\s*[A-Z])*)(?![A-Za-z0-9])/g;   // 집합 A, 전체집합 U, 부분집합 A, B
+  function plain(t){
+    var src=String(t==null?'':t), out='', last=0, m;
+    LONE.lastIndex=0;
+    while((m=LONE.exec(src))){
+      var at=m.index+m[1].length;
+      if(/\d\s*$/.test(src.slice(0,at))){ continue; }        // 500 g, 3 m — 단위
+      if(MF_UNIT && UNIT_CH.indexOf(m[2])>=0){ continue; }   // 단위 이야기 속의 m·g·t·l
+      out += esc(src.slice(last,at)) + '<span class="mf">'+mvar(m[2])+'</span>';
+      last = at+1; LONE.lastIndex = last;
+    }
+    out += esc(src.slice(last));
+    // 집합 이름은 대문자라도 기울인다 (점 A·원 O 는 그대로 세움)
+    return out.replace(SET_UP, function(_, k, sp, names){
+      return k + sp + names.replace(/[A-Z]/g, function(c){ return '<span class="mf">' + mvar(c) + '</span>'; });
+    });
+  }
+
+  // 안 닫힌 √( 의 '(' 자리(덩어리 안 위치), 없으면 -1
+  function radOpen(t){ var st=[]; for(var j=0;j<t.length;j++){ if(t[j]==='(') st.push(j); else if(t[j]===')') st.pop(); }
+    for(var q=0;q<st.length;q++) if(t[st[q]-1]==='√') return st[q]; return -1; }
+
+  // [v85.7] 대분수 "2와 1/3"·"1과1/2" → 교재처럼 자연수 바로 옆에 분수. 화면에서 한글 '와/과'를 뺀다.
+  //   앞이 숫자·'/'·'.' 이면(3/4과 5/6 같은 분수 두 개) 건드리지 않는다. 채점·음성은 원래 글자를 쓰므로 영향 없음.
+  var MIXED = /(^|[^\d\/.])(\d+)\s*[와과]\s*(?=\d+\s*\/\s*\d+)/g;
+  function mfmt(s){
+    var src=String(s==null?'':s).replace(MIXED, '$1$2\u2009'), out='', last=0, m;
+    MF_UNIT = UNIT_CTX.test(src);
+    RUN.lastIndex=0;
+    while((m=RUN.exec(src))){
+      var raw=m[0], start=m.index;
+      var trimmed=raw.replace(/\s+$/,'');
+      // [0.21.2] √( 가 이 덩어리 안에서 안 닫히면(안에 − 같은 글자가 있어 끊김) 짝 괄호까지 늘린다
+      var rp=radOpen(trimmed);
+      if(rp>=0){ var gq=group(src,start+rp); if(gq) trimmed=src.slice(start,start+rp+gq.length); }
+      if(trimmed.length<2 || !OPS.test(trimmed)){ continue; }
+      MF_CTX = src.slice(Math.max(0,start-12), start);
+      out += plain(src.slice(last,start)) + '<span class="mf">'+expr(trimmed)+'</span>';
+      last = start + trimmed.length;
+      RUN.lastIndex = last;
+    }
+    return out + plain(src.slice(last));
+  }
+  window.mfmt = mfmt;
+})();
+
+</script>
+<script>
+const fm = s => window.mfmt ? mfmt(s) : s;
+const $ = s => document.querySelector(s);
+const SCREENS = [['login','로그인'],['home','홈'],['units','단원'],['ask','질문'],['pass','통과'],['mission','문제 풀기'],['record','나의 기록']];
+const NOTES = {
+  ma: ['밝은 바탕에 청록 한 색만 써요. 형광펜 노랑은 「오늘 할 것」에만 칠해 눈이 거기로 먼저 가요.', '캐릭터·이야기는 빼고 포물선 모양 작은 표시만 남겼어요(초등은 뚜삐·퉁구리·우주).', '모서리는 적당히 둥글게, 그림자 없이 선으로만 칸을 나눠요.'],
+  mb: ['짙은 회색 바탕에 산호색 한 색. 밤에 공부해도 눈이 편하고, 중학생이 좋아하는 「어두운 모드」 느낌이에요.', '글씨를 조금 키우고, 모서리는 덜 둥글게 해서 단단해 보이게 했어요.', '화면 구성·버튼 자리는 A안과 똑같아요. 색만 골라 주시면 돼요.'],
+  h: ['흰 종이·검은 글씨. 제목만 명조체로 써서 수험 교재처럼 차분하게.', '색은 진한 자주 한 색만, 「지금 할 것」과 정답에만 아껴 써요.', '질문 화면에 풀이 노트가 있어요. 학생이 할 일을 말하면 앱이 식을 노트에 써 줘요(고등 대화형 풀이).']
+};
+let TH = 'ma', SC = 'login';
+try { const s = JSON.parse(localStorage.getItem('mhs-mock') || 'null'); if (s && NOTES[s.t]) { TH = s.t; SC = s.s; } } catch (e) {}
+const H = () => TH === 'h';
+
+/* ── 그래프(이 시안 안에서 그림) ── */
+function graph(o) {
+  const W = o.w || 300, Hh = o.h || 220, pad = 14;
+  const [x0, x1] = o.xr, [y0, y1] = o.yr;
+  const X = x => pad + (x - x0) / (x1 - x0) * (W - 2 * pad), Y = y => Hh - pad - (y - y0) / (y1 - y0) * (Hh - 2 * pad);
+  const s = [`<svg viewBox="0 0 ${W} ${Hh}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${o.label || '그래프'}" font-family="Cambria Math,STIX Two Math,Times New Roman,serif">`];
+  const ax = 'stroke:var(--axis);stroke-width:1.2';
+  s.push(`<line x1="${X(x0)}" y1="${Y(0)}" x2="${X(x1)}" y2="${Y(0)}" style="${ax}"/><line x1="${X(0)}" y1="${Y(y0)}" x2="${X(0)}" y2="${Y(y1)}" style="${ax}"/>`);
+  s.push(`<path d="M${X(x1)-6},${Y(0)-3.5} L${X(x1)},${Y(0)} L${X(x1)-6},${Y(0)+3.5}" style="fill:none;${ax}"/><path d="M${X(0)-3.5},${Y(y1)+6} L${X(0)},${Y(y1)} L${X(0)+3.5},${Y(y1)+6}" style="fill:none;${ax}"/>`);
+  const fs = o.fs || 13;
+  if (!o.noLab) s.push(`<text x="${X(x1)-4}" y="${Y(0)+15}" font-size="${fs}" font-style="italic" style="fill:var(--sub)">x</text><text x="${X(0)+6}" y="${Y(y1)+10}" font-size="${fs}" font-style="italic" style="fill:var(--sub)">y</text>`);
+  if (o.O !== false) s.push(`<text x="${X(0)-12}" y="${Y(0)+14}" font-size="${fs-1}" style="fill:var(--sub)">O</text>`);
+  (o.guides || []).forEach(([gx, gy]) => s.push(`<path d="M${X(gx)},${Y(0)} L${X(gx)},${Y(gy)} L${X(0)},${Y(gy)}" style="fill:none;stroke:var(--axis);stroke-width:1;stroke-dasharray:3 3"/>`));
+  (o.segs || []).forEach(g => s.push(`<line x1="${X(g[0])}" y1="${Y(g[1])}" x2="${X(g[2])}" y2="${Y(g[3])}" style="stroke:var(--acc);stroke-width:1.6;stroke-dasharray:5 4"/>`));
+  (o.fns || []).forEach(f => {
+    let d = '', pen = false;
+    for (let k = 0; k <= 240; k++) {
+      const x = x0 + (x1 - x0) * k / 240, y = f(x);
+      if (y < y0 - .5 || y > y1 + .5) { pen = false; continue; }
+      d += (pen ? 'L' : 'M') + X(x).toFixed(1) + ',' + Y(y).toFixed(1); pen = true;
+    }
+    s.push(`<path d="${d}" style="fill:none;stroke:var(--curve);stroke-width:${o.cw || 2.2}"/>`);
+  });
+  (o.ticksX || []).forEach(v => s.push(`<text x="${X(v)}" y="${Y(0) + (o.tickBelow === false ? -6 : 14)}" font-size="${fs-2}" text-anchor="middle" style="fill:var(--sub)">${String(v).replace('-', '−')}</text>`));
+  (o.ticksY || []).forEach(([v, right]) => s.push(`<text x="${X(0) + (right ? 5 : -5)}" y="${Y(v)+4}" font-size="${fs-2}" text-anchor="${right ? 'start' : 'end'}" style="fill:var(--sub)">${String(v).replace('-', '−')}</text>`));
+  (o.pts || []).forEach(p => s.push(`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="${o.pr || 3.4}" style="fill:var(--ink)"/>` + (p[2] ? `<text x="${X(p[0]) + (p[3] || 6)}" y="${Y(p[1]) + (p[4] || -6)}" font-size="${fs}" style="fill:var(--ink)">${p[2]}</text>` : '')));
+  (o.texts || []).forEach(t => s.push(`<text x="${X(t[0])}" y="${Y(t[1])}" font-size="${fs}" font-style="italic" style="fill:var(--curve)">${t[2]}</text>`));
+  return s.join('') + '</svg>';
+}
+/* 그래프 카드 — y=a(x−p)²+q : 꼭짓점 눈금·점선, y절편 */
+function gcard(a, p, q) {
+  const yi = a * p * p + q, ys = [0, q, yi];
+  const lo = Math.min(...ys), hi = Math.max(...ys), m = Math.max(2.5, (hi - lo) * .14);
+  return graph({w: 150, h: 150, xr: [Math.min(0, p) - 3.6, Math.max(0, p) + 3.6], yr: [lo - m, hi + m], fns: [x => a * (x - p) ** 2 + q],
+    guides: [[p, q]], pts: [[p, q], [0, yi]], pr: 3.2, cw: 2.2, fs: 15, O: false, noLab: true,
+    ticksX: [p], tickBelow: q < 0 ? false : true, ticksY: [[q, p < 0], [yi, p < 0]], label: '그래프 보기'});
+}
+
+/* ── 공통 조각 ── */
+const GLYPH = `<span class="glyph" aria-hidden="true"><svg viewBox="0 0 18 18"><path d="M2 3 Q9 22 16 3" style="fill:none;stroke:${'var(--acc-ink)'};stroke-width:2;stroke-linecap:round"/><circle cx="9" cy="12.4" r="1.9" style="fill:var(--acc-ink)"/></svg></span>`;
+const GLYPH_H = `<span class="glyph" aria-hidden="true"><svg viewBox="0 0 18 18"><path d="M2 3 Q9 22 16 3" style="fill:none;stroke:var(--ink);stroke-width:1.6"/><circle cx="9" cy="12.4" r="1.7" style="fill:var(--acc)"/></svg></span>`;
+const brand = () => `<span class="brand">${H() ? GLYPH_H : GLYPH}말하는 수학<span class="lv">${H() ? '고등' : '중등'}</span></span>`;
+const ST = H => H ? {name: '서윤', grade: '고2'} : {name: '민준', grade: '중3'};
+function bar(opt) {
+  const s = ST(H());
+  return `<header class="bar">${opt && opt.back ? `<button class="back" data-go="${opt.back}">‹ ${opt.backText}</button><span class="crumb">${fm(opt.crumb || '')}</span>` : brand()}<span class="sp"></span><span class="who">${s.name} · ${s.grade}<button data-toast="로그아웃(시안)">나가기</button></span></header>`;
+}
+const MIC = `<svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>`;
+const ICON = {
+  units: '<svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h10"/></svg>',
+  record: '<svg viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>',
+  note: '<svg viewBox="0 0 24 24"><path d="M6 3h10l3 3v15H6z M9 9h7M9 13h7M9 17h4"/></svg>'
+};
+
+/* ── 내용(실제 데이터: 중3-1 m31_quad.py · 고등 h_calc1_maxmin.py) ── */
+const M = {
+  today: {t: '이차함수 y=ax²+bx+c의 그래프', meta: '중3-1 · 4. 이차함수 · 1회차', n: '질문 5개 · 약 12분'},
+  bigs: [['1. 실수와 그 계산', 10, 10, 6], ['2. 다항식의 곱셈과 인수분해', 9, 9, 4], ['3. 이차방정식', 7, 7, 1], ['4. 이차함수', 5, 3, 1]],
+  course: '중3-1',
+  ask: {kind: '개념 · 1회차', no: 2, n: 5, q: 'y=x²−2x−8의 그래프야. x절편과 y절편은 각각 어떻게 구해?', src: '숨마쿰 222쪽',
+    say: 'x절편은 그래프가 x축과 만나는 점이니까 y에 0을 넣고 이차방정식을 풀어요. y절편은 x에 0을 넣으면 상수항 −8이에요.',
+    kw: ['x축 위의 점은 y=0', 'y축 위의 점은 x=0'],
+    short: 'x축 위의 점은 y좌표가 0이라 y=0을 넣어 이차방정식을 풀면 x절편이 나와. y축 위의 점은 x좌표가 0이라 x=0을 넣으면 y절편, 곧 상수항이 나와.',
+    long: 'y=x²−2x−8에 y=0을 넣으면 (x+2)(x−4)=0이라 x절편은 −2와 4야. x=0을 넣으면 y=−8이라 y절편은 −8이야.'},
+  pass: {score: 90, how: ['ask', '되묻기 1번 뒤'],
+    keys: [['hit', 'x절편은 y=0을 넣어 이차방정식을 풀어 구한다', '처음 대답에서 말함'], ['late', 'y절편은 x=0을 넣어 구한다 — 상수항 −8', '되묻기 「y축 위에 있는 점은 x좌표가 얼마야?」 뒤에 말함']],
+    ans: 'x절편은 그래프가 x축과 만나는 점의 x좌표라서, y=0을 넣어 x²−2x−8=0을 풀면 −2, 4야. y절편은 y축과 만나는 점의 y좌표라서 x=0을 넣으면 상수항 −8이야.'},
+  mis: {stem: '이차함수 y=x²−8x+7의 그래프로 알맞은 것은?', sub: '문제 풀기 · 1회차 기본 · 1 / 3',
+    ch: [[1, -4, -9], [1, 4, -9], [-1, 4, -9], [1, 4, -23], [1, 4, 7]], ans: 1,
+    wrong: {0: '꼭짓점의 x좌표 부호를 반대로 봤어.', 2: 'x²의 계수의 부호(볼록한 방향)를 놓쳤어.', 3: 'y절편의 부호를 반대로 봤어.', 4: '상수항 7을 꼭짓점의 y좌표로 착각했어.'},
+    exp: 'y=(x−4)²−9 → 아래로 볼록 · 꼭짓점 (4, −9) · y절편 7'},
+  rec: {tiles: [13, 7, 1, 1], week: '이번 주 4일 · 52분',
+    rows: [['01 이차함수의 뜻', '4-1 · 1회차', [4, 1, 0, 0]], ['02 이차함수 y=ax²의 그래프', '4-1 · 1회차', [4, 2, 0, 0]], ['03 y=a(x−p)²+q의 그래프', '4-1 · 1·2회차', [4, 3, 1, 0]], ['01 y=ax²+bx+c의 그래프', '4-2 · 1회차 · 오늘', [1, 1, 0, 1]]]}
+};
+const HS = {
+  today: {t: '함수의 최댓값과 최솟값의 활용', meta: '미적분Ⅰ · 2. 미분 · 1회차', n: '문제 1개 · 대화형 풀이 · 약 15분'},
+  bigs: [['1. 함수의 극한과 연속', 8, 8, 3], ['2. 미분', 12, 7, 0], ['3. 적분', 9, 0, 0]],
+  course: '미적분Ⅰ',
+  prob: '곡선 y=x² 위를 움직이는 점 P와 점 A(10, 2) 사이의 거리가 최소일 때, 점 P의 좌표와 그 최소 거리를 구하시오.',
+  pts: ['점 P를 문자로', '거리를 t의 식으로', '√ 대신 √ 안의 식', '도함수가 0인 t', '정말 최소인지', '답 되돌리기'],
+  note: [['점 P(t, t²)', '내가 말함'], ['AP = √((t − 10)² + (t² − 2)²)', '내가 말함 · 앱이 씀']],
+  ask: 'AP에는 √가 있어. 무엇을 가장 작게 만들면 될까? 왜 그래도 돼?',
+  say: 'AP 대신 AP 제곱, 그러니까 루트 안의 식을 가장 작게 만들면 돼요. 거리는 0 이상이라 AP가 가장 작을 때 제곱도 가장 작아요.',
+  kw: ['AP ≥ 0', '같은 t에서 가장 작다'],
+  short: '거리는 0 이상이라, 거리가 가장 작아지는 t에서 거리의 제곱도 가장 작아져. 그래서 √를 없앤 다항식 AP²만 미분하면 돼.',
+  long: '거리는 0 이상이라 AP가 가장 작은 t와 AP²이 가장 작은 t는 같아. 미적분Ⅰ에서는 다항함수를 미분하니까 √가 있는 식 대신 f(t)=AP²=(t−10)²+(t²−2)²을 가장 작게 만드는 t를 찾아. (교재 180쪽 11-3)',
+  pass: {score: 100, how: ['solo', '혼자'],
+    keys: [['hit', '√ 안의 식, 곧 AP²을 가장 작게 만든다', '처음 대답에서 말함'], ['hit', 'AP는 0 이상이라 AP가 가장 작을 때 AP²도 가장 작다(같은 t)', '처음 대답에서 말함']],
+    ans: '거리는 0 이상이라, 거리가 가장 작아지는 t에서 거리의 제곱도 가장 작아져. 그래서 √를 없앤 다항식 AP²만 미분하면 돼.',
+    newline: 'f(t) = AP² = (t − 10)² + (t² − 2)² = t⁴ − 3t² − 20t + 104'},
+  mis: {stem: '곡선 y=x² 위의 점 P와 점 A(5, −1) 사이의 거리의 최솟값은?', sub: '문제 풀기 · 1회차 기본 · 1 / 3',
+    ch: ['√26', '4', '2√5', '3√2', '20'], ans: 2,
+    wrong: {0: '√26은 A와 원점 사이의 거리야. 원점이 가장 가까운 점은 아니야.', 1: 'f′(t)=0인 t를 구해 f(t)를 계산해 봐.', 3: '3√2=√18은 실제 최솟값 √20보다 작아. 곡선 위에 그런 점은 없어.', 4: '20은 AP²의 값이야. 거리는 √를 씌워야 해.'},
+    exp: 'P(t, t²)라 하면 AP² = f(t) = (t−5)² + (t²+1)² = t⁴ + 3t² − 10t + 26. f′(t) = 2(t−1)(2t²+2t+5) = 0 → t = 1(앞뒤로 감소 → 증가라 최소). AP = √f(1) = √20 = 2√5'},
+  rec: {tiles: [9, 3, 1, 1], week: '이번 주 3일 · 64분 · 문제 2개',
+    rows: [['곡선 위의 점을 문자로', 'solo'], ['거리를 t의 식으로', 'solo'], ['√ 대신 √ 안의 식을 최소로', 'solo'], ['도함수가 0인 t 찾기', 'ask'], ['정말 최소인지 판정', 'tea'], ['답 되돌리기', 'solo']]}
+};
+
+/* ── 화면 ── */
+const V = {};
+V.login = () => {
+  const art = H()
+    ? graph({w: 400, h: 120, xr: [-2.2, 11.5], yr: [-.6, 6.2], fns: [x => x * x], pts: [[1.25, 1.5625, 'P', 5, 15], [10, 2, 'A', -4, -9]], segs: [[1.25, 1.5625, 10, 2]], O: false, noLab: true, cw: 1.4, fs: 13, label: '곡선 위의 점 P와 점 A'})
+    : graph({w: 400, h: 150, xr: [-4.5, 6.5], yr: [-10.5, 6], fns: [x => x * x - 2 * x - 8], pts: [[1, -9]], O: false, noLab: true, cw: 2.6, label: '포물선'});
+  return `<main class="login"><div class="lg">
+    ${brand()}
+    <div class="lg-art" aria-hidden="true">${art}</div>
+    <div><h1>${H() ? '설명할 수 있어야,<br><em>안다.</em>' : '풀 수 있는지보다,<br><em>설명할 수 있는지.</em>'}</h1>
+      <p>${H() ? '개념을 말로 짚고, 풀이의 길을 스스로 정합니다.' : '개념을 내 말로 설명하고, 바로 확인받아요.'}</p></div>
+    <form id="lgForm" style="display:grid;gap:12px">
+      <label class="fld" for="lgName">이름<input id="lgName" autocomplete="off" value="${ST(H()).name}"></label>
+      <label class="fld" for="lgPw">비밀번호<input id="lgPw" type="password" inputmode="numeric" value="1234"></label>
+      <button class="btn pri big" type="submit">들어가기</button>
+    </form>
+    <div class="lg-foot"><span>${H() ? '고등부' : '중등부'} 전용 주소예요</span><button class="lnk" data-toast="선생님 화면은 초·중·고 하나로 같아요">선생님 ›</button></div>
+  </div></main>`;
+};
+V.home = () => {
+  const D = H() ? HS : M, t = D.today;
+  const prog = D.bigs.map(([nm, all, r1, r2]) => `<div class="prow"><span class="nm">${fm(nm)}</span><span class="n">${r1}/${all}</span><span class="track" aria-hidden="true"><i style="width:${r2 / all * 100}%" class="r2"></i><i style="width:${(r1 - r2) / all * 100}%"></i></span></div>`).join('');
+  return bar() + `<main class="home two">
+    <div class="col">
+      <div class="date">10월 24일 금요일</div>
+      <section class="card today">
+        <span class="lbl">오늘 할 것</span>
+        <h2><span class="mark">${fm(t.t)}</span></h2>
+        <div class="meta"><span>${fm(t.meta)}</span><span>${t.n}</span></div>
+        <button class="btn pri big" data-go="ask">시작하기</button>
+        <div class="clock">오늘 15분 중 0분<span class="track"><i style="width:0"></i></span></div>
+      </section>
+      <nav class="minis" aria-label="다른 화면">
+        <button class="card mini" data-go="units">${ICON.units}단원</button>
+        <button class="card mini" data-go="record">${ICON.record}나의 기록</button>
+        <button class="card mini" data-toast="개념 노트(시안 밖)">${ICON.note}개념 노트</button>
+      </nav>
+    </div>
+    <section class="card prog" aria-label="진도">
+      <div class="prog-h"><span class="lbl">${D.course} 진도</span><span class="sp"></span><button class="qbtn" data-pop="pg" aria-label="막대 설명">?</button></div>
+      <div class="pop" id="pg" hidden>막대는 소주제 중 1회차를 마친 만큼이에요. 진한 부분은 2회차까지 마친 소주제예요.</div>
+      ${prog}
+    </section>
+  </main>`;
+};
+V.units = () => {
+  const rd = r => r.map((v, k) => `<span class="rd ${v}" aria-label="${k + 1}회차 ${{done: '마침', cur: '하는 중', lk: '잠김', '': '아직'}[v]}">${v === 'lk' ? '·' : k + 1}</span>`).join('');
+  const topic = ([no, nm, r, cls]) => `<button class="card topic ${cls || ''}" ${cls === 'lock' ? 'disabled' : 'data-go="ask"'}><span class="tn"><small>${no}${cls === 'now' ? ' · 오늘' : ''}</small>${fm(nm)}</span><span class="rds">${rd(r)}</span></button>`;
+  const body = H()
+    ? `<div class="mid"><h3>도함수의 활용</h3>${[
+        ['01', '접선의 방정식', ['done', 'done', '']], ['02', '평균값 정리', ['done', 'cur', '']], ['03', '함수의 증가와 감소', ['done', '', '']],
+        ['04', '함수의 극대와 극소', ['done', '', '']], ['05', '함수의 그래프', ['done', '', '']], ['06', '함수의 최댓값과 최솟값', ['done', '', '']],
+        ['07', '함수의 최댓값과 최솟값의 활용', ['cur', '', ''], 'now'], ['08', '방정식과 부등식에의 활용', ['lk', 'lk', 'lk'], 'lock'], ['09', '속도와 가속도', ['lk', 'lk', 'lk'], 'lock']].map(topic).join('')}</div>`
+    : `<div class="mid"><h3>4-1 이차함수와 그 그래프</h3>${[['01', '이차함수의 뜻', ['done', 'done', '']], ['02', '이차함수 y=ax²의 그래프', ['done', 'done', '']], ['03', '이차함수 y=a(x−p)²+q의 그래프', ['done', 'cur', '']]].map(topic).join('')}</div>
+       <div class="mid"><h3>${fm('4-2 이차함수 y=ax²+bx+c의 그래프')}</h3>${[['01', '이차함수 y=ax²+bx+c의 그래프', ['cur', '', ''], 'now'], ['02', '이차함수의 식 구하기', ['lk', 'lk', 'lk'], 'lock']].map(topic).join('')}</div>`;
+  const bigs = (H() ? HS : M).bigs.map(([nm], k, a) => `<button aria-pressed="${k === (H() ? 1 : 3)}" data-toast="다른 대단원(시안)">${fm(nm)}</button>`).join('');
+  return bar({back: 'home', backText: '홈', crumb: H() ? '미적분Ⅰ' : '중3-1'}) + `<main class="units">
+    <div class="uhead"><span class="lbl">${H() ? '미적분Ⅰ' : '중3-1'}</span><h2>${H() ? '2. 미분' : '4. 이차함수'}</h2></div>
+    <nav class="bigs" aria-label="대단원">${bigs}</nav>
+    <div class="legend"><span><span class="rd done">1</span>마침</span><span><span class="rd cur">2</span>하는 중</span><span>숫자 = 회차</span><button class="qbtn" data-pop="rdp" aria-label="회차 설명">?</button></div>
+    <div class="pop" id="rdp" hidden>같은 소주제를 시기를 두고 세 번 확인해요. 1회차는 뜻·성질, 2회차는 이유와 다른 상황, 3회차는 여러 개념을 이어서 푸는 길이에요. 앞 회차를 마쳐야 다음 회차가 열려요.</div>
+    ${body}
+    ${H() ? '<p class="legend">소주제 목록은 예시예요.</p>' : ''}
+  </main>`;
+};
+function answerBox(say) {
+  return `<section class="card answer" aria-label="대답">
+      <div class="live" id="live"><span class="ph">마이크를 누르고 말해 봐.</span></div>
+      <div class="microw"><button class="mic" id="mic" aria-label="말하기">${MIC}</button></div>
+      <div class="mic-cap" id="micCap">누르면 듣기 시작</div>
+      <div class="arow"><button class="lnk" data-toast="글로 쓰기 칸이 열려요(시안)">글로 쓰기</button><button class="lnk" id="clr">지우기</button><button class="btn pri" id="done" disabled>다 말했어</button></div>
+      <div class="help"><span>막히면</span><button id="helpBtn">도움 보기</button></div>
+    </section>`;
+}
+V.ask = () => {
+  if (H()) {
+    const pts = HS.pts.map((p, k) => `<i class="${k < 2 ? 'd' : k === 2 ? 'c' : ''}" title="${p}"></i>`).join('');
+    const fig = graph({w: 300, h: 210, xr: [-1.8, 11.4], yr: [-1, 13.2], fns: [x => x * x], pts: [[1.25, 1.5625, 'P', 5, 15], [10, 2, 'A(10, 2)', -34, -9]], segs: [[1.25, 1.5625, 10, 2]], texts: [[4.4, 11.4, 'y=x²']], label: '곡선 y=x²와 점 A, P'});
+    return bar({back: 'home', backText: '그만하기', crumb: '최댓값과 최솟값의 활용'}) + `<main class="stage">
+      <div class="qtop"><div class="pts" aria-label="지점 6개 중 3번째">${pts}<span>지점 3 · ${HS.pts[2]}</span></div><span class="sp"></span><div class="timer" aria-hidden="true"><b></b></div></div>
+      <div class="qgrid"><div class="left">
+        <section class="card prob"><span class="lbl">문제</span><div class="pt">${fm(HS.prob)}</div><details class="figd" ${innerWidth >= 900 ? 'open' : ''}><summary>그림 보기</summary><div class="fig">${fig}</div></details></section>
+        <section class="card note"><span class="lbl">풀이 노트</span>${HS.note.map(([l, s]) => `<div class="nl"><span>${fm(l)}</span><small>${s}</small></div>`).join('')}</section>
+      </div>
+      <div class="left">
+        <section class="card qcard"><span class="tag acc">지금 물음</span><div class="ask">${fm(HS.ask)}</div></section>
+        ${answerBox()}
+      </div></div></main>`;
+  }
+  const A = M.ask;
+  const fig = graph({w: 300, h: 230, xr: [-4.2, 6.4], yr: [-10.5, 7], fns: [x => x * x - 2 * x - 8], texts: [[2.3, -9.9, 'y=x²−2x−8']], label: '이차함수 y=x²−2x−8의 그래프'});
+  const steps = Array.from({length: A.n}, (_, k) => `<i class="${k < A.no - 1 ? 'd' : k === A.no - 1 ? 'c' : ''}"></i>`).join('');
+  return bar({back: 'home', backText: '그만하기', crumb: 'y=ax²+bx+c의 그래프'}) + `<main class="stage">
+    <div class="qtop"><div class="steps" aria-label="질문 ${A.no} / ${A.n}">${steps}</div><span class="crumb">${A.no} / ${A.n}</span><span class="sp"></span><div class="timer" aria-hidden="true"><b></b></div></div>
+    <div class="qgrid">
+      <section class="card qcard"><span class="tag acc">${A.kind}</span><div class="q">${fm(A.q)}</div><div class="fig">${fig}</div><div class="src">${A.src}</div></section>
+      ${answerBox()}
+    </div></main>`;
+};
+V.pass = () => {
+  const P = H() ? HS.pass : M.pass;
+  const keys = P.keys.map(([c, k, s]) => `<li class="${c}"><span class="k">✓</span><span>${fm(k)}<small>${s}</small></span></li>`).join('');
+  return bar({back: 'home', backText: '그만하기', crumb: H() ? '지점 3 통과' : '질문 2 / 5'}) + `<main class="stage"><div class="resgrid">
+    <section class="card res">
+      <div class="score"><b>${P.score}</b><span>점</span><span class="how ${P.how[0]}">${P.how[1]}</span></div>
+      <div><span class="lbl">${H() ? '이 지점에서 짚은 것' : '짚은 핵심'}</span></div>
+      <ul class="keys">${keys}</ul>
+    </section>
+    <section class="card res">
+      <div class="model"><b>모범답 꼭! 확인</b>${fm(P.ans)}</div>
+      ${H() ? `<div class="note" style="padding:0"><span class="lbl">풀이 노트에 새 줄</span><div class="nl new"><span>${fm(P.newline)}</span><small>앱이 씀</small></div></div>` : ''}
+      <button class="lnk" data-toast="개념 노트에 담았어요(시안)" style="justify-self:start">개념 노트에 담기</button>
+      <button class="btn pri big" data-go="${H() ? 'ask' : 'ask'}">${H() ? '다음 지점' : '다음 질문'}</button>
+    </section></div></main>`;
+};
+V.mission = () => {
+  const D = (H() ? HS : M).mis;
+  const chs = D.ch.map((c, k) => `<button class="ch" data-ch="${k}" aria-pressed="false"><span class="no">${'①②③④⑤'[k]}</span>${H() ? `<span>${fm(c)}</span>` : gcard(...c)}</button>`).join('');
+  const fig = H() ? `<div class="fig">${graph({w: 300, h: 200, xr: [-2.6, 6.6], yr: [-2.4, 8], fns: [x => x * x], pts: [[1.7, 2.89, 'P', 6, 12], [5, -1, 'A(5, −1)', -30, 18]], segs: [[1.7, 2.89, 5, -1]], texts: [[3.1, 7.2, 'y=x²']], label: '곡선 y=x²와 점 A, P'})}</div>` : '';
+  return bar({back: 'home', backText: '그만하기'}) + `<main class="stage">
+    <div class="crumb">${D.sub}</div>
+    <section class="card qcard"><div class="stem">${fm(D.stem)}</div>${fig}</section>
+    <div class="chs ${H() ? 'num' : ''}" id="chs" role="group" aria-label="보기">${chs}</div>
+    <div id="misOut"></div>
+    <button class="btn pri big" id="misGo" disabled>제출</button>
+  </main>`;
+};
+V.record = () => {
+  const D = H() ? HS.rec : M.rec, lab = ['한 번에', '되묻기 뒤', '도움 보고', '아직'], cls = ['solo', 'ask', 'tea', 'yet'];
+  const tiles = D.tiles.map((v, k) => `<button class="card tile ${cls[k]}" data-toast="${lab[k]} 질문 목록이 열려요(시안)"><b>${v}</b><small>${H() ? lab[k].replace('한 번에', '혼자') : lab[k]}</small></button>`).join('');
+  const rows = H()
+    ? D.rows.map(([nm, c]) => `<div class="rrow"><span class="nm">${fm(nm)}</span><span class="pill ${c}">${{solo: '혼자', ask: '되묻기 뒤', tea: '설명 보고'}[c]}</span></div>`).join('')
+    : D.rows.map(([nm, sub, c]) => { const t = c.reduce((a, b) => a + b, 0); return `<div class="rrow"><span class="nm">${fm(nm)}<small>${sub}</small></span><span class="crumb">${t - c[3]}/${t}</span><span class="stack" aria-hidden="true">${c.map((v, k) => v ? `<i class="s${k + 1}" style="flex:${v}"></i>` : '').join('')}</span></div>`; }).join('');
+  return bar({back: 'home', backText: '홈', crumb: '나의 기록'}) + `<main class="stage">
+    <div class="uhead"><span class="lbl">나의 기록</span><h2 style="font-size:23px">${D.week}</h2></div>
+    <div class="tiles">${tiles}</div>
+    <section class="card rlist"><div class="rrow" style="padding-bottom:6px"><span class="lbl">${H() ? '지난 문제 · 최댓값과 최솟값의 활용' : '4. 이차함수'}</span></div>${rows}</section>
+    <button class="btn" data-toast="내가 한 말 목록(시안)" style="justify-self:start">내가 한 말 보기</button>
+  </main>`;
+};
+
+/* ── 움직임: 화면 넘기기 · 마이크 흉내 · 도움 · 문제 고르기 ── */
+let micT = null;
+function toast(t) { document.querySelector('.toast')?.remove(); const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2200); }
+function go(s) { SC = s; draw(); window.scrollTo(0, 0); }
+function draw() {
+  clearInterval(micT);
+  document.body.className = 'th-' + TH;
+  document.querySelectorAll('[data-th]').forEach(b => b.setAttribute('aria-pressed', b.dataset.th === TH));
+  $('#scrs').innerHTML = SCREENS.map(([k, n], i) => `<button data-sc="${k}" aria-pressed="${k === SC}">${i + 1} ${n}</button>`).join('');
+  $('#app').className = 'app' + (['home', 'ask', 'pass'].includes(SC) ? ' wide' : '');
+  $('#app').innerHTML = V[SC]();
+  if (!$('#rvNote').hidden) note();
+  try { localStorage.setItem('mhs-mock', JSON.stringify({t: TH, s: SC})); } catch (e) {}
+  bind();
+  const bp = document.querySelector('.bigs [aria-pressed=true]'); if (bp) bp.parentNode.scrollLeft = bp.offsetLeft - 16;
+}
+function note() { $('#rvNote').innerHTML = `<ul>${NOTES[TH].map(x => `<li>${x}</li>`).join('')}</ul>`; }
+function bind() {
+  const f = $('#lgForm'); if (f) f.onsubmit = e => { e.preventDefault(); go('home'); };
+  const mic = $('#mic');
+  if (mic) {
+    const text = H() ? HS.say : M.ask.say, words = text.split(' '); let k = 0;
+    const live = $('#live'), done = $('#done');
+    const show = () => { live.innerHTML = fm(words.slice(0, k).join(' ')) + (mic.classList.contains('on') ? '<span class="cur"></span>' : ''); done.disabled = !k; };
+    mic.onclick = () => {
+      if (mic.classList.toggle('on')) {
+        $('#micCap').textContent = '듣는 중 · 다시 누르면 멈춤';
+        micT = setInterval(() => { if (k < words.length) { k++; show(); } else { mic.click(); } }, 260);
+      } else { clearInterval(micT); $('#micCap').textContent = '누르면 이어서 듣기'; show(); }
+    };
+    $('#clr').onclick = () => { k = 0; mic.classList.remove('on'); clearInterval(micT); live.innerHTML = '<span class="ph">마이크를 누르고 말해 봐.</span>'; done.disabled = true; };
+    done.onclick = () => go('pass');
+    $('#helpBtn').onclick = helpSheet;
+  }
+  document.querySelectorAll('.ch').forEach(b => b.onclick = () => {
+    if ($('#chs').dataset.done) return;
+    document.querySelectorAll('.ch').forEach(x => x.setAttribute('aria-pressed', x === b)); $('#misGo').disabled = false;
+  });
+  const mg = $('#misGo');
+  if (mg) mg.onclick = () => {
+    const D = (H() ? HS : M).mis, sel = document.querySelector('.ch[aria-pressed=true]'); if (!sel) return;
+    if ($('#chs').dataset.done) return go('record');
+    $('#chs').dataset.done = 1; const k = +sel.dataset.ch, ok = k === D.ans;
+    const right = document.querySelector(`.ch[data-ch="${D.ans}"]`); right.classList.add('right'); right.insertAdjacentHTML('beforeend', '<span class="badge">정답</span>');
+    if (!ok) { sel.classList.add('wrong'); sel.insertAdjacentHTML('beforeend', '<span class="badge">고른 답</span>'); }
+    $('#misOut').innerHTML = `<div class="check"><b>${ok ? '꼭 확인!' : '아쉬워!'}</b>${ok ? '' : `<div class="why">${fm(D.wrong[k])}</div>`}${fm(D.exp)}</div>`;
+    mg.textContent = '다음 문제';
+  };
+}
+function helpSheet() {
+  const D = H() ? HS : M.ask;
+  const bg = document.createElement('div'); bg.className = 'sheet-bg';
+  bg.innerHTML = `<div class="sheet" role="dialog" aria-label="도움"><h3>도움</h3><p style="margin:0;color:var(--sub);font-size:13.5px">하나씩 열어 봐. 무엇을 봤는지는 선생님 기록에 남아.</p>
+    <button class="hopt" data-h="kw"><b>낱말 힌트</b><small>떠올릴 낱말만</small><span>›</span></button>
+    <button class="hopt" data-h="short"><b>간단한 설명</b><small>두 문장 · 본 뒤에 다시 말하기</small><span>›</span></button>
+    <button class="hopt" data-h="long"><b>자세한 설명</b><small>설명을 보면 내일 다시 물어봐</small><span>›</span></button>
+    <div id="hOut"></div><button class="btn" id="hClose">닫고 다시 말하기</button></div>`;
+  document.body.appendChild(bg);
+  bg.onclick = e => { if (e.target === bg) bg.remove(); };
+  bg.querySelector('#hClose').onclick = () => bg.remove();
+  bg.querySelectorAll('[data-h]').forEach(b => b.onclick = () => {
+    const h = b.dataset.h; bg.querySelector('#hOut').innerHTML = `<div class="hopen">${h === 'kw' ? D.kw.map(fm).join(' · ') : fm(D[h])}</div>`;
+  });
+}
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-go],[data-sc],[data-th],[data-toast],[data-pop]'); if (!t) return;
+  if (t.dataset.go) go(t.dataset.go);
+  else if (t.dataset.sc) go(t.dataset.sc);
+  else if (t.dataset.th) { TH = t.dataset.th; draw(); }
+  else if (t.dataset.pop) { const p = document.getElementById(t.dataset.pop); p.hidden = !p.hidden; }
+  else toast(t.dataset.toast);
+});
+$('#rvWhy').onclick = () => { const n = $('#rvNote'); n.hidden = !n.hidden; if (!n.hidden) note(); };
+draw();
+</script>
