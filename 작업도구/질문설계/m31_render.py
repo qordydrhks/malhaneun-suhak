@@ -21,7 +21,7 @@ def mf(s):
         out.append('<span class="fr"><span>%s</span><span>%s</span></span>' % (it(m_.group(1)), it(m_.group(2))) if m_ else it(pt))
     return ''.join(out)
 
-KIND = {'K': ('개념', 'kK'), 'P': ('과정 이해·증명', 'kP'), 'T': ('유형', 'kT')}
+KIND = {'B': ('기초', 'kB'), 'K': ('개념', 'kK'), 'P': ('과정 이해·증명', 'kP'), 'T': ('유형', 'kT')}
 CIRC = '①②③④⑤⑥'
 SK = {'card': '🃏 카드 고르기', 'gcard': '🃏 그래프 카드', 'tap': '👆 그래프 누르기', 'grid': '👆 점 찍기', 'draw': '✏️ 대강 그리기', 'say': '🗣 짧은 말',
       'input': '⌨ 칸 입력', 'choice': '☑ 고르기', 'multi': '☑ 여러 개 고르기'}
@@ -34,7 +34,7 @@ h1{font-size:15pt;margin:0}.sub{color:#5b6270;font-size:8.6pt;margin:2px 0 6px}
 .box{border:1px solid #d6dae2;border-radius:6px;padding:6px 10px;margin:5px 0;background:#fafbfc;font-size:8.8pt}.box ul,.box ol{margin:2px 0;padding-left:18px}
 .box.ask{border-color:#e7c27a;background:#fffaf0}.idea{border-left:4px solid #2f5fb3}
 .sum{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.chip{display:inline-block;font-size:8.3pt;padding:0 8px;border-radius:99px;border:1px solid currentColor;white-space:nowrap}
-.r1{color:#2563eb}.r2{color:#6d3fd0}.r3{color:#b45309}.kK{color:#0f766e}.kP{color:#9d174d}.kT{color:#1d4ed8}
+.r1{color:#2563eb}.r2{color:#6d3fd0}.r3{color:#b45309}.kB{color:#4d7c0f}.kK{color:#0f766e}.kP{color:#9d174d}.kT{color:#1d4ed8}
 table{width:100%;border-collapse:collapse}td,th{vertical-align:top}
 .tt td,.tt th{border:1px solid #d6dae2;padding:2px 6px;font-size:8.3pt;text-align:left}.tt th{background:#f3f5f9}
 .sec{break-before:page;font-size:13pt;font-weight:800;margin:0 0 4px;padding:3px 9px;border-left:6px solid currentColor;background:#f7f8fb}
@@ -192,7 +192,7 @@ def type_table(U, L, MS, names, sseen):
 
 def number(U, L):
     k_ = 0
-    for r in (1, 2):              # 화면에 나오는 순서(회차 → 개념·과정·유형)대로 번호
+    for r in (1, 2):              # 화면에 나오는 순서(회차 → 기초·개념·과정·유형)대로 번호
         for kk in KIND:
             for q in [q for q in U if q['r'] == r and q['kind'] == kk]: k_ += 1; NUMOF[q['id']] = k_
     for kk in KIND:
