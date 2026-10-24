@@ -116,6 +116,8 @@ button:disabled{opacity:.35;cursor:default}
 .mic{width:84px;height:84px;border-radius:50%;background:var(--gold);position:relative;box-shadow:0 0 0 0 #f2c45f66}
 .mic span{position:absolute;inset:28px 33px;border-radius:12px;background:#241a00}
 .mic.on{animation:pulse 1.3s ease-out infinite;background:#ff8a8a}
+.mic.wait{animation:none;background:#9aa6bd}   /* CLOVA 마지막 말 조각을 기다리는 동안 */
+.tcost{width:100%;border-collapse:collapse;font-size:14px}.tcost td{padding:7px 4px;border-top:1px solid var(--line)}.tcost td:last-child{text-align:right;white-space:nowrap}.tcost td:nth-child(2){color:var(--sub)}   /* 선생님 💰 AI 비용 */
 @keyframes pulse{0%{box-shadow:0 0 0 0 #ff8a8a88}100%{box-shadow:0 0 0 22px #ff8a8a00}}
 .thinking{text-align:center;color:var(--sub);padding:22px}
 .spin{display:inline-block;width:16px;height:16px;border:2px solid var(--line);border-top-color:var(--gold);border-radius:50%;animation:sp 1s linear infinite;vertical-align:-3px}

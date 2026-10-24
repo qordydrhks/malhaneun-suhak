@@ -239,6 +239,8 @@
      틀렸을 때는 넣지 않는다(벌처럼 느껴져 되묻기·도움을 피하게 됨). 버튼마다 넣지 않는다 */
   const BZ = {pass: [25, 50, 25], planet: [60, 50, 140], big: [30, 40, 30, 40, 160], micOn: 14, micOff: 8, tap: 15};
   A.BZ = BZ;
+  // 🎙 네이버 CLOVA 실시간 음성 인식을 쓸지 — 학원 기기에서만(돈이 드는 길) · 선생님 설정 「네이버 음성 인식」을 끄면 브라우저 음성 인식
+  const useClova = () => !A.sttOff && A.isAcademyDevice() && !!window.CLOVA && CLOVA.ok();
   A.buzz = p => { try { if (p && navigator.vibrate && localStorage.getItem('app:buzz') !== '0') navigator.vibrate(p); } catch (e) {} };
   document.addEventListener('click', e => {                           // 캐릭터를 누르면 살짝 흔들리고 톡
     const img = e.target.closest('.buddy img'); if (!img) return;
@@ -283,6 +285,7 @@
     await E.load();
     A.visitStart(A.loginHow || 'auto'); A.loginHow = '';
     try { A.academy = ((await A.store.get('app:academy')) || {}).name || ''; } catch (e) {}
+    A.store.get('app:stt').then(v => { A.sttOff = !!(v && v.off); }).catch(() => {});   // 선생님 설정 「네이버 음성 인식 끄기」
     await applyCmds();
     friend = (A.ls.raw('dd:char:' + A.session.student.id) || '').replace(/"/g, '');
     if (!FR[friend]) friend = null;
@@ -604,7 +607,26 @@
         tries++; hint(`「${esc(heard[0] || '')}」? 잘 못 들었어. 다시 말해 줘`); listen();
       };
       const typeMode = msg => { stopW(); if (msg) toast(msg); const ty = $('#wTy'); if (!ty) return; ty.hidden = false; $('#wTw').hidden = true; $('#wIn').focus(); };
-      function listen() {
+      function listen() { if (useClova()) listenClova(); else listenBrowser(); }
+      /* 🎙 CLOVA 로 낱말 하나 듣기 — 글자가 오고 1.2초 동안 새 글자가 없으면 끝내고 채점 · 8초 동안 아무 말이 없으면 멈춤 */
+      function listenClova() {
+        stopW(); try { A.S.quiet(); } catch (e) {}
+        let heard = '', lastAt = 0, cancel = false; const t0 = Date.now();
+        const r = CLOVA.start({
+          pts: () => [],
+          onWords: ws => { const t = A.fixSpeech(ws.map(x => x.w).join(' ').replace(/[.?!]+$/, '').trim()); if (t && t !== heard) { heard = t; lastAt = Date.now(); hint(esc(t) + ' …'); } },
+          onState: st => { if (st === 'on') { $('#wMic')?.classList.add('on'); if (!tries) hint('듣고 있어… 낱말을 말해 줘'); } else if (st === 'off') { clearInterval(tm); $('#wMic')?.classList.remove('on', 'wait'); if (wrec === r) wrec = null; } },
+          onFail: msg => { toast(msg); clearInterval(tm); if (wrec === r) wrec = null; if (!cancel) listenBrowser(); },
+          onError: msg => toast(msg)
+        });
+        const abort0 = r.abort; r.abort = () => { cancel = true; clearInterval(tm); abort0(); }; r.onend = null; wrec = r;   // stopW() 가 부르는 모양
+        const tm = setInterval(() => {
+          if (cancel || lock || k !== myK) { r.abort(); return; }
+          if (heard && Date.now() - lastAt > 1200) { clearInterval(tm); if (wrec === r) wrec = null; r.finish().then(() => { if (!cancel && !lock && k === myK) judge([heard]); }); }
+          else if (!heard && Date.now() - t0 > 8000) { r.abort(); if (wrec === r) wrec = null; hint('마이크를 누르고 말해 줘'); }
+        }, 200);
+      }
+      function listenBrowser() {
         const R = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!R) return typeMode('이 기기는 말하기가 안 돼서 글로 써 줘');
         stopW(); try { A.S.quiet(); } catch (e) {}
@@ -1227,7 +1249,7 @@
       root().querySelector('[data-go="quit"]').onclick = (e) => { e.stopPropagation(); NAV.quit = null; stop(); resolve('quit'); };
       navMark(['q']); NAV.quit = () => { stop(); resolve('quit'); return true; };
       const say = (t, cls) => { $('#say').innerHTML = t ? `<div class="sbubble ${cls || ''}">${t}</div>` : ''; };
-      const stop = () => { done = true; clearInterval(tim); try { rec && rec.stop(); } catch (e) {} };
+      const stop = () => { done = true; clearInterval(tim); try { rec && (rec.clova ? rec.abort() : rec.stop()); } catch (e) {} };
       // 타이머 — 채점하는 동안은 멈춘다. 다 되면 떨어진 것과 같다(내일 다시)
       const drawT = () => { const b = $('.timer b'); if (b) { b.style.width = Math.max(0, left / limit * 100) + '%'; b.parentNode.classList.toggle('low', left < 30); } };
       const noT = E.timerOff() && practice !== 'battle';
@@ -1248,10 +1270,15 @@
         const ta = $('#ta'), live = $('#live'), sub = $('#sub');
         const upd = t => { text = t; live.textContent = typed ? '' : t; sub.disabled = !text.trim(); };
         MI.bind(ta, () => upd(MI.value(ta)));
-        $('#tw').onclick = () => { typed = !typed; stopRec(); input(prompt, onSubmit); };
-        $('#clr').onclick = () => { stopRec(); ta.innerHTML = ''; altPieces.length = 0; upd(''); };
+        const cut = () => { if (rec && rec.clova) { const r = rec; rec = null; r.abort(); } else stopRec(); };   // 글로 쓰기·지우기: CLOVA 는 남은 글자를 기다리지 않고 바로 끊음
+        $('#tw').onclick = () => { typed = !typed; cut(); input(prompt, onSubmit); };
+        $('#clr').onclick = () => { cut(); ta.innerHTML = ''; altPieces.length = 0; upd(''); };
         $('#mic').onclick = () => (rec ? stopRec() : startRec());
         sub.onclick = () => {
+          if (rec && rec.clova) {   // CLOVA: 마지막 말 조각이 다 올 때까지 기다렸다 채점(0.5~2초)
+            const r = rec; rec = null; sub.disabled = true; sub.textContent = '마지막 말 받는 중…'; A.buzz(BZ.micOff);
+            r.finish().then(() => { if (done) return; sub.textContent = '다 말했어'; sub.disabled = !text.trim(); if (text.trim()) sub.onclick(); }); return;
+          }
           stopRec(); const t = (typed ? MI.value(ta) : text).trim(); if (!t) return;
           if (typed && t.includes('□')) { toast('분수 칸을 모두 채워 줘'); MI.focusEmpty(ta); return; }
           ticking = false; onSubmit(t);
@@ -1260,7 +1287,26 @@
            · interimResults=false: 확정된 문장만 받는다 → 중간 결과가 겹쳐 반복되는 문제(안드로이드) 원천 차단
            · 새로 확정된 조각만 resultIndex 부터 모은다 · 2순위 이하 인식 후보도 모아 채점에 같이 넘긴다
            · 안드로이드가 저절로 끊으면 다시 켠다(직접 멈춘 때만 끝) · 4초 안에 안 켜지면 글로 쓰기로 */
-        function startRec() {
+        function startRec() { if (useClova()) startClova(); else browserRec(); }
+        /* 🎙 네이버 CLOVA 실시간(10/24 마스터 「앱 전체에서」) — 학원 기기에서만(돈이 드는 길) · 선생님 설정에서 끌 수 있음.
+           js/clova.js → 서버 함수 clova-stt. 글자는 0.4초 조각(확정)으로 와서 겹침 문제가 없다. 연결이 안 되면 아래 브라우저 방식으로 */
+        function startClova() {
+          try { A.S.quiet(); } catch (e) {}
+          const pre = text;   // 앞서 말한 것 뒤에 이어 붙인다
+          const r = CLOVA.start({
+            pts: () => [],
+            onWords: ws => upd(A.fixSpeech(((pre ? pre + ' ' : '') + ws.map(x => x.w).join(' ')).replace(/\s+/g, ' ').trim())),
+            onState: st => {
+              if (st === 'on') { $('#mic')?.classList.add('on'); setBuddy('listening'); if (!live.textContent) live.innerHTML = '<span class="hear">듣고 있어… 다 말하면 마이크를 다시 눌러 줘</span>'; }
+              else if (st === 'wait') $('#mic')?.classList.add('wait');
+              else { if (rec === r) rec = null; if (!rec) { $('#mic')?.classList.remove('on', 'wait'); setBuddy('question'); } if (!text.trim() && !typed) live.textContent = ''; }
+            },
+            onFail: msg => { toast(msg); if (rec === r) rec = null; if (!rec && !done) browserRec(); },
+            onError: msg => toast(msg)
+          });
+          r._stop = () => {}; r.stop = () => r.finish(); rec = r; A.buzz(BZ.micOn);
+        }
+        function browserRec() {
           const R = window.SpeechRecognition || window.webkitSpeechRecognition;
           if (!R) { typed = true; toast('이 기기는 말하기가 안 돼서 글로 써 줘'); return input(prompt, onSubmit); }
           try { A.S.quiet(); } catch (e) {}                              // 효과음 장치를 먼저 잠재운다(안드로이드에서 마이크를 뺏는 일) · 기다리지 않는다(아이폰은 누른 순간에 시작해야 함)

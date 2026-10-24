@@ -35,7 +35,7 @@
     opt = opt || {};
     root().innerHTML = `<header class="bar">${opt.back ? `<button class="ghost" id="tBack">‹ ${esc(opt.backText || '뒤로')}</button>` : '<span class="logo">선생님</span>'}
       <span class="crumb">${esc(opt.crumb || E.course().code + ' 은하')}</span><span class="who"><button class="ghost small" id="tOut">나가기</button></span></header><main class="tmain">${inner}</main>`;
-    $('#tOut').onclick = () => { try { sessionStorage.removeItem(SK); } catch (e) {} pin(); };
+    $('#tOut').onclick = () => { try { sessionStorage.removeItem(SK); sessionStorage.removeItem('app:tpin'); } catch (e) {} clearInterval(COST_T); pin(); };
     if (opt.back) $('#tBack').onclick = opt.back;
     window.scrollTo(0, 0);
   }
@@ -54,7 +54,7 @@
         const saved = await A.store.get('config:teacherPin');
         const want = saved && saved.hash ? saved.hash : await A.sha256('0000');
         if ((await A.sha256(v)) !== want) { $('#pm').textContent = 'PIN이 맞지 않아요.'; return; }
-        try { sessionStorage.setItem(SK, '1'); } catch (e2) {}
+        try { sessionStorage.setItem(SK, '1'); sessionStorage.setItem('app:tpin', v); } catch (e2) {}   // PIN 은 💰 AI 비용(서버가 PIN 을 확인)에 쓴다 · 이 탭에서만
         list();
       } catch (err) { $('#pm').textContent = '서버에 연결하지 못했어요.'; }
     };
@@ -106,6 +106,7 @@
         <button class="tmbtn" id="tVs"><i>🕒</i><b>접속 기록</b><small>날짜 · 시간별</small></button>
         <button class="tmbtn" id="tMg"><i>👥</i><b>학생 관리</b><small>등록 · 수정 · 비밀번호</small></button>
         <button class="tmbtn ${NB.fresh ? 'hot' : ''}" id="tNb"><i>✦</i><b>별빛노트</b><small>${NB.fresh ? '새 대답 ' + NB.fresh + '개 확인' : '새 대답 없음'}</small></button>
+        <button class="tmbtn" id="tCost"><i>💰</i><b>AI 비용</b><small id="tCostS">오늘 · 이번 달</small></button>
         <button class="tmbtn" id="tSet"><i>⚙</i><b>설정</b><small>학원 이름 · 학기 · 기기</small></button>
       </div>
       <div class="tlist">${rows.map(({s, v}) => `<button class="tstu" data-id="${esc(s.id)}">
@@ -119,6 +120,8 @@
     $('#tRd').onclick = () => roundsAll();
     $('#tVs').onclick = () => visitsDay(A.today());
     $('#tSet').onclick = settings;
+    $('#tCost').onclick = () => costView();
+    clearInterval(COST_T); costFetch().then(c => { const el = document.getElementById('tCostS'); if (c && el) el.textContent = `오늘 ${won(c.tday)} · 이번 달 ${won(c.tmon)}`; });
     root().querySelectorAll('.tstu').forEach(b => b.onclick = () => detail(STU.find(s => s.id === b.dataset.id)));
   }
   /* ── 🪐 회차 열기(마스터 10/21 — 옛 선생님 화면에 있던 것) ──
@@ -188,6 +191,8 @@
       <div class="tbox"><h3>학원 이름</h3><p class="sub">학생 화면 왼쪽 위에 보여요(비우면 「말하는 수학」)</p>
         <div class="row"><input id="tAcad" class="tin" maxlength="20" placeholder="예: 두드림 수학" value="${esc(ACAD)}"><button class="secondary small" id="tAcadS">저장</button><span class="sub" id="tAcadM"></span></div></div>
       <div class="tbox">${semEditor()}</div>
+      <div class="tbox"><h3>🎙 음성 인식</h3><p class="sub">학원 기기에서 네이버 CLOVA 실시간 인식을 써요(수학 낱말을 더 잘 알아들어요 · 15초당 5원). 끄면 모든 기기가 브라우저 음성 인식(무료)을 써요. 학생 기기는 다음에 들어올 때 받아요.</p>
+        <div class="row"><button class="secondary small" id="tStt">불러오는 중…</button></div></div>
       <div class="tbox"><h3>이 기기</h3>
         <div class="row"><button class="secondary small" id="tDev">${dev ? '✅ 학원 기기로 등록됨 · 해제' : '이 기기를 학원 기기로 등록'}</button>
         <button class="secondary small" id="tBuzz">${buzz ? '📳 진동 켜짐 · 끄기' : '📳 진동 꺼짐 · 켜기'}</button></div></div>
@@ -212,6 +217,53 @@
       ['#pOld', '#pNew', '#pNew2'].forEach(s => { $(s).value = ''; }); $('#pMsg').textContent = '✅ 바꿨어요. 다음부터 새 PIN으로 들어와요.';
     };
     $('#tDev').onclick = () => { try { if (dev) localStorage.removeItem('dd:academyDevice'); else localStorage.setItem('dd:academyDevice', '1'); } catch (e) {} settings(); };
+    A.store.get('app:stt').then(v => {
+      const off = !!(v && v.off), b = document.getElementById('tStt'); if (!b) return;
+      b.textContent = off ? '🔇 네이버 음성 인식 꺼짐 · 켜기' : '✅ 네이버 음성 인식 켜짐(학원 기기) · 끄기';
+      b.onclick = async () => { b.disabled = true; await A.store.set('app:stt', {off: !off, at: Date.now()}); settings(); };
+    });
+  }
+
+  /* ── 💰 AI 비용(마스터 10/24 「얼마나 썼는지 실시간으로」) — 서버 함수 ai-cost 가 ai_usage 를 모아 준다(선생님 PIN 확인).
+     음성 인식 = 네이버 CLOVA(15초 단위 5원) · AI 채점·도움 = Gemini · 문제 출제 = Claude Opus. 금액은 공식 단가로 계산한 추정치(달러 → 원) */
+  const KRW = 1400, won = usd => Math.round((usd || 0) * KRW).toLocaleString('ko-KR') + '원';
+  let COST_T = 0;
+  async function costFetch() {
+    let p = ''; try { p = sessionStorage.getItem('app:tpin') || ''; } catch (e) {}
+    if (!p) return null;
+    try {
+      const r = await fetch('https://cnyrbxsmxwajhlrvcdml.supabase.co/functions/v1/ai-cost', {method: 'POST', headers: {'Content-Type': 'application/json', apikey: 'sb_publishable_e2iVXV5K1sl7-kJ-d3v1Ow_VEzNUJGv'}, body: JSON.stringify({pin: p})});
+      const d = await r.json(); if (!r.ok) return {err: d.error || ('서버 오류 ' + r.status)};
+      const sum = o => o.stt.usd + o.ai.usd + o.gen.usd;
+      return Object.assign(d, {tday: sum(d.today), tmon: sum(d.month)});
+    } catch (e) { return {err: '서버에 연결하지 못했어요'}; }
+  }
+  async function costView(msg) {
+    clearInterval(COST_T);
+    let p = ''; try { p = sessionStorage.getItem('app:tpin') || ''; } catch (e) {}
+    if (!p) {   // 예전에 들어와 PIN 을 기억하지 않은 탭
+      frame(`<div class="thead"><h2>💰 AI 비용</h2></div><div class="tbox"><p class="sub">비용을 보려면 선생님 PIN을 한 번 더 넣어 주세요.</p>
+        <div class="row"><input id="cPin" class="tin" type="password" inputmode="numeric" autocomplete="off" placeholder="PIN"><button class="secondary small" id="cGo">보기</button><span class="sub" id="cM">${esc(msg || '')}</span></div></div>`, {back: list, backText: '학생', crumb: 'AI 비용'});
+      $('#cGo').onclick = async () => { const v = $('#cPin').value; if (!(await A.checkPin(v))) { $('#cM').textContent = 'PIN이 맞지 않아요.'; return; } try { sessionStorage.setItem('app:tpin', v); } catch (e) {} costView(); };
+      return;
+    }
+    frame('<div class="loading">불러오는 중…</div>', {back: () => { clearInterval(COST_T); list(); }, backText: '학생', crumb: 'AI 비용'});
+    const paint = c => {
+      if (!c || c.err) { if (c && /PIN/.test(c.err)) { try { sessionStorage.removeItem('app:tpin'); } catch (e) {} return costView(c.err); } $('.tmain').innerHTML = `<p class="sub center">${esc((c && c.err) || '불러오지 못했어요')}</p>`; return; }
+      const min = s => s >= 60 ? Math.round(s / 60) + '분' : Math.round(s) + '초';
+      const line = (ic, name, o, unit) => `<tr><td>${ic} ${name}</td><td>${unit(o)}</td><td><b>${won(o.usd)}</b></td></tr>`;
+      const tbl = (o, title, total) => `<div class="tbox"><h3>${title} <small>모두 <b>${won(total)}</b></small></h3><table class="tcost">
+        ${line('🎙', '음성 인식(네이버)', o.stt, x => `${min(x.sec)} · ${x.n}번`)}${line('🤖', 'AI 채점·도움(Gemini)', o.ai, x => `${x.n}번`)}${line('📝', '문제 출제(Claude)', o.gen, x => `${x.n}번`)}</table></div>`;
+      const name = id => { const s = STU.find(x => x.id === id); return s ? s.name : (id === 'claude-test' ? '(시험)' : id); };
+      const st = Object.entries(c.students || {}).map(([id, v]) => ({id, v, t: v.stt.usd + v.ai.usd})).sort((a, b) => b.t - a.t);
+      $('.tmain').innerHTML = `<div class="thead"><h2>💰 AI 비용</h2><button class="ghost small" id="cRe">↻ 새로고침</button></div>
+        ${tbl(c.today, '오늘', c.tday)}${tbl(c.month, '이번 달(' + (new Date().getMonth() + 1) + '월)', c.tmon)}
+        <div class="tbox"><h3>학생별 · 이번 달</h3>${st.length ? `<table class="tcost">${st.map(x => `<tr><td>${esc(name(x.id))}</td><td>🎙 ${min(x.v.stt.sec)} · 🤖 ${x.v.ai.n}번</td><td><b>${won(x.t)}</b></td></tr>`).join('')}</table>` : '<p class="sub">아직 기록이 없어요.</p>'}</div>
+        <p class="sub">20초마다 저절로 새로 불러와요(${new Date(c.at).toTimeString().slice(0, 8)} 기준). 금액은 공식 단가로 계산한 추정치예요 — 네이버는 한 번 켤 때마다 15초 단위로 올려 세고(VAT 별도), 환율은 1달러 = ${KRW.toLocaleString('ko-KR')}원으로 셈해요. 실제 청구는 네이버 클라우드·구글·앤트로픽 콘솔에서 확인하세요.</p>`;
+      $('#cRe').onclick = async () => paint(await costFetch());
+    };
+    paint(await costFetch());
+    COST_T = setInterval(async () => { if (!document.querySelector('.tcost')) return clearInterval(COST_T); paint(await costFetch()); }, 20000);
   }
 
   // ── 👥 학생 관리(마스터 10/20) — 옛 선생님 화면과 같은 서버 표(students: id·name·grade·pin_hash)를 쓴다 ──
