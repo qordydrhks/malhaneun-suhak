@@ -59,7 +59,7 @@
     const g = b.dataset.go;
     if (g === 'home') home(); else if (g === 'logout') { whereClear(); A.logout(); login(); }
     else if (g === 'hall') hall(); else if (g === 'play') playHub(); else if (g === 'calc') calcHub(); else if (g === 'battle') battleHub(); else if (g === 'words') wordHub();
-    else if (g.startsWith('big:')) star(+g.slice(4)); else if (g.startsWith('small:')) planet(g.slice(6), +b.dataset.r); else if (g.startsWith('bh:')) blackhole(+g.slice(3), +b.dataset.r); else if (g === 'record') record(); else if (g === 'guide') guide();
+    else if (g.startsWith('big:')) star(+g.slice(4)); else if (g.startsWith('small:')) planet(g.slice(6), +b.dataset.r); else if (g.startsWith('bh:')) blackhole(+g.slice(3), +b.dataset.r); else if (g === 'record') record(); else if (g === 'guide') guide(); else if (g === 'cnote') A.CN.open();
   });
 
   // ── 뒤로 가기(폰의 뒤로·취소 버튼) = 앱 안의 이전 화면 (옛 앱 v81.7 과 같은 방식) ──
@@ -90,7 +90,7 @@
   }
   function navGo(rt) {
     NAV.restoring = true;
-    try { ({home, star, planet, record, guide, blackhole, note, hall, calc: calcHub, calcu: calcUnit, battle: battleHub, words: wordHub, wordu: wordUnit, play: playHub})[rt[0]](...rt.slice(1)); } finally { NAV.restoring = false; }
+    try { ({home, star, planet, record, guide, blackhole, note, hall, calc: calcHub, calcu: calcUnit, battle: battleHub, words: wordHub, wordu: wordUnit, play: playHub, cnote: () => A.CN.open()})[rt[0]](...rt.slice(1)); } finally { NAV.restoring = false; }
   }
   /* 맨 아래 칸 = 로그인 화면(마스터 10/20 「뒤로 가면 마지막은 로그인 화면, 그다음 앱이 나가게」).
      처음 그린 화면(홈)은 기록 맨 첫 칸을 덮어쓰므로, 아이가 처음 화면을 누를 때(사용자 조작 순간) 그 밑에 로그인 칸을 깐다.
@@ -385,6 +385,7 @@
       <details><summary>✨ 다시 빛내기</summary><p>도움을 받아 통과한 질문은 일주일 뒤에 다시 물어봐요. 이번에 스스로 답하면 별빛이 다시 환해져요.</p></details>
       <details><summary>🏅 탐험가 등급</summary><p>이해가 커질수록 더 큰 세상으로 가요.</p><ul class="g-tiers">${tiers}</ul><p>스스로 한 번에 답하면 빛이 더 크게 모여요. 힌트를 봐도 안 한 것보다 훨씬 나아요. 갤럭시는 LEVEL Ⅱ, 코스모스는 LEVEL Ⅲ까지 해야 될 수 있어요.</p></details>
       <details><summary>⭐ 별빛 · 🏆 빛나는 탐험가</summary><p>질문을 <b>처음 통과</b>하면 점수만큼 별빛이 모여요(LEVEL Ⅱ는 1.5배, LEVEL Ⅲ은 2배). <b>학기 별빛</b>은 학기마다 새로, <b>전체 별빛</b>은 계속 쌓여요.<br>학기 별빛이 가장 많은 세 친구는 <b>🌟 북극성 · ✨ 샛별 · 💫 혜성</b>! 이번 주 상도 다섯 가지가 있어요.</p></details>
+      <details><summary>📒 개념 노트</summary><p>질문에서 본 <b>간단한 설명·자세한 설명</b> 중 다시 보고 싶은 것을 「📒 노트에 담기」로 골라 담아요. 빼는 것도 내 마음대로! 노트에서 그 질문을 <b>다시 말해 보거나</b> 예제 문제(mission)를 풀 수 있어요. 연습이라 점수·기록은 그대로예요.</p></details>
       <details><summary>✦ 별빛노트</summary><p>행성 질문을 다 마치면 친구들의 100점 대답을 볼 수 있어요. 질문마다 무작위로 하나씩 골라 보여 줘요. 네 대답도 오를 수 있어!</p></details>
       <details><summary>📖 용어 맞히기</summary><p>대단원마다 12문제. 뜻을 보고 낱말을 <b>말로</b> 답하고, 낱말을 보고 바른 뜻이나 알맞은 예를 골라요. 보기는 대충 보면 헷갈리게 나와요. 예전에 배운 낱말도 섞여 있어요.</p></details>
       <details><summary>⚡ 계산 연습 · ⚔ 친구와 대결</summary><p><b>계산 연습</b>은 퉁구리와 경주해요. 8문제 이상 맞히고 먼저 도착하면 이겨요(하루 3번까지 별빛 +10).<br><b>친구와 대결</b>은 대기실에서 친구에게 신청해요. 개념 대결은 정확하고 꼼꼼하게 설명한 쪽이, 계산 대결은 많이 맞힌 쪽이 이겨요. 이기면 배지가 자라요!</p></details>
@@ -408,7 +409,7 @@
                ? `<button class="primary big go" data-go="bh:${nx.big.no}" data-r="${nx.r}"><span>오늘 갈 곳</span><small>${esc(nx.big.title)} · <span class="tm" data-term="블랙홀 관문">블랙홀 관문</span></small></button>`
                : `<button class="primary big go" data-go="small:${nx.small.code}" data-r="${nx.r}"><span>오늘 갈 곳</span><small>${esc(nx.small.title)}${nx.why === 'again' ? ' · <span class="tm" data-term="다시 열린 질문">다시 열린 질문</span>' : nx.why === 'mission' ? ` · <span class="tm" data-term="mission">${A.M.name(nx.r)}</span>` : nx.why === 'review' ? ' · <span class="tm" data-term="다시 빛내기">다시 빛내기</span>' : ''}</small></button>`)
              : `<div class="done-all">지금 열린 곳은 모두 탐험했어요 ✦</div>`}
-      <nav class="homenav"><button data-go="play"><span>🎮</span>놀이터</button><button data-go="record"><span>${rk.icon}</span>나의 기록</button><button data-go="guide"><span>📖</span>안내서</button></nav>
+      <nav class="homenav"><button data-go="play"><span>🎮</span>놀이터</button><button data-go="record"><span>${rk.icon}</span>나의 기록</button><button data-go="cnote"><span>📒</span>개념 노트</button><button data-go="guide"><span>📖</span>안내서</button></nav>
       <h3 class="galttl">${E.course().code} 은하 <i class="tq" data-term="은하">?</i>${A.isTester() && A.courses().length > 1 ? ' <button class="ghost small" id="cSwap">학년 바꾸기</button>' : ''}</h3><div class="mapbox">${A.galaxyMap()}</div>`, {crumb: ''});
     if ($('#cSwap')) $('#cSwap').onclick = courseSwap;
   }
@@ -954,7 +955,7 @@
       const o = m[r.question_id] || (m[r.question_id] = {});
       const prac = r.stage === 'practice' || /re$/.test(r.level || '');
       if (r.pass && !prac && !o.pass) o.pass = r;
-      if (!o.last) o.last = r;
+      if (!o.last && !prac) o.last = r;                          // 연습(개념 노트·나의 기록에서 다시 해 본 것)은 「내가 한 말」을 바꾸지 않는다
     }
     MYSUBS = m; MYSUBS_AT = Date.now();
     return m;
@@ -981,19 +982,23 @@
     const liOf = it => {
       const o = subs[it.t.id] || {}, row = which === 'yet' ? o.last : (o.pass || o.last);
       const go = which === 'yet' ? (it.s ? `data-go="small:${it.s.code}" data-r="${it.r}"` : `data-go="bh:${it.b.no}" data-r="${it.r}"`) : '';
-      return `<li class="rec"><span class="code">${it.t.kind === 'bh' ? '블랙홀 · ' : ''}${E.RL(it.r)}</span><span>${fm(qOf(it))}</span>
+      const id = esc(it.t.id), cn = ['s', 'l'].some(w => A.CN.can(it.t, w));
+      /* 마스터 10/24: 통과한 질문은 누르면 바로 다시 풀어 보기(연습 — 기록·점수·별빛 그대로) · 📒 개념 노트에 담기 */
+      return `<li class="rec"><span class="code">${it.t.kind === 'bh' ? '블랙홀 · ' : ''}${E.RL(it.r)}</span><span${which !== 'yet' ? ` class="rq" data-rp="${id}"` : ''}>${fm(qOf(it))}</span>
         ${row && row.transcript ? `<details class="myd"><summary>🗣 내가 한 말 보기</summary><div class="myd-in"><b>내가 한 말</b><p>${ansHtml(row.transcript)}</p>${which !== 'yet' && it.t.src && it.t.src.ans ? `<b>모범 답</b><p class="mod">${fm(it.t.src.ans)}</p>` : ''}</div></details>` : '<small class="sub">남아 있는 대답이 없어요</small>'}
-        ${which === 'yet' ? `<button class="ghost small redo" ${go}>다시 하기 →</button>` : ''}</li>`;
+        <div class="recact">${which === 'yet' ? `<button class="ghost small redo" ${go}>다시 하기 →</button>` : `<button class="ghost small redo" data-rp="${id}">↻ 다시 풀어 보기 <small>연습</small></button>`}${cn ? `<button class="ghost small redo cnr ${A.CN.has(it.t.id) ? 'in' : ''}" data-rn="${id}">${A.CN.has(it.t.id) ? '✓ 노트에 있어' : '📒 노트에 담기'}</button>` : ''}</div></li>`;
     };
+    /* 그 행성에서 이미 푼 mission 은 여기서 바로 다시 풀기(연습) */
+    const misRedo = s => [1, 2, 3].map(r => [r, A.M.result(s, r)]).filter(x => x[1]).map(([r, m]) => `<button class="ghost small mredo" data-mc="${s.code}" data-mr="${r}">📝 ${A.M.name(r)} 다시 풀기 <small>${m.c}/${m.n} · 연습</small></button>`).join('');
     let list = '';
     if (which) {
       const groups = E.bigs().map(b => {
         const mine = bk[which].filter(it => it.b === b); if (!mine.length) return null;
-        const subs2 = b.smalls.map(s => [s.code + ' ' + s.title, mine.filter(it => it.s === s)]).concat([['🕳 블랙홀 관문', mine.filter(it => !it.s)]]).filter(x => x[1].length);
+        const subs2 = b.smalls.map(s => [s.code + ' ' + s.title, mine.filter(it => it.s === s), s]).concat([['🕳 블랙홀 관문', mine.filter(it => !it.s), null]]).filter(x => x[1].length);
         return {b, n: mine.length, subs2};
       }).filter(Boolean);
       list = groups.map(g => `<details class="recbig"${groups.length === 1 ? ' open' : ''}><summary><span class="rbc">${esc(g.b.code)}</span><span class="rbt">${esc(g.b.title)}</span><b class="rbn">${g.n}</b></summary>
-        ${g.subs2.map(([t, its]) => `<div class="recsm"><div class="rst">${esc(t)}</div><ul class="reclist">${its.map(liOf).join('')}</ul></div>`).join('')}</details>`).join('');
+        ${g.subs2.map(([t, its, s]) => `<div class="recsm"><div class="rst">${esc(t)}</div><ul class="reclist">${its.map(liOf).join('')}</ul>${s && misRedo(s) ? `<div class="recmis">${misRedo(s)}</div>` : ''}</div>`).join('')}</details>`).join('');
     }
     frame(`<section class="book">
       <div class="starcards"><div class="scard"><span>⭐ 학기 별빛</span><b>${A.S.semPts().toLocaleString('ko-KR')}</b><small>${esc(sem.name)} · ${E.course().code}</small></div>
@@ -1011,7 +1016,32 @@
     root().querySelectorAll('.stat').forEach(b => b.onclick = () => record(b.dataset.k === which ? null : b.dataset.k));
     $('#rkS').onclick = () => tierPop(rk.score);
     $('#sndT').onclick = () => { if (A.S.soundOn()) A.ls.set('app:sound', 0); else { A.ls.del('app:sound'); A.S.sound('gain'); } record(which); };
+    if (!which) return;
+    const byId = {}; bk[which].forEach(it => { byId[it.t.id] = it; });
+    const keepOpen = id => () => {                                // 다시 그린 뒤 보던 대단원을 펼쳐 둔다
+      record(which);
+      const el = root().querySelector(`[data-rp="${CSS.escape(id)}"],[data-rn="${CSS.escape(id)}"]`);
+      const g = el && el.closest('.recbig'); if (g) { g.open = true; el.closest('.rec').scrollIntoView({block: 'center'}); }
+    };
+    root().querySelectorAll('[data-rp]').forEach(b => b.onclick = () => { const it = byId[b.dataset.rp]; if (it) practiceOne(it, keepOpen(it.t.id)); });
+    root().querySelectorAll('[data-rn]').forEach(b => b.onclick = () => { const it = byId[b.dataset.rn]; if (it) A.CN.pick(it.t, () => { const n = A.CN.has(it.t.id); b.classList.toggle('in', n); b.textContent = n ? '✓ 노트에 있어' : '📒 노트에 담기'; }); });
+    root().querySelectorAll('.mredo').forEach(b => b.onclick = () => { const {big, small} = E.small(b.dataset.mc); mission(big, small, +b.dataset.mr, false, null, {fn: () => record(which), text: '나의 기록으로'}); });
   }
+
+  /* 한 질문만 바로 다시 해 보기(마스터 10/24 — 나의 기록·개념 노트에서). 연습이라 기록·점수·별빛·잠금은 그대로, 도움도 무료 */
+  async function practiceOne(it, back) {
+    if (!A.isAcademyDevice()) return blocked();
+    if (studyOver()) return;
+    { const o = sess(); if (!o.start) { o.start = Date.now(); sessSave(o); } }
+    tickClock();
+    const big = it.b, r = it.r;
+    let small = it.s, task = it.t;
+    if (task.kind === 'bh') { small = {code: big.code + ' 블랙홀', title: '블랙홀 관문', unitId: '', unitLabel: '🕳 블랙홀 · ' + big.title, key: ''}; task = Object.assign({}, task, {src: big.bh[r]}); }
+    const out = await ask(big, small, task, 0, 1, true);
+    if (out === 'quit' && NAV.backQuit) { NAV.backQuit = false; return; }
+    back();
+  }
+  A.UI = {frame, navMark, toast, practice: practiceOne, mission: (...a) => mission(...a)};
 
   // ── ✦ 별빛노트(마스터 10/13) — 행성 질문을 다 마친 아이가 친구들의 잘한 대답을 본다 ──
   const noteBtn = () => `<button class="notebtn" id="nbGo"><span class="nbs">✦</span><span class="nbt"><b><span class="tm" data-term="별빛노트">별빛노트</span></b><small>100점을 받은 친구들의 대답</small></span><span class="nba">›</span></button>`;
@@ -1055,7 +1085,8 @@
   }
   /* AI 문제의 대분수 "1 2/9"(띄어 씀) → "1과 2/9" 로 바꿔 교재처럼 자연수 바로 옆에 분수가 붙게 (mfmt 가 와/과 꼴을 대분수로 그린다) */
   const mx = t => String(t ?? '').replace(/(^|[^\d.\/])(\d+) (\d+\/\d+)/g, (m, p, w, f) => p + w + ({0: '과', 1: '과', 3: '과', 6: '과', 7: '과', 8: '과'}[w.slice(-1)] || '와') + ' ' + f);
-  async function mission(big, small, r, hard, res) {
+  /* back = {fn, text: '나의 기록으로'}: 나의 기록·개념 노트에서 연 mission — 그만하기·끝난 뒤 그 화면으로 돌아간다 */
+  async function mission(big, small, r, hard, res, back) {
     if (!A.isAcademyDevice()) return blocked();
     if (studyOver()) return;
     const name = A.M.name(r, hard);
@@ -1068,8 +1099,9 @@
     catch (e) {
       if (!alive) return;
       NAV.quit = null;
-      frame(`<section class="center-msg stage">${buddy('retry')}<h2>문제를 못 찾았어</h2><p class="sub">${esc(e.message)}</p><button class="primary big" id="rt">다시 찾기</button><button class="ghost" data-go="big:${big.no}">${big.code}로</button></section>`);
-      $('#rt').onclick = () => mission(big, small, r, hard);
+      frame(`<section class="center-msg stage">${buddy('retry')}<h2>문제를 못 찾았어</h2><p class="sub">${esc(e.message)}</p><button class="primary big" id="rt">다시 찾기</button>${back ? `<button class="ghost" id="mbk">${esc(back.text)}</button>` : `<button class="ghost" data-go="big:${big.no}">${big.code}로</button>`}</section>`);
+      $('#rt').onclick = () => mission(big, small, r, hard, null, back);
+      if (back) $('#mbk').onclick = () => back.fn();
       return;
     }
     const first = !A.M.done(small, r, hard);
@@ -1084,7 +1116,8 @@
         ${tap ? `<div class="tapbar"><span class="sub" id="tsel">그림에서 눌러 골라 봐</span><button class="primary" id="tok" disabled>다 골랐어</button></div>`
               : `<div class="chs">${it.choices.map((c, j) => `<button class="ch" data-j="${j}"><span class="cn">${'①②③④⑤'[j]}</span><span class="ct">${fm(mx(c))}</span></button>`).join('')}</div>
                  <div class="subbar"><button class="primary" id="msub" disabled>제출</button></div>`}
-        <div class="say" id="say"></div></section><div class="row" id="nx"></div>`, {back: 'big:' + big.no, backText: '그만하기', crumb: small.code});
+        <div class="say" id="say"></div></section><div class="row" id="nx"></div>`, {back: back ? 'mback' : 'big:' + big.no, backText: '그만하기', crumb: small.code});
+      if (back) root().querySelector('[data-go="mback"]').onclick = e => { e.stopPropagation(); alive = false; NAV.quit = null; whereSet({mis: null}); back.fn(); };
       const after = right => {
         if (right) ok++;
         misSave(k + 1, ok);                       // 답을 고른 뒤 새로고침하면 다음 문제부터(같은 문제를 다시 풀지 않게)
@@ -1131,8 +1164,9 @@
         <div class="score">${ok}<small> / ${quiz.length}</small></div>${A.S.chip(gain, r, 'mis')}
         <p class="sub">${esc(name)}${saved ? '' : ' · 연습(처음 결과는 그대로)'}</p>
         ${!hard && !A.M.done(small, r, true) ? `<button class="secondary mbtn" id="mHard"><b>${A.M.name(r, true)}</b> <small>도전해 볼래? (선택 · 틀려도 괜찮아)</small></button>` : ''}
-        <button class="primary big" data-go="big:${big.no}">${big.code}로</button><button class="ghost" data-go="home">은하로</button></section>`);
+        ${back ? `<button class="primary big" id="mbk">${esc(back.text)}</button>` : `<button class="primary big" data-go="big:${big.no}">${big.code}로</button>`}<button class="ghost" data-go="home">은하로</button></section>`);
       bindMission(big, small, r);
+      if (back) $('#mbk').onclick = () => back.fn();
       if (gain) A.S.gain(gain, $('#gainChip'), all);
     };
     k < quiz.length ? one() : done();
@@ -1530,7 +1564,9 @@
         if (h === 'short' || h === 'long') {
           helpNow = h; setBuddy('hint');
           say(`<div class="expl">${fm(h === 'short' ? S.help.short : S.help.long)}</div>${h === 'long' && S.help.lfig ? `<div class="figbox">${S.help.lfig}</div>` : ''}`, 'expl');
-          $('#ans').innerHTML = `<div class="prompt">설명을 잘 읽었으면, 내일 비슷한 질문으로 다시 물어볼게.</div><div class="row"><button class="primary big" id="ok">알겠어</button></div>`;
+          const cw = h === 'short' ? 's' : 'l', cnOk = ['q', 'lad'].includes(task.kind) && A.CN.expl(task)[cw];
+          $('#ans').innerHTML = `<div class="prompt">설명을 잘 읽었으면, ${practice === true ? '다시 해 보자.' : '내일 비슷한 질문으로 다시 물어볼게.'}</div>${cnOk ? `<div class="row">${A.CN.btn(task.id, cw, 'secondary')}</div>` : ''}<div class="row"><button class="primary big" id="ok">알겠어</button></div>`;
+          if (cnOk) A.CN.bind($('#ans'));   // 📒 학생이 고르면 이 설명이 개념 노트에 쏙(마스터 10/24)
           return $('#ok').onclick = () => end({st: 'wait', help: h, stage: h, pass: false});
         }
         end({st: 'lock', help: 'none', stage: 'lock', pass: false, needTeacher: true});
@@ -1557,8 +1593,10 @@
         const saving = commit(rr, true);                         // 결과가 보이는 순간 저장(이 화면에서 나가도 통과가 남는다)
         $('#ans').innerHTML = `<div class="result">${q != null ? `<div class="score">${q}<small>점</small></div>` : '<div class="score small">연습</div>'}${A.S.chip(gain, task.r, why)}
           <ul class="keys">${keysHtml}</ul><div class="model"><b>모범답 꼭! 확인</b>${fm(S.ans)}</div>
+          ${['q', 'lad'].includes(task.kind) ? `<div class="row"><button class="ghost small" id="cnP">${A.CN.has(task.id) ? '✓ 개념 노트에 있어' : '📒 개념 노트에 담기'}</button></div>` : ''}
           <div class="row"><button class="primary big" id="ok">${i < n - 1 ? '다음 질문' : '끝내기'}</button></div></div>`;
         if (gain) A.S.gain(gain, $('#gainChip'));
+        if ($('#cnP')) $('#cnP').onclick = () => saving.then(() => A.CN.pick(task, () => { const b = $('#cnP'); if (b) b.textContent = A.CN.has(task.id) ? '✓ 개념 노트에 있어' : '📒 개념 노트에 담기'; }));   // 통과를 저장한 뒤라 두 설명 모두 담을 수 있다
         if (!practice && q >= 90) A.N.post({task, small, r: task.r, q, answers: answers.slice(), keys: S.keys, question: S.q, ans: S.ans});   // ✦ 별빛노트 후보(AI 가 한 번 더 보고 올린다)
         $('#ok').onclick = async () => { $('#ok').disabled = true; const opened = await saving; NAV.quit = null; resolve({pass: true, opened}); };
       }

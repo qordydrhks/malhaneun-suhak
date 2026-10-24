@@ -590,7 +590,7 @@ textarea.tin{width:100%}
 
 /* ── 깔끔한 화면(대전제 3번, app 0.16) ── */
 .galttl{display:flex;align-items:center;gap:6px;font-size:17px;margin:18px 2px 4px}
-.homenav{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0 4px}
+.homenav{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0 4px}
 .homenav button{display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--sky2);border:1px solid var(--line);border-radius:14px;padding:10px 4px;font-weight:700;font-size:14px;color:var(--ink)}
 .homenav button span{font-size:22px;line-height:1.1}
 .play h2{margin:4px 0 12px}.playgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -668,3 +668,31 @@ details.tq2 summary::-webkit-details-marker{display:none}
 .tvis{list-style:none;margin:0;padding:0;display:grid;gap:4px}
 .tvis li{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;font-size:14px;padding:6px 0;border-top:1px solid var(--line)}
 .tvis li:first-child{border-top:0}.tvis li span{color:var(--gold);font-weight:700}.tvis li small{color:var(--sub);font-size:12.5px}
+
+/* 📒 개념 노트(0.21) — 학생이 고른 설명만 담는 복습 노트 · js/note2.js */
+.cnote h2{margin:4px 0 2px}.cnote>.sub{margin:0 0 12px}
+.cnlist{display:grid;gap:6px}
+.cncard{background:#0003;border:1px solid var(--line);border-radius:12px}
+.cncard>summary{display:grid;grid-template-columns:auto 1fr;gap:4px 8px;align-items:baseline;padding:10px 12px;cursor:pointer;list-style:none}
+.cncard>summary::-webkit-details-marker{display:none}
+.cncard[open]>summary{border-bottom:1px dashed var(--line)}
+.cnlv{font-size:11.5px;color:var(--gold);font-weight:700;white-space:nowrap}.cnqt{line-height:1.55}
+.cnbody{padding:10px 12px 12px;display:grid;gap:10px}
+.cnex{background:#f3f0ff;color:#2f2665;border-radius:12px;padding:10px 12px}
+.cnh{font-size:12.5px;font-weight:700;color:#5b4bb7;margin-bottom:4px}
+.cnex .figbox{margin-top:8px}
+.cnmore{justify-self:start;color:var(--gold)}
+.cnact{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.cnact .secondary{display:grid;gap:2px;padding:10px 12px;text-align:left}.cnact .secondary small{color:var(--sub);font-size:12px}
+.cndel{justify-self:end;font-size:13px}
+.cnempty{text-align:center;padding:30px 10px;display:grid;gap:6px;justify-items:center}.cnempty p{margin:0}.cnei{font-size:44px}
+.cnempty .secondary{margin-top:10px}
+.cnb.in,.cnr.in{color:var(--ok)}
+.cnq{font-size:14.5px;line-height:1.6;color:var(--sub)}
+.cnopts{display:grid;gap:8px}
+.cnopt{display:grid;gap:2px;text-align:left;border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--sky)}
+.cnopt small{color:var(--sub);font-size:12.5px}.cnopt.in{border-color:var(--ok)}.cnopt.in small{color:var(--ok)}
+.recact{display:flex;flex-wrap:wrap;gap:4px 14px}
+.rec .rq{cursor:pointer}
+.recmis{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.recmis .mredo{color:var(--gold);border:1px solid var(--line);border-radius:999px;padding:6px 12px}
+.mredo small,.redo small{color:var(--sub);font-size:11.5px}
