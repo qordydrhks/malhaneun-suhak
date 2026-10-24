@@ -40,11 +40,11 @@ sub.mf-sub{font-size:.68em;vertical-align:-.2em;line-height:0;}
   --r-card:18px; --r-btn:14px; --fs-q:20px;
   color-scheme:light;
 }
-body.th-mb{ /* 중등 B — 어두운 화면: 짙은 회색 · 주황 섞인 쨍한 노랑 한 색 · 글씨 조금 크게 */
+body.th-mb{ /* 중등 B — 어두운 화면: 짙은 회색 · 형광펜 연두 한 색 · 글씨 조금 크게 */
   --bg:#14161b; --surf:#1d2027; --surf2:#252932; --ink:#eceef3; --sub:#9aa1b0; --line:#30343e;
-  --acc:#ffb81c; --acc-ink:#2a1a00; --acc-soft:#3a2f15; --mark:#ffb81c;
-  --ok:#5cc98f; --okbg:#1c3327; --mid:#86a8ff; --midbg:#1f2944; --help:#c4a1ff; --helpbg:#2e2440; --bad:#ff7a70; --badbg:#3d1f1d;
-  --curve:#ffc64a; --axis:#8b93a3; --grid:#262a33;
+  --acc:#b8f22a; --acc-ink:#1a2600; --acc-soft:#28321a; --mark:#b8f22a;
+  --ok:#4fd1e0; --okbg:#163238; --mid:#86a8ff; --midbg:#1f2944; --help:#c4a1ff; --helpbg:#2e2440; --bad:#ff7a70; --badbg:#3d1f1d;
+  --curve:#c6f55a; --axis:#8b93a3; --grid:#262a33;
   --r-card:14px; --r-btn:12px; --fs-q:21px;
   color-scheme:dark;
 }
@@ -536,7 +536,7 @@ const $ = s => document.querySelector(s);
 const SCREENS = [['login','로그인'],['home','홈'],['units','단원'],['ask','질문'],['pass','통과'],['mission','문제 풀기'],['record','나의 기록']];
 const NOTES = {
   ma: ['밝은 바탕에 청록 한 색만 써요. 형광펜 노랑은 「오늘 할 것」에만 칠해 눈이 거기로 먼저 가요.', '캐릭터·이야기는 빼고 포물선 모양 작은 표시만 남겼어요(초등은 뚜삐·퉁구리·우주).', '모서리는 적당히 둥글게, 그림자 없이 선으로만 칸을 나눠요.'],
-  mb: ['짙은 회색 바탕에 주황 섞인 쨍한 노랑 한 색. 밤에 공부해도 눈이 편하고, 중학생이 좋아하는 「어두운 모드」 느낌이에요.', '글씨를 조금 키우고, 모서리는 덜 둥글게 해서 단단해 보이게 했어요.', '화면 구성·버튼 자리는 A안과 똑같아요. 색만 골라 주시면 돼요.'],
+  mb: ['짙은 회색 바탕에 형광펜 같은 연두 한 색. 밤에 공부해도 눈이 편하고, 중학생이 좋아하는 「어두운 모드」 느낌이에요.', '글씨를 조금 키우고, 모서리는 덜 둥글게 해서 단단해 보이게 했어요.', '화면 구성·버튼 자리는 A안과 똑같아요. 색만 골라 주시면 돼요.'],
   h: ['흰 종이·검은 글씨. 제목만 명조체로 써서 수험 교재처럼 차분하게.', '색은 진한 자주 한 색만, 「지금 할 것」과 정답에만 아껴 써요.', '질문 화면에 풀이 노트가 있어요. 학생이 할 일을 말하면 앱이 식을 노트에 써 줘요(고등 대화형 풀이).']
 };
 let TH = 'ma', SC = 'login';
