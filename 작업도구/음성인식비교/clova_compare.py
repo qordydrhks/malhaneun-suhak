@@ -13,7 +13,8 @@ import base64, glob, html, json, os, re, sys, time
 import requests
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-BOOST = '엇각,맞꼭지각,동위각,합동,닮음,닮음비,무게중심,중선,판별식,인수분해,이등변삼각형,평행사변형,대변,밑각,꼭짓점,이차방정식,공통,평행,SAS,ASA,SSS,루트,통분,표준형,원주각,중심각,음수,이상,미만,제곱,선분'
+_TS = open(os.path.join(HERE, '..', '..', 'supabase', 'functions', 'clova-stt', 'index.ts'), encoding='utf-8').read()   # 실제 앱과 같은 낱말 목록
+BOOST, BOOST_HARD = (re.search(r"const %s = '([^']*)'" % k, _TS).group(1) for k in ('BOOST', 'BOOST_HARD'))
 
 # 문장 → 꼭 알아들어야 할 낱말(같은 뜻의 다른 적기를 | 로) — 띄어쓰기 없애고 소문자로 비교. app/stt-compare.html 의 묶음 1·2 와 같은 문장
 _F = lambda a, b, ka, kb: f'{b}/{a}|{a}분의{b}|{ka}분의{kb}'   # 분수 b/a 를 적는 여러 모양
@@ -58,7 +59,7 @@ def read_key():
 
 def clova(url, secret, wav, boost):
     params = {'language': 'ko-KR', 'completion': 'sync', 'fullText': True, 'wordAlignment': False, 'diarization': {'enable': False}}
-    if boost: params['boostings'] = [{'words': BOOST}]
+    if boost: params['boostings'] = [{'words': BOOST, 'weight': 1}, {'words': BOOST_HARD, 'weight': 2}]
     t0 = time.time()
     r = requests.post(url + '/recognizer/upload', headers={'X-CLOVASPEECH-API-KEY': secret},
                       files={'media': ('a.wav', wav, 'audio/wav'), 'params': (None, json.dumps(params, ensure_ascii=False), 'application/json')}, timeout=120)
