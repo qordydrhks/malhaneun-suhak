@@ -21,10 +21,10 @@
   // 분수의 한쪽 피연산자를 뒤/앞에서 읽는다
   var TOKEN = /[A-Za-z0-9²³ⁿ_.]+$/;
   function leftOperand(s,i){            // s[0..i-1] 의 끝에서
-    if(s[i-1]===')'){ var d=0; for(var j=i-1;j>=0;j--){ if(s[j]===')')d++; else if(s[j]==='('){d--; if(!d) return [j,s.slice(j,i)];} } return null; }
+    if(s[i-1]===')'){ var d=0; for(var j=i-1;j>=0;j--){ if(s[j]===')')d++; else if(s[j]==='('){d--; if(!d){ if(s[j-1]==='√') j--; return [j,s.slice(j,i)]; }} } return null; }
     var m=TOKEN.exec(s.slice(0,i)); if(!m||!m[0]) return null;
-    if(s[i-1-m[0].length]==='√') return null;      // √a/… 는 √까지 포함
-    return [i-m[0].length, m[0]];
+    var b=i-m[0].length; if(s[b-1]==='√') b--;      // [0.21.2] √2/2 · √(x-1)/2 는 √까지 분자로
+    return [b, s.slice(b,i)];
   }
   function rightOperand(s,i){           // s[i..] 의 앞에서
     var gp=group(s,i); if(gp) return gp;
@@ -42,8 +42,10 @@
       if(ch==='√'){
         var gp=group(t,i+1), body;
         if(gp){ body=gp.slice(1,-1); i+=1+gp.length; }
-        else { var m=/^[A-Za-z0-9²³_.]+/.exec(t.slice(i+1)); if(m){ body=m[0]; i+=1+m[0].length; } else { out+='√'; i++; continue; } }
-        out+='<span class="mf-rad">√<span class="mf-rcd">'+inner(body)+'</span></span>';
+        else { var m=/^[A-Za-z0-9²³_.]+/.exec(t.slice(i+1)); if(m){ body=m[0]; i+=1+m[0].length;
+          var fg=/^[fgh]$/.test(body)?group(t,i):null; if(fg){ body+=fg; i+=fg.length; }   // [0.21.2] √f(2) 는 f(2) 전체에 지붕
+        } else { out+='√'; i++; continue; } }
+        out+='<span class="mf-rad"><span class="mf-rcd"><span class="mf-rs" aria-hidden="true">'+RSIGN+'</span><span class="mf-rt">√</span>'+expr(body)+'</span></span>';
         continue;
       }
       // 위첨자
@@ -116,11 +118,16 @@
     return '<i class="mf-v">' + ch + '</i>';
   }
 
+  // [0.21.2] 근호 — 글꼴 √ 대신 직접 그린 기호. 지붕(.mf-rcd 윗줄)과 끊기지 않고 안의 식 높이만큼 늘어난다.
+  var RSIGN='<svg viewBox="0 0 10 20" preserveAspectRatio="none"><path d="M0.5 12.4 2.6 10.8" class="mf-rs1"/><path d="M2.6 10.8 5.4 19.4" class="mf-rs3"/><path d="M5.4 19.4 9.5 0 11 0" class="mf-rs2"/></svg>';
+  // t[k] 가 √( … ) 괄호 안이면 true
+  function inRad(t,k){ var st=[]; for(var j=0;j<k;j++){ if(t[j]==='(') st.push(t[j-1]==='√'); else if(t[j]===')') st.pop(); } return st.indexOf(true)>=0; }
+
   // 분수 처리 후 inner()
   function expr(t){
     var k=t.indexOf('/');
     while(k>0){
-      if(t[k-1]!=='/' && t[k+1]!=='/'){
+      if(t[k-1]!=='/' && t[k+1]!=='/' && !inRad(t,k)){
         var L=leftOperand(t,k), R=L?rightOperand(t,k+1):null;
         if(L && R){
           return expr(t.slice(0,L[0]))
@@ -160,6 +167,10 @@
     });
   }
 
+  // 안 닫힌 √( 의 '(' 자리(덩어리 안 위치), 없으면 -1
+  function radOpen(t){ var st=[]; for(var j=0;j<t.length;j++){ if(t[j]==='(') st.push(j); else if(t[j]===')') st.pop(); }
+    for(var q=0;q<st.length;q++) if(t[st[q]-1]==='√') return st[q]; return -1; }
+
   // [v85.7] 대분수 "2와 1/3"·"1과1/2" → 교재처럼 자연수 바로 옆에 분수. 화면에서 한글 '와/과'를 뺀다.
   //   앞이 숫자·'/'·'.' 이면(3/4과 5/6 같은 분수 두 개) 건드리지 않는다. 채점·음성은 원래 글자를 쓰므로 영향 없음.
   var MIXED = /(^|[^\d\/.])(\d+)\s*[와과]\s*(?=\d+\s*\/\s*\d+)/g;
@@ -170,6 +181,9 @@
     while((m=RUN.exec(src))){
       var raw=m[0], start=m.index;
       var trimmed=raw.replace(/\s+$/,'');
+      // [0.21.2] √( 가 이 덩어리 안에서 안 닫히면(안에 − 같은 글자가 있어 끊김) 짝 괄호까지 늘린다
+      var rp=radOpen(trimmed);
+      if(rp>=0){ var gq=group(src,start+rp); if(gq) trimmed=src.slice(start,start+rp+gq.length); }
       if(trimmed.length<2 || !OPS.test(trimmed)){ continue; }
       MF_CTX = src.slice(Math.max(0,start-12), start);
       out += plain(src.slice(last,start)) + '<span class="mf">'+expr(trimmed)+'</span>';

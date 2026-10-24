@@ -7,6 +7,15 @@
 .mf-num{border-bottom:1px solid currentColor;padding:0 .32em;}
 .mf-den{padding:1px .32em 0;}
 .mf-rad{white-space:nowrap;}
-.mf-rcd{border-top:1px solid currentColor;padding:1px .14em 0 .05em;margin-left:-.06em;}
+/* [0.21.2] 근호: 기호를 직접 그려 지붕(윗줄)과 이어 붙인다 — 안의 식이 높아지면(분수) 기호도 같이 늘어난다 */
+.mf-rcd{display:inline-block;position:relative;border-top:max(1px,.07em) solid currentColor;
+  padding:.08em .1em 0 .06em;margin-left:.58em;line-height:1.15;}
+.mf-rs{position:absolute;right:100%;top:calc(-.5 * max(1px,.07em));bottom:-.04em;width:.52em;}
+.mf-rs svg{display:block;width:100%;height:100%;overflow:visible;fill:none;stroke:currentColor;stroke-linejoin:round;}
+.mf-rs path{vector-effect:non-scaling-stroke;}
+.mf-rs1{stroke-width:max(1px,.065em);}
+.mf-rs2{stroke-width:max(1px,.07em);}
+.mf-rs3{stroke-width:max(1.6px,.12em);stroke-linecap:round;}
+.mf-rt{position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;}
 sup.mf-sup{font-size:.68em;vertical-align:.55em;line-height:0;}
 sub.mf-sub{font-size:.68em;vertical-align:-.2em;line-height:0;}
