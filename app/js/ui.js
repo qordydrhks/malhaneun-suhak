@@ -608,26 +608,7 @@
         tries++; hint(`「${esc(heard[0] || '')}」? 잘 못 들었어. 다시 말해 줘`); listen();
       };
       const typeMode = msg => { stopW(); if (msg) toast(msg); const ty = $('#wTy'); if (!ty) return; ty.hidden = false; $('#wTw').hidden = true; $('#wIn').focus(); };
-      function listen() { if (useClova()) listenClova(); else listenBrowser(); }
-      /* 🎙 CLOVA 로 낱말 하나 듣기 — 글자가 오고 1.2초 동안 새 글자가 없으면 끝내고 채점 · 8초 동안 아무 말이 없으면 멈춤 */
-      function listenClova() {
-        stopW(); try { A.S.quiet(); } catch (e) {}
-        let heard = '', lastAt = 0, cancel = false; const t0 = Date.now();
-        const r = CLOVA.start({
-          pts: () => [],
-          onWords: ws => { const t = A.fixSpeech(ws.map(x => x.w).join(' ').replace(/[.?!]+$/, '').trim()); if (t && t !== heard) { heard = t; lastAt = Date.now(); hint(esc(t) + ' …'); } },
-          onState: st => { if (st === 'on') { $('#wMic')?.classList.add('on'); if (!tries) hint('듣고 있어… 낱말을 말해 줘'); } else if (st === 'off') { clearInterval(tm); $('#wMic')?.classList.remove('on', 'wait'); if (wrec === r) wrec = null; } },
-          onFail: msg => { toast(msg); clearInterval(tm); if (wrec === r) wrec = null; if (!cancel) listenBrowser(); },
-          onError: msg => toast(msg)
-        });
-        const abort0 = r.abort; r.abort = () => { cancel = true; clearInterval(tm); abort0(); }; r.onend = null; wrec = r;   // stopW() 가 부르는 모양
-        const tm = setInterval(() => {
-          if (cancel || lock || k !== myK) { r.abort(); return; }
-          if (heard && Date.now() - lastAt > 1200) { clearInterval(tm); if (wrec === r) wrec = null; r.finish().then(() => { if (!cancel && !lock && k === myK) judge([heard]); }); }
-          else if (!heard && Date.now() - t0 > 8000) { r.abort(); if (wrec === r) wrec = null; hint('마이크를 누르고 말해 줘'); }
-        }, 200);
-      }
-      function listenBrowser() {
+      function listen() {   // 낱말 하나라 브라우저 음성 인식으로 충분(마스터 10/24 — CLOVA 는 한 번에 15초치가 붙어 낱말 게임엔 비쌈)
         const R = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!R) return typeMode('이 기기는 말하기가 안 돼서 글로 써 줘');
         stopW(); try { A.S.quiet(); } catch (e) {}
